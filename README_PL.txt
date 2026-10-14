@@ -184,7 +184,7 @@ szarże torpedowe, walka zamiast ucieczki, odłączanie wolnych okrętów,
 doktryny narodowe. Nieprzetestowane w dłuższej grze: kierunek działania
 mnożnika dystansu w doktrynach (distanceMult) oraz zmiany gospodarcze
 na przestrzeni całej kampanii. Pełna historia zmian z uzasadnieniami,
-źródłami i statusem testów: CHANGELOG_PL.txt (33 sekcje).
+źródłami i statusem testów: CHANGELOG_PL.txt (34 sekcje).
 
 --------------------------------------------------------------------------
 INSTALACJA

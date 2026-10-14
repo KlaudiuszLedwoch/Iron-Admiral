@@ -82,7 +82,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.10.1", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.10.2", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -185,7 +185,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.10.1. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.10.2. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -360,7 +360,12 @@ namespace DipGgFixes
                     string fileBase = $"{store.YearCreated} {pd.name} {store.vesselName} [{shortId}]";
                     string fileName;
                     string path = Storage.GetSavedDesignPath(fileBase, out fileName);
-                    if (string.IsNullOrEmpty(path) || File.Exists(path)) { skipped++; continue; }
+                    if (string.IsNullOrEmpty(path)) { skipped++; continue; }
+                    // GetSavedDesignPath appends " 2", " 3", ... when the name is taken, so the
+                    // File.Exists test on its result never fires. Look for any existing file of
+                    // this design (short id) for this nation instead (1.10.2; before that every
+                    // turn wrote a new copy: 235 files for 10 designs).
+                    if (AlreadyExported(path, pd.name, shortId)) { skipped++; continue; }
 
                     store.playerName = pd.name;
                     store.playerOriginal = pd.name;
@@ -374,6 +379,36 @@ namespace DipGgFixes
             }
             if (written > 0)
                 MelonLogger.Msg($"[DIP GG Fixes] Exported {written} shared design file(s) ({skipped} already existed). They load on the next game start.");
+        }
+
+        private static readonly Dictionary<string, HashSet<string>> ExistingCache = new Dictionary<string, HashSet<string>>();
+        private static bool AlreadyExported(string path, string nation, string shortId)
+        {
+            try
+            {
+                string dir = Path.GetDirectoryName(path);
+                if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return false;
+                HashSet<string> keys;
+                if (!ExistingCache.TryGetValue(dir, out keys))
+                {
+                    keys = new HashSet<string>();
+                    foreach (var f in Directory.GetFiles(dir, "*.bindesign"))
+                    {
+                        var n = Path.GetFileNameWithoutExtension(f);
+                        int lb = n.LastIndexOf('['), rb = n.LastIndexOf(']');
+                        if (lb < 0 || rb < lb) continue;
+                        var parts = n.Split(' ');
+                        if (parts.Length < 3) continue;
+                        keys.Add(parts[1] + "|" + n.Substring(lb + 1, rb - lb - 1));
+                    }
+                    ExistingCache[dir] = keys;
+                }
+                string key = nation + "|" + shortId;
+                if (keys.Contains(key)) return true;
+                keys.Add(key);
+                return false;
+            }
+            catch { return File.Exists(path); }
         }
     }
 
