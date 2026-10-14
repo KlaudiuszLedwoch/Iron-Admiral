@@ -1,4 +1,4 @@
-﻿IRON ADMIRAL 1.1
+IRON ADMIRAL 1.1
 DIP The Great Game Extended (AI overhaul, one-click install)
 dla Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
@@ -184,7 +184,7 @@ szarże torpedowe, walka zamiast ucieczki, odłączanie wolnych okrętów,
 doktryny narodowe. Nieprzetestowane w dłuższej grze: kierunek działania
 mnożnika dystansu w doktrynach (distanceMult) oraz zmiany gospodarcze
 na przestrzeni całej kampanii. Pełna historia zmian z uzasadnieniami,
-źródłami i statusem testów: CHANGELOG_PL.txt (36 sekcji).
+źródłami i statusem testów: CHANGELOG_PL.txt (37 sekcji).
 
 --------------------------------------------------------------------------
 INSTALACJA
