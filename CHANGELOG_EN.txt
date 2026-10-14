@@ -1,0 +1,1217 @@
+==========================================================================
+CHANGES MADE RELATIVE TO THE ORIGINAL DIP MOD (Dreadnought Improvement Project)
+==========================================================================
+This file is updated continuously whenever a new data change is made.
+Last update: see date at the end of the file.
+
+Purpose: document EVERY change relative to the original (vanilla) DIP mod,
+together with its justification — mostly historical, occasionally purely
+gameplay/balance-driven (QoL). Every replaced table has the original kept
+as a backup in the same folder under "<name>_backup_..._.csv".
+
+--------------------------------------------------------------------------
+1. GUNNERY — ARMOR PENETRATION (guns.csv, penetration.csv)
+--------------------------------------------------------------------------
+WHAT: Rebuilt the armor penetration curves from scratch for all 21
+calibers (1"-21") and all 5 "grades" (generations) of each caliber.
+
+WHY: The original vanilla DIP values grew roughly LINEARLY with caliber
+(e.g. +58mm per additional inch), which does not reflect real-world
+penetration physics. In reality, penetration depends primarily on
+muzzle/striking velocity and shell weight (via the classic De Marre
+formula), not on caliber alone.
+
+METHOD: Applied the De Marre formula:
+    T/D = K(D) x D^1.07144 x (W/D^3)^0.71429 x V^1.42857
+(T = penetrated armor thickness, D = caliber, W = shell weight,
+V = striking velocity, in inches/pounds/ft-s)
+
+The K(D) constant was calibrated against 6 REAL, documented penetration
+tables from navweaps.com (US 8"/55 Mk12/15, German 28cm SK C/34,
+US 12"/50 Mk8, UK 13.5"/45 Mk V, UK 15"/42 Mk I, US 16"/50 Mk7) — error
+vs. real data is 0.5-13% across the whole range.
+(The first calibration pass, based on only 2 data points at 15"/16",
+produced errors of 2-35x for calibers far from that range — this was
+corrected after the error was noticed.)
+
+For each caliber and grade, a real historical gun was chosen as the
+data source (shell weight, muzzle velocity) — the full source list is
+in gun_sources_reference.csv. Calibers 1"-3" (never used against belt
+armor in reality) and 17", 19", 21" (never actually built) are formula
+extrapolations, not real combat tables.
+
+ADDITIONAL FIX: The baseline curve (grade 5) across calibers was
+smoothed (isotonic regression) to remove non-historical "dips" (e.g.
+caliber 13-15" weaker than caliber 12" purely because the specific real
+gun chosen for that generation happened to have a lower velocity).
+Similarly, the grade multipliers (1-5) within a single caliber were
+forced to be non-decreasing (G1 <= G2 <= ... <= G5), since the different
+real guns used as a basis did not always improve monotonically.
+
+EFFECT: small calibers (1-5") are weaker than the original (since they
+historically never penetrated thick armor), medium 7-9" come out similar
+or slightly stronger than the original (best-calibrated range), large
+13"+ are weaker than the original (which scaled them up linearly with
+no physical basis).
+
+--------------------------------------------------------------------------
+2. GUN / TURRET WEIGHT (guns.csv: baseWeight, barrelW_1-5)
+--------------------------------------------------------------------------
+WHAT: Barrel and turret weights recalculated using power laws calibrated
+against 3 real, confirmed weights (US 16"/50 Mk7, UK 15"/42 Mk I,
+Japanese 46cm/45 Type 94 from Yamato).
+
+Barrel weight: W = 0.05564 x D^2.7732 (tonnes), extrapolation error ~4%.
+
+FIX (turret weight change reverted): Turret structure weight (baseWeight)
+was originally also recalculated using a power law: W = 1.528x10^-6 x
+D^7.04. It turned out that with such a steep exponent, calibrated on
+only 3 very large guns (16", 15", 46cm), the formula extrapolated down
+to small calibers (1"-8") collapsed almost to zero (e.g. caliber 1" =
+0.0 tonnes instead of 0.48t in vanilla DIP, caliber 5" = 0.127t instead
+of 7.9t). In-game effect: small-caliber turrets had no weight budget
+left for armor, so the player could not set any armor thickness on
+those turrets at all. FIX: the baseWeight column in guns.csv was
+restored to the original vanilla DIP values for all 21 calibers (the
+power-law formula also proved unreliable outside its narrow calibration
+range at the large end — e.g. at caliber 21" it gave roughly 6.5x MORE
+than vanilla — so the entire turret-weight formula was reverted, not
+just patched for small calibers). Barrel weight (barrelW_1-5) is
+unchanged — a separate column, not affected by this issue. Backup:
+guns_backup_przed_baseweight_fix.csv.
+
+--------------------------------------------------------------------------
+3. GUN ACCURACY (guns.csv: accuracy_1-5)
+--------------------------------------------------------------------------
+An attempt was made to recompute accuracy based on the documented 66%
+reduction in US Navy gunnery dispersion from 1920-1945 (navweaps.com /
+W.J. Jurens) — the result turned out too drastic (0.21-1.62) compared to
+the original's narrow range (0.63-0.75), which the rest of the game's
+hit-chance engine is tuned around. AT THE USER'S REQUEST, THIS WAS
+REVERTED to the original flat mod values for all calibers.
+
+--------------------------------------------------------------------------
+4. SHIP TONNAGE LIMITS (technologies.csv)
+--------------------------------------------------------------------------
+WHAT: Added missing tonnage caps that were absent from the original mod
+(battleships could be built with no upper weight limit for the entire
+game).
+
+WHY — Washington Naval Treaty (1922) and 2nd London Treaty (1936):
+- hull_strength_12 (year 1919): tonnage(bb;35000) — 35,000-ton limit,
+  matching the 1922 Washington Naval Treaty (5:5:3 ratio for
+  USA/UK/Japan, 35,000 long-ton cap per battleship).
+- hull_strength_15 (year 1936): tonnage(bb;45000) — the "escalator
+  clause" of the 1936-38 2nd London Treaty, raising the cap to 45,000
+  tons after Japan declined to sign the treaty.
+- hull_strength_end (year 1940): tonnage(bb;-1) — by 1940 the treaties
+  had effectively lapsed (war had broken out), so the limit is removed.
+
+CRITICAL FIX (corrupted CSV row — modern battleships unavailable despite
+being researched): The hull_strength_15 edit described above (prepending
+"tonnage(bb;45000), " to the already-existing "unlock(...)" text) had
+originally been done incorrectly — the "effect" field in the CSV file
+was not wrapped in quotes, and the added comma split it into TWO
+separate columns instead of one. Result: the hull_strength_15 row ended
+up with 15 columns instead of the correct 14, and the entire
+"unlock(bb_6_kgeorge;bb_6_russia;bb_7_russia;bb_6_china;bb_6_littorio;
+bb_7_littorio;bb_7_kgeorge;bb_7_austria;bb_7_china;bb_7_spain;
+bb_6_soyuz;bb_7_soyuz;bb_8_china;bb_7_china_exp)" clause — i.e. the
+unlock for ALL modern battleship hulls (King George V, Littorio, Soviet
+Sovetsky Soyuz, Chinese, Austrian, Spanish) — landed outside the actual
+"effect" column and was never actually applied by the game, even though
+the technology showed as researched. FIX: the effect field was merged
+back into a single correct string, "tonnage(bb;45000), unlock(...)" —
+verified that no other row in the file has an incorrect column count.
+Backup: technologies_backup_przed_naprawa_hull_strength_15.csv.
+NOTE: on an already-running campaign where hull_strength_15 was
+researched BEFORE this fix, re-researching that technology (or starting
+a new game) may be needed — it is not certain the game engine
+re-applies the effect of an already-"completed" technology without a
+fresh calculation.
+
+ALSO: hull_destroyer_27 (year 1935) had a jump in the destroyer tonnage
+limit to 7,500 tons, which does not correspond to any real destroyer
+class of that era (the largest WWII destroyers, such as the Japanese
+Shimakaze or American Fletcher class, stayed within 2,000-3,500
+standard tons). Changed to tonnage(dd;4200) — a reasonable ceiling with
+headroom above the largest real destroyers of the era.
+
+--------------------------------------------------------------------------
+5. TORPEDOES — OXYGEN PROPULSION / "LONG LANCE" (technologies.csv:
+   torpedo_prop_4)
+--------------------------------------------------------------------------
+WHAT: Raised the range bonus from oxygen propulsion from +40% to +100%
+(torpedo_range_mod), and updated the description text from "14,000m at
+40 Knots" to "35,000m at 40 Knots".
+
+WHY: The Japanese Type 93 "Long Lance" (1935, oxygen propulsion instead
+of compressed air) achieved 40,000m at 33-35 knots — roughly 3x more
+than ANY other torpedo of the era at its longest setting (US Mark 15:
+13,700m, UK Mark IX: 12,300m, German G7a: 12,000m). The original mod's
+bonus value produced a maximum achievable range of roughly 14,000-
+18,000m even at full tech development — about 2.2x weaker than reality.
+The new value brings the max achievable range up to roughly 28,000-
+35,000m, closer to the real Long Lance.
+
+NOTE: The exact way the game engine sums percentage bonuses from
+multiple technologies has not been fully verified (no access to source
+code) — the actual in-game effect may differ from these calculations.
+In-game testing and further tuning is recommended.
+
+--------------------------------------------------------------------------
+6. RESEARCH SPEED AND VARIANCE (params.csv)
+--------------------------------------------------------------------------
+- research_progress_base: 3.0 -> 1 (percent) — lowered the base research
+  progress rate ("100/x months to research a technology"), previously
+  set well above vanilla DIP (0.8). This works together with the x10
+  research cost (see below) to slow down inventions that were coming
+  too fast.
+- research_late_years_to_double: 12 -> 3 -> back to 12 -> finally 2
+  years. The vanilla DIP value is 12; after a round of testing the
+  final setting is 2 years — a technology "late" by just 2 years
+  (very quickly) now gets doubled research speed, i.e. aggressive
+  catch-up on technological backlog.
+- tech_mod_randomness: 0.9 -> 0.5 — reduced the spread of each nation's
+  hidden random "aptitude" for a given tech category from a 0.1x-1.9x
+  range down to 0.5x-1.5x (still wider than vanilla's 0.7x-1.3x, but
+  less extreme than the previous 0.9).
+- Research cost/difficulty (the "cost" column in technologies.csv) was
+  first ROLLED BACK to the level found in the archival "x4" file on
+  disk, after it had previously been raised roughly 40x relative to
+  that reference point during the user's own earlier experimentation.
+  After testing in-game, the x4 level turned out to make inventions
+  come too fast, so the research cost was RAISED AGAIN — this time to
+  the level found in the archival "x10bak" file on disk, i.e. ten times
+  the original mod's base cost. This change affects only the
+  cost/difficulty column — the tonnage limits (section 4) and the
+  torpedo range bonus (section 5) in technologies.csv are unchanged.
+
+--------------------------------------------------------------------------
+6b. TOP RESEARCH-SPENDER BONUS (params.csv)
+--------------------------------------------------------------------------
+WHAT: Reduced the research-speed bonus a nation gets for spending the
+most on research relative to other players.
+
+WHY: In the user's own earlier experimentation, this bonus had been
+raised well above the original DIP mod's level (verified against the
+mod's archived installer files), making the research leader's advantage
+disproportionately large. At the user's request ("the bonus for whoever
+spends most on research needs to be reduced"), both values were set
+to EXACTLY THE MIDPOINT between the pre-change state and the original
+vanilla DIP level:
+- research_budget_mod_max ("highest possible research multiplier from
+  budget difference to richest player"): 2.125 -> 1.625 (vanilla DIP:
+  1.125)
+- tech_budget_boost ("boost of research from maximum tech budget
+  relative to average budget, percent, if above average"): 300 -> 205
+  (vanilla DIP: 110)
+
+UNCHANGED (deliberately left alone, since they concern the penalty for
+under-funding research rather than the leader's bonus):
+research_budget_mod_min (0.99), tech_budget_max (100), tech_budget_reduce
+(60), tech_budget_curver (5.8).
+
+--------------------------------------------------------------------------
+7. ECONOMY AND AI FLEET BUILDING (params.csv)
+--------------------------------------------------------------------------
+PROBLEM: After earlier AI parameter changes, some nations (e.g. the USA)
+had nearly stopped building ships; later it was reported that NO nation
+at all was building ships (zero fleets).
+DIAGNOSIS: fleet_generation_money_min/max (per the file's own comment,
+the higher these are, the FEWER ships get generated) were set to
+0.35/0.2 — HIGHER than the original vanilla DIP (0.22/0.1), which
+strongly suppressed fleet generation. An earlier attempt to fix this
+(recorded earlier in this session) was incorrectly logged as done, but
+NEVER actually reached the device — the live file kept the old, too-high
+0.35/0.2 values the whole time, so the problem kept coming back.
+FIX (this time actually verified on the live file): fleet_generation_
+money_min 0.35 -> 0.22, max 0.2 -> 0.1 — exactly the original vanilla
+DIP values (restoring lower thresholds = more ships built by the AI).
+Previous state backed up as params_backup_przed_naprawa_floty.csv.
+
+--------------------------------------------------------------------------
+8. REBELLIONS AND INTERNAL UNREST (params.csv, governmentMod.csv,
+   provinces.csv)
+--------------------------------------------------------------------------
+At the user's request, rebellions were made more frequent and stronger,
+and then GEOGRAPHICALLY DIFFERENTIATED:
+
+a) params.csv (global rebellion strengthening):
+   - goverment_changed_naval_funds_penalty: 0.75 -> 0.9
+   - goverment_changed_penalty_decrease_per_turn: 0.05 -> 0.015
+     (the penalty for changing government lasts longer)
+   - revol_wealth_growth_add: -0.01 -> -0.025
+   - revol_gdp_multiplier: -0.01 -> -0.025
+     (revolutions/rebellions hit economic growth harder)
+   - vp_to_respect: 0.00075 -> 0.0003 (harder to rebuild respect via
+     victory points)
+   - war_weariness_respect: 0 -> -3.5 (war weariness strongly reduces
+     respect/stability)
+
+b) governmentMod.csv: UnrestMod raised x1.5 for all 7 government types
+   (e.g. absolute monarchy 2.75 -> 4.125).
+
+c2) initial_cash_without_fleet_multiplier (params.csv): 0.24 -> 1.
+   PROBLEM: even after fixing fleet_generation_money_min/max, some
+   nations still built no ships at all at the start of the game.
+   DIAGNOSIS: nations that start the game with NO fleet get an
+   additional starting-cash multiplier of only 0.24, while nations
+   that start with an existing fleet get 4 (initial_player_cash_
+   multiplier) — roughly a 16.7x gap. This almost certainly put such
+   nations' starting cash below the fleet_generation_money_min
+   threshold from turn one, creating a loop: no fleet -> too little
+   cash -> threshold never cleared -> still no fleet. This parameter
+   was unchanged from vanilla DIP — likely an original flaw/design
+   choice in the mod itself.
+   FIX: raised to 1 (still clearly below the 4x multiplier for
+   nations with an existing fleet, but above the threshold that was
+   blocking the start).
+   NOTE: the exact engine formula combining this multiplier with
+   actual starting cash is not known from the CSV data alone —
+   in-game testing is recommended; the value may need further tuning.
+
+c3) cash_start_part (params.csv): 0.004 -> 0.02.
+   WHAT: Raised the overall starting cash budget for ALL nations at
+   once (not just fleet-less ones) — this parameter sets what fraction
+   of a nation's yearly budget is paid out as starting cash. Increased
+   5x.
+   WHY: complements fix (c2) — more starting cash across the board
+   reduces the risk of getting stuck below the fleet_generation_
+   money_min threshold early in the game, regardless of whether a
+   nation starts with an existing fleet or not.
+
+ALSO FOUND ALONG THE WAY, PREVIOUSLY UNDOCUMENTED DEVIATIONS FROM
+VANILLA (from the user's own earlier experimentation predating this
+session, now documented for completeness):
+- cash_start_randomness: 0.05 (vanilla) -> 0.5 (current) — starting
+  cash randomness spread raised 10x.
+- shipyard_start: 12,500 (vanilla) -> 35,000 (current) — starting
+  shipyard size raised roughly 2.8x.
+
+c) provinces.csv (NEW — geographic differentiation): the revoltChance
+   column was reduced by 65% only for provinces with isHome=1 (a
+   nation's "home" provinces). Colonies and occupied territories
+   (isHome=0) are left unchanged.
+   WHY: In the (already previously modified) original data, home
+   provinces had, on AVERAGE, a HIGHER revolt chance (6.99) than
+   colonies (5.75) — which runs counter to historical logic (colonial
+   and occupied-territory rebellions/uprisings, e.g. in India, Ireland,
+   African colonies, were historically more frequent and severe than
+   unrest in an ethnically homogeneous home territory). After the
+   change: home provinces average 2.45, colonies/occupied territories
+   remain at 5.75 — i.e. colonies/occupations are now clearly more
+   unstable than one's own homeland, matching history.
+
+--------------------------------------------------------------------------
+9. NATION-SPECIFIC TECHNOLOGY SPECIALIZATIONS (aiPersonalities.csv)
+--------------------------------------------------------------------------
+The file already contained a partial system of per-category research
+speed bonuses per nation (TechMod). This was expanded and strengthened:
+
+- JAPAN: torpedoes (size/tubes/propulsion) +30% -> +60%; added
+  battleships (hull_strength) +30% and light cruisers (hull_cruiser)
+  +30%. Rationale: the Japanese navy was famous for advanced torpedoes
+  (Long Lance), rapid battleship modernization (Nagato, Kongo), and
+  innovative light cruisers (Kuma, Nagara classes).
+
+- RUSSIA (NEW): destroyers (hull_destroyer) +40%, armor quality/forging
+  (armor_quality/forging) +30%, main guns (gun_main) +30%. Rationale:
+  the Russian/Soviet tradition of large destroyer flotilla leaders, and
+  the Sovetsky Soyuz-class project with very thick armor and 406mm
+  guns — an emphasis on heavy artillery and tough armor.
+
+- ITALY (NEW): main engines (engine_engine) +40%, boilers
+  (engine_boiler) +30%, special engines (engine_special) +30%, light
+  cruisers (hull_cruiser) +30%. Rationale: the Italian Regia Marina was
+  famous for extremely fast ships — the Capitani Romani-class cruisers
+  exceeded 40 knots, trading armor for maximum speed.
+
+- SPAIN (NEW, more speculative): cruisers (hull_cruiser) +20%, gun
+  mechanisms (gun_mech) +20%. Rationale: a more modest, defensively
+  oriented fleet, built partly with British technical assistance (e.g.
+  the España-class battleships).
+
+- CHINA (NEW, more speculative): torpedo tubes (torpedo_tubes) +30%,
+  destroyers (hull_destroyer) +20%. Rationale: a poor, technologically
+  dependent navy favoring an asymmetric strategy of cheap torpedo forces
+  as an "equalizer" against stronger opponents.
+
+--------------------------------------------------------------------------
+10. CONSIDERED BUT NOT IMPLEMENTED
+--------------------------------------------------------------------------
+- Maximum belt armor thickness for bb 1940/1950 (genarmordata.csv):
+  identified as potentially unrealistic (18" of armor), but AT THE
+  USER'S EXPLICIT REQUEST no hard cap was introduced — "armor thickness
+  doesn't need to be hard-limited."
+- Engine/machinery formulas (shipTypes.csv): the realism of engine
+  room size/weight was checked, but changes were NOT made due to
+  uncertainty about exactly how the game engine combines these values —
+  risk of introducing an error without being able to fully verify it.
+- Per-nation ballistics (penetration/velocity/shell weight): IMPOSSIBLE
+  to achieve through CSV data editing alone. The game engine reads
+  these values purely by caliber, with no "nation" field anywhere in
+  guns.csv/penetration.csv/parts.csv. The same applies to technologies
+  (no field restricting availability to a single nation). This would
+  require changes to the mod's compiled code (TweaksAndFixes.dll), not
+  just its data files.
+
+--------------------------------------------------------------------------
+11. "MODERN BATTLESHIP" HULLS — MINIMUM TONNAGE (parts.csv)
+--------------------------------------------------------------------------
+WHAT: Lowered the tonnageMin field to 35000 tons for all 29 hull-type
+rows whose nameUi contains "Modern Battleship" (variants I/II/III plus
+the mission-specific "(Japan)"/"(USA)"/"(Germany)"/"(Italy)"/"(France)"/
+"(Russia)"/"(British)" variants), across every nation: USA (bb_5_iowa,
+bb_5_iowa_small, bb_usa_north_carolina_large), Japan (bb_5, bb_5_old),
+Germany (bb_5_bismarck, bb_5_bismarck_small), France (bb_5_richelieu,
+bb_5_france), Britain (bb_5_kgeorge, bb_6_kgeorge), Russia (bb_5_russia,
+bb_6_russia, bb_6_soyuz), Italy (bb_5_italy, bb_6_italy, bb_6_littorio),
+Austria (bb_6_austria), Spain (bb_6_spain), China (bb_6_china), plus the
+matching mission variants. tonnageMax was left unchanged for every row —
+only the lower bound was moved.
+
+WHY: Researching hull_strength_13/14/15 unlocked these hulls in the tech
+tree, but they could never actually be built — their tonnageMin
+(originally 42500-66000 tons depending on variant) exceeded the current
+battleship tonnage cap set by tonnage(bb;X) in technologies.csv (35000
+tons after hull_strength_12, 45000 tons after hull_strength_15, no cap
+at all until hull_strength_end in 1940). The result: the player could
+only pick older "Modernized Dreadnought" hulls despite having fully
+researched "Modern Battleship" technology — two independent gates (tech
+and tonnage) were out of sync in time.
+
+HISTORICAL NOTE: lowering to 35000 tons is actually CLOSER to reality
+than the mod's original values. Real late-1930s fast battleships
+displaced: South Dakota ~37,000 t standard, King George V ~36,000 t,
+Bismarck ~41,700 t, Littorio ~40,700 t — none came close to the
+56,000-66,000 tons the mod originally required as a minimum.
+
+BALANCE RISK (knowingly accepted at the user's request): "Modern
+Battleship" hulls carry HIGHER fixed hull_form/stability/floatability
+values than older hulls of the same tonnage class (e.g. bb_5_iowa: hull_
+form 95 at any tonnage in its range), so at the same 35000-ton mark they
+now outperform "Modernized Dreadnought" hulls statistically — some
+power creep relative to the intended progression (bigger performance
+should require a bigger hull), accepted deliberately so that researching
+the technology has a real in-game effect instead of being a dead entry
+in the tech tree.
+
+Original backed up as: parts_backup_przed_tonnageMin_modern_bb.csv
+
+--------------------------------------------------------------------------
+12. THE SAME PROBLEM IN OTHER HULL CLASSES (parts.csv)
+--------------------------------------------------------------------------
+WHAT: Following the user's question "do other classes have a similar
+problem?", every ship class (BB, BC, CA, CL, DD, TB) was systematically
+checked for the same bug pattern: a hull unlocked by a technology but
+with a tonnageMin exceeding that class's tonnage cap at the moment of
+unlock. Result:
+
+- BC (battlecruiser): NO problem — tonnage(bc;-1) (no cap) is set by the
+  very same technology that introduces the BC class itself
+  (hull_cruiser_45, 1907). The class and its uncapped tonnage appear
+  simultaneously, so this conflict cannot occur there structurally.
+- CA, CL, TB: checked, no rows found with tonnageMin exceeding that
+  class's maximum cap.
+- BB: the problem was much wider than just the "Modern Battleship" tier
+  fixed earlier (see item 11). An additional 23 hulls were fixed,
+  lowering tonnageMin to the tonnage cap in effect in the exact year
+  their unlocking technology fires:
+  * unlocked by hull_strength_12/13/14 (cap then: 35000 tons):
+    bb_4 (46000→35000), bb_4_german (47000→35000), bb_4_japan
+    (49000→35000), bb_4_japan_2 (51000→35000), bb_4_generic
+    (54000→35000), bb_5_austria (64000→35000), bb_5_china
+    (61000→35000), bb_5_japan (47000→35000), bb_5_exp_france
+    (45500→35000) — the last two grouped with the "Super Battleship"
+    tier below, since hull_strength_14 (1929) still operated under the
+    35000-ton cap (45000 only arrives with hull_strength_15 in 1936);
+  * the entire "Super Battleship" tier unlocked by hull_strength_14
+    (1929, cap 35000): bb_6 (97000→35000), bb_6_iowa (88000→35000),
+    bb_6_bismarck (84000→35000), bb_6_richelieu (70000→35000),
+    bb_6_france (82500→35000), bb_7_bismarck (104000→35000);
+  * the rest of "Super Battleship" unlocked by hull_strength_15 (1936,
+    cap 45000): bb_7_kgeorge (80500→45000), bb_7_littorio
+    (76500→45000), bb_7_spain (75500→45000), bb_7_china (74500→45000),
+    bb_7_russia (85000→45000), bb_7_soyuz (96000→45000), bb_7_austria
+    (92500→45000), bb_8_china (69000→45000).
+- DD (destroyers): found a bug WORSE than BB's — PERMANENT, with no
+  possibility of ever being fixed by further tech progress.
+  hull_destroyer_27 (1935) is the LAST technology in the entire DD tree
+  — it sets the tonnage cap to 4200 tons FOR GOOD (unlike BB, where
+  hull_strength_end in 1940 removes the cap entirely, no later DD tech
+  ever lifts it) — and in that same row unlocks 5 hulls exceeding that
+  cap: dd_7_german_hybrid_dd ("Hybrid Destroyer", Germany/Austria,
+  4450→4200), dd_8_hybrid_cruiser_gen ("Hybrid Destroyer", Spain/China/
+  Scandinavia, 4750→4200), dd_8_hybrid_cruiser_italy ("Hybrid Destroyer
+  II", Italy, 5050→4200), dd_8_france_dd ("Flotilla Leader", France,
+  5250→4200), dd_8_russia_dd ("Flotilla Leader", Russia/Portugal/
+  Netherlands/Greece, 5350→4200). Without this fix, these 5 hulls would
+  have been unbuildable for the entire rest of the game, no exceptions.
+
+METHOD: for each fixed hull, tonnageMin was set to the exact tonnage cap
+in effect in the year its technology unlocks (not one flat number for
+everything) — so the hull becomes buildable the moment it's researched,
+matching the tech tree's own intended logic. tonnageMax was left
+unchanged across all 28 rows.
+
+BALANCE RISK: this compounds the effect noted in item 11 — the "Super
+Battleship" tier now shares its lower tonnage floor (35000 or 45000)
+with the "Modern Battleship" tier, despite representing much larger,
+heavier designs (up to 130,000 tons at the top end). This follows
+directly from the original tech tree's own cap curve (a step from 35000
+to 45000 only in 1936, full removal only in 1940) — fixing that would
+require redesigning the cap curve itself, which was out of scope here.
+
+Original backed up as: parts_backup_przed_naprawa_super_bb_dd.csv
+
+--------------------------------------------------------------------------
+13. PHYSICAL LIMIT ON MAXIMUM "SUPER BATTLESHIP" TONNAGE (technologies.csv, parts.csv)
+--------------------------------------------------------------------------
+WHAT: At the user's explicit request ("let it be 200,000-240,000"), an
+upper tonnage limit was set for the "Super Battleship" tier, derived
+PURELY from physical/engineering constraints (not treaties, cost, or
+tactical sense), applied in two places:
+
+1. technologies.csv, hull_strength_end (1940): changed the effect
+   "tonnage(bb;-1)" (no cap at all) to "tonnage(bb;240000)" — the
+   global BB tonnage ceiling is no longer infinite; it's now an
+   explicit, physically-justified limit.
+
+2. parts.csv: the tonnageMax field for all 14 "Super Battleship" tier
+   hulls was proportionally stretched from its previous 78,500-130,000
+   ton range to a new 200,000-240,000 ton range (preserving relative
+   order and proportions between hulls/nations): bb_8_china
+   (78500→200000), bb_7_china (82500→203000), bb_6_richelieu
+   (85000→205000), bb_7_spain (87500→207000), bb_7_kgeorge and
+   bb_7_littorio (92500→211000), bb_6_france (95000→213000), bb_7_russia
+   (99000→216000), bb_7_austria (101500→218000), bb_6_bismarck
+   (105000→221000), bb_6_iowa (109000→224000), bb_7_soyuz
+   (123000→235000), bb_6 (125000→236000), bb_7_bismarck
+   (130000→240000). tonnageMin was left unchanged (see item 12 — a
+   separate, previously-fixed gate governing early buildability).
+
+PHYSICAL RATIONALE (from research done at the user's request before
+making the change): steel hull strength is NOT a real constraint — the
+largest tanker ever built (Seawise Giant/Knock Nevis) reached 564,763
+DWT with no structural issues. The real historical limit was the
+availability of a large enough dry dock: the German H-44 design (~131,000
+tons standard / ~141,500 tons full load, 345 m long) was judged by its
+own designers and the Kriegsmarine to be unbuildable on any slipway of
+the era and purely speculative. The 200,000-240,000 ton figure the user
+chose sits between that era-specific historical ceiling (~140,000 t) and
+the scale of today's largest shipyard dry docks (700+ m, handling
+200,000+ DWT ships) — representing "better infrastructure than the
+1940s powers had, but not fully modern scale."
+
+Originals backed up as: parts_backup_przed_limitem_fizycznym_super_bb.csv,
+technologies_backup_przed_limitem_fizycznym_super_bb.csv
+
+--------------------------------------------------------------------------
+14. RADAR BONUS FOR NIGHT AND BAD WEATHER (technologies.csv)
+--------------------------------------------------------------------------
+WHAT: Added two effects that were previously entirely absent to the three
+radar technologies (`aim_rangefinder_11` [1935], `aim_rangefinder_12`
+[1940], `aim_rangefinder_13` [1945]):
+- stat(night;20 / 35 / 50) — the "night" stat (night visibility) has
+  existed in stats.csv from the start ("Night Vision: Decreases
+  visibility penalties during night"), but no technology anywhere in
+  the entire tree ever granted it — ships never got any night-combat
+  bonus at all, regardless of tech level.
+- accuracy_weather(15 / 20 / 25) — additional bad-weather accuracy
+  bonus. Previously accuracy_weather only grew until 1915
+  (aim_control_6/8/9, +10 each) and then froze completely — the radar
+  technologies (1935-1945) added nothing further here, despite radar
+  historically having the biggest impact on accuracy in poor
+  conditions.
+
+WHY: The user asked whether the radar bonuses were realistic and
+specifically pointed out they should be bigger for night and bad
+weather. Checking the stats.csv documentation: the "radar" field is
+explicitly described as "unaffected from weather and night" — meaning
+target DETECTION via radar already works regardless of conditions, but
+the actual firing ACCURACY once a target is detected in those
+conditions got no additional support from that same technology. This
+was a genuine data gap, not just a balance question: the "night"
+mechanic existed in the game engine (documented in stats.csv) but was
+never actually used by any technology.
+
+HISTORICAL RATIONALE: in the USS Washington vs Kirishima battle
+(November 1942, a night engagement), the radar-equipped ship hit 6-9 of
+75 shells (8-12%), while the opponent without radar, despite an
+experienced night-fighting crew, hit maybe 1-2 shells on another ship
+and none on Washington — the source (combinedfleet.com) sums it up as
+"radar turned in a much better hit percentage than optics, even when
+the optics were wielded by the best night fighters in the world."
+Earlier fire-control radar could also track shell splashes out to about
+20,000 yards, and an improved model (Mark 8 mod 3, roughly matching the
+later technologies here) reliably out to 35,000+ yards, while optical
+spotting deteriorated sharply beyond 18,000 yards.
+
+VALUES CHOSEN (my proposal, not backed by a specific sourced figure —
+no hard percentage statistics were found in available sources, only one
+well-documented battle case): values escalate progressively with each
+radar generation (20/35/50 for night, 15/20/25 for accuracy_weather),
+mirroring the escalation pattern already present in these same rows for
+other stats (e.g. aim: 150→165→180, stat(tspot;...): 150→200→220).
+
+Original backed up as: technologies_backup_przed_radar_noc_pogoda.csv
+
+--------------------------------------------------------------------------
+15. RESTORED TERRITORY OF SOVEREIGN MINOR NATIONS (provinces.csv) — 2026-10-10
+--------------------------------------------------------------------------
+PROBLEM: minor nations existed but did not buy ships, form alliances or
+join wars. They started working only after a province revolted and
+regained independence.
+DIAGNOSIS: this is a design choice of DIP "The Great Game", not an
+engine bug. DIP assigned almost all minor-nation provinces to the 14
+majors. Compared with provincesDump.csv from the NAR package (treated as
+a picture of the original game — NOTE: it comes from another mod's
+package, not directly from the game): minors with territory in 1890 —
+original 61, DIP 1 (Switzerland); "country" provinces — original 79,
+DIP 3. A minor with no provinces has no economy, ports or budget, so it
+is idle.
+The "British Guiana (Province)" exception in CheckMinorNationThreat is
+a separate issue: there is no duplicate row in provinces.csv and the
+current Player.log does not contain it. The method cannot be decompiled
+(the game is IL2CPP; the Cpp2IL Assembly-CSharp.dll has empty stubs only).
+CHANGE: in controller and controller_1890..1940, the original-game owner
+was restored for states that were historically sovereign in that year;
+the type column was copied from the original for those provinces.
+68 rows; no other columns changed.
+Excluded (stay with DIP majors): cores of the new majors (ottoman ->
+greece, Sweden/Norway/Denmark/Iceland -> scandinavia, Belgium/Luxembourg
+-> netherlands, Brazil -> portugal), dominions, protectorates, mandates
+and colonies (Canada, Australia, Cyprus, Transjordan, Kuwait, Malaya,
+Xinjiang, Vanuatu, Kiribati, African colonies, Laos, "neutral"), Soviet
+republics in 1920 (Belarus, Ukraine, Central Asia). Year exclusions:
+Cuba 1900 (US occupation), Iraq 1930 (mandate), Albania/Czechoslovakia/
+Poland 1940 (occupation).
+Argentina and Chile: not present in DIP players.csv — not restored.
+Also fixed a DIP bug: mongolia controller_1940 = "v" (non-existent
+nation) -> mongolia.
+Minors with territory after the change: 1890: 36, 1900: 32, 1910: 31,
+1920: 44, 1930: 42, 1940: 41.
+The sovereign/non-sovereign split is the assistant's own judgement based
+on general historical knowledge, not game data.
+CONSEQUENCE: Spain loses most of Latin America and Morocco, greece loses
+Persia/Arabia/Oman/Yemen, Austria loses the Balkans, etc. Those majors'
+economies will be noticeably weaker in new campaigns.
+Backup: provinces_backup_przed_przywroceniem_minorow.csv
+
+SAVE FILES (save_0.bin, save_4.bin): both campaigns started in 1890.
+Province ownership (controller fields in the province record, including
+its copies) was moved only where the current owner = DIP 1890 starting
+owner (i.e. the province has not changed hands in-game), skipping the
+human player's provinces and provinces in an ongoing battle. Minors that
+received land had player flag #50 set to False (as with minors that
+already hold land). save_4 (Byzantine Empire): 27 provinces (player's
+Persia/Oman/Arabia skipped). save_0 (German Reich): 6 provinces (the
+rest changed hands in-game).
+Backups: save_4_backup_przed_przywroceniem_minorow.bin,
+save_0_backup_przed_przywroceniem_minorow.bin. The meaning of field 50
+is not documented (inferred by comparing records).
+
+--------------------------------------------------------------------------
+16. STRONGER MINORS (provinces.csv, params.csv) — 2026-10-10
+--------------------------------------------------------------------------
+At the user's request minors should be stronger than in the original.
+- provinces.csv: provinceArmyPercentage and ProvinceDefenderBonus x1.5
+  for the 72 provinces owned by a minor in any start year (e.g. defence
+  2 -> 3). Note: the value belongs to the province, so it stays after a
+  major conquers it.
+- params.csv:
+  minor_ally_event_chance_base 0.05 -> 0.1
+  minor_ally_event_chance_liked 0.55 -> 0.7 (more alliances with minors)
+  minor_ally_place_order 0.3 -> 0.5 (more ship orders)
+  minor_ally_depart_chance 0.2 -> 0.1 (alliances break less often)
+The specific values are the assistant's own proposal, not documented
+values; the engine formula for these parameters is not described in the
+CSV.
+Backups: provinces_backup_przed_wzmocnieniem_minorow.csv,
+params_backup_przed_kryzys_wojenny_minory.csv
+
+--------------------------------------------------------------------------
+17. MILDER ECONOMIC CRISIS AFTER A LOST WAR (params.csv) — 2026-10-10
+--------------------------------------------------------------------------
+PROBLEM: after losing a war countries run out of money and spiral.
+CHANGE (all nations):
+  vp_to_funds_multiplier 7500 -> 3750 (half the VP-based reparations)
+  take_preparation_chance 0.9 -> 0.6 (reparation demands accepted less often)
+  blockade_income_modifier 0.5 -> 0.3 (blockade takes 30% of GDP instead of 50%)
+  goverment_changed_naval_funds_penalty 0.75 -> 0.5 (budget penalty after revolution)
+  goverment_changed_penalty_decrease_per_turn 0.05 -> 0.08 (penalty fades faster)
+  war_inflation_add 0.02 -> 0.01 (war inflation halved)
+  taf_war_min_months_for_econ_collapse_peace 24 -> 12 (TAF offers peace
+    on economic collapse after 12 months instead of 24; behaviour read
+    from TweaksAndFixes.dll, UiM.CheckForPeace: peace is offered when a
+    side's WealthGrowthEffective < 0)
+The specific values are the assistant's own proposal.
+UnrestMod x1.5 from section 8b was not changed (still active — it raises
+revolution risk, so it also feeds the spiral).
+params.csv and provinces.csv values (other than province owners) most
+likely apply to running campaigns too, as they are not stored in the
+save — not verified in-game.
+
+CORRECTION TO SECTION 8a: the params.csv values described in section 8a
+(goverment_changed_*, revol_*, vp_to_respect, war_weariness_respect)
+were NOT active in params.csv before this change — the file had vanilla
+DIP values (0.75 / 0.05 / -0.01 / -0.01 / 0.00075 / 0). Only 8b
+(governmentMod.csv) and 8c (provinces.csv) from section 8 were active.
+
+NEW OPTIONS FOUND IN TweaksAndFixes.dll (decompiled, nothing changed):
+- F9 in game: partial reload of parts/components/technologies/randParts
+  without restart (taf_hot_reload=1; rows must not be added/removed).
+- 16 naval mine parameters (taf_mines_*) missing from params.csv; they
+  run on the defaults in the code.
+- taf_scrap_mothballScoreAddYears (default 5) — AI scrapping of
+  mothballed ships.
+- Hull param ai_beamdraughtlimits(beamMin;beamMax;draughtMin;draughtMax)
+  in the parts.csv param column — separate beam/draught limits for AI
+  ship generation.
+- <name>_override.csv files — partial overrides of game data.
+--------------------------------------------------------------------------
+18. FASTER RESEARCH (+20%) AND STRONGER NATIONAL SPECIALISATIONS (params.csv, aiPersonalities.csv) — 2026-10-10
+--------------------------------------------------------------------------
+a) params.csv: research_progress_base 1 -> 1.2. Per the parameter
+   description this is base research progress in percent per month
+   ("100/x months"), so base tech time drops from 100 to about 83
+   months. Other multipliers (budget, lateness vs year) work as before;
+   the +20% holds assuming the engine multiplies them by the base value
+   — the formula is not described in the CSV.
+b) aiPersonalities.csv: every TechMod(category;X) value in the 14
+   national personalities (britain_ai ... greece_ai) multiplied by 1.5
+   (85 values, e.g. Germany armour/rangefinders 90 -> 135, Britain main
+   guns 70 -> 105, Japan torpedoes 60 -> 90). Generic random
+   personalities (ecole_ai, industrial_ai etc.) unchanged.
+   Fixed a DIP typo: austria_ai TechMod(surv_hull;0.2) -> 20 (as for
+   netherlands/scandinavia), then x1.5 = 30.
+   The x1.5 multiplier is the assistant's own proposal.
+NOTE: in the saves the player's nation has a personality other than its
+own (save_4: greece -> russia_ai, save_0: germany -> battleship_ai).
+The data does not show whether personality TechMod applies to the player.
+Backups: params_backup_przed_tempo_badan_20.csv,
+aiPersonalities_backup_przed_wzmocnieniem_specjalizacji.csv
+--------------------------------------------------------------------------
+19. BYZANTINE TECH PROFILE (aiPersonalities.csv, save_4.bin) — 2026-10-10
+--------------------------------------------------------------------------
+At the user's request (heavy armour, strong calibres, fast cruisers)
+greece_ai = sum of the previous greece_ai and russia_ai profiles
+(values after the x1.5 boost from section 18).
+TechMod (research speed-up in category, %):
+  gun_main 75 (30 + 45)
+  armor_quality 45, armor_forging 45 (from russia_ai)
+  hull_cruiser 45, engine_engine 30, engine_boiler 30,
+  hull_strength 30, gun_mech 30 (from greece_ai)
+  hull_destroyer 60 (from russia_ai)
+A version with the assistant's own values (armour 120, gun_main 120,
+cruisers 105, engines 60) was deployed first — replaced by the sum at the
+user's request.
+save_4.bin: the player nation's (greece) personality changed from
+russia_ai to greece_ai (field 46 of the player record; same byte length,
+other data unchanged). The data does not show whether personality
+TechMod applies to the player.
+Backups: aiPersonalities_backup_przed_profilem_bizancjum.csv,
+save_4_backup_przed_osobowoscia_bizancjum.bin
+--------------------------------------------------------------------------
+20. BYZANTINE PROFILE x1.5 (aiPersonalities.csv) — 2026-10-10
+--------------------------------------------------------------------------
+At the user's request the greece_ai profile from section 19 (sum of
+greece_ai and russia_ai) was multiplied by 1.5, like the other nations
+in section 18:
+  gun_main 75 -> 112.5; hull_destroyer 60 -> 90;
+  armor_quality 45 -> 67.5; armor_forging 45 -> 67.5;
+  hull_cruiser 45 -> 67.5; engine_engine 30 -> 45;
+  engine_boiler 30 -> 45; hull_strength 30 -> 45; gun_mech 30 -> 45.
+The summed components were already x1.5 from section 18, so relative to
+pre-section-18 values this is x2.25 per component.
+Backup: aiPersonalities_backup_przed_bizancjum_x1_5.csv
+--------------------------------------------------------------------------
+21. SECTION 20 REVERTED (aiPersonalities.csv) — 2026-10-10
+--------------------------------------------------------------------------
+At the user's request the x1.5 multiplier for greece_ai from section 20
+was reverted. The file was restored from
+aiPersonalities_backup_przed_bizancjum_x1_5.csv. The section 19 profile
+(sum of greece_ai and russia_ai) applies: gun_main 75, hull_destroyer 60,
+armor_quality 45, armor_forging 45, hull_cruiser 45, engine_engine 30,
+engine_boiler 30, hull_strength 30, gun_mech 30.
+--------------------------------------------------------------------------
+22. DIP_GG_Fixes.dll ADD-ON — CheckMinorNationThreat BUG (Mods\DIP_GG_Fixes.dll) — 2026-10-10
+--------------------------------------------------------------------------
+PROBLEM: CampaignController.CheckMinorNationThreat (game code) throws
+"ArgumentException: An item with the same key has already been added.
+Key: <name> (Province)" (e.g. British Guiana, Iceland). Player.log
+shows that the turn does not finish after this exception: no turn
+summary and no save, i.e. the rest of the processing (fleet
+management, events, autosave) is skipped.
+The method cannot be fixed in CSV data: the game is IL2CPP and the
+method is native code in GameAssembly.dll. Its machine code builds a
+dictionary from a SelectMany/ToList list and adds provinces with
+Dictionary.Add, so a province appearing twice in the list throws
+(inferred from the call sequence, not a full decompilation).
+CHANGE: new MelonLoader add-on DIP_GG_Fixes.dll (source: Mod.cs) with a
+Harmony Finalizer patch on CheckMinorNationThreat: the exception is
+caught and logged as a "[DIP GG Fixes]" warning, and the turn continues.
+Only the rest of the minor-threat check for that one turn is skipped.
+NOT TESTED IN-GAME: it depends on whether an exception from native code
+can be caught on the MelonLoader side. To check in the MelonLoader log:
+on the error a "[DIP GG Fixes] CheckMinorNationThreat threw..." warning
+should appear, followed by a normal turn summary in Player.log.
+Removal: delete Mods\DIP_GG_Fixes.dll.
+--------------------------------------------------------------------------
+23. DIP_GG_Fixes 1.1 — PATCH CONFIRMED AND AUTOMATIC SHARED DESIGNS — 2026-10-10
+--------------------------------------------------------------------------
+a) The section 22 patch is CONFIRMED IN-GAME: the MelonLoader log from a
+   1919-1922 campaign shows 16 caught exceptions (Iceland, Sardinia,
+   Lithuania), and Player.log shows normally completed turns (turn
+   summaries and saves after each of them).
+b) NEW: the player's designs go to shared designs automatically. Every
+   time the player leaves the constructor in a campaign, the add-on takes
+   the player's designs (excluding refit designs and designs taken from
+   the shared pool) and, for every major nation allowed to use the
+   design's hull (parts.csv countries column; empty = all), saves a copy
+   using the game's own functions (Ship.ToStore, Util.SerializeObjectByte,
+   Storage.GetSavedDesignPath, Storage.SaveSharedDesignShipByte — the
+   same ones Ui.SaveSharedDesign uses). The copy gets playerName /
+   playerOriginal set to the target nation, isSharedDesign = true and a
+   new id. File name: "<year> <nation> <ship name> [<id>]"; existing
+   files are not overwritten.
+   The game loads new shared designs on the next start. AI uses them only
+   if the campaign's shared-design usage setting allows it (chosen when
+   creating the campaign).
+   Settings: UserData\MelonPreferences.cfg, section [DIP_GG_Fixes]:
+   AutoShareDesigns (true/false), ShareToAllNations (true = every nation
+   with a matching hull, false = only the player's nation).
+   NOT TESTED IN-GAME: check for "[DIP GG Fixes] Exported N shared design
+   file(s)" in the MelonLoader log and for files in the Designs folder.
+--------------------------------------------------------------------------
+24. DIP_GG_Fixes 1.2 — CRUISERS INSTEAD OF BATTLESHIPS AND MINOR PURCHASES — 2026-10-10
+--------------------------------------------------------------------------
+a) AI that cannot afford a battleship builds cruisers.
+   From the game code: CampaignController.BuildNewShips picks ship types
+   via Player.GetShipBuildRatio(type, multiplier) = aiPersonalities.csv
+   buildRatio x multiplier. A Harmony Postfix changes this result for AI
+   majors while the AI's cash is below the cost of its cheapest
+   battleship (bb) design or its monthly income is negative: bb and bc
+   x0.15, ca and cl x1.6. Adjustable in UserData\MelonPreferences.cfg
+   [DIP_GG_Fixes]: CruisersWhenPoor, PoorBigShipRatioFactor,
+   PoorCruiserRatioFactor.
+b) Minors buy ships more readily.
+   From the game code (CampaignController.CheckForWarshipTrade): a minor
+   buying a used ship needs, in order: a roll <= minor_ally_buy_used
+   (2 in params.csv, so this check always passes already), a ship listed
+   for sale, free minor port capacity (GetMinorNationFreePortCapacity) and
+   a 50% roll hard-coded in the game. Only minors allied with the selling
+   nation buy. The patch multiplies minors' free port capacity x2
+   (MinorPortCapacityMultiplier), so they pass the capacity test more
+   often for orders and purchases. Note: the same function may also be
+   used when minor fleets are created, so minors may have more ships
+   overall. The 50% roll cannot be changed without touching the game's
+   native code.
+The multiplier values are the assistant's own proposal.
+NOT TESTED IN-GAME.
+--------------------------------------------------------------------------
+25. DIP_GG_Fixes 1.3 — BALANCE-OF-POWER EVENTS AND "Prussia" ERROR PATCH — 2026-10-10
+--------------------------------------------------------------------------
+a) Balance-of-power events. Once per turn the add-on compares the
+   player's fleet tonnage with the strongest AI major's. If the player
+   has at least 1.5x as much (BalanceTonnageRatio), each AI nation has a
+   20% chance per turn (BalanceEventChance) of "emergency naval
+   appropriations": extra cash worth 3 months of its naval budget
+   (BalanceGrantMonths), capped at 25% of its yearly state budget. The
+   event appears in the in-game news and the MelonLoader log. Regular
+   events.csv events have no player-strength condition (only peace/war),
+   so this cannot be done in CSV.
+b) The same error type as in section 22 ("Key: Prussia (Province)")
+   occurs in ProvinceBattleManager.TryGenerateSmallerNationsBattle
+   (ToDictionary with a duplicate province) and also aborts the turn.
+   The same Finalizer guard was added for TryGenerateSmallerNationsBattle
+   and, as a precaution, GenerateBattlesForMediumNations.
+Settings: UserData\MelonPreferences.cfg [DIP_GG_Fixes]:
+BalanceOfPowerEvents, BalanceTonnageRatio, BalanceEventChance,
+BalanceGrantMonths. The values are the assistant's own proposal.
+NOT TESTED IN-GAME.
+--------------------------------------------------------------------------
+26. DIP_GG_Fixes 1.4 — STRONGER DIPLOMATIC RELATION CHANGES — 2026-10-10
+--------------------------------------------------------------------------
+Every attitude change between nations goes through
+CampaignController.AdjustAttitude(relation, attitudeDelta, ...). A
+Harmony Prefix multiplies attitudeDelta by 1.5
+(DiplomacyAttitudeMultiplier in UserData\MelonPreferences.cfg
+[DIP_GG_Fixes]; 1 = vanilla). Calls with init = true (initial setup)
+and force = true (forced, e.g. TweaksAndFixes resetting alliances when a
+war starts) are left unchanged. The multiplier also applies to relation
+changes from events, so event_attitude_mult in params.csv stays at 1 to
+avoid double scaling. The x1.5 value is the assistant's own proposal.
+NOT TESTED IN-GAME.
+
+CONFIRMED IN-GAME (version 1.3, MelonLoader log from the Byzantine
+campaign): the CheckMinorNationThreat guard caught 10 exceptions
+(Prussia, Eastern Germany) without aborting turns; balance-of-power
+events fired (Britain, Russia, Austria-Hungary, Netherlands, Spain,
+United States received funding); the shared-design export wrote 10
+files.
+--------------------------------------------------------------------------
+27. DIP_GG_Fixes 1.5 — FRANCE ANALYSIS AND STALLED-CONSTRUCTION WATCH — 2026-10-10
+--------------------------------------------------------------------------
+save_4 analysis: France has about 16 billion cash, a 547,285 t
+shipyard and a crew pool of 109,904, but no active fleet. Causes:
+- huge war losses (incl. 9 BB, 18 CA, 35 CL, 30 TB),
+- 23 old ships in Erased status,
+- 1 ship at sea (Foch),
+- 5 ships under construction (Levrette bc, Davout cl, Du Chayla cl,
+  Magenta bb, Rochambeau ca) stuck at 0.0% since 1922-1924 although
+  construction is NOT paused. These stuck orders most likely also
+  occupy shipyard capacity and block new orders.
+The game should advance progress every turn in
+CampaignController.AdvanceShips; the cause of the stall cannot be
+determined from static analysis alone.
+
+New patch (FixStalledConstruction setting in
+UserData\MelonPreferences.cfg [DIP_GG_Fixes], default true):
+- a Postfix on AdvanceShips records which nations had construction
+  advanced by the game this turn,
+- once per turn every active AI major with unpaused ships under
+  construction is checked; if the game skipped that nation, the
+  add-on calls AdvanceShips itself and logs
+  "[DIP GG Fixes] Construction for ... was not advanced last turn",
+- if the game advanced it but average progress did not change, it
+  logs "... advanced last turn but progress did not change"
+  (diagnostics for a further fix).
+The first turn after loading is skipped. NOT TESTED IN-GAME.
+--------------------------------------------------------------------------
+28. DIP_GG_Fixes 1.6 — RELATION WORSENING x4 — 2026-10-10
+--------------------------------------------------------------------------
+Every worsening of relations between nations (a negative change in
+CampaignController.AdjustAttitude) is now 4 times stronger than
+vanilla: this covers both player actions (event answers, player
+actions) and the AI (tension, conquests, wars, "enemy of my ally",
+etc.). Improvements stay at x1.5 (version 1.4).
+New setting in UserData\MelonPreferences.cfg [DIP_GG_Fixes]:
+DiplomacyNegativeAttitudeMultiplier = 4 (1 = vanilla);
+DiplomacyAttitudeMultiplier now applies to positive changes only.
+
+Side fix: game code analysis showed AdjustAttitude calls itself to
+spread a change to allies and enemies (values derived from the
+already-scaled change). In 1.4 those derived changes were scaled a
+second time (1.5 x 1.5). Since 1.6 only the outermost call is
+scaled. The x4 value for worsening came from the user; reading it as
+"x4 relative to vanilla, instead of x1.5" is the assistant's
+assumption. NOT TESTED IN-GAME.
+--------------------------------------------------------------------------
+29. RODOS SHIP FIX (save_4) AND MORE AGGRESSIVE AI TORPEDOES — 2026-10-11
+--------------------------------------------------------------------------
+A) Ship RODOS (Greece, save_4). The fleet had two battleships named
+Rodos: one with the old design "Rodos (1925) - 9" (engine
+main_engine_5, 330 mm belt, 18.4 kn), the other with the design
+"Rodos (1933) - 10" like the rest of the class (Salamis, Kriti, Samos,
+Sfendoni). The old-design ship did not match the class design and could
+not be attached to it. Fixed with a byte-level patch in save_4: the
+design, propulsion, armor, armament and parts fields were copied from
+the reference ship (with new part identifiers). All other save sections
+and ships are unchanged. Backup: save_4_backup_przed_naprawa_rodos.bin.
+NOT TESTED IN-GAME.
+
+B) AI and player torpedoes in automatic fire (params.csv):
+ammo_normal_torp_acc_threshold 0.15 -> 0.1 (lower = fires torpedoes more
+aggressively), ammo_torp_always_shoot_range 3000 -> 4500 m.
+NOTE: these parameters apply to every ship under automatic fire,
+including the player's, not only the AI. The values are the assistant's
+own proposal. Backup: params_backup_przed_torpedy_bitwa.csv.
+NOT TESTED IN-GAME.
+
+C) Battle AI code analysis (no game changes): division retreat
+(division_retreat_threshold), general retreat (general_retreat_threshold),
+distance (ai_distance_mod, ai_aggressiveness_exp_factor) and target
+selection (Ship.FindBestEnemy) are driven by game code; the direction of
+division_retreat_threshold and the distance parameters is not clear from
+static analysis alone, so they were left unchanged.
+--------------------------------------------------------------------------
+30. DIP_GG_Fixes 1.7 — BATTLE AI: LIGHT-SHIP TORPEDO CHARGE AND FOCUS FIRE — 2026-10-11
+--------------------------------------------------------------------------
+New Harmony patches on the game's battle code (AI ships only, never
+the player's). Each has a switch in UserData\MelonPreferences.cfg
+[DIP_GG_Fixes].
+
+A) Torpedo charge (LightShipTorpedoCharge = true). Postfix on
+Ship.AILogic for an AI division leader of type tb, dd or cl with
+torpedoes:
+- when a visible enemy bb, bc or ca is closer than
+  TorpedoChargeStartRange (12000 m), the division charges the nearest
+  such target (Division.MoveTo on its position),
+- the charge continues until the distance drops below torpedo range x
+  TorpedoChargeRangeMargin (0.7); then movement is left to the game
+  and its own logic fires the torpedoes (see section 29B),
+- the charge is aborted and the division is ordered to retreat
+  (Division.Retreat) when it runs out of torpedoes or the division's
+  average damage estimate (Ship.DamageEstimation: structure x
+  flooding) exceeds LightShipChargeAbortDamage (0.6),
+- the decision is re-evaluated every BattleAiThinkSeconds (4 battle
+  seconds),
+- divisions already retreating are left alone.
+This implements the rule: light ships either reach the effective
+range of their strongest weapon (torpedoes) or run.
+
+B) Focus fire (FocusFire = true). Postfix on Ship.FindBestEnemy: if a
+visible enemy ship within the gun group's range is damaged above
+FocusFireMinDamage (0.15) and more than the target the game picked,
+the guns switch to the more damaged target.
+
+C) BattleAiLog = true writes charge/retreat decisions to the
+MelonLoader log: "[DIP GG Fixes][Battle] ...".
+
+Limitations: 1) the game has its own AI movement logic in the same
+method; static analysis cannot tell whether it overrides the add-on's
+MoveTo between decisions (every 4 s) — needs testing; 2) the retreat
+(division_retreat_threshold) and distance (ai_distance_mod) parameters
+in params.csv were left unchanged. All threshold values are the
+assistant's own proposal. Patch errors are caught and logged (up to 5
+times) and do not abort the battle. NOT TESTED IN-GAME.
+--------------------------------------------------------------------------
+31. DIP_GG_Fixes 1.7.1–1.9 — FIGHT INSTEAD OF FLEEING, DETACHING SLOW SHIPS, NATIONAL DOCTRINES — 2026-10-11
+--------------------------------------------------------------------------
+1.7.1: focus-fire patch fix (the game names the FindBestEnemy parameters
+gunGroup, guns, aim; in 1.7 Harmony rejected the patch at startup).
+Confirmed in the log: 1.7.1 loads without errors and the AILogic patch
+sees AI light ships (CL Forfait, torpedoes=True).
+1.7.2: logs the reason of every charge decision (retreat, no target,
+distance).
+
+1.8 — fight when escape is impossible (FightWhenCannotEscape = true),
+applies to EVERY AI division: every BattleAiThinkSeconds the speed of
+the slowest ship of a retreating division (current, with damage:
+Ship.SpeedMax) is compared with the fastest visible enemy within
+PursuitRange (15000 m). If the division is not faster (factor
+EscapeSpeedMargin), the retreat is cancelled (Division.Retreat(false))
+and the ships fight; light ships with torpedoes charge the nearest
+bb/bc/ca immediately regardless of TorpedoChargeStartRange and keep
+fighting with guns once out of torpedoes. A division faster than its
+pursuers keeps running. Reason: in escape_taskforce battles the game
+sets a retreat, so in 1.7 the charge never started.
+
+1.8.1 — detaching slow ships (DetachSlowShips = true), AI divisions: a
+ship slower than SlowShipSpeedRatio (0.8) x the fastest ship of the
+division and at least 2 kn slower is detached (Ship.DetachShips, the
+same as manual detaching in game) into a new division ordered to
+retreat; the healthy ships keep fighting. When the leader is the slow
+one, the healthy ships are detached instead and the old division
+retreats. Minimum gap between splits: DetachCooldownSeconds (30 s).
+Player divisions are left alone (assistant's assumption).
+
+1.9 — national doctrines: new file Mods\battleDoctrines.csv (columns:
+nation, distanceMult, chargeStartRange, abortDamage, escapeMargin). The
+add-on reads it at startup; for AI nations it replaces the global
+TorpedoChargeStartRange / LightShipChargeAbortDamage / EscapeSpeedMargin,
+and distanceMult multiplies the ai_distance_mod parameter (preferred
+engagement distance) while the game computes the range of that nation's
+AI ship (Prefix on Ship.AILogic sets the context, Postfix on
+MonoBehaviourExt.Param scales the result). Values follow the "National
+tactical doctrines" table (Britain: long range, cautious; Japan: charges
+from 16000 m, accepts losses; Italy: fights only with an advantage;
+etc.). Missing file = global settings. The direction of ai_distance_mod
+(bigger = farther) is taken from the parameter description, not
+verified in code. Historical sources are in the project document
+doktryny_taktyczne_nacji.md. Values are the assistant's own proposal.
+
+Confirmed in-game (1.7.1): error-free loading, detection of AI light
+divisions, balance-of-power events (France +4.29 bn at the 25% yearly
+budget cap), construction watch reported no stalls. CONFIRMED IN-GAME (1.8.1 and 1.9.1, two battles, MelonLoader log):
+- detaching slow ships: BB Hannibal (7.2) detached from Ajax (9.2),
+  CA Royal Arthur, 2 CL from Penelope, DD Sénégalais, CL Émile Bertin;
+- fight instead of fleeing: 5 British and 3 French divisions cancelled
+  their retreat because Adrias (16.1) was faster;
+- doctrines: 15 loaded, French divisions tagged doctrine=france, the
+  charge started at 11914 m (French threshold 12000) and was aborted at
+  damage 0.63 (threshold 0.6);
+- torpedo charge: CL Émile Bertin (torpedo range 13160 m) and DD
+  Sénégalais/Le Fortuné (7395 m) charged BB Velos; torpedo range taken
+  from weaponRangesCache (in 1.7–1.9.0 the lookup returned 0 and no charge
+  started, fixed in 1.9.1). Speeds in the log are game units (look like
+  m/s); comparisons are consistent.
+1.9.2: shorter, non-repeating reason messages in the log.
+The direction of distanceMult is still unverified.
+--------------------------------------------------------------------------
+32. DIP_GG_Fixes 1.10.0 — ECONOMIC-COLLAPSE GRACE PERIOD, SHIP-LOADING GUARD; PENETRATION VS OKUN TABLES — 2026-10-12
+--------------------------------------------------------------------------
+A) lose_provinces_threshold DOES NOT EXIST IN THE GAME CODE. Checked in
+GameAssembly.dll: the game's string literals contain no such key, so the
+value in params.csv (DIP: 0.8; vanilla 0.3; EPFM 0.1) has no effect at
+all. The row stays in the file unchanged (harmless).
+What actually dissolves a nation (CampaignController.CheckForCampaignEnd,
+Player.CanDissolve, Player.StateBudget):
+- "dissolved due to economic collapse": when Player.StateBudget() <= 0,
+  i.e. nation year income x (1 + wealth) x (1 - 0.05 x government-change
+  penalty) x (blockaded: 1 - blockade_income_modifier) x transport factor
+  x (revolution: 1 + revol_gdp_multiplier) reaches zero; in practice when
+  wealth (accumulated GDP) falls to -100% or income to zero. Dissolution
+  happens on the FIRST turn the condition holds, provided
+  Player.CanDissolve() returns true;
+- "dissolved due to losing all ports": no province with a port left;
+- Player.CanDissolve(): always true for a nation never restored; for a
+  restored one: true after turns_last_diissolve_nation turns, before that
+  only if StateBudget <= 0;
+- medium nations: separate CheckForMediumNationsDissolving — dissolved
+  after losing all home provinces.
+CORRECTION (DIP_GG_Fixes 1.10.0): new option EconomicCollapseGraceMonths
+(default 24). A Player.CanDissolve prefix returns false while an AI
+nation still owns ports and has been at zero state budget for fewer than
+that many consecutive months; a gap in the series resets the counter.
+Losing all ports dissolves at once as in vanilla. The player is not
+affected. 0 = vanilla behaviour. The value 24 is the assistant's own
+proposal. Log: "[DIP GG Fixes] <nation>: state budget at zero,
+dissolution deferred ..." and "... grace period over ...".
+NOT YET TESTED IN GAME.
+
+B) Ship-loading guard (port of the EPFM/TAF 3.21 fix, own implementation,
+no code copied — EPFM is non-commercial licensed). TweaksAndFixes 3.16.7
+in Patch_VesselEntityFromStore.Prefix_FromBaseStore -> TAFShipData.LoadTCs
+enumerates store.turretCalibers without a null check (confirmed in the
+IL of our TAF build). A predefined-design store saved without that field
+makes the TAF prefix throw and takes the battle-loading coroutine down
+with it (custom battle hangs on "building ships"). The DIP_GG_Fixes
+patch (VesselEntity.FromBaseStore prefix with Priority.First, i.e. before
+TAF) substitutes an empty list for null; for TAF and for the game an
+empty list means "no turret-caliber overrides". The second EPFM fix
+(pd == null in UpdateLoadingCustomBattleM) does not apply to TAF 3.16.7,
+which does not replace that coroutine. Log: "[DIP GG Fixes] ship store
+'<name>' had no turretCalibers list" (up to 5 entries). NOT YET TESTED
+IN GAME (no crash reproduction available).
+
+C) Our penetration curves (penetration.csv row = grade 5 of the calibre,
+without the ±7.5% barrel-length factor) against Okun/NavWeaps tables.
+Vertical armour, deviation ours/real:
+- 16" vs 16"/50 Mk7 (Mk8 2700 lb shell, FACEHARD): 0 km -12%, 9 km -15%,
+  18 km -16%, 27 km -20%, 37 km -26%; vs NavWeaps -14…-20%;
+- 15" vs 38 cm SK C/34 (Bismarck): 0 km -8%, 10 km -6%, 20 km -7%,
+  25 km -8% (our 15" row is based on the 15"/42 Mk I; the 38 cm/52 is a
+  15" with maximum barrel length in game, +7.5% — within a few percent);
+- 18" vs 46 cm Type 94 (Yamato): 0 km -14%, 20 km -16%, 30 km -14%;
+  deck: 20 km -3%, 30 km -29%.
+Cause: the isotonic smoothing from section 1 flattened the big calibres
+into steps (12–15" share 682.5 mm at 0 km; 16–18" share 747.7 mm;
+19–20" 753.6), so 16–18" end up 12–20% below reality and 13–15" and
+17–18" barely gain over 12" and 16". Vanilla used the Okun tables
+directly for 16" and 18" (853/648/485/376 and 864/494/360), DIP inflated
+them (921, 1037 mm), we undershot. Our 16" deck values are 16–20% too
+high at 9–18 km, right at 27 km, too low beyond 30 km (irrelevant: the
+grade-5 16" range is 28.8 km).
+APPLIED (user decision, 2026-10-12): rows 16–21" anchored directly
+on the Okun tables — 16" = FACEHARD 16"/50 Mk7, 18" = 46 cm Type 94,
+17" = geometric mean, 19–21" = 18" x (D/18.1)^1.07 (De Marre calibre
+term). New values at 0/10/20/30 km: 16": 853/631/462/354 (was 748/537/
+386/277); 18": 864/639/494/360 (was 748/557/415/310); 20": 961/711/550/
+401 (was 754/579/444/341). New penetration.csv in Mods; the previous
+one kept as penetration_backup_przed_okun.csv. Rows 1–15" and the deck
+columns unchanged. In-game effect: 16"+ guns about 15% more effective
+against belt armour. NOT YET TESTED IN GAME.
+--------------------------------------------------------------------------
+33. IRON ADMIRAL 1.1 — MERGE WITH DIP THE GREAT GAME 1.3.5, TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1 — 2026-10-14
+--------------------------------------------------------------------------
+REASON: a Nexus review — our base was an old DIP (1.0.1 according to the
+reviewer), current is 1.3.5 (tag GG1.3.5 of 13 Jul 2026 on GitHub
+brothermunro/Dreadnought-Improvement-Project; Nexus has 1.3.5.HF1 of
+21 Jul 2026 — hotfix content unknown, not on GitHub).
+METHOD: three-way comparison of every file and every CSV cell (key =
+first column, columns by name): DIP base → our changes, DIP base →
+DIP 1.3.5. Script and full report in source\merge_dip_1.3.5\.
+Rule: DIP 1.3.5 is the starting point, every change of ours from
+sections 1–32 is re-applied on top; conflicts decided as described below.
+
+A) TAKEN FROM DIP 1.3.5 UNCHANGED (our files never touched them):
+TweaksAndFixes.dll 3.16.7 → 3.21.1 (merged game scenes — no more
+transition freezes; its own turretCalibers null check makes our guard
+from section 32B redundant but harmless; its CheckForCampaignEnd patch
+only concerns the PLAYER's campaign end: total victory, reputation,
+bankruptcy with bailout, retirement — no clash with our AI dissolution
+grace period). Files: English.lng, German.lng (new), accuracies,
+accuraciesEx (new), events, genarmordata, missions, mounts (new, 42,288
+rows), partModels, players (nation colours, starting shipyards of
+Portugal/Greece/Netherlands/China → 8500, Japanese parties, US growth),
+ports, relationMatrix, shipNames, shipTypes, sprites (new), techGroups,
+techTypes, folders Flags, Sprites, DecorativeShips, TAFData (new:
+genArmorDefaults.csv, locText, baseGamePartModelData.csv).
+NOT taken: predefinedDesignsData.csv (points to predefinedDesigns.bin,
+absent from the GitHub "patch only" release; without the file TAF uses
+generated designs as before), Default_Files (TAF documentation),
+DIP LICENSE/README (the licence is in the licenses folder).
+NOTE: TweaksAndFixes 3.21.1 references MelonLoader 0.7.2.0 and
+Il2CppInterop 1.5.1, yet DIP (GitHub and Nexus) still instructs
+MelonLoader 0.6.6 and that is what DIP 1.3.5 users run — we stay on
+0.6.6; to be confirmed in game.
+
+B) KEPT ENTIRELY OURS (DIP 1.3.5 did not change them, or only
+marginally): penetration.csv (1.3.5 only touched 1–2"; our rebuild from
+section 1 and the Okun 16–21" rows from section 32), aiPersonalities,
+governmentMod, battleDoctrines.csv, DIP_GG_Fixes.dll.
+
+C) CELL-LEVEL MERGE:
+guns.csv — 862 of our cells re-applied (barrelW_1-5, shellW_1-5,
+  shellV_1-5, penetration_1-5, baseWeight); taken from 1.3.5:
+  hitChanceCurver, accuracy_1/2, firerate, range, damageMod, ammo (127
+  cells). The 58 "conflicts" are only barrel-weight rounding in 1.3.5
+  (e.g. 0.14330525 → 0.143) — our values.
+params.csv — 53 of our values re-applied, zero conflicts. Taken from
+  1.3.5 (user decision): shell dispersion (shell_max_distance_dispersion
+  1500→500, max_shell_dispersion 65→10, reduce_disp_same_gun_min/max,
+  splash_*), per-layer penetration reduction 0.6/0.3/0.125 →
+  0.45/0.33/0.25, torpedo_detonation_chance_mod 100→10,
+  torpedo_damage_ammo_detonation 400→5200, section_damage_torpedo
+  4200→5200, section_flooding_chance_torpedo 10→15, acceleration_mod
+  0.02875→0.06, deceleration_mod 0.03→0.06, approach_clamp 0.4→0.3,
+  approach_clamp_torpedoes 1→2.5, ai_aggressiveness_exp_factor 1→1.3,
+  max_gun_caliber_mod 0.9→0.93, revol_wealth_growth_add and
+  revol_gdp_multiplier -0.01→-0.001, new army_support_factor_borders.
+  36 taf_* keys moved by TAF to params_override.csv; our
+  taf_war_min_months_for_econ_collapse_peace=12 set there (1.3.5: 24).
+provinces.csv — 596 of our cells re-applied (minor-nation controllers,
+  revoltChance, provinceArmyPercentage, ProvinceDefenderBonus); from
+  1.3.5: neighbour_provinces (114) and single fixes. Conflicts: Portugal
+  revoltChance → ours 5.25 (1.3.5: 5); Mongolia controller_1940 →
+  "china" per the DIP author (the base had a broken "v", we had written
+  "mongolia").
+technologies.csv — 8 new technologies from 1.3.5 (hull_strength_12_2,
+  hull_strength_12_3, hull_cruiser_52_2 and unnamed rows), 168 new
+  unlock/obsolete lists (new hulls). difficulty: DIP 1.3.5 cut research
+  cost to 0.025× base, we had 0.1× base with our own research_*
+  parameters — USER DECISION: our calibration stays (0.1× for the 729
+  existing rows; the 3 new rows ×4 of the 1.3.5 value, i.e. the same
+  ratio). Our effect edits re-applied onto the new strings:
+  tonnage(bb;35000) in hull_strength_12, tonnage(bb;45000) in
+  hull_strength_15, tonnage(bb;240000) in hull_strength_end,
+  stat(night)/accuracy_weather in aim_rangefinder_11/12/13,
+  tonnage(dd;4200) in hull_destroyer_27, torpedo_range_mod(100) in
+  torpedo_prop_4. DIP 1.3.5 has no BB tonnage cap at all — the treaties
+  are purely our feature.
+parts.csv — 249 new hulls, 34 removed, 1877 cells changed (taken).
+  Instead of copying our 68 tonnage cells, the rule from sections 11–13
+  was applied to ALL hulls: BB unlocked before 1936 → tonnageMin ≤
+  35,000, from 1936 (hull_strength_15) → ≤ 45,000; hulls with tonnageMax
+  ≥ 78,500 (Super Battleship tier) → tonnageMax = 200,000 +
+  0.7767×(max−78,500), rounded to 1,000 (the same function that produced
+  our previous values: 130,000→240,000, 78,500→200,000); DDs unlocked by
+  hull_destroyer_27 → tonnageMin 4200. Result: 89 hulls, 21 of them new
+  in 1.3.5 (bb_7_scandinavia, bb_7_france, bb_9_china, bb_6_byzantine,
+  bb_6_portugal, hull_bb_super_3_korea, bb_4_*F, bb_4_gangut_super,
+  bb_4_aushun). The bb_7_china conflict is settled by the rule:
+  35,000 / 213,000 (1.3.5: 82,500 / 95,000).
+  List: source\merge_dip_1.3.5\parts_tonnage_changes.txt.
+
+D) DIP_GG_Fixes 1.10.1: TAF 3.21.1 compatibility — TAF re-enters
+CampaignController.AdjustAttitude from its own postfix (flag
+Patch_CampaignController._PassThroughAdjustAttitude) with values we have
+already scaled; our prefix reads that flag via reflection and does not
+scale such calls a second time. The other 12 patches are unchanged;
+TAF 3.21.1 does not patch AILogic, FindBestEnemy, CanDissolve,
+GetShipBuildRatio, AdvanceShips, GetMinorNationFreePortCapacity or
+MonoBehaviourExt.Param.
+
+E) PACKAGE: Iron_Admiral_1.1_Nexus.zip (installer as before) plus the new
+Iron_Admiral_1.1_Mods_only.zip — just the contents of the Mods folder
+for people who already have MelonLoader set up (review suggestion). A new
+campaign is required.
+ALL OF THIS IS UNTESTED IN GAME — the first launch must confirm: TAF
+3.21.1 starting under MelonLoader 0.6.6, 1.10.1 loading, no CSV errors
+in the log, new hulls in the designer.
+--------------------------------------------------------------------------
+Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package)
+==========================================================================

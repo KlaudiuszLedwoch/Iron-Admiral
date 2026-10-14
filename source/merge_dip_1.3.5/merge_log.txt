@@ -1,0 +1,11 @@
+penetration.csv: ours
+aiPersonalities.csv: ours
+governmentMod.csv: ours
+battleDoctrines.csv: ours
+DIP_GG_Fixes.dll: ours
+guns.csv: new base + 862 our cells re-applied; our changes on keys missing in new: []
+params.csv: new base + 65 our cells re-applied; our changes on keys missing in new: [('taf_war_min_months_for_econ_collapse_peace', 'value')]
+provinces.csv: new base + 596 our cells re-applied; our changes on keys missing in new: []
+params_override.csv: taf_war_min_months_for_econ_collapse_peace 24 -> 12
+technologies.csv: new base; difficulty ours for 729 rows, x4 for 3 new rows; 8 effect edits re-applied
+parts.csv: new base; tonnage rule applied to 0 hulls

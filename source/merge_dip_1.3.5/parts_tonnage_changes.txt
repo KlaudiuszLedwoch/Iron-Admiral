@@ -1,0 +1,89 @@
+hull_bb_super_3_korea                unlock 1936 min   88000->45000   max  107500->223000  NEW
+bb_7_scandinavia                     unlock 1936 min   94000->45000   max  117500->230000  NEW
+bb_7_france                          unlock 1936 min   87500->45000   max  120000->232000  NEW
+bb_7_bismarck                        unlock 1936 min  104000->45000   max  130000->240000  
+bb_7_soyuz                           unlock 1936 min   96000->45000   max  123000->235000  
+bb_6_france                          unlock 1936 min   82500->45000   max   95000->213000  
+bb_9_china                           unlock 1936 min   88000->45000   max  105000->221000  NEW
+bb_6_bismarck                        unlock 1929 min   84000->35000   max  105000->221000  
+bb_7_russia                          unlock 1929 min   85000->35000   max   99000->216000  
+bb_6_richelieu                       unlock 1929 min   70000->35000   max   85000->205000  
+bb_7_spain                           unlock 1929 min   75500->35000   max   87500->207000  
+bb_7_china                           unlock 1929 min   82500->35000   max   95000->213000  
+bb_6_iowa                            unlock 1929 min   88000->35000   max  109000->224000  
+bb_6                                 unlock 1929 min   97000->35000   max  125000->236000  
+bb_7_austria                         unlock 1929 min   92500->35000   max  101500->218000  
+bb_7_kgeorge                         unlock 1929 min   80500->35000   max   92500->211000  
+bb_7_littorio                        unlock 1929 min   76500->35000   max   92500->211000  
+bb_6_byzantine                       unlock 1936 min   70500->45000   max   85500->205000  NEW
+bb_8_china                           unlock 1929 min   69000->35000   max   78500->200000  
+bb_6_portugal                        unlock 1936 min   64500->45000   max   81500->202000  NEW
+bb_6_soyuz                           unlock 1936 min   63000->45000   max   83000->203000  
+bb_5_iowa                            unlock 1936 min   56000->45000   max   86000->206000  
+bb_6_italy                           unlock 1929 min   60500->35000   max   70500->70500   
+bb_6_spain                           unlock 1929 min   61500->35000   max   71500->71500   
+bb_6_kgeorge                         unlock 1929 min   57500->35000   max   75500->75500   
+bb_6_russia                          unlock 1929 min   65000->35000   max   79000->200000  
+bb_5                                 unlock 1929 min   66000->35000   max   96000->214000  
+bb_5_iowa_small                      unlock 1929 min   47500->35000   max   57500->57500   
+bb_5_bismarck                        unlock 1929 min   52500->35000   max   82500->203000  
+bb_5_richelieu                       unlock 1929 min   45000->35000   max   65000->65000   
+bb_5_kgeorge                         unlock 1927 min   45000->35000   max   60500->60500   
+bb_5_bismarck_small                  unlock 1927 min   42500->35000   max   54500->54500   
+bb_5_old                             unlock 1927 min   60000->35000   max   90000->209000  
+bb_usa_north_carolina_large          unlock 1927 min   44500->35000   max   52500->52500   
+bb_5_italy                           unlock 1927 min   55000->35000   max   65000->65000   
+bb_5_france                          unlock 1927 min   50000->35000   max   60000->60000   
+bb_5_russia                          unlock 1927 min   45000->35000   max   69000->69000   
+bb_6_china                           unlock 1927 min   50500->35000   max   60500->60500   
+bb_6_austria                         unlock 1927 min   51000->35000   max   81000->202000  
+bb_5_assault_austria                 unlock 1927 min   36000->35000   max   45500->45500   
+bb_5_assault                         unlock 1927 min   45000->35000   max   59500->59500   
+bb_4_britain                         unlock 1927 min   38000->35000   max   61000->61000   
+bb_5_japan                           unlock 1927 min   47000->35000   max   72000->72000   
+bb_6_china_exp                       unlock 1927 min   42500->35000   max   55000->55000   
+bb_5_exp_france                      unlock 1927 min   45500->35000   max   67500->67500   
+bb_4_spainF                          unlock 1924 min   47000->35000   max   55000->55000   NEW
+bb_4_chinaF                          unlock 1924 min   43500->35000   max   55000->55000   NEW
+bb_4_portugalF                       unlock 1924 min   40000->35000   max   54000->54000   NEW
+bb_4_dutchF                          unlock 1924 min   44000->35000   max   57000->57000   NEW
+bb_4_russiaF2                        unlock 1924 min   45000->35000   max   56000->56000   NEW
+bb_4_russiaF                         unlock 0 min   44000->35000   max   56000->56000   NEW
+bb_4_aushunF                         unlock 1924 min   42000->35000   max   54000->54000   NEW
+bb_4_japanF                          unlock 1924 min   46000->35000   max   57000->57000   NEW
+bb_4_franceF                         unlock 1924 min   44500->35000   max   55500->55500   NEW
+bb_4_italyF                          unlock 1924 min   45000->35000   max   57000->57000   NEW
+bb_4_usaF                            unlock 1924 min   41000->35000   max   58000->58000   NEW
+bb_4_germanyF                        unlock 1924 min   47000->35000   max   56000->56000   NEW
+bb_4_britainF                        unlock 1924 min   48500->35000   max   57500->57500   NEW
+bb_4_japan_wide                      unlock 1927 min   42000->35000   max   69500->69500   
+bb_4_gangut_super                    unlock 1921 min   59000->35000   max   85000->205000  NEW
+bb_4_japan_3                         unlock 1921 min   36000->35000   max   69000->69000   
+bb_2_usa_newyork_wide                unlock 1921 min   41500->35000   max   49500->49500   
+bb_4_japan_2                         unlock 1921 min   51000->35000   max   67000->67000   
+bb_4_generic                         unlock 1921 min   54000->35000   max   64000->64000   
+bb_4_usa_modernized                  unlock 1921 min   38500->35000   max   46500->46500   
+bb_5_austria                         unlock 1921 min   64000->35000   max   90500->209000  
+bb_5_china                           unlock 1921 min   61000->35000   max   87000->207000  
+bb_4_russia                          unlock 1919 min   37500->35000   max   45000->45000   
+bb_4_japan                           unlock 1919 min   49000->35000   max   65000->65000   
+bb_5_austria_alt                     unlock 1919 min   44000->35000   max   60500->60500   
+bb_3_britain                         unlock 1919 min   40000->35000   max   51000->51000   
+bb_4_france                          unlock 1916 min   44000->35000   max   60000->60000   
+bb_4_german                          unlock 1914 min   47000->35000   max   61000->61000   
+bb_4_italy                           unlock 1914 min   38000->35000   max   56000->56000   
+bb_4                                 unlock 1912 min   46000->35000   max   62000->62000   
+bb_3_german                          unlock 1912 min   44000->35000   max   57000->57000   
+bb_3                                 unlock 1910 min   36000->35000   max   44000->44000   
+bb_4_aushun                          unlock 1910 min   36000->35000   max   48000->48000   NEW
+bb_2_usa                             unlock 1910 min   42500->35000   max   49500->49500   
+bb_3_usa_var                         unlock 1907 min   41000->35000   max   47000->47000   
+dd_8_russia_dd                       unlock 1935 min    5350->4200    max    6650->6650    
+dd_8_france_dd                       unlock 1935 min    5250->4200    max    6550->6550    
+bb_5_mission_test                    unlock 1929 min   66000->35000   max   96000->214000  
+bb_5_mission                         unlock 1929 min   66000->35000   max   96000->214000  
+bb_5_iowa_mission                    unlock 1936 min   56000->45000   max   86000->206000  
+bb_5_bismarck_mission                unlock 1929 min   52500->35000   max   82500->203000  
+bb_5_richelieu_mission               unlock 1929 min   45000->35000   max   65000->65000   
+bb_6_soyuz_mission                   unlock 1936 min   63000->45000   max   83000->203000  
+bb_5_kgeorge_mission                 unlock 1927 min   45000->35000   max   60500->60500   
