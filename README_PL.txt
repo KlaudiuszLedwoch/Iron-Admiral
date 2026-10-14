@@ -12,6 +12,8 @@ kompletna: MelonLoader 0.6.6, TweaksAndFixes 3.21.1, dane DIP ze
 zmianami, kod źródłowy dodatku. Instalacja to jedno
 kliknięcie, odinstalowanie przywraca stan sprzed instalacji.
 Autor rozszerzenia: Klaudiusz Ledwoch (Steam: Klod76).
+Nexus: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66
+GitHub (kod źródłowy): https://github.com/KlaudiuszLedwoch/Iron-Admiral
 
 --------------------------------------------------------------------------
 DLACZEGO WARTO
