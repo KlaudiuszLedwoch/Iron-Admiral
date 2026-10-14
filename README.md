@@ -12,9 +12,9 @@ Download / Nexus page: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mod
 - **Ships and tech**: armour penetration rebuilt from De Marre physics and anchored on Okun/NavWeaps tables for 16–21", treaty tonnage limits (Washington 35,000 t, London 45,000 t) then a physical Super Battleship ceiling, radar that matters at night, Long Lance range, research and national specialisations retuned.
 - Two game-code bugs that aborted turn processing in DIP are caught.
 
-Full, reasoned change history: `CHANGELOG_EN.txt` / `CHANGELOG_PL.txt` (35 sections). Readme: `README_EN.txt` / `README_PL.txt`.
+Full, reasoned change history: `CHANGELOG_EN.txt` / `CHANGELOG_PL.txt` (36 sections). Readme: `README_EN.txt` / `README_PL.txt`.
 
-Latest fixes in the current 1.1 package: DIP_GG_Fixes 1.10.2 (shared designs are no longer re-exported every turn), a save migration tool for 1.0 campaigns (`source/save_tools`), and new campaigns start correctly again (predefined designs disabled, as the package ships without `predefinedDesigns.bin`).
+Latest fixes in the current 1.1 package: DIP_GG_Fixes 1.10.2 (shared designs are no longer re-exported every turn), a save migration tool for 1.0 campaigns (`source/save_tools`), the "Experimental Small Ironclad" hull no longer fails AI design generation every time (10" calibre limit, 2 barrels minimum), and new campaigns start correctly again (predefined designs disabled, as the package ships without `predefinedDesigns.bin`).
 
 ## Install
 
