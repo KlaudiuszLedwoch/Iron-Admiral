@@ -1213,5 +1213,35 @@ ALL OF THIS IS UNTESTED IN GAME — the first launch must confirm: TAF
 3.21.1 starting under MelonLoader 0.6.6, 1.10.1 loading, no CSV errors
 in the log, new hulls in the designer.
 --------------------------------------------------------------------------
-Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package)
+34. DIP_GG_Fixes 1.10.2 — SHARED-DESIGN DUPLICATE FIX; SAVE MIGRATION 1.0 → 1.1 — 2026-10-14
+--------------------------------------------------------------------------
+A) BUG: the shared-design export (section 19, DIP_GG_Fixes 1.1) wrote a
+new copy of every design each turn. Cause: Storage.GetSavedDesignPath
+appends " 2", " 3"… to a taken name, so the File.Exists test on its
+result never fired. Effect in the test campaign: 235 .bindesign files
+for 10 designs (e.g. Adrias 1930: 60 copies), all loaded at game start.
+FIX: before writing, the whole Designs folder is checked — if any file
+with the same short design id [xxxxxxxx] already exists for that nation,
+the export is skipped. The existing list is cached per folder. Disk
+clean-up: 209 duplicates moved to Designs_duplikaty_backup (outside the
+game), 26 files left = 10 designs × nations whose hull list allows them.
+B) SAVE MIGRATION of save_4 (a 1.0 campaign) to the 1.1 data — tool
+source\save_tools\save_migrate_1.0_to_1.1.py. The save was scanned for
+every identifier from 21 CSV files; only three are missing in 1.1: the
+tech types gun_main and gun_sec (DIP 1.3.5 split them into
+gun_xlarge/gun_verylarge/gun_large and gun_medium/gun_small) and the hull
+ca_1_italian_exp_japan_3mast (removed in 1.3.5; the identical
+ca_1_italian_small_japan_3mast differs only in tonnageMin 6200→5000 and
+an empty maxAllowedCaliber). Changes in the save: for 14 players the
+techMods gun_main/gun_sec were expanded to the new types with the same
+value (e.g. gun_main 0.7 → gun_xlarge/verylarge/large 0.7), research
+priority lists of 3 players rewritten likewise; one cruiser design
+(Santo Cristo de Burgos, Spain, no ships built) re-pointed to hull
+ca_1_italian_small_japan_3mast. Every other byte of the save unchanged
+(verified after unpacking). Backup: save_4_backup_przed_1.1.bin. New
+1.3.5 hulls and technologies appear through normal unlocks during play.
+Risk: still to be confirmed in game that no other references hide in
+fields the scanner did not recognise as names.
+--------------------------------------------------------------------------
+Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package, DIP_GG_Fixes 1.10.2: shared-design duplicate fix, save_4 migration to 1.1
 ==========================================================================
