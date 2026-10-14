@@ -1,0 +1,17 @@
+nation,distanceMult,chargeStartRange,abortDamage,escapeMargin,comment
+#nation = id from players.csv; distanceMult = multiplier of ai_distance_mod (preferred gun range) for this nation's AI ships; chargeStartRange = light ships (tb/dd/cl) start a torpedo charge when an enemy bb/bc/ca is closer than this (m); abortDamage = charge is aborted above this average division damage (0-1); escapeMargin = division cannot escape when its speed <= pursuer speed x this; lines starting with # are comments
+default,1.0,12000,0.6,1.0,fallback for nations not listed
+britain,1.2,8000,0.45,1.0,Grand Fleet Battle Orders: long-range line, turn away from torpedoes, DD screen
+germany,1.0,14000,0.7,1.05,Hochseeflotte: torpedo flotillas cover the battle turn-away
+usa,1.1,10000,0.5,1.0,War Instructions 1934: concentration of fire, methodical approach
+japan,1.2,16000,0.8,1.1,Kaisen Yomurei: outrange, decisive battle, torpedo attack regardless of losses
+france,0.95,12000,0.6,1.0,Jeune Ecole / contre-torpilleurs, avoids general action without superiority
+russia,1.0,9000,0.5,0.95,post-Tsushima: squadron fire, mine-artillery position defence
+italy,1.25,7000,0.4,1.0,Regia Marina: speed over armour, fights only with advantage
+austria,1.0,11000,0.55,1.0,Adriatic fleet in being, light raids
+spain,1.0,9000,0.5,1.0,defensive, British patterns
+china,0.9,8000,0.4,0.95,Beiyang: coastal defence, brittle
+portugal,1.0,10000,0.5,1.0,small defensive fleet
+netherlands,1.0,10000,0.5,1.0,East Indies defence with CL/DD
+scandinavia,1.0,10000,0.5,1.0,coastal defence
+greece,1.15,13000,0.65,1.05,Byzantium (DIP): heavy armour, big guns, fast cruisers

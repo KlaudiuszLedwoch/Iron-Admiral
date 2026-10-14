@@ -1,0 +1,137 @@
+$TAF_LoadError_HarmonyFail_Title;Version Mismatch
+$TAF_LoadError_HarmonyFail_Text;The installed version of <b>Tweaks and Fixes</b> doesn't match the installed version of Ultimate Admiral: Dreadnoughts. Patching has failed and your game will not funciton. Please either downgrade UAD to the correct version for your version of TAF, or download the correct version of TAF if available.
+$TAF_LoadError_DataFail_Title;TAF Installation Error
+$TAF_LoadError_DataFail_Text;<b>Tweaks and Fixes</b> was not installed properly and your game will not function. Please make sure you unzip the correct release of TAF to your Ultimate Admiral: Dreadnoughts folder and overwrite files if prompted. It is not enough to just copy the DLL.
+$TAF_LoadError_SteamFail_Title;Steam API Error
+$TAF_LoadError_SteamFail_Text;Failed to connect to the Steam API! Restart your computer and try again.
+$TAF_Ui_Constr_UpgradeMark;Upgrade Mark
+$TAF_Ui_Constr_UpgradeTorpMark;Upgrade\nTorpedo\nMark
+$TAF_Ui_Convert_ConvertedToJSON;Designs to JSON
+$TAF_Ui_Convert_ConvertedToJSON_Title;Converted Designs to JSON
+$TAF_Ui_Convert_ConvertedToJSON_Text;Converted {0} designs
+$TAF_Ui_Convert_ConvertedToBin;Designs to Bin
+$TAF_Ui_Convert_ConvertedToBin_Title;Converted Designs to Bin
+$TAF_Ui_Convert_ConvertedToBin_Text;Converted {0} designs
+$TAF_Ui_Convert_Exported;Designs to Predefined
+$TAF_Ui_Convert_Exported_Title;Exported Predefined Designs
+$TAF_Ui_Convert_Exported_Text;Exported {0} Shared Design ships to {1}
+$TAF_Ui_Convert_PredefToDesigns;Predefined to Designs
+$TAF_Ui_Convert_PredefToDesigns_Title;Saved Predefined Designs
+$TAF_Ui_Convert_PredefToDesigns_Text;Saved {0} predefined ships to Shared Designs
+$TAF_Ui_BatchShipGenerator_Title;Batch Ship Generator
+$TAF_Ui_BatchShipGenerator_Note;Note: Generation may take a long time and will generate many Shared Designs. Clear your designs first!
+$TAF_Ui_BatchShipGenerator_Generate;Generate
+$TAF_Ui_BatchShipGenerator_ShowYears;Show Years
+$TAF_Ui_BatchShipGenerator_HideYears;Hide Years
+$TAF_Ui_BatchShipGenerator_Nations;Nations
+$TAF_Ui_BatchShipGenerator_Types;Types
+$TAF_Ui_BatchShipGenerator_NumShips;Num Ships Per
+$TAF_Ui_War_WhitePeace;The War has been very quiet...\n{0} {1} asks you if we should ask for a white peace.
+$TAF_Ui_NavalInvasion_InsufficientTonnage;In order to launch a naval invasion, you require at least [{0}] tonnes of naval assets in the sea region of the province you want to invade.
+$TAF_Ui_NavalInvasion_SufficientTonnage;You have naval assets over [{0}] tonnes in a sea region containing enemy ports. Ensure you have enough tonnage to secure the province you invade!
+$TAF_Ui_NavalInvasion_ChangeNavalInvasionTarget;You have set [{0}] as your naval invasion target this month.\nWould you like to change your invasion target?
+$TAF_Ui_NavalInvasion_ConfirmInvasion;You have naval assets of over [{0}] tonnes in the sea region around [{1}]. \nDo you want to launch a naval invasion next month?
+$TAF_Ui_NavalInvasion_ProvinceListCatagories_New;New:
+$TAF_Ui_NavalInvasion_ProvinceListCatagories_Ongoing;Ongoing:
+$TAF_Ui_NavalInvasion_ProvinceListCatagories_Options;Options:
+$TAF_Ui_NavalInvasion_ProvinceListCatagories_Insufficient_Tonnage;Lacking Tonnage In Region:
+$TAF_Ui_Retirement_Header;Considering Retirement
+$TAF_Ui_Retirement_Body;After {0} long years of service to your country, perhaps its time to step down.\nWould you like to end the campaign here? If you decline, you will be asked again in {1} months.
+$TAF_Ui_Dockyard_Confirm_Action_Save;Are you sure you want to save this ship?
+$TAF_Ui_Dockyard_Confirm_Action_RandomShip;Are you sure you want to generate a random ship on this hull?
+$TAF_Ui_Dockyard_Confirm_Action_ClearShip;Are you sure you want to clear all parts?
+$TAF_Ui_Dockyard_Confirm_Action_DeleteShip;Are you sure you want to delete this ship permanently?
+$TAF_Ui_Dockyard_Confirm_Action_CloneShip;Are you sure you want to clone this ship?
+$TAF_Ui_Dockyard_Confirm_Action_Exit;Are you sure you want to leave the Dockyard?
+$TAF_Ui_Dockyard_Confirm_Action_RandomShipSimpleRefit;Are you sure you want to refit ship components automatically?
+$TAF_Ui_Dockyard_Confirm_Action_RefitShip;Are you sure you want to enter Refit Mode?
+$TAF_Ui_Dockyard_Confirm_Action_SwitchPlayerType;Are you sure you want to switch player type?
+$TAF_Ui_Dockyard_YearInput_PlaceHolderText;Input Year
+$TAF_Ui_Settings_Confirm_Reset;Are you sure you want to reset all settings and configurations?
+$TAF_Ui_Dockyard_TopBar_RotationIncrementControl;Increment\n{0}
+$TAF_tooltip_rotation_increment_control;Curent part rotation increment. Click or press [G] to change incrament.
+$TAF_Ui_Dockyard_TopBar_RotationValueControl;Rotation\n{0}
+$TAF_Ui_Dockyard_TopBar_SkirmishShipType;{0}\n{1}x {2} #{3}
+$TAF_tooltip_skirmish_ship_type_dropdown;Click to change the current shiptype.
+$TAF_Ui_Dockyard_Launch;Launch
+$TAF_tooltip_rotation_value_control;Curent part rotation plus default mount rotation. Click or press [F] to auto-orient the part.
+$TAF_Ui_Dockyard_ArmorTab_UpdateArmorQualitySetting;Update Armor Preview Setting
+$TAF_tooltip_update_armor_quality_setting;The armor quality slider does not match this ship's armor quality. Click to update the setting so gun penetration previews show the correct values.
+$TAF_Ui_Predef_Error_MalformedPredefFile;Malformed predefs. Check log: `..\\steamapps\\common\\Ultimate Admiral Dreadnoughts\\MelonLoader\\Latest.log`.
+$TAF_Ui_FleetWindow_Confirm_Action_Delete;Are you sure you want to delete this design?
+$TAF_Ui_FleetWindow_Confirm_Action_Scrap;Are you sure you want to scrap the selected ship(s)?
+$TAF_Ui_World_FleetDesign_ViewOnMap;View On Map
+$TAF_Ui_World_FleetDesign_SetRole;Set Role
+$TAF_Ui_World_FleetDesign_SoldTo;Sold To\n{0}
+$TAF_tooltip_set_role;Set the role of one or more ships.
+$TAF_tooltip_set_crew;Set the crew level or mothball one or more ships.
+$TAF_tooltip_view_on_map;Center camera on the map location of the selected ship.
+$toolltip_file_converter;*File Converter*\nTool for converting save files between BIN and JSON. Also used for managing shared designs and creating predefined designs files.
+$TAF_Ui_Popup_OptionsWindow_UI_Scale;UI Scale
+$TAF_Ui_World_compactM;M
+$TAF_Ui_Constr_Port;Port
+$TAF_Ui_BatchShipGenerator_Batch;Batch #{0}
+$TAF_Ui_BatchShipGenerator_Progress;Progress {0}
+$TAF_Ui_BatchShipGenerator_Completed;Completed: {0}
+$TAF_Ui_BatchShipGenerator_Requested;Requested: {0}
+$TAF_Ui_BatchShipGenerator_Performance;Performance {0}
+$TAF_Ui_BatchShipGenerator_Total_Tries;Total Tries: {0}
+$TAF_Ui_BatchShipGenerator_Total_Time;Total Time: {0}
+$TAF_Ui_BatchShipGenerator_Batch_Time;Batch Time: {0}
+$TAF_Ui_BatchShipGenerator_Total_Batches;Total Batches: {0}
+$TAF_Ui_BatchShipGenerator_Stop_At_Batch_End;Press [ESC] to stop the generator at the end of the batch.
+$TAF_Ui_BatchShipGenerator_Stop_Imediate;Press [Shift + ESC] to force quit the game.
+$TAF_Ui_BatchShipGenerator_Stoping_At_Batch_End;Will stop at the end of this batch!
+$TAF_Ui_BatchShipGenerator_Finished;Finished Batch Ship Generation:
+$TAF_Ui_BatchShipGenerator_See_Log;See log for more details!
+$TAF_Ui_BatchShipGenerator_Count_Tries_Time;Count = {0} | Tries = {1} | Time = {2}
+$TAF_Ui_BatchShipGenerator_Failed;Failed
+$TAF_Ui_BatchShipGenerator_Succeeded;Succeeded
+$TAF_Ui_ReportShipScuttled;{0} was ordered to set scuttling charges due to high casualties!
+$TAF_Ui_ReportShipSurrendered;{0} has surrendered due to high casualties!
+$TAF_Ui_ReportShipScuttling;{0} is setting off its scuttling charges!
+$TAF_Ui_Settings_ShowMapImage;Show Map Image
+$TAF_Ui_Settings_DeckPropCoverage;Deck Prop Coverage
+$TAF_Ui_SkirmishSettup_SharedDesignToggle_On;Shared Designs: On
+$TAF_Ui_SkirmishSettup_SharedDesignToggle_Off;Shared Designs: Off
+$TAF_Ui_SkirmishSettup_PredefDesignToggle_On;Pregenerated: On
+$TAF_Ui_SkirmishSettup_PredefDesignToggle_Off;Pregenerated: Off
+$TAF_tooltip_skirmish_shared_design_toggle;<b>On</b>: Will pick from availible Shared Designs if no design is made or chosen in the constructor.\n\n<b>Off</b>: If no design is made or chosen, a randomly generated or Predefiend Designs ship will be used instead.
+$TAF_tooltip_skirmish_predef_design_toggle;<b>On</b>: Will pick from the Predefined Designs file if no design is made or chosen in the constructor and no Shared Design is availible or if Shared Designs are <b>Off</b>.\n\n<b>Off</b>: If no design or Shared Design is made or chosen, a randomly generated ship will be used instead.
+$TAF_tooltip_launch_to_custom_battle;Begin the custom battle with the designs you selected.
+$TAF_UI_CheatMod_CheatMenu;Cheat Menu
+$TAF_UI_CheatMod_Give100Million;Give 100 Million
+$TAF_UI_CheatMod_Give1Billion;Give 1 Billion
+$TAF_UI_CheatMod_InstantBuildShips;Instant Build Ships
+$TAF_UI_CheatMod_InstantRepair; Instant Repair
+$TAF_UI_CheatMod_InstantResearch;Instant Research
+$TAF_UI_CheatMod_Close;Close
+$TAF_UI_CheatMod_CheatMenu_Tooltip;Cheater
+$TAF_UI_CheatMod_Give100Million_Tooltip;Give yourself 100 million in cash.
+$TAF_UI_CheatMod_Give1Billion_Tooltip;Give yourself 1 Billion in cash.
+$TAF_UI_CheatMod_InstantBuildShips_Tooltip;Sets any ship that is building to be 100% progress and will start commissioning next turn.
+$TAF_UI_CheatMod_InstantRepair_Tooltip;Sets any ship that is repairing to be 100% repaired and will clear the next turn. 
+$TAF_UI_CheatMod_InstantResearch_Tooltip;Sets the technologies you have tagged as "priority" or "focused" to 100% 
+$TAF_UI_CheatMod_Close_Tooltip;Closes the UI
+$TAF_Ui_MainMenu_ModUpdates;Mod Updates
+$TAF_Ui_MainMenu_ModUpdates_Tooltip;Check for mod updates.
+$TAF_Ui_MainMenu_TAFUpdates;TAF Updates
+$TAF_Ui_MainMenu_TAFUpdates_Tooltip;Check for Tweaks and Fixes updates.
+$TAF_Ui_FadeText_GameSaved;Game Saved!
+$TAF_Ui_FadeText_DesignSaved;Design Saved!
+$TAF_Ui_Constructor_UpdateTechs;Update Techs
+$TAF_Ui_Constructor_UpdateTechsBody;Do you want the cloned design to use the latest tech unlocks?
+$TAF_month_short_January;Jan.
+$TAF_month_short_February;Feb.
+$TAF_month_short_March;Mar.
+$TAF_month_short_April;Apr.
+$TAF_month_short_May;May
+$TAF_month_short_June;Jun.
+$TAF_month_short_July;Jul.
+$TAF_month_short_August;Aug.
+$TAF_month_short_September;Sep.
+$TAF_month_short_October;Oct.
+$TAF_month_short_November;Nov.
+$TAF_month_short_December;Dec.
+$TAF_Ui_Settings_RefitDateFormat;Refit Date Format
+$TAF_Ui_Event_GovernmentBailout;Government Bailout
