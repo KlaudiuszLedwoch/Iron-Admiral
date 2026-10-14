@@ -1,4 +1,4 @@
-﻿IRON ADMIRAL 1.1
+IRON ADMIRAL 1.1
 DIP The Great Game Extended (AI overhaul, one-click install)
 for Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
@@ -180,7 +180,7 @@ instead of fleeing, detaching slow ships, national doctrines. Not yet
 tested over a long game: the direction of the doctrine distance
 multiplier (distanceMult) and the economic changes across a whole
 campaign. Full change history with reasoning, sources and test status:
-CHANGELOG_EN.txt (36 sections).
+CHANGELOG_EN.txt (37 sections).
 
 --------------------------------------------------------------------------
 INSTALLATION
