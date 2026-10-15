@@ -1,5 +1,7 @@
 # Iron Admiral — DIP The Great Game Extended
 
+_Description as of 15 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.2._
+
 **AI overhaul for Ultimate Admiral: Dreadnoughts, built on the Dreadnought Improvement Project (DIP) "The Great Game" 1.3.5, TweaksAndFixes 3.21.1 and MelonLoader 0.6.6.**
 
 Download / Nexus page: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66
