@@ -75,6 +75,32 @@
 // Feature 4: minor nations get more free port capacity in the game's
 //   warship-trade check (Player.GetMinorNationFreePortCapacity), so they
 //   pass the capacity test for ordering and buying used ships more often.
+//
+// 1.11.0 (battle, all ships unless noted):
+//   - Charge start depends on torpedo range and speed advantage
+//     (torpedo range x margin + speed advantage x ChargeApproachSeconds +
+//     ChargeBaseExtra, capped by the national chargeStartRange).
+//   - Capital AI ships (bb/bc/ca) charge too when they carry torpedoes and are
+//     faster than the target, or close the distance when their guns are
+//     outranged by the target or cannot penetrate its belt at the current
+//     range ("only option" rule).
+//   - Player divisions set as Scout (tb/dd/cl with torpedoes) run the same
+//     torpedo charge as the AI (PlayerScoutCharge).
+//   - Player ships hold torpedoes while a friendly ship is in the lane towards
+//     the torpedo target (TorpedoFriendlyLane).
+//   - Target selection for all ships (Ship.AimAndShoot postfix, respects
+//     manual targets): most damaged enemy in range; bb/bc main guns prefer the
+//     heaviest enemy calibre; secondary guns prefer the nearest torpedo threat.
+//     Replaces the 1.9 FindBestEnemy postfix, which never ran because the game
+//     inlines FindBestEnemy into its callers.
+//   - Crew training levels rescaled non-linearly (GameData.crewTrainingLevels):
+//     elite/veteran effects up to +100%, green crews down to -50%.
+//   - Surrender threshold depends on crew training (green 70% crew, elite 40%).
+//   - Panic: badly damaged ships with inexperienced crews break off and retreat
+//     (AI and player).
+//   - Surrendered ships are captured by the winner when it still has ships in
+//     the battle (BattleManager.DamageShip prefix): transferred, sent to repair,
+//     crew training reset to green.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -82,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.10.2", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.0", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -119,6 +145,35 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> BalanceRatio;
         internal static MelonPreferences_Entry<float> BalanceChance;
         internal static MelonPreferences_Entry<float> BalanceMonths;
+        // 1.11
+        internal static MelonPreferences_Entry<float> ChargeApproachSeconds;
+        internal static MelonPreferences_Entry<float> ChargeBaseExtra;
+        internal static MelonPreferences_Entry<bool> CapitalCharge;
+        internal static MelonPreferences_Entry<float> CapitalSpeedMargin;
+        internal static MelonPreferences_Entry<bool> CapitalCloseIn;
+        internal static MelonPreferences_Entry<float> OutrangedFactor;
+        internal static MelonPreferences_Entry<float> PenetrationFactor;
+        internal static MelonPreferences_Entry<float> CloseInStopRange;
+        internal static MelonPreferences_Entry<bool> PlayerScoutCharge;
+        internal static MelonPreferences_Entry<bool> TorpedoFriendlyLane;
+        internal static MelonPreferences_Entry<float> LaneHalfWidth;
+        internal static MelonPreferences_Entry<bool> SmartTargeting;
+        internal static MelonPreferences_Entry<bool> SmartTargetingAi;
+        internal static MelonPreferences_Entry<float> TorpedoThreatRangeMult;
+        internal static MelonPreferences_Entry<bool> CrewLevelsRescale;
+        internal static MelonPreferences_Entry<float> CrewPlusAmp;
+        internal static MelonPreferences_Entry<float> CrewMinusAmp;
+        internal static MelonPreferences_Entry<float> CrewCurvePower;
+        internal static MelonPreferences_Entry<bool> SurrenderByTraining;
+        internal static MelonPreferences_Entry<float> SurrenderGreen;
+        internal static MelonPreferences_Entry<float> SurrenderElite;
+        internal static MelonPreferences_Entry<bool> Panic;
+        internal static MelonPreferences_Entry<float> PanicMaxRank;
+        internal static MelonPreferences_Entry<float> PanicDamage;
+        internal static MelonPreferences_Entry<float> PanicCrew;
+        internal static MelonPreferences_Entry<float> PanicChance;
+        internal static MelonPreferences_Entry<bool> CaptureSurrendered;
+        internal static MelonPreferences_Entry<float> CaptureDamage;
 
         public override void OnInitializeMelon()
         {
@@ -181,11 +236,68 @@ namespace DipGgFixes
                 "A target counts as damaged for focus fire above this damage estimate (0-1)");
             BattleAiLog = cat.CreateEntry("BattleAiLog", true, null,
                 "Write charge/retreat/focus decisions to the MelonLoader log");
+            ChargeApproachSeconds = cat.CreateEntry("ChargeApproachSeconds", 240f, null,
+                "Charge start distance = torpedo range x margin + (own speed - target speed, m/s) x this many seconds + ChargeBaseExtra; the national chargeStartRange is the cap");
+            ChargeBaseExtra = cat.CreateEntry("ChargeBaseExtra", 2500f, null,
+                "Extra meters added to the charge start distance regardless of speed");
+            CapitalCharge = cat.CreateEntry("CapitalTorpedoCharge", true, null,
+                "AI bb/bc/ca divisions with torpedoes charge an enemy capital ship when they are faster than it");
+            CapitalSpeedMargin = cat.CreateEntry("CapitalChargeSpeedMargin", 1.05f, null,
+                "Capital ship counts as faster when own speed > target speed x this");
+            CapitalCloseIn = cat.CreateEntry("CapitalCloseInWhenOutgunned", true, null,
+                "AI bb/bc/ca divisions close the distance when their guns are outranged by the target or cannot penetrate its belt at the current range");
+            OutrangedFactor = cat.CreateEntry("OutrangedFactor", 1.1f, null,
+                "Outranged when the target's gun range > own gun range x this");
+            PenetrationFactor = cat.CreateEntry("PenetrationFactor", 1.0f, null,
+                "Cannot penetrate when own main-gun penetration at the current range < target belt armour x this");
+            CloseInStopRange = cat.CreateEntry("CloseInStopRangeFactor", 0.7f, null,
+                "Stop closing in at own gun range x this (or when penetration becomes possible)");
+            PlayerScoutCharge = cat.CreateEntry("PlayerScoutCharge", true, null,
+                "Player tb/dd/cl divisions set as Scout run the same torpedo charge as the AI (retreat when out of torpedoes or badly damaged)");
+            TorpedoFriendlyLane = cat.CreateEntry("TorpedoFriendlyLane", true, null,
+                "Player ships hold their torpedoes while a friendly ship is in the lane towards the torpedo target");
+            LaneHalfWidth = cat.CreateEntry("TorpedoLaneHalfWidth", 350f, null,
+                "Half width (m) of the lane checked for friendly ships");
+            SmartTargeting = cat.CreateEntry("SmartTargeting", true, null,
+                "Player ships without a manual target: guns pick the most damaged enemy in range; bb/bc main guns prefer the heaviest enemy calibre; secondary guns prefer the nearest torpedo threat");
+            SmartTargetingAi = cat.CreateEntry("SmartTargetingAi", true, null,
+                "Apply the same target selection to AI ships (replaces FocusFire)");
+            TorpedoThreatRangeMult = cat.CreateEntry("TorpedoThreatRangeMult", 1.5f, null,
+                "An enemy with torpedoes counts as a torpedo threat when closer than its torpedo range x this");
+            CrewLevelsRescale = cat.CreateEntry("CrewLevelsRescale", true, null,
+                "Rescale crew training levels non-linearly (stronger effect of experience)");
+            CrewPlusAmp = cat.CreateEntry("CrewLevelsPlusAmplitude", 1.0f, null,
+                "Effect of the best training level relative to the baseline level (1.0 = +100%)");
+            CrewMinusAmp = cat.CreateEntry("CrewLevelsMinusAmplitude", 0.5f, null,
+                "Effect of the worst training level relative to the baseline level (0.5 = -50%)");
+            CrewCurvePower = cat.CreateEntry("CrewLevelsCurvePower", 1.6f, null,
+                "Curve exponent: >1 = levels near the baseline change little, extreme levels change a lot");
+            SurrenderByTraining = cat.CreateEntry("SurrenderByTraining", true, null,
+                "Surrender crew threshold depends on crew training (interpolated between the two values below)");
+            SurrenderGreen = cat.CreateEntry("SurrenderCrewGreen", 0.70f, null,
+                "Worst-trained crews surrender when crew falls below this ratio (vanilla: 0.55 for everybody)");
+            SurrenderElite = cat.CreateEntry("SurrenderCrewElite", 0.40f, null,
+                "Best-trained crews surrender when crew falls below this ratio");
+            Panic = cat.CreateEntry("CrewPanic", true, null,
+                "Badly damaged ships with inexperienced crews may break off and retreat (AI and player ships)");
+            PanicMaxRank = cat.CreateEntry("PanicMaxTrainingRank", 0.4f, null,
+                "Only crews with training rank below this (0 = worst level, 1 = best level) can panic");
+            PanicDamage = cat.CreateEntry("PanicDamage", 0.5f, null,
+                "Panic check starts above this damage estimate (0-1)");
+            PanicCrew = cat.CreateEntry("PanicCrewRatio", 0.7f, null,
+                "Panic check also starts below this crew ratio");
+            PanicChance = cat.CreateEntry("PanicChancePerCheck", 0.2f, null,
+                "Chance per 3-second check for the worst-trained crew at the threshold (scales with damage and rank)");
+            CaptureSurrendered = cat.CreateEntry("CaptureSurrenderedShips", true, null,
+                "Ships that surrendered in a campaign battle are transferred to the winner if it still has ships in the battle; they go to repair with a green crew");
+            CaptureDamage = cat.CreateEntry("CaptureDamage", 0.6f, null,
+                "Structural damage (0-1) applied to a captured ship before it enters repair");
             Doctrines.Load();
+            LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew<{PanicCrew.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value})");
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.10.2. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.0. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -726,7 +838,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; }
+        internal class DivState { public float nextThink; public bool charging; public bool closing; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -819,47 +931,133 @@ namespace DipGgFixes
             return n == 0 ? 1f : sum / n;
         }
 
-        internal static void Think(Ship leader)
+        // ---- 1.11 helpers -------------------------------------------------------------
+        internal static float GunRange(Ship s)
         {
-            if (!DipGgFixesMod.LightShipCharge.Value && !DipGgFixesMod.FightWhenCannotEscape.Value && !DipGgFixesMod.DetachSlowShips.Value) return;
+            float best = 0f;
+            try
+            {
+                var cache = s.weaponRangesCache;
+                if (cache != null)
+                    foreach (var kv in cache)
+                    {
+                        var d = kv.Key; if (d == null || !d.isGun) continue;
+                        if (kv.Value > best) best = kv.Value;
+                    }
+            }
+            catch { }
+            return best;
+        }
+        internal static float MainCaliber(Ship s)
+        {
+            try { var g = s.mainGunsGroup; return g != null ? g.caliber : 0f; } catch { return 0f; }
+        }
+        internal static float BeltArmor(Ship s)
+        {
+            float best = 0f;
+            try
+            {
+                var a = s.armor; if (a == null) return 0f;
+                float v;
+                if (a.TryGetValue(Ship.A.Belt, out v) && v > best) best = v;
+                if (a.TryGetValue(Ship.A.BeltBow, out v) && v > best) best = v;
+                if (a.TryGetValue(Ship.A.BeltStern, out v) && v > best) best = v;
+            }
+            catch { }
+            return best;
+        }
+        static int penLogged;
+        // true when the shooter's main guns are estimated unable to penetrate the target's belt at the given distance
+        internal static bool CannotPenetrate(Ship shooter, Ship target, float dist, out float pen, out float belt)
+        {
+            pen = 0f; belt = BeltArmor(target);
+            if (belt <= 0f) return false;
+            try
+            {
+                var g = shooter.mainGunsGroup; if (g == null) return false;
+                pen = Ship.GetPenetration(g, shooter, dist, false, new Il2CppSystem.Nullable<Ship.ShellType>(), new Il2CppSystem.Nullable<UnityEngine.Vector3>());
+            }
+            catch (Exception e) { if (penLogged++ < 3) Log("GetPenetration failed: " + e.Message); return false; }
+            if (pen <= 0f) return false;
+            if (penLogged < 6) { penLogged++; Log($"penetration check: {shooter.name} ({MainCaliber(shooter):0} mm) vs {target.name}: pen {pen:0.0} vs belt {belt:0.0} at {dist:0} m"); }
+            return pen < belt * DipGgFixesMod.PenetrationFactor.Value;
+        }
+        // distance at which a torpedo charge starts: torpedo range x margin + speed advantage x approach time + base, capped by doctrine
+        internal static float ChargeStartFor(Ship leader, Ship target, Doctrine doc, float torp)
+        {
+            float adv = UnityEngine.Mathf.Max(0f, Speed(leader) - Speed(target));
+            float d = torp * DipGgFixesMod.ChargeTorpedoMargin.Value + adv * DipGgFixesMod.ChargeApproachSeconds.Value + DipGgFixesMod.ChargeBaseExtra.Value;
+            return UnityEngine.Mathf.Min(d, ChargeStart(doc));
+        }
+        internal static Ship NearestVisibleCapital(Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, out float bestD)
+        {
+            Ship best = null; bestD = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i];
+                if (e == null || e.isSinking || e.isDead || e.IsSurrendered || !IsCapital(e)) continue;
+                if (!e.IsVisibleFor(leader)) continue;
+                float d = Dist(leader, e);
+                if (d < bestD) { bestD = d; best = e; }
+            }
+            return best;
+        }
+
+        // Think for AI division leaders (from Ship.AILogic) and for player division leaders (from the per-ship tick).
+        internal static void Think(Ship leader) { Think(leader, false); }
+        internal static void Think(Ship leader, bool playerSide)
+        {
             if (!GameManager.IsBattle) return;
             if (!announced) { announced = true; Log("AILogic patch active"); }
-            if (leader == null || leader.isSinking || leader.isDead) return;
-            if (!leader.isAiControlled || !leader.isDivLeader) return;
+            if (leader == null || leader.isSinking || leader.isDead || leader.IsSurrendered) return;
+            if (!leader.isDivLeader) return;
             var div = leader.division; if (div == null) return;
-            var player = leader.player; if (player == null || player.isMain) return;
+            var player = leader.player; if (player == null) return;
+            if (playerSide != player.isMain) return;
+            if (!playerSide && !leader.isAiControlled) return;
             bool light = IsLight(leader);
+            bool capital = IsCapital(leader);
             var doc = Doctrines.For(player);
 
             var key = div.Pointer;
             if (!States.TryGetValue(key, out var st))
             {
                 st = new DivState { name = leader.name ?? "?" }; States[key] = st;
-                Log($"AI division leader {st.name} ({leader.shipType.name}), light={light}, torpedoes={leader.haveTorpedoes}, ships={(div.ships != null ? div.ships.Count : 0)}, doctrine={(doc != null ? doc.nation : "global")}");
+                Log($"{(playerSide ? "Player" : "AI")} division leader {st.name} ({leader.shipType.name}), light={light}, torpedoes={leader.haveTorpedoes}, ships={(div.ships != null ? div.ships.Count : 0)}, doctrine={(doc != null ? doc.nation : "global")}");
             }
             float now = UnityEngine.Time.time;
             if (now < st.nextThink) return;
             st.nextThink = now + UnityEngine.Mathf.Max(1f, DipGgFixesMod.BattleThinkSeconds.Value);
-
-            // --- rule for every AI division: ships that slow the division down leave it and retreat alone
-            if (DipGgFixesMod.DetachSlowShips.Value && now >= st.nextDetach && TryDetachSlow(div, leader, st)) { st.nextDetach = now + DipGgFixesMod.DetachCooldownSeconds.Value; return; }
 
             var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
             if (battle == null) { Why(st, "no CurrentBattle"); return; }
             var enemies = battle.ShipsOf(battle.OppositePlayer(player), true);
             if (enemies == null) { Why(st, "no enemy list"); return; }
 
+            if (playerSide)
+            {
+                // player: only the scout torpedo charge (manual orders stay in force otherwise)
+                if (!DipGgFixesMod.PlayerScoutCharge.Value || !light || !leader.haveTorpedoes) return;
+                bool scout = false; try { scout = div.IsScout(); } catch { }
+                if (!st.charging && !scout) { Why(st, "not a scout division"); return; }
+                TorpedoCharge(leader, div, st, doc, enemies, true);
+                return;
+            }
+
+            // --- rule for every AI division: ships that slow the division down leave it and retreat alone
+            if (DipGgFixesMod.DetachSlowShips.Value && now >= st.nextDetach && TryDetachSlow(div, leader, st)) { st.nextDetach = now + DipGgFixesMod.DetachCooldownSeconds.Value; return; }
+
             // --- rule for every AI division: a retreat that cannot succeed becomes a fight
             bool retreating = div.isRetreating || div.retreat;
             if (retreating || st.fighting)
             {
-                if (!DipGgFixesMod.FightWhenCannotEscape.Value) { st.fighting = false; st.charging = false; Why(st, "retreating - left to the game"); return; }
+                if (!DipGgFixesMod.FightWhenCannotEscape.Value) { st.fighting = false; st.charging = false; st.closing = false; Why(st, "retreating - left to the game"); return; }
                 float own = DivSpeed(div, leader);
                 Ship pursuer = null; float pv = 0f, pd = 0f;
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     var e = enemies[i];
-                    if (e == null || e.isSinking || e.isDead || !e.IsVisibleFor(leader)) continue;
+                    if (e == null || e.isSinking || e.isDead || e.IsSurrendered || !e.IsVisibleFor(leader)) continue;
                     float d = Dist(leader, e); if (d > DipGgFixesMod.PursuitRange.Value) continue;
                     float v = Speed(e); if (v > pv) { pv = v; pursuer = e; pd = d; }
                 }
@@ -868,23 +1066,33 @@ namespace DipGgFixes
                 {
                     if (retreating) div.Retreat(false);
                     if (!st.fighting) { st.fighting = true; Log($"{st.name} ({leader.shipType.name}) cannot outrun {pursuer.name} ({pursuer.shipType.name}, {pv:0.0} vs own {own:0.0} speed units, {pd:0} m) - retreat cancelled, fighting"); }
-                    if (!light || !leader.haveTorpedoes) { Why(st, "fighting (cannot escape)"); return; } // gun ships: the game's own combat AI takes over
+                    if (!leader.haveTorpedoes) { Why(st, "fighting (cannot escape)"); return; } // gun ships: the game's own combat AI takes over
                 }
                 else
                 {
                     if (st.fighting) { st.fighting = false; Log($"{st.name}: pursuer gone or division faster - fight state cleared"); }
                     if (retreating)
                     {
-                        st.charging = false;
+                        st.charging = false; st.closing = false;
                         Why(st, pursuer == null ? "retreating, no visible pursuer in range - left to the game"
                                                : $"retreating and faster than {pursuer.name} - left to the game");
                         return;
                     }
                 }
             }
-            if (!light || !leader.haveTorpedoes || !DipGgFixesMod.LightShipCharge.Value) return;
 
-            // --- light torpedo ships: charge the nearest capital ship
+            if (light)
+            {
+                if (!leader.haveTorpedoes || !DipGgFixesMod.LightShipCharge.Value) return;
+                TorpedoCharge(leader, div, st, doc, enemies, false);
+                return;
+            }
+            if (capital) CapitalLogic(leader, div, st, doc, enemies);
+        }
+
+        // Torpedo charge of a light (or capital) division against the nearest visible enemy capital ship.
+        internal static void TorpedoCharge(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, bool playerSide)
+        {
             float dmg = DivDamage(div);
             bool ammo = HasTorpedoAmmo(leader);
             if (st.charging && (dmg > AbortDamage(doc) || !ammo))
@@ -897,17 +1105,8 @@ namespace DipGgFixes
             if (!ammo) { Why(st, "no torpedo ammo"); return; }
             if (dmg > AbortDamage(doc)) { Why(st, "too damaged for a charge"); return; }
 
-            Ship best = null; float bestD = float.MaxValue; int capitals = 0, visible = 0;
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                var e = enemies[i];
-                if (e == null || e.isSinking || e.isDead || !IsCapital(e)) continue;
-                capitals++;
-                if (!e.IsVisibleFor(leader)) continue;
-                visible++;
-                float d = Dist(leader, e);
-                if (d < bestD) { bestD = d; best = e; }
-            }
+            float bestD;
+            var best = NearestVisibleCapital(leader, enemies, out bestD);
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
             float torp = TorpedoRange(leader);
@@ -915,16 +1114,55 @@ namespace DipGgFixes
             float launchAt = torp * DipGgFixesMod.ChargeTorpedoMargin.Value;
             if (!st.charging)
             {
-                if (bestD > ChargeStart(doc) && !st.fighting) { Why(st, $"nearest capital {best.name} beyond start range ({ChargeStart(doc):0} m)"); return; }
+                float start = ChargeStartFor(leader, best, doc, torp);
+                if (bestD > start && !st.fighting) { Why(st, $"nearest capital {best.name} at {bestD:0} m beyond start distance ({start:0} m: torpedoes {torp:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0})"); return; }
                 st.charging = true; st.target = best.Pointer;
                 Why(st, "charging");
-                Log($"{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m");
+                Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, start distance {start:0} m");
             }
             if (bestD > launchAt)
             {
                 var tt = best.transform; if (tt != null) div.MoveTo(tt.position);
             }
             // inside launch range: leave movement to the game, the torpedo logic fires on its own
+        }
+
+        // Capital AI divisions: torpedo charge when faster and armed with torpedoes; otherwise close in
+        // when outranged or unable to penetrate the nearest enemy capital ship ("only option").
+        internal static void CapitalLogic(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            float bestD;
+            var best = NearestVisibleCapital(leader, enemies, out bestD);
+            if (best == null) { st.charging = false; st.closing = false; Why(st, "no visible capital target"); return; }
+            float own = Speed(leader), tv = Speed(best);
+            if (DipGgFixesMod.CapitalCharge.Value && leader.haveTorpedoes && HasTorpedoAmmo(leader) && own > tv * DipGgFixesMod.CapitalSpeedMargin.Value)
+            {
+                TorpedoCharge(leader, div, st, doc, enemies, false);
+                return;
+            }
+            if (st.charging) { st.charging = false; Log($"{st.name}: capital charge ended (not faster or no torpedoes)"); }
+            if (!DipGgFixesMod.CapitalCloseIn.Value) return;
+
+            float dmg = DivDamage(div);
+            if (dmg > AbortDamage(doc)) { if (st.closing) { st.closing = false; Log($"{st.name}: close-in aborted (damage {dmg:0.00})"); } Why(st, "too damaged to close in"); return; }
+            float ownR = GunRange(leader), tgtR = GunRange(best);
+            bool outranged = ownR > 0f && tgtR > ownR * DipGgFixesMod.OutrangedFactor.Value;
+            float pen, belt;
+            bool noPen = CannotPenetrate(leader, best, bestD, out pen, out belt);
+            float stopAt = ownR > 0f ? ownR * DipGgFixesMod.CloseInStopRange.Value : 0f;
+            if ((outranged || noPen) && bestD > stopAt)
+            {
+                if (!st.closing)
+                {
+                    st.closing = true;
+                    Log($"{st.name} ({leader.shipType.name}) closes in on {best.name} ({best.shipType.name}) at {bestD:0} m: {(outranged ? $"outranged ({ownR:0} vs {tgtR:0} m)" : "")}{(outranged && noPen ? ", " : "")}{(noPen ? $"cannot penetrate (pen {pen:0.0} vs belt {belt:0.0})" : "")}");
+                }
+                Why(st, "closing in");
+                var tt = best.transform; if (tt != null) div.MoveTo(tt.position);
+                return;
+            }
+            if (st.closing) { st.closing = false; Log($"{st.name}: close-in ended at {bestD:0} m ({(noPen ? "still cannot penetrate" : "penetration ok")}, {(outranged ? "still outranged" : "range ok")}) - left to the game"); }
+            Why(st, "guns adequate - left to the game");
         }
 
         // Detach the ships that slow the division down into a new division and order it to retreat.
@@ -989,63 +1227,360 @@ namespace DipGgFixes
         }
     }
 
+    // =====================================================================================
+    // 1.11: per-ship battle tick (Ship.AimAndShoot runs for every ship, player and AI)
+    // =====================================================================================
+    internal static class ShipTick
+    {
+        internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; }
+        internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
+        internal static int Errors; static bool announced;
+        internal static int targetChanges, laneHolds, panics;
+
+        internal static St Get(Ship s)
+        {
+            if (!States.TryGetValue(s.Pointer, out var st)) { st = new St(); States[s.Pointer] = st; }
+            return st;
+        }
+
+        // called before Ship.AimAndShoot
+        internal static void Pre(Ship s)
+        {
+            if (!GameManager.IsBattle || s == null || s.isSinking || s.isDead) return;
+            if (!announced) { announced = true; BattleAi.Log("per-ship tick active (AimAndShoot)"); }
+            var player = s.player; if (player == null) return;
+            var st = Get(s);
+            float now = UnityEngine.Time.time;
+            bool isPlayer = player.isMain && !s.isAiControlled;
+            if (isPlayer && DipGgFixesMod.TorpedoFriendlyLane.Value && s.haveTorpedoes && now >= st.nextLane) { st.nextLane = now + 0.5f; TorpedoLane(s, st, now); }
+            if (DipGgFixesMod.Panic.Value && now >= st.nextPanic) { st.nextPanic = now + 3f; PanicCheck(s, st); }
+            if (isPlayer && s.isDivLeader && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
+        }
+        // called after Ship.AimAndShoot
+        internal static void Post(Ship s)
+        {
+            if (!GameManager.IsBattle || s == null || s.isSinking || s.isDead) return;
+            var player = s.player; if (player == null) return;
+            bool isPlayer = player.isMain && !s.isAiControlled;
+            if (isPlayer ? !DipGgFixesMod.SmartTargeting.Value : !DipGgFixesMod.SmartTargetingAi.Value) return;
+            var st = Get(s);
+            float now = UnityEngine.Time.time;
+            if (now < st.nextTarget) return;
+            st.nextTarget = now + 2f;
+            SmartTargets(s, player);
+        }
+
+        // ---- torpedo lane: hold torpedoes while a friendly ship is between us and the torpedo target
+        static void TorpedoLane(Ship s, St st, float now)
+        {
+            var mode = s.torpedoMode;
+            if (st.laneBlocked)
+            {
+                if (mode != Ship.ShootMode.Off) { st.laneBlocked = false; return; } // player changed the mode meanwhile - leave it
+                if (now < st.laneHoldUntil) return;
+                if (!LaneHasFriend(s)) { s.torpedoMode = st.savedTorpedoMode; st.laneBlocked = false; BattleAi.Log($"{s.name}: torpedo lane clear - torpedoes released ({st.savedTorpedoMode})"); }
+                else st.laneHoldUntil = now + 2f;
+                return;
+            }
+            if (mode == Ship.ShootMode.Off || mode == Ship.ShootMode.Invalid) return;
+            if (LaneHasFriend(s))
+            {
+                st.savedTorpedoMode = mode; st.laneBlocked = true; st.laneHoldUntil = now + 2f; s.torpedoMode = Ship.ShootMode.Off; laneHolds++;
+                BattleAi.Log($"{s.name}: friendly ship in the torpedo lane - torpedoes held");
+            }
+        }
+        static Ship TorpedoTarget(Ship s)
+        {
+            try
+            {
+                var en = s.enemies;
+                if (en != null)
+                    foreach (var kv in en) { var pd = kv.Key; if (pd == null || !pd.isTorpedo) continue; var a = kv.Value; if (a != null && a.target != null) return a.target; }
+                var en2 = s.enemiesLeftSide;
+                if (en2 != null)
+                    foreach (var kv in en2) { var pd = kv.Key; if (pd == null || !pd.isTorpedo) continue; var a = kv.Value; if (a != null && a.target != null) return a.target; }
+            }
+            catch { }
+            return null;
+        }
+        static bool LaneHasFriend(Ship s)
+        {
+            var target = TorpedoTarget(s); if (target == null || target.isDead || target.isSinking) return false;
+            var ts = s.transform; var tt = target.transform; if (ts == null || tt == null) return false;
+            var p0 = ts.position; var p1 = tt.position; p0.y = 0f; p1.y = 0f;
+            var dir = p1 - p0; float len = dir.magnitude; if (len < 1f) return false;
+            float torp = BattleAi.TorpedoRange(s); if (torp > 0f && len > torp) len = torp;
+            dir /= dir.magnitude;
+            float half = DipGgFixesMod.LaneHalfWidth.Value;
+            var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return false;
+            var friends = battle.ShipsOf(s.player, true); if (friends == null) return false;
+            for (int i = 0; i < friends.Count; i++)
+            {
+                var f = friends[i]; if (f == null || f.Pointer == s.Pointer || f.isDead || f.isSinking) continue;
+                var tf = f.transform; if (tf == null) continue;
+                var p = tf.position; p.y = 0f; var v = p - p0;
+                float t = UnityEngine.Vector3.Dot(v, dir);
+                if (t < 50f || t > len) continue;
+                float perp = (v - dir * t).magnitude;
+                if (perp < half) return true;
+            }
+            return false;
+        }
+
+        // ---- target selection (respects manual targets)
+        static int tgtLogged;
+        static void SmartTargets(Ship s, Player player)
+        {
+            try
+            {
+                var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return;
+                var enemies = battle.ShipsOf(battle.OppositePlayer(player), true); if (enemies == null || enemies.Count == 0) return;
+                var cache = s.weaponRangesCache;
+                var main = s.mainGunsGroup;
+                bool heavy = false; try { var tn = s.shipType != null ? s.shipType.name : null; heavy = tn == "bb" || tn == "bc"; } catch { }
+                Apply(s, s.enemies, enemies, cache, main, heavy);
+                Apply(s, s.enemiesLeftSide, enemies, cache, main, heavy);
+            }
+            catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] SmartTargets: " + e.Message); }
+        }
+        static void Apply(Ship s, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, Il2CppSystem.Collections.Generic.List<Ship> enemies, Il2CppSystem.Collections.Generic.Dictionary<PartData, float> cache, PartData main, bool heavy)
+        {
+            if (dict == null) return;
+            var keys = new List<PartData>();
+            foreach (var kv in dict) { if (kv.Key != null && kv.Value != null) keys.Add(kv.Key); }
+            foreach (var pd in keys)
+            {
+                if (!pd.isGun) continue;
+                var aim = dict[pd]; if (aim == null || aim.manual) continue;
+                float range = 0f; if (cache != null) cache.TryGetValue(pd, out range);
+                if (range <= 0f) continue;
+                bool isMain = main != null && pd.Pointer == main.Pointer;
+                var pick = isMain ? PickMain(s, enemies, range, heavy) : PickSecondary(s, enemies, range);
+                if (pick == null) continue;
+                var cur = aim.target;
+                if (cur != null && cur.Pointer == pick.Pointer) continue;
+                aim.target = pick; aim.progress = 0f; targetChanges++;
+                if (tgtLogged < 40 || targetChanges % 200 == 0) { tgtLogged++; BattleAi.Log($"{s.name} {(isMain ? "main" : "secondary")} guns ({pd.caliber:0} mm): target {pick.name} ({pick.shipType.name}, dmg {Dmg(pick):0.00}) instead of {(cur != null ? cur.name : "none")} [{targetChanges} changes]"); }
+            }
+        }
+        internal static float Dmg(Ship e) { try { return UnityEngine.Mathf.Clamp01(e.DamageEstimation()); } catch { return 0f; } }
+        static bool Usable(Ship s, Ship e) { return e != null && !e.isDead && !e.isSinking && !e.IsSurrendered && e.IsVisibleFor(s); }
+        // main guns: most damaged enemy in range; bb/bc: among the enemies with the heaviest calibre (within 25 mm of the max)
+        static Ship PickMain(Ship s, Il2CppSystem.Collections.Generic.List<Ship> enemies, float range, bool heavy)
+        {
+            var inRange = new List<Ship>();
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (Usable(s, e) && BattleAi.Dist(s, e) <= range) inRange.Add(e); }
+            if (inRange.Count == 0) return null;
+            if (heavy)
+            {
+                float maxCal = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxCal) maxCal = c; }
+                if (maxCal > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxCal - 25f);
+            }
+            Ship best = null; float bestScore = float.MinValue;
+            foreach (var e in inRange)
+            {
+                float score = Dmg(e) * 10f - BattleAi.Dist(s, e) / range; // damage first, then proximity
+                if (score > bestScore) { bestScore = score; best = e; }
+            }
+            return best;
+        }
+        // secondary guns: nearest torpedo threat (enemy with torpedoes inside its torpedo range x mult), else most damaged in range
+        static Ship PickSecondary(Ship s, Il2CppSystem.Collections.Generic.List<Ship> enemies, float range)
+        {
+            Ship threat = null; float threatD = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Usable(s, e) || !e.haveTorpedoes) continue;
+                float d = BattleAi.Dist(s, e); if (d > range) continue;
+                float tr = BattleAi.TorpedoRange(e) * DipGgFixesMod.TorpedoThreatRangeMult.Value;
+                if (d <= tr && d < threatD) { threatD = d; threat = e; }
+            }
+            if (threat != null) return threat;
+            return PickMain(s, enemies, range, false);
+        }
+
+        // ---- panic: inexperienced crews on badly damaged ships break off
+        static void PanicCheck(Ship s, St st)
+        {
+            if (st.panicked) return;
+            try
+            {
+                if (s.IsSurrendered) return;
+                var d0 = s.division; if (d0 == null || d0.isRetreating || d0.retreat) return;
+                float rank = CrewLevels.Rank(s);
+                if (rank > DipGgFixesMod.PanicMaxRank.Value) return;
+                float dmg = Dmg(s); float crew = 1f; try { crew = s.CrewPercents; } catch { }
+                float over = UnityEngine.Mathf.Max((dmg - DipGgFixesMod.PanicDamage.Value) / UnityEngine.Mathf.Max(0.05f, 1f - DipGgFixesMod.PanicDamage.Value),
+                                                  (DipGgFixesMod.PanicCrew.Value - crew) / UnityEngine.Mathf.Max(0.05f, DipGgFixesMod.PanicCrew.Value));
+                if (over <= 0f) return;
+                float rankFactor = 1f - rank / UnityEngine.Mathf.Max(0.01f, DipGgFixesMod.PanicMaxRank.Value); // 1 for the worst crews, 0 at the limit
+                float p = DipGgFixesMod.PanicChance.Value * (0.5f + over) * (0.3f + 0.7f * rankFactor);
+                if (UnityEngine.Random.value > p) return;
+                var div = s.division; if (div == null) return;
+                st.panicked = true; panics++;
+                string how;
+                if (s.isDivLeader || div.ships == null || div.ships.Count <= 1) { div.Retreat(true); how = "division retreats"; }
+                else if (s.CanDetach())
+                {
+                    var il = new Il2CppSystem.Collections.Generic.List<Ship>(); il.Add(s); Ship.DetachShips(il);
+                    var nd = s.division; if (nd != null) nd.Retreat(true); how = "leaves the division and retreats";
+                }
+                else { div.Retreat(true); how = "cannot detach - division retreats"; }
+                BattleAi.Log($"PANIC: {s.name} ({s.shipType.name}, {(s.player != null && s.player.isMain ? "player" : "AI")}) crew rank {rank:0.00}, damage {dmg:0.00}, crew {crew:0.00} - {how}");
+            }
+            catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] PanicCheck: " + e.Message); }
+        }
+    }
+
+    [HarmonyPatch(typeof(Ship), "AimAndShoot")]
+    internal static class Patch_AimAndShoot
+    {
+        private static void Prefix(Ship __instance)
+        {
+            try { ShipTick.Pre(__instance); }
+            catch (Exception e) { if (ShipTick.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] AimAndShoot prefix: " + e.Message); }
+        }
+        private static void Postfix(Ship __instance)
+        {
+            try { ShipTick.Post(__instance); }
+            catch (Exception e) { if (ShipTick.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] AimAndShoot postfix: " + e.Message); }
+        }
+    }
+
+    // =====================================================================================
+    // 1.11: crew training levels (non-linear rescale) and training-dependent surrender
+    // =====================================================================================
+    internal static class CrewLevels
+    {
+        internal static int Count = 0; internal static bool Done;
+        internal static float Rank(Ship s)
+        {
+            int idx = 0; try { idx = s.GetCrewTrainingIndex(); } catch { }
+            int n = Count > 1 ? Count : 5;
+            return UnityEngine.Mathf.Clamp01(idx / (float)(n - 1));
+        }
+        internal static void Apply()
+        {
+            if (Done) return;
+            try
+            {
+                var gd = G.GameData; if (gd == null) return;
+                var levels = gd.crewTrainingLevels; if (levels == null || levels.Count == 0) return;
+                Done = true; Count = levels.Count;
+                var keys = new List<string>(); var vals = new Dictionary<string, CrewTrainingLevels>();
+                foreach (var kv in levels) { keys.Add(kv.Key); vals[kv.Key] = kv.Value; }
+                // order: numeric key if possible, else by Accuracy ascending
+                bool numeric = true; foreach (var k in keys) { int t; if (!int.TryParse(k, out t)) { numeric = false; break; } }
+                if (numeric) keys.Sort((a, b) => int.Parse(a).CompareTo(int.Parse(b))); else keys.Sort((a, b) => vals[a].Accuracy.CompareTo(vals[b].Accuracy));
+                var sb = new System.Text.StringBuilder("crew training levels (vanilla): ");
+                foreach (var k in keys) { var v = vals[k]; sb.Append($"[{k}: acc {v.Accuracy:0.###} aim {v.Aiming:0.###} rel {v.Reload:0.###} dc {v.DamageControl:0.###}] "); }
+                MelonLogger.Msg("[DIP GG Fixes] " + sb);
+                if (!DipGgFixesMod.CrewLevelsRescale.Value) return;
+                int n = keys.Count; if (n < 2) return;
+                // baseline = level whose values are closest to 1
+                int b = 0; float bd = float.MaxValue;
+                for (int i = 0; i < n; i++) { var v = vals[keys[i]]; float d = Math.Abs(v.Accuracy - 1f) + Math.Abs(v.Aiming - 1f) + Math.Abs(v.Reload - 1f) + Math.Abs(v.DamageControl - 1f); if (d < bd) { bd = d; b = i; } }
+                var top = vals[keys[n - 1]]; var bot = vals[keys[0]];
+                float dirAcc = Dir(top.Accuracy, bot.Accuracy), dirAim = Dir(top.Aiming, bot.Aiming), dirRel = Dir(top.Reload, bot.Reload), dirDc = Dir(top.DamageControl, bot.DamageControl);
+                float plus = DipGgFixesMod.CrewPlusAmp.Value, minus = DipGgFixesMod.CrewMinusAmp.Value, pw = DipGgFixesMod.CrewCurvePower.Value;
+                var sb2 = new System.Text.StringBuilder("crew training levels (rescaled): ");
+                for (int i = 0; i < n; i++)
+                {
+                    var v = vals[keys[i]];
+                    float r = i == b ? 0f : (i < b ? (i - b) / (float)Math.Max(1, b) : (i - b) / (float)Math.Max(1, n - 1 - b));
+                    float e = (float)(Math.Sign(r) * Math.Pow(Math.Abs(r), pw) * (r > 0 ? plus : minus));
+                    if (dirAcc != 0f) v.Accuracy = Val(e, dirAcc);
+                    if (dirAim != 0f) v.Aiming = Val(e, dirAim);
+                    if (dirRel != 0f) v.Reload = Val(e, dirRel);
+                    if (dirDc != 0f) v.DamageControl = Val(e, dirDc);
+                    sb2.Append($"[{keys[i]}: acc {v.Accuracy:0.###} aim {v.Aiming:0.###} rel {v.Reload:0.###} dc {v.DamageControl:0.###}] ");
+                }
+                MelonLogger.Msg("[DIP GG Fixes] " + sb2 + $"(baseline {keys[b]}, +{plus} / -{minus}, p={pw})");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] CrewLevels.Apply: " + e.Message); }
+        }
+        // +1 when higher values are better for the top level, -1 when lower is better, 0 when the stat is unused
+        static float Dir(float top, float bot) { if (Math.Abs(top - bot) < 1e-4f) return 0f; return top > bot ? 1f : -1f; }
+        // e in [-minus, +plus]; positive-direction stats: 1+e; time-like stats (lower is better): 1/(1+e)
+        static float Val(float e, float dir) { return dir > 0f ? 1f + e : 1f / Math.Max(0.05f, 1f + e); }
+    }
+
+    [HarmonyPatch(typeof(GameData), "DataLoaded")]
+    internal static class Patch_DataLoaded
+    {
+        private static void Postfix() { CrewLevels.Apply(); }
+    }
+
+    // surrender threshold per crew training: Ship.CheckForSurrender reads crew_percents_surrender_threshold via Param
+    [HarmonyPatch(typeof(Ship), "CheckForSurrender")]
+    internal static class Patch_CheckForSurrender
+    {
+        [ThreadStatic] internal static Ship Current;
+        private static void Prefix(Ship __instance) { Current = __instance; if (!CrewLevels.Done) CrewLevels.Apply(); }
+        private static void Finalizer() { Current = null; }
+        internal static float Threshold(Ship s)
+        {
+            float r = CrewLevels.Rank(s);
+            return UnityEngine.Mathf.Lerp(DipGgFixesMod.SurrenderGreen.Value, DipGgFixesMod.SurrenderElite.Value, r);
+        }
+    }
+
+    // =====================================================================================
+    // 1.11: surrendered ships are captured by the winner (campaign)
+    // =====================================================================================
+    [HarmonyPatch(typeof(BattleManager), "DamageShip")]
+    internal static class Patch_DamageShip
+    {
+        static int logged;
+        private static void Prefix(Ship __0, ref float __1, CampaignBattleBase __2)
+        {
+            try
+            {
+                var ship = __0; if (ship == null) return;
+                bool surrendered = false; try { surrendered = ship.IsSurrendered; } catch { }
+                if (logged < 30) { logged++; MelonLogger.Msg($"[DIP GG Fixes][Capture] post-battle: {ship.name} ({(ship.player != null ? ship.player.data.name : "?")}) damage {__1:0.00} surrendered={surrendered} status={ship.status}"); }
+                if (!surrendered || !DipGgFixesMod.CaptureSurrendered.Value) return;
+                var battle = __2 as CampaignBattle; if (battle == null) { try { battle = __2.TryCast<CampaignBattle>(); } catch { } }
+                if (battle == null) { MelonLogger.Msg("[DIP GG Fixes][Capture] no CampaignBattle - skipped"); return; }
+                var loser = ship.player; if (loser == null) return;
+                var winner = battle.OppositePlayer(loser); if (winner == null) return;
+                // the winner must still have ships in the battle
+                var ws = battle.ShipsOf(winner, true); int alive = 0;
+                if (ws != null) for (int i = 0; i < ws.Count; i++) { var w = ws[i]; if (w != null && !w.isDead && !w.isSinking && !w.isSunk && !w.IsSurrendered) alive++; }
+                if (alive == 0) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} surrendered but {winner.data.name} has no ships left in the battle - not captured"); return; }
+                var cc = CampaignController.Instance; if (cc == null) return;
+                var list = new Il2CppSystem.Collections.Generic.List<Ship>();
+                cc.TransferShipToNewOwner(winner, ship.id, ref list, null, false);
+                try { ship.CrewTrainingAmount = 0f; } catch { }
+                __1 = UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f);
+                MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered to {winner.data.name} and was taken as a prize ({loser.data.name} -> {winner.data.name}); damage set to {__1:0.00}, crew training reset, status {ship.status}, new owner {(ship.player != null ? ship.player.data.name : "?")}");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] DamageShip prefix: " + e.Message); }
+        }
+    }
+
     // ai_distance_mod (preferred engagement distance) scaled per nation while the game
     // evaluates an AI ship's range inside Ship.AILogic (RangeCalc).
     [HarmonyPatch(typeof(MonoBehaviourExt), "Param", new Type[] { typeof(string), typeof(float) })]
     internal static class Patch_Param
     {
+        static int surrLogged;
         private static void Postfix(string __0, ref float __result)
         {
+            if (__0 == "crew_percents_surrender_threshold" && DipGgFixesMod.SurrenderByTraining.Value)
+            {
+                var s = Patch_CheckForSurrender.Current;
+                if (s != null)
+                {
+                    float t = Patch_CheckForSurrender.Threshold(s);
+                    if (surrLogged < 5) { surrLogged++; BattleAi.Log($"surrender threshold for {s.name}: {t:0.00} (vanilla {__result:0.00}, crew rank {CrewLevels.Rank(s):0.00})"); }
+                    __result = t;
+                }
+                return;
+            }
             var m = BattleAi.CurrentDistanceMult;
             if (m == 1f || m <= 0f) return;
             if (__0 == "ai_distance_mod") __result *= m;
-        }
-    }
-
-    [HarmonyPatch(typeof(Ship), "FindBestEnemy")]
-    internal static class Patch_FindBestEnemy
-    {
-        private static void Postfix(Ship __instance, PartData gunGroup, List<Part> guns, ref Ship __result)
-        {
-            try
-            {
-                if (!DipGgFixesMod.FocusFire.Value || __result == null || __instance == null) return;
-                if (!__instance.isAiControlled) return;
-                var player = __instance.player; if (player == null || player.isMain) return;
-                var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
-                if (battle == null) return;
-                float range = 0f;
-                if (guns != null && guns.Count > 0 && guns[0] != null) range = guns[0].WeaponRange(null);
-                if (range <= 0f) return;
-                float cur = Damage(__result);
-                float minD = DipGgFixesMod.FocusFireMinDamage.Value;
-                var enemies = battle.ShipsOf(battle.OppositePlayer(player), true);
-                if (enemies == null) return;
-                Ship pick = null; float pickDmg = UnityEngine.Mathf.Max(cur, minD);
-                for (int i = 0; i < enemies.Count; i++)
-                {
-                    var e = enemies[i];
-                    if (e == null || e.Pointer == __result.Pointer || e.isSinking || e.isDead) continue;
-                    if (!e.IsVisibleFor(__instance)) continue;
-                    if (BattleAi.Dist(__instance, e) > range) continue;
-                    float d = Damage(e);
-                    if (d > pickDmg) { pickDmg = d; pick = e; }
-                }
-                if (pick != null)
-                {
-                    if (BattleAi.Errors < 1 && DipGgFixesMod.BattleAiLog.Value && UnityEngine.Time.frameCount % 600 == 0)
-                        BattleAi.Log($"{__instance.name} focuses {pick.name} (damage {pickDmg:0.00}) instead of {__result.name} ({cur:0.00})");
-                    __result = pick;
-                }
-            }
-            catch (Exception e)
-            {
-                if (BattleAi.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] FindBestEnemy postfix: " + e.Message);
-            }
-        }
-        private static float Damage(Ship s)
-        {
-            try { return UnityEngine.Mathf.Clamp01(s.DamageEstimation()); } catch { return 0f; }
         }
     }
 }
