@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.0", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.1", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -297,7 +297,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.0. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.1. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -970,16 +970,25 @@ namespace DipGgFixes
         // true when the shooter's main guns are estimated unable to penetrate the target's belt at the given distance
         internal static bool CannotPenetrate(Ship shooter, Ship target, float dist, out float pen, out float belt)
         {
-            pen = 0f; belt = BeltArmor(target);
-            if (belt <= 0f) return false;
+            pen = 0f; belt = 0f;
+            float beltRaw = BeltArmor(target);
             try
             {
                 var g = shooter.mainGunsGroup; if (g == null) return false;
-                pen = Ship.GetPenetration(g, shooter, dist, false, new Il2CppSystem.Nullable<Ship.ShellType>(), new Il2CppSystem.Nullable<UnityEngine.Vector3>());
+                var noShell = new Il2CppSystem.Nullable<Ship.ShellType>(); var noVec = new Il2CppSystem.Nullable<UnityEngine.Vector3>();
+                pen = Ship.GetPenetration(g, shooter, dist, false, noShell, noVec);
+                // effective belt armour against this gun, in the same internal units as GetPenetration
+                try { belt = target.GetEffectiveArmor(Ship.A.Belt, null, g, shooter, false); } catch { belt = 0f; }
+                if (penLogged < 8)
+                {
+                    penLogged++;
+                    float penUi = 0f; try { penUi = Ship.GetPenetrationUI(g, shooter, dist, false, noShell, noVec); } catch { }
+                    float beltUi = 0f; try { beltUi = target.GetEffectiveArmorUI(Ship.A.Belt, null, g, shooter, false); } catch { }
+                    Log($"penetration check: {shooter.name} ({MainCaliber(shooter):0} mm) vs {target.name} at {dist:0} m: pen {pen:0.0} (UI {penUi:0.0}) vs effective belt {belt:0.0} (UI {beltUi:0.0}, armour table {beltRaw:0.0})");
+                }
             }
             catch (Exception e) { if (penLogged++ < 3) Log("GetPenetration failed: " + e.Message); return false; }
-            if (pen <= 0f) return false;
-            if (penLogged < 6) { penLogged++; Log($"penetration check: {shooter.name} ({MainCaliber(shooter):0} mm) vs {target.name}: pen {pen:0.0} vs belt {belt:0.0} at {dist:0} m"); }
+            if (pen <= 0f || belt <= 0f) return false; // units unknown or no data - do not claim "cannot penetrate"
             return pen < belt * DipGgFixesMod.PenetrationFactor.Value;
         }
         // distance at which a torpedo charge starts: torpedo range x margin + speed advantage x approach time + base, capped by doctrine
@@ -1115,7 +1124,11 @@ namespace DipGgFixes
             if (!st.charging)
             {
                 float start = ChargeStartFor(leader, best, doc, torp);
-                if (bestD > start && !st.fighting) { Why(st, $"nearest capital {best.name} at {bestD:0} m beyond start distance ({start:0} m: torpedoes {torp:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0})"); return; }
+                if (bestD > start && !st.fighting)
+                {
+                    if (st.reason != "waiting") Log($"{st.name}: nearest capital {best.name} at {bestD:0} m beyond start distance ({start:0} m: torpedoes {torp:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0})");
+                    Why(st, "waiting"); return;
+                }
                 st.charging = true; st.target = best.Pointer;
                 Why(st, "charging");
                 Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, start distance {start:0} m");
