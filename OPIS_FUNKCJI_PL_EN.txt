@@ -1,6 +1,6 @@
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - CO DAJE TEN MOD
-Opis z dnia 15 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.2.
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (41 sekcji).
+Opis z dnia 15 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.3.
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (42 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -151,7 +151,7 @@ Iron Admiral 1.1 (14 października 2026)
   wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka
   generatora).
 
-DIP_GG_Fixes 1.11.0-1.11.2 (15 października 2026)
+DIP_GG_Fixes 1.11.0-1.11.3 (15 października 2026)
 - 1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości;
   ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są
   przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza
@@ -165,6 +165,12 @@ DIP_GG_Fixes 1.11.0-1.11.2 (15 października 2026)
 - 1.11.2: wybór celów przez blokadę celu należącą do moda, bo gra co kilkaset
   milisekund wybierała cel na nowo i zerowała celowanie; ręczny rozkaz gracza
   jest nietykalny.
+- 1.11.3: panika liczona od straty załogi względem początku bitwy zamiast od
+  procentu załogi (okręty AI startują z 70% i panikowały od razu); przebicie
+  pasa porównywane w tych samych jednostkach (gra zwraca cm, pancerz jest w mm)
+  i z pasem, a nie pokładem; ten sam cel zachowuje postęp celowania; okręty
+  poddane są usuwane z list zatopionych przed rozliczeniem strat i dostają
+  minimalną załogę pryzową, więc mogą pojawić się we flocie zwycięzcy.
 
 
 Dwa pliki do pobrania: Iron_Admiral_1.1_Nexus.zip (instalator; MelonLoader
@@ -174,8 +180,8 @@ Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 ============================================================================
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - WHAT THIS MOD DOES
-Description as of 15 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.2.
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (41 sections).
+Description as of 15 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.3.
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (42 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -323,7 +329,7 @@ Iron Admiral 1.1 (14 October 2026)
   disabled), work on the AI ship generator (lower early battleship belt,
   relaxed Experimental Small Ironclad, generator diagnostics).
 
-DIP_GG_Fixes 1.11.0-1.11.2 (15 October 2026)
+DIP_GG_Fixes 1.11.0-1.11.3 (15 October 2026)
 - 1.11.0: torpedo charges start by torpedo range and speed advantage; AI
   capital ships charge when faster and close in when outranged or unable to
   penetrate; player scout divisions charge; torpedoes held while a friendly
@@ -336,6 +342,13 @@ DIP_GG_Fixes 1.11.0-1.11.2 (15 October 2026)
 - 1.11.2: target selection through a mod-owned target lock, because the game
   re-selected targets every few hundred milliseconds and reset the aiming; a
   manual order of the player is never touched.
+- 1.11.3: panic is driven by crew lost since the start of the battle instead of
+  the crew percentage (AI ships begin at 70% and were panicking at once); belt
+  penetration compared in the right units (the game returns cm, armour is in mm)
+  and against the belt instead of the deck; the same target keeps its aiming
+  progress; surrendered ships are removed from the sunk lists before the loss
+  accounting and get a minimal prize crew, so they can appear in the victor's
+  fleet.
 
 
 Two downloads: Iron_Admiral_1.1_Nexus.zip (installer; MelonLoader fetched from

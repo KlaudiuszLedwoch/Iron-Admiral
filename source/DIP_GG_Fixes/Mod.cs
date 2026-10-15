@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.2", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.3", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -170,7 +170,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> Panic;
         internal static MelonPreferences_Entry<float> PanicMaxRank;
         internal static MelonPreferences_Entry<float> PanicDamage;
-        internal static MelonPreferences_Entry<float> PanicCrew;
+        internal static MelonPreferences_Entry<float> PanicCrewLoss;
         internal static MelonPreferences_Entry<float> PanicChance;
         internal static MelonPreferences_Entry<bool> CaptureSurrendered;
         internal static MelonPreferences_Entry<float> CaptureDamage;
@@ -284,20 +284,20 @@ namespace DipGgFixes
                 "Only crews with training rank below this (0 = worst level, 1 = best level) can panic");
             PanicDamage = cat.CreateEntry("PanicDamage", 0.5f, null,
                 "Panic check starts above this damage estimate (0-1)");
-            PanicCrew = cat.CreateEntry("PanicCrewRatio", 0.7f, null,
-                "Panic check also starts below this crew ratio");
+            PanicCrewLoss = cat.CreateEntry("PanicCrewLoss", 0.25f, null,
+                "Panic check also starts when the ship lost this share of the crew it had at the start of the battle (0-1)");
             PanicChance = cat.CreateEntry("PanicChancePerCheck", 0.2f, null,
-                "Chance per 3-second check for the worst-trained crew at the threshold (scales with damage and rank)");
+                "Chance per 3-second check for the worst-trained crew at the far end of the scale (scales with the excess over the thresholds and with rank)");
             CaptureSurrendered = cat.CreateEntry("CaptureSurrenderedShips", true, null,
                 "Ships that surrendered in a campaign battle are transferred to the winner if it still has ships in the battle; they go to repair with a green crew");
             CaptureDamage = cat.CreateEntry("CaptureDamage", 0.6f, null,
                 "Structural damage (0-1) applied to a captured ship before it enters repair");
             Doctrines.Load();
-            LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew<{PanicCrew.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value})");
+            LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew loss>{PanicCrewLoss.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value})");
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.2. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.3. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -976,15 +976,16 @@ namespace DipGgFixes
             {
                 var g = shooter.mainGunsGroup; if (g == null) return false;
                 var noShell = new Il2CppSystem.Nullable<Ship.ShellType>(); var noVec = new Il2CppSystem.Nullable<UnityEngine.Vector3>();
-                pen = Ship.GetPenetration(g, shooter, dist, false, noShell, noVec);
-                // effective belt armour against this gun, in the same internal units as GetPenetration
+                // 1.11.1 log: the bool=false variant GREW with distance (plunging/deck penetration); belt penetration is the bool=true variant.
+                // Units (1.11.2 log): penetration comes back in cm, armour in mm (UI 29.1 vs 330 for an 11" gun at 10.7 km) - hence x10.
+                float penBelt = Ship.GetPenetration(g, shooter, dist, true, noShell, noVec);
+                pen = penBelt * 10f;
                 try { belt = target.GetEffectiveArmor(Ship.A.Belt, null, g, shooter, false); } catch { belt = 0f; }
                 if (penLogged < 8)
                 {
                     penLogged++;
-                    float penUi = 0f; try { penUi = Ship.GetPenetrationUI(g, shooter, dist, false, noShell, noVec); } catch { }
-                    float beltUi = 0f; try { beltUi = target.GetEffectiveArmorUI(Ship.A.Belt, null, g, shooter, false); } catch { }
-                    Log($"penetration check: {shooter.name} ({MainCaliber(shooter):0} mm) vs {target.name} at {dist:0} m: pen {pen:0.0} (UI {penUi:0.0}) vs effective belt {belt:0.0} (UI {beltUi:0.0}, armour table {beltRaw:0.0})");
+                    float penDeck = 0f; try { penDeck = Ship.GetPenetration(g, shooter, dist, false, noShell, noVec); } catch { }
+                    Log($"penetration check: {shooter.name} ({MainCaliber(shooter):0} mm) vs {target.name} at {dist:0} m: belt pen {penBelt:0.0} cm (deck variant {penDeck:0.0}) vs effective belt {belt:0.0} mm (armour table {beltRaw:0.0})");
                 }
             }
             catch (Exception e) { if (penLogged++ < 3) Log("GetPenetration failed: " + e.Message); return false; }
@@ -1245,7 +1246,7 @@ namespace DipGgFixes
     // =====================================================================================
     internal static class ShipTick
     {
-        internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>(); }
+        internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>(); }
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
@@ -1381,7 +1382,12 @@ namespace DipGgFixes
                 bool isMain = main != null && pd.Pointer == main.Pointer;
                 var pick = isMain ? PickMain(s, enemies, range, heavy) : PickSecondary(s, enemies, range);
                 if (pick == null) { Release(aim, st, pd); continue; }
-                if (cur != null && cur.Pointer == pick.Pointer && aim.manual) continue;
+                if (cur != null && cur.Pointer == pick.Pointer)
+                {
+                    // same target: only (re)assert the lock, never touch the aiming progress
+                    if (!aim.manual) aim.manual = true;
+                    st.ours[pd.Pointer] = pick.Pointer; continue;
+                }
                 aim.target = pick; aim.manual = true; aim.progress = 0f; st.ours[pd.Pointer] = pick.Pointer; targetChanges++;
                 if (tgtLogged < 40 || targetChanges % 200 == 0) { tgtLogged++; BattleAi.Log($"{s.name} {(isMain ? "main" : "secondary")} guns ({pd.caliber:0} mm): target {pick.name} ({pick.shipType.name}, dmg {Dmg(pick):0.00}) instead of {(cur != null ? cur.name : "none")} [{targetChanges} changes]"); }
             }
@@ -1434,15 +1440,18 @@ namespace DipGgFixes
             try
             {
                 if (s.IsSurrendered) return;
+                float crew = 1f; try { crew = s.CrewPercents; } catch { }
+                if (st.startCrew <= 0f) st.startCrew = crew; // many ships start a battle below 100% crew: measure the loss, not the level
                 var d0 = s.division; if (d0 == null || d0.isRetreating || d0.retreat) return;
                 float rank = CrewLevels.Rank(s);
                 if (rank > DipGgFixesMod.PanicMaxRank.Value) return;
-                float dmg = Dmg(s); float crew = 1f; try { crew = s.CrewPercents; } catch { }
+                float dmg = Dmg(s);
+                float crewLoss = st.startCrew > 0f ? (st.startCrew - crew) / st.startCrew : 0f;
                 float over = UnityEngine.Mathf.Max((dmg - DipGgFixesMod.PanicDamage.Value) / UnityEngine.Mathf.Max(0.05f, 1f - DipGgFixesMod.PanicDamage.Value),
-                                                  (DipGgFixesMod.PanicCrew.Value - crew) / UnityEngine.Mathf.Max(0.05f, DipGgFixesMod.PanicCrew.Value));
-                if (over <= 0f) return;
+                                                  (crewLoss - DipGgFixesMod.PanicCrewLoss.Value) / UnityEngine.Mathf.Max(0.05f, 1f - DipGgFixesMod.PanicCrewLoss.Value));
+                if (over <= 0.02f) return;
                 float rankFactor = 1f - rank / UnityEngine.Mathf.Max(0.01f, DipGgFixesMod.PanicMaxRank.Value); // 1 for the worst crews, 0 at the limit
-                float p = DipGgFixesMod.PanicChance.Value * (0.5f + over) * (0.3f + 0.7f * rankFactor);
+                float p = DipGgFixesMod.PanicChance.Value * over * (0.25f + 0.75f * rankFactor);
                 if (UnityEngine.Random.value > p) return;
                 var div = s.division; if (div == null) return;
                 st.panicked = true; panics++;
@@ -1454,7 +1463,7 @@ namespace DipGgFixes
                     var nd = s.division; if (nd != null) nd.Retreat(true); how = "leaves the division and retreats";
                 }
                 else { div.Retreat(true); how = "cannot detach - division retreats"; }
-                BattleAi.Log($"PANIC: {s.name} ({s.shipType.name}, {(s.player != null && s.player.isMain ? "player" : "AI")}) crew rank {rank:0.00}, damage {dmg:0.00}, crew {crew:0.00} - {how}");
+                BattleAi.Log($"PANIC: {s.name} ({s.shipType.name}, {(s.player != null && s.player.isMain ? "player" : "AI")}) crew rank {rank:0.00}, damage {dmg:0.00}, crew {crew:0.00} (start {st.startCrew:0.00}, loss {crewLoss:0.00}) - {how}");
             }
             catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] PanicCheck: " + e.Message); }
         }
@@ -1577,13 +1586,54 @@ namespace DipGgFixes
                 if (ws != null) for (int i = 0; i < ws.Count; i++) { var w = ws[i]; if (w != null && !w.isDead && !w.isSinking && !w.isSunk && !w.IsSurrendered) alive++; }
                 if (alive == 0) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} surrendered but {winner.data.name} has no ships left in the battle - not captured"); return; }
                 var cc = CampaignController.Instance; if (cc == null) return;
+                // 1.11.3: in the first test (6 TBs, 2026-10-15) the transfer went through but the ships were gone
+                // from the save: they stayed on the battle's "sunk" lists (loss accounting erases them) and had a
+                // crew near zero (LowCrew). Take them off the sunk lists and give them a prize crew first.
+                int removed = 0;
+                try { var l1 = battle.AttackerShipsSink; if (l1 != null && l1.Remove(ship)) removed++; } catch { }
+                try { var l2 = battle.DefenderShipsSink; if (l2 != null && l2.Remove(ship)) removed++; } catch { }
+                try { var l3 = battle.sunkShipsCached; if (l3 != null && l3.Remove(ship)) removed++; } catch { }
+                float hp = 0f, crew = 0f; try { hp = ship.HP; } catch { } try { crew = ship.CrewPercents; } catch { }
+                float minCrew = 0.7f; try { minCrew = UnityEngine.Mathf.Max(0.5f, MonoBehaviourExt.Param("min_crew_threshold", 0.7f)); } catch { }
                 var list = new Il2CppSystem.Collections.Generic.List<Ship>();
                 cc.TransferShipToNewOwner(winner, ship.id, ref list, null, false);
                 try { ship.CrewTrainingAmount = 0f; } catch { }
+                try { if (crew < minCrew) ship.CrewPercents = minCrew; } catch { }
                 __1 = UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f);
-                MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered to {winner.data.name} and was taken as a prize ({loser.data.name} -> {winner.data.name}); damage set to {__1:0.00}, crew training reset, status {ship.status}, new owner {(ship.player != null ? ship.player.data.name : "?")}");
+                Captured.Add(ship.Pointer);
+                MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered to {winner.data.name} and was taken as a prize ({loser.data.name} -> {winner.data.name}); removed from {removed} sunk list(s), HP {hp:0}, crew {crew:0.00} -> {UnityEngine.Mathf.Max(crew, minCrew):0.00}, damage set to {__1:0.00}, crew training reset, status {ship.status}, new owner {(ship.player != null ? ship.player.data.name : "?")}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] DamageShip prefix: " + e.Message); }
+        }
+        internal static readonly HashSet<IntPtr> Captured = new HashSet<IntPtr>();
+        private static void Postfix(Ship __0)
+        {
+            try
+            {
+                if (__0 == null || !Captured.Contains(__0.Pointer)) return;
+                MelonLogger.Msg($"[DIP GG Fixes][Capture] after DamageShip: {__0.name} status {__0.status}, isSunk {__0.isSunk}, HP {__0.HP:0}, crew {__0.CrewPercents:0.00}, owner {(__0.player != null ? __0.player.data.name : "?")}, port {(__0.PortLocation != null ? __0.PortLocation.name : "none")}");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] DamageShip postfix: " + e.Message); }
+        }
+    }
+
+    // log the fate of captured ships once the game has finished its loss accounting
+    [HarmonyPatch(typeof(CampaignController), "CheckResultBattleOnShipLosses", new Type[] { typeof(CampaignBattle) })]
+    internal static class Patch_CheckResultBattleOnShipLosses
+    {
+        private static void Postfix(CampaignBattle __0)
+        {
+            try
+            {
+                if (Patch_DamageShip.Captured.Count == 0 || __0 == null) return;
+                var all = __0.ActualShips; if (all == null) return;
+                for (int i = 0; i < all.Count; i++)
+                {
+                    var s = all[i]; if (s == null || !Patch_DamageShip.Captured.Contains(s.Pointer)) continue;
+                    MelonLogger.Msg($"[DIP GG Fixes][Capture] after loss accounting: {s.name} status {s.status}, isSunk {s.isSunk}, owner {(s.player != null ? s.player.data.name : "?")}");
+                }
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] CheckResultBattleOnShipLosses postfix: " + e.Message); }
         }
     }
 
