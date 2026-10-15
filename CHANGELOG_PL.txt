@@ -1347,5 +1347,86 @@ ZMIANY:
 Działa od następnego uruchomienia gry. Sekcja 37 pozostaje w mocy do czasu
 diagnozy z punktu 1.
 --------------------------------------------------------------------------
-Ostatnia aktualizacja pliku: 2026-10-14 (koszt badań: x10, premia budżetowa: w połowie do vanilla, naprawiono budowę floty przez AI, research_progress_base: 1, research_late_years_to_double: 2, naprawiono brak floty u nacji startujących bez okrętów, podniesiono startowy budżet gotówkowy dla wszystkich, cofnięto wagę wieży dział do vanilla — naprawiono brak możliwości ustawienia pancerza na małych kalibrach, naprawiono uszkodzony wiersz CSV blokujący odblokowanie nowoczesnych pancerników, obniżono minimalny tonaż kadłubów Modern Battleship do 35000 ton dla wszystkich nacji, naprawiono ten sam problem tonażu dla warstwy Super Battleship i wcześniejszych kadłubów BB oraz dla 5 permanentnie niebudowalnych kadłubów DD, ustawiono fizycznie uzasadniony maksymalny tonaż 200000-240000 ton dla warstwy Super Battleship i zastąpiono nieskończony limit BB po hull_strength_end wartością 240000, dodano bonus radarowy do walki nocnej i złej pogody dla technologii aim_rangefinder_11/12/13, przywrócono terytoria suwerennych państw minor w provinces.csv i w save_0/save_4, wzmocniono minory, złagodzono kryzys ekonomiczny po przegranej wojnie, naprawiono kontroler "v" Mongolii, przyspieszono badania o 20%, wzmocniono specjalizacje nacji x1,5, profil technologiczny Bizancjum = suma greece_ai i russia_ai, profil Bizancjum x1,5, cofnięto profil Bizancjum x1,5, dodatek DIP_GG_Fixes.dll łapiący błąd CheckMinorNationThreat, łatka CheckMinorNationThreat potwierdzona w grze, automatyczne projekty współdzielone w DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: krążowniki zamiast pancerników przy braku pieniędzy, większa pojemność portów minorów, DIP_GG_Fixes 1.3: wydarzenia równowagi sił, łatka na błąd TryGenerateSmallerNationsBattle, DIP_GG_Fixes 1.4: zmiany stosunków dyplomatycznych x1,5, DIP_GG_Fixes 1.5: strażnik zablokowanej budowy okrętów AI, DIP_GG_Fixes 1.6: pogorszenie stosunków x4, naprawa okrętu RODOS w save_4, agresywniejsze torpedy w automatycznym ogniu, DIP_GG_Fixes 1.7: szarża torpedowa lekkich okrętów AI i skupianie ognia, DIP_GG_Fixes 1.8–1.9: walka zamiast ucieczki, odłączanie wolnych okrętów, doktryny narodowe battleDoctrines.csv, DIP_GG_Fixes 1.10.0: karencja 24 mies. przed rozpadem gospodarczym, osłona turretCalibers przy ładowaniu okrętów, lose_provinces_threshold uznany za martwy parametr, porównanie przebijalności 15/16/18" z tabelami Okuna, wiersze 16–21" penetration.csv oparte na tabelach Okuna, Iron Admiral 1.1: scalenie z DIP GG 1.3.5 i TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, paczka „tylko Mods”, DIP_GG_Fixes 1.10.2: naprawa duplikatów projektów współdzielonych, migracja save_4 do 1.1, poprawka startu nowej kampanii: taf_force_no_predef_designs=1, kadłub Experimental Small Ironclad: limit kalibru 10", min. 2 lufy, obniżony minimalny pas pancerników w generatorze pancerza dla 1890 (6") i 1900 (7.5"), diagnostyka generatora projektów taf_debug_shipgen_info=2, Experimental Small Ironclad minimum 1 wieża)
+39. DIP_GG_FIXES 1.11.0 — SZARŻE WG ZASIĘGU I PRĘDKOŚCI, OKRĘTY GRACZA, WETERAŃSKOŚĆ, PANIKA, PRZEJMOWANIE PODDANYCH OKRĘTÓW — 2026-10-15
+--------------------------------------------------------------------------
+Wszystko ma przełączniki w UserData\MelonPreferences.cfg [DIP_GG_Fixes].
+Działa od następnego uruchomienia gry; zapisy kampanii bez zmian formatu.
+
+A. SZARŻA TORPEDOWA ZALEŻNA OD ZASIĘGU TORPED I PRĘDKOŚCI (wszystkie dywizjony AI).
+   Dotąd próg startu był stałą na nację (np. Rosja 9000 m), stąd przypadki
+   jak CL Aurora ruszająca z 8920 m na pancernik przy zasięgu torped 850 m.
+   Teraz: start = zasięg torped x TorpedoChargeRangeMargin + (prędkość
+   własna - prędkość celu, m/s) x ChargeApproachSeconds (240 s) +
+   ChargeBaseExtra (2500 m), nie więcej niż narodowy chargeStartRange z
+   battleDoctrines.csv (zostaje jako górny limit i smak narodowy).
+B. CIĘŻKIE OKRĘTY AI (bb/bc/ca) TEŻ SZARŻUJĄ LUB SKRACAJĄ DYSTANS:
+   - z torpedami i przewagą prędkości > 1.05x nad najbliższym ciężkim
+     okrętem wroga: szarża torpedowa jak okręty lekkie (CapitalTorpedoCharge);
+   - bez takiej opcji, gdy ich działa są przestrzelone (zasięg wroga > 1.1x
+     własnego) ALBO główny kaliber nie przebija pasa celu na obecnym
+     dystansie (Ship.GetPenetration vs pancerz pasa celu x PenetrationFactor):
+     dywizjon zbliża się do celu, aż osiągnie 0.7x własnego zasięgu dział lub
+     przebicie stanie się możliwe (CapitalCloseInWhenOutgunned). Przerwanie
+     przy uszkodzeniach > abortDamage doktryny. Pierwsze porównania
+     przebicie/pas są logowane do kalibracji.
+C. OKRĘTY GRACZA:
+   - dywizjony TB/DD/CL z torpedami ustawione jako ZWIAD (Division.IsScout)
+     wykonują tę samą szarżę torpedową co AI, z odwrotem po wystrzelaniu lub
+     przy ciężkich uszkodzeniach (PlayerScoutCharge; wpis "[player scout]").
+   - blokada torped, gdy własny okręt stoi w torze do celu torped: tryb
+     torped jest tymczasowo przełączany na Off i przywracany, gdy tor jest
+     wolny (TorpedoFriendlyLane, pas o połowie szerokości 350 m, sprawdzany co
+     0.5 s). Jeśli gracz sam zmieni tryb w tym czasie, mod nie ingeruje.
+   - wybór celów (SmartTargeting) dla grup dział bez ręcznie wskazanego celu
+     (Ship.Aim.manual = false), co 2 s: działa główne -> najbardziej
+     uszkodzony wróg w zasięgu; na bb/bc działa główne wybierają spośród
+     wrogów o najcięższym kalibrze (w granicach 25 mm od maksimum); działa
+     pomocnicze -> najbliższe zagrożenie torpedowe (wróg z torpedami bliżej
+     niż 1.5x jego zasięg torped), a gdy go nie ma - najbardziej uszkodzony.
+     Ręczny rozkaz ma pierwszeństwo. Ta sama logika obowiązuje AI
+     (SmartTargetingAi).
+   KOREKTA: poprawka "focus fire" z 1.9 (postfix na Ship.FindBestEnemy)
+   nigdy nie działała - gra wkompilowuje FindBestEnemy w funkcje wywołujące
+   (brak wywołań w kodzie natywnym), więc hak Harmony się nie uruchamiał.
+   Usunięta; zastąpiona przez SmartTargeting w postfixie Ship.AimAndShoot.
+   Klucze FocusFire/FocusFireMinDamage w konfiguracji zostają bez funkcji.
+D. WETERAŃSKOŚĆ NIELINIOWA (CrewLevelsRescale). Gra trzyma poziomy
+   wyszkolenia w tabeli crewTrainingLevels (celność, naprowadzanie,
+   przeładowanie, kontrola uszkodzeń) i interpoluje między sąsiednimi
+   poziomami wg punktów szkolenia. Po wczytaniu danych tabela jest
+   przeskalowana: poziom bazowy = ten o wartościach najbliższych 1.0;
+   odchylenie r w [-1, +1] od bazy; efekt = sign(r) x |r|^1.6 x (+1.0 dla
+   lepszych, 0.5 dla gorszych), czyli elita +100%, najgorsza załoga -50%,
+   poziomy pośrednie zmieniają się mało (efekt na plus 2x silniejszy niż na
+   minus - decyzja autora). Kierunek każdej statystyki wzięty z vanilla
+   (statystyki "czasowe" skalowane odwrotnością). Wartości vanilla i po
+   zmianie są zapisane w logu przy starcie.
+E. KAPITULACJA ZALEŻNA OD WYSZKOLENIA (SurrenderByTraining). Vanilla:
+   crew_percents_surrender_threshold = 0.55 dla wszystkich. Teraz próg jest
+   interpolowany od 0.70 (najgorsza załoga) do 0.40 (najlepsza) wg rangi
+   wyszkolenia; wstrzyknięty przez Param podczas Ship.CheckForSurrender.
+F. PANIKA (CrewPanic) - AI i gracz. Co 3 s okręt o randze wyszkolenia < 0.4
+   z uszkodzeniami > 0.5 albo załogą < 0.7 ma szansę (0.2 x (0.5 + nadwyżka)
+   x (0.3 + 0.7 x "zieloność")) na załamanie: dywizjon odwrót, a jeśli to nie
+   lider - okręt odłącza się (DetachShips) i odwraca sam. Raz na okręt na
+   bitwę, wpis "PANIC:" w logu. Dywizjony już w odwrocie i okręty poddane są
+   pominięte.
+G. PRZEJMOWANIE PODDANYCH OKRĘTÓW (CaptureSurrenderedShips) - kampania.
+   Prefix na BattleManager.DamageShip (gra wywołuje go po bitwie dla każdego
+   okrętu z jego uszkodzeniami). Jeśli okręt ma IsSurrendered, a przeciwnik
+   ma jeszcze w bitwie choć jeden sprawny okręt: CampaignController.
+   TransferShipToNewOwner do zwycięzcy (ta sama funkcja, której gra używa
+   przy sprzedaży i traktatach: klonuje projekt, przydziela port), punkty
+   wyszkolenia załogi zerowane (zielona załoga), uszkodzenie ustawione na
+   CaptureDamage 0.6, więc gra kieruje okręt do remontu w porcie nowego
+   właściciela. Pierwsze 30 okrętów po bitwie jest logowane z flagą
+   surrendered do weryfikacji, czy flaga przeżywa do tego momentu.
+   Precedens: Cuszima 1905 (okręty Niebogatowa w służbie japońskiej).
+   STATUS: niesprawdzone w grze - wymaga bitwy z kapitulacją.
+RYZYKA: B i C.3 wpływają na każdy okręt w bitwie - przy błędach wyłączyć
+odpowiedni klucz. SmartTargeting liczy zmiany celów ("[N changes]" w logu);
+jeśli gra co klatkę przywraca własny cel, licznik będzie rósł szybko - wtedy
+do przeprojektowania.
+--------------------------------------------------------------------------
+Ostatnia aktualizacja pliku: 2026-10-14 (koszt badań: x10, premia budżetowa: w połowie do vanilla, naprawiono budowę floty przez AI, research_progress_base: 1, research_late_years_to_double: 2, naprawiono brak floty u nacji startujących bez okrętów, podniesiono startowy budżet gotówkowy dla wszystkich, cofnięto wagę wieży dział do vanilla — naprawiono brak możliwości ustawienia pancerza na małych kalibrach, naprawiono uszkodzony wiersz CSV blokujący odblokowanie nowoczesnych pancerników, obniżono minimalny tonaż kadłubów Modern Battleship do 35000 ton dla wszystkich nacji, naprawiono ten sam problem tonażu dla warstwy Super Battleship i wcześniejszych kadłubów BB oraz dla 5 permanentnie niebudowalnych kadłubów DD, ustawiono fizycznie uzasadniony maksymalny tonaż 200000-240000 ton dla warstwy Super Battleship i zastąpiono nieskończony limit BB po hull_strength_end wartością 240000, dodano bonus radarowy do walki nocnej i złej pogody dla technologii aim_rangefinder_11/12/13, przywrócono terytoria suwerennych państw minor w provinces.csv i w save_0/save_4, wzmocniono minory, złagodzono kryzys ekonomiczny po przegranej wojnie, naprawiono kontroler "v" Mongolii, przyspieszono badania o 20%, wzmocniono specjalizacje nacji x1,5, profil technologiczny Bizancjum = suma greece_ai i russia_ai, profil Bizancjum x1,5, cofnięto profil Bizancjum x1,5, dodatek DIP_GG_Fixes.dll łapiący błąd CheckMinorNationThreat, łatka CheckMinorNationThreat potwierdzona w grze, automatyczne projekty współdzielone w DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: krążowniki zamiast pancerników przy braku pieniędzy, większa pojemność portów minorów, DIP_GG_Fixes 1.3: wydarzenia równowagi sił, łatka na błąd TryGenerateSmallerNationsBattle, DIP_GG_Fixes 1.4: zmiany stosunków dyplomatycznych x1,5, DIP_GG_Fixes 1.5: strażnik zablokowanej budowy okrętów AI, DIP_GG_Fixes 1.6: pogorszenie stosunków x4, naprawa okrętu RODOS w save_4, agresywniejsze torpedy w automatycznym ogniu, DIP_GG_Fixes 1.7: szarża torpedowa lekkich okrętów AI i skupianie ognia, DIP_GG_Fixes 1.8–1.9: walka zamiast ucieczki, odłączanie wolnych okrętów, doktryny narodowe battleDoctrines.csv, DIP_GG_Fixes 1.10.0: karencja 24 mies. przed rozpadem gospodarczym, osłona turretCalibers przy ładowaniu okrętów, lose_provinces_threshold uznany za martwy parametr, porównanie przebijalności 15/16/18" z tabelami Okuna, wiersze 16–21" penetration.csv oparte na tabelach Okuna, Iron Admiral 1.1: scalenie z DIP GG 1.3.5 i TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, paczka „tylko Mods”, DIP_GG_Fixes 1.10.2: naprawa duplikatów projektów współdzielonych, migracja save_4 do 1.1, poprawka startu nowej kampanii: taf_force_no_predef_designs=1, kadłub Experimental Small Ironclad: limit kalibru 10", min. 2 lufy, obniżony minimalny pas pancerników w generatorze pancerza dla 1890 (6") i 1900 (7.5"), diagnostyka generatora projektów taf_debug_shipgen_info=2, Experimental Small Ironclad minimum 1 wieża, DIP_GG_Fixes 1.11.0: szarże wg zasięgu torped i prędkości, szarże i skracanie dystansu ciężkich okrętów AI, szarża zwiadu gracza, blokada torped przed własnymi okrętami, inteligentny wybór celów, weterańskość nieliniowa, kapitulacja wg wyszkolenia, panika, przejmowanie poddanych okrętów)
 ==========================================================================

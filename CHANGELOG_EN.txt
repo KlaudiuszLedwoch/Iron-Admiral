@@ -1331,5 +1331,85 @@ CHANGES:
 Takes effect on the next game start. Section 37 stays in place until the
 diagnosis from point 1.
 --------------------------------------------------------------------------
-Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package, DIP_GG_Fixes 1.10.2: shared-design duplicate fix, save_4 migration to 1.1, new-campaign start fix: taf_force_no_predef_designs=1, Experimental Small Ironclad hull: 10" calibre limit, min. 2 barrels, battleship minimum belt in the armor generator lowered for 1890 (6") and 1900 (7.5"), ship generator diagnostics taf_debug_shipgen_info=2, Experimental Small Ironclad 1 turret minimum)
+39. DIP_GG_FIXES 1.11.0 — CHARGES BY RANGE AND SPEED, PLAYER SHIPS, VETERANCY, PANIC, CAPTURING SURRENDERED SHIPS — 2026-10-15
+--------------------------------------------------------------------------
+Everything has a switch in UserData\MelonPreferences.cfg [DIP_GG_Fixes].
+Takes effect on the next game start; campaign save format unchanged.
+
+A. TORPEDO CHARGE START BY TORPEDO RANGE AND SPEED (all AI divisions).
+   The start threshold used to be a per-nation constant (e.g. Russia
+   9000 m), hence cases like CL Aurora starting at 8920 m against a
+   battleship with 850 m torpedoes. Now: start = torpedo range x
+   TorpedoChargeRangeMargin + (own speed - target speed, m/s) x
+   ChargeApproachSeconds (240 s) + ChargeBaseExtra (2500 m), capped by the
+   national chargeStartRange from battleDoctrines.csv (kept as the upper
+   limit and national flavour).
+B. AI CAPITAL SHIPS (bb/bc/ca) CHARGE OR CLOSE IN TOO:
+   - with torpedoes and a speed advantage > 1.05x over the nearest enemy
+     capital ship: torpedo charge like light ships (CapitalTorpedoCharge);
+   - otherwise, when their guns are outranged (enemy range > 1.1x own) OR
+     the main calibre cannot penetrate the target's belt at the current
+     distance (Ship.GetPenetration vs target belt armour x PenetrationFactor):
+     the division closes in until 0.7x own gun range or until penetration
+     becomes possible (CapitalCloseInWhenOutgunned). Aborted above the
+     doctrine's abortDamage. The first penetration/belt comparisons are
+     logged for calibration.
+C. PLAYER SHIPS:
+   - TB/DD/CL divisions with torpedoes set as SCOUT (Division.IsScout) run
+     the same torpedo charge as the AI, retreating when out of torpedoes or
+     badly damaged (PlayerScoutCharge; log entries "[player scout]").
+   - torpedoes are held while a friendly ship is in the lane to the torpedo
+     target: the torpedo mode is temporarily set to Off and restored when
+     the lane is clear (TorpedoFriendlyLane, lane half width 350 m, checked
+     every 0.5 s). If the player changes the mode meanwhile, the mod backs off.
+   - target selection (SmartTargeting) for gun groups without a manual
+     target (Ship.Aim.manual = false), every 2 s: main guns -> most damaged
+     enemy in range; on bb/bc the main guns pick among the enemies with the
+     heaviest calibre (within 25 mm of the maximum); secondary guns -> the
+     nearest torpedo threat (enemy with torpedoes closer than 1.5x its
+     torpedo range), otherwise the most damaged. Manual orders take
+     precedence. The same logic applies to the AI (SmartTargetingAi).
+   CORRECTION: the 1.9 "focus fire" patch (postfix on Ship.FindBestEnemy)
+   never ran - the game inlines FindBestEnemy into its callers (no calls in
+   the native code), so the Harmony hook was never hit. Removed; replaced by
+   SmartTargeting in a Ship.AimAndShoot postfix. The FocusFire /
+   FocusFireMinDamage config keys remain without function.
+D. NON-LINEAR VETERANCY (CrewLevelsRescale). The game keeps crew training
+   levels in the crewTrainingLevels table (accuracy, aiming, reload, damage
+   control) and interpolates between neighbouring levels by training points.
+   After data load the table is rescaled: baseline = the level with values
+   closest to 1.0; deviation r in [-1, +1] from the baseline; effect =
+   sign(r) x |r|^1.6 x (+1.0 for better, 0.5 for worse), i.e. elite +100%,
+   worst crew -50%, intermediate levels change little (positive effect 2x
+   stronger than negative - author's decision). The direction of each stat
+   is taken from vanilla (time-like stats scaled by the reciprocal). Vanilla
+   and rescaled values are written to the log at start.
+E. SURRENDER BY TRAINING (SurrenderByTraining). Vanilla:
+   crew_percents_surrender_threshold = 0.55 for everybody. Now the threshold
+   is interpolated from 0.70 (worst crew) to 0.40 (best) by training rank;
+   injected through Param during Ship.CheckForSurrender.
+F. PANIC (CrewPanic) - AI and player. Every 3 s a ship with training rank
+   < 0.4 and damage > 0.5 or crew < 0.7 has a chance (0.2 x (0.5 + excess)
+   x (0.3 + 0.7 x "greenness")) to break: the division retreats, or, if the
+   ship is not the leader, it detaches (DetachShips) and retreats alone. Once
+   per ship per battle, log entry "PANIC:". Divisions already retreating and
+   surrendered ships are skipped.
+G. CAPTURING SURRENDERED SHIPS (CaptureSurrenderedShips) - campaign.
+   Prefix on BattleManager.DamageShip (the game calls it after the battle
+   for every ship with its damage). If the ship has IsSurrendered and the
+   opponent still has at least one working ship in the battle:
+   CampaignController.TransferShipToNewOwner to the winner (the same
+   function the game uses for sales and treaties: clones the design, assigns
+   a port), crew training points reset (green crew), damage set to
+   CaptureDamage 0.6 so the game sends the ship to repair in the new owner's
+   port. The first 30 ships after a battle are logged with the surrendered
+   flag to verify that the flag survives to this point.
+   Precedent: Tsushima 1905 (Nebogatov's ships in Japanese service).
+   STATUS: untested in game - needs a battle with a surrender.
+RISKS: B and C.3 affect every ship in battle - on problems switch the
+relevant key off. SmartTargeting counts target changes ("[N changes]" in the
+log); if the game restores its own target every frame the counter will grow
+fast - then the design needs rework.
+--------------------------------------------------------------------------
+Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package, DIP_GG_Fixes 1.10.2: shared-design duplicate fix, save_4 migration to 1.1, new-campaign start fix: taf_force_no_predef_designs=1, Experimental Small Ironclad hull: 10" calibre limit, min. 2 barrels, battleship minimum belt in the armor generator lowered for 1890 (6") and 1900 (7.5"), ship generator diagnostics taf_debug_shipgen_info=2, Experimental Small Ironclad 1 turret minimum, DIP_GG_Fixes 1.11.0: charges by torpedo range and speed, AI capital ships charge or close in, player scout charge, torpedo friendly-lane hold, smart targeting, non-linear veterancy, surrender by training, panic, capture of surrendered ships)
 ==========================================================================
