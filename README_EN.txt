@@ -180,7 +180,7 @@ instead of fleeing, detaching slow ships, national doctrines. Not yet
 tested over a long game: the direction of the doctrine distance
 multiplier (distanceMult) and the economic changes across a whole
 campaign. Full change history with reasoning, sources and test status:
-CHANGELOG_EN.txt (39 sections).
+CHANGELOG_EN.txt (40 sections).
 
 --------------------------------------------------------------------------
 INSTALLATION
