@@ -1,5 +1,7 @@
 [h1]Iron Admiral 1.1 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
+[i]Description as of 15 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.2.[/i]
+
 [b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.2.
@@ -99,6 +101,8 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 ============================================================================
 
 [h1]Iron Admiral 1.1 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
+
+[i]Opis z dnia 15 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.2.[/i]
 
 [b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
