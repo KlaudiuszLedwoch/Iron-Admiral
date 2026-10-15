@@ -1,6 +1,6 @@
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - CO DAJE TEN MOD
 Opis funkcji w aktualnej wersji, od najważniejszych dla gracza.
-Stan na 2026-10-15. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (40 sekcji).
+Stan na 2026-10-15. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (41 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -123,7 +123,7 @@ Mods dla osób z działającym MelonLoaderem 0.6.6).
 ============================================================================
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - WHAT THIS MOD DOES
 Feature overview of the current version, most important for the player first.
-As of 2026-10-15. Full reasoning and sources: CHANGELOG_EN.txt (40 sections).
+As of 2026-10-15. Full reasoning and sources: CHANGELOG_EN.txt (41 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project

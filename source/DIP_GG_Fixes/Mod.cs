@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.1", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.2", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -297,7 +297,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.1. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.2. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1245,7 +1245,7 @@ namespace DipGgFixes
     // =====================================================================================
     internal static class ShipTick
     {
-        internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; }
+        internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>(); }
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
@@ -1280,7 +1280,7 @@ namespace DipGgFixes
             float now = UnityEngine.Time.time;
             if (now < st.nextTarget) return;
             st.nextTarget = now + 2f;
-            SmartTargets(s, player);
+            SmartTargets(s, player, st);
         }
 
         // ---- torpedo lane: hold torpedoes while a friendly ship is between us and the torpedo target
@@ -1342,7 +1342,10 @@ namespace DipGgFixes
 
         // ---- target selection (respects manual targets)
         static int tgtLogged;
-        static void SmartTargets(Ship s, Player player)
+        // The game re-selects targets for non-manual aims every few hundred ms (1.11.0 test: 1200 overrides
+        // in 90 s, each resetting aiming progress). So the mod sets its pick as a "manual" target and
+        // remembers it; a manual target the mod did not set (the player's order) is never touched.
+        static void SmartTargets(Ship s, Player player, St st)
         {
             try
             {
@@ -1351,12 +1354,12 @@ namespace DipGgFixes
                 var cache = s.weaponRangesCache;
                 var main = s.mainGunsGroup;
                 bool heavy = false; try { var tn = s.shipType != null ? s.shipType.name : null; heavy = tn == "bb" || tn == "bc"; } catch { }
-                Apply(s, s.enemies, enemies, cache, main, heavy);
-                Apply(s, s.enemiesLeftSide, enemies, cache, main, heavy);
+                Apply(s, st, s.enemies, enemies, cache, main, heavy);
+                Apply(s, st, s.enemiesLeftSide, enemies, cache, main, heavy);
             }
             catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] SmartTargets: " + e.Message); }
         }
-        static void Apply(Ship s, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, Il2CppSystem.Collections.Generic.List<Ship> enemies, Il2CppSystem.Collections.Generic.Dictionary<PartData, float> cache, PartData main, bool heavy)
+        static void Apply(Ship s, St st, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, Il2CppSystem.Collections.Generic.List<Ship> enemies, Il2CppSystem.Collections.Generic.Dictionary<PartData, float> cache, PartData main, bool heavy)
         {
             if (dict == null) return;
             var keys = new List<PartData>();
@@ -1364,17 +1367,29 @@ namespace DipGgFixes
             foreach (var pd in keys)
             {
                 if (!pd.isGun) continue;
-                var aim = dict[pd]; if (aim == null || aim.manual) continue;
+                var aim = dict[pd]; if (aim == null) continue;
+                var cur = aim.target;
+                IntPtr mine; bool haveMine = st.ours.TryGetValue(pd.Pointer, out mine);
+                if (aim.manual)
+                {
+                    // a manual target that is not ours = the player's order: hands off
+                    if (!haveMine || cur == null || cur.Pointer != mine) { if (haveMine) st.ours.Remove(pd.Pointer); continue; }
+                }
+                else if (haveMine) st.ours.Remove(pd.Pointer); // the game or the player cleared our lock
                 float range = 0f; if (cache != null) cache.TryGetValue(pd, out range);
-                if (range <= 0f) continue;
+                if (range <= 0f) { Release(aim, st, pd); continue; }
                 bool isMain = main != null && pd.Pointer == main.Pointer;
                 var pick = isMain ? PickMain(s, enemies, range, heavy) : PickSecondary(s, enemies, range);
-                if (pick == null) continue;
-                var cur = aim.target;
-                if (cur != null && cur.Pointer == pick.Pointer) continue;
-                aim.target = pick; aim.progress = 0f; targetChanges++;
+                if (pick == null) { Release(aim, st, pd); continue; }
+                if (cur != null && cur.Pointer == pick.Pointer && aim.manual) continue;
+                aim.target = pick; aim.manual = true; aim.progress = 0f; st.ours[pd.Pointer] = pick.Pointer; targetChanges++;
                 if (tgtLogged < 40 || targetChanges % 200 == 0) { tgtLogged++; BattleAi.Log($"{s.name} {(isMain ? "main" : "secondary")} guns ({pd.caliber:0} mm): target {pick.name} ({pick.shipType.name}, dmg {Dmg(pick):0.00}) instead of {(cur != null ? cur.name : "none")} [{targetChanges} changes]"); }
             }
+        }
+        // give the group back to the game's own targeting
+        static void Release(Ship.Aim aim, St st, PartData pd)
+        {
+            if (st.ours.ContainsKey(pd.Pointer)) { st.ours.Remove(pd.Pointer); if (aim.manual) aim.manual = false; }
         }
         internal static float Dmg(Ship e) { try { return UnityEngine.Mathf.Clamp01(e.DamageEstimation()); } catch { return 0f; } }
         static bool Usable(Ship s, Ship e) { return e != null && !e.isDead && !e.isSinking && !e.IsSurrendered && e.IsVisibleFor(s); }
