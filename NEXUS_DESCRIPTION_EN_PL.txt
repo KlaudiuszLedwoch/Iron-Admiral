@@ -1,126 +1,156 @@
-Nexus Mods — main Description field (BBCode), bilingual: English first, Polish after the separator.
-Short summary field: DIP "The Great Game" with a battle AI that fights: torpedo charges, no free kills on slower ships, national doctrines, stronger minors, balance-of-power events. One-click install, full uninstall, MelonLoader bundled.
+Nexus Mods - main Description field (BBCode), bilingual: English first, Polish after the separator.
+Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: torpedo charges by range and speed, capital ships that close in, crews that matter (veterancy, panic, surrender), prizes, national doctrines, stronger minors, balance-of-power events. One-click install, full uninstall. Download: https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases
 
 ==========================================================================
 
-[b]One-click install. Full uninstall. Everything bundled (MelonLoader, TweaksAndFixes, DIP data, source code).[/b]
+[b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-If you liked the Dreadnought Improvement Project but felt the AI still plays like a script, this is for you. Iron Admiral keeps DIP's map, nations and data and adds a small MelonLoader add-on (DIP_GG_Fixes) that changes how the AI behaves in battle and in the campaign — things no CSV edit can do.
+Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.2.
 
-[h2]Current 1.1 package[/h2]
-[b]DIP_GG_Fixes 1.11.0 (section 39):[/b] AI torpedo charges start at a distance derived from torpedo range and speed advantage (no more 9 km charges with 850 m torpedoes); AI capital ships with torpedoes and a speed edge charge too, and when outranged or unable to penetrate they close the distance; your TB/DD/CL divisions set as Scout charge like the AI; your ships hold torpedoes while a friendly ship is in the lane; target selection for guns without a manual order (most damaged enemy, battleship main guns on the heaviest calibre, secondaries on the nearest torpedo threat); crew experience matters far more (elite up to +100%, green down to -50%, non-linear); surrender threshold by training (70% crew for green, 40% for elite); green crews on badly damaged ships panic and retreat; ships that surrender are taken as prizes by the winner (repair, green crew) - experimental.
-[b]Post-release fixes (sections 35-38 of the changelog):[/b] new campaigns start correctly again (predefined designs disabled - the package ships without predefinedDesigns.bin), shared designs are exported once instead of every turn (DIP_GG_Fixes 1.10.2), a save migration tool for 1.0 campaigns, and work on the AI ship generator: lower minimum battleship belt for 1890-1900 (6"/7.5" instead of 9"), relaxed requirements for the "Experimental Small Ironclad" hull (10" limit, 1 turret) and full generator diagnostics in the log (taf_debug_shipgen_info=2) while the remaining failed designs are being tracked down.
-
-[h2]Battle AI[/h2]
+[h2]Battle: an enemy that fights like a navy[/h2]
 [list]
-[*][b]Torpedo charges.[/b] AI destroyers, torpedo boats and light cruisers charge your battleships and heavy cruisers to deliver torpedoes, then withdraw when empty or badly hit.
-[*][b]No more free kills.[/b] Any AI division that cannot outrun your pursuit stops fleeing and turns to fight. If it is faster, it keeps running — as it should.
-[*][b]Cripples don't slow the fleet.[/b] Damaged, slow ships are detached and retreat on their own; the healthy ships keep fighting at full speed.
-[*][b]Focus fire.[/b] AI guns prefer targets that are already damaged.
-[*][b]National doctrines.[/b] Each nation fights by its historical doctrine (Royal Navy: long range and line; Japan: torpedo charges from 16 km, losses accepted; Italy: fights only with an advantage; Germany: torpedo flotillas cover the turn-away). Based on the Grand Fleet Battle Orders, the USN War Instructions and the Kaisen Yōmurei literature. All in one editable CSV.
+[*][b]Torpedo charges that make sense.[/b] AI destroyers, torpedo boats and light cruisers go for your battleships and heavy cruisers to deliver torpedoes. The start distance follows from their torpedo range and speed advantage, not from a constant: a ship with 850 m torpedoes no longer charges from 9 km. Out of torpedoes or badly hit, it withdraws; slower than its pursuers, it fights to the end.
+[*][b]Capital ships charge too.[/b] An AI battleship or cruiser with torpedoes and a speed edge closes in; outranged or unable to penetrate your armour, it shortens the distance instead of dying at the edge of range.
+[*][b]No more free kills.[/b] Any AI division that cannot outrun your pursuit stops fleeing and turns to fight. A faster one keeps running, as it should.
+[*][b]Cripples don't slow the fleet.[/b] Slow, damaged ships are detached and retreat on their own; the healthy ones fight at full speed.
+[*][b]Target selection like a real bridge[/b] (AI and player, when no manual target is set): guns engage the most damaged enemy in range, battleship main batteries aim at the heaviest enemy calibre, secondaries watch the nearest torpedo threat. A manual order always takes precedence.
+[*][b]National battle doctrines[/b] (15 nations in an editable CSV): the Royal Navy keeps range and line, Japan charges with torpedoes from 16 km and accepts losses, Italy fights only with an advantage, Germany covers the turn-away with torpedo flotillas. Based on the Grand Fleet Battle Orders, the USN War Instructions and the Kaisen Yomurei literature.
 [/list]
 
-[h2]Campaign AI and world[/h2]
+[h2]Your ships: less micromanagement[/h2]
 [list]
-[*]AI nations that cannot afford a battleship build cruisers instead of leaving their yards empty.
-[*]Balance of power: when your fleet outgrows the strongest rival by half, AI nations get emergency naval funding.
-[*]Sovereign minor nations get their territories back and behave like in vanilla again: alliances, ship purchases, wars. Stronger minor defence, doubled minor port capacity for the warship trade.
-[*]Diplomacy with consequences: improvements x1.5, worsening x4 — for you and for the AI.
-[*]Post-war crisis softened so nations don't spiral into permanent bankruptcy.
-[*]Your campaign designs are automatically exported to the shared design pool.
-[*]Two game-code bugs that aborted turn processing in DIP ("An item with the same key has already been added") are caught, so turns complete.
+[*]A TB/DD/CL division set as [b]Scout[/b] runs the torpedo charge itself, like the AI, and comes back when the torpedoes are gone or things get hot.
+[*][b]Torpedoes do not run into friendly ships:[/b] when a friendly hull is in the lane to the target, the salvo waits until the lane is clear. Your own torpedo-mode change takes precedence.
+[*]The automatic target selection above works for your ships as well.
 [/list]
 
-[h2]Historical accuracy and battleship design freedom[/h2]
+[h2]The crew matters[/h2]
 [list]
-[*][b]Armour penetration from physics:[/b] De Marre formula for all 21 calibres and 5 gun generations, calibrated on six documented penetration tables (US 8"/55, German 28 cm, US 12"/50, British 13.5"/45 and 15"/42, US 16"/50 Mk 7), 0.5–13% error. Every calibre is based on a real gun. DIP scaled penetration linearly with calibre.
-[*][b]Gun weights:[/b] barrel weight W = 0.05564·D^2.7732 t, calibrated on the 16"/50 Mk 7, 15"/42 Mk I and Yamato's 46 cm.
-[*][b]Naval treaties, modelled for the first time:[/b] Washington 35,000 t from the 1919 hull tech, Second London escalator 45,000 t from 1936, treaties lapse in 1940. DIP had no battleship cap at all.
-[*][b]Design freedom after 1940:[/b] the 14 Super Battleship hulls go from DIP's 78,500–130,000 t to 200,000–240,000 t (bb_8_china 200,000 … bb_7_bismarck 240,000), hard ceiling 240,000 t instead of infinity. Hull steel was never the limit — docks were; H-44 (~131,000 t) was judged unbuildable in the 1940s. Here you get the docks.
-[*][b]Unbuildable hulls fixed:[/b] 29 Modern Battleship variants (Iowa, Bismarck, Richelieu, KGV, Littorio, Soyuz…) unlocked at 42,500–66,000 t minimum under a 35,000–45,000 t cap — dead techs. Now 35,000 t minimum (closer to history: South Dakota ~37,000, KGV ~36,000, Bismarck ~41,700). Plus 23 earlier BB hulls, 5 permanently unbuildable destroyer hulls and a corrupted CSV row that dropped every modern-BB unlock.
-[*][b]Long Lance:[/b] +100% range for oxygen torpedoes (Type 93: 40,000 m vs ~12,000–13,700 m for everyone else). [b]Radar:[/b] night visibility +20/35/50 and bad-weather accuracy, which DIP never granted.
+[*][b]Experience really counts.[/b] The six training levels (cadets to veterans) are rescaled non-linearly: veterans up to +100% in accuracy, aiming and damage control with reload twice as fast; cadets down to -50% and reload twice as slow. Middle levels change little, the extremes a lot.
+[*][b]Surrender depends on training:[/b] a green crew gives up the ship at 70% crew strength, an elite one fights down to 40% (vanilla: 55% for everybody).
+[*][b]Panic.[/b] Inexperienced crews on badly damaged ships may break and leave the line - AI and player alike. A well-trained fleet is not only more accurate, it is a fleet that does not run.
+[*][b]Prizes.[/b] A ship that surrenders falls to the winner if the winner still has working ships on the field: it goes to repair with a green crew. Like Nebogatov's squadron after Tsushima. New feature, under test.
 [/list]
 
-[h2]Ships and tech (short list)[/h2]
+[h2]Campaign: an AI that does not give up[/h2]
 [list]
-[*]Armour penetration rebuilt from physics (De Marre) for 21 calibres and 5 gun generations; barrel weights calibrated on real guns.
-[*][b]Naval treaties:[/b] DIP had no battleship tonnage cap. Now: Washington Treaty 35,000 t (from 1919 tech), Second London escalator 45,000 t (1936), treaties lapse in 1940 — and then the Super Battleship tier is raised from 78,500–130,000 t to 200,000–240,000 t per hull, 240,000 t hard ceiling instead of infinity.
-[*]Fixed hulls that could never be built in DIP (Modern/Super Battleship, several BB and DD hulls) and a corrupted CSV row blocking modern battleship unlocks.
-[*]Radar finally helps at night and in bad weather. Long Lance torpedoes: +100% range.
-[*]Research ~20% faster, national tech specialisations x1.5, new Byzantine Empire profile.
+[*]An AI nation that cannot afford a battleship builds cruisers instead of keeping its yards empty.
+[*][b]Balance of power:[/b] when your fleet outgrows the strongest rival by half, AI nations receive emergency naval appropriations. Dominance has a price.
+[*]Construction watch: if the game skips a nation's construction progress in a turn, the add-on does it instead.
+[*]Your designs go automatically to the shared design pool, so the AI can build from them.
+[*]The post-war crisis hurts but no longer traps nations in an endless spiral: a nation at zero budget vanishes only after 24 months of crisis.
 [/list]
 
-[h2]Install[/h2]
-Unzip anywhere and double-click [b]Install.bat[/b] — a readable PowerShell script, no exe. It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 before extracting, then installs the mod. Internet is needed during install and on the first launch, which takes a few minutes. Start a new campaign.
+[h2]A world that lives[/h2]
+[list]
+[*]Sovereign minor nations (Latin America, Persia, Siam, the Balkans, Scandinavia and more) get their territories back, form alliances, buy ships and take part in wars as in vanilla; in the original DIP most of them existed only on paper.
+[*]Minors have stronger province defence and doubled port capacity in the warship trade, so they order ships from you more often.
+[*]Diplomacy with consequences: improvements x1.5, worsening x4, for the player and the AI.
+[*]Revolts and internal instability more frequent, stronger and geographically varied.
+[/list]
 
-[h2]Transparency[/h2]
-Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (40 sections). Everything in the add-on has a switch in MelonPreferences.cfg. Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[h2]History in numbers[/h2]
+[list]
+[*][b]Penetration from physics, not from a slider:[/b] curves for 21 calibres and 5 gun generations rebuilt with the De Marre formula and calibrated on six navweaps.com tables (error 0.5-13%), the 16-21" calibres anchored on Okun's tables. Small guns no longer scratch a battleship's belt.
+[*]Barrel weights from a power law calibrated on the 16"/50 Mk 7, 15"/42 Mk I and 46 cm Type 94.
+[*][b]The naval treaties modelled for the first time:[/b] 35,000 t from the 1919 hull tech, 45,000 t from 1936, limits lapse in 1940.
+[*]After the treaties, design freedom up to 240,000 t for the super-battleship tier (DIP: 78,500-130,000 t). The ship H-44 could not be is buildable here, by you and by the AI.
+[*]Hulls that could be researched but never built in DIP are fixed (29 Modern Battleship variants, 23 earlier battleships, 5 destroyers, a corrupted CSV row that blocked the unlocks).
+[*]Radar that works at night and in bad weather (three techs, 1935-1945). Long Lance: +100% range instead of +40%.
+[*]Research 20% faster, technology cost x10, national specialisations x1.5, a new profile for the Byzantine Empire (heavy armour, the biggest calibres, fast cruisers).
+[/list]
 
-[h2]Files[/h2]
-Main file: Iron_Admiral_1.1_Nexus.zip — extract anywhere and run Install.bat (a readable PowerShell script, no exe). Optional file: Iron_Admiral_1.1_Mods_only.zip — just the Mods folder, for those who already have MelonLoader 0.6.6 set up (replace your Mods folder with it). Based on DIP The Great Game 1.3.5; TweaksAndFixes 3.21.1 is bundled. MelonLoader 0.6.6 is [b]not[/b] bundled: the installer downloads the official MelonLoader.x64.zip from the LavaGang GitHub release and verifies its SHA-256 (687b8260…3c0db) before extracting, so internet access is needed during installation.
+[h2]Stability and transparency[/h2]
+[list]
+[*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
+[*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv. Nothing is forced.
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (41 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[/list]
 
-Source code (DIP_GG_Fixes, installer, merge scripts) and both zips: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
-
-[h2]Feedback[/h2]
+[h2]Download and install[/h2]
+[b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
+[list]
+[*][b]Iron_Admiral_1.1_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.1_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[/list]
+Based on DIP The Great Game 1.3.5 with TweaksAndFixes 3.21.1. Source code (DIP_GG_Fixes, installer, merge scripts): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
+Start a new campaign; saves from 1.0 need the migration tool from the source folder (source/save_tools).
 Bug reports with MelonLoader\Latest.log attached are the fastest way to get something fixed. Post them in the Bugs tab.
 
 [hr][/hr]
 
 [b]Wersja polska[/b]
 
-[b]Instalacja jednym kliknięciem. Pełne odinstalowanie. Wszystko w paczce (MelonLoader, TweaksAndFixes, dane DIP, kod źródłowy).[/b]
+[b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Jeśli lubisz Dreadnought Improvement Project, ale AI nadal gra jak skrypt — to jest dla ciebie. Iron Admiral zachowuje mapę, nacje i dane DIP, a dodaje mały dodatek pod MelonLoadera (DIP_GG_Fixes), który zmienia zachowanie AI w bitwie i w kampanii — rzeczy, których nie da się zrobić edycją CSV.
+Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.2.
 
-[h2]AI bitewne[/h2]
+[h2]Bitwa: przeciwnik, który walczy jak flota[/h2]
 [list]
-[*][b]Szarże torpedowe.[/b] Niszczyciele, torpedowce i lekkie krążowniki AI idą na twoje pancerniki i ciężkie krążowniki, odpalają torpedy i wycofują się, gdy ich zabraknie albo są mocno uszkodzone.
-[*][b]Koniec darmowych zatopień.[/b] Każdy dywizjon AI, który nie jest w stanie uciec przed pościgiem, przestaje uciekać i odwraca się do walki. Jeśli jest szybszy, ucieka dalej — jak powinien.
-[*][b]Kaleki nie spowalniają floty.[/b] Uszkodzone, wolne okręty są odłączane i wycofują się osobno; sprawne walczą dalej z pełną prędkością.
-[*][b]Skupianie ognia.[/b] Działa AI wybierają cele już uszkodzone.
-[*][b]Doktryny narodowe.[/b] Każda nacja walczy według własnej doktryny historycznej (Royal Navy: dystans i linia; Japonia: szarże torpedowe z 16 km, akceptacja strat; Włochy: walka tylko przy przewadze; Niemcy: flotylle torpedowe osłaniają odwrót). Oparte na Grand Fleet Battle Orders, War Instructions USN i literaturze o Kaisen Yōmurei. Wszystko w jednym edytowalnym CSV.
+[*][b]Szarże torpedowe z sensem.[/b] Niszczyciele, kutry i lekkie krążowniki AI ruszają na Twoje pancerniki i ciężkie krążowniki, by odpalić torpedy. Dystans startu wynika z zasięgu ich torped i przewagi prędkości, nie ze stałej: okręt z torpedami o zasięgu 850 m nie rusza już z 9 km. Po wystrzelaniu lub przy ciężkich uszkodzeniach odchodzi; gdy jest wolniejszy od pościgu, walczy do końca.
+[*][b]Ciężkie okręty też szarżują.[/b] Pancernik lub krążownik AI z torpedami i przewagą prędkości idzie na zbliżenie; przestrzelony albo niezdolny przebić Twojego pancerza skraca dystans, zamiast ginąć na granicy zasięgu.
+[*][b]Koniec darmowych zestrzeleń.[/b] Dywizjon AI, który nie ucieknie pościgowi, przestaje uciekać i odwraca się do walki. Szybszy ucieka dalej, jak należy.
+[*][b]Uszkodzone okręty nie hamują floty.[/b] Wolne jednostki są odłączane i odchodzą same; zdrowe walczą z pełną prędkością.
+[*][b]Wybór celów jak na prawdziwym mostku[/b] (AI i gracz, gdy nie wskazano celu ręcznie): działa biją najbardziej uszkodzony okręt w zasięgu, działa główne pancerników celują w najcięższy kaliber przeciwnika, działa pomocnicze pilnują najbliższego zagrożenia torpedowego. Ręczny rozkaz ma zawsze pierwszeństwo.
+[*][b]Narodowe doktryny bitewne[/b] (15 nacji w edytowalnym CSV): Royal Navy trzyma dystans i linię, Japonia szarżuje torpedami z 16 km i godzi się na straty, Włochy walczą tylko z przewagą, Niemcy osłaniają zwrot flotyllami torpedowymi. Na podstawie Grand Fleet Battle Orders, USN War Instructions i literatury o Kaisen Yomurei.
 [/list]
 
-[h2]AI kampanii i świat[/h2]
+[h2]Twoje okręty: mniej mikrozarządzania[/h2]
 [list]
-[*]Nacje AI, których nie stać na pancernik, budują krążowniki zamiast stać z pustą stocznią.
-[*]Równowaga sił: gdy twoja flota przerasta najsilniejszego rywala o połowę, nacje AI dostają nadzwyczajne środki na marynarkę.
-[*]Suwerenne państwa minor odzyskują terytoria i znów działają jak w vanilla: sojusze, zakupy okrętów, wojny. Silniejsza obrona minorów, podwojona pojemność portów w handlu okrętami.
-[*]Dyplomacja z konsekwencjami: poprawa x1,5, pogorszenie x4 — dla ciebie i dla AI.
-[*]Złagodzony kryzys po przegranej wojnie, żeby państwa nie wpadały w wieczne bankructwo.
-[*]Twoje projekty z kampanii trafiają automatycznie do puli projektów współdzielonych.
-[*]Dwa błędy kodu gry przerywające turę w DIP ("An item with the same key has already been added") są przechwytywane — tury się kończą.
+[*]Dywizjon TB/DD/CL ustawiony jako [b]zwiad[/b] sam wykonuje szarżę torpedową jak AI i wraca, gdy skończą się torpedy albo zrobi się gorąco.
+[*][b]Torpedy nie idą w własne okręty:[/b] gdy w torze do celu stoi sojuszniczy kadłub, salwa czeka, aż tor będzie czysty. Własna zmiana trybu torped ma pierwszeństwo.
+[*]Automatyczny wybór celów opisany wyżej działa także dla Twoich okrętów.
 [/list]
 
-[h2]Wierność historyczna i swoboda projektowania pancerników[/h2]
+[h2]Załoga ma znaczenie[/h2]
 [list]
-[*][b]Przebijalność z fizyki:[/b] wzór De Marre'a dla 21 kalibrów i 5 generacji dział, skalibrowany na sześciu udokumentowanych tabelach przebijalności (US 8"/55, niemieckie 28 cm, US 12"/50, brytyjskie 13,5"/45 i 15"/42, US 16"/50 Mk 7), błąd 0,5–13%. Każdy kaliber oparty na realnym dziale. DIP skalował przebijalność liniowo z kalibrem.
-[*][b]Wagi dział:[/b] waga lufy W = 0,05564·D^2,7732 t, skalibrowana na 16"/50 Mk 7, 15"/42 Mk I i 46 cm z Yamato.
-[*][b]Traktaty morskie, po raz pierwszy w modzie:[/b] Waszyngton 35 000 t od technologii kadłuba z 1919, klauzula eskalacyjna II Traktatu Londyńskiego 45 000 t od 1936, wygaśnięcie traktatów w 1940. DIP nie miał żadnego limitu pancerników.
-[*][b]Swoboda projektowania po 1940:[/b] 14 kadłubów Super Battleship rośnie z 78 500–130 000 t w DIP do 200 000–240 000 t (bb_8_china 200 000 … bb_7_bismarck 240 000), twardy sufit 240 000 t zamiast nieskończoności. Stal kadłuba nigdy nie była granicą — były nią doki; H-44 (~131 000 t) uznano za niemożliwy do zbudowania w latach 40. Tu dostajesz te doki.
-[*][b]Naprawione niebudowalne kadłuby:[/b] 29 wariantów Modern Battleship (Iowa, Bismarck, Richelieu, KGV, Littorio, Sojuz…) odblokowywało się z minimum 42 500–66 000 t przy limicie 35 000–45 000 t — martwe technologie. Teraz minimum 35 000 t (bliżej historii: South Dakota ~37 000, KGV ~36 000, Bismarck ~41 700). Do tego 23 wcześniejsze kadłuby BB, 5 trwale niebudowalnych kadłubów niszczycieli i uszkodzony wiersz CSV, który wycinał odblokowanie wszystkich nowoczesnych pancerników.
-[*][b]Long Lance:[/b] +100% zasięgu torped tlenowych (Typ 93: 40 000 m wobec ~12 000–13 700 m u pozostałych). [b]Radar:[/b] widoczność nocna +20/35/50 i celność w złej pogodzie, czego DIP nigdy nie dawał.
+[*][b]Doświadczenie liczy się naprawdę.[/b] Sześć poziomów wyszkolenia (od kadetów do weteranów) przeskalowano nieliniowo: weterani do +100% w celności, naprowadzaniu i kontroli uszkodzeń oraz dwukrotnie szybsze przeładowanie; kadeci do -50% i dwukrotnie wolniejsze przeładowanie. Poziomy pośrednie zmieniają się mało, skrajne dużo.
+[*][b]Kapitulacja zależna od wyszkolenia:[/b] zielona załoga poddaje okręt, gdy spadnie do 70% stanu, elitarna walczy do 40% (vanilla: 55% dla wszystkich).
+[*][b]Panika.[/b] Niedoświadczone załogi na ciężko uszkodzonych okrętach mogą się załamać i odejść z linii - dotyczy AI i gracza. Dobrze wyszkolona flota to nie tylko celniejsze salwy, to także flota, która nie ucieka.
+[*][b]Pryzy.[/b] Okręt, który się poddał, trafia w ręce zwycięzcy, jeśli ten ma jeszcze sprawne jednostki na polu bitwy: idzie do remontu, z zieloną załogą. Jak eskadra Niebogatowa po Cuszimie. Funkcja nowa, w fazie testów.
 [/list]
 
-[h2]Okręty i technologia (skrót)[/h2]
+[h2]Kampania: AI, które się nie poddaje[/h2]
 [list]
-[*]Przebijalność pancerza przeliczona z fizyki (De Marre) dla 21 kalibrów i 5 generacji dział; wagi luf skalibrowane na prawdziwych działach.
-[*][b]Traktaty morskie:[/b] DIP nie miał żadnego limitu tonażu pancerników. Teraz: Traktat Waszyngtoński 35 000 t (od technologii z 1919), klauzula eskalacyjna II Traktatu Londyńskiego 45 000 t (1936), wygaśnięcie traktatów w 1940 — a potem warstwa Super Battleship podniesiona z 78 500–130 000 t do 200 000–240 000 t na kadłub, twardy sufit 240 000 t zamiast nieskończoności.
-[*]Naprawione kadłuby, których w DIP nie dało się zbudować (Modern/Super Battleship, kilka BB i DD) oraz uszkodzony wiersz CSV blokujący nowoczesne pancerniki.
-[*]Radar wreszcie pomaga w nocy i przy złej pogodzie. Torpedy Long Lance: +100% zasięgu.
-[*]Badania ok. 20% szybsze, specjalizacje nacji x1,5, nowy profil Cesarstwa Bizantyjskiego.
+[*]Nacja AI, której nie stać na pancernik, buduje krążowniki zamiast trzymać puste stocznie.
+[*][b]Równowaga sił:[/b] gdy Twoja flota przerasta najsilniejszego rywala o połowę, nacje AI dostają nadzwyczajne fundusze morskie. Dominacja kosztuje.
+[*]Nadzór nad budową: gdy gra pominie postęp budowy u jakiejś nacji, dodatek robi to za nią.
+[*]Twoje projekty trafiają automatycznie do puli projektów wspólnych, więc AI może budować według nich.
+[*]Kryzys gospodarczy po przegranej wojnie boli, ale nie wciąga w spiralę bez wyjścia: nacja przy zerowym budżecie znika dopiero po 24 miesiącach kryzysu.
 [/list]
 
-[h2]Instalacja[/h2]
-Rozpakuj gdziekolwiek i kliknij dwukrotnie [b]Install.bat[/b] — czytelny skrypt PowerShell, bez exe. Robi kopię obecnego folderu Mods (Uninstall.bat ją przywraca), pobiera oficjalny MelonLoader 0.6.6 z wydania LavaGang na GitHubie i sprawdza SHA-256 przed rozpakowaniem, potem instaluje mod. Internet jest potrzebny w trakcie instalacji i przy pierwszym uruchomieniu, które trwa kilka minut. Zacznij nową kampanię.
+[h2]Świat, który żyje[/h2]
+[list]
+[*]Suwerenne nacje mniejsze (Ameryka Łacińska, Persja, Syjam, Bałkany, Skandynawia i inne) odzyskały terytoria, zawierają sojusze, kupują okręty i biorą udział w wojnach jak w vanilla; w oryginalnym DIP większość istniała tylko na papierze.
+[*]Minory mają silniejszą obronę prowincji i dwukrotnie większą pojemność portów w handlu okrętami, więc częściej zamawiają u Ciebie.
+[*]Dyplomacja z konsekwencjami: poprawa stosunków x1,5, pogorszenie x4, dla gracza i AI.
+[*]Bunty i niestabilność wewnętrzna częstsze, silniejsze i bardziej zróżnicowane geograficznie.
+[/list]
 
-[h2]Przejrzystość[/h2]
-Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (40 sekcji). Wszystko w dodatku ma przełącznik w MelonPreferences.cfg. Kod źródłowy w paczce (Apache 2.0). Autor rozszerzenia: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[h2]Historia w liczbach[/h2]
+[list]
+[*][b]Przebijalność z fizyki, nie z suwaka:[/b] krzywe dla 21 kalibrów i 5 generacji dział przebudowane formułą De Marre'a i skalibrowane na sześciu tabelach z navweaps.com (błąd 0,5-13%), kalibry 16-21" zakotwiczone na tabelach Okuna. Małe działa nie rysują już pasa pancernego pancernika.
+[*]Masy luf z prawa potęgowego skalibrowanego na 16"/50 Mk 7, 15"/42 Mk I i 46 cm Type 94.
+[*][b]Traktaty morskie po raz pierwszy zamodelowane:[/b] 35 000 t od technologii kadłuba z 1919 r., 45 000 t od 1936 r., koniec ograniczeń w 1940 r.
+[*]Po traktatach wolność projektowania do 240 000 t dla warstwy superpancerników (DIP: 78 500-130 000 t). Okręt, którym nie mógł być H-44, tu da się zbudować - Tobie i AI.
+[*]Naprawiono kadłuby, których w DIP nie dało się zbudować mimo zbadania (29 wariantów Modern Battleship, 23 wcześniejsze pancerniki, 5 niszczycieli, uszkodzony wiersz CSV blokujący odblokowania).
+[*]Radar, który działa nocą i w złej pogodzie (trzy technologie, 1935-1945). Long Lance: +100% zasięgu zamiast +40%.
+[*]Badania o 20% szybsze, koszt technologii x10, specjalizacje narodowe x1,5, nowy profil Bizancjum (ciężki pancerz, największe kalibry, szybkie krążowniki).
+[/list]
 
-[h2]Pliki[/h2]
-Plik główny: Iron_Admiral_1.1_Nexus.zip — rozpakuj gdziekolwiek i uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Plik opcjonalny: Iron_Admiral_1.1_Mods_only.zip — sam folder Mods, dla osób z gotowym MelonLoaderem 0.6.6 (podmień nim swój folder Mods). Baza: DIP The Great Game 1.3.5; TweaksAndFixes 3.21.1 jest w paczce. MelonLoader 0.6.6 [b]nie[/b] jest dołączony: instalator pobiera oficjalne MelonLoader.x64.zip z wydania LavaGang na GitHubie i sprawdza sumę SHA-256 (687b8260…3c0db) przed rozpakowaniem, więc w trakcie instalacji potrzebny jest internet.
+[h2]Stabilność i przejrzystość[/h2]
+[list]
+[*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
+[*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv. Nic nie jest narzucone.
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (41 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[/list]
 
-Kod źródłowy (DIP_GG_Fixes, instalator, skrypty scalania) i oba pliki: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
-
-[h2]Uwagi[/h2]
+[h2]Pobieranie i instalacja[/h2]
+[b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
+[list]
+[*][b]Iron_Admiral_1.1_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.1_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[/list]
+Baza: DIP The Great Game 1.3.5 z TweaksAndFixes 3.21.1. Kod źródłowy (DIP_GG_Fixes, instalator, skrypty scalania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
+Zacznij nową kampanię; zapisy z 1.0 wymagają narzędzia migracji z folderu źródeł (source/save_tools).
 Zgłoszenia błędów z załączonym MelonLoader\Latest.log są najszybszą drogą do poprawki. Zakładka Bugs.
