@@ -1,4 +1,4 @@
-﻿[h1]Iron Admiral 1.1 — DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
+[h1]Iron Admiral 1.1 — DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
 [b]Download: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
@@ -12,6 +12,7 @@ If you liked the Dreadnought Improvement Project but felt the AI still plays lik
 [*][b]Merged, not overwritten:[/b] every file and every CSV cell was compared three ways (old DIP → my changes, old DIP → DIP 1.3.5). DIP's new values were taken wherever I had not changed anything; all my changes were re-applied on top. The merge script and full report are in the source folder.
 [*][b]DIP 1.3.5 ballistics adopted:[/b] tighter shell dispersion, new per-layer penetration loss, deadlier torpedoes (ammo detonation, flooding), quicker acceleration, a slightly more aggressive AI.
 [*][b]Kept from Iron Admiral:[/b] my research pacing, penetration curves (now anchored on Okun's tables for 16–21"), battle and campaign AI, minor nations, diplomacy. The treaty tonnage rule was applied to all 89 battleship and destroyer hulls, including the 21 new ones.
+[*][b]Post-release fixes (sections 35-38 of the changelog):[/b] new campaigns start correctly again (predefined designs disabled - the package ships without predefinedDesigns.bin), shared designs are exported once instead of every turn (DIP_GG_Fixes 1.10.2), a save migration tool for 1.0 campaigns, and work on the AI ship generator: lower minimum battleship belt for 1890-1900 (6"/7.5" instead of 9"), relaxed requirements for the "Experimental Small Ironclad" hull (10" limit, 1 turret) and full generator diagnostics in the log (taf_debug_shipgen_info=2) while the remaining failed designs are being tracked down.
 [*][b]Two downloads:[/b] the one-click installer, and a "Mods only" zip for anyone who already runs MelonLoader 0.6.6.
 [*]Also new since 1.0: AI nations at zero budget are no longer wiped out on the first turn of a crisis (24-month grace period; losing all ports still ends them at once), and a guard against a ship-loading crash in custom battles.
 [/list]
@@ -59,7 +60,7 @@ If you liked the Dreadnought Improvement Project but felt the AI still plays lik
 Download [b]Iron_Admiral_1.1_Nexus.zip[/b] from [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]GitHub releases[/url], unzip anywhere and double-click [b]Install.bat[/b] — a readable PowerShell script, no exe. It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 before extracting, then installs the mod. Internet is needed during install and on the first launch, which takes a few minutes. Already running MelonLoader 0.6.6? Take [b]Iron_Admiral_1.1_Mods_only.zip[/b] and replace your Mods folder with its contents. Start a new campaign — saves from 1.0 campaigns are not supported in 1.1 (the hull, technology and province data changed; they may load with errors or broken designs).
 
 [h2]Transparency[/h2]
-Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (36 sections). Everything in the add-on has a switch in MelonPreferences.cfg. Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (38 sections). Everything in the add-on has a switch in MelonPreferences.cfg. Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 
 [h2]Download[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
@@ -86,6 +87,7 @@ Jeśli lubisz Dreadnought Improvement Project, ale AI nadal gra jak skrypt — t
 [*][b]Scalone, nie nadpisane:[/b] każdy plik i każda komórka CSV porównane trójstronnie (stary DIP → moje zmiany, stary DIP → DIP 1.3.5). Nowe wartości DIP przejęte wszędzie, gdzie niczego nie zmieniałem; wszystkie moje zmiany nałożone ponownie. Skrypt scalania i pełny raport są w folderze source.
 [*][b]Przejęta balistyka DIP 1.3.5:[/b] mniejszy rozrzut pocisków, nowe straty penetracji po warstwach, groźniejsze torpedy (detonacja amunicji, zalewanie), szybsze przyspieszanie, nieco agresywniejsze AI.
 [*][b]Zachowane z Iron Admiral:[/b] moje tempo badań, krzywe przebijalności (teraz oparte na tabelach Okuna dla 16–21"), AI bitewne i kampanii, państwa minor, dyplomacja. Reguła tonażu traktatowego objęła wszystkie 89 kadłubów pancerników i niszczycieli, w tym 21 nowych.
+[*][b]Poprawki po wydaniu (sekcje 35-38 changelogu):[/b] nowa kampania znów startuje poprawnie (wyłączone projekty predefiniowane - paczka nie zawiera predefinedDesigns.bin), projekty wspólne eksportowane raz, a nie co turę (DIP_GG_Fixes 1.10.2), narzędzie migracji zapisów z 1.0 oraz prace nad generatorem projektów AI: niższy minimalny pas pancerników 1890-1900 (6"/7,5" zamiast 9"), złagodzone wymagania kadłuba "Experimental Small Ironclad" (limit 10", 1 wieża) i pełna diagnostyka generatora w logu (taf_debug_shipgen_info=2) na czas szukania przyczyny pozostałych nieudanych projektów.
 [*][b]Dwa pliki do pobrania:[/b] instalator jednym kliknięciem oraz zip „tylko Mods” dla osób z działającym MelonLoaderem 0.6.6.
 [*]Nowe od 1.0: państwa AI z zerowym budżetem nie znikają już w pierwszej turze kryzysu (24 miesiące karencji; utrata wszystkich portów nadal kończy je od razu) oraz osłona przed crashem ładowania okrętów w bitwach własnych.
 [/list]
@@ -133,7 +135,7 @@ Jeśli lubisz Dreadnought Improvement Project, ale AI nadal gra jak skrypt — t
 Pobierz [b]Iron_Admiral_1.1_Nexus.zip[/b] z [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]wydań na GitHubie[/url], rozpakuj gdziekolwiek i kliknij dwukrotnie [b]Install.bat[/b] — czytelny skrypt PowerShell, bez exe. Robi kopię obecnego folderu Mods (Uninstall.bat ją przywraca), pobiera oficjalny MelonLoader 0.6.6 z wydania LavaGang na GitHubie i sprawdza SHA-256 przed rozpakowaniem, potem instaluje mod. Internet jest potrzebny w trakcie instalacji i przy pierwszym uruchomieniu, które trwa kilka minut. Masz już MelonLoadera 0.6.6? Weź [b]Iron_Admiral_1.1_Mods_only.zip[/b] i podmień nim zawartość folderu Mods. Zacznij nową kampanię — zapisy kampanii z 1.0 nie są wspierane w 1.1 (zmieniły się dane kadłubów, technologii i prowincji; mogą się wczytać z błędami albo z uszkodzonymi projektami).
 
 [h2]Przejrzystość[/h2]
-Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (36 sekcji). Wszystko w dodatku ma przełącznik w MelonPreferences.cfg. Kod źródłowy w paczce (Apache 2.0). Autor rozszerzenia: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (38 sekcji). Wszystko w dodatku ma przełącznik w MelonPreferences.cfg. Kod źródłowy w paczce (Apache 2.0). Autor rozszerzenia: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 
 [h2]Pobieranie[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
