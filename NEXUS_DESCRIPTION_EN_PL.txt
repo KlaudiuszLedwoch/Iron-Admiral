@@ -40,6 +40,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*][b]Balance of power:[/b] when your fleet outgrows the strongest rival by half, AI nations receive emergency naval appropriations. Dominance has a price.
 [*]Construction watch: if the game skips a nation's construction progress in a turn, the add-on does it instead.
 [*]Your designs go automatically to the shared design pool, so the AI can build from them.
+[*][b]Fleets change hands.[/b] When a nation loses its last port, or is dissolved, its ships in the fallen ports pass to the new controller instead of vanishing on the scrap heap - take Port Arthur and you take the fleet inside it. Works for you and against you.
 [*]The post-war crisis hurts but no longer traps nations in an endless spiral: a nation at zero budget vanishes only after 24 months of crisis.
 [/list]
 
@@ -150,6 +151,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*][b]Równowaga sił:[/b] gdy Twoja flota przerasta najsilniejszego rywala o połowę, nacje AI dostają nadzwyczajne fundusze morskie. Dominacja kosztuje.
 [*]Nadzór nad budową: gdy gra pominie postęp budowy u jakiejś nacji, dodatek robi to za nią.
 [*]Twoje projekty trafiają automatycznie do puli projektów wspólnych, więc AI może budować według nich.
+[*][b]Floty zmieniają właściciela.[/b] Gdy nacja traci ostatni port albo zostaje rozwiązana, jej okręty w zajętych portach przechodzą do nowego kontrolera, zamiast znikać na złomie - zdobądź Port Artur i zdobywasz flotę, która w nim stoi. Działa na Twoją korzyść i przeciw Tobie.
 [*]Kryzys gospodarczy po przegranej wojnie boli, ale nie wciąga w spiralę bez wyjścia: nacja przy zerowym budżecie znika dopiero po 24 miesiącach kryzysu.
 [/list]
 
