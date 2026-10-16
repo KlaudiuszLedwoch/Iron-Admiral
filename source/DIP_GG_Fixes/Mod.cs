@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.8", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.9", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -176,7 +176,13 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> CaptureDamage;
         internal static MelonPreferences_Entry<bool> MinorFleetToConqueror;
         internal static MelonPreferences_Entry<bool> NationalTech;
+        internal static MelonPreferences_Entry<bool> CheckUpdates;
         internal static MelonPreferences_Entry<float> NationalTechScale;
+
+        public override void OnUpdate()
+        {
+            UpdateCheck.Tick();
+        }
 
         public override void OnInitializeMelon()
         {
@@ -301,13 +307,16 @@ namespace DipGgFixes
                 "Research speed per nation and technology category from Mods/techBonuses.csv, for the player and the AI (1.11.7)");
             NationalTechScale = cat.CreateEntry("NationalTechScale", 1.0f, null,
                 "Multiplier applied to every percentage in techBonuses.csv (1 = as in the file, 0.5 = half strength)");
+            CheckUpdates = cat.CreateEntry("CheckForUpdates", true, null,
+                "At game start fetch the VERSION file of the Iron Admiral GitHub repository (one HTTPS request to raw.githubusercontent.com) and show a message when a newer release exists (1.11.9)");
             Doctrines.Load();
             TechBonuses.Load();
+            UpdateCheck.Start();
             LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew loss>{PanicCrewLoss.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value}), MinorFleetToConqueror={MinorFleetToConqueror.Value}");
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.8. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.9. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1866,6 +1875,90 @@ namespace DipGgFixes
                 TechBonuses.LogOnce(nation, cat, before, __result);
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Tech] GetResearchSpeed postfix: " + e.Message); }
+        }
+    }
+
+
+    // =====================================================================================
+    // 1.11.9: update check. Reads Mods/IRON_ADMIRAL_VERSION.txt (installed package version,
+    // written by the release script) and fetches
+    // https://raw.githubusercontent.com/KlaudiuszLedwoch/Iron-Admiral/main/VERSION in the
+    // background. When the remote version is newer, a message box is shown once the game UI
+    // exists (Ui.ReportMessage), and the log gets a line either way. Opt-out: CheckForUpdates.
+    // =====================================================================================
+    internal static class UpdateCheck
+    {
+        const string Url = "https://raw.githubusercontent.com/KlaudiuszLedwoch/Iron-Admiral/main/VERSION";
+        const string Page = "https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases";
+        static volatile string remote, remoteDll; static volatile bool done, shown;
+        static string local = "?", localDll = "?";
+        static float firstTry;
+
+        internal static void Start()
+        {
+            try
+            {
+                if (DipGgFixesMod.CheckUpdates == null || !DipGgFixesMod.CheckUpdates.Value) { MelonLogger.Msg("[DIP GG Fixes][Update] check disabled"); done = true; return; }
+                try
+                {
+                    string vf = Path.Combine(MelonUtils.GameDirectory, "Mods", "IRON_ADMIRAL_VERSION.txt");
+                    if (File.Exists(vf)) { var l = File.ReadAllLines(vf); if (l.Length > 0) local = l[0].Trim(); if (l.Length > 1) localDll = l[1].Trim(); }
+                }
+                catch { }
+                System.Threading.Tasks.Task.Run(async () =>
+                {
+                    try
+                    {
+                        using (var hc = new System.Net.Http.HttpClient())
+                        {
+                            hc.Timeout = TimeSpan.FromSeconds(8);
+                            hc.DefaultRequestHeaders.UserAgent.ParseAdd("IronAdmiral-DIP_GG_Fixes");
+                            string s = await hc.GetStringAsync(Url);
+                            var lines = s.Replace("\r", "").Split('\n');
+                            remote = lines.Length > 0 ? lines[0].Trim() : null;
+                            remoteDll = lines.Length > 1 ? lines[1].Trim() : "";
+                        }
+                    }
+                    catch (Exception e) { MelonLogger.Msg("[DIP GG Fixes][Update] check failed (offline?): " + e.Message); }
+                    done = true;
+                });
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Update] " + e.Message); done = true; }
+        }
+
+        static bool Newer(string a, string b)
+        {
+            // true when a > b, comparing dotted integers
+            if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
+            var pa = a.Split('.'); var pb = b.Split('.');
+            for (int i = 0; i < Math.Max(pa.Length, pb.Length); i++)
+            {
+                int x = 0, y = 0;
+                if (i < pa.Length) int.TryParse(pa[i], out x);
+                if (i < pb.Length) int.TryParse(pb[i], out y);
+                if (x != y) return x > y;
+            }
+            return false;
+        }
+
+        internal static void Tick()
+        {
+            if (shown || !done) return;
+            try
+            {
+                if (remote == null) { shown = true; return; }
+                bool newer = Newer(remote, local);
+                if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}), latest on GitHub {remote} ({remoteDll}) - {(newer ? "UPDATE AVAILABLE" : "up to date")}"); }
+                if (!newer) { shown = true; return; }
+                if (UnityEngine.Time.realtimeSinceStartup - firstTry < 15f) return; // let the main menu appear first
+                var ui = G.ui; if (ui == null) return;
+                string text = $"Iron Admiral {remote} is available on GitHub (installed: {local}).\n{remoteDll}\nDownload: {Page}\n\nDostepna jest nowsza wersja Iron Admiral {remote} (zainstalowana: {local}). Pobierz: {Page}";
+                var ok = Il2CppInterop.Runtime.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(new Action(() => { }));
+                ui.ReportMessage("Iron Admiral - update", text, "OK", null, ok, null);
+                shown = true;
+                MelonLogger.Msg("[DIP GG Fixes][Update] message shown");
+            }
+            catch (Exception e) { shown = true; MelonLogger.Warning("[DIP GG Fixes][Update] message failed: " + e.Message); }
         }
     }
 

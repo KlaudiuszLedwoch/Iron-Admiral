@@ -3,11 +3,11 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.8.[/i]
+[i]Description as of 16 October 2026. Latest version: Iron Admiral 1.2.0 (DIP_GG_Fixes 1.11.9).[/i]
 
 [b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.8.
+Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.9.
 
 [h2]Battle: an enemy that fights like a navy[/h2]
 [list]
@@ -68,8 +68,9 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [h2]Stability and transparency[/h2]
 [list]
 [*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
+[*][b]Update check.[/b] At start the add-on compares the installed version with the GitHub repository and shows a message when a newer build exists - one HTTPS request, nothing sent, switch CheckForUpdates.
 [*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv, research profiles in Mods\techBonuses.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (48 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (49 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Version history[/h2]
@@ -87,7 +88,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]DIP_GG_Fixes 1.10.1-1.10.2: compatibility with TAF 3.21.1 (attitude pass-through), shared designs exported once instead of every turn, a migration tool for 1.0 campaign saves.
 [*]Post-release fixes: new campaigns start correctly again (predefined designs disabled), work on the AI ship generator (lower early battleship belt, relaxed Experimental Small Ironclad, generator diagnostics).
 [/list]
-[b]DIP_GG_Fixes 1.11.0-1.11.8 (15 October 2026)[/b]
+[b]DIP_GG_Fixes 1.11.0-1.11.9 (15 October 2026)[/b]
 [list]
 [*]1.11.0: torpedo charges start by torpedo range and speed advantage; AI capital ships charge when faster and close in when outranged or unable to penetrate; player scout divisions charge; torpedoes held while a friendly ship is in the lane; target selection for all ships (most damaged, heaviest calibre for battleship main guns, torpedo threats for secondaries); non-linear veterancy (+100% / -50%); surrender threshold by training (70% - 40%); panic of green crews; surrendered ships captured as prizes.
 [*]1.11.1: log noise removed; penetration compared with the game's effective belt armour in the same units.
@@ -98,6 +99,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]1.11.6: a captured ship (battle prize or conquest) brings its design into the new owner's design list, so it can be refitted and its class built further.
 [*]1.11.7: national research profiles (techBonuses.csv) - 14 great powers, -10..+50% research speed per technology category, for the player and the AI alike.
 [*]1.11.8: belt penetration read in millimetres (the game returns mm, not cm - verified against penetration.csv), so ships that cannot penetrate now really close in; close-in hysteresis (restart only beyond 0.85 of own range).
+[*]1.11.9 / Iron Admiral 1.2.0: every publication now has its own package number (VERSION file, zips Iron_Admiral_X.Y.Z_*.zip, GitHub release vX.Y.Z); the add-on checks GitHub at start and tells you in-game when a newer build exists (switch: CheckForUpdates).
 [/list]
 [b]Data update (16 October 2026)[/b]
 [list]
@@ -107,8 +109,8 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.1_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.1_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.0_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.0_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [/list]
 Based on DIP The Great Game 1.3.5 with TweaksAndFixes 3.21.1. Source code (DIP_GG_Fixes, installer, merge scripts): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
 Start a new campaign; saves from 1.0 need the migration tool from the source folder (source/save_tools).
@@ -118,11 +120,11 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.8.[/i]
+[i]Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.2.0 (DIP_GG_Fixes 1.11.9).[/i]
 
 [b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.8.
+Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.9.
 
 [h2]Bitwa: przeciwnik, który walczy jak flota[/h2]
 [list]
@@ -183,8 +185,9 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [h2]Stabilność i przejrzystość[/h2]
 [list]
 [*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
+[*][b]Sprawdzanie aktualizacji.[/b] Przy starcie dodatek porównuje zainstalowaną wersję z repozytorium GitHub i pokazuje komunikat, gdy jest nowsza - jedno żądanie HTTPS, nic nie jest wysyłane, wyłącznik CheckForUpdates.
 [*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv, profile badań w Mods\techBonuses.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (48 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (49 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Historia wersji[/h2]
@@ -202,7 +205,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]DIP_GG_Fixes 1.10.1-1.10.2: zgodność z TAF 3.21.1 (przepuszczanie zmian stosunków), projekty wspólne eksportowane raz, a nie co turę, narzędzie migracji zapisów kampanii z 1.0.
 [*]Poprawki po wydaniu: nowa kampania znów startuje poprawnie (wyłączone projekty predefiniowane), prace nad generatorem projektów AI (niższy pas wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka generatora).
 [/list]
-[b]DIP_GG_Fixes 1.11.0-1.11.8 (15 października 2026)[/b]
+[b]DIP_GG_Fixes 1.11.0-1.11.9 (15 października 2026)[/b]
 [list]
 [*]1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości; ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza szarżują; torpedy wstrzymane, gdy własny okręt stoi w torze; wybór celów dla wszystkich okrętów (najbardziej uszkodzony, najcięższy kaliber dla dział głównych pancerników, zagrożenia torpedowe dla dział pomocniczych); weterańskość nieliniowa (+100% / -50%); próg kapitulacji wg wyszkolenia (70% - 40%); panika zielonych załóg; poddane okręty przejmowane jako pryzy.
 [*]1.11.1: usunięty szum w logu; przebicie porównywane z efektywnym pancerzem pasa z gry w tych samych jednostkach.
@@ -213,6 +216,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]1.11.6: przejęty okręt (pryz bitewny lub podbój) przynosi projekt do listy projektów nowego właściciela, więc da się go przebudowywać i budować dalej jego klasę.
 [*]1.11.7: narodowe profile badań (techBonuses.csv) - 14 mocarstw, -10..+50% tempa badań per kategoria technologii, dla gracza i AI.
 [*]1.11.8: przebicie pasa czytane w milimetrach (gra zwraca mm, nie cm - zweryfikowane z penetration.csv), więc okręty, które nie przebijają, naprawdę skracają dystans; histereza skracania dystansu (ponowny start dopiero powyżej 0,85 zasięgu).
+[*]1.11.9 / Iron Admiral 1.2.0: każda publikacja ma własny numer paczki (plik VERSION, zipy Iron_Admiral_X.Y.Z_*.zip, wydanie GitHub vX.Y.Z); dodatek sprawdza GitHub przy starcie i informuje w grze, gdy jest nowsza wersja (wyłącznik: CheckForUpdates).
 [/list]
 [b]Aktualizacja danych (16 października 2026)[/b]
 [list]
@@ -222,8 +226,8 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.1_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.1_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.0_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.0_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [/list]
 Baza: DIP The Great Game 1.3.5 z TweaksAndFixes 3.21.1. Kod źródłowy (DIP_GG_Fixes, instalator, skrypty scalania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
 Zacznij nową kampanię; zapisy z 1.0 wymagają narzędzia migracji z folderu źródeł (source/save_tools).

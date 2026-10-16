@@ -1,4 +1,4 @@
-# Iron Admiral 1.1 (DIP GG Extended) - uninstaller
+# Iron Admiral 1.2.0 (DIP GG Extended) - uninstaller
 # Restores the Mods folder (and MelonLoader, if the installer replaced it)
 # from the most recent backup made by the installer.
 param([string]$GamePath = "", [switch]$NoPause)
