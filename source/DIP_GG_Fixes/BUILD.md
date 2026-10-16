@@ -60,7 +60,7 @@ shared-design export (writes design files to the game's own shared designs folde
 the game's Storage API), AI build ratios, minor port capacity, balance-of-power cash
 grants, diplomacy multipliers, stalled-construction watch, battle AI (torpedo charge,
 fight when unable to escape, detach slow ships, focus fire, national doctrines read
-from `Mods\battleDoctrines.csv`). File access: reads `Mods\battleDoctrines.csv`,
+from `Mods\battleDoctrines.csv`). File access: reads `Mods\battleDoctrines.csv` and `Mods\techBonuses.csv`,
 writes nothing outside the game's own save/design folders. No network access.
 
 License: Apache 2.0.

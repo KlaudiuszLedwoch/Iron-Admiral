@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.6", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.7", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -175,6 +175,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> CaptureSurrendered;
         internal static MelonPreferences_Entry<float> CaptureDamage;
         internal static MelonPreferences_Entry<bool> MinorFleetToConqueror;
+        internal static MelonPreferences_Entry<bool> NationalTech;
+        internal static MelonPreferences_Entry<float> NationalTechScale;
 
         public override void OnInitializeMelon()
         {
@@ -295,12 +297,17 @@ namespace DipGgFixes
                 "Structural damage (0-1) applied to a captured ship before it enters repair");
             MinorFleetToConqueror = cat.CreateEntry("MinorFleetToConqueror", true, null,
                 "When a nation loses a province and has no other port to flee to, or is dissolved, its ships in the lost ports pass to the new controller of the port instead of being scrapped (1.11.4, all nations since 1.11.5)");
+            NationalTech = cat.CreateEntry("NationalTechBonuses", true, null,
+                "Research speed per nation and technology category from Mods/techBonuses.csv, for the player and the AI (1.11.7)");
+            NationalTechScale = cat.CreateEntry("NationalTechScale", 1.0f, null,
+                "Multiplier applied to every percentage in techBonuses.csv (1 = as in the file, 0.5 = half strength)");
             Doctrines.Load();
+            TechBonuses.Load();
             LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew loss>{PanicCrewLoss.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value}), MinorFleetToConqueror={MinorFleetToConqueror.Value}");
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.6. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.7. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1780,6 +1787,80 @@ namespace DipGgFixes
                 MelonLogger.Msg($"[DIP GG Fixes][{tag}] design of {ship.name} (hull {hullName}, {ton:0} t) cloned to {recipient.data.name} as {(clone != null ? clone.name : "null")}; designs {count} -> {after}");
             }
             catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][{tag}] design clone failed: " + e.Message); }
+        }
+    }
+
+
+    // =====================================================================================
+    // 1.11.7: national research profiles. Mods/techBonuses.csv holds, per nation and
+    // technology category (technologies.csv column "type"), a percentage added to the
+    // research speed. CampaignController.GetResearchSpeed(Player, Technology) is used both
+    // by the monthly research update (UpdatePlayerTech) and by the research window, so the
+    // player sees the modified speed and the AI gets it too.
+    // =====================================================================================
+    internal static class TechBonuses
+    {
+        internal static readonly Dictionary<string, Dictionary<string, float>> ByNation = new Dictionary<string, Dictionary<string, float>>(StringComparer.OrdinalIgnoreCase);
+        internal static bool Loaded;
+        static readonly HashSet<string> logged = new HashSet<string>();
+
+        internal static void Load()
+        {
+            try
+            {
+                string path = Path.Combine(MelonUtils.GameDirectory, "Mods", "techBonuses.csv");
+                if (!File.Exists(path)) { MelonLogger.Msg("[DIP GG Fixes] techBonuses.csv not found - no national research profiles"); return; }
+                int n = 0;
+                foreach (var raw in File.ReadAllLines(path))
+                {
+                    var line = raw.Trim();
+                    if (line.Length == 0 || line.StartsWith("#") || line.StartsWith("nation,")) continue;
+                    var c = line.Split(',');
+                    if (c.Length < 3) continue;
+                    string nation = c[0].Trim().ToLowerInvariant(), cat = c[1].Trim().ToLowerInvariant();
+                    if (!float.TryParse(c[2].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var pct)) continue;
+                    if (!ByNation.TryGetValue(nation, out var d)) { d = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase); ByNation[nation] = d; }
+                    d[cat] = pct; n++;
+                }
+                Loaded = n > 0;
+                MelonLogger.Msg($"[DIP GG Fixes] Loaded {n} national research modifiers for {ByNation.Count} nation(s) from techBonuses.csv");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] techBonuses.csv: " + e.Message); }
+        }
+
+        internal static float Factor(string nation, string category)
+        {
+            if (!Loaded || nation == null || category == null) return 1f;
+            if (!ByNation.TryGetValue(nation, out var d) || !d.TryGetValue(category, out var pct)) return 1f;
+            float scale = DipGgFixesMod.NationalTechScale != null ? DipGgFixesMod.NationalTechScale.Value : 1f;
+            return Math.Max(0.1f, 1f + pct * scale / 100f);
+        }
+
+        internal static void LogOnce(string nation, string category, float before, float after)
+        {
+            string key = nation + "|" + category;
+            if (logged.Count > 200 || logged.Contains(key)) return;
+            logged.Add(key);
+            MelonLogger.Msg($"[DIP GG Fixes][Tech] {nation} {category}: research speed {before:0.###} -> {after:0.###}");
+        }
+    }
+
+    [HarmonyPatch(typeof(CampaignController), "GetResearchSpeed", new Type[] { typeof(Player), typeof(Technology) })]
+    internal static class Patch_GetResearchSpeed
+    {
+        private static void Postfix(Player __0, Technology __1, ref float __result)
+        {
+            try
+            {
+                if (DipGgFixesMod.NationalTech == null || !DipGgFixesMod.NationalTech.Value || !TechBonuses.Loaded) return;
+                if (__0 == null || __1 == null || __0.data == null || __1.data == null) return;
+                string nation = __0.data.name, cat = __1.data.type;
+                float f = TechBonuses.Factor(nation, cat);
+                if (f == 1f) return;
+                float before = __result; __result *= f;
+                TechBonuses.LogOnce(nation, cat, before, __result);
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Tech] GetResearchSpeed postfix: " + e.Message); }
         }
     }
 
