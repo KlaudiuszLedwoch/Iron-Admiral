@@ -1,5 +1,5 @@
 [assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName = ".NET 6.0")]
-[assembly: System.Reflection.AssemblyVersion("1.11.13.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.11.13.0")]
-[assembly: System.Reflection.AssemblyInformationalVersion("1.11.13")]
+[assembly: System.Reflection.AssemblyVersion("1.11.14.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.11.14.0")]
+[assembly: System.Reflection.AssemblyInformationalVersion("1.11.14")]
 [assembly: System.Reflection.AssemblyTitle("DIP GG Fixes")]

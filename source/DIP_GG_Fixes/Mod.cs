@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.13", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.14", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -319,7 +319,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.13. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.14. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1905,7 +1905,7 @@ namespace DipGgFixes
             try
             {
                 // 1.11.11: remove the previous DLL left behind by a self-update
-                try { string old = Path.Combine(ModsDir, "DIP_GG_Fixes.dll.old"); if (File.Exists(old)) { File.Delete(old); MelonLogger.Msg("[DIP GG Fixes][Update] removed DIP_GG_Fixes.dll.old from the previous update"); } } catch (Exception e) { MelonLogger.Msg("[DIP GG Fixes][Update] could not remove DIP_GG_Fixes.dll.old: " + e.Message); }
+                try { foreach (var old in Directory.GetFiles(ModsDir, "*.old", SearchOption.AllDirectories)) { try { File.Delete(old); MelonLogger.Msg("[DIP GG Fixes][Update] removed " + Path.GetFileName(old) + " from the previous update"); } catch (Exception e) { MelonLogger.Msg("[DIP GG Fixes][Update] could not remove " + Path.GetFileName(old) + ": " + e.Message); } } } catch { }
                 if (DipGgFixesMod.CheckUpdates == null || !DipGgFixesMod.CheckUpdates.Value) { MelonLogger.Msg("[DIP GG Fixes][Update] check disabled"); done = true; return; }
                 try
                 {
@@ -1993,11 +1993,11 @@ namespace DipGgFixes
                 if (UnityEngine.Time.realtimeSinceStartup - settledAt < 3f) return;
                 var ui = G.ui; if (ui == null) return;
                 bool canDownload = DipGgFixesMod.UpdateDownload != null && DipGgFixesMod.UpdateDownload.Value && !string.IsNullOrEmpty(remoteZipUrl) && !string.IsNullOrEmpty(remoteSha);
-                string text = $"Iron Admiral {remote} is available on GitHub (installed: {local}).\n{remoteDll}\n{Page}\n\nDostepna jest nowsza wersja Iron Admiral {remote} (zainstalowana: {local}).";
+                string text = $"Iron Admiral {remote} is available on GitHub (installed: {local}).\n{remoteDll}\n{Page}";
                 if (canDownload)
                 {
-                    text += "\n\nDownload installs the Mods folder of the new version (SHA-256 verified); the game must be restarted afterwards. Nothing is downloaded unless you click.\nPobierz = instalacja folderu Mods nowej wersji (weryfikacja SHA-256); potem restart gry. Bez klikniecia nic nie jest pobierane.";
-                    ui.ReportMessage("Iron Admiral - update", text, "Download / Pobierz", "Later / Pozniej", Act(() => StartDownload()), Act(() => { MelonLogger.Msg("[DIP GG Fixes][Update] download declined"); }));
+                    text += "\n\nDownload installs the Mods folder of the new version (SHA-256 verified); the game must be restarted afterwards. Nothing is downloaded unless you click.";
+                    ui.ReportMessage("Iron Admiral - update", text, "Download", "Later", Act(() => StartDownload()), Act(() => { MelonLogger.Msg("[DIP GG Fixes][Update] download declined"); }));
                 }
                 else
                 {
@@ -2036,35 +2036,58 @@ namespace DipGgFixes
                     string srcMods = Path.Combine(tmp, "Mods");
                     if (!Directory.Exists(srcMods)) { Fail("the package has no Mods folder - nothing installed"); return; }
                     string mods = ModsDir;
-                    int copied = 0; bool dllSwapped = false;
+                    int copied = 0, same = 0, swapped = 0; var failed = new List<string>();
                     foreach (var f in Directory.GetFiles(srcMods, "*", SearchOption.AllDirectories))
                     {
                         string rel = f.Substring(srcMods.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                         string dst = Path.Combine(mods, rel);
-                        Directory.CreateDirectory(Path.GetDirectoryName(dst));
-                        if (string.Equals(rel, "DIP_GG_Fixes.dll", StringComparison.OrdinalIgnoreCase))
+                        try
                         {
-                            // the loaded DLL cannot be overwritten, but it can be renamed
-                            string old = dst + ".old";
-                            if (File.Exists(old)) File.Delete(old);
-                            if (File.Exists(dst)) File.Move(dst, old);
-                            File.Copy(f, dst); dllSwapped = true;
+                            Directory.CreateDirectory(Path.GetDirectoryName(dst));
+                            if (File.Exists(dst) && SameContent(f, dst)) { same++; continue; }
+                            try { File.Copy(f, dst, true); copied++; }
+                            catch (IOException)
+                            {
+                                // 1.11.14: a loaded DLL (DIP_GG_Fixes.dll, TweaksAndFixes.dll - the 16:05 log) cannot be
+                                // overwritten, but it can be renamed; the .old copies are deleted at the next start
+                                string old = dst + ".old";
+                                if (File.Exists(old)) File.Delete(old);
+                                File.Move(dst, old);
+                                File.Copy(f, dst); copied++; swapped++;
+                            }
                         }
-                        else File.Copy(f, dst, true);
-                        copied++;
+                        catch (Exception fe) { failed.Add(rel + " (" + fe.GetType().Name + ")"); }
                     }
                     try { Directory.Delete(tmp, true); } catch { }
-                    MelonLogger.Msg($"[DIP GG Fixes][Update] installed Iron Admiral {ver}: {copied} file(s) into Mods, DLL swapped={dllSwapped}; restart the game");
-                    resultText = $"Iron Admiral {ver} installed ({copied} files). Restart the game to use it.\n\nZainstalowano Iron Admiral {ver} ({copied} plikow). Uruchom gre ponownie.";
+                    string summary = $"{copied} file(s) updated, {same} unchanged, {swapped} loaded DLL(s) swapped for the next start";
+                    if (failed.Count > 0) { MelonLogger.Warning("[DIP GG Fixes][Update] not updated: " + string.Join(", ", failed)); }
+                    MelonLogger.Msg($"[DIP GG Fixes][Update] installed Iron Admiral {ver}: {summary}; restart the game");
+                    try { File.WriteAllText(Path.Combine(mods, "IRON_ADMIRAL_VERSION.txt"), ver + "\n" + (remoteDll ?? "") + "\n" + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "\n"); } catch { }
+                    resultText = failed.Count == 0
+                        ? $"Iron Admiral {ver} installed ({summary}). Restart the game to use it."
+                        : $"Iron Admiral {ver} installed with {failed.Count} file(s) skipped ({summary}). Restart the game; see the MelonLoader log for the skipped files.";
                 }
                 catch (Exception e) { Fail(e.GetType().Name + ": " + e.Message); }
             });
         }
 
+        static bool SameContent(string a, string b)
+        {
+            try
+            {
+                var fa = new FileInfo(a); var fb = new FileInfo(b);
+                if (fa.Length != fb.Length) return false;
+                using (var h = System.Security.Cryptography.SHA256.Create())
+                using (var sa = File.OpenRead(a)) using (var sb = File.OpenRead(b))
+                    return BitConverter.ToString(h.ComputeHash(sa)) == BitConverter.ToString(h.ComputeHash(sb));
+            }
+            catch { return false; }
+        }
+
         static void Fail(string why)
         {
             MelonLogger.Warning("[DIP GG Fixes][Update] update failed: " + why);
-            resultText = $"Update failed: {why}\nDownload manually: {Page}\n\nAktualizacja nie powiodla sie. Pobierz recznie: {Page}";
+            resultText = $"Update failed: {why}\nDownload manually: {Page}";
         }
     }
 
