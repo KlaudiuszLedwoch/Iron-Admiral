@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.12", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.13", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -319,7 +319,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.12. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.13. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1897,7 +1897,7 @@ namespace DipGgFixes
         static volatile string remote, remoteDll, remoteSha, remoteZipUrl; static volatile bool done, shown;
         static volatile string resultText; static volatile bool resultShown;
         static string local = "?", localDll = "?";
-        static float firstTry;
+        static float firstTry, settledAt;
         static string ModsDir => Path.Combine(MelonUtils.GameDirectory, "Mods");
 
         internal static void Start()
@@ -1982,6 +1982,15 @@ namespace DipGgFixes
                 if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}), latest on GitHub {remote} ({remoteDll}) - {(newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
                 if (!newer) { shown = true; return; }
                 if (UnityEngine.Time.realtimeSinceStartup - firstTry < 15f) return; // let the main menu appear first
+                // 1.11.13: never during a loading screen - the 15:44 log showed the message raised while a save was loading
+                // (LoadingCustom) and swallowed by the loading screen. Wait for MainMenu or World with no loading in progress,
+                // then another 3 s so the scene has settled.
+                bool loading = true; try { loading = GameManager.IsLoadingAny || GameManager.IsLoadingScreenActive; } catch { loading = false; }
+                if (loading) { settledAt = 0f; return; }
+                var state = GameManager.GameState.MainMenu; try { state = G.GameManager.CurrentState; } catch { }
+                if (state != GameManager.GameState.MainMenu && state != GameManager.GameState.World) { settledAt = 0f; return; }
+                if (settledAt == 0f) { settledAt = UnityEngine.Time.realtimeSinceStartup; return; }
+                if (UnityEngine.Time.realtimeSinceStartup - settledAt < 3f) return;
                 var ui = G.ui; if (ui == null) return;
                 bool canDownload = DipGgFixesMod.UpdateDownload != null && DipGgFixesMod.UpdateDownload.Value && !string.IsNullOrEmpty(remoteZipUrl) && !string.IsNullOrEmpty(remoteSha);
                 string text = $"Iron Admiral {remote} is available on GitHub (installed: {local}).\n{remoteDll}\n{Page}\n\nDostepna jest nowsza wersja Iron Admiral {remote} (zainstalowana: {local}).";
