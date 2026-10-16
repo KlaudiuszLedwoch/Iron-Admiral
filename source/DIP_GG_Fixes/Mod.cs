@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.4", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.5", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -294,13 +294,13 @@ namespace DipGgFixes
             CaptureDamage = cat.CreateEntry("CaptureDamage", 0.6f, null,
                 "Structural damage (0-1) applied to a captured ship before it enters repair");
             MinorFleetToConqueror = cat.CreateEntry("MinorFleetToConqueror", true, null,
-                "When a minor nation loses a province or is dissolved, its ships in the lost ports pass to the new controller of the port instead of being scrapped (1.11.4)");
+                "When a nation loses a province and has no other port to flee to, or is dissolved, its ships in the lost ports pass to the new controller of the port instead of being scrapped (1.11.4, all nations since 1.11.5)");
             Doctrines.Load();
             LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew loss>{PanicCrewLoss.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value}), MinorFleetToConqueror={MinorFleetToConqueror.Value}");
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.4. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.5. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1635,9 +1635,11 @@ namespace DipGgFixes
 
 
     // =====================================================================================
-    // 1.11.4: a conquered or dissolved minor nation hands its fleet to the new controller of
-    // the port instead of scrapping it. The game calls ScrapShip for every ship of the loser
-    // from TransferProvinceToNewOwner (province lost) and DisableMediumPlayer (dissolved).
+    // 1.11.4/1.11.5: a conquered or dissolved nation hands its fleet to the new controller of
+    // the port instead of scrapping it. TransferProvinceToNewOwner moves the loser's ships to a
+    // random remaining port (SetPortLocation) and only scraps them when the loser has no port
+    // left; DisableMediumPlayer / DisablePlayer scrap everything. The ScrapShip prefix catches
+    // exactly those scrap calls.
     // =====================================================================================
     internal static class ConquestCtx
     {
@@ -1669,6 +1671,22 @@ namespace DipGgFixes
         }
     }
 
+    // 1.11.5: the same for a great power that is dissolved
+    [HarmonyPatch(typeof(CampaignController), "DisablePlayer", new Type[] { typeof(Player) })]
+    internal static class Patch_DisablePlayer
+    {
+        private static void Prefix(Player __0)
+        {
+            ConquestCtx.Dissolving = __0; ConquestCtx.Transferred = 0; ConquestCtx.Scrapped = 0;
+            try { MelonLogger.Msg($"[DIP GG Fixes][Conquest] {__0?.data?.name ?? "?"} (major) is being dissolved"); } catch { }
+        }
+        private static void Finalizer()
+        {
+            try { if (ConquestCtx.Dissolving != null) MelonLogger.Msg($"[DIP GG Fixes][Conquest] {ConquestCtx.Dissolving.data?.name ?? "?"} dissolved: {ConquestCtx.Transferred} ship(s) handed over, {ConquestCtx.Scrapped} scrapped"); } catch { }
+            ConquestCtx.Dissolving = null;
+        }
+    }
+
     [HarmonyPatch(typeof(CampaignController), "ScrapShip", new Type[] { typeof(Ship), typeof(bool) })]
     internal static class Patch_ScrapShip
     {
@@ -1686,7 +1704,7 @@ namespace DipGgFixes
             {
                 if (DipGgFixesMod.MinorFleetToConqueror == null || !DipGgFixesMod.MinorFleetToConqueror.Value) return true;
                 var ship = __0; if (ship == null) return true;
-                var loser = ship.player; if (loser == null || !loser.isMedium) return true;
+                var loser = ship.player; if (loser == null) return true;
                 bool conquest = ConquestCtx.NewOwner != null, dissolving = ConquestCtx.Dissolving != null && ConquestCtx.Dissolving.Pointer == loser.Pointer;
                 if (!conquest && !dissolving) return true;
                 // only ships that exist: hulls on the slip are scrapped as before

@@ -1,6 +1,6 @@
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - CO DAJE TEN MOD
-Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.4.
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (44 sekcji).
+Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.5.
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (45 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -154,7 +154,7 @@ Iron Admiral 1.1 (14 października 2026)
   wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka
   generatora).
 
-DIP_GG_Fixes 1.11.0-1.11.4 (15 października 2026)
+DIP_GG_Fixes 1.11.0-1.11.5 (15 października 2026)
 - 1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości;
   ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są
   przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza
@@ -177,6 +177,10 @@ DIP_GG_Fixes 1.11.0-1.11.4 (15 października 2026)
 - 1.11.4: flota podbitego lub rozwiązanego minora przechodzi do nowego
   kontrolera jego portów zamiast na złom; komunikat o budżecie balance of
   power jest teraz faktycznie pokazywany w grze.
+- 1.11.5: przekazanie dotyczy także mocarstw - okręty uciekają do innego
+  własnego portu, gdy taki jest (zachowanie gry), a do zdobywcy trafiają
+  tylko, gdy żadnego nie ma; flota rozwiązanego mocarstwa idzie do kontrolerów
+  jego portów.
 
 Aktualizacja danych (16 października 2026)
 - technologies.csv: accuracy_long w technologiach dalmierzy
@@ -192,8 +196,8 @@ Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 ============================================================================
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - WHAT THIS MOD DOES
-Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.4.
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (44 sections).
+Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.5.
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (45 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -344,7 +348,7 @@ Iron Admiral 1.1 (14 October 2026)
   disabled), work on the AI ship generator (lower early battleship belt,
   relaxed Experimental Small Ironclad, generator diagnostics).
 
-DIP_GG_Fixes 1.11.0-1.11.4 (15 October 2026)
+DIP_GG_Fixes 1.11.0-1.11.5 (15 October 2026)
 - 1.11.0: torpedo charges start by torpedo range and speed advantage; AI
   capital ships charge when faster and close in when outranged or unable to
   penetrate; player scout divisions charge; torpedoes held while a friendly
@@ -367,6 +371,10 @@ DIP_GG_Fixes 1.11.0-1.11.4 (15 October 2026)
 - 1.11.4: the fleet of a conquered or dissolved minor nation passes to the new
   controller of its ports instead of being scrapped; the balance-of-power
   budget message is now actually shown in-game.
+- 1.11.5: the hand-over applies to the great powers too - ships flee to
+  another own port when one exists (game behaviour) and pass to the conqueror
+  only when none is left; a dissolved great power's fleet goes to the
+  controllers of its ports.
 
 Data update (16 October 2026)
 - technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945
