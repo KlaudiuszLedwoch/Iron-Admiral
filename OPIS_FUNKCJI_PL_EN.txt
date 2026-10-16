@@ -1,6 +1,6 @@
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - CO DAJE TEN MOD
-Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.2.1 (DIP_GG_Fixes 1.11.10).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (50 sekcji).
+Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.2.2 (DIP_GG_Fixes 1.11.11).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (51 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -125,9 +125,12 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 ----------------------------------------------------------------------------
 - Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie
   tury ("An item with the same key has already been added").
-- Sprawdzanie aktualizacji. Przy starcie dodatek porównuje zainstalowaną
-  wersję z repozytorium GitHub i pokazuje komunikat, gdy jest nowsza - jedno
-  żądanie HTTPS, nic nie jest wysyłane, wyłącznik CheckForUpdates.
+- Sprawdzanie aktualizacji i aktualizacja jednym kliknięciem. Przy starcie
+  dodatek porównuje zainstalowaną wersję z repozytorium GitHub i pokazuje
+  komunikat, gdy jest nowsza - jedno żądanie HTTPS, nic nie jest wysyłane.
+  Komunikat ma przycisk Pobierz: dopiero po kliknięciu paczka Mods jest
+  pobierana z wydania GitHub, weryfikowana (SHA-256) i instalowana; potem
+  restart gry. Wyłączniki: CheckForUpdates, UpdateDownloadButton.
 - Każda funkcja dodatku ma przełącznik i wartości w
   UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w battleDoctrines.csv,
   profile badań w techBonuses.csv. Nic nie jest narzucone.
@@ -169,7 +172,7 @@ Iron Admiral 1.1 (14 października 2026)
   wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka
   generatora).
 
-DIP_GG_Fixes 1.11.0-1.11.10 (15 października 2026)
+DIP_GG_Fixes 1.11.0-1.11.11 (15 października 2026)
 - 1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości;
   ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są
   przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza
@@ -205,12 +208,16 @@ DIP_GG_Fixes 1.11.0-1.11.10 (15 października 2026)
   zweryfikowane z penetration.csv), więc okręty, które nie przebijają,
   naprawdę skracają dystans; histereza skracania dystansu (ponowny start
   dopiero powyżej 0,85 zasięgu).
-- 1.11.9 / Iron Admiral 1.2.1: każda publikacja ma własny numer paczki (plik
+- 1.11.9 / Iron Admiral 1.2.2: każda publikacja ma własny numer paczki (plik
   VERSION, zipy Iron_Admiral_X.Y.Z_*.zip, wydanie GitHub vX.Y.Z); dodatek
   sprawdza GitHub przy starcie i informuje w grze, gdy jest nowsza wersja
   (wyłącznik: CheckForUpdates).
 - 1.11.10: grant balance of power tylko w logu - wywołanie raportu w grze
   rzucało wyjątek dla okrętów AI.
+- 1.11.11: komunikat o aktualizacji ma przycisk Pobierz - po kliknięciu
+  dodatek pobiera paczkę Mods z wydania GitHub, sprawdza SHA-256 i instaluje
+  (DLL podmieniany przez rename, wymagany restart); bez kliknięcia nic nie
+  jest pobierane.
 
 Aktualizacja danych (16 października 2026)
 - technologies.csv: accuracy_long w technologiach dalmierzy
@@ -219,15 +226,15 @@ Aktualizacja danych (16 października 2026)
   (Jurens); premie do szybkości namierzania bez zmian. Dotyczy gracza i AI.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.1_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.1_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.2_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.2_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - WHAT THIS MOD DOES
-Description as of 16 October 2026. Latest version: Iron Admiral 1.2.1 (DIP_GG_Fixes 1.11.10).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (50 sections).
+Description as of 16 October 2026. Latest version: Iron Admiral 1.2.2 (DIP_GG_Fixes 1.11.11).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (51 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -352,9 +359,12 @@ files cannot reach. One-click install, full uninstall, source code included.
 ----------------------------------------------------------------------------
 - The add-on catches two bugs in the game's own code that aborted turn
   processing in DIP ("An item with the same key has already been added").
-- Update check. At start the add-on compares the installed version with the
-  GitHub repository and shows a message when a newer build exists - one HTTPS
-  request, nothing sent, switch CheckForUpdates.
+- Update check and one-click update. At start the add-on compares the
+  installed version with the GitHub repository and shows a message when a
+  newer build exists - one HTTPS request, nothing sent. The message has a
+  Download button: only after you click it the Mods package is fetched from
+  the GitHub release, verified (SHA-256) and installed; restart the game
+  afterwards. Switches: CheckForUpdates, UpdateDownloadButton.
 - Every add-on feature has a switch and values in
   UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in
   battleDoctrines.csv, research profiles in techBonuses.csv. Nothing is forced.
@@ -394,7 +404,7 @@ Iron Admiral 1.1 (14 October 2026)
   disabled), work on the AI ship generator (lower early battleship belt,
   relaxed Experimental Small Ironclad, generator diagnostics).
 
-DIP_GG_Fixes 1.11.0-1.11.10 (15 October 2026)
+DIP_GG_Fixes 1.11.0-1.11.11 (15 October 2026)
 - 1.11.0: torpedo charges start by torpedo range and speed advantage; AI
   capital ships charge when faster and close in when outranged or unable to
   penetrate; player scout divisions charge; torpedoes held while a friendly
@@ -430,12 +440,16 @@ DIP_GG_Fixes 1.11.0-1.11.10 (15 October 2026)
 - 1.11.8: belt penetration read in millimetres (the game returns mm, not cm -
   verified against penetration.csv), so ships that cannot penetrate now really
   close in; close-in hysteresis (restart only beyond 0.85 of own range).
-- 1.11.9 / Iron Admiral 1.2.1: every publication now has its own package
+- 1.11.9 / Iron Admiral 1.2.2: every publication now has its own package
   number (VERSION file, zips Iron_Admiral_X.Y.Z_*.zip, GitHub release vX.Y.Z);
   the add-on checks GitHub at start and tells you in-game when a newer build
   exists (switch: CheckForUpdates).
 - 1.11.10: the balance-of-power grant is logged only - the in-game report call
   threw inside the game for AI ships.
+- 1.11.11: the update message has a Download button - after the click the add-
+  on fetches the Mods package from the GitHub release, verifies SHA-256 and
+  installs it (DLL swapped by rename, restart required); nothing is downloaded
+  without the click.
 
 Data update (16 October 2026)
 - technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945
@@ -444,6 +458,6 @@ Data update (16 October 2026)
   are unchanged. Applies to player and AI.
 
 
-Two downloads: Iron_Admiral_1.2.1_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.1_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.2_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.2_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
