@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.7", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.8", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -307,7 +307,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.7. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.8. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -861,7 +861,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public bool closing; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; }
+        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -1000,15 +1000,18 @@ namespace DipGgFixes
                 var g = shooter.mainGunsGroup; if (g == null) return false;
                 var noShell = new Il2CppSystem.Nullable<Ship.ShellType>(); var noVec = new Il2CppSystem.Nullable<UnityEngine.Vector3>();
                 // 1.11.1 log: the bool=false variant GREW with distance (plunging/deck penetration); belt penetration is the bool=true variant.
-                // Units (1.11.2 log): penetration comes back in cm, armour in mm (UI 29.1 vs 330 for an 11" gun at 10.7 km) - hence x10.
+                // Units (1.11.8): GetPenetration returns mm. Battle log 2026-10-16: a 229 mm gun of 1901 at 19.9 km gave 95.9 (deck
+                // variant 58.5) against penetration.csv table values of 182.8 / 107.1 mm for 9" at 20 km - the same ratio (~0.53) for an
+                // early-generation gun; read as cm (x10, 1.11.3) it would have been 959 mm, five times the table, and the "cannot penetrate"
+                // branch never fired.
                 float penBelt = Ship.GetPenetration(g, shooter, dist, true, noShell, noVec);
-                pen = penBelt * 10f;
+                pen = penBelt;
                 try { belt = target.GetEffectiveArmor(Ship.A.Belt, null, g, shooter, false); } catch { belt = 0f; }
                 if (penLogged < 8)
                 {
                     penLogged++;
                     float penDeck = 0f; try { penDeck = Ship.GetPenetration(g, shooter, dist, false, noShell, noVec); } catch { }
-                    Log($"penetration check: {shooter.name} ({MainCaliber(shooter):0} mm) vs {target.name} at {dist:0} m: belt pen {penBelt:0.0} cm (deck variant {penDeck:0.0}) vs effective belt {belt:0.0} mm (armour table {beltRaw:0.0})");
+                    Log($"penetration check: {shooter.name} ({MainCaliber(shooter):0} mm) vs {target.name} at {dist:0} m: belt pen {penBelt:0.0} mm (deck variant {penDeck:0.0}) vs effective belt {belt:0.0} mm (armour table {beltRaw:0.0})");
                 }
             }
             catch (Exception e) { if (penLogged++ < 3) Log("GetPenetration failed: " + e.Message); return false; }
@@ -1187,7 +1190,9 @@ namespace DipGgFixes
             float pen, belt;
             bool noPen = CannotPenetrate(leader, best, bestD, out pen, out belt);
             float stopAt = ownR > 0f ? ownR * DipGgFixesMod.CloseInStopRange.Value : 0f;
-            if ((outranged || noPen) && bestD > stopAt)
+            // 1.11.8: hysteresis. Battle log 2026-10-16: a CA at 0.7x range flipped "close-in ended" / "closes in" five times
+            // around 6.9-7.1 km. Once a close-in has ended it restarts only beyond stop + 15% of own range.
+            if ((outranged || noPen) && bestD > stopAt && (st.closing || bestD > st.closeResumeAt))
             {
                 if (!st.closing)
                 {
@@ -1198,7 +1203,7 @@ namespace DipGgFixes
                 var tt = best.transform; if (tt != null) div.MoveTo(tt.position);
                 return;
             }
-            if (st.closing) { st.closing = false; Log($"{st.name}: close-in ended at {bestD:0} m ({(noPen ? "still cannot penetrate" : "penetration ok")}, {(outranged ? "still outranged" : "range ok")}) - left to the game"); }
+            if (st.closing) { st.closing = false; st.closeResumeAt = ownR * (DipGgFixesMod.CloseInStopRange.Value + 0.15f); Log($"{st.name}: close-in ended at {bestD:0} m ({(noPen ? "still cannot penetrate" : "penetration ok")}, {(outranged ? "still outranged" : "range ok")}) - left to the game"); }
             Why(st, "guns adequate - left to the game");
         }
 
