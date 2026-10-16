@@ -1,6 +1,6 @@
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - CO DAJE TEN MOD
-Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.5.
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (45 sekcji).
+Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.6.
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (46 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -56,8 +56,9 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
   załamać i odejść z linii: dotyczy AI i gracza. Dobrze wyszkolona flota to
   nie tylko celniejsze salwy, to także flota, która nie ucieka.
 - Pryzy. Okręt, który się poddał, trafia w ręce zwycięzcy, jeśli ten ma
-  jeszcze sprawne jednostki na polu bitwy: idzie do remontu, z zieloną
-  załogą. Jak eskadra Niebogatowa po Cuszimie. Funkcja nowa, w fazie testów.
+  jeszcze sprawne jednostki na polu bitwy: idzie do remontu, z zieloną załogą,
+  a jego projekt trafia do Twojej listy projektów. Jak eskadra Niebogatowa po
+  Cuszimie. Funkcja nowa, w fazie testów.
 
 4. KAMPANIA: AI, KTÓRE SIĘ NIE PODDAJE
 ----------------------------------------------------------------------------
@@ -158,7 +159,7 @@ Iron Admiral 1.1 (14 października 2026)
   wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka
   generatora).
 
-DIP_GG_Fixes 1.11.0-1.11.5 (15 października 2026)
+DIP_GG_Fixes 1.11.0-1.11.6 (15 października 2026)
 - 1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości;
   ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są
   przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza
@@ -185,6 +186,9 @@ DIP_GG_Fixes 1.11.0-1.11.5 (15 października 2026)
   własnego portu, gdy taki jest (zachowanie gry), a do zdobywcy trafiają
   tylko, gdy żadnego nie ma; flota rozwiązanego mocarstwa idzie do kontrolerów
   jego portów.
+- 1.11.6: przejęty okręt (pryz bitewny lub podbój) przynosi projekt do listy
+  projektów nowego właściciela, więc da się go przebudowywać i budować dalej
+  jego klasę.
 
 Aktualizacja danych (16 października 2026)
 - technologies.csv: accuracy_long w technologiach dalmierzy
@@ -200,8 +204,8 @@ Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 ============================================================================
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - WHAT THIS MOD DOES
-Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.5.
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (45 sections).
+Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.6.
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (46 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -255,8 +259,9 @@ files cannot reach. One-click install, full uninstall, source code included.
   line - AI and player alike. A well-trained fleet is not only more accurate,
   it is a fleet that does not run.
 - Prizes. A ship that surrenders falls to the winner if the winner still has
-  working ships on the field: it goes to repair with a green crew. Like
-  Nebogatov's squadron after Tsushima. New feature, under test.
+  working ships on the field: it goes to repair with a green crew, and its
+  design joins your design list. Like Nebogatov's squadron after Tsushima. New
+  feature, under test.
 
 4. CAMPAIGN: AN AI THAT DOES NOT GIVE UP
 ----------------------------------------------------------------------------
@@ -356,7 +361,7 @@ Iron Admiral 1.1 (14 October 2026)
   disabled), work on the AI ship generator (lower early battleship belt,
   relaxed Experimental Small Ironclad, generator diagnostics).
 
-DIP_GG_Fixes 1.11.0-1.11.5 (15 October 2026)
+DIP_GG_Fixes 1.11.0-1.11.6 (15 October 2026)
 - 1.11.0: torpedo charges start by torpedo range and speed advantage; AI
   capital ships charge when faster and close in when outranged or unable to
   penetrate; player scout divisions charge; torpedoes held while a friendly
@@ -383,6 +388,9 @@ DIP_GG_Fixes 1.11.0-1.11.5 (15 October 2026)
   another own port when one exists (game behaviour) and pass to the conqueror
   only when none is left; a dissolved great power's fleet goes to the
   controllers of its ports.
+- 1.11.6: a captured ship (battle prize or conquest) brings its design into
+  the new owner's design list, so it can be refitted and its class built
+  further.
 
 Data update (16 October 2026)
 - technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945

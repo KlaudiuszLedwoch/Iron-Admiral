@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.5", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.6", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -300,7 +300,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.5. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.6. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1613,6 +1613,7 @@ namespace DipGgFixes
                 float minCrew = 0.7f; try { minCrew = UnityEngine.Mathf.Max(0.5f, MonoBehaviourExt.Param("min_crew_threshold", 0.7f)); } catch { }
                 var list = new Il2CppSystem.Collections.Generic.List<Ship>();
                 cc.TransferShipToNewOwner(winner, ship.id, ref list, null, false);
+                PrizeDesign.Ensure(ship, winner, "Capture");
                 try { ship.CrewTrainingAmount = 0f; } catch { }
                 try { if (crew < minCrew) ship.CrewPercents = minCrew; } catch { }
                 __1 = UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f);
@@ -1727,11 +1728,58 @@ namespace DipGgFixes
                 if (recipient == null || recipient.isDisabled || recipient.Pointer == loser.Pointer) { if (dissolving) ConquestCtx.Scrapped++; return true; }
                 var list = new Il2CppSystem.Collections.Generic.List<Ship>();
                 __instance.TransferShipToNewOwner(recipient, ship.id, ref list, port, false);
+                PrizeDesign.Ensure(ship, recipient, "Conquest");
                 if (dissolving) ConquestCtx.Transferred++;
                 MelonLogger.Msg($"[DIP GG Fixes][Conquest] {ship.name} ({ship.shipType?.name}) {loser.data.name} -> {recipient.data.name} ({why}); status {ship.status}, port {(ship.PortLocation != null ? ship.PortLocation.name : "none")}");
                 return false;
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Conquest] ScrapShip prefix: " + e.Message); return true; }
+        }
+    }
+
+
+    // =====================================================================================
+    // 1.11.6: a ship that changes hands brings its design along. If the new owner has no
+    // design with the same hull and tonnage, the design is cloned into its design list
+    // (PlayerController.CloneDesign) so the ship can be refitted and the class rebuilt.
+    // =====================================================================================
+    internal static class PrizeDesign
+    {
+        internal static void Ensure(Ship ship, Player recipient, string tag)
+        {
+            try
+            {
+                if (ship == null || recipient == null) return;
+                Ship d = null; try { d = ship.design; } catch { }
+                if (d == null) d = ship;
+                var hull = d.hull; string hullName = hull != null ? hull.name : null;
+                float ton = 0f; try { ton = d.Tonnage(); } catch { }
+                int count = 0; Ship found = null;
+                try
+                {
+                    var en = recipient.designs.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
+                    while (un.MoveNext())
+                    {
+                        var x = en.Current; if (x == null) continue; count++;
+                        if (x.Pointer == d.Pointer) { found = x; break; }
+                        var xh = x.hull; if (xh == null || hullName == null || xh.name != hullName) continue;
+                        float xt = 0f; try { xt = x.Tonnage(); } catch { }
+                        if (Math.Abs(xt - ton) <= Math.Max(50f, ton * 0.01f)) { found = x; break; }
+                    }
+                }
+                catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][{tag}] design scan: " + e.Message); }
+                if (found != null)
+                {
+                    MelonLogger.Msg($"[DIP GG Fixes][{tag}] {recipient.data.name} already has a design for {ship.name} ({found.name}, hull {hullName}); {count} design(s) in list");
+                    return;
+                }
+                var pc = PlayerController.Instance; if (pc == null) { MelonLogger.Msg($"[DIP GG Fixes][{tag}] no PlayerController - design not cloned"); return; }
+                var clone = pc.CloneDesign(d, recipient);
+                int after = 0; try { var en2 = recipient.designs.GetEnumerator(); var un2 = en2.Cast<Il2CppSystem.Collections.IEnumerator>(); while (un2.MoveNext()) after++; } catch { }
+                if (clone != null) { try { ship.design = clone; } catch { } }
+                MelonLogger.Msg($"[DIP GG Fixes][{tag}] design of {ship.name} (hull {hullName}, {ton:0} t) cloned to {recipient.data.name} as {(clone != null ? clone.name : "null")}; designs {count} -> {after}");
+            }
+            catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][{tag}] design clone failed: " + e.Message); }
         }
     }
 
