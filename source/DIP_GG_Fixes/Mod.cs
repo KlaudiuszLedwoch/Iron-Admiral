@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.14", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.15", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -319,7 +319,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.14. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.15. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1767,6 +1767,9 @@ namespace DipGgFixes
     // 1.11.6: a ship that changes hands brings its design along. If the new owner has no
     // design with the same hull and tonnage, the design is cloned into its design list
     // (PlayerController.CloneDesign) so the ship can be refitted and the class rebuilt.
+    // 1.11.15: the scan uses designsAll - Player.designs hides designs the owner cannot
+    // build (16:4x log: Russia received three identical clones of a Romanian CL class, the
+    // count stayed 3 -> 3), so duplicates were created.
     // =====================================================================================
     internal static class PrizeDesign
     {
@@ -1782,7 +1785,7 @@ namespace DipGgFixes
                 int count = 0; Ship found = null;
                 try
                 {
-                    var en = recipient.designs.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
+                    var en = recipient.designsAll.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
                     while (un.MoveNext())
                     {
                         var x = en.Current; if (x == null) continue; count++;
@@ -1800,7 +1803,7 @@ namespace DipGgFixes
                 }
                 var pc = PlayerController.Instance; if (pc == null) { MelonLogger.Msg($"[DIP GG Fixes][{tag}] no PlayerController - design not cloned"); return; }
                 var clone = pc.CloneDesign(d, recipient);
-                int after = 0; try { var en2 = recipient.designs.GetEnumerator(); var un2 = en2.Cast<Il2CppSystem.Collections.IEnumerator>(); while (un2.MoveNext()) after++; } catch { }
+                int after = 0; try { var en2 = recipient.designsAll.GetEnumerator(); var un2 = en2.Cast<Il2CppSystem.Collections.IEnumerator>(); while (un2.MoveNext()) after++; } catch { }
                 if (clone != null) { try { ship.design = clone; } catch { } }
                 MelonLogger.Msg($"[DIP GG Fixes][{tag}] design of {ship.name} (hull {hullName}, {ton:0} t) cloned to {recipient.data.name} as {(clone != null ? clone.name : "null")}; designs {count} -> {after}");
             }
