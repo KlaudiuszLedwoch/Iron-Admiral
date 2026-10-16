@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.11", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.12", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -319,7 +319,7 @@ namespace DipGgFixes
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.11. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.12. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -1915,13 +1915,18 @@ namespace DipGgFixes
                 catch { }
                 System.Threading.Tasks.Task.Run(async () =>
                 {
+                    // 1.11.12: the first HTTPS request from the game process can take well over 8 s (TLS and DNS
+                    // warm-up; 2026-10-16 log: timeout at 8 s), so 30 s and one retry after 20 s.
+                    for (int attempt = 1; attempt <= 2 && remote == null; attempt++)
                     try
                     {
+                        var sw = System.Diagnostics.Stopwatch.StartNew();
                         using (var hc = new System.Net.Http.HttpClient())
                         {
-                            hc.Timeout = TimeSpan.FromSeconds(8);
+                            hc.Timeout = TimeSpan.FromSeconds(30);
                             hc.DefaultRequestHeaders.UserAgent.ParseAdd("IronAdmiral-DIP_GG_Fixes");
                             string s = await hc.GetStringAsync(Url);
+                            MelonLogger.Msg($"[DIP GG Fixes][Update] VERSION fetched in {sw.ElapsedMilliseconds} ms (attempt {attempt})");
                             var lines = s.Replace("\r", "").Split('\n');
                             remote = lines.Length > 0 ? lines[0].Trim() : null;
                             remoteDll = lines.Length > 1 ? lines[1].Trim() : "";
@@ -1934,7 +1939,11 @@ namespace DipGgFixes
                             }
                         }
                     }
-                    catch (Exception e) { MelonLogger.Msg("[DIP GG Fixes][Update] check failed (offline?): " + e.Message); }
+                    catch (Exception e)
+                    {
+                        MelonLogger.Msg($"[DIP GG Fixes][Update] check failed (attempt {attempt}): " + e.Message);
+                        if (attempt == 1) await System.Threading.Tasks.Task.Delay(20000);
+                    }
                     done = true;
                 });
             }
