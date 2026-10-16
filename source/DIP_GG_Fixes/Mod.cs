@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.3", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.4", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -174,6 +174,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> PanicChance;
         internal static MelonPreferences_Entry<bool> CaptureSurrendered;
         internal static MelonPreferences_Entry<float> CaptureDamage;
+        internal static MelonPreferences_Entry<bool> MinorFleetToConqueror;
 
         public override void OnInitializeMelon()
         {
@@ -292,12 +293,14 @@ namespace DipGgFixes
                 "Ships that surrendered in a campaign battle are transferred to the winner if it still has ships in the battle; they go to repair with a green crew");
             CaptureDamage = cat.CreateEntry("CaptureDamage", 0.6f, null,
                 "Structural damage (0-1) applied to a captured ship before it enters repair");
+            MinorFleetToConqueror = cat.CreateEntry("MinorFleetToConqueror", true, null,
+                "When a minor nation loses a province or is dissolved, its ships in the lost ports pass to the new controller of the port instead of being scrapped (1.11.4)");
             Doctrines.Load();
-            LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew loss>{PanicCrewLoss.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value})");
+            LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew loss>{PanicCrewLoss.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value}), MinorFleetToConqueror={MinorFleetToConqueror.Value}");
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.3. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded 1.11.4. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -389,13 +392,26 @@ namespace DipGgFixes
                     string name = p.data != null ? p.data.nameUi : "?";
                     string text = $"{name}: emergency naval appropriations in response to {mainName}'s naval dominance (+{grant:N0}).";
                     MelonLogger.Msg("[DIP GG Fixes] " + text);
-                    try { if (G.ui != null) G.ui.ReportImportant(text, null); } catch { }
+                    // 1.11.4: Ui.ReportImportant throws inside the game when the ship is null, so hand it one of the nation's ships
+                    try { var any = FirstShip(p); if (G.ui != null && any != null) G.ui.ReportImportant(text, any); } catch { }
                 }
             }
             catch (Exception e)
             {
                 MelonLogger.Warning("[DIP GG Fixes] Balance-of-power check failed: " + e.Message);
             }
+        }
+
+        private static Ship FirstShip(Player p)
+        {
+            try
+            {
+                if (p.fleet == null) return null;
+                var en = p.fleet.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
+                while (un.MoveNext()) { var s = en.Current; if (s != null) return s; }
+            }
+            catch { }
+            return null;
         }
 
         private static float FleetTonnage(Player p)
@@ -1614,6 +1630,90 @@ namespace DipGgFixes
                 MelonLogger.Msg($"[DIP GG Fixes][Capture] after DamageShip: {__0.name} status {__0.status}, isSunk {__0.isSunk}, HP {__0.HP:0}, crew {__0.CrewPercents:0.00}, owner {(__0.player != null ? __0.player.data.name : "?")}, port {(__0.PortLocation != null ? __0.PortLocation.name : "none")}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] DamageShip postfix: " + e.Message); }
+        }
+    }
+
+
+    // =====================================================================================
+    // 1.11.4: a conquered or dissolved minor nation hands its fleet to the new controller of
+    // the port instead of scrapping it. The game calls ScrapShip for every ship of the loser
+    // from TransferProvinceToNewOwner (province lost) and DisableMediumPlayer (dissolved).
+    // =====================================================================================
+    internal static class ConquestCtx
+    {
+        [ThreadStatic] internal static Player NewOwner;
+        [ThreadStatic] internal static string ProvinceId;
+        [ThreadStatic] internal static Player Dissolving;
+        internal static int Transferred, Scrapped;
+    }
+
+    [HarmonyPatch(typeof(CampaignController), "TransferProvinceToNewOwner")]
+    internal static class Patch_TransferProvinceToNewOwner
+    {
+        private static void Prefix(Player __0, string __1) { ConquestCtx.NewOwner = __0; ConquestCtx.ProvinceId = __1; }
+        private static void Finalizer() { ConquestCtx.NewOwner = null; ConquestCtx.ProvinceId = null; }
+    }
+
+    [HarmonyPatch(typeof(CampaignController), "DisableMediumPlayer")]
+    internal static class Patch_DisableMediumPlayer
+    {
+        private static void Prefix(Player __0)
+        {
+            ConquestCtx.Dissolving = __0; ConquestCtx.Transferred = 0; ConquestCtx.Scrapped = 0;
+            try { MelonLogger.Msg($"[DIP GG Fixes][Conquest] {__0?.data?.name ?? "?"} is being dissolved"); } catch { }
+        }
+        private static void Finalizer()
+        {
+            try { if (ConquestCtx.Dissolving != null) MelonLogger.Msg($"[DIP GG Fixes][Conquest] {ConquestCtx.Dissolving.data?.name ?? "?"} dissolved: {ConquestCtx.Transferred} ship(s) handed over, {ConquestCtx.Scrapped} scrapped"); } catch { }
+            ConquestCtx.Dissolving = null;
+        }
+    }
+
+    [HarmonyPatch(typeof(CampaignController), "ScrapShip", new Type[] { typeof(Ship), typeof(bool) })]
+    internal static class Patch_ScrapShip
+    {
+        private static Player ByName(CampaignController cc, string name)
+        {
+            if (string.IsNullOrEmpty(name) || cc.CampaignData == null) return null;
+            var ps = cc.CampaignData.Players; if (ps == null) return null;
+            for (int i = 0; i < ps.Count; i++) { var p = ps[i]; if (p != null && p.data != null && p.data.name == name) return p; }
+            return null;
+        }
+
+        private static bool Prefix(CampaignController __instance, Ship __0)
+        {
+            try
+            {
+                if (DipGgFixesMod.MinorFleetToConqueror == null || !DipGgFixesMod.MinorFleetToConqueror.Value) return true;
+                var ship = __0; if (ship == null) return true;
+                var loser = ship.player; if (loser == null || !loser.isMedium) return true;
+                bool conquest = ConquestCtx.NewOwner != null, dissolving = ConquestCtx.Dissolving != null && ConquestCtx.Dissolving.Pointer == loser.Pointer;
+                if (!conquest && !dissolving) return true;
+                // only ships that exist: hulls on the slip are scrapped as before
+                var st = ship.status;
+                if (st == VesselEntity.Status.Building || st == VesselEntity.Status.Commissioning || st == VesselEntity.Status.Sunk || st == VesselEntity.Status.Scrapped || st == VesselEntity.Status.Erased) return true;
+                var port = ship.PortLocation;
+                Player recipient = null; string why = "";
+                if (conquest)
+                {
+                    // ships in the lost province go to the conqueror; ships elsewhere are left to the game
+                    if (port == null || port.ProvinceId != ConquestCtx.ProvinceId) return true;
+                    recipient = ConquestCtx.NewOwner; why = "province " + ConquestCtx.ProvinceId + " lost";
+                }
+                else
+                {
+                    if (port == null) { ConquestCtx.Scrapped++; return true; }
+                    var prov = port.CurrentProvince; string ctrl = prov != null ? prov.Controller : null;
+                    recipient = ByName(__instance, ctrl); why = "dissolved, port " + port.name + " controlled by " + (ctrl ?? "?");
+                }
+                if (recipient == null || recipient.isDisabled || recipient.Pointer == loser.Pointer) { if (dissolving) ConquestCtx.Scrapped++; return true; }
+                var list = new Il2CppSystem.Collections.Generic.List<Ship>();
+                __instance.TransferShipToNewOwner(recipient, ship.id, ref list, port, false);
+                if (dissolving) ConquestCtx.Transferred++;
+                MelonLogger.Msg($"[DIP GG Fixes][Conquest] {ship.name} ({ship.shipType?.name}) {loser.data.name} -> {recipient.data.name} ({why}); status {ship.status}, port {(ship.PortLocation != null ? ship.PortLocation.name : "none")}");
+                return false;
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Conquest] ScrapShip prefix: " + e.Message); return true; }
         }
     }
 
