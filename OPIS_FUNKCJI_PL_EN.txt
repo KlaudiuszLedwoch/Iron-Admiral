@@ -69,6 +69,10 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
   robi to za nią.
 - Projekty gracza trafiają automatycznie do puli projektów wspólnych, więc AI
   może budować według nich.
+- Floty zmieniają właściciela. Gdy nacja traci ostatni port albo zostaje
+  rozwiązana, jej okręty w zajętych portach przechodzą do nowego kontrolera,
+  zamiast znikać na złomie - zdobądź Port Artur i zdobywasz flotę, która w nim
+  stoi. Działa na Twoją korzyść i przeciw Tobie.
 - Kryzys gospodarczy po przegranej wojnie boli, ale nie wciąga w spiralę bez
   wyjścia: nacja przy zerowym budżecie znika dopiero po 24 miesiącach kryzysu.
 
@@ -264,6 +268,10 @@ files cannot reach. One-click install, full uninstall, source code included.
   turn, the add-on does it instead.
 - Your designs go automatically to the shared design pool, so the AI can build
   from them.
+- Fleets change hands. When a nation loses its last port, or is dissolved, its
+  ships in the fallen ports pass to the new controller instead of vanishing on
+  the scrap heap - take Port Arthur and you take the fleet inside it. Works
+  for you and against you.
 - The post-war crisis hurts but no longer traps nations in an endless spiral:
   a nation at zero budget vanishes only after 24 months of crisis.
 
