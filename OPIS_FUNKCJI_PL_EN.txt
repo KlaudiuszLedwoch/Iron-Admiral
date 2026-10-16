@@ -1,6 +1,6 @@
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - CO DAJE TEN MOD
-Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.6.
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (46 sekcji).
+Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.7.
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (47 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -111,7 +111,14 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 - Celność na dużym dystansie rośnie x2,6 między 1920 a 1945 przez dalmierze
   stereo i radarowe, wg danych W.J. Jurensa o artylerii pancerników US Navy
   (rozrzut w odległości mniejszy o ~66%).
-- Badania o 20% szybsze, koszt technologii x10, specjalizacje narodowe x1,5,
+- Narodowe profile badań. Każde mocarstwo bada w swoim tempie w swoich
+  dziedzinach, zgodnie z historią: Niemcy pancerz, optykę i odporność,
+  Brytania ciężkie działa, turbiny i ZOP, USA kierowanie ogniem, pociski i
+  stocznie, Japonia torpedy i walkę nocną, Włochy prędkość, Francja
+  niszczyciele i wieże czterodziałowe - i każde płaci za swoje historyczne
+  słabości (pociski spod Jutlandii, torpeda Mk 14, 380 mm Richelieu). Od -10%
+  do +50% na kategorię, widoczne w oknie badań, dla Ciebie i dla AI.
+- Badania o 20% szybsze, koszt technologii x10, priorytety badań AI x1,5,
   nowy profil Bizancjum (ciężki pancerz, największe kalibry, szybkie krążowniki).
 
 7. STABILNOŚĆ I KONTROLA
@@ -119,8 +126,8 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 - Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie
   tury ("An item with the same key has already been added").
 - Każda funkcja dodatku ma przełącznik i wartości w
-  UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w battleDoctrines.csv.
-  Nic nie jest narzucone.
+  UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w battleDoctrines.csv,
+  profile badań w techBonuses.csv. Nic nie jest narzucone.
 - Kod źródłowy, instalator i skrypty scalania: github.com/KlaudiuszLedwoch/Iron-Admiral.
 
 8. HISTORIA WERSJI
@@ -131,7 +138,7 @@ Iron Admiral 1.0 (październik 2026, na bazie DIP The Great Game 1.0.1)
   000 t) i limit 240 000 t dla superpancerników; naprawione kadłuby, których
   nie dało się zbudować (Modern Battleship, wcześniejsze pancerniki,
   niszczyciele); Long Lance +100%; radar działający nocą; tempo badań,
-  gospodarka i budowa floty przez AI; bunty; specjalizacje narodowe x1,5;
+  gospodarka i budowa floty przez AI; bunty; priorytety badań AI x1,5;
   profil Bizancjum.
 - Świat: suwerenne nacje mniejsze odzyskały terytoria i zostały wzmocnione;
   łagodniejszy kryzys powojenny.
@@ -159,7 +166,7 @@ Iron Admiral 1.1 (14 października 2026)
   wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka
   generatora).
 
-DIP_GG_Fixes 1.11.0-1.11.6 (15 października 2026)
+DIP_GG_Fixes 1.11.0-1.11.7 (15 października 2026)
 - 1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości;
   ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są
   przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza
@@ -189,6 +196,8 @@ DIP_GG_Fixes 1.11.0-1.11.6 (15 października 2026)
 - 1.11.6: przejęty okręt (pryz bitewny lub podbój) przynosi projekt do listy
   projektów nowego właściciela, więc da się go przebudowywać i budować dalej
   jego klasę.
+- 1.11.7: narodowe profile badań (techBonuses.csv) - 14 mocarstw, -10..+50%
+  tempa badań per kategoria technologii, dla gracza i AI.
 
 Aktualizacja danych (16 października 2026)
 - technologies.csv: accuracy_long w technologiach dalmierzy
@@ -204,8 +213,8 @@ Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 ============================================================================
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - WHAT THIS MOD DOES
-Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.6.
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (46 sections).
+Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.7.
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (47 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -314,7 +323,15 @@ files cannot reach. One-click install, full uninstall, source code included.
 - Long-range accuracy grows x2.6 between 1920 and 1945 through the stereo and
   radar rangefinders, following W.J. Jurens' data on US Navy battleship
   gunnery (range dispersion down ~66%).
-- Research 20% faster, technology cost x10, national specialisations x1.5, a
+- National research profiles. Each great power researches at its own pace in
+  its own fields, from the historical record: Germany in armour, optics and
+  survivability, Britain in heavy guns, turbines and anti-submarine warfare,
+  the USA in fire control, shells and shipbuilding, Japan in torpedoes and
+  night fighting, Italy in speed, France in destroyers and quadruple turrets -
+  and each pays for its historical weaknesses (Jutland shells, the Mk 14
+  torpedo, Richelieu's 380mm). -10% to +50% per category, visible in the
+  research window, for you and for the AI.
+- Research 20% faster, technology cost x10, AI research priorities x1.5, a
   new profile for the Byzantine Empire (heavy armour, the biggest calibres,
   fast cruisers).
 
@@ -324,7 +341,7 @@ files cannot reach. One-click install, full uninstall, source code included.
   processing in DIP ("An item with the same key has already been added").
 - Every add-on feature has a switch and values in
   UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in
-  battleDoctrines.csv. Nothing is forced.
+  battleDoctrines.csv, research profiles in techBonuses.csv. Nothing is forced.
 - Source code, installer and merge scripts: github.com/KlaudiuszLedwoch/Iron-Admiral.
 
 8. VERSION HISTORY
@@ -335,7 +352,7 @@ Iron Admiral 1.0 (October 2026, based on DIP The Great Game 1.0.1)
   45,000 t) and a 240,000 t super-battleship ceiling; fixed hulls that could
   never be built (Modern Battleship, earlier BBs, destroyers); Long Lance
   +100%; radar that works at night; research pacing, economy and AI fleet-
-  building parameters; revolts; national specialisations x1.5; a Byzantine
+  building parameters; revolts; AI research priorities x1.5; a Byzantine
   profile.
 - World: sovereign minor nations get their territories back and are
   strengthened; the post-war crisis is softened.
@@ -361,7 +378,7 @@ Iron Admiral 1.1 (14 October 2026)
   disabled), work on the AI ship generator (lower early battleship belt,
   relaxed Experimental Small Ironclad, generator diagnostics).
 
-DIP_GG_Fixes 1.11.0-1.11.6 (15 October 2026)
+DIP_GG_Fixes 1.11.0-1.11.7 (15 October 2026)
 - 1.11.0: torpedo charges start by torpedo range and speed advantage; AI
   capital ships charge when faster and close in when outranged or unable to
   penetrate; player scout divisions charge; torpedoes held while a friendly
@@ -391,6 +408,9 @@ DIP_GG_Fixes 1.11.0-1.11.6 (15 October 2026)
 - 1.11.6: a captured ship (battle prize or conquest) brings its design into
   the new owner's design list, so it can be refitted and its class built
   further.
+- 1.11.7: national research profiles (techBonuses.csv) - 14 great powers,
+  -10..+50% research speed per technology category, for the player and the AI
+  alike.
 
 Data update (16 October 2026)
 - technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945

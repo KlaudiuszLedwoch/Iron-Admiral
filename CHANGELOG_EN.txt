@@ -1610,5 +1610,54 @@ ASSUMPTION: CloneDesign appends the clone to the recipient's design list
 count before and after is logged to confirm it. STATUS: not yet tested
 in-game.
 --------------------------------------------------------------------------
-Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package, DIP_GG_Fixes 1.10.2: shared-design duplicate fix, save_4 migration to 1.1, new-campaign start fix: taf_force_no_predef_designs=1, Experimental Small Ironclad hull: 10" calibre limit, min. 2 barrels, battleship minimum belt in the armor generator lowered for 1890 (6") and 1900 (7.5"), ship generator diagnostics taf_debug_shipgen_info=2, Experimental Small Ironclad 1 turret minimum, DIP_GG_Fixes 1.11.0: charges by torpedo range and speed, AI capital ships charge or close in, player scout charge, torpedo friendly-lane hold, smart targeting, non-linear veterancy, surrender by training, panic, capture of surrendered ships, DIP_GG_Fixes 1.11.1: constant charge log reason, penetration compared with effective belt armour, DIP_GG_Fixes 1.11.2: target selection through a mod-owned target lock, DIP_GG_Fixes 1.11.3: panic from crew loss, belt penetration cm->mm, no aiming reset on the same target, prizes taken off the sunk lists with a prize crew, long-range accuracy in the radar rangefinders after Jurens (x2.6 1920-1945), DIP_GG_Fixes 1.11.4: a conquered minor's fleet passes to the conqueror instead of being scrapped, balance-of-power message fixed, DIP_GG_Fixes 1.11.5: fleet to the conqueror for the great powers too (the game itself moves ships to another port when one exists), DIP_GG_Fixes 1.11.6: a captured ship (prize, conquest) brings its design into the new owner's list)
+47. DIP_GG_FIXES 1.11.7 — NATIONAL RESEARCH PROFILES FOR PLAYER AND AI (techBonuses.csv) — 2026-10-16
+--------------------------------------------------------------------------
+WHAT: DIP_GG_Fixes 1.11.7 - national research profiles for the 14 great
+powers, working for the player and the AI. New file Mods/techBonuses.csv
+(nation, technology category per the "type" column of technologies.csv,
+percent, basis); 118 entries in the -10..+50% range. A postfix on
+CampaignController.GetResearchSpeed(Player, Technology) multiplies the
+research speed by 1+percent/100 for the player's nation and the
+technology's category. The method is used both by the monthly research
+update (UpdatePlayerTech) and by the research window (UpdateTechRes), so
+the modified value is visible in the interface. Options:
+NationalTechBonuses (on), NationalTechScale (1.0 - multiplier on every
+percentage). Log: "[Tech] <nation> <category>: research speed a -> b"
+once per pair.
+
+WHY: the existing TechMod values in aiPersonalities.csv (sections 9 and
+18) are AI research-priority weights (sole user: Player.GetTechPriorities),
+not research speed, and do nothing for the player; describing them as
+"research speed bonuses" in sections 9/18 was inaccurate. The profiles
+follow documented specialisations: Britain - heavy guns (15in/42 Mk I),
+Parsons turbines, ASDIC and convoys, signals; penalties for APC shells
+(Jutland) and magazine protection. Germany - Krupp armour (KC 1894),
+Zeiss stereoscopic rangefinders, survivability (Seydlitz, Derfflinger),
+shells; penalties for the high-pressure boilers of the 1930s and the lack
+of large hulls 1918-1935. USA - Ford Rangekeeper and Mk 37, superheavy
+16in shells, industrial shipbuilding, damage control, high-pressure
+steam; penalties for the Mk 14 torpedo and 1942 night tactics. France -
+contre-torpilleurs (45 kn), Indret boilers, quadruple turrets; penalties
+for the Richelieu 380mm and fire control. Russia - mines (Port Arthur,
+Baltic), Novik, Obukhov guns and the B-37; penalties for imported
+turbines and building times. Italy - speed (Capitani Romani, Ansaldo),
+Zara/Condottieri cruisers; penalties for 381mm dispersion, no radar,
+coordination. Austria-Hungary - Whitehead of Fiume (the torpedo), Skoda,
+Tegetthoff triple turrets. Japan - Long Lance, 61cm torpedoes,
+Takao/Mogami cruisers, night fighting, optics; penalties for damage
+control (Taiho, Shinano), ASW, radar. Netherlands - Hazemeyer AA fire
+control, Bofors 40mm, light cruisers, Werkspoor. Scandinavia - Bofors
+40mm and heavy guns, Swedish steel, coastal defence ships, mines;
+penalties for no dreadnoughts and no cruisers. Spain, China, Portugal -
+import-dependent fleets: profile balance about 0. Greece (Byzantium) -
+profile per the character adopted in section 19 (heavy armour, big
+calibres, fast cruisers).
+
+EFFECTS: percentage sums per nation range from 0 (Spain) to +230
+(Germany, Japan) - industrial powers research faster in their fields
+than import-dependent fleets; intended. STATUS: not yet tested in-game -
+to be confirmed by "[Tech]" log entries and the speed shown in the
+research window.
+--------------------------------------------------------------------------
+Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package, DIP_GG_Fixes 1.10.2: shared-design duplicate fix, save_4 migration to 1.1, new-campaign start fix: taf_force_no_predef_designs=1, Experimental Small Ironclad hull: 10" calibre limit, min. 2 barrels, battleship minimum belt in the armor generator lowered for 1890 (6") and 1900 (7.5"), ship generator diagnostics taf_debug_shipgen_info=2, Experimental Small Ironclad 1 turret minimum, DIP_GG_Fixes 1.11.0: charges by torpedo range and speed, AI capital ships charge or close in, player scout charge, torpedo friendly-lane hold, smart targeting, non-linear veterancy, surrender by training, panic, capture of surrendered ships, DIP_GG_Fixes 1.11.1: constant charge log reason, penetration compared with effective belt armour, DIP_GG_Fixes 1.11.2: target selection through a mod-owned target lock, DIP_GG_Fixes 1.11.3: panic from crew loss, belt penetration cm->mm, no aiming reset on the same target, prizes taken off the sunk lists with a prize crew, long-range accuracy in the radar rangefinders after Jurens (x2.6 1920-1945), DIP_GG_Fixes 1.11.4: a conquered minor's fleet passes to the conqueror instead of being scrapped, balance-of-power message fixed, DIP_GG_Fixes 1.11.5: fleet to the conqueror for the great powers too (the game itself moves ships to another port when one exists), DIP_GG_Fixes 1.11.6: a captured ship (prize, conquest) brings its design into the new owner's list, DIP_GG_Fixes 1.11.7: national research profiles for player and AI (techBonuses.csv, -10..+50%))
 ==========================================================================

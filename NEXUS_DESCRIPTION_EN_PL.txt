@@ -3,11 +3,11 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.6.[/i]
+[i]Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.7.[/i]
 
 [b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.6.
+Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.7.
 
 [h2]Battle: an enemy that fights like a navy[/h2]
 [list]
@@ -61,20 +61,21 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]Hulls that could be researched but never built in DIP are fixed (29 Modern Battleship variants, 23 earlier battleships, 5 destroyers, a corrupted CSV row that blocked the unlocks).
 [*]Radar that works at night and in bad weather (three techs, 1935-1945). Long Lance: +100% range instead of +40%.
 [*]Long-range accuracy grows x2.6 between 1920 and 1945 through the stereo and radar rangefinders, following W.J. Jurens' data on US Navy battleship gunnery (range dispersion down ~66%).
-[*]Research 20% faster, technology cost x10, national specialisations x1.5, a new profile for the Byzantine Empire (heavy armour, the biggest calibres, fast cruisers).
+[*][b]National research profiles.[/b] Each great power researches at its own pace in its own fields, from the historical record: Germany in armour, optics and survivability, Britain in heavy guns, turbines and anti-submarine warfare, the USA in fire control, shells and shipbuilding, Japan in torpedoes and night fighting, Italy in speed, France in destroyers and quadruple turrets - and each pays for its historical weaknesses (Jutland shells, the Mk 14 torpedo, Richelieu's 380mm). -10% to +50% per category, visible in the research window, for you and for the AI.
+[*]Research 20% faster, technology cost x10, AI research priorities x1.5, a new profile for the Byzantine Empire (heavy armour, the biggest calibres, fast cruisers).
 [/list]
 
 [h2]Stability and transparency[/h2]
 [list]
 [*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
-[*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (46 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv, research profiles in Mods\techBonuses.csv. Nothing is forced.
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (47 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Version history[/h2]
 [b]Iron Admiral 1.0 (October 2026, based on DIP The Great Game 1.0.1)[/b]
 [list]
-[*]Data: armour penetration rebuilt from physics (De Marre) for 21 calibres and 5 gun generations; barrel weights from a power law; naval treaties (35,000 / 45,000 t) and a 240,000 t super-battleship ceiling; fixed hulls that could never be built (Modern Battleship, earlier BBs, destroyers); Long Lance +100%; radar that works at night; research pacing, economy and AI fleet-building parameters; revolts; national specialisations x1.5; a Byzantine profile.
+[*]Data: armour penetration rebuilt from physics (De Marre) for 21 calibres and 5 gun generations; barrel weights from a power law; naval treaties (35,000 / 45,000 t) and a 240,000 t super-battleship ceiling; fixed hulls that could never be built (Modern Battleship, earlier BBs, destroyers); Long Lance +100%; radar that works at night; research pacing, economy and AI fleet-building parameters; revolts; AI research priorities x1.5; a Byzantine profile.
 [*]World: sovereign minor nations get their territories back and are strengthened; the post-war crisis is softened.
 [*]DIP_GG_Fixes 1.0-1.6: guards for two game bugs that aborted turn processing; automatic export of player designs to the shared pool; cruisers when a battleship is unaffordable; doubled minor port capacity; balance-of-power events; diplomacy x1.5 / x4; construction watch for stalled AI shipyards.
 [*]DIP_GG_Fixes 1.7-1.9: battle AI - torpedo charges of light ships, fight instead of a hopeless retreat, detaching slow ships, national battle doctrines (battleDoctrines.csv).
@@ -86,7 +87,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]DIP_GG_Fixes 1.10.1-1.10.2: compatibility with TAF 3.21.1 (attitude pass-through), shared designs exported once instead of every turn, a migration tool for 1.0 campaign saves.
 [*]Post-release fixes: new campaigns start correctly again (predefined designs disabled), work on the AI ship generator (lower early battleship belt, relaxed Experimental Small Ironclad, generator diagnostics).
 [/list]
-[b]DIP_GG_Fixes 1.11.0-1.11.6 (15 October 2026)[/b]
+[b]DIP_GG_Fixes 1.11.0-1.11.7 (15 October 2026)[/b]
 [list]
 [*]1.11.0: torpedo charges start by torpedo range and speed advantage; AI capital ships charge when faster and close in when outranged or unable to penetrate; player scout divisions charge; torpedoes held while a friendly ship is in the lane; target selection for all ships (most damaged, heaviest calibre for battleship main guns, torpedo threats for secondaries); non-linear veterancy (+100% / -50%); surrender threshold by training (70% - 40%); panic of green crews; surrendered ships captured as prizes.
 [*]1.11.1: log noise removed; penetration compared with the game's effective belt armour in the same units.
@@ -95,6 +96,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]1.11.4: the fleet of a conquered or dissolved minor nation passes to the new controller of its ports instead of being scrapped; the balance-of-power budget message is now actually shown in-game.
 [*]1.11.5: the hand-over applies to the great powers too - ships flee to another own port when one exists (game behaviour) and pass to the conqueror only when none is left; a dissolved great power's fleet goes to the controllers of its ports.
 [*]1.11.6: a captured ship (battle prize or conquest) brings its design into the new owner's design list, so it can be refitted and its class built further.
+[*]1.11.7: national research profiles (techBonuses.csv) - 14 great powers, -10..+50% research speed per technology category, for the player and the AI alike.
 [/list]
 [b]Data update (16 October 2026)[/b]
 [list]
@@ -115,11 +117,11 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.6.[/i]
+[i]Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.7.[/i]
 
 [b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.6.
+Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.7.
 
 [h2]Bitwa: przeciwnik, który walczy jak flota[/h2]
 [list]
@@ -173,20 +175,21 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]Naprawiono kadłuby, których w DIP nie dało się zbudować mimo zbadania (29 wariantów Modern Battleship, 23 wcześniejsze pancerniki, 5 niszczycieli, uszkodzony wiersz CSV blokujący odblokowania).
 [*]Radar, który działa nocą i w złej pogodzie (trzy technologie, 1935-1945). Long Lance: +100% zasięgu zamiast +40%.
 [*]Celność na dużym dystansie rośnie x2,6 między 1920 a 1945 przez dalmierze stereo i radarowe, wg danych W.J. Jurensa o artylerii pancerników US Navy (rozrzut w odległości mniejszy o ~66%).
-[*]Badania o 20% szybsze, koszt technologii x10, specjalizacje narodowe x1,5, nowy profil Bizancjum (ciężki pancerz, największe kalibry, szybkie krążowniki).
+[*][b]Narodowe profile badań.[/b] Każde mocarstwo bada w swoim tempie w swoich dziedzinach, zgodnie z historią: Niemcy pancerz, optykę i odporność, Brytania ciężkie działa, turbiny i ZOP, USA kierowanie ogniem, pociski i stocznie, Japonia torpedy i walkę nocną, Włochy prędkość, Francja niszczyciele i wieże czterodziałowe - i każde płaci za swoje historyczne słabości (pociski spod Jutlandii, torpeda Mk 14, 380 mm Richelieu). Od -10% do +50% na kategorię, widoczne w oknie badań, dla Ciebie i dla AI.
+[*]Badania o 20% szybsze, koszt technologii x10, priorytety badań AI x1,5, nowy profil Bizancjum (ciężki pancerz, największe kalibry, szybkie krążowniki).
 [/list]
 
 [h2]Stabilność i przejrzystość[/h2]
 [list]
 [*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
-[*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (46 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv, profile badań w Mods\techBonuses.csv. Nic nie jest narzucone.
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (47 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Historia wersji[/h2]
 [b]Iron Admiral 1.0 (październik 2026, na bazie DIP The Great Game 1.0.1)[/b]
 [list]
-[*]Dane: przebijalność pancerza z fizyki (De Marre) dla 21 kalibrów i 5 generacji dział; masy luf z prawa potęgowego; traktaty morskie (35 000 / 45 000 t) i limit 240 000 t dla superpancerników; naprawione kadłuby, których nie dało się zbudować (Modern Battleship, wcześniejsze pancerniki, niszczyciele); Long Lance +100%; radar działający nocą; tempo badań, gospodarka i budowa floty przez AI; bunty; specjalizacje narodowe x1,5; profil Bizancjum.
+[*]Dane: przebijalność pancerza z fizyki (De Marre) dla 21 kalibrów i 5 generacji dział; masy luf z prawa potęgowego; traktaty morskie (35 000 / 45 000 t) i limit 240 000 t dla superpancerników; naprawione kadłuby, których nie dało się zbudować (Modern Battleship, wcześniejsze pancerniki, niszczyciele); Long Lance +100%; radar działający nocą; tempo badań, gospodarka i budowa floty przez AI; bunty; priorytety badań AI x1,5; profil Bizancjum.
 [*]Świat: suwerenne nacje mniejsze odzyskały terytoria i zostały wzmocnione; łagodniejszy kryzys powojenny.
 [*]DIP_GG_Fixes 1.0-1.6: osłony na dwa błędy gry przerywające przeliczanie tury; automatyczny eksport projektów gracza do puli wspólnej; krążowniki, gdy nie stać na pancernik; dwukrotnie większa pojemność portów minorów; wydarzenia równowagi sił; dyplomacja x1,5 / x4; nadzór nad zablokowaną budową w stoczniach AI.
 [*]DIP_GG_Fixes 1.7-1.9: AI bitewne - szarże torpedowe lekkich okrętów, walka zamiast beznadziejnej ucieczki, odłączanie wolnych okrętów, narodowe doktryny bitewne (battleDoctrines.csv).
@@ -198,7 +201,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]DIP_GG_Fixes 1.10.1-1.10.2: zgodność z TAF 3.21.1 (przepuszczanie zmian stosunków), projekty wspólne eksportowane raz, a nie co turę, narzędzie migracji zapisów kampanii z 1.0.
 [*]Poprawki po wydaniu: nowa kampania znów startuje poprawnie (wyłączone projekty predefiniowane), prace nad generatorem projektów AI (niższy pas wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka generatora).
 [/list]
-[b]DIP_GG_Fixes 1.11.0-1.11.6 (15 października 2026)[/b]
+[b]DIP_GG_Fixes 1.11.0-1.11.7 (15 października 2026)[/b]
 [list]
 [*]1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości; ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza szarżują; torpedy wstrzymane, gdy własny okręt stoi w torze; wybór celów dla wszystkich okrętów (najbardziej uszkodzony, najcięższy kaliber dla dział głównych pancerników, zagrożenia torpedowe dla dział pomocniczych); weterańskość nieliniowa (+100% / -50%); próg kapitulacji wg wyszkolenia (70% - 40%); panika zielonych załóg; poddane okręty przejmowane jako pryzy.
 [*]1.11.1: usunięty szum w logu; przebicie porównywane z efektywnym pancerzem pasa z gry w tych samych jednostkach.
@@ -207,6 +210,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]1.11.4: flota podbitego lub rozwiązanego minora przechodzi do nowego kontrolera jego portów zamiast na złom; komunikat o budżecie balance of power jest teraz faktycznie pokazywany w grze.
 [*]1.11.5: przekazanie dotyczy także mocarstw - okręty uciekają do innego własnego portu, gdy taki jest (zachowanie gry), a do zdobywcy trafiają tylko, gdy żadnego nie ma; flota rozwiązanego mocarstwa idzie do kontrolerów jego portów.
 [*]1.11.6: przejęty okręt (pryz bitewny lub podbój) przynosi projekt do listy projektów nowego właściciela, więc da się go przebudowywać i budować dalej jego klasę.
+[*]1.11.7: narodowe profile badań (techBonuses.csv) - 14 mocarstw, -10..+50% tempa badań per kategoria technologii, dla gracza i AI.
 [/list]
 [b]Aktualizacja danych (16 października 2026)[/b]
 [list]

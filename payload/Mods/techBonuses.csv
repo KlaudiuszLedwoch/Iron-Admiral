@@ -1,0 +1,123 @@
+# Iron Admiral - national research profiles (DIP_GG_Fixes 1.11.7)
+# nation,category,percent,historical basis
+# category = column "type" of technologies.csv. percent is added to the research speed of that category (+50 = 1.5x, -10 = 0.9x).
+# Applies to the player and the AI alike, depending on the nation. Scale with NationalTechScale in the DIP_GG_Fixes preferences.
+nation,category,percent,basis
+britain,gun_main,40,Armstrong and Vickers heavy guns; the 15in/42 Mk I (1915) served to 1945 as the best balanced battleship gun of its generation
+britain,hull_strength,30,Dreadnought (1906) and Invincible (1908) created the capital ship of the century in two years
+britain,engine_engine,30,Parsons turbines: Turbinia 1897 and Dreadnought 1906 - first turbine battleship
+britain,tactics_comm,30,fleet wireless and signals intelligence: Room 40 and the Grand Fleet signal organisation
+britain,tactics_asw,50,ASDIC (1918-1920s) and the convoy system; the Royal Navy led anti-submarine warfare in both wars
+britain,aim_rangefinder,25,Barr and Stroud coincidence rangefinders and the Dreyer fire-control table
+britain,hull_cruiser,20,continuous cruiser lineage from the Towns of 1910 to the Town class of 1937
+britain,projectile_shell,-10,Jutland: British APC shells broke up on oblique impact; cured only by the Greenboy shells of 1918
+britain,surv_internal,-10,three battlecruisers lost at Jutland to magazine explosions through flash and cordite handling
+germany,armor_quality,50,Krupp cemented armour (1894) became the world standard; Krupp Wotan hart in the 1930s
+germany,armor_forging,40,Krupp and Dillinger forged the thickest and most uniform plates in Europe
+germany,aim_rangefinder,40,Zeiss stereoscopic rangefinders: Jutland opening salvos and Bismarck versus Hood
+germany,surv_internal,50,Seydlitz and Derfflinger at Jutland: watertight subdivision and damage control without equal
+germany,projectile_shell,30,German AP shells functioned reliably at oblique angles when British shells did not
+germany,gun_main,20,Krupp 28cm and 30.5cm guns: lighter calibres of high quality and velocity
+germany,torpedo_prop,20,G7a and G7e torpedoes; Schwartzkopff works
+germany,hull_strength,-10,treaty and budget limits: few large hulls between 1918 and 1935
+germany,engine_boiler,-10,Wagner and Benson high-pressure boilers of the 1930s were unreliable in service
+usa,aim_control,50,Ford Rangekeeper (1916) and the Mk 37 director with radar: the best fire control of the 1940s
+usa,projectile_shell,40,superheavy AP: 16in/45 Mk 8 shell of 1225 kg; the heaviest and best-performing battleship shells of the war
+usa,hull_construction,40,industrial shipbuilding: welding, prefabrication, 8 fast battleships and 24 Essex carriers in four years
+usa,surv_internal,40,damage control doctrine: Yorktown at Midway, Enterprise and the South Dakota class survived heavy damage
+usa,engine_boiler,30,high-pressure high-temperature steam (600 psi / 850 F) from 1934; fuel economy and speed
+usa,aim_rangefinder,30,fire-control radar Mk 3 and Mk 8 from 1941
+usa,gun_main,20,16in/50 Mk 7 of the Iowa class
+usa,torpedo_prop,-10,Mark 14 torpedo: depth, exploder and contact faults unresolved until late 1943
+usa,torpedo_tubes,-10,torpedo armament neglected on cruisers after 1930
+usa,tactics_tactics,-10,night actions of 1942 (Savo, Tassafaronga) lost through tactical inexperience
+france,hull_destroyer,50,contre-torpilleurs: Le Fantasque class made 45 knots in 1935
+france,engine_boiler,40,Indret boilers and Rateau-Bretagne turbines powered the fastest destroyers in the world
+france,engine_engine,30,high-speed machinery of the Dunkerque and Richelieu classes
+france,gun_layout,40,quadruple turrets of Dunkerque (1937) and Richelieu (1940) - unique in the world
+france,hull_cruiser,20,Algerie (1934): the best treaty cruiser design in Europe
+france,tactics_asw,20,convoy escort tradition of 1917-1918
+france,gun_main,-10,380mm/45 of Richelieu: dispersion and shell problems until 1943
+france,aim_rangefinder,-10,fire control lagged behind the gun and hull designs
+russia,tactics_mines,50,mine warfare pioneer: Port Arthur 1904 and the Baltic barrages of 1914-1917
+russia,hull_destroyer,40,Novik (1913) was the fastest destroyer in the world; flotilla leader tradition continued by the Soviets
+russia,gun_main,30,Obukhov 12in/52 of the Gangut class and the 406mm B-37 for Sovetsky Soyuz
+russia,armor_quality,20,Izhora and Mariupol works produced good KC-type armour
+russia,armor_forging,20,heavy plate forging for the Sovetsky Soyuz class
+russia,engine_engine,-10,dependence on imported turbines (John Brown, Vulcan) until the 1930s
+russia,hull_construction,-10,slow yards: Izmail battlecruisers and Sovetsky Soyuz were never finished
+russia,aim_control,-10,Tsushima gunnery and slow fire-control modernisation
+italy,engine_engine,50,Capitani Romani: 41 knots on trials; Ansaldo and Belluzzo turbines
+italy,engine_boiler,40,Yarrow-Ansaldo boilers of the Condottieri cruisers
+italy,engine_special,30,speed before everything in Regia Marina design practice
+italy,hull_cruiser,40,Zara: the best protected treaty heavy cruiser; the Condottieri lineage
+italy,gun_main,20,Ansaldo 381mm/50: the highest velocity battleship gun of the war
+italy,projectile_shell,-10,poor manufacturing tolerances gave the 381mm gun excessive salvo dispersion
+italy,aim_rangefinder,-10,no fire-control radar before 1943; Matapan was lost in the dark
+italy,tactics_comm,-10,poor coordination between fleet and air reconnaissance
+austria,torpedo_prop,30,Whitehead works at Fiume: birthplace of the torpedo (1866)
+austria,torpedo_size,20,Whitehead torpedo development to 53cm
+austria,gun_main,30,Skoda 30.5cm/45 of the Tegetthoff class and the 35cm for the Ersatz Monarch class
+austria,gun_layout,30,Tegetthoff (1912): first dreadnoughts designed with triple turrets
+austria,armor_quality,20,Witkowitz armour works
+austria,hull_construction,-10,small yards and long building times at Trieste and Fiume
+austria,engine_engine,-10,machinery bought or licensed from abroad
+japan,torpedo_prop,50,Type 93 Long Lance: oxygen torpedo with 40 km range and 490 kg warhead
+japan,torpedo_size,40,61cm torpedoes - the largest in service anywhere
+japan,torpedo_tubes,40,quadruple and quintuple mounts with reloads on cruisers and destroyers
+japan,hull_cruiser,40,Takao and Mogami: the most heavily armed treaty cruisers
+japan,hull_destroyer,20,Fubuki (1928) redefined the destroyer
+japan,gun_main,20,46cm guns of Yamato - the largest naval guns ever mounted
+japan,aim_rangefinder,20,Nikon optics: 15 m rangefinders of the Yamato class
+japan,tactics_tactics,30,night-fighting doctrine proven in the Solomons campaign
+japan,surv_internal,-10,Taiho and Shinano: fuel vapour and poor damage control sank new carriers
+japan,tactics_asw,-10,anti-submarine warfare neglected until 1943
+japan,tactics_comm,-10,radar introduced late; codes compromised
+spain,hull_cruiser,20,Canarias class (1936) on a Kent-class basis; SECN Ferrol cruisers
+spain,tactics_mines,10,coastal defence orientation
+spain,gun_mech,10,Vickers licence production at Reinosa
+spain,hull_construction,-10,SECN yards depended on British designs and components
+spain,engine_engine,-10,machinery under licence; no indigenous turbine design
+spain,aim_control,-10,fire control imported
+spain,projectile_explosive,-10,limited ordnance industry
+china,torpedo_tubes,30,asymmetric reliance on torpedo craft against stronger fleets
+china,hull_destroyer,20,destroyers and gunboats as the backbone of the fleet
+china,tactics_mines,30,river and coastal mine warfare on the Yangtze
+china,hull_strength,-10,no capital ships after 1895
+china,armor_quality,-10,no domestic armour industry
+china,aim_control,-10,fire control imported
+china,engine_engine,-10,machinery imported
+china,gun_main,-10,heavy guns imported
+portugal,hull_destroyer,20,Vouga class destroyers (1933) and the avisos of the 1930s
+portugal,tactics_asw,20,Atlantic escort and the Azores
+portugal,tactics_mines,10,coastal defence orientation
+portugal,hull_strength,-10,no capital ships since the 19th century
+portugal,armor_quality,-10,no armour industry
+portugal,aim_rangefinder,-10,fire control imported
+portugal,engine_engine,-10,machinery imported
+netherlands,aim_control,30,Hazemeyer tachymetric stabilised fire control (1930s) - the best light AA director of its time
+netherlands,gun_sec,30,Hazemeyer-Bofors 40mm mounting adopted by the Royal Navy
+netherlands,hull_cruiser,30,De Ruyter, Tromp and De Zeven Provincien: light cruisers for the East Indies
+netherlands,engine_engine,20,Werkspoor machinery
+netherlands,engine_boiler,20,Werkspoor and Yarrow boilers
+netherlands,tactics_mines,20,minelaying for the defence of the archipelago
+netherlands,hull_strength,-10,battlecruiser project 1047 never built
+netherlands,gun_main,-10,heavy guns imported (Bofors, Krupp)
+netherlands,armor_quality,-10,no armour industry
+scandinavia,gun_sec,40,Bofors 40mm L/60: the standard light AA gun of every allied navy
+scandinavia,gun_small,30,Bofors and Madsen automatic weapons
+scandinavia,gun_main,30,Bofors heavy guns for the Sverige class and export
+scandinavia,armor_quality,20,Swedish steel and Bofors armour
+scandinavia,surv_hull,20,coastal defence ships built to survive in the skerries
+scandinavia,tactics_mines,30,mine barrages in the Baltic approaches and the Norwegian fjords
+scandinavia,torpedo_tubes,10,Norwegian and Swedish motor torpedo boats
+scandinavia,hull_strength,-10,coastal defence ships instead of dreadnoughts
+scandinavia,hull_cruiser,-10,almost no cruiser construction
+greece,gun_main,40,heavy calibres as the defining feature of the Byzantine naval profile
+greece,armor_quality,40,heavy armour as the second defining feature
+greece,armor_forging,30,heavy plate production
+greece,hull_cruiser,30,fast cruisers
+greece,engine_engine,20,speed for the cruiser force
+greece,hull_construction,-10,a smaller industrial base
+greece,aim_control,-10,fire control behind the guns and armour
+greece,tactics_asw,-10,anti-submarine warfare neglected
