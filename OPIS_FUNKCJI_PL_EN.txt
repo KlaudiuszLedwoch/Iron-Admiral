@@ -1,6 +1,6 @@
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - CO DAJE TEN MOD
-Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.2.5 (DIP_GG_Fixes 1.11.14).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (54 sekcji).
+Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.2.6 (DIP_GG_Fixes 1.11.15).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (55 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -58,7 +58,7 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 - Pryzy. Okręt, który się poddał, trafia w ręce zwycięzcy, jeśli ten ma
   jeszcze sprawne jednostki na polu bitwy: idzie do remontu, z zieloną załogą,
   a jego projekt trafia do Twojej listy projektów. Jak eskadra Niebogatowa po
-  Cuszimie. Funkcja nowa, w fazie testów.
+  Cuszimie.
 
 4. KAMPANIA: AI, KTÓRE SIĘ NIE PODDAJE
 ----------------------------------------------------------------------------
@@ -172,7 +172,7 @@ Iron Admiral 1.1 (14 października 2026)
   wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka
   generatora).
 
-DIP_GG_Fixes 1.11.0-1.11.14 (15 października 2026)
+DIP_GG_Fixes 1.11.0-1.11.15 (15 października 2026)
 - 1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości;
   ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są
   przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza
@@ -208,7 +208,7 @@ DIP_GG_Fixes 1.11.0-1.11.14 (15 października 2026)
   zweryfikowane z penetration.csv), więc okręty, które nie przebijają,
   naprawdę skracają dystans; histereza skracania dystansu (ponowny start
   dopiero powyżej 0,85 zasięgu).
-- 1.11.9 / Iron Admiral 1.2.5: każda publikacja ma własny numer paczki (plik
+- 1.11.9 / Iron Admiral 1.2.6: każda publikacja ma własny numer paczki (plik
   VERSION, zipy Iron_Admiral_X.Y.Z_*.zip, wydanie GitHub vX.Y.Z); dodatek
   sprawdza GitHub przy starcie i informuje w grze, gdy jest nowsza wersja
   (wyłącznik: CheckForUpdates).
@@ -226,6 +226,9 @@ DIP_GG_Fixes 1.11.0-1.11.14 (15 października 2026)
   załadowana biblioteka (także TweaksAndFixes.dll) podmieniana przez rename,
   pojedynczy błąd nie przerywa całości; komunikaty tylko po angielsku
   (Download / Later).
+- 1.11.15: pryzy i przejęcia przy podboju potwierdzone w kampanii (3 pryzy dla
+  Niemiec, 4 rumuńskie okręty dla Rosji); kontrola duplikatów projektów czyta
+  pełną listę właściciela (AI dostawało trzy kopie jednej klasy).
 
 Aktualizacja danych (16 października 2026)
 - technologies.csv: accuracy_long w technologiach dalmierzy
@@ -234,15 +237,15 @@ Aktualizacja danych (16 października 2026)
   (Jurens); premie do szybkości namierzania bez zmian. Dotyczy gracza i AI.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.5_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.5_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.6_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.6_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
 IRON ADMIRAL 1.1 (DIP_GG_Fixes 1.11.0) - WHAT THIS MOD DOES
-Description as of 16 October 2026. Latest version: Iron Admiral 1.2.5 (DIP_GG_Fixes 1.11.14).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (54 sections).
+Description as of 16 October 2026. Latest version: Iron Admiral 1.2.6 (DIP_GG_Fixes 1.11.15).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (55 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -297,8 +300,7 @@ files cannot reach. One-click install, full uninstall, source code included.
   it is a fleet that does not run.
 - Prizes. A ship that surrenders falls to the winner if the winner still has
   working ships on the field: it goes to repair with a green crew, and its
-  design joins your design list. Like Nebogatov's squadron after Tsushima. New
-  feature, under test.
+  design joins your design list. Like Nebogatov's squadron after Tsushima.
 
 4. CAMPAIGN: AN AI THAT DOES NOT GIVE UP
 ----------------------------------------------------------------------------
@@ -412,7 +414,7 @@ Iron Admiral 1.1 (14 October 2026)
   disabled), work on the AI ship generator (lower early battleship belt,
   relaxed Experimental Small Ironclad, generator diagnostics).
 
-DIP_GG_Fixes 1.11.0-1.11.14 (15 October 2026)
+DIP_GG_Fixes 1.11.0-1.11.15 (15 October 2026)
 - 1.11.0: torpedo charges start by torpedo range and speed advantage; AI
   capital ships charge when faster and close in when outranged or unable to
   penetrate; player scout divisions charge; torpedoes held while a friendly
@@ -448,7 +450,7 @@ DIP_GG_Fixes 1.11.0-1.11.14 (15 October 2026)
 - 1.11.8: belt penetration read in millimetres (the game returns mm, not cm -
   verified against penetration.csv), so ships that cannot penetrate now really
   close in; close-in hysteresis (restart only beyond 0.85 of own range).
-- 1.11.9 / Iron Admiral 1.2.5: every publication now has its own package
+- 1.11.9 / Iron Admiral 1.2.6: every publication now has its own package
   number (VERSION file, zips Iron_Admiral_X.Y.Z_*.zip, GitHub release vX.Y.Z);
   the add-on checks GitHub at start and tells you in-game when a newer build
   exists (switch: CheckForUpdates).
@@ -465,6 +467,9 @@ DIP_GG_Fixes 1.11.0-1.11.14 (15 October 2026)
 - 1.11.14: the update installs file by file - unchanged files skipped, every
   loaded DLL (TweaksAndFixes.dll too) swapped by rename, a single failure no
   longer aborts the whole update; messages in English only (Download / Later).
+- 1.11.15: prizes and conquest hand-overs confirmed in a campaign (3 prizes to
+  Germany, 4 Romanian ships to Russia); design duplicate check reads the
+  owner's full design list (AI received three copies of one class).
 
 Data update (16 October 2026)
 - technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945
@@ -473,6 +478,6 @@ Data update (16 October 2026)
   are unchanged. Applies to player and AI.
 
 
-Two downloads: Iron_Admiral_1.2.5_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.5_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.6_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.6_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
