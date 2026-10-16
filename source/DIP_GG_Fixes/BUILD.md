@@ -61,6 +61,6 @@ the game's Storage API), AI build ratios, minor port capacity, balance-of-power 
 grants, diplomacy multipliers, stalled-construction watch, battle AI (torpedo charge,
 fight when unable to escape, detach slow ships, focus fire, national doctrines read
 from `Mods\battleDoctrines.csv`). File access: reads `Mods\battleDoctrines.csv` and `Mods\techBonuses.csv`,
-writes nothing outside the game's own save/design folders. Network: one HTTPS GET of the repository's VERSION file at start for the update check (CheckForUpdates, can be switched off); nothing is sent.
+writes nothing outside the game's own save/design folders. Network: one HTTPS GET of the repository's VERSION file at start for the update check (CheckForUpdates, can be switched off), and - only after the player clicks Download in the update message - one GET of the Mods_only.zip release asset, verified by SHA-256 before anything is written (UpdateDownloadButton). Nothing is sent.
 
 License: Apache 2.0.
