@@ -1,6 +1,6 @@
 [h1]Iron Admiral 1.1 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
-[i]Description as of 15 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.3.[/i]
+[i]Description as of 16 October 2026. Latest version: Iron Admiral 1.1 with DIP_GG_Fixes 1.11.3.[/i]
 
 [b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
@@ -56,6 +56,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]After the treaties, design freedom up to 240,000 t for the super-battleship tier (DIP: 78,500-130,000 t). The ship H-44 could not be is buildable here, by you and by the AI.
 [*]Hulls that could be researched but never built in DIP are fixed (29 Modern Battleship variants, 23 earlier battleships, 5 destroyers, a corrupted CSV row that blocked the unlocks).
 [*]Radar that works at night and in bad weather (three techs, 1935-1945). Long Lance: +100% range instead of +40%.
+[*]Long-range accuracy grows x2.6 between 1920 and 1945 through the stereo and radar rangefinders, following W.J. Jurens' data on US Navy battleship gunnery (range dispersion down ~66%).
 [*]Research 20% faster, technology cost x10, national specialisations x1.5, a new profile for the Byzantine Empire (heavy armour, the biggest calibres, fast cruisers).
 [/list]
 
@@ -63,7 +64,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [list]
 [*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
 [*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (42 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (43 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Version history[/h2]
@@ -88,6 +89,10 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]1.11.2: target selection through a mod-owned target lock, because the game re-selected targets every few hundred milliseconds and reset the aiming; a manual order of the player is never touched.
 [*]1.11.3: panic is driven by crew lost since the start of the battle instead of the crew percentage (AI ships begin at 70% and were panicking at once); belt penetration compared in the right units (the game returns cm, armour is in mm) and against the belt instead of the deck; the same target keeps its aiming progress; surrendered ships are removed from the sunk lists before the loss accounting and get a minimal prize crew, so they can appear in the victor's fleet.
 [/list]
+[b]Data update (16 October 2026)[/b]
+[list]
+[*]technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945 raised from 27.5/15/20/30 to 45/90/160/260, so the 1920-1945 gain in long-range accuracy is x2.6 instead of x1.1 (Jurens); the aiming-speed bonuses are unchanged. Applies to player and AI.
+[/list]
 
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
@@ -103,7 +108,7 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 [h1]Iron Admiral 1.1 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
 
-[i]Opis z dnia 15 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.3.[/i]
+[i]Opis z dnia 16 października 2026. Najnowsza wersja: Iron Admiral 1.1 z DIP_GG_Fixes 1.11.3.[/i]
 
 [b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
@@ -159,6 +164,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]Po traktatach wolność projektowania do 240 000 t dla warstwy superpancerników (DIP: 78 500-130 000 t). Okręt, którym nie mógł być H-44, tu da się zbudować - Tobie i AI.
 [*]Naprawiono kadłuby, których w DIP nie dało się zbudować mimo zbadania (29 wariantów Modern Battleship, 23 wcześniejsze pancerniki, 5 niszczycieli, uszkodzony wiersz CSV blokujący odblokowania).
 [*]Radar, który działa nocą i w złej pogodzie (trzy technologie, 1935-1945). Long Lance: +100% zasięgu zamiast +40%.
+[*]Celność na dużym dystansie rośnie x2,6 między 1920 a 1945 przez dalmierze stereo i radarowe, wg danych W.J. Jurensa o artylerii pancerników US Navy (rozrzut w odległości mniejszy o ~66%).
 [*]Badania o 20% szybsze, koszt technologii x10, specjalizacje narodowe x1,5, nowy profil Bizancjum (ciężki pancerz, największe kalibry, szybkie krążowniki).
 [/list]
 
@@ -166,7 +172,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [list]
 [*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
 [*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (42 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (43 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Historia wersji[/h2]
@@ -190,6 +196,10 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]1.11.1: usunięty szum w logu; przebicie porównywane z efektywnym pancerzem pasa z gry w tych samych jednostkach.
 [*]1.11.2: wybór celów przez blokadę celu należącą do moda, bo gra co kilkaset milisekund wybierała cel na nowo i zerowała celowanie; ręczny rozkaz gracza jest nietykalny.
 [*]1.11.3: panika liczona od straty załogi względem początku bitwy zamiast od procentu załogi (okręty AI startują z 70% i panikowały od razu); przebicie pasa porównywane w tych samych jednostkach (gra zwraca cm, pancerz jest w mm) i z pasem, a nie pokładem; ten sam cel zachowuje postęp celowania; okręty poddane są usuwane z list zatopionych przed rozliczeniem strat i dostają minimalną załogę pryzową, więc mogą pojawić się we flocie zwycięzcy.
+[/list]
+[b]Aktualizacja danych (16 października 2026)[/b]
+[list]
+[*]technologies.csv: accuracy_long w technologiach dalmierzy 1925/1935/1940/1945 podniesione z 27,5/15/20/30 do 45/90/160/260, dzięki czemu wzrost celności na dużym dystansie 1920-1945 wynosi x2,6 zamiast x1,1 (Jurens); premie do szybkości namierzania bez zmian. Dotyczy gracza i AI.
 [/list]
 
 [h2]Pobieranie i instalacja[/h2]
