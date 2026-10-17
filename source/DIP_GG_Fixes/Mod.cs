@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.17", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.18", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -158,6 +158,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> BalanceRatio;
         internal static MelonPreferences_Entry<float> BalanceChance;
         internal static MelonPreferences_Entry<float> BalanceMonths;
+        internal static MelonPreferences_Entry<bool> BalanceOnlySolvent;
+        internal static MelonPreferences_Entry<int> BalanceCooldown;
         // 1.11
         internal static MelonPreferences_Entry<float> ChargeApproachSeconds;
         internal static MelonPreferences_Entry<float> ChargeBaseExtra;
@@ -222,6 +224,9 @@ namespace DipGgFixes
                 "Chance per AI major per turn while the trigger holds (0-1)");
             BalanceMonths = cat.CreateEntry("BalanceGrantMonths", 3.0f, null,
                 "Cash grant in months of the AI's naval budget (capped at 25% of its yearly state budget)");
+            BalanceOnlySolvent = cat.CreateEntry("BalanceGrantOnlyWhenSolvent", true, null,
+                "Balance-of-power grants go only to nations with a non-negative monthly income and are sized to lift them just over the AI's shipbuilding reserve (aiShipbuilding x revenue) instead of a flat 3 months of budget");
+            BalanceCooldown = cat.CreateEntry("BalanceGrantCooldownMonths", 6, null, "Months between two balance-of-power grants to the same nation");
             AttitudeMult = cat.CreateEntry("DiplomacyAttitudeMultiplier", 1.5f, null,
                 "Multiplier for positive diplomatic attitude changes (improvements; 1 = vanilla)");
             NegAttitudeMult = cat.CreateEntry("DiplomacyNegativeAttitudeMultiplier", 4.0f, null,
@@ -402,6 +407,7 @@ namespace DipGgFixes
     {
         private static string lastTurn;
         private static readonly System.Random rng = new System.Random();
+        private static readonly Dictionary<string, int> lastGrant = new Dictionary<string, int>();
 
         internal static void CheckOncePerTurn()
         {
@@ -431,13 +437,32 @@ namespace DipGgFixes
                 if (maxAi <= 0f || mainTon < maxAi * DipGgFixesMod.BalanceRatio.Value) return;
 
                 string mainName = main.data != null ? main.data.nameUi : "player";
+                int month = 0; try { var d = cc.CurrentDate.AsDate(); month = d.Year * 12 + d.Month; } catch { }
                 foreach (var p in ais)
                 {
                     if (rng.NextDouble() >= DipGgFixesMod.BalanceChance.Value) continue;
                     float grant = p.Budget() * DipGgFixesMod.BalanceMonths.Value;
                     float cap = p.StateBudget() * 0.25f;
                     if (cap > 0f && grant > cap) grant = cap;
+                    string key = p.data != null ? p.data.name : p.Pointer.ToString();
+                    if (DipGgFixesMod.BalanceOnlySolvent != null && DipGgFixesMod.BalanceOnlySolvent.Value)
+                    {
+                        // 1.11.18: the 17 October log showed grants of 3 months of budget landing every turn or two on nations
+                        // with a negative income (Britain -434M/month, USA -158M cash two turns after +1.08 bn). The AI budget
+                        // routines scale tech/training/transport/shipyard spending with cash, so each grant inflated expenses,
+                        // income went negative and BuildNewShips never passed its reserve gate (cash + income must exceed
+                        // aiShipbuilding x revenue). Grants now go only to solvent nations, lift them just over that gate, and
+                        // repeat for the same nation no more than once per cooldown.
+                        int last; if (lastGrant.TryGetValue(key, out last) && month - last < DipGgFixesMod.BalanceCooldown.Value) continue;
+                        float income = 0f, rev = 0f, k = 1.5f;
+                        try { income = p.Income(); rev = p.Revenue(); var pe = p.GetAiPersonality(); if (pe != null && pe.aiShipbuilding > 0f) k = pe.aiShipbuilding; } catch { }
+                        if (income < 0f) { MelonLogger.Msg($"[DIP GG Fixes] {(p.data != null ? p.data.nameUi : "?")}: no emergency appropriations - monthly income {income / 1e6f:F0}M is negative"); continue; }
+                        float need = k * rev + rev - (p.cash + income);
+                        if (need <= 0f) continue; // already able to order
+                        if (grant > need) grant = need;
+                    }
                     if (grant <= 0f) continue;
+                    lastGrant[key] = month;
                     p.cash = p.cash + grant;
                     string name = p.data != null ? p.data.nameUi : "?";
                     string text = $"{name}: emergency naval appropriations in response to {mainName}'s naval dominance (+{grant:N0}).";
@@ -2444,7 +2469,16 @@ namespace DipGgFixes
                 try { var en = player.designsAll.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>(); while (un.MoveNext()) designs++; } catch { }
                 float gdpRatio = 40000f; try { gdpRatio = CampaignController.Param("ai_ship_gdp_ratio", 40000f); } catch { }
                 string ratio = ton > 0f ? (sb / (gdpRatio * ton)).ToString("F2") : "inf";
-                MelonLogger.Msg($"[DIP GG Fixes][Shipyard] {player.data?.nameUi}: nothing under construction after BuildNewShips - cash {player.cash / 1e6f:F0}M, money arg {__1 / 1e6f:F1}M, revenue {rev / 1e6f:F1}M, income {inc / 1e6f:F1}M, state budget {sb / 1e6f:F0}M, fleet {ton:F0} t, budget/(ratio*tonnage) {ratio}, under construction {uc:F0} t of capacity {cap:F0} t, crew pool {crew}, aiShipbuilding {ship:F2} (x revenue {ship * rev / 1e6f:F1}M), designs {designs}");
+                string br = "";
+                if (inc < 0f)
+                {
+                    try
+                    {
+                        br = $", expenses: maintenance {player.ExpensesShipMaintenance() / 1e6f:F0}M, building {player.ExpensesShipBuilding() / 1e6f:F0}M, repair {player.ExpensesShipRepairing() / 1e6f:F0}M, refit {player.ExpensesShipRefit() / 1e6f:F0}M, commissioning {player.ExpensesShipCommissioning() / 1e6f:F0}M, shipyard {player.ExpensesShipyardBudget() / 1e6f:F0}M, tech {player.ExpensesTechBudget() / 1e6f:F0}M, training {player.ExpensesTrainingBudget() / 1e6f:F0}M, intel {player.ExpensesIntelBudget() / 1e6f:F0}M, transport {player.ExpensesTransportCapacity(false) / 1e6f:F0}M, transport losses {player.TrLosesMoney() / 1e6f:F0}M, total {player.Expenses() / 1e6f:F0}M, budget {player.Budget() / 1e6f:F0}M";
+                    }
+                    catch (Exception e) { br = ", expenses breakdown failed: " + e.Message; }
+                }
+                MelonLogger.Msg($"[DIP GG Fixes][Shipyard] {player.data?.nameUi}: nothing under construction after BuildNewShips - cash {player.cash / 1e6f:F0}M, money arg {__1 / 1e6f:F1}M, revenue {rev / 1e6f:F1}M, income {inc / 1e6f:F1}M, state budget {sb / 1e6f:F0}M, fleet {ton:F0} t, budget/(ratio*tonnage) {ratio}, under construction {uc:F0} t of capacity {cap:F0} t, crew pool {crew}, aiShipbuilding {ship:F2} (x revenue {ship * rev / 1e6f:F1}M), designs {designs}{br}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Shipyard] diagnostics failed: " + e.Message); }
         }
