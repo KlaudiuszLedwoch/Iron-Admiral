@@ -1,6 +1,6 @@
-Iron Admiral 1.2.10 (DIP_GG_Fixes 1.11.18) - CO DAJE TEN MOD
-Opis z dnia 17 października 2026. Najnowsza wersja: Iron Admiral 1.2.10 (DIP_GG_Fixes 1.11.18).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (59 sekcji).
+Iron Admiral 1.2.11 (DIP_GG_Fixes 1.11.19) - CO DAJE TEN MOD
+Opis z dnia 17 października 2026. Najnowsza wersja: Iron Admiral 1.2.11 (DIP_GG_Fixes 1.11.19).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (60 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -257,7 +257,7 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   czemu wzrost celności na dużym dystansie 1920-1945 wynosi x2,6 zamiast x1,1
   (Jurens); premie do szybkości namierzania bez zmian. Dotyczy gracza i AI.
 
-17 października 2026 - DIP_GG_Fixes 1.11.16-1.11.18 / Iron Admiral 1.2.7-1.2.10
+17 października 2026 - DIP_GG_Fixes 1.11.16-1.11.19 / Iron Admiral 1.2.7-1.2.11
 - 1.11.16 / Iron Admiral 1.2.7: wydarzenie kryzysu skarbu dla mocarstw
   (pożyczka wojenna, dodruk z inflacją, cięcia floty; AI wg sytuacji, gracz w
   oknie; stan zapisywany w save); zbankrutowane lub tnące flotę mocarstwo AI
@@ -276,17 +276,24 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   co turę lub dwie dla nacji, których dochód spadał potem głęboko pod zero
   (Brytania -434 mln/mies., USA -158 mln kasy dwie tury po +1,1 mld), więc
   nikt nie zamawiał okrętów; rozbicie wydatków dla nacji z ujemnym dochodem.
+- 1.11.19 / Iron Admiral 1.2.11: mocarstwo AI wydaje na badania, ile chce,
+  dopóki ma dodatni dochód; przy deficycie budżet badań jest cięty o deficyt
+  do równowagi (USA wrzucały 96% budżetu morskiego w badania plus rozbudowę
+  stoczni i nigdy nie odłożyły na okręt); bez nowej rozbudowy stoczni przy
+  deficycie albo gdy pojemność przekracza już dwukrotność floty. Pożyczka
+  wojenna Brytanii potwierdzona w grze (-1059 -> 2389 mln, 29,9 mln/mies.
+  przez 120 mies.) - zaczęła zamawiać.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.10_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.10_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.11_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.11_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.10 (DIP_GG_Fixes 1.11.18) - WHAT THIS MOD DOES
-Description as of 17 October 2026. Latest version: Iron Admiral 1.2.10 (DIP_GG_Fixes 1.11.18).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (59 sections).
+Iron Admiral 1.2.11 (DIP_GG_Fixes 1.11.19) - WHAT THIS MOD DOES
+Description as of 17 October 2026. Latest version: Iron Admiral 1.2.11 (DIP_GG_Fixes 1.11.19).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (60 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -541,7 +548,7 @@ when the DLL does.
   1920-1945 gain in long- range accuracy is x2.6 instead of x1.1 (Jurens); the
   aiming-speed bonuses are unchanged. Applies to player and AI.
 
-17 October 2026 - DIP_GG_Fixes 1.11.16-1.11.18 / Iron Admiral 1.2.7-1.2.10
+17 October 2026 - DIP_GG_Fixes 1.11.16-1.11.19 / Iron Admiral 1.2.7-1.2.11
 - 1.11.16 / Iron Admiral 1.2.7: treasury crisis event for the great powers
   (war loan, money printing with inflation, fleet cuts; AI by situation,
   player by dialog; state stored in the save); a bankrupt or cutting AI power
@@ -560,8 +567,15 @@ when the DLL does.
   deep negative (Britain -434M/month, USA -158M cash two turns after +1.1 bn)
   so nobody ever ordered a ship; expense breakdown for nations with negative
   income.
+- 1.11.19 / Iron Admiral 1.2.11: an AI great power spends what it likes on
+  research while its income is positive; with a deficit the research budget is
+  cut by the deficit until the books balance (the USA ran 96% of the naval
+  budget on research plus a shipyard expansion and never saved up for a ship);
+  no new shipyard expansion with a deficit or when capacity already exceeds
+  twice the fleet. Britain's war loan confirmed in-game (-1,059M -> 2,389M,
+  29.9M/month for 120 months) and she started ordering.
 
 
-Two downloads: Iron_Admiral_1.2.10_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.10_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.11_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.11_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
