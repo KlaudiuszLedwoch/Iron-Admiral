@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.16", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.17", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -128,6 +128,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<int> CollapseGraceMonths;
         internal static MelonPreferences_Entry<bool> FinancialCrisis;
         internal static MelonPreferences_Entry<int> CrisisMonths;
+        internal static MelonPreferences_Entry<int> CrisisDebtMonths;
         internal static MelonPreferences_Entry<int> LoanTermMonths;
         internal static MelonPreferences_Entry<float> LoanRepayShare;
         internal static MelonPreferences_Entry<int> LoanGrantMonths;
@@ -232,6 +233,7 @@ namespace DipGgFixes
             FinancialCrisis = cat.CreateEntry("FinancialCrisis", true, null,
                 "Treasury crisis for great powers whose cash stays below zero: war loan, money printing (inflation) or fleet cuts. AI chooses by situation, the player gets a dialog.");
             CrisisMonths = cat.CreateEntry("CrisisAfterMonthsInDebt", 6, null, "Consecutive months with cash below zero before the crisis event fires");
+            CrisisDebtMonths = cat.CreateEntry("CrisisWhenDebtExceedsMonthsOfBudget", 12, null, "The crisis fires at once when the debt exceeds this many months of naval budget (0 = off)");
             LoanTermMonths = cat.CreateEntry("LoanTermMonths", 120, null, "War loan: repayment period in months");
             LoanRepayShare = cat.CreateEntry("LoanRepaymentShareOfBudget", 0.15f, null, "War loan: monthly repayment as a share of the monthly naval budget");
             LoanGrantMonths = cat.CreateEntry("LoanGrantMonthsOfBudget", 12, null, "War loan: debt is cleared and this many months of naval budget are credited");
@@ -344,9 +346,10 @@ namespace DipGgFixes
             UpdateCheck.Start();
             LoggerInstance.Msg($"1.11: ChargeApproachSeconds={ChargeApproachSeconds.Value} base {ChargeBaseExtra.Value} m, CapitalTorpedoCharge={CapitalCharge.Value}, CapitalCloseInWhenOutgunned={CapitalCloseIn.Value} (outranged x{OutrangedFactor.Value}, pen x{PenetrationFactor.Value}), PlayerScoutCharge={PlayerScoutCharge.Value}, TorpedoFriendlyLane={TorpedoFriendlyLane.Value} ({LaneHalfWidth.Value} m), SmartTargeting={SmartTargeting.Value}/AI {SmartTargetingAi.Value}, CrewLevelsRescale={CrewLevelsRescale.Value} (+{CrewPlusAmp.Value}/-{CrewMinusAmp.Value}, p={CrewCurvePower.Value}), SurrenderByTraining={SurrenderByTraining.Value} ({SurrenderGreen.Value}-{SurrenderElite.Value}), CrewPanic={Panic.Value} (rank<{PanicMaxRank.Value}, dmg>{PanicDamage.Value}, crew loss>{PanicCrewLoss.Value}, p={PanicChance.Value}), CaptureSurrenderedShips={CaptureSurrendered.Value} (damage {CaptureDamage.Value}), MinorFleetToConqueror={MinorFleetToConqueror.Value}");
             LoggerInstance.Msg($"Battle AI: LightShipTorpedoCharge={LightShipCharge.Value} (start {ChargeStartRange.Value} m, margin {ChargeTorpedoMargin.Value}, abort {ChargeAbortDamage.Value}), FightWhenCannotEscape={FightWhenCannotEscape.Value} (pursuit {PursuitRange.Value} m, margin {EscapeSpeedMargin.Value}), DetachSlowShips={DetachSlowShips.Value} (ratio {SlowShipSpeedRatio.Value}, cooldown {DetachCooldownSeconds.Value} s), FocusFire={FocusFire.Value} (min {FocusFireMinDamage.Value})");
+            LoggerInstance.Msg($"Treasury crisis={FinancialCrisis.Value} (after {CrisisMonths.Value} months in debt; loan {LoanGrantMonths.Value} mo budget, repay {LoanRepayShare.Value:P0} x {LoanTermMonths.Value} mo; print {PrintGrantMonths.Value} mo, inflation {PrintInflation.Value}% -{InflationDecay.Value}/mo, unrest +{PrintUnrest.Value}; cuts {CutsMonths.Value} mo, maintenance -{CutsMaintenanceSaving.Value:P0}), BankruptBuildsCheapShips={BankruptNoCapitalShips.Value}");
             LoggerInstance.Msg($"Diplomacy attitude multiplier: positive={AttitudeMult.Value}, negative={NegAttitudeMult.Value}, FixStalledConstruction={FixStalledBuilding.Value}, EconomicCollapseGraceMonths={CollapseGraceMonths.Value}");
             LoggerInstance.Msg($"Balance-of-power events={BalanceEvents.Value} (ratio {BalanceRatio.Value}, chance {BalanceChance.Value}, {BalanceMonths.Value} months)");
-            LoggerInstance.Msg($"Loaded 1.11.15. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
+            LoggerInstance.Msg($"Loaded {Info.Version}. CheckMinorNationThreat guard on. AutoShareDesigns={AutoShare.Value}, ShareToAllNations={AllNations.Value}, "
                 + $"CruisersWhenPoor={CruisersWhenPoor.Value} (bb/bc x{BigShipFactor.Value}, ca/cl x{CruiserFactor.Value}), MinorPortCapacityMultiplier={MinorPortCapacityMult.Value}");
         }
     }
@@ -2277,12 +2280,14 @@ namespace DipGgFixes
                     }
                     if (p.cash >= 0f) { monthsInDebt[k] = 0; bankruptLogged.Remove(k); continue; }
                     int n; monthsInDebt.TryGetValue(k, out n); n++; monthsInDebt[k] = n;
-                    if (n < Math.Max(1, DipGgFixesMod.CrisisMonths.Value)) continue;
+                    bool deep = false;
+                    try { int dm = DipGgFixesMod.CrisisDebtMonths.Value; float b0 = p.Budget(); deep = dm > 0 && b0 > 0f && -p.cash > dm * b0; } catch { }
+                    if (n < Math.Max(1, DipGgFixesMod.CrisisMonths.Value) && !deep) continue;
                     if (st.Active) continue; // one remedy at a time
                     int last; if (lastEventMonth.TryGetValue(k, out last) && month - last < 12) continue;
                     if (p.isMain)
                     {
-                        if (pendingPlayer == null) { pendingPlayer = p; pendingMonth = month; pendingSince = 0f; MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: {n} months in debt (cash {p.cash / 1e6f:F0}M) - asking the player"); }
+                        if (pendingPlayer == null) { pendingPlayer = p; pendingMonth = month; pendingSince = 0f; MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: {n} months in debt (cash {p.cash / 1e6f:F0}M, budget {b1(p) / 1e6f:F1}M/month) - asking the player"); }
                         continue;
                     }
                     int choice = ChooseForAi(p, k);
@@ -2292,6 +2297,7 @@ namespace DipGgFixes
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Treasury] turn check failed: " + e.Message); }
         }
 
+        static float b1(Player p) { try { return p.Budget(); } catch { return 0f; } }
         static int ChooseForAi(Player p, string k)
         {
             int prev; lastChoice.TryGetValue(k, out prev);
@@ -2382,6 +2388,65 @@ namespace DipGgFixes
         private static void Postfix(Player __instance, ref float __result)
         {
             FinanceCrisis.AdjustExpenses(__instance, ref __result);
+        }
+    }
+
+    // ---------------------------------------------------------------- AI shipbuilding diagnostics (1.11.17)
+    //   CampaignController.BuildNewShips(Player, float) returns without ordering when one of these holds (native code):
+    //   aiShipbuilding x Revenue() > money argument; crewPool < build_ships_min_crew_pool_amount; tonnage under
+    //   construction >= override_shipybuilding_limit x ShipbuildingCapacityLimit(); StateBudget() / (ai_ship_gdp_ratio x
+    //   fleet tonnage) < 1; Revenue() x year factor(fleet_generation_money_min..max) > Income(). The 17 October save had
+    //   the USA with 1.2 bn cash, 19 provinces, 5 designs and not a single ship or order, so the inputs are logged for
+    //   every AI great power that ends a turn with nothing under construction.
+    [HarmonyPatch(typeof(CampaignController), "BuildNewShips", new Type[] { typeof(Player), typeof(float) })]
+    internal static class Patch_BuildNewShips
+    {
+        private static string lastTurn; private static readonly HashSet<string> logged = new HashSet<string>();
+        private static int Building(Player p)
+        {
+            int n = 0; var en = p.fleet.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
+            while (un.MoveNext()) { var s = en.Current; if (s != null && s.isBuilding) n++; }
+            return n;
+        }
+        private static float Tonnage(Player p)
+        {
+            float t = 0f; var en = p.fleet.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
+            while (un.MoveNext()) { var s = en.Current; if (s != null && !s.isBuilding) t += s.Tonnage(); }
+            return t;
+        }
+        private static void Prefix(Player player, float __1, ref int __state)
+        {
+            __state = -1;
+            try { if (player != null && player.isAi && player.isMajor) __state = Building(player); } catch { }
+        }
+        private static void Postfix(Player player, float __1, int __state)
+        {
+            try
+            {
+                if (__state < 0) return;
+                var cc = CampaignController.Instance; if (cc == null) return;
+                string turn = cc.CurrentDate.ToString();
+                if (turn != lastTurn) { lastTurn = turn; logged.Clear(); }
+                string k = player.data != null ? player.data.name : player.Pointer.ToString();
+                if (logged.Contains(k)) return;
+                int after = Building(player);
+                if (after > 0) return; // something is being built - nothing to explain
+                logged.Add(k);
+                float rev = 0f, inc = 0f, sb = 0f, cap = 0f, uc = 0f, ton = 0f, ship = 0f; int crew = 0, designs = 0;
+                try { rev = player.Revenue(); } catch { }
+                try { inc = player.Income(); } catch { }
+                try { sb = player.StateBudget(); } catch { }
+                try { cap = player.ShipbuildingCapacityLimit(); } catch { }
+                try { uc = player.ShipTonnageUnderConstruction(); } catch { }
+                try { ton = Tonnage(player); } catch { }
+                try { crew = player.crewPool; } catch { }
+                try { var pe = player.GetAiPersonality(); if (pe != null) ship = pe.aiShipbuilding; } catch { }
+                try { var en = player.designsAll.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>(); while (un.MoveNext()) designs++; } catch { }
+                float gdpRatio = 40000f; try { gdpRatio = CampaignController.Param("ai_ship_gdp_ratio", 40000f); } catch { }
+                string ratio = ton > 0f ? (sb / (gdpRatio * ton)).ToString("F2") : "inf";
+                MelonLogger.Msg($"[DIP GG Fixes][Shipyard] {player.data?.nameUi}: nothing under construction after BuildNewShips - cash {player.cash / 1e6f:F0}M, money arg {__1 / 1e6f:F1}M, revenue {rev / 1e6f:F1}M, income {inc / 1e6f:F1}M, state budget {sb / 1e6f:F0}M, fleet {ton:F0} t, budget/(ratio*tonnage) {ratio}, under construction {uc:F0} t of capacity {cap:F0} t, crew pool {crew}, aiShipbuilding {ship:F2} (x revenue {ship * rev / 1e6f:F1}M), designs {designs}");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Shipyard] diagnostics failed: " + e.Message); }
         }
     }
 }
