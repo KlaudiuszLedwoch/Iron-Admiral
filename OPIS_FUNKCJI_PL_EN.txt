@@ -1,6 +1,6 @@
-Iron Admiral 1.2.8 (DIP_GG_Fixes 1.11.16) - CO DAJE TEN MOD
-Opis z dnia 17 października 2026. Najnowsza wersja: Iron Admiral 1.2.8 (DIP_GG_Fixes 1.11.16).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (57 sekcji).
+Iron Admiral 1.2.9 (DIP_GG_Fixes 1.11.17) - CO DAJE TEN MOD
+Opis z dnia 17 października 2026. Najnowsza wersja: Iron Admiral 1.2.9 (DIP_GG_Fixes 1.11.17).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (58 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -257,24 +257,30 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   czemu wzrost celności na dużym dystansie 1920-1945 wynosi x2,6 zamiast x1,1
   (Jurens); premie do szybkości namierzania bez zmian. Dotyczy gracza i AI.
 
-17 października 2026 - DIP_GG_Fixes 1.11.16 / Iron Admiral 1.2.7
+17 października 2026 - DIP_GG_Fixes 1.11.16-1.11.17 / Iron Admiral 1.2.7-1.2.9
 - 1.11.16 / Iron Admiral 1.2.7: wydarzenie kryzysu skarbu dla mocarstw
   (pożyczka wojenna, dodruk z inflacją, cięcia floty; AI wg sytuacji, gracz w
   oknie; stan zapisywany w save); zbankrutowane lub tnące flotę mocarstwo AI
   nie zamawia BB/BC, a CA/CL/DD/TB dostają x1,6. W autozapisie z 16
   października Brytania bez okrętów i z -188 mln generowała półdrednoty, które
   przepadały w autodesignerze.
+- 1.11.17 / Iron Admiral 1.2.9: kryzys skarbu odpala też natychmiast, gdy dług
+  przekracza 12 miesięcy budżetu morskiego (licznik miesięcy zerował się przy
+  każdym restarcie, więc Brytania z -823 mln nie dostała pożyczki);
+  diagnostyka [Shipyard] dla mocarstw AI, które nic nie zamawiają (USA
+  siedziały na 1,2 mld bez okrętów i bez zamówień); linia startowa logu czyta
+  prawdziwą wersję.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.8_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.8_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.9_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.9_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.8 (DIP_GG_Fixes 1.11.16) - WHAT THIS MOD DOES
-Description as of 17 October 2026. Latest version: Iron Admiral 1.2.8 (DIP_GG_Fixes 1.11.16).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (57 sections).
+Iron Admiral 1.2.9 (DIP_GG_Fixes 1.11.17) - WHAT THIS MOD DOES
+Description as of 17 October 2026. Latest version: Iron Admiral 1.2.9 (DIP_GG_Fixes 1.11.17).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (58 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -529,15 +535,20 @@ when the DLL does.
   1920-1945 gain in long- range accuracy is x2.6 instead of x1.1 (Jurens); the
   aiming-speed bonuses are unchanged. Applies to player and AI.
 
-17 October 2026 - DIP_GG_Fixes 1.11.16 / Iron Admiral 1.2.7
+17 October 2026 - DIP_GG_Fixes 1.11.16-1.11.17 / Iron Admiral 1.2.7-1.2.9
 - 1.11.16 / Iron Admiral 1.2.7: treasury crisis event for the great powers
   (war loan, money printing with inflation, fleet cuts; AI by situation,
   player by dialog; state stored in the save); a bankrupt or cutting AI power
   orders no bb/bc and favours ca/cl/dd/tb x1.6. Found in the 16 October
   autosave: Britain with no ships and -188M kept generating semi-dreadnoughts
   that failed in the autodesigner.
+- 1.11.17 / Iron Admiral 1.2.9: the treasury crisis also fires at once when
+  the debt exceeds 12 months of naval budget (the month counter reset with
+  every restart, so Britain at -823M never got its loan); [Shipyard]
+  diagnostics for AI powers that order nothing (the USA sat on 1.2 bn with no
+  ships and no orders); start-up log line reads the real version.
 
 
-Two downloads: Iron_Admiral_1.2.8_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.8_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.9_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.9_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
