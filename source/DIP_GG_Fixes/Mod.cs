@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.19", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.20", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -2316,8 +2316,12 @@ namespace DipGgFixes
                     bool deep = false;
                     try { int dm = DipGgFixesMod.CrisisDebtMonths.Value; float b0 = p.Budget(); deep = dm > 0 && b0 > 0f && -p.cash > dm * b0; } catch { }
                     if (n < Math.Max(1, DipGgFixesMod.CrisisMonths.Value) && !deep) continue;
-                    if (st.Active) continue; // one remedy at a time
-                    int last; if (lastEventMonth.TryGetValue(k, out last) && month - last < 12) continue;
+                    // 1.11.20: a remedy already running no longer blocks the next one when the debt is deep again - Britain took a
+                    // war loan (-1,059M -> +2,389M) and fifteen months later sat at -4,501M with the loan still "active", so nothing
+                    // fired. A second remedy needs the deep-debt condition and at least 12 months since the previous one.
+                    int last; bool hasLast = lastEventMonth.TryGetValue(k, out last);
+                    if (st.Active && !deep) continue;
+                    if (hasLast && month - last < 12) continue;
                     if (p.isMain)
                     {
                         if (pendingPlayer == null) { pendingPlayer = p; pendingMonth = month; pendingSince = 0f; MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: {n} months in debt (cash {p.cash / 1e6f:F0}M, budget {b1(p) / 1e6f:F1}M/month) - asking the player"); }
@@ -2335,8 +2339,10 @@ namespace DipGgFixes
         {
             int prev; lastChoice.TryGetValue(k, out prev);
             bool war = false; try { war = p.IsAtWar(); } catch { }
-            if (war) return prev == 1 ? 2 : 1;          // at war: loan; a second crisis after a loan -> print money
-            return prev == 3 ? 1 : 3;                   // peace: fleet cuts; cuts did not help -> loan
+            var st = Decode(p.inflation);
+            if (war) return (prev == 1 || st.Loan > 0) ? 2 : 1;   // at war: loan; with a loan still running -> print money
+            if (st.Cuts > 0 || prev == 3) return 1;                // peace: cuts did not help -> loan
+            return 3;                                              // peace: fleet cuts first
         }
 
         internal static void Apply(Player p, int choice, int month, string who)
@@ -2346,7 +2352,8 @@ namespace DipGgFixes
                 string k = Key(p); float cash = p.cash;
                 float b = 0f; try { b = p.Budget(); } catch { }
                 if (b <= 0f) b = Math.Abs(cash) / 12f;
-                var st = new CrisisState();
+                var prevSt = Decode(p.inflation);
+                var st = new CrisisState { Inflation = prevSt.Inflation, Loan = prevSt.Loan, Cuts = prevSt.Cuts };
                 string what;
                 switch (choice)
                 {
@@ -2357,7 +2364,7 @@ namespace DipGgFixes
                         break;
                     case 2:
                         p.cash = DipGgFixesMod.PrintGrantMonths.Value * b;
-                        st.Inflation = DipGgFixesMod.PrintInflation.Value;
+                        st.Inflation = Math.Min(99, st.Inflation + DipGgFixesMod.PrintInflation.Value);
                         try { if (DipGgFixesMod.PrintUnrest.Value > 0f) p.AddUnrest(DipGgFixesMod.PrintUnrest.Value); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Treasury] AddUnrest: " + e.Message); }
                         what = $"money printing: cash {cash / 1e6f:F0}M -> {p.cash / 1e6f:F0}M, inflation +{st.Inflation}% on expenses falling {DipGgFixesMod.InflationDecay.Value}/month, unrest +{DipGgFixesMod.PrintUnrest.Value}";
                         break;
@@ -2447,6 +2454,21 @@ namespace DipGgFixes
             while (un.MoveNext()) { var s = en.Current; if (s != null && !s.isBuilding) t += s.Tonnage(); }
             return t;
         }
+        private static string Treasury(Player p)
+        {
+            try
+            {
+                var st = FinanceCrisis.Decode(p.inflation);
+                string t = "";
+                if (st.Loan > 0) t += $", loan repayment {p.Budget() * DipGgFixesMod.LoanRepayShare.Value / 1e6f:F0}M ({st.Loan} months left)";
+                if (st.Inflation > 0) t += $", inflation {st.Inflation}%";
+                if (st.Cuts > 0) t += $", fleet cuts {st.Cuts} months left";
+                float listed = p.ExpensesShipMaintenance() + p.ExpensesShipBuilding() + p.ExpensesShipRepairing() + p.ExpensesShipRefit() + p.ExpensesShipCommissioning() + p.ExpensesShipyardBudget() + p.ExpensesTechBudget() + p.ExpensesTrainingBudget() + p.ExpensesIntelBudget() + p.ExpensesTransportCapacity(false) + p.TrLosesMoney();
+                t += $", other {(p.Expenses() - listed) / 1e6f:F0}M";
+                return t;
+            }
+            catch { return ""; }
+        }
         private static void Prefix(Player player, float __1, ref int __state)
         {
             __state = -1;
@@ -2482,7 +2504,7 @@ namespace DipGgFixes
                 {
                     try
                     {
-                        br = $", expenses: maintenance {player.ExpensesShipMaintenance() / 1e6f:F0}M, building {player.ExpensesShipBuilding() / 1e6f:F0}M, repair {player.ExpensesShipRepairing() / 1e6f:F0}M, refit {player.ExpensesShipRefit() / 1e6f:F0}M, commissioning {player.ExpensesShipCommissioning() / 1e6f:F0}M, shipyard {player.ExpensesShipyardBudget() / 1e6f:F0}M, tech {player.ExpensesTechBudget() / 1e6f:F0}M, training {player.ExpensesTrainingBudget() / 1e6f:F0}M, intel {player.ExpensesIntelBudget() / 1e6f:F0}M, transport {player.ExpensesTransportCapacity(false) / 1e6f:F0}M, transport losses {player.TrLosesMoney() / 1e6f:F0}M, total {player.Expenses() / 1e6f:F0}M, budget {player.Budget() / 1e6f:F0}M";
+                        br = $", expenses: maintenance {player.ExpensesShipMaintenance() / 1e6f:F0}M, building {player.ExpensesShipBuilding() / 1e6f:F0}M, repair {player.ExpensesShipRepairing() / 1e6f:F0}M, refit {player.ExpensesShipRefit() / 1e6f:F0}M, commissioning {player.ExpensesShipCommissioning() / 1e6f:F0}M, shipyard {player.ExpensesShipyardBudget() / 1e6f:F0}M, tech {player.ExpensesTechBudget() / 1e6f:F0}M, training {player.ExpensesTrainingBudget() / 1e6f:F0}M, intel {player.ExpensesIntelBudget() / 1e6f:F0}M, transport {player.ExpensesTransportCapacity(false) / 1e6f:F0}M, transport losses {player.TrLosesMoney() / 1e6f:F0}M, total {player.Expenses() / 1e6f:F0}M, budget {player.Budget() / 1e6f:F0}M{Treasury(player)}";
                     }
                     catch (Exception e) { br = ", expenses breakdown failed: " + e.Message; }
                 }
