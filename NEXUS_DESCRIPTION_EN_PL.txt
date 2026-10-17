@@ -3,12 +3,13 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 17 October 2026. Latest version: Iron Admiral 1.2.9 (DIP_GG_Fixes 1.11.17).[/i]
+[i]Description as of 17 October 2026. Latest version: Iron Admiral 1.2.10 (DIP_GG_Fixes 1.11.18).[/i]
 
-[b]What is new today (17 October 2026) - Iron Admiral 1.2.9, DIP_GG_Fixes 1.11.17[/b]
+[b]What is new today (17 October 2026) - Iron Admiral 1.2.10, DIP_GG_Fixes 1.11.18[/b]
 [list]
 [*]Treasury crisis for the great powers: war loan, money printing with inflation, or fleet cuts - the AI chooses by its situation, you choose in a dialog. State survives save and load.
 [*]Bankrupt AI powers build cheap ships: no battleships or battlecruisers while cash is below zero or fleet cuts last; cruisers, destroyers and torpedo boats x1.6.
+[*]1.11.18: balance-of-power grants only for solvent nations and only up to the order threshold - the old flat grants inflated AI spending, pushed incomes negative and blocked every order.
 [*]1.11.17: the crisis also fires on debt depth (12 months of budget), because the month counter reset on every restart; [Shipyard] diagnostics for AI powers that order nothing - the USA had 1.2 bn cash and not a single order.
 [*]Version history rewritten day by day, with a note on the two numbering schemes (Iron Admiral package vs DIP_GG_Fixes DLL).
 [*]Why: in the 16 October campaign Britain had lost every ship, sat at -188M and still tried to build semi-dreadnoughts that failed in the autodesigner - the nation was dead for the rest of the campaign.
@@ -80,7 +81,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
 [*][b]Update check and one-click update.[/b] At start the add-on compares the installed version with the GitHub repository and shows a message when a newer build exists - one HTTPS request, nothing sent. The message has a Download button: only after you click it the Mods package is fetched from the GitHub release, verified (SHA-256) and installed; restart the game afterwards. Switches: CheckForUpdates, UpdateDownloadButton.
 [*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv, research profiles in Mods\techBonuses.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (58 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (59 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Version history[/h2]
@@ -124,17 +125,18 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [*]1.11.15 / Iron Admiral 1.2.6: prizes and conquest hand-overs confirmed in a campaign (3 prizes to Germany, 4 Romanian ships to Russia); design duplicate check reads the owner's full design list (AI received three copies of one class).
 [*]Data: technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945 raised from 27.5/15/20/30 to 45/90/160/260, so the 1920-1945 gain in long-range accuracy is x2.6 instead of x1.1 (Jurens); the aiming-speed bonuses are unchanged. Applies to player and AI.
 [/list]
-[b]17 October 2026 - DIP_GG_Fixes 1.11.16-1.11.17 / Iron Admiral 1.2.7-1.2.9[/b]
+[b]17 October 2026 - DIP_GG_Fixes 1.11.16-1.11.18 / Iron Admiral 1.2.7-1.2.10[/b]
 [list]
 [*]1.11.16 / Iron Admiral 1.2.7: treasury crisis event for the great powers (war loan, money printing with inflation, fleet cuts; AI by situation, player by dialog; state stored in the save); a bankrupt or cutting AI power orders no bb/bc and favours ca/cl/dd/tb x1.6. Found in the 16 October autosave: Britain with no ships and -188M kept generating semi-dreadnoughts that failed in the autodesigner.
 [*]1.11.17 / Iron Admiral 1.2.9: the treasury crisis also fires at once when the debt exceeds 12 months of naval budget (the month counter reset with every restart, so Britain at -823M never got its loan); [Shipyard] diagnostics for AI powers that order nothing (the USA sat on 1.2 bn with no ships and no orders); start-up log line reads the real version.
+[*]1.11.18 / Iron Admiral 1.2.10: balance-of-power grants only for nations with a non-negative income, sized to lift them just over the AI's order threshold, at most once per 6 months - the diagnostics showed grants of 3 months of budget landing every turn or two on nations whose income then went deep negative (Britain -434M/month, USA -158M cash two turns after +1.1 bn) so nobody ever ordered a ship; expense breakdown for nations with negative income.
 [/list]
 
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.9_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.9_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.10_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.10_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [/list]
 Based on DIP The Great Game 1.3.5 with TweaksAndFixes 3.21.1. Source code (DIP_GG_Fixes, installer, merge scripts): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
 Start a new campaign; saves from 1.0 need the migration tool from the source folder (source/save_tools).
@@ -144,12 +146,13 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 17 października 2026. Najnowsza wersja: Iron Admiral 1.2.9 (DIP_GG_Fixes 1.11.17).[/i]
+[i]Opis z dnia 17 października 2026. Najnowsza wersja: Iron Admiral 1.2.10 (DIP_GG_Fixes 1.11.18).[/i]
 
-[b]Co nowego dziś (17 października 2026) - Iron Admiral 1.2.9, DIP_GG_Fixes 1.11.17[/b]
+[b]Co nowego dziś (17 października 2026) - Iron Admiral 1.2.10, DIP_GG_Fixes 1.11.18[/b]
 [list]
 [*]Kryzys skarbu dla mocarstw: pożyczka wojenna, dodruk pieniądza z inflacją albo cięcia floty - AI wybiera według sytuacji, Ty w oknie. Stan przeżywa zapis i wczytanie.
 [*]Zbankrutowane mocarstwa AI budują tanie okręty: bez pancerników i krążowników liniowych, gdy kasa jest poniżej zera albo trwają cięcia; krążowniki, niszczyciele i torpedowce x1,6.
+[*]1.11.18: granty balance of power tylko dla wypłacalnych i tylko do progu zamówień - stare, stałe granty pompowały wydatki AI, spychały dochody pod zero i blokowały każde zamówienie.
 [*]1.11.17: kryzys odpala też od głębokości długu (12 miesięcy budżetu), bo licznik miesięcy zerował się przy każdym restarcie; diagnostyka [Shipyard] dla mocarstw AI, które nic nie zamawiają - USA miały 1,2 mld i ani jednego zamówienia.
 [*]Historia wersji przepisana dzień po dniu, z objaśnieniem dwóch numeracji (paczka Iron Admiral i biblioteka DIP_GG_Fixes).
 [*]Dlaczego: w kampanii z 16 października Brytania straciła wszystkie okręty, miała -188 mln i dalej próbowała budować półdrednoty, które przepadały w autodesignerze - nacja była martwa do końca kampanii.
@@ -221,7 +224,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
 [*][b]Sprawdzanie aktualizacji i aktualizacja jednym kliknięciem.[/b] Przy starcie dodatek porównuje zainstalowaną wersję z repozytorium GitHub i pokazuje komunikat, gdy jest nowsza - jedno żądanie HTTPS, nic nie jest wysyłane. Komunikat ma przycisk Pobierz: dopiero po kliknięciu paczka Mods jest pobierana z wydania GitHub, weryfikowana (SHA-256) i instalowana; potem restart gry. Wyłączniki: CheckForUpdates, UpdateDownloadButton.
 [*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv, profile badań w Mods\techBonuses.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (58 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (59 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Historia wersji[/h2]
@@ -265,17 +268,18 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [*]1.11.15 / Iron Admiral 1.2.6: pryzy i przejęcia przy podboju potwierdzone w kampanii (3 pryzy dla Niemiec, 4 rumuńskie okręty dla Rosji); kontrola duplikatów projektów czyta pełną listę właściciela (AI dostawało trzy kopie jednej klasy).
 [*]Dane: technologies.csv: accuracy_long w technologiach dalmierzy 1925/1935/1940/1945 podniesione z 27,5/15/20/30 do 45/90/160/260, dzięki czemu wzrost celności na dużym dystansie 1920-1945 wynosi x2,6 zamiast x1,1 (Jurens); premie do szybkości namierzania bez zmian. Dotyczy gracza i AI.
 [/list]
-[b]17 października 2026 - DIP_GG_Fixes 1.11.16-1.11.17 / Iron Admiral 1.2.7-1.2.9[/b]
+[b]17 października 2026 - DIP_GG_Fixes 1.11.16-1.11.18 / Iron Admiral 1.2.7-1.2.10[/b]
 [list]
 [*]1.11.16 / Iron Admiral 1.2.7: wydarzenie kryzysu skarbu dla mocarstw (pożyczka wojenna, dodruk z inflacją, cięcia floty; AI wg sytuacji, gracz w oknie; stan zapisywany w save); zbankrutowane lub tnące flotę mocarstwo AI nie zamawia BB/BC, a CA/CL/DD/TB dostają x1,6. W autozapisie z 16 października Brytania bez okrętów i z -188 mln generowała półdrednoty, które przepadały w autodesignerze.
 [*]1.11.17 / Iron Admiral 1.2.9: kryzys skarbu odpala też natychmiast, gdy dług przekracza 12 miesięcy budżetu morskiego (licznik miesięcy zerował się przy każdym restarcie, więc Brytania z -823 mln nie dostała pożyczki); diagnostyka [Shipyard] dla mocarstw AI, które nic nie zamawiają (USA siedziały na 1,2 mld bez okrętów i bez zamówień); linia startowa logu czyta prawdziwą wersję.
+[*]1.11.18 / Iron Admiral 1.2.10: granty balance of power tylko dla nacji z nieujemnym dochodem, w wysokości wynoszącej je tuż nad próg zamówień, najwyżej raz na 6 miesięcy - diagnostyka pokazała granty 3 miesięcy budżetu co turę lub dwie dla nacji, których dochód spadał potem głęboko pod zero (Brytania -434 mln/mies., USA -158 mln kasy dwie tury po +1,1 mld), więc nikt nie zamawiał okrętów; rozbicie wydatków dla nacji z ujemnym dochodem.
 [/list]
 
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.9_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.9_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.10_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.10_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [/list]
 Baza: DIP The Great Game 1.3.5 z TweaksAndFixes 3.21.1. Kod źródłowy (DIP_GG_Fixes, instalator, skrypty scalania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
 Zacznij nową kampanię; zapisy z 1.0 wymagają narzędzia migracji z folderu źródeł (source/save_tools).
