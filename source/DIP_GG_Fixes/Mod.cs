@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.18", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.19", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -159,6 +159,9 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> BalanceChance;
         internal static MelonPreferences_Entry<float> BalanceMonths;
         internal static MelonPreferences_Entry<bool> BalanceOnlySolvent;
+        internal static MelonPreferences_Entry<bool> AiTechBalance;
+        internal static MelonPreferences_Entry<float> AiTechBudgetMin;
+        internal static MelonPreferences_Entry<float> AiShipyardHeadroom;
         internal static MelonPreferences_Entry<int> BalanceCooldown;
         // 1.11
         internal static MelonPreferences_Entry<float> ChargeApproachSeconds;
@@ -227,6 +230,11 @@ namespace DipGgFixes
             BalanceOnlySolvent = cat.CreateEntry("BalanceGrantOnlyWhenSolvent", true, null,
                 "Balance-of-power grants go only to nations with a non-negative monthly income and are sized to lift them just over the AI's shipbuilding reserve (aiShipbuilding x revenue) instead of a flat 3 months of budget");
             BalanceCooldown = cat.CreateEntry("BalanceGrantCooldownMonths", 6, null, "Months between two balance-of-power grants to the same nation");
+            AiTechBalance = cat.CreateEntry("AiTechBudgetBalance", true, null,
+                "An AI great power spends what it likes on research while its monthly income is positive; with a deficit the research budget is cut by the deficit so that income returns to zero (never below AiTechBudgetMinPercent)");
+            AiTechBudgetMin = cat.CreateEntry("AiTechBudgetMinPercent", 10f, null, "Floor for the AI research budget when it is cut to balance the books");
+            AiShipyardHeadroom = cat.CreateEntry("AiShipyardHeadroom", 2.0f, null,
+                "An AI great power does not start a shipyard expansion while its income is negative or while shipyard capacity already exceeds this multiple of its fleet tonnage. 0 = vanilla");
             AttitudeMult = cat.CreateEntry("DiplomacyAttitudeMultiplier", 1.5f, null,
                 "Multiplier for positive diplomatic attitude changes (improvements; 1 = vanilla)");
             NegAttitudeMult = cat.CreateEntry("DiplomacyNegativeAttitudeMultiplier", 4.0f, null,
@@ -2481,6 +2489,88 @@ namespace DipGgFixes
                 MelonLogger.Msg($"[DIP GG Fixes][Shipyard] {player.data?.nameUi}: nothing under construction after BuildNewShips - cash {player.cash / 1e6f:F0}M, money arg {__1 / 1e6f:F1}M, revenue {rev / 1e6f:F1}M, income {inc / 1e6f:F1}M, state budget {sb / 1e6f:F0}M, fleet {ton:F0} t, budget/(ratio*tonnage) {ratio}, under construction {uc:F0} t of capacity {cap:F0} t, crew pool {crew}, aiShipbuilding {ship:F2} (x revenue {ship * rev / 1e6f:F1}M), designs {designs}{br}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Shipyard] diagnostics failed: " + e.Message); }
+        }
+    }
+
+    // ---------------------------------------------------------------- AI budget caps (1.11.19)
+    //   The 17 October [Shipyard] breakdown: USA revenue 422M/month, tech 406M + shipyard expansion 317M -> income -384M,
+    //   no orders (reserve gate needs cash + income > 2.93 x revenue). Britain: 211k t of shipyard capacity and no ship.
+    //   CampaignController.AiTechBudget sets Player.techBudget (percent of the monthly budget) from CashAndIncome, and DIP
+    //   raised tech_budget_max to 100, so a cash-rich AI pours the whole naval budget into research. Rule: the AI may spend
+    //   what it likes on research while it has a surplus; with a deficit the research budget is cut by the deficit so that the
+    //   books balance. AiTryBuildShipyard starts expansions from CashAndIncome as well; no new expansion with a deficit.
+    [HarmonyPatch(typeof(CampaignController), "AiTechBudget", new Type[] { typeof(Player) })]
+    internal static class Patch_AiTechBudget
+    {
+        private static readonly Dictionary<string, bool> wasCut = new Dictionary<string, bool>();
+        private static void Postfix(Player player)
+        {
+            try
+            {
+                var on = DipGgFixesMod.AiTechBalance; if (on == null || !on.Value) return;
+                if (player == null || !player.isAi || !player.isMajor) return;
+                string k = player.data != null ? player.data.name : "?";
+                float income = player.Income();
+                bool prev; wasCut.TryGetValue(k, out prev);
+                if (income >= 0f)
+                {
+                    if (prev) { wasCut[k] = false; MelonLogger.Msg($"[DIP GG Fixes][Budget] {player.data?.nameUi}: income {income / 1e6f:F0}M/month is positive again, research budget {player.techBudget:F0}% left as the AI set it"); }
+                    return;
+                }
+                float techExp = player.ExpensesTechBudget();
+                if (techExp <= 0f) return;
+                float before = player.techBudget;
+                float keep = Math.Max(0f, (techExp + income) / techExp); // income < 0: cut the budget by the deficit
+                float floor = Math.Max(0f, DipGgFixesMod.AiTechBudgetMin.Value);
+                float after = Math.Max(floor, before * keep);
+                if (after >= before) return;
+                player.techBudget = after;
+                float incomeAfter = 0f; try { incomeAfter = player.Income(); } catch { }
+                if (!prev || Math.Abs(after - before) > 10f)
+                {
+                    wasCut[k] = true;
+                    MelonLogger.Msg($"[DIP GG Fixes][Budget] {player.data?.nameUi}: deficit {-income / 1e6f:F0}M/month - research budget cut {before:F0}% -> {after:F0}% ({techExp / 1e6f:F0}M -> {player.ExpensesTechBudget() / 1e6f:F0}M), income now {incomeAfter / 1e6f:F0}M");
+                }
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Budget] AiTechBudget postfix: " + e.Message); }
+        }
+    }
+
+    [HarmonyPatch(typeof(CampaignController), "AiTryBuildShipyard", new Type[] { typeof(Player) })]
+    internal static class Patch_AiTryBuildShipyard
+    {
+        private static readonly Dictionary<string, string> lastReason = new Dictionary<string, string>();
+        private static float Tonnage(Player p)
+        {
+            float t = 0f; var en = p.fleet.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
+            while (un.MoveNext()) { var s = en.Current; if (s != null && !s.isBuilding) t += s.Tonnage(); }
+            return t;
+        }
+        private static bool Prefix(Player player)
+        {
+            try
+            {
+                var h = DipGgFixesMod.AiShipyardHeadroom; if (h == null || h.Value <= 0f) return true;
+                if (player == null || !player.isAi || !player.isMajor) return true;
+                if (player.shipyardBuildMonthLeft > 0) return true; // an expansion already runs - let the game finish it
+                string why = null;
+                float income = player.Income();
+                if (income < 0f) why = $"income {income / 1e6f:F0}M/month is negative";
+                else
+                {
+                    float ton = Tonnage(player), cap = player.ShipbuildingCapacityLimit();
+                    if (cap > h.Value * Math.Max(ton, 1f)) why = $"shipyard capacity {cap:F0} t already exceeds {h.Value:F1} x fleet {ton:F0} t";
+                }
+                if (why == null) return true;
+                string k2 = player.data != null ? player.data.name : "?";
+                string prev; if (!lastReason.TryGetValue(k2, out prev) || prev != why.Substring(0, Math.Min(12, why.Length)))
+                {
+                    lastReason[k2] = why.Substring(0, Math.Min(12, why.Length));
+                    MelonLogger.Msg($"[DIP GG Fixes][Budget] {player.data?.nameUi}: no shipyard expansion - {why}");
+                }
+                return false;
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Budget] AiTryBuildShipyard prefix: " + e.Message); return true; }
         }
     }
 }
