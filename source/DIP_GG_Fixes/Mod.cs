@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.15", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.16", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -126,6 +126,18 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> NegAttitudeMult;
         internal static MelonPreferences_Entry<bool> FixStalledBuilding;
         internal static MelonPreferences_Entry<int> CollapseGraceMonths;
+        internal static MelonPreferences_Entry<bool> FinancialCrisis;
+        internal static MelonPreferences_Entry<int> CrisisMonths;
+        internal static MelonPreferences_Entry<int> LoanTermMonths;
+        internal static MelonPreferences_Entry<float> LoanRepayShare;
+        internal static MelonPreferences_Entry<int> LoanGrantMonths;
+        internal static MelonPreferences_Entry<int> PrintGrantMonths;
+        internal static MelonPreferences_Entry<int> PrintInflation;
+        internal static MelonPreferences_Entry<float> InflationDecay;
+        internal static MelonPreferences_Entry<float> PrintUnrest;
+        internal static MelonPreferences_Entry<int> CutsMonths;
+        internal static MelonPreferences_Entry<float> CutsMaintenanceSaving;
+        internal static MelonPreferences_Entry<bool> BankruptNoCapitalShips;
         internal static MelonPreferences_Entry<bool> LightShipCharge;
         internal static MelonPreferences_Entry<float> ChargeStartRange;
         internal static MelonPreferences_Entry<float> ChargeTorpedoMargin;
@@ -183,6 +195,7 @@ namespace DipGgFixes
         public override void OnUpdate()
         {
             UpdateCheck.Tick();
+            FinanceCrisis.Tick();
         }
 
         public override void OnInitializeMelon()
@@ -216,6 +229,20 @@ namespace DipGgFixes
                 "Advance AI ship construction for nations whose building ships were not advanced during a turn");
             CollapseGraceMonths = cat.CreateEntry("EconomicCollapseGraceMonths", 24, null,
                 "An AI nation whose state budget fell to zero is dissolved (\"economic collapse\") only after this many consecutive months at zero (0 = vanilla: immediately). Losing all ports still dissolves at once.");
+            FinancialCrisis = cat.CreateEntry("FinancialCrisis", true, null,
+                "Treasury crisis for great powers whose cash stays below zero: war loan, money printing (inflation) or fleet cuts. AI chooses by situation, the player gets a dialog.");
+            CrisisMonths = cat.CreateEntry("CrisisAfterMonthsInDebt", 6, null, "Consecutive months with cash below zero before the crisis event fires");
+            LoanTermMonths = cat.CreateEntry("LoanTermMonths", 120, null, "War loan: repayment period in months");
+            LoanRepayShare = cat.CreateEntry("LoanRepaymentShareOfBudget", 0.15f, null, "War loan: monthly repayment as a share of the monthly naval budget");
+            LoanGrantMonths = cat.CreateEntry("LoanGrantMonthsOfBudget", 12, null, "War loan: debt is cleared and this many months of naval budget are credited");
+            PrintGrantMonths = cat.CreateEntry("PrintGrantMonthsOfBudget", 24, null, "Money printing: debt is cleared and this many months of naval budget are credited");
+            PrintInflation = cat.CreateEntry("PrintInflationPercent", 40, null, "Money printing: initial inflation, raises all naval expenses by this percentage");
+            InflationDecay = cat.CreateEntry("InflationDecayPerMonth", 1.0f, null, "Inflation falls by this many percentage points each month");
+            PrintUnrest = cat.CreateEntry("PrintUnrest", 5f, null, "Money printing: unrest added once");
+            CutsMonths = cat.CreateEntry("FleetCutsMonths", 36, null, "Fleet cuts: months without new capital ships (bb/bc)");
+            CutsMaintenanceSaving = cat.CreateEntry("FleetCutsMaintenanceSaving", 0.3f, null, "Fleet cuts: share of fleet maintenance saved while the cuts last");
+            BankruptNoCapitalShips = cat.CreateEntry("BankruptBuildsCheapShips", true, null,
+                "An AI great power with cash below zero (or under fleet cuts) orders no bb/bc and favours ca/cl/dd/tb");
             LightShipCharge = cat.CreateEntry("LightShipTorpedoCharge", true, null,
                 "AI tb/dd/cl divisions charge enemy bb/bc/ca to use torpedoes, then retreat when out of torpedoes or badly damaged");
             ChargeStartRange = cat.CreateEntry("TorpedoChargeStartRange", 12000f, null,
@@ -339,6 +366,7 @@ namespace DipGgFixes
             }
             BalanceOfPower.CheckOncePerTurn();
             ConstructionWatch.CheckOncePerTurn();
+            FinanceCrisis.CheckOncePerTurn();
             return null;
         }
     }
@@ -574,8 +602,20 @@ namespace DipGgFixes
                 if (__instance == null || __result <= 0f || string.IsNullOrEmpty(shipType)) return;
                 bool big = shipType == "bb" || shipType == "bc";
                 bool cruiser = shipType == "ca" || shipType == "cl";
-                if (!big && !cruiser) return;
+                bool light = shipType == "dd" || shipType == "tb";
+                if (!big && !cruiser && !light) return;
                 if (!__instance.isAi || !__instance.isMajor) return;
+                // 1.11.16: a bankrupt great power (cash below zero) or one under fleet cuts orders no capital ships at all
+                // and leans on ca/cl/dd/tb, which the current balance makes worthwhile. Before: Britain at -188M kept
+                // generating semi-dreadnoughts that failed in the autodesigner, so nothing was built.
+                if (DipGgFixesMod.BankruptNoCapitalShips != null && DipGgFixesMod.BankruptNoCapitalShips.Value
+                    && (__instance.cash < 0f || FinanceCrisis.Decode(__instance.inflation).Cuts > 0))
+                {
+                    if (big) __result = 0f; else __result *= DipGgFixesMod.CruiserFactor.Value;
+                    FinanceCrisis.LogBankruptOnce(__instance);
+                    return;
+                }
+                if (light) return;
                 if (!IsPoor(__instance)) return;
                 __result *= big ? DipGgFixesMod.BigShipFactor.Value : DipGgFixesMod.CruiserFactor.Value;
             }
@@ -1967,7 +2007,7 @@ namespace DipGgFixes
             return false;
         }
 
-        static Il2CppSystem.Action Act(Action a) { return Il2CppInterop.Runtime.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(a); }
+        internal static Il2CppSystem.Action Act(Action a) { return Il2CppInterop.Runtime.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(a); }
 
         internal static void Tick()
         {
@@ -2136,6 +2176,212 @@ namespace DipGgFixes
             var m = BattleAi.CurrentDistanceMult;
             if (m == 1f || m <= 0f) return;
             if (__0 == "ai_distance_mod") __result *= m;
+        }
+    }
+
+    // ---------------------------------------------------------------- treasury crisis (1.11.16)
+    //   Vanilla keeps a Player.inflation float in the save (Player.Store.inflation) that nothing reads any more:
+    //   Player.ExpensesInflation() is "cash * 0", Inflation()/DesiredInflation() have no callers and only
+    //   InitPlayerCash/FromStore write the field. It is used here as the persisted crisis state, packed as
+    //   inflation% + 100 * loanMonthsLeft + 100000 * cutsMonthsLeft (all small integers, exact in a float).
+    //   Each turn CampaignController.NextTurn does cash += Player.Income(), Income() = Budget() - Expenses(),
+    //   so the loan repayment, inflation surcharge and cuts saving are applied as a postfix on Expenses().
+    internal struct CrisisState { public int Inflation; public int Loan; public int Cuts; public bool Active { get { return Inflation > 0 || Loan > 0 || Cuts > 0; } } }
+
+    internal static class FinanceCrisis
+    {
+        private static string lastTurn;
+        private static readonly Dictionary<string, int> monthsInDebt = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> lastEventMonth = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> lastChoice = new Dictionary<string, int>(); // 1 loan, 2 print, 3 cuts
+        private static readonly HashSet<string> bankruptLogged = new HashSet<string>();
+        private static Player pendingPlayer; private static int pendingMonth; private static bool dialogOpen; private static float pendingSince;
+        [ThreadStatic] private static bool inExpenses;
+
+        internal static CrisisState Decode(float v)
+        {
+            var st = new CrisisState();
+            if (float.IsNaN(v) || v < 0.5f) return st;
+            int n = (int)Math.Round(v);
+            st.Inflation = n % 100; st.Loan = (n / 100) % 1000; st.Cuts = (n / 100000) % 100;
+            return st;
+        }
+        internal static float Encode(CrisisState st)
+        {
+            int i = Math.Max(0, Math.Min(99, st.Inflation)), l = Math.Max(0, Math.Min(999, st.Loan)), c = Math.Max(0, Math.Min(99, st.Cuts));
+            return i + 100 * l + 100000 * c;
+        }
+        static bool On { get { return DipGgFixesMod.FinancialCrisis != null && DipGgFixesMod.FinancialCrisis.Value; } }
+        static string Key(Player p) { try { return p.data != null ? p.data.name : p.Pointer.ToString(); } catch { return "?"; } }
+        static string NameUi(Player p) { try { return p.data != null ? p.data.nameUi : Key(p); } catch { return "?"; } }
+
+        internal static void LogBankruptOnce(Player p)
+        {
+            string k = Key(p);
+            if (bankruptLogged.Contains(k)) return;
+            bankruptLogged.Add(k);
+            MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: cash {p.cash / 1e6f:F0}M - no bb/bc orders, ca/cl/dd/tb favoured x{DipGgFixesMod.CruiserFactor.Value}");
+        }
+
+        // monthly surcharge / saving on Player.Expenses()
+        internal static void AdjustExpenses(Player p, ref float result)
+        {
+            if (!On || p == null || inExpenses) return;
+            var st = Decode(p.inflation);
+            if (!st.Active) return;
+            inExpenses = true;
+            try
+            {
+                if (st.Inflation > 0) result *= 1f + st.Inflation / 100f;
+                if (st.Loan > 0)
+                {
+                    float b = p.Budget(); if (b > 0f) result += b * DipGgFixesMod.LoanRepayShare.Value;
+                }
+                if (st.Cuts > 0)
+                {
+                    float m = p.ExpensesShipMaintenance(); if (m > 0f) result -= m * DipGgFixesMod.CutsMaintenanceSaving.Value;
+                }
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Treasury] Expenses adjust failed: " + e.Message); }
+            finally { inExpenses = false; }
+        }
+
+        internal static void CheckOncePerTurn()
+        {
+            if (!On) return;
+            try
+            {
+                var cc = CampaignController.Instance;
+                if (cc == null || cc.CampaignData == null) return;
+                string turn = cc.CurrentDate.ToString();
+                if (turn == lastTurn) return;
+                lastTurn = turn;
+                var d = cc.CurrentDate.AsDate(); int month = d.Year * 12 + d.Month;
+                var majors = cc.CampaignData.PlayersMajor;
+                for (int i = 0; i < majors.Count; i++)
+                {
+                    var p = majors[i];
+                    if (p == null || p.isDisabled || !p.HavePorts) continue;
+                    string k = Key(p);
+                    var st = Decode(p.inflation);
+                    if (st.Active)
+                    {
+                        var before = st;
+                        if (st.Inflation > 0) st.Inflation = Math.Max(0, st.Inflation - (int)Math.Round(DipGgFixesMod.InflationDecay.Value));
+                        if (st.Loan > 0) st.Loan--;
+                        if (st.Cuts > 0) st.Cuts--;
+                        p.inflation = Encode(st);
+                        if (before.Inflation > 0 && st.Inflation == 0) MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: inflation is over");
+                        if (before.Loan > 0 && st.Loan == 0) MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: war loan repaid");
+                        if (before.Cuts > 0 && st.Cuts == 0) MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: fleet cuts ended");
+                    }
+                    if (p.cash >= 0f) { monthsInDebt[k] = 0; bankruptLogged.Remove(k); continue; }
+                    int n; monthsInDebt.TryGetValue(k, out n); n++; monthsInDebt[k] = n;
+                    if (n < Math.Max(1, DipGgFixesMod.CrisisMonths.Value)) continue;
+                    if (st.Active) continue; // one remedy at a time
+                    int last; if (lastEventMonth.TryGetValue(k, out last) && month - last < 12) continue;
+                    if (p.isMain)
+                    {
+                        if (pendingPlayer == null) { pendingPlayer = p; pendingMonth = month; pendingSince = 0f; MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: {n} months in debt (cash {p.cash / 1e6f:F0}M) - asking the player"); }
+                        continue;
+                    }
+                    int choice = ChooseForAi(p, k);
+                    Apply(p, choice, month, "AI");
+                }
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Treasury] turn check failed: " + e.Message); }
+        }
+
+        static int ChooseForAi(Player p, string k)
+        {
+            int prev; lastChoice.TryGetValue(k, out prev);
+            bool war = false; try { war = p.IsAtWar(); } catch { }
+            if (war) return prev == 1 ? 2 : 1;          // at war: loan; a second crisis after a loan -> print money
+            return prev == 3 ? 1 : 3;                   // peace: fleet cuts; cuts did not help -> loan
+        }
+
+        internal static void Apply(Player p, int choice, int month, string who)
+        {
+            try
+            {
+                string k = Key(p); float cash = p.cash;
+                float b = 0f; try { b = p.Budget(); } catch { }
+                if (b <= 0f) b = Math.Abs(cash) / 12f;
+                var st = new CrisisState();
+                string what;
+                switch (choice)
+                {
+                    case 1:
+                        p.cash = DipGgFixesMod.LoanGrantMonths.Value * b;
+                        st.Loan = DipGgFixesMod.LoanTermMonths.Value;
+                        what = $"war loan: cash {cash / 1e6f:F0}M -> {p.cash / 1e6f:F0}M, repayment {DipGgFixesMod.LoanRepayShare.Value:P0} of budget ({b * DipGgFixesMod.LoanRepayShare.Value / 1e6f:F1}M/month) for {st.Loan} months";
+                        break;
+                    case 2:
+                        p.cash = DipGgFixesMod.PrintGrantMonths.Value * b;
+                        st.Inflation = DipGgFixesMod.PrintInflation.Value;
+                        try { if (DipGgFixesMod.PrintUnrest.Value > 0f) p.AddUnrest(DipGgFixesMod.PrintUnrest.Value); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Treasury] AddUnrest: " + e.Message); }
+                        what = $"money printing: cash {cash / 1e6f:F0}M -> {p.cash / 1e6f:F0}M, inflation +{st.Inflation}% on expenses falling {DipGgFixesMod.InflationDecay.Value}/month, unrest +{DipGgFixesMod.PrintUnrest.Value}";
+                        break;
+                    default:
+                        st.Cuts = DipGgFixesMod.CutsMonths.Value;
+                        what = $"fleet cuts: no bb/bc for {st.Cuts} months, maintenance -{DipGgFixesMod.CutsMaintenanceSaving.Value:P0}, cash stays {cash / 1e6f:F0}M";
+                        break;
+                }
+                p.inflation = Encode(st);
+                lastEventMonth[k] = month; lastChoice[k] = choice; monthsInDebt[k] = 0;
+                MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)} ({who}) - {what}");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Treasury] apply failed: " + e.Message); }
+        }
+
+        // player dialog, shown on the map when nothing is loading
+        internal static void Tick()
+        {
+            if (pendingPlayer == null || dialogOpen) return;
+            try
+            {
+                bool loading = true; try { loading = GameManager.IsLoadingAny || GameManager.IsLoadingScreenActive; } catch { loading = false; }
+                if (loading) { pendingSince = 0f; return; }
+                var state = GameManager.GameState.MainMenu; try { state = G.GameManager.CurrentState; } catch { }
+                if (state != GameManager.GameState.World) { pendingSince = 0f; return; }
+                if (pendingSince == 0f) { pendingSince = UnityEngine.Time.realtimeSinceStartup; return; }
+                if (UnityEngine.Time.realtimeSinceStartup - pendingSince < 1.5f) return;
+                var ui = G.ui; if (ui == null) return;
+                var p = pendingPlayer; int month = pendingMonth;
+                if (p.cash >= 0f) { pendingPlayer = null; return; }
+                float b = 0f; try { b = p.Budget(); } catch { }
+                if (b <= 0f) b = Math.Abs(p.cash) / 12f;
+                string text = $"The treasury has been in debt for months (cash {p.cash / 1e6f:F0}M, monthly naval budget {b / 1e6f:F1}M). The government must act.\n\n"
+                    + $"War loan: debt cleared and {DipGgFixesMod.LoanGrantMonths.Value} months of budget credited; repayment {DipGgFixesMod.LoanRepayShare.Value:P0} of the budget every month for {DipGgFixesMod.LoanTermMonths.Value} months.\n"
+                    + $"Other options: money printing ({DipGgFixesMod.PrintGrantMonths.Value} months of budget now, then inflation +{DipGgFixesMod.PrintInflation.Value}% on all expenses fading by {DipGgFixesMod.InflationDecay.Value}/month, unrest +{DipGgFixesMod.PrintUnrest.Value}) or fleet cuts (no new capital ships for {DipGgFixesMod.CutsMonths.Value} months, maintenance -{DipGgFixesMod.CutsMaintenanceSaving.Value:P0}).";
+                dialogOpen = true;
+                ui.ReportMessage("Treasury crisis", text, "War loan", "Other options",
+                    UpdateCheck.Act(() => { dialogOpen = false; pendingPlayer = null; Apply(p, 1, month, "player"); }),
+                    UpdateCheck.Act(() => { ShowSecond(ui, p, month); }));
+            }
+            catch (Exception e) { dialogOpen = false; pendingPlayer = null; MelonLogger.Warning("[DIP GG Fixes][Treasury] dialog failed: " + e.Message); }
+        }
+
+        static void ShowSecond(Ui ui, Player p, int month)
+        {
+            try
+            {
+                string text = $"Money printing: debt cleared, {DipGgFixesMod.PrintGrantMonths.Value} months of naval budget credited now; inflation raises all naval expenses by {DipGgFixesMod.PrintInflation.Value}%, falling {DipGgFixesMod.InflationDecay.Value} point(s) a month; unrest +{DipGgFixesMod.PrintUnrest.Value}.\n\n"
+                    + $"Fleet cuts: no money, no new battleships or battlecruisers for {DipGgFixesMod.CutsMonths.Value} months, fleet maintenance -{DipGgFixesMod.CutsMaintenanceSaving.Value:P0}.";
+                ui.ReportMessage("Treasury crisis", text, "Print money", "Fleet cuts",
+                    UpdateCheck.Act(() => { dialogOpen = false; pendingPlayer = null; Apply(p, 2, month, "player"); }),
+                    UpdateCheck.Act(() => { dialogOpen = false; pendingPlayer = null; Apply(p, 3, month, "player"); }));
+            }
+            catch (Exception e) { dialogOpen = false; pendingPlayer = null; MelonLogger.Warning("[DIP GG Fixes][Treasury] second dialog failed: " + e.Message); }
+        }
+    }
+
+    [HarmonyPatch(typeof(Player), "Expenses")]
+    internal static class Patch_Expenses
+    {
+        private static void Postfix(Player __instance, ref float __result)
+        {
+            FinanceCrisis.AdjustExpenses(__instance, ref __result);
         }
     }
 }
