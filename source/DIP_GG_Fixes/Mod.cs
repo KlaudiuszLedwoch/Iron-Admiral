@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.20", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.21", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -2231,6 +2231,7 @@ namespace DipGgFixes
         private static readonly Dictionary<string, int> lastEventMonth = new Dictionary<string, int>();
         private static readonly Dictionary<string, int> lastChoice = new Dictionary<string, int>(); // 1 loan, 2 print, 3 cuts
         private static readonly HashSet<string> bankruptLogged = new HashSet<string>();
+        private static readonly Dictionary<string, float> written = new Dictionary<string, float>();
         private static Player pendingPlayer; private static int pendingMonth; private static bool dialogOpen; private static float pendingSince;
         [ThreadStatic] private static bool inExpenses;
 
@@ -2241,6 +2242,11 @@ namespace DipGgFixes
             int n = (int)Math.Round(v);
             st.Inflation = n % 100; st.Loan = (n / 100) % 1000; st.Cuts = (n / 100000) % 100;
             return st;
+        }
+        static void Write(Player p, CrisisState st)
+        {
+            float v = Encode(st); p.inflation = v;
+            try { written[p.data != null ? p.data.name : p.Pointer.ToString()] = v; } catch { }
         }
         internal static float Encode(CrisisState st)
         {
@@ -2299,14 +2305,24 @@ namespace DipGgFixes
                     var p = majors[i];
                     if (p == null || p.isDisabled || !p.HavePorts) continue;
                     string k = Key(p);
-                    var st = Decode(p.inflation);
+                    // 1.11.21: the field is not as unused as it looked - Britain and Portugal both showed "inflation 63%" on a
+                    // running loan before any money printing, and Portugal lost one point more per turn than the decay. Keep the
+                    // value written by the mod, log any outside change with the raw numbers and restore the mod's value.
+                    float raw = p.inflation; float mine;
+                    if (written.TryGetValue(k, out mine) && Math.Abs(raw - mine) > 0.25f)
+                    {
+                        MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: state field changed outside the mod ({mine:F2} -> {raw:F2}), restored");
+                        p.inflation = mine; raw = mine;
+                    }
+                    var st = Decode(raw);
+                    if (!written.ContainsKey(k) && st.Active) { written[k] = raw; MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: loaded state raw {raw:F2} -> inflation {st.Inflation}%, loan {st.Loan} months, cuts {st.Cuts} months"); }
                     if (st.Active)
                     {
                         var before = st;
                         if (st.Inflation > 0) st.Inflation = Math.Max(0, st.Inflation - (int)Math.Round(DipGgFixesMod.InflationDecay.Value));
                         if (st.Loan > 0) st.Loan--;
                         if (st.Cuts > 0) st.Cuts--;
-                        p.inflation = Encode(st);
+                        Write(p, st);
                         if (before.Inflation > 0 && st.Inflation == 0) MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: inflation is over");
                         if (before.Loan > 0 && st.Loan == 0) MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: war loan repaid");
                         if (before.Cuts > 0 && st.Cuts == 0) MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)}: fleet cuts ended");
@@ -2364,7 +2380,7 @@ namespace DipGgFixes
                         break;
                     case 2:
                         p.cash = DipGgFixesMod.PrintGrantMonths.Value * b;
-                        st.Inflation = Math.Min(99, st.Inflation + DipGgFixesMod.PrintInflation.Value);
+                        st.Inflation = Math.Min(99, Math.Max(st.Inflation, DipGgFixesMod.PrintInflation.Value) + (st.Inflation > 0 ? DipGgFixesMod.PrintInflation.Value / 2 : 0));
                         try { if (DipGgFixesMod.PrintUnrest.Value > 0f) p.AddUnrest(DipGgFixesMod.PrintUnrest.Value); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Treasury] AddUnrest: " + e.Message); }
                         what = $"money printing: cash {cash / 1e6f:F0}M -> {p.cash / 1e6f:F0}M, inflation +{st.Inflation}% on expenses falling {DipGgFixesMod.InflationDecay.Value}/month, unrest +{DipGgFixesMod.PrintUnrest.Value}";
                         break;
@@ -2373,7 +2389,7 @@ namespace DipGgFixes
                         what = $"fleet cuts: no bb/bc for {st.Cuts} months, maintenance -{DipGgFixesMod.CutsMaintenanceSaving.Value:P0}, cash stays {cash / 1e6f:F0}M";
                         break;
                 }
-                p.inflation = Encode(st);
+                Write(p, st);
                 lastEventMonth[k] = month; lastChoice[k] = choice; monthsInDebt[k] = 0;
                 MelonLogger.Msg($"[DIP GG Fixes][Treasury] {NameUi(p)} ({who}) - {what}");
             }
