@@ -159,11 +159,14 @@ namespace DipGgFixes
         internal static readonly Dictionary<string, Laid> laidDown = new Dictionary<string, Laid>();
         static readonly HashSet<string> diagDesigns = new HashSet<string>();
         // laying-down month of a ship under construction: own record, otherwise estimated from the building progress
-        static int LaidMonth(Ship o, int now, int fallback)
+        // 1.11.34: no game calls on other ships while the ship designer / refit screen is open (parts left on the world map)
+        internal static bool InDesigner() { try { return GameManager.IsConstructor || GameManager.IsSharedDesignConstructor; } catch { return false; } }
+        static int LaidMonth(Ship o, int now, int fallback, bool noGameCalls)
         {
             try
             {
                 Laid r; if (laidDown.TryGetValue(o.id.ToString(), out r)) return r.Month;
+                if (noGameCalls) return fallback;
                 float pr = o.buildingProgress; float f = pr > 1.001f ? pr / 100f : pr;
                 if (f <= 0.0001f) return now;
                 int bm = 0; Depth++; try { bm = o.BuildingTime(false); } catch { } finally { Depth--; }
@@ -216,7 +219,7 @@ namespace DipGgFixes
                 {
                     // ship without a record (laid down before 1.11.30): estimate the laying-down month from the building progress
                     float f = progress > 1.001f ? progress / 100f : progress;
-                    int baseMonths = 0; Depth++; try { baseMonths = s.BuildingTime(false); } catch { } finally { Depth--; }
+                    int baseMonths = 0; if (!InDesigner()) { Depth++; try { baseMonths = s.BuildingTime(false); } catch { } finally { Depth--; } }
                     if (f > 0.0001f && baseMonths > 0) start = now - (int)Math.Round(f * baseMonths);
                 }
                 var finishes = new List<int>();
@@ -230,7 +233,9 @@ namespace DipGgFixes
                     bool oBuild = false, oRefit = false, gone = false;
                     try { oBuild = o.isBuilding; oRefit = o.isRefit; gone = o.isSunk || o.isScrapped; } catch { }
                     int oStart = MonthOf(o.dateCreated);
-                    if (oBuild) oStart = LaidMonth(o, now, oStart);
+                    // 1.11.35: dateCreated is the design date; for a completed sister its completion month marks the last activity of the series
+                    if (!oBuild && !oRefit) { int fin = MonthOf(o.dateFinished); if (fin > oStart && fin <= now) oStart = preview ? fin : Math.Min(fin, start); }
+                    if (oBuild) oStart = LaidMonth(o, now, oStart, preview || InDesigner());
                     if (!oBuild && !oRefit && !gone) sisters++;
                     // series effects start only once a ship of the design has been completed (before this one was laid down)
                     if (!oBuild && !oRefit)
@@ -241,7 +246,7 @@ namespace DipGgFixes
                     }
                     if (refit)
                     {
-                        if (oRefit) { float op = 0f; try { op = o.refitProgress; } catch { } if (op > progress) earlierRefits++; batch = true; }
+                        if (oRefit) { float op = 0f; try { op = o.refitProgress; } catch { } if (op > progress || (op == progress && o.Pointer.ToInt64() < s.Pointer.ToInt64())) earlierRefits++; batch = true; }
                         else if (!oBuild) earlierRefits++;
                         continue;
                     }
@@ -741,12 +746,44 @@ namespace DipGgFixes
                         if (p.isDisabled) continue;
                         var st = Get(p); if (st == null) continue;
                         st.PrevCash = p.cash; st.PrevIncome = p.Income(); st.PrevExpenses = RawExpenses(p); st.HavePrev = true;
-                        if (p.isMain) EconomyUi.QueueReport(p, st);
+                        if (p.isMain) { EconomyUi.QueueReport(p, st); WarDiagnostics(p); }
                     }
                     catch { }
                 }
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Economy] month end failed: " + e.Message); }
+        }
+
+        // 1.11.36: why the AI does not declare war on the player - attitude, tension, war, power and money per AI great power
+        internal static void WarDiagnostics(Player me)
+        {
+            try
+            {
+                var cd = CampaignController.Instance.CampaignData; if (cd == null || me == null) return;
+                float myPower = 0f, myProj = 0f; try { myPower = me.NationPower(); myProj = me.TotalPowerProjection(); } catch { }
+                var sb = new StringBuilder();
+                int n = 0;
+                foreach (var kv in cd.Relations)
+                {
+                    var r = kv.Value; if (r == null) continue;
+                    Player o = null; try { if (!r.AnyOnePlayerIs(me)) continue; o = r.OppositePlayer(me); } catch { continue; }
+                    if (o == null || !o.isMajor || o.isDisabled) continue;
+                    bool war = false, tension = false, almost = false, ally = false; float att = 0f;
+                    try { war = r.isWar; tension = r.HighTension(); almost = r.AlmostWar(); ally = r.isAlliance; att = r.attitude; } catch { }
+                    float p = 0f, pp = 0f; try { p = o.NationPower(); pp = o.TotalPowerProjection(); } catch { }
+                    float inc = 0f; try { inc = o.Income(); } catch { }
+                    sb.Append($"\n   {NameUi(o)}: attitude {att:F0}, {(war ? "WAR" : ally ? "alliance" : almost ? "almost war" : tension ? "high tension" : "peace")}, nation power x{(myPower > 0 ? p / myPower : 0):F2}, fleet power x{(myProj > 0 ? pp / myProj : 0):F2} of yours, cash {o.cash / 1e6f:F0}M, income {inc / 1e6f:F0}M/month, wars in total {Wars(o)}");
+                    n++;
+                }
+                if (n > 0) MelonLogger.Msg($"[DIP GG Fixes][War] relations of the great powers with {NameUi(me)}:{sb}");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][War] diagnostics: " + e.Message); }
+        }
+        static int Wars(Player p)
+        {
+            int c = 0;
+            try { foreach (var kv in CampaignController.Instance.CampaignData.Relations) { var r = kv.Value; if (r != null && r.isWar && r.AnyOnePlayerIs(p)) c++; } } catch { }
+            return Math.Max(0, c - 0);
         }
 
         internal static List<Player> MajorsPublic() { return Majors(); }
