@@ -3,7 +3,7 @@ DIP The Great Game Extended (AI overhaul, one-click install)
 dla Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
 
-Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.15 (DIP_GG_Fixes 1.11.21).
+Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.16 (DIP_GG_Fixes 1.11.31).
 
 Iron Admiral to rozszerzona wersja Dreadnought Improvement Project
 (DIP) "The Great Game": te same dane, mapa i nacje, do tego kilkadziesiąt zmian w
@@ -62,6 +62,18 @@ KAMPANIA, W KTÓREJ AI SIĘ NIE PODDAJE
 - Kryzys po przegranej wojnie jest dotkliwy, ale nie wpędza państw w
   spiralę bez wyjścia (złagodzone kary budżetowe, inflacja wojenna,
   krótszy minimalny czas do pokoju z powodu załamania gospodarki).
+- Okręty buduje się klasami: pierwszy okręt nowego projektu to drogi
+  prototyp; okręty położone po jego wejściu do służby są tańsze i szybsze w
+  miarę rozwoju serii, zamówienie klasy razem się opłaca, pusta stocznia
+  liczy taniej, przeciążona drożej, siostry są tańsze w utrzymaniu. Te same
+  zasady dla AI i dla refitów.
+- Pieniądz ma cenę: pożyczki, dodruk i nagłe wpływy podnoszą inflację
+  względem gospodarki, cięcia ją obniżają; oprocentowanie kredytu idzie za
+  inflacją i ratingiem, inflacja zmniejsza dług, niewydana gotówka zachowuje
+  wartość. F8 na mapie kampanii otwiera panel skarbu; inflacja jest w oknie
+  Finanse, a po każdej turze przychodzi miesięczny raport skarbu.
+- Rozdział "Iron Admiral - new mechanics" w pomocy gry; poradnik kampanii
+  w GUIDE_EN.md (po angielsku).
 
 WIERNOŚĆ HISTORYCZNA I SWOBODA PROJEKTOWANIA PANCERNIKÓW
 - Przebijalność z fizyki, nie z suwaka. W DIP przebijalność rosła mniej
@@ -186,7 +198,7 @@ szarże torpedowe, walka zamiast ucieczki, odłączanie wolnych okrętów,
 doktryny narodowe. Nieprzetestowane w dłuższej grze: kierunek działania
 mnożnika dystansu w doktrynach (distanceMult) oraz zmiany gospodarcze
 na przestrzeni całej kampanii. Pełna historia zmian z uzasadnieniami,
-źródłami i statusem testów: CHANGELOG_PL.txt (62 sekcji).
+źródłami i statusem testów: CHANGELOG_PL.txt (65 sekcji).
 
 --------------------------------------------------------------------------
 INSTALACJA
