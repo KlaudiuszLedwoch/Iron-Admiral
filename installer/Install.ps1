@@ -1,4 +1,4 @@
-# Iron Admiral 1.2.13 (DIP GG Extended) - installer
+# Iron Admiral 1.2.14 (DIP GG Extended) - installer
 # Installs MelonLoader v0.6.6 (if needed), TweaksAndFixes and the mod data
 # into Ultimate Admiral: Dreadnoughts. Existing files are backed up first.
 param(
@@ -7,7 +7,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$ModName    = "Iron Admiral 1.2.13 (DIP GG Extended)"
+$ModName    = "Iron Admiral 1.2.14 (DIP GG Extended)"
 $AppId      = "1069660"
 $GameExe    = "Ultimate Admiral Dreadnoughts.exe"
 $MLVersion  = "0.6.6"
@@ -104,6 +104,22 @@ if ($mlOk) {
     Say "Instalacja MelonLoader $MLVersion (SHA-256 OK)..." "Installing MelonLoader $MLVersion (SHA-256 OK)..."
     Expand-Archive -Path $mlZip -DestinationPath $GamePath -Force
     $meta.mlInstalled = $true
+}
+
+# --- .NET 6 runtime (MelonLoader 0.6.x runs on .NET 6; without it the game shows a .NET 6.0 runtime error at start)
+$net6 = @(Get-ChildItem -Path (Join-Path $env:ProgramFiles "dotnet\shared\Microsoft.NETCore.App") -Directory -Filter "6.*" -ErrorAction SilentlyContinue)
+if ($net6.Count -gt 0) {
+    Say ".NET 6 runtime obecny ($($net6[-1].Name))." ".NET 6 runtime present ($($net6[-1].Name))."
+} else {
+    Say "Brak .NET 6 Desktop Runtime (x64), wymaganego przez MelonLoader." ".NET 6 Desktop Runtime (x64), required by MelonLoader, is missing."
+    $winget = Get-Command winget -ErrorAction SilentlyContinue
+    $ans = ""
+    if ($winget -and -not $NoPause) { $ans = Read-Host "[PL] Zainstalowac teraz przez winget (Microsoft.DotNet.DesktopRuntime.6)? T/N  [EN] Install it now with winget? Y/N" }
+    if ($ans -match '^[TtYy]') {
+        & winget install --id Microsoft.DotNet.DesktopRuntime.6 --architecture x64 -e
+    } else {
+        Say "Zainstaluj recznie: https://dotnet.microsoft.com/download/dotnet/6.0 (.NET Desktop Runtime 6.0.x, Windows x64)." "Install it manually: https://dotnet.microsoft.com/download/dotnet/6.0 (.NET Desktop Runtime 6.0.x, Windows x64)."
+    }
 }
 
 # --- Mods folder
