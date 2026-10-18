@@ -19,6 +19,6 @@ dotnet /usr/lib/dotnet/sdk/8.0.131/Roslyn/bincore/csc.dll -nologo -noconfig -nos
   -out:$OUT/DIP_GG_Fixes.dll \
   -r:$R/System.Private.CoreLib.dll -r:$R/System.Runtime.dll -r:$R/System.Collections.dll -r:$R/System.Linq.dll -r:$R/System.Console.dll -r:$R/System.Runtime.InteropServices.dll -r:$R/System.Reflection.dll -r:$R/netstandard.dll -r:$R/System.Net.Http.dll -r:$R/System.Net.Primitives.dll -r:$R/System.Threading.dll -r:$R/System.Threading.Tasks.dll -r:$R/System.Threading.Thread.dll -r:$R/System.Private.Uri.dll -r:$R/System.IO.Compression.dll -r:$R/System.IO.Compression.ZipFile.dll -r:$R/System.Security.Cryptography.Algorithms.dll -r:$R/System.Security.Cryptography.Primitives.dll \
   -r:"$ML/net6/MelonLoader.dll" -r:"$ML/net6/0Harmony.dll" -r:"$ML/net6/Il2CppInterop.Runtime.dll" -r:"$ML/net6/Il2CppInterop.Common.dll" \
-  -r:"$ML/Il2CppAssemblies/Assembly-CSharp.dll" -r:"$ML/Il2CppAssemblies/Il2Cppmscorlib.dll" -r:"$ML/Il2CppAssemblies/Il2CppSystem.dll" -r:"$ML/Il2CppAssemblies/Il2CppSystem.Core.dll" -r:"$ML/Il2CppAssemblies/UnityEngine.CoreModule.dll" \
-  Mod.cs AssemblyInfo.cs
+  -r:"$ML/Il2CppAssemblies/Assembly-CSharp.dll" -r:"$ML/Il2CppAssemblies/Il2Cppmscorlib.dll" -r:"$ML/Il2CppAssemblies/Il2CppSystem.dll" -r:"$ML/Il2CppAssemblies/Il2CppSystem.Core.dll" -r:"$ML/Il2CppAssemblies/UnityEngine.CoreModule.dll" -r:"$ML/Il2CppAssemblies/UnityEngine.IMGUIModule.dll" -r:"$ML/Il2CppAssemblies/UnityEngine.InputLegacyModule.dll" -r:"$ML/Il2CppAssemblies/UnityEngine.TextRenderingModule.dll" -r:"$ML/Il2CppAssemblies/Unity.TextMeshPro.dll" -r:"$ML/Il2CppAssemblies/UnityEngine.UI.dll" \
+  Mod.cs Economy.cs EconomyUi.cs AssemblyInfo.cs
 ls -la $OUT/DIP_GG_Fixes.dll

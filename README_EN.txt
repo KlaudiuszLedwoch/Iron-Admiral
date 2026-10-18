@@ -3,7 +3,7 @@ DIP The Great Game Extended (AI overhaul, one-click install)
 for Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
 
-Description as of 18 October 2026. Latest version: Iron Admiral 1.2.15 (DIP_GG_Fixes 1.11.21).
+Description as of 18 October 2026. Latest version: Iron Admiral 1.2.16 (DIP_GG_Fixes 1.11.31).
 
 Iron Admiral is an extended edition of the Dreadnought Improvement
 Project (DIP) "The Great Game": the same data, map and nations, plus dozens of balance,
@@ -62,6 +62,18 @@ A WORLD THAT LIVES
 - The post-war crisis hurts but no longer traps nations in an endless
   spiral (softer budget penalties, war inflation and a shorter minimum
   time to an economic-collapse peace).
+- Ships are built in classes: the first ship of a new design is an
+  expensive prototype; ships laid down after it is in service get cheaper
+  and faster as the series grows, ordering a class together pays off, idle
+  yards bid lower and overloaded ones charge more, sister ships are cheaper
+  to keep. Same rules for the AI and for refits.
+- Money has a price: loans, printing and windfalls raise inflation relative
+  to the economy, cuts lower it; loan interest follows inflation and the
+  credit rating, inflation erodes debt, unspent cash keeps its value. Press
+  F8 on the campaign map for the treasury panel; inflation is shown in the
+  Finances window, and a monthly treasury report follows each turn.
+- In-game Help chapter "Iron Admiral - new mechanics"; campaign guide in
+  GUIDE_EN.md.
 
 HISTORICAL ACCURACY AND BATTLESHIP DESIGN FREEDOM
 - Armour penetration from physics, not from a slider. DIP's penetration
@@ -182,7 +194,7 @@ instead of fleeing, detaching slow ships, national doctrines. Not yet
 tested over a long game: the direction of the doctrine distance
 multiplier (distanceMult) and the economic changes across a whole
 campaign. Full change history with reasoning, sources and test status:
-CHANGELOG_EN.txt (62 sections).
+CHANGELOG_EN.txt (65 sections).
 
 --------------------------------------------------------------------------
 INSTALLATION

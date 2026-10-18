@@ -1,7 +1,7 @@
 # DIP_GG_Fixes — build instructions
 
 DIP_GG_Fixes.dll is a MelonLoader 0.6.6 mod for Ultimate Admiral: Dreadnoughts
-(IL2CPP, .NET 6). It is two source files: `Mod.cs` and `AssemblyInfo.cs`.
+(IL2CPP, .NET 6). It is four source files: `Mod.cs` (battle and campaign AI, treasury crisis, updater), `Economy.cs` (series production, inflation and credit), `EconomyUi.cs` (treasury panel, Finances window, monthly report) and `AssemblyInfo.cs`.
 No NuGet packages, no obfuscation, no network code.
 
 ## References
@@ -19,6 +19,7 @@ launch):
 - `<game>\MelonLoader\Il2CppAssemblies\Il2CppSystem.dll`
 - `<game>\MelonLoader\Il2CppAssemblies\Il2CppSystem.Core.dll`
 - `<game>\MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll`
+- `<game>\MelonLoader\Il2CppAssemblies\UnityEngine.IMGUIModule.dll`, `UnityEngine.InputLegacyModule.dll`, `UnityEngine.TextRenderingModule.dll`, `Unity.TextMeshPro.dll`, `UnityEngine.UI.dll`
 - .NET 6 runtime assemblies (e.g. `C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.x\`):
   `System.Private.CoreLib.dll`, `System.Runtime.dll`, `System.Collections.dll`,
   `System.Linq.dll`, `System.Console.dll`, `System.Reflection.dll`,
@@ -41,7 +42,7 @@ $refs = @(
 $refs += Get-ChildItem "$game\MelonLoader\net6\*.dll","$game\MelonLoader\Il2CppAssemblies\*.dll" | ForEach-Object { "-r:`"$($_.FullName)`"" }
 
 dotnet $csc -nostdlib -noconfig -target:library -optimize+ -nullable:disable -langversion:latest `
-  -out:DIP_GG_Fixes.dll @refs Mod.cs AssemblyInfo.cs
+  -out:DIP_GG_Fixes.dll @refs Mod.cs Economy.cs EconomyUi.cs AssemblyInfo.cs
 ```
 
 The output `DIP_GG_Fixes.dll` is byte-for-byte reproducible for the same compiler
