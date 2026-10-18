@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.20. Updated with every release._
+_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.21. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -16,6 +16,8 @@ In the base game the AI tends to stay clumped and lets you shoot it apart. In Ir
 - A division that cannot outrun you turns and fights instead of being chased down.
 - Guns finish off damaged ships first; heavy guns go for heavy targets, secondaries for torpedo boats.
 - Each navy has its own doctrine – some hold the line at long range, others charge and accept losses.
+- The enemy picks its fights. A torpedo boat that cannot catch your battleship no longer throws itself at it from 14 km, and a cruiser whose guns cannot hurt your belt stays out of your effective range instead of sailing into it.
+- Ships on the approach zigzag. Firing at a turning ship is harder, so a charging flotilla is harder to stop – but turning spoils the ship's own aim even more, so the enemy straightens up once its own guns can do damage.
 
 A player compared the same 1892 quick battle with and without the mod (even fleets: 1 BB, 2 CA, 4 CL, 6 TB):
 
@@ -30,6 +32,10 @@ Another early tester, thunderspirit2014, singled out exactly this: the base-game
 - Never send capital ships out without a screen. Your destroyers are there to break up the torpedo attack before it reaches the line.
 - Use your own light divisions on *Scout*: they run the same charge logic and can hurt enemy battleships.
 - Expect a beaten enemy to fight on when it cannot escape – finish it, or let it go before it costs you a cruiser.
+
+**From the test campaign (February 1916).** Three German *Hildebrand*-class battleships met 40 US ships – 2 battleships, 5 heavy and 15 light cruisers, 11 destroyers and 7 torpedo boats. The log shows why numbers did not decide it: the German main guns reached 25 km against 12–15 km for the US ships, and no American gun in the fight could penetrate the German belt at any range in the log. The only real danger was torpedoes – 20 charges by US destroyers, torpedo boats and light cruisers. This battle is also where the old AI's mistakes showed: some charges started far beyond any chance of reaching the target, and cruisers kept closing in although their guns could not do any harm. Version 1.2.21 fixes both and adds the zigzag on the approach.
+
+**Refits after the treaties.** If your battleships are already above the Washington Treaty limit, you can still refit them: a refit may add a limited amount of tonnage above the ship's present size, as the treaty itself allowed for anti-aircraft guns, torpedo bulges and deck armour. New construction keeps the treaty limit.
 
 ## 2. Crews, surrender and prizes
 
@@ -124,9 +130,10 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 
 ### Guide history
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
-- **18 October 2026, Iron Admiral 1.2.20:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
-- **18 October 2026, Iron Admiral 1.2.20:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
-- **18 October 2026, Iron Admiral 1.2.20:** coalitions against the dominant power.
+- **18 October 2026, Iron Admiral 1.2.21:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
+- **18 October 2026, Iron Admiral 1.2.21:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
+- **18 October 2026, Iron Admiral 1.2.21:** coalitions against the dominant power.
+- **18 October 2026, Iron Admiral 1.2.21:** refits of ships above the treaty limits; a 1916 battle from the test campaign (3 battleships against 40 ships); the enemy charges only what it can reach, does not close in without a chance to penetrate, and zigzags on the approach.
 
 ---
 

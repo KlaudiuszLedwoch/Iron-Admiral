@@ -1,6 +1,6 @@
-Iron Admiral 1.2.20 (DIP_GG_Fixes 1.11.38) - CO DAJE TEN MOD
-Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.20 (DIP_GG_Fixes 1.11.38).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (69 sekcji).
+Iron Admiral 1.2.21 (DIP_GG_Fixes 1.11.40) - CO DAJE TEN MOD
+Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.21 (DIP_GG_Fixes 1.11.40).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (70 sekcji).
 ============================================================================
 
 Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great
@@ -313,7 +313,7 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do
   99%.
 
-18 października 2026 - DIP_GG_Fixes 1.11.21-1.11.38 / Iron Admiral 1.2.14-1.2.20
+18 października 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21
 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zipy zapisywane ze ścieżkami z
   ukośnikiem / (gracze zgłosili, że zipy Mods_only i Nexus rozpakowują się
   płasko, więc MelonLoader nic nie ładował); instalator sprawdza środowisko
@@ -328,7 +328,7 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   siostry, refity); inflacja względem gospodarki z ratingiem kredytowym,
   odsetkami i zmniejszaniem długu; panel skarbu (F8), inflacja w oknie
   Finanse, miesięczny raport; rozdział w pomocy gry; poradnik GUIDE_EN.md.
-- Iron Admiral 1.2.20: wyjaśnienie inflacji (dopłata, nie poziom cen) w
+- Iron Admiral 1.2.21: wyjaśnienie inflacji (dopłata, nie poziom cen) w
   pomocy, poradniku i opisach.
 - DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: rozbudowa stoczni AI tylko po
   okresie stałej nadwyżki z gotówką albo przy nadwyżce pokrywającej koszt.
@@ -337,17 +337,20 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   ukończenia ostatniej siostry; diagnostyka wojen.
 - DIP_GG_Fixes 1.11.38 / Iron Admiral 1.2.20: wojny koalicyjne przeciw
   dominującemu mocarstwu; AI nie projektuje okrętów bez możliwości budowy.
+- DIP_GG_Fixes 1.11.40 / Iron Admiral 1.2.21: refity okrętów ponad limitami
+  traktatowymi; szarże torpedowe AI tylko na osiągalne cele, bez skracania
+  dystansu bez szans na przebicie, zygzak w podejściu.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.20_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.20_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.21_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.21_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.20 (DIP_GG_Fixes 1.11.38) - WHAT THIS MOD DOES
-Description as of 18 October 2026. Latest version: Iron Admiral 1.2.20 (DIP_GG_Fixes 1.11.38).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (69 sections).
+Iron Admiral 1.2.21 (DIP_GG_Fixes 1.11.40) - WHAT THIS MOD DOES
+Description as of 18 October 2026. Latest version: Iron Admiral 1.2.21 (DIP_GG_Fixes 1.11.40).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (70 sections).
 ============================================================================
 
 Iron Admiral is an extended edition of the Dreadnought Improvement Project
@@ -659,7 +662,7 @@ when the DLL does.
   99% after printing); printing on top of inflation adds 20 points instead of
   stacking to 99%.
 
-18 October 2026 - DIP_GG_Fixes 1.11.21-1.11.38 / Iron Admiral 1.2.14-1.2.20
+18 October 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21
 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zips written with forward-slash
   paths (players reported the Mods_only and Nexus zips extracting flat, so
   MelonLoader loaded nothing); the installer checks the .NET 6 runtime that
@@ -674,7 +677,7 @@ when the DLL does.
   sister ships, refits); inflation relative to the economy with credit
   ratings, interest and debt erosion; treasury panel (F8), inflation in the
   Finances window, monthly report; in-game Help chapter; guide GUIDE_EN.md.
-- Iron Admiral 1.2.20: inflation explained (a surcharge, not a price level)
+- Iron Admiral 1.2.21: inflation explained (a surcharge, not a price level)
   in the Help, the guide and the descriptions.
 - DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: AI shipyard expansion only after
   a steady surplus with cash in hand, or with a surplus covering the cost.
@@ -683,8 +686,11 @@ when the DLL does.
   last completed sister; war diagnostics.
 - DIP_GG_Fixes 1.11.38 / Iron Admiral 1.2.20: coalition wars against a
   dominant power; no AI designs without a way to build.
+- DIP_GG_Fixes 1.11.40 / Iron Admiral 1.2.21: refits of ships above the
+  treaty limits; AI torpedo charges only on reachable targets, no close-in
+  without a chance to penetrate, evasive zigzag on the approach.
 
 
-Two downloads: Iron_Admiral_1.2.20_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.20_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.21_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.21_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
