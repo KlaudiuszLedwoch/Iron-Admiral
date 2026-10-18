@@ -1,18 +1,34 @@
-[h1]Iron Admiral 1.2.14 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
+[h1]Iron Admiral 1.2.15 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
-[i]Description as of 18 October 2026. Latest version: Iron Admiral 1.2.14 (DIP_GG_Fixes 1.11.21).[/i]
+[i]Description as of 18 October 2026. Latest version: Iron Admiral 1.2.15 (DIP_GG_Fixes 1.11.21).[/i]
 
-[b]What is new today (18 October 2026) - Iron Admiral 1.2.14, DIP_GG_Fixes 1.11.21[/b]
+[b]What is new today (18 October 2026) - Iron Admiral 1.2.15, DIP_GG_Fixes 1.11.21[/b]
 [list]
+[*]New: Install-IronAdmiral.ps1 - a single setup script that installs the .NET 6 runtime, the Visual C++ Redistributable, MelonLoader 0.6.6 and the latest Iron Admiral in one go (old Mods folder kept as a backup); plus a step-by-step guide for installing MelonLoader by hand, with links.
 [*]Fixed packaging: in several unpackers the Mods_only and Nexus zips came out as loose files named "Mods\accuracies.csv" and so on, so MelonLoader found no mod. Both zips now use standard ZIP paths (forward slashes); the folders Mods\... and payload\Mods\... come out as intended with every tool.
 [*]The installer checks the .NET 6 runtime that MelonLoader 0.6.6 runs on. When it is missing it offers to install it with winget or gives the download link - a missing .NET 6 is the cause of the ".NET 6.0 runtime" error at game start.
 [*]Readme: troubleshooting section (.NET 6 error, manual Mods-only install, returning to the unmodded game).
 [*]The add-on itself is unchanged (DIP_GG_Fixes 1.11.21); no new campaign needed.
 [/list]
 
+[b]Recent highlights (16-18 October 2026)[/b]
+[list]
+[*][b]Treasury crisis for the great powers:[/b] a power stuck in debt takes a war loan, prints money (inflation, unrest) or cuts its fleet - the AI chooses by its situation, you choose in a dialog.
+[*][b]Bankrupt AI powers build cheap ships:[/b] no battleships or battlecruisers while broke; cruisers, destroyers and torpedo boats instead.
+[*][b]AI that saves up for ships:[/b] research spending balanced against income, no shipyard expansion in deficit, balance-of-power grants only for solvent nations - AI powers actually order fleets again.
+[*][b]Prizes and conquests:[/b] surrendered ships are captured by the winner; a conquered nation's fleet passes to whoever takes the port.
+[*][b]Built-in updater:[/b] at game start the mod checks for a newer version and offers a Download button; nothing is downloaded without your click, the package is SHA-256 verified. Development is intensive - sometimes several versions a day - and save games are kept compatible wherever possible.
+[/list]
+
+[b]Coming next - in testing[/b]
+[list]
+[*][b]Series production:[/b] the first ship of a new class is the expensive one - every further ship of the same design gets cheaper and quicker to build, ordering a class together pays off, and small ships built in numbers come off the slips much faster than battleships. Sister ships are cheaper to keep in service, and an idle shipyard takes orders on better terms than a busy one. Calibrated on historical shipbuilding data; refits follow the same logic.
+[*][b]Inflation and credit:[/b] borrowing, printing money and sudden windfalls drive prices up, thrift and research bring them down. Credit has a price, a bankruptcy is remembered for years, savings earn interest, investment in shipyards and research feeds growth - and runaway inflation stirs unrest at home.
+[/list]
+
 [b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.15.
+Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.21.
 
 [h2]Battle: an enemy that fights like a navy[/h2]
 [list]
@@ -76,7 +92,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
 [*][b]Update check and one-click update.[/b] At start the add-on compares the installed version with the GitHub repository and shows a message when a newer build exists - one HTTPS request, nothing sent. The message has a Download button: only after you click it the Mods package is fetched from the GitHub release, verified (SHA-256) and installed; restart the game afterwards. Switches: CheckForUpdates, UpdateDownloadButton.
 [*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv, research profiles in Mods\techBonuses.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (63 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (64 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Version history[/h2]
@@ -129,18 +145,30 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [*]1.11.20 / Iron Admiral 1.2.12: a running treasury remedy no longer blocks the next one when the debt is deep again (Britain sat at -4.5 bn with a loan still running; blockade costs and reparations bypass the income figure) - at war with a loan running the AI prints money, inflation stacks; diagnostics show the loan, inflation, cuts and the unexplained 'other' expenses.
 [*]1.11.21 / Iron Admiral 1.2.13: the treasury state is guarded against outside changes (Britain and Portugal showed a phantom 63% inflation and ended at 99% after printing); printing on top of inflation adds 20 points instead of stacking to 99%.
 [/list]
-[b]18 October 2026 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14[/b]
+[b]18 October 2026 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14-1.2.15[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zips written with forward-slash paths (players reported the Mods_only and Nexus zips extracting flat, so MelonLoader loaded nothing); the installer checks the .NET 6 runtime and offers a winget install or the download link; readme troubleshooting section.
+[*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.15: one-file setup script Install-IronAdmiral.ps1 (.NET 6, VC++ Redistributable, MelonLoader 0.6.6 with SHA-256 check, latest Mods package with the checksum from the VERSION file, old Mods kept as a backup); manual MelonLoader installation guide with links in the readmes and descriptions; descriptions highlight the recent features and what is in testing.
 [/list]
 
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.14_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.14_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.15_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.15_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [*]Mods_only: extract it into the game folder so that you get <game folder>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll and the CSV files; MelonLoader 0.6.6 must already be installed.
 [*]Error about the .NET 6.0 runtime at game start: install the .NET Desktop Runtime 6.0 (Windows x64) from https://dotnet.microsoft.com/download/dotnet/6.0 - MelonLoader 0.6.6 runs on it. Back to the unmodded game: run Uninstall.bat from <game folder>\Iron_Admiral_backup, or delete version.dll, the MelonLoader folder and the Mods folder and let Steam verify the game files; campaigns saved with the mod are not meant for the unmodded game.
+[/list]
+[b]One-file setup:[/b] Install-IronAdmiral.ps1 (in the repository and in the Nexus zip) installs .NET 6, the VC++ Redistributable, MelonLoader 0.6.6 and the latest Iron Admiral - right-click > Run with PowerShell.
+[b]Installing MelonLoader by hand (Mods_only package, or when the installer cannot do it)[/b]
+[list=1]
+[*]Close the game.
+[*]Install the .NET Desktop Runtime 6.0 (Windows x64): [url=https://dotnet.microsoft.com/download/dotnet/6.0]https://dotnet.microsoft.com/download/dotnet/6.0[/url] - under ".NET Desktop Runtime 6.0.x" pick Windows x64.
+[*]Install the Microsoft Visual C++ Redistributable (x64): [url=https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist]https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist[/url]
+[*]Download MelonLoader.x64.zip from the official MelonLoader 0.6.6 release: [url=https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6]https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6[/url] (Assets). Only 0.6.6 is tested - TweaksAndFixes 3.21.1 needs it.
+[*]Unzip it straight into the game folder (Steam: right-click the game > Manage > Browse local files), so that the MelonLoader folder, version.dll and dobby.dll sit next to "Ultimate Admiral Dreadnoughts.exe".
+[*]Start the game once - the first launch takes a few minutes and needs internet; a console window next to the game is normal. Close the game.
+[*]Unzip Iron_Admiral_Mods_only.zip into the game folder, so that <game folder>\Mods\TweaksAndFixes.dll exists, and start the game.
 [/list]
 Based on DIP The Great Game 1.3.5 with TweaksAndFixes 3.21.1. Source code (DIP_GG_Fixes, installer, merge scripts): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
 Start a new campaign; saves from 1.0 need the migration tool from the source folder (source/save_tools).
@@ -148,21 +176,37 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 ============================================================================
 
-[h1]Iron Admiral 1.2.14 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
+[h1]Iron Admiral 1.2.15 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
 
-[i]Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.14 (DIP_GG_Fixes 1.11.21).[/i]
+[i]Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.15 (DIP_GG_Fixes 1.11.21).[/i]
 
-[b]Co nowego dziś (18 października 2026) - Iron Admiral 1.2.14, DIP_GG_Fixes 1.11.21[/b]
+[b]Co nowego dziś (18 października 2026) - Iron Admiral 1.2.15, DIP_GG_Fixes 1.11.21[/b]
 [list]
+[*]Nowość: Install-IronAdmiral.ps1 - jeden skrypt, który instaluje środowisko .NET 6, Visual C++ Redistributable, MelonLoader 0.6.6 i najnowszego Iron Admirala za jednym razem (stary folder Mods zostaje jako kopia); do tego instrukcja ręcznej instalacji MelonLoadera krok po kroku, z linkami.
 [*]Naprawione pakowanie: w części programów do rozpakowywania zipy Mods_only i Nexus dawały luźne pliki o nazwach "Mods\accuracies.csv" itd., więc MelonLoader nie widział moda. Oba zipy mają teraz standardowe ścieżki ZIP (ukośniki /); foldery Mods\... i payload\Mods\... powstają poprawnie w każdym narzędziu.
 [*]Instalator sprawdza środowisko .NET 6, na którym działa MelonLoader 0.6.6. Gdy go brak, proponuje instalację przez winget albo podaje link - brak .NET 6 to przyczyna błędu ".NET 6.0 runtime" przy starcie gry.
 [*]Readme: sekcja rozwiązywania problemów (błąd .NET 6, ręczna instalacja Mods_only, powrót do gry bez moda).
 [*]Sam dodatek bez zmian (DIP_GG_Fixes 1.11.21); nowa kampania niepotrzebna.
 [/list]
 
+[b]Najważniejsze nowości ostatnich dni (16-18 października 2026)[/b]
+[list]
+[*][b]Kryzys skarbu mocarstw:[/b] zadłużone mocarstwo bierze pożyczkę wojenną, dodrukowuje pieniądze (inflacja, niezadowolenie) albo tnie flotę - AI wybiera według sytuacji, Ty w oknie dialogowym.
+[*][b]Zbankrutowane mocarstwa AI budują tanie okręty:[/b] bez pancerników i krążowników liniowych, w zamian krążowniki, niszczyciele i torpedowce.
+[*][b]AI, które odkłada na okręty:[/b] wydatki na badania równoważone z dochodem, bez rozbudowy stoczni przy deficycie, granty równowagi sił tylko dla wypłacalnych - mocarstwa AI znów zamawiają floty.
+[*][b]Pryzy i podboje:[/b] okręty, które się poddały, przejmuje zwycięzca; flota podbitego państwa przechodzi do tego, kto zajmie port.
+[*][b]Wbudowane aktualizacje:[/b] przy starcie gry mod sprawdza, czy jest nowsza wersja, i pokazuje przycisk Download; nic nie jest pobierane bez kliknięcia, paczka jest sprawdzana sumą SHA-256. Prace idą intensywnie - czasem kilka wersji dziennie - a zapisy gry pozostają zgodne wszędzie, gdzie to możliwe.
+[/list]
+
+[b]Wkrótce - w testach[/b]
+[list]
+[*][b]Produkcja seryjna:[/b] najdroższy jest pierwszy okręt nowej klasy - każdy kolejny według tego samego projektu jest tańszy i szybciej powstaje, zamówienie całej serii naraz się opłaca, a małe okręty budowane masowo schodzą z pochylni dużo szybciej niż pancerniki. Okręty siostrzane są tańsze w utrzymaniu, a stocznia bez zleceń bierze je na lepszych warunkach niż przeciążona. Kalibracja na historycznych danych o budowie okrętów; refity według tej samej logiki.
+[*][b]Inflacja i kredyt:[/b] pożyczki, dodruk pieniądza i nagłe przypływy gotówki podnoszą ceny, oszczędność i badania je obniżają. Kredyt kosztuje, bankructwo pamięta się latami, oszczędności przynoszą odsetki, inwestycje w stocznie i badania napędzają wzrost - a galopująca inflacja budzi niezadowolenie w kraju.
+[/list]
+
 [b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.15.
+Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.21.
 
 [h2]Bitwa: przeciwnik, który walczy jak flota[/h2]
 [list]
@@ -226,7 +270,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
 [*][b]Sprawdzanie aktualizacji i aktualizacja jednym kliknięciem.[/b] Przy starcie dodatek porównuje zainstalowaną wersję z repozytorium GitHub i pokazuje komunikat, gdy jest nowsza - jedno żądanie HTTPS, nic nie jest wysyłane. Komunikat ma przycisk Pobierz: dopiero po kliknięciu paczka Mods jest pobierana z wydania GitHub, weryfikowana (SHA-256) i instalowana; potem restart gry. Wyłączniki: CheckForUpdates, UpdateDownloadButton.
 [*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv, profile badań w Mods\techBonuses.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (63 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (64 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Historia wersji[/h2]
@@ -279,18 +323,30 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [*]1.11.20 / Iron Admiral 1.2.12: trwający środek zaradczy nie blokuje następnego, gdy dług znów jest głęboki (Brytania siedziała na -4,5 mld z trwającą pożyczką; koszty blokady i reparacje omijają dochód) - w wojnie z pożyczką AI dodrukowuje pieniądze, inflacja się sumuje; diagnostyka pokazuje pożyczkę, inflację, cięcia i niewyjaśnione wydatki 'other'.
 [*]1.11.21 / Iron Admiral 1.2.13: stan kryzysu skarbu chroniony przed zmianami z zewnątrz (Brytania i Portugalia miały fantomowe 63% inflacji i po dodruku 99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do 99%.
 [/list]
-[b]18 października 2026 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14[/b]
+[b]18 października 2026 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14-1.2.15[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zipy zapisywane ze ścieżkami z ukośnikiem / (gracze zgłosili, że zipy Mods_only i Nexus rozpakowują się płasko, więc MelonLoader nic nie ładował); instalator sprawdza środowisko .NET 6 i proponuje instalację przez winget albo podaje link; sekcja rozwiązywania problemów w readme.
+[*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.15: skrypt instalacyjny w jednym pliku Install-IronAdmiral.ps1 (.NET 6, VC++ Redistributable, MelonLoader 0.6.6 ze sprawdzeniem SHA-256, najnowsza paczka Mods z sumą kontrolną z pliku VERSION, stary Mods jako kopia); instrukcja ręcznej instalacji MelonLoadera z linkami w readme i opisach; opisy wyróżniają ostatnie nowości i to, co jest w testach.
 [/list]
 
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.14_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.14_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.15_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.15_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [*]Mods_only: rozpakuj do folderu gry tak, żeby powstało <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV; MelonLoader 0.6.6 musi być już zainstalowany.
 [*]Błąd ".NET 6.0 runtime" przy starcie gry: zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony https://dotnet.microsoft.com/download/dotnet/6.0 - na nim działa MelonLoader 0.6.6. Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup albo usuń version.dll, folder MelonLoader i folder Mods, a potem zweryfikuj pliki gry w Steam; kampanie zapisane z modem nie są przeznaczone dla gry bez moda.
+[/list]
+[b]Instalacja jednym plikiem:[/b] Install-IronAdmiral.ps1 (w repozytorium i w zipie Nexus) instaluje .NET 6, VC++ Redistributable, MelonLoader 0.6.6 i najnowszego Iron Admirala - prawy klik > Uruchom za pomocą PowerShell.
+[b]Ręczna instalacja MelonLoadera (paczka Mods_only albo gdy instalator sobie nie radzi)[/b]
+[list=1]
+[*]Zamknij grę.
+[*]Zainstaluj .NET Desktop Runtime 6.0 (Windows x64): [url=https://dotnet.microsoft.com/download/dotnet/6.0]https://dotnet.microsoft.com/download/dotnet/6.0[/url] - w sekcji ".NET Desktop Runtime 6.0.x" wybierz Windows x64.
+[*]Zainstaluj Microsoft Visual C++ Redistributable (x64): [url=https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist]https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist[/url]
+[*]Pobierz MelonLoader.x64.zip z oficjalnego wydania MelonLoader 0.6.6: [url=https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6]https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6[/url] (sekcja Assets). Testowana jest tylko wersja 0.6.6 - wymaga jej TweaksAndFixes 3.21.1.
+[*]Rozpakuj go wprost do folderu gry (Steam: prawy klik na grze > Zarządzaj > Przeglądaj pliki lokalne), tak by folder MelonLoader, version.dll i dobby.dll leżały obok "Ultimate Admiral Dreadnoughts.exe".
+[*]Uruchom grę raz - pierwszy start trwa kilka minut i wymaga internetu; okno konsoli obok gry to normalne. Zamknij grę.
+[*]Rozpakuj Iron_Admiral_Mods_only.zip do folderu gry tak, by istniał <folder gry>\Mods\TweaksAndFixes.dll, i uruchom grę.
 [/list]
 Baza: DIP The Great Game 1.3.5 z TweaksAndFixes 3.21.1. Kod źródłowy (DIP_GG_Fixes, instalator, skrypty scalania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
 Zacznij nową kampanię; zapisy z 1.0 wymagają narzędzia migracji z folderu źródeł (source/save_tools).
