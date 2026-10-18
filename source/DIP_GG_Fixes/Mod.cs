@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.38", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.40", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -163,6 +163,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> AiTechBudgetMin;
         internal static MelonPreferences_Entry<float> AiShipyardHeadroom, AiShipyardSurplusMonths, AiShipyardCostCover;
         internal static MelonPreferences_Entry<bool> AiDesignOnlyWhenBuildable;
+        internal static MelonPreferences_Entry<float> RefitTreatyAllowance;
         internal static MelonPreferences_Entry<int> BalanceCooldown;
         // 1.11
         internal static MelonPreferences_Entry<float> ChargeApproachSeconds;
@@ -170,6 +171,11 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> CapitalCharge;
         internal static MelonPreferences_Entry<float> CapitalSpeedMargin;
         internal static MelonPreferences_Entry<bool> CapitalCloseIn;
+        internal static MelonPreferences_Entry<float> ChargeReachFactor;
+        internal static MelonPreferences_Entry<bool> CloseInOnlyIfPenetrates;
+        internal static MelonPreferences_Entry<bool> Evasive;
+        internal static MelonPreferences_Entry<float> EvasiveAngle;
+        internal static MelonPreferences_Entry<float> EvasiveSeconds;
         internal static MelonPreferences_Entry<float> OutrangedFactor;
         internal static MelonPreferences_Entry<float> PenetrationFactor;
         internal static MelonPreferences_Entry<float> CloseInStopRange;
@@ -248,6 +254,8 @@ namespace DipGgFixes
                 "...or when the monthly surplus covers this multiple of the expected monthly expansion cost (last expansion of that nation, otherwise half its monthly budget)");
             AiDesignOnlyWhenBuildable = cat.CreateEntry("AiDesignOnlyWhenBuildable", true, null,
                 "AI nations skip generating new ship designs in a turn when they cannot build anyway (no ports, cash below zero, or shipyard capacity full); designs at campaign start are not affected");
+            RefitTreatyAllowance = cat.CreateEntry("RefitTreatyAllowanceTons", 3000f, null,
+                "Refit of an existing ship may exceed the treaty tonnage limit: up to its own tonnage plus this many tons (Washington Treaty 1922, Ch. II Part 3 Sec. I(d): +3,000 t for anti-air, anti-torpedo and deck protection), never above the hull's own maximum. 0 = vanilla");
             AttitudeMult = cat.CreateEntry("DiplomacyAttitudeMultiplier", 1.5f, null,
                 "Multiplier for positive diplomatic attitude changes (improvements; 1 = vanilla)");
             NegAttitudeMult = cat.CreateEntry("DiplomacyNegativeAttitudeMultiplier", 4.0f, null,
@@ -311,6 +319,14 @@ namespace DipGgFixes
                 "Capital ship counts as faster when own speed > target speed x this");
             CapitalCloseIn = cat.CreateEntry("CapitalCloseInWhenOutgunned", true, null,
                 "AI bb/bc/ca divisions close the distance when their guns are outranged by the target or cannot penetrate its belt at the current range");
+            ChargeReachFactor = cat.CreateEntry("ChargeReachFactor", 1.5f, null,
+                "A division that cannot escape only starts a torpedo charge when the target is within its charge start distance x this, or when it is faster than the target (otherwise it fights with guns)");
+            CloseInOnlyIfPenetrates = cat.CreateEntry("CloseInOnlyIfPenetrates", true, null,
+                "AI capital ships do not close in when their guns could not penetrate the target's belt even at the closest planned range");
+            Evasive = cat.CreateEntry("EvasiveManeuvers", true, null,
+                "AI ships zigzag while approaching (torpedo charge, close-in out of own range or without penetration): target turning lowers enemy accuracy (params acc_turning_target), own turning lowers own accuracy, so it is used only when own guns are not effective");
+            EvasiveAngle = cat.CreateEntry("EvasiveAngle", 30f, null, "Zigzag: course offset to each side from the direct course (degrees)");
+            EvasiveSeconds = cat.CreateEntry("EvasiveLegSeconds", 25f, null, "Zigzag: average leg length in seconds (randomised +-30%)");
             OutrangedFactor = cat.CreateEntry("OutrangedFactor", 1.1f, null,
                 "Outranged when the target's gun range > own gun range x this");
             PenetrationFactor = cat.CreateEntry("PenetrationFactor", 1.0f, null,
@@ -969,7 +985,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; }
+        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -1234,6 +1250,29 @@ namespace DipGgFixes
             if (capital) CapitalLogic(leader, div, st, doc, enemies);
         }
 
+        static readonly System.Random zigRnd = new System.Random();
+        // 1.11.40: move towards dest with a zigzag (alternating course offset) so the enemy's fire suffers the target-turning penalty
+        internal static void MoveEvasive(Division div, Ship leader, DivState st, UnityEngine.Vector3 dest, string why)
+        {
+            if (!DipGgFixesMod.Evasive.Value) { div.MoveTo(dest); return; }
+            var lt = leader.transform; if (lt == null) { div.MoveTo(dest); return; }
+            var pos = lt.position; var dir = dest - pos; dir.y = 0f;
+            float dist = dir.magnitude;
+            if (dist < 1500f) { div.MoveTo(dest); return; }
+            float now = UnityEngine.Time.time;
+            if (st.legSign == 0) st.legSign = zigRnd.Next(2) == 0 ? -1 : 1;
+            if (now >= st.nextLeg)
+            {
+                st.legSign = -st.legSign;
+                float leg = UnityEngine.Mathf.Max(8f, DipGgFixesMod.EvasiveSeconds.Value);
+                st.nextLeg = now + leg * (0.7f + 0.6f * (float)zigRnd.NextDouble());
+                if (!st.zigLogged) { st.zigLogged = true; Log($"{st.name}: evasive zigzag +-{DipGgFixesMod.EvasiveAngle.Value:0} deg while {why}"); }
+            }
+            var rot = UnityEngine.Quaternion.Euler(0f, st.legSign * DipGgFixesMod.EvasiveAngle.Value, 0f);
+            var aim = pos + rot * (dir / dist) * UnityEngine.Mathf.Min(dist, 3000f);
+            div.MoveTo(aim);
+        }
+
         // Torpedo charge of a light (or capital) division against the nearest visible enemy capital ship.
         internal static void TorpedoCharge(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, bool playerSide)
         {
@@ -1259,6 +1298,13 @@ namespace DipGgFixes
             if (!st.charging)
             {
                 float start = ChargeStartFor(leader, best, doc, torp);
+                // 1.11.40: battle log 2026-10-18 - CL Omaha charged from 14.6 km at 4.3 vs 12.1 speed units (torpedoes 1.6 km):
+                // a division that cannot escape charges only when the target is reachable
+                if (st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
+                {
+                    if (!st.reachLogged) { st.reachLogged = true; Log($"{st.name}: charge on {best.name} not feasible ({bestD:0} m, start distance {start:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0}) - fighting with guns"); }
+                    Why(st, "charge not feasible - guns"); return;
+                }
                 if (bestD > start && !st.fighting)
                 {
                     if (st.reason != "waiting") Log($"{st.name}: nearest capital {best.name} at {bestD:0} m beyond start distance ({start:0} m: torpedoes {torp:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0})");
@@ -1270,7 +1316,8 @@ namespace DipGgFixes
             }
             if (bestD > launchAt)
             {
-                var tt = best.transform; if (tt != null) div.MoveTo(tt.position);
+                var tt = best.transform;
+                if (tt != null) { if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, tt.position, "charging"); else div.MoveTo(tt.position); }
             }
             // inside launch range: leave movement to the game, the torpedo logic fires on its own
         }
@@ -1298,6 +1345,18 @@ namespace DipGgFixes
             float pen, belt;
             bool noPen = CannotPenetrate(leader, best, bestD, out pen, out belt);
             float stopAt = ownR > 0f ? ownR * DipGgFixesMod.CloseInStopRange.Value : 0f;
+            // 1.11.40: battle log 2026-10-18 - cruisers with 76-294 mm penetration closed in 19 times on a 634 mm belt and every
+            // close-in ended "still cannot penetrate". Check penetration at the closest planned range before closing in.
+            if (noPen && DipGgFixesMod.CloseInOnlyIfPenetrates.Value && stopAt > 0f && !st.closing)
+            {
+                float penNear, beltNear;
+                bool hopeless = CannotPenetrate(leader, best, UnityEngine.Mathf.Min(stopAt, bestD), out penNear, out beltNear);
+                if (hopeless)
+                {
+                    if (!st.hopelessLogged) { st.hopelessLogged = true; Log($"{st.name} ({leader.shipType.name}): cannot penetrate {best.name} even at {UnityEngine.Mathf.Min(stopAt, bestD):0} m (pen {penNear:0.0} vs belt {beltNear:0.0}) - no close-in, left to the game"); }
+                    Why(st, "hopeless penetration - no close-in"); return;
+                }
+            }
             // 1.11.8: hysteresis. Battle log 2026-10-16: a CA at 0.7x range flipped "close-in ended" / "closes in" five times
             // around 6.9-7.1 km. Once a close-in has ended it restarts only beyond stop + 15% of own range.
             if ((outranged || noPen) && bestD > stopAt && (st.closing || bestD > st.closeResumeAt))
@@ -1308,7 +1367,8 @@ namespace DipGgFixes
                     Log($"{st.name} ({leader.shipType.name}) closes in on {best.name} ({best.shipType.name}) at {bestD:0} m: {(outranged ? $"outranged ({ownR:0} vs {tgtR:0} m)" : "")}{(outranged && noPen ? ", " : "")}{(noPen ? $"cannot penetrate (pen {pen:0.0} vs belt {belt:0.0})" : "")}");
                 }
                 Why(st, "closing in");
-                var tt = best.transform; if (tt != null) div.MoveTo(tt.position);
+                var tt = best.transform;
+                if (tt != null) { if (noPen || bestD > ownR) MoveEvasive(div, leader, st, tt.position, "closing in"); else div.MoveTo(tt.position); }
                 return;
             }
             if (st.closing) { st.closing = false; st.closeResumeAt = ownR * (DipGgFixesMod.CloseInStopRange.Value + 0.15f); Log($"{st.name}: close-in ended at {bestD:0} m ({(noPen ? "still cannot penetrate" : "penetration ok")}, {(outranged ? "still outranged" : "range ok")}) - left to the game"); }
@@ -2680,5 +2740,42 @@ namespace DipGgFixes
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Design] GenerateRandomDesigns: " + e.Message); return true; }
         }
+    }
+
+    // 1.11.39: treaty limits must not block the refit of ships that already exceed them
+    internal static class RefitTreaty
+    {
+        private static readonly Dictionary<IntPtr, float> origin = new Dictionary<IntPtr, float>();
+        private static readonly HashSet<IntPtr> logged = new HashSet<IntPtr>();
+        internal static void Apply(Ship s, ref float result)
+        {
+            try
+            {
+                var a = DipGgFixesMod.RefitTreatyAllowance; if (a == null || a.Value <= 0f || s == null) return;
+                if (!s.isRefitDesign) return;
+                float o; if (!origin.TryGetValue(s.Pointer, out o)) { o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return; origin[s.Pointer] = o; }
+                float allowed = o + a.Value;
+                float hullMax = 0f; try { var h = s.hull; if (h != null && h.data != null) hullMax = h.data.tonnageMax; } catch { }
+                if (hullMax > 0f) allowed = Math.Min(allowed, hullMax);
+                if (allowed > result)
+                {
+                    if (logged.Add(s.Pointer)) MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: refit tonnage limit {result:F0} t -> {allowed:F0} t (ship {o:F0} t + treaty modernisation allowance, hull max {(hullMax > 0 ? hullMax.ToString("F0") : "-")} t)");
+                    result = allowed;
+                }
+            }
+            catch { }
+        }
+    }
+
+    [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { })]
+    internal static class Patch_TonnageMax_Refit
+    {
+        private static void Postfix(Ship __instance, ref float __result) { RefitTreaty.Apply(__instance, ref __result); }
+    }
+
+    [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { typeof(PartData), typeof(Ship) })]
+    internal static class Patch_TonnageMaxStatic_Refit
+    {
+        private static void Postfix(Ship __1, ref float __result) { RefitTreaty.Apply(__1, ref __result); }
     }
 }
