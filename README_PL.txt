@@ -3,7 +3,7 @@ DIP The Great Game Extended (AI overhaul, one-click install)
 dla Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
 
-Opis z dnia 17 października 2026. Najnowsza wersja: Iron Admiral 1.2.13 (DIP_GG_Fixes 1.11.21).
+Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.14 (DIP_GG_Fixes 1.11.21).
 
 Iron Admiral to rozszerzona wersja Dreadnought Improvement Project
 (DIP) "The Great Game": te same dane, mapa i nacje, do tego kilkadziesiąt zmian w
@@ -223,6 +223,24 @@ Uruchom Uninstall.bat z <folder gry>\Iron_Admiral_backup\.
 Przywraca poprzedni folder Mods oraz, jeśli instalator go podmienił,
 poprzedni MelonLoader (albo usuwa MelonLoader, jeśli go wcześniej nie
 było).
+
+ROZWIĄZYWANIE PROBLEMÓW
+- Błąd ".NET 6.0 runtime" przy starcie gry: MelonLoader 0.6.6 działa na
+  .NET 6. Zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony
+  https://dotnet.microsoft.com/download/dotnet/6.0 (albo: winget install
+  Microsoft.DotNet.DesktopRuntime.6). Instalator sprawdza to od
+  wersji 1.2.14.
+- Zip Mods_only: rozpakuj do folderu gry tak, żeby powstało
+  <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV.
+  MelonLoader 0.6.6 musi być już zainstalowany (version.dll i folder
+  MelonLoader obok exe gry). Zipy do wersji 1.2.13 mogły się w
+  niektórych programach rozpakować jako luźne pliki "Mods\..."; użyj 1.2.14
+  lub nowszej.
+- Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup\
+  albo usuń version.dll, folder MelonLoader i folder Mods, a potem
+  zweryfikuj pliki gry w Steam. Kampanie zapisane z modem nie są
+  przeznaczone dla gry bez moda.
+- Logi do zgłoszeń błędów: <folder gry>\MelonLoader\Latest.log.
 
 --------------------------------------------------------------------------
 USTAWIENIA DODATKU (UserData\MelonPreferences.cfg, [DIP_GG_Fixes])
