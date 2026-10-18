@@ -3,7 +3,7 @@ DIP The Great Game Extended (AI overhaul, one-click install)
 dla Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
 
-Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.14 (DIP_GG_Fixes 1.11.21).
+Opis z dnia 18 października 2026. Najnowsza wersja: Iron Admiral 1.2.15 (DIP_GG_Fixes 1.11.21).
 
 Iron Admiral to rozszerzona wersja Dreadnought Improvement Project
 (DIP) "The Great Game": te same dane, mapa i nacje, do tego kilkadziesiąt zmian w
@@ -223,6 +223,30 @@ Uruchom Uninstall.bat z <folder gry>\Iron_Admiral_backup\.
 Przywraca poprzedni folder Mods oraz, jeśli instalator go podmienił,
 poprzedni MelonLoader (albo usuwa MelonLoader, jeśli go wcześniej nie
 było).
+
+SKRYPT INSTALACYJNY W JEDNYM PLIKU
+Install-IronAdmiral.ps1 (główny folder repozytorium i zip Nexus) instaluje
+środowisko .NET 6, VC++ Redistributable, MelonLoader 0.6.6 i najnowszego
+Iron Admirala za jednym razem; stary folder Mods zostaje jako
+Mods_backup_<data>. Prawy klik > Uruchom za pomocą PowerShell, albo:
+  powershell -ExecutionPolicy Bypass -File .\Install-IronAdmiral.ps1
+
+RĘCZNA INSTALACJA MELONLOADERA (paczka Mods_only albo gdy instalator
+sobie nie radzi)
+1. Zamknij grę.
+2. Zainstaluj .NET Desktop Runtime 6.0 (Windows x64):
+   https://dotnet.microsoft.com/download/dotnet/6.0
+3. Zainstaluj Microsoft Visual C++ Redistributable (x64):
+   https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
+4. Pobierz MelonLoader.x64.zip z oficjalnego wydania MelonLoader 0.6.6
+   (sekcja Assets): https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6
+   Testowana jest tylko wersja 0.6.6 - wymaga jej TweaksAndFixes 3.21.1.
+5. Rozpakuj go wprost do folderu gry (Steam: prawy klik na grze >
+   Zarządzaj > Przeglądaj pliki lokalne), tak by folder MelonLoader,
+   version.dll i dobby.dll leżały obok "Ultimate Admiral Dreadnoughts.exe".
+6. Uruchom grę raz (kilka minut, potrzebny internet), potem ją zamknij.
+7. Rozpakuj paczkę Mods_only do folderu gry tak, by istniał
+   <folder gry>\Mods\TweaksAndFixes.dll, i uruchom grę.
 
 ROZWIĄZYWANIE PROBLEMÓW
 - Błąd ".NET 6.0 runtime" przy starcie gry: MelonLoader 0.6.6 działa na

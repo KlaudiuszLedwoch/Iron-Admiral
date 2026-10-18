@@ -3,7 +3,7 @@ DIP The Great Game Extended (AI overhaul, one-click install)
 for Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
 
-Description as of 18 October 2026. Latest version: Iron Admiral 1.2.14 (DIP_GG_Fixes 1.11.21).
+Description as of 18 October 2026. Latest version: Iron Admiral 1.2.15 (DIP_GG_Fixes 1.11.21).
 
 Iron Admiral is an extended edition of the Dreadnought Improvement
 Project (DIP) "The Great Game": the same data, map and nations, plus dozens of balance,
@@ -217,6 +217,30 @@ UNINSTALL
 Run Uninstall.bat from <game folder>\Iron_Admiral_backup\.
 It restores the previous Mods folder and, if the installer replaced it,
 the previous MelonLoader (or removes MelonLoader if there was none).
+
+ONE-FILE SETUP SCRIPT
+Install-IronAdmiral.ps1 (repository root and Nexus zip) installs the .NET 6
+runtime, the VC++ Redistributable, MelonLoader 0.6.6 and the latest Iron
+Admiral in one go; the old Mods folder is kept as Mods_backup_<date>.
+Right-click > Run with PowerShell, or:
+  powershell -ExecutionPolicy Bypass -File .\Install-IronAdmiral.ps1
+
+INSTALLING MELONLOADER BY HAND (Mods_only package, or when the installer
+cannot do it)
+1. Close the game.
+2. Install the .NET Desktop Runtime 6.0 (Windows x64):
+   https://dotnet.microsoft.com/download/dotnet/6.0
+3. Install the Microsoft Visual C++ Redistributable (x64):
+   https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
+4. Download MelonLoader.x64.zip from the official MelonLoader 0.6.6 release
+   (Assets): https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6
+   Only 0.6.6 is tested - TweaksAndFixes 3.21.1 needs it.
+5. Unzip it straight into the game folder (Steam: right-click the game >
+   Manage > Browse local files), so that the MelonLoader folder,
+   version.dll and dobby.dll sit next to "Ultimate Admiral Dreadnoughts.exe".
+6. Start the game once (a few minutes, internet needed), then close it.
+7. Unzip the Mods_only package into the game folder so that
+   <game folder>\Mods\TweaksAndFixes.dll exists, and start the game.
 
 TROUBLESHOOTING
 - ".NET 6.0 runtime" error at game start: MelonLoader 0.6.6 runs on .NET 6.
