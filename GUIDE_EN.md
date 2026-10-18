@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.16. Updated with every release._
+_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.17. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -80,6 +80,8 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 
 **Inflation** raises the price of everything you pay for. It is driven up by borrowing, printing, grants, reparations and loot (the larger compared with your economy, the stronger), and by rising spending. Without new shocks it settles back to a normal low level; research slows a rising inflation down, and only large spending cuts push prices below zero.
 
+**What inflation means here.** Inflation works as a surcharge at the current yearly rate on everything you pay: at 30% you pay 30% more for building, upkeep and research for as long as the rate stays there. It does not pile up into a permanent price level – when inflation falls back, your costs fall back with it, and your budget is not inflated either: every figure stays in today's money. A spell of high inflation therefore costs you while it lasts (and the debt you carried through it shrinks in real terms), but it never leaves ship prices and budgets permanently out of scale. A large swing in a nation's budget comes from the game itself – war, peace, lost or gained territory, recovery after a crisis – not from inflation.
+
 **Credit** costs the inflation rate plus a margin set by your **credit rating**: the more debt you carry compared with your economy, the worse the rating, and deficits, war and a bankruptcy in the last years make it worse still. When inflation runs very high, lenders add an extra premium. Inflation also eats into the real value of what you owe. Unspent cash earns interest a little below inflation – it keeps its value, but printing money to sit on it does not pay.
 
 **The British example (test campaign 1908–1910).** Britain lost colony after colony to France and Spain and paid heavily for lost transports and blockades. It took a war loan – cash jumped from about −1.1 billion to +2.4 billion and it started ordering ships again. Losses continued; two years later it was 4.5 billion in debt and printed money. Printing cleared the debt but drove inflation above 50% and added unrest every month; its loan, rated CCC after the bankruptcy, cost over 50% a year. Inflation then fell turn by turn (51% → 48% → 45% → 37% in the 1911 test), and with it the real value of the old loan – but its fleet still paid inflated prices all the way down. Lesson: a loan buys time, it does not fix a lost war; printing is the last resort.
@@ -117,7 +119,8 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 
 ### Guide history
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
-- **18 October 2026, Iron Admiral 1.2.16:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
+- **18 October 2026, Iron Admiral 1.2.17:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
+- **18 October 2026, Iron Admiral 1.2.17:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
 
 ---
 
