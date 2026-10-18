@@ -54,7 +54,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> ProtoCost, CostCurve, CostFloor, ProtoTime, TimeCurve, MinMonths, BatchDiscount, BatchMonths;
         internal static MelonPreferences_Entry<float> SisterMaint, SisterMaintMax, ResetMonths, YardLow, YardHigh, YardLowCost, YardLowTime, YardHighCost, YardHighTime;
         internal static MelonPreferences_Entry<float> KLoan, KPrint, KCut, Decay, InflMin, InflMax, InflowThresholdMonths, InflowThresholdGdp;
-        internal static MelonPreferences_Entry<float> SpreadMin, SpreadMax, SpreadDebtGdp, SpreadDeficit, SpreadWar, HighInflFrom, HighInflSpread, RateFloor, SavingsMult, InflBaseline;
+        internal static MelonPreferences_Entry<float> SpreadMin, SpreadMax, SpreadDebtGdp, SpreadDeficit, SpreadWar, HighInflFrom, HighInflSpread, RateFloor, SavingsMult, InflBaseline, CoalRatio, CoalStart, CoalJoin, CoalAttitude, CoalMaxWars;
+        internal static MelonPreferences_Entry<bool> CoalOn;
         internal static MelonPreferences_Entry<float> ResearchR0, ResearchGrowth, ResearchDisinflation, ShipyardGrowth, ShipyardAfterMonths;
         internal static MelonPreferences_Entry<float> UnrestFrom, UnrestPerPoint, UnrestJump, UnrestJumpFactor;
         internal static MelonPreferences_Entry<int> BankruptYears;
@@ -102,6 +103,12 @@ namespace DipGgFixes
             BankruptYears = cat.CreateEntry("BankruptMarkYears", 15, null, "Years a bankruptcy raises the loan interest");
             SavingsMult = cat.CreateEntry("SavingsRateBelowInflation", 1.5f, null, "Unspent cash earns inflation minus this many points a year (never below 0)");
             InflBaseline = cat.CreateEntry("InflationBaseline", 1f, null, "Inflation returns to this level when nothing pushes it; research only slows inflation down to this level, deflation comes from large spending cuts");
+            CoalOn = cat.CreateEntry("CoalitionWar", true, null, "Coalitions against a dominant power: AI great powers close to war with a nation (attitude at or below CoalitionAttitude, 'almost war') go to war together when their fleets, with the nation's current enemies, are strong enough (player and AI targets alike)");
+            CoalRatio = cat.CreateEntry("CoalitionPowerRatio", 1.5f, null, "Combined fleet power of the hostile powers (and the target's current enemies) needed, as a multiple of the target's fleet power");
+            CoalStart = cat.CreateEntry("CoalitionStartChance", 0.25f, null, "Chance per turn that the strongest member declares war when the coalition is strong enough and nobody fights the target yet");
+            CoalJoin = cat.CreateEntry("CoalitionJoinChance", 0.5f, null, "Chance per turn for each other member to join once a member is at war with the target");
+            CoalAttitude = cat.CreateEntry("CoalitionAttitude", -90f, null, "Attitude at or below which an AI great power counts as hostile");
+            CoalMaxWars = cat.CreateEntry("CoalitionMaxWars", 3f, null, "An AI great power already fighting this many wars does not join a coalition");
             ResearchR0 = cat.CreateEntry("ResearchGdpScale", 0.002f, null, "Research effect = ln(1 + research spending / GDP / this)");
             ResearchGrowth = cat.CreateEntry("ResearchGrowthPerLog", 0.15f, null, "Annual GDP growth points per unit of the research effect");
             ResearchDisinflation = cat.CreateEntry("ResearchDisinflationPerLog", 0.05f, null, "Inflation points removed per month per unit of the research effect");
@@ -752,6 +759,7 @@ namespace DipGgFixes
                 }
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Economy] month end failed: " + e.Message); }
+            Coalitions();
         }
 
         // 1.11.36: why the AI does not declare war on the player - attitude, tension, war, power and money per AI great power
@@ -785,6 +793,82 @@ namespace DipGgFixes
             try { foreach (var kv in CampaignController.Instance.CampaignData.Relations) { var r = kv.Value; if (r != null && r.isWar && r.AnyOnePlayerIs(p)) c++; } } catch { }
             return Math.Max(0, c - 0);
         }
+
+        // 1.11.37: coalition wars against a dominant power (player or AI)
+        static readonly System.Random rng = new System.Random();
+        static Relation RelationOf(Player a, Player b)
+        {
+            try { foreach (var kv in CampaignController.Instance.CampaignData.Relations) { var r = kv.Value; if (r != null && r.AnyOnePlayerIs(a) && r.AnyOnePlayerIs(b) && a.Pointer != b.Pointer) return r; } } catch { }
+            return null;
+        }
+        static float Fleet(Player p) { try { return p.TotalPowerProjection(); } catch { return 0f; } }
+        internal static void Coalitions()
+        {
+            if (EcoPrefs.CoalOn == null || !EcoPrefs.CoalOn.Value) return;
+            try
+            {
+                var majors = Majors().Where(x => { try { return !x.isDisabled; } catch { return false; } }).ToList();
+                int month = Month();
+                foreach (var t in majors)
+                {
+                    float tf = Fleet(t); if (tf <= 0f) continue;
+                    var hostile = new List<Player>(); var atWar = new List<Player>(); float sum = 0f;
+                    foreach (var o in majors)
+                    {
+                        if (o.Pointer == t.Pointer) continue;
+                        var r = RelationOf(t, o); if (r == null) continue;
+                        bool war = false, almost = false; float att = 0f;
+                        try { war = r.isWar; almost = r.AlmostWar(); att = r.attitude; } catch { continue; }
+                        if (war) { atWar.Add(o); sum += Fleet(o); }
+                        else if (almost && att <= EcoPrefs.CoalAttitude.Value) { hostile.Add(o); sum += Fleet(o); }
+                    }
+                    if (hostile.Count == 0 || sum < EcoPrefs.CoalRatio.Value * tf) continue;
+                    // 1.11.38: only against a dominant power - one that is stronger at sea than every single hostile power
+                    float strongest = hostile.Concat(atWar).Max(Fleet);
+                    if (tf <= strongest) continue;
+                    var cands = hostile.Where(o =>
+                    {
+                        try
+                        {
+                            if (o.isMain) return false; // the player decides his own wars
+                            var st = Get(o);
+                            if (o.cash < 0f || (st != null && st.BankruptUntil > month)) return false;
+                            return Wars(o) < (int)EcoPrefs.CoalMaxWars.Value;
+                        }
+                        catch { return false; }
+                    }).OrderByDescending(Fleet).ToList();
+                    if (cands.Count == 0) continue;
+                    string coal = string.Join(", ", hostile.Concat(atWar).Select(NameUi));
+                    if (atWar.Count == 0)
+                    {
+                        if (rng.NextDouble() < EcoPrefs.CoalStart.Value) DeclareWar(cands[0], t, $"leads the coalition ({coal}: fleet power x{sum / tf:F2} of {NameUi(t)})");
+                        else MelonLogger.Msg($"[DIP GG Fixes][War] coalition against {NameUi(t)} ready ({coal}: fleet power x{sum / tf:F2}) - {NameUi(cands[0])} did not declare war this turn");
+                    }
+                    else
+                    {
+                        foreach (var c in cands)
+                            if (rng.NextDouble() < EcoPrefs.CoalJoin.Value) DeclareWar(c, t, $"joins the war against {NameUi(t)} ({string.Join(", ", atWar.Select(NameUi))} already fighting; coalition fleet power x{sum / tf:F2})");
+                    }
+                }
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][War] coalitions: " + e.Message); }
+        }
+        static void DeclareWar(Player a, Player t, string why)
+        {
+            var r = RelationOf(a, t); if (r == null) return;
+            float before = 0f; try { before = r.attitude; } catch { }
+            string how = "AdjustAttitude";
+            try { CampaignController.Instance.AdjustAttitude(r, -101f - before, false, true, "coalition war", false, false, false); } catch (Exception e) { how = "AdjustAttitude failed: " + e.Message; }
+            bool war = false; try { war = r.isWar; } catch { }
+            if (!war)
+            {
+                try { r.attitude = -100f; try { r.recentWarStartDate = CampaignController.Instance.CurrentDate; } catch { } how += " + attitude set"; } catch (Exception e) { how += ", set failed: " + e.Message; }
+                try { war = r.isWar; } catch { }
+            }
+            MelonLogger.Msg($"[DIP GG Fixes][War] {NameUi(a)} {why} - attitude {before:F0} -> {SafeAtt(r):F0}, war: {war} ({how})");
+            if (war && t.isMain) { try { EconomyUi.Notice("War declared", $"{NameUi(a)} has declared war on you: {why}."); } catch { } }
+        }
+        static float SafeAtt(Relation r) { try { return r.attitude; } catch { return 0f; } }
 
         internal static List<Player> MajorsPublic() { return Majors(); }
         internal static string Name(Player p) { return NameUi(p); }

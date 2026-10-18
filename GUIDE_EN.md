@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.19. Updated with every release._
+_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.20. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -96,6 +96,11 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 
 ## 6. Diplomacy, expansion and minor nations
 
+**Coalitions.** Being the strongest navy has a price. Nations that hate you sit at the brink of war, but none of them alone dares to attack a much stronger fleet. Once together they are clearly stronger than you at sea, one of them strikes and the others follow over the next turns. The same happens to an AI empire that grows too strong. In the author's 1914 test every great power except France stood at the brink with Germany; one at a time each had at most half the German fleet, together about 1.5 times – and the coalition was declared ready.
+
+**What to do:** watch how many powers are hostile and how strong they are together, not just the strongest rival. Keeping one or two of them friendly, or busy elsewhere, breaks the coalition.
+
+
 - Relations worsen much faster than they improve. Aggression and expansion build friction quickly, and wars can follow one another. A player put it this way:
 
   > "…the snowball effect of wars being declared in rapid succession."
@@ -119,8 +124,9 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 
 ### Guide history
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
-- **18 October 2026, Iron Admiral 1.2.19:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
-- **18 October 2026, Iron Admiral 1.2.19:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
+- **18 October 2026, Iron Admiral 1.2.20:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
+- **18 October 2026, Iron Admiral 1.2.20:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
+- **18 October 2026, Iron Admiral 1.2.20:** coalitions against the dominant power.
 
 ---
 

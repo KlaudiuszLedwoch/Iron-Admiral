@@ -171,6 +171,12 @@ namespace DipGgFixes
         }
 
         // ------------------------------------------------------------------ monthly report
+        internal static void Notice(string title, string text)
+        {
+            if (pendingText != null) { pendingText = "! " + text + "\n\n" + pendingText; pendingTitle = title; }
+            else { pendingTitle = title; pendingText = text; pendingSince = 0f; }
+        }
+
         internal static void QueueReport(Player p, EconState st)
         {
             try

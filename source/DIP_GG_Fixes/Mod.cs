@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.36", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.38", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -162,6 +162,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> AiTechBalance;
         internal static MelonPreferences_Entry<float> AiTechBudgetMin;
         internal static MelonPreferences_Entry<float> AiShipyardHeadroom, AiShipyardSurplusMonths, AiShipyardCostCover;
+        internal static MelonPreferences_Entry<bool> AiDesignOnlyWhenBuildable;
         internal static MelonPreferences_Entry<int> BalanceCooldown;
         // 1.11
         internal static MelonPreferences_Entry<float> ChargeApproachSeconds;
@@ -245,6 +246,8 @@ namespace DipGgFixes
                 "AI great powers start a shipyard expansion only after this many months of surplus in a row (and with cash for the expected shortfall), or when AiShipyardCostCover holds");
             AiShipyardCostCover = cat.CreateEntry("AiShipyardCostCover", 1.25f, null,
                 "...or when the monthly surplus covers this multiple of the expected monthly expansion cost (last expansion of that nation, otherwise half its monthly budget)");
+            AiDesignOnlyWhenBuildable = cat.CreateEntry("AiDesignOnlyWhenBuildable", true, null,
+                "AI nations skip generating new ship designs in a turn when they cannot build anyway (no ports, cash below zero, or shipyard capacity full); designs at campaign start are not affected");
             AttitudeMult = cat.CreateEntry("DiplomacyAttitudeMultiplier", 1.5f, null,
                 "Multiplier for positive diplomatic attitude changes (improvements; 1 = vanilla)");
             NegAttitudeMult = cat.CreateEntry("DiplomacyNegativeAttitudeMultiplier", 4.0f, null,
@@ -2640,6 +2643,42 @@ namespace DipGgFixes
                 return false;
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Budget] AiTryBuildShipyard prefix: " + e.Message); return true; }
+        }
+    }
+
+    // 1.11.38: no AI ship design generation while the nation cannot build (debt, or yard capacity full)
+    [HarmonyPatch(typeof(CampaignController._GenerateRandomDesigns_d__202), "MoveNext")]
+    internal static class Patch_GenerateRandomDesigns
+    {
+        private static readonly Dictionary<string, string> last = new Dictionary<string, string>();
+        private static bool Prefix(CampaignController._GenerateRandomDesigns_d__202 __instance, ref bool __result)
+        {
+            try
+            {
+                var on = DipGgFixesMod.AiDesignOnlyWhenBuildable; if (on == null || !on.Value || __instance == null) return true;
+                if (__instance.__1__state != 0 || __instance.prewarming) return true;
+                var p = __instance.player; if (p == null || !p.isAi) return true;
+                string why = null;
+                bool ports = true; try { ports = p.HavePorts; } catch { }
+                if (!ports) why = "no ports";
+                else if (p.cash < 0f) why = $"cash {p.cash / 1e6f:F0}M is below zero";
+                else
+                {
+                    float cap = 0f, uc = 0f; try { cap = p.ShipbuildingCapacityLimit(); uc = p.ShipTonnageUnderConstruction(); } catch { }
+                    if (cap <= 0f) why = "no shipbuilding capacity";
+                    else if (uc >= cap) why = $"shipyards full ({uc:F0} of {cap:F0} t under construction)";
+                }
+                if (why == null) return true;
+                string k = p.data != null ? p.data.name : "?";
+                string pv; if (!last.TryGetValue(k, out pv) || pv != why.Substring(0, Math.Min(10, why.Length)))
+                {
+                    last[k] = why.Substring(0, Math.Min(10, why.Length));
+                    MelonLogger.Msg($"[DIP GG Fixes][Design] {p.data?.nameUi}: no new ship designs - {why}");
+                }
+                __result = false;
+                return false;
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Design] GenerateRandomDesigns: " + e.Message); return true; }
         }
     }
 }
