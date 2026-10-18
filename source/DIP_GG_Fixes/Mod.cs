@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.31", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.32", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -161,7 +161,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> BalanceOnlySolvent;
         internal static MelonPreferences_Entry<bool> AiTechBalance;
         internal static MelonPreferences_Entry<float> AiTechBudgetMin;
-        internal static MelonPreferences_Entry<float> AiShipyardHeadroom;
+        internal static MelonPreferences_Entry<float> AiShipyardHeadroom, AiShipyardSurplusMonths, AiShipyardCostCover;
         internal static MelonPreferences_Entry<int> BalanceCooldown;
         // 1.11
         internal static MelonPreferences_Entry<float> ChargeApproachSeconds;
@@ -241,6 +241,10 @@ namespace DipGgFixes
             AiTechBudgetMin = cat.CreateEntry("AiTechBudgetMinPercent", 10f, null, "Floor for the AI research budget when it is cut to balance the books");
             AiShipyardHeadroom = cat.CreateEntry("AiShipyardHeadroom", 2.0f, null,
                 "An AI great power does not start a shipyard expansion while its income is negative or while shipyard capacity already exceeds this multiple of its fleet tonnage. 0 = vanilla");
+            AiShipyardSurplusMonths = cat.CreateEntry("AiShipyardSurplusMonths", 6f, null,
+                "AI great powers start a shipyard expansion only after this many months of surplus in a row (and with cash for the expected shortfall), or when AiShipyardCostCover holds");
+            AiShipyardCostCover = cat.CreateEntry("AiShipyardCostCover", 1.25f, null,
+                "...or when the monthly surplus covers this multiple of the expected monthly expansion cost (last expansion of that nation, otherwise half its monthly budget)");
             AttitudeMult = cat.CreateEntry("DiplomacyAttitudeMultiplier", 1.5f, null,
                 "Multiplier for positive diplomatic attitude changes (improvements; 1 = vanilla)");
             NegAttitudeMult = cat.CreateEntry("DiplomacyNegativeAttitudeMultiplier", 4.0f, null,
@@ -2582,29 +2586,52 @@ namespace DipGgFixes
     internal static class Patch_AiTryBuildShipyard
     {
         private static readonly Dictionary<string, string> lastReason = new Dictionary<string, string>();
+        // 1.11.32: a single positive month is not enough (Britain, Oct 1911: +86M once, expansion started, -310M the month after)
+        private class Track { public int Month = -1; public int Streak; public float Cost; public int Months = 12; }
+        private static readonly Dictionary<string, Track> track = new Dictionary<string, Track>();
         private static float Tonnage(Player p)
         {
             float t = 0f; var en = p.fleet.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
             while (un.MoveNext()) { var s = en.Current; if (s != null && !s.isBuilding) t += s.Tonnage(); }
             return t;
         }
+        private static int Month() { try { var d = CampaignController.Instance.CurrentDate.AsDate(); return d.Year * 12 + d.Month; } catch { return 0; } }
         private static bool Prefix(Player player)
         {
             try
             {
                 var h = DipGgFixesMod.AiShipyardHeadroom; if (h == null || h.Value <= 0f) return true;
                 if (player == null || !player.isAi || !player.isMajor) return true;
-                if (player.shipyardBuildMonthLeft > 0) return true; // an expansion already runs - let the game finish it
-                string why = null;
+                string k2 = player.data != null ? player.data.name : "?";
+                Track t; if (!track.TryGetValue(k2, out t)) { t = new Track(); track[k2] = t; }
                 float income = player.Income();
+                int m = Month();
+                if (m != t.Month) { t.Month = m; t.Streak = income >= 0f ? t.Streak + 1 : 0; }
+                if (player.shipyardBuildMonthLeft > 0)
+                {
+                    // an expansion already runs - let the game finish it, and remember what it costs
+                    try { float c = player.ExpensesShipyardBudget(); if (c > 0f) t.Cost = c; int tot = player.shipyardBuildMonthTotal; if (tot > 0) t.Months = tot; } catch { }
+                    return true;
+                }
+                string why = null;
                 if (income < 0f) why = $"income {income / 1e6f:F0}M/month is negative";
                 else
                 {
                     float ton = Tonnage(player), cap = player.ShipbuildingCapacityLimit();
                     if (cap > h.Value * Math.Max(ton, 1f)) why = $"shipyard capacity {cap:F0} t already exceeds {h.Value:F1} x fleet {ton:F0} t";
+                    else
+                    {
+                        float cost = t.Cost; if (cost <= 0f) { try { cost = 0.5f * player.Budget(); } catch { cost = 0f; } }
+                        float cover = DipGgFixesMod.AiShipyardCostCover != null ? DipGgFixesMod.AiShipyardCostCover.Value : 1.25f;
+                        int need = DipGgFixesMod.AiShipyardSurplusMonths != null ? (int)DipGgFixesMod.AiShipyardSurplusMonths.Value : 6;
+                        bool covered = cost > 0f && income >= cover * cost;
+                        float shortfall = Math.Max(0f, cost - income) * t.Months;
+                        bool steady = t.Streak >= need && player.cash >= shortfall;
+                        if (!covered && !steady)
+                            why = $"surplus {income / 1e6f:F0}M/month for {t.Streak} month(s), expected expansion cost {cost / 1e6f:F0}M/month - needs {need} months of surplus with {shortfall / 1e6f:F0}M cash (has {player.cash / 1e6f:F0}M) or a surplus of {cover * cost / 1e6f:F0}M";
+                    }
                 }
                 if (why == null) return true;
-                string k2 = player.data != null ? player.data.name : "?";
                 string prev; if (!lastReason.TryGetValue(k2, out prev) || prev != why.Substring(0, Math.Min(12, why.Length)))
                 {
                     lastReason[k2] = why.Substring(0, Math.Min(12, why.Length));

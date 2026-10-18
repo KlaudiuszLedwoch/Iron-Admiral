@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.17. Updated with every release._
+_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.18. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -119,8 +119,8 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 
 ### Guide history
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
-- **18 October 2026, Iron Admiral 1.2.17:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
-- **18 October 2026, Iron Admiral 1.2.17:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
+- **18 October 2026, Iron Admiral 1.2.18:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
+- **18 October 2026, Iron Admiral 1.2.18:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
 
 ---
 
