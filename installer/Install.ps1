@@ -1,4 +1,4 @@
-# Iron Admiral 1.2.16 (DIP GG Extended) - installer
+# Iron Admiral 1.2.17 (DIP GG Extended) - installer
 # Installs MelonLoader v0.6.6 (if needed), TweaksAndFixes and the mod data
 # into Ultimate Admiral: Dreadnoughts. Existing files are backed up first.
 param(
@@ -7,7 +7,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$ModName    = "Iron Admiral 1.2.16 (DIP GG Extended)"
+$ModName    = "Iron Admiral 1.2.17 (DIP GG Extended)"
 $AppId      = "1069660"
 $GameExe    = "Ultimate Admiral Dreadnoughts.exe"
 $MLVersion  = "0.6.6"
