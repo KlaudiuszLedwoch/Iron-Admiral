@@ -196,6 +196,9 @@ namespace DipGgFixes
             Expire();
             Info inf;
             if (cache.TryGetValue(s.Pointer, out inf)) return inf;
+            // 1.11.52: right after a campaign is loaded the laying-down records are not read yet; the estimate from the
+            // building progress then marked running series as "prototype not finished" for a few seconds (log 2026-10-19 16:19)
+            if (!Economy.StateReady()) return new Info { N = 1, Cost = 1f, Time = 1f, Maint = 1f, Occupancy = 0.5f };
             inf = Compute(s);
             cache[s.Pointer] = inf;
             return inf;
@@ -486,6 +489,8 @@ namespace DipGgFixes
             return h.ToString("x16");
         }
 
+        // 1.11.52: series computations wait until the saved laying-down records of this campaign are loaded
+        internal static bool StateReady() { try { EnsureSession(); } catch { } return loaded; }
         static void EnsureSession()
         {
             var cc = CampaignController.Instance;

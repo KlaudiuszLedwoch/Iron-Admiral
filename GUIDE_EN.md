@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.25. Updated with every release._
+_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.26. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -148,6 +148,7 @@ A player on the Steam thread asked for the battle AI, crew quality and surrender
 - **19 October 2026, Iron Admiral 1.2.23:** massed torpedo attacks when you outnumber the enemy in battleships, ramming, enemy battleships that withdraw when they cannot hurt you, task forces that run or scatter instead of attacking, turning away from torpedo tracks.
 - **19 October 2026, Iron Admiral 1.2.24:** enemy tactics by ship size, not by battleships; surrendered ships go to the battle winner.
 - **19 October 2026, Iron Admiral 1.2.25:** massed attacks only with enough torpedo craft; outmatched enemies withdraw.
+- **19 October 2026, Iron Admiral 1.2.26:** series savings apply right from loading a campaign.
 
 ---
 

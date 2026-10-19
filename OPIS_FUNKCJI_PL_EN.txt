@@ -1,6 +1,6 @@
-Iron Admiral 1.2.25 (DIP_GG_Fixes 1.11.51) - CO DAJE TEN MOD
-Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.25 (DIP_GG_Fixes 1.11.51).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (74 sekcje).
+Iron Admiral 1.2.26 (DIP_GG_Fixes 1.11.52) - CO DAJE TEN MOD
+Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.26 (DIP_GG_Fixes 1.11.52).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (75 sekcji).
 ============================================================================
 
 FILMY Z BITEW (YouTube) - każdy napis pochodzi z dziennika bitwy moda:
@@ -343,7 +343,7 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do
   99%.
 
-19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.51 / Iron Admiral 1.2.22-1.2.25
+19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.52 / Iron Admiral 1.2.22-1.2.26
 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: panel ustawień w grze (F10):
   każda funkcja włącz/wyłącz z opisem, zapis od razu.
 - DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: zmasowany atak torpedowy, gdy
@@ -360,6 +360,8 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
 - DIP_GG_Fixes 1.11.51 / Iron Admiral 1.2.25: zmasowany atak tylko przy
   dostatecznej liczbie okrętów torpedowych na cele; przegrywający wróg, który
   jest dość szybki, wycofuje się.
+- DIP_GG_Fixes 1.11.52 / Iron Admiral 1.2.26: produkcja seryjna poprawna od
+  pierwszej chwili po wczytaniu kampanii.
 
 18 października 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21
 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zipy zapisywane ze ścieżkami z
@@ -390,15 +392,15 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   dystansu bez szans na przebicie, zygzak w podejściu.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.25_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.25_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.26_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.26_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.25 (DIP_GG_Fixes 1.11.51) - WHAT THIS MOD DOES
-Description as of 19 October 2026. Latest version: Iron Admiral 1.2.25 (DIP_GG_Fixes 1.11.51).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (74 sections).
+Iron Admiral 1.2.26 (DIP_GG_Fixes 1.11.52) - WHAT THIS MOD DOES
+Description as of 19 October 2026. Latest version: Iron Admiral 1.2.26 (DIP_GG_Fixes 1.11.52).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (75 sections).
 ============================================================================
 
 BATTLE VIDEOS (YouTube) - every caption comes from the mod's own battle log:
@@ -740,7 +742,7 @@ when the DLL does.
   99% after printing); printing on top of inflation adds 20 points instead of
   stacking to 99%.
 
-19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.51 / Iron Admiral 1.2.22-1.2.25
+19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.52 / Iron Admiral 1.2.22-1.2.26
 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: in-game settings panel (F10):
   every feature on/off with its description, saved at once.
 - DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: massed torpedo attack when the
@@ -756,6 +758,8 @@ when the DLL does.
 - DIP_GG_Fixes 1.11.51 / Iron Admiral 1.2.25: massed attack only with enough
   torpedo craft for the targets; an outmatched enemy that is fast enough
   withdraws.
+- DIP_GG_Fixes 1.11.52 / Iron Admiral 1.2.26: series production correct from
+  the first moment after loading a campaign.
 
 18 October 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21
 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zips written with forward-slash
@@ -786,6 +790,6 @@ when the DLL does.
   without a chance to penetrate, evasive zigzag on the approach.
 
 
-Two downloads: Iron_Admiral_1.2.25_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.25_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.26_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.26_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
