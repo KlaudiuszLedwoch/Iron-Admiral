@@ -3,7 +3,7 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 19 October 2026. Latest version: Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41).[/i]
+[i]Description as of 19 October 2026. Latest version: Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
@@ -12,12 +12,18 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]What is new today (19 October 2026) - Iron Admiral 1.2.22, DIP_GG_Fixes 1.11.41[/b]
+[b]What is new today (19 October 2026) - Iron Admiral 1.2.23, DIP_GG_Fixes 1.11.49[/b]
 [list]
+[*][b]A massed torpedo attack:[/b] when you bring more battleships than the enemy, all its torpedo craft go in together. One destroyer alone would not get through - part of a whole flotilla does.
+[*][b]Ramming:[/b] enemy light ships with no torpedoes left that cannot escape steer straight into your ships.
+[*][b]Battleships that cannot hurt you leave:[/b] an enemy battleship that cannot penetrate your armour even at close range withdraws when it can survive the battle, instead of waiting to be sunk.
+[*][b]Escape missions:[/b] a task force whose job is to get away no longer throws itself at you. If it is faster it runs; if it is not, it splits up and the ships flee in different directions, so some of them escape.
+[*][b]Turning away from torpedoes:[/b] enemy divisions that spot torpedo tracks coming at them turn to run parallel to them.
+[*][b]Gunnery after historical data:[/b] semi-armour-piercing (SAPC) shells in the 1920s, rates of fire checked against NavWeaps, ricochets after Okun, light secondary guns on destroyers.
 [*][b]Settings panel in the game (F10):[/b] every feature of the mod with an ON/OFF switch and a short description, grouped by battle AI, crews and prizes, campaign AI, economy, diplomacy and information. Want only the battle AI, crews and prizes? Switch the economy group off - no config file editing needed. Changes apply at once and are saved.
 [/list]
 
-[b]18 October 2026 - Iron Admiral 1.2.226-1.2.21[/b]
+[b]18 October 2026 - Iron Admiral 1.2.14-1.2.21[/b]
 [list]
 [*][b]Series production is live:[/b] the first ship of a new design is an expensive prototype. Ships laid down after the prototype is in service get cheaper and faster the longer the series runs; ordering a class together pays off, and small ships that share the slips come out in a fraction of the time. Sister ships are cheaper to keep in service, an idle shipyard takes orders on better terms than an overloaded one, and refits follow the same rules - for you and for the AI.
 [*][b]How to order a new class:[/b] build one ship first and wait until it is commissioned, then order the rest together. From the test campaign: a destroyer that takes 7 months as a prototype - its 29 sisters, ordered together after the prototype entered service, were built in a fraction of that time and markedly cheaper. Ordered all at once, they would all have cost full price.
@@ -169,16 +175,17 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [*]1.11.20 / Iron Admiral 1.2.12: a running treasury remedy no longer blocks the next one when the debt is deep again (Britain sat at -4.5 bn with a loan still running; blockade costs and reparations bypass the income figure) - at war with a loan running the AI prints money, inflation stacks; diagnostics show the loan, inflation, cuts and the unexplained 'other' expenses.
 [*]1.11.21 / Iron Admiral 1.2.13: the treasury state is guarded against outside changes (Britain and Portugal showed a phantom 63% inflation and ended at 99% after printing); printing on top of inflation adds 20 points instead of stacking to 99%.
 [/list]
-[b]19 October 2026 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22[/b]
+[b]19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.49 / Iron Admiral 1.2.22-1.2.23[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: in-game settings panel (F10) - every feature on/off with its description, saved at once; the in-game Help points to it.
+[*]DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: massed torpedo attack when the enemy has more battleships; ramming by light ships out of torpedoes; battleships that cannot penetrate withdraw when they can survive; escape missions - run when faster, scatter when not; turning away from torpedo tracks; SAPC shells, rates of fire, ricochets and destroyer secondaries from historical data; the settings panel no longer throws errors on the campaign map; armour diagnostics in the log.
 [/list]
 [b]18 October 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zips written with forward-slash paths (players reported the Mods_only and Nexus zips extracting flat, so MelonLoader loaded nothing); the installer checks the .NET 6 runtime and offers a winget install or the download link; readme troubleshooting section.
 [*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.15: one-file setup script Install-IronAdmiral.ps1 (.NET 6, VC++ Redistributable, MelonLoader 0.6.6 with SHA-256 check, latest Mods package with the checksum from the VERSION file, old Mods kept as a backup); manual MelonLoader installation guide with links in the readmes and descriptions; descriptions highlight the recent features and what is in testing.
 [*]DIP_GG_Fixes 1.11.31 / Iron Admiral 1.2.16: series production (prototype, learning curve, ordering together, idle and overloaded yards, cheaper sister ships; refits too); inflation relative to the economy with credit ratings, interest and debt erosion; treasury panel (F8), inflation in the Finances window, monthly treasury report; in-game Help chapter; campaign guide GUIDE_EN.md.
-[*]Iron Admiral 1.2.22: what inflation means explained in the Help, the guide and the descriptions - a surcharge while it lasts, not a growing price level; budgets stay in today's money.
+[*]Iron Admiral 1.2.17: what inflation means explained in the Help, the guide and the descriptions - a surcharge while it lasts, not a growing price level; budgets stay in today's money.
 [*]DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: AI shipyard expansion only after a steady surplus with cash in hand, or with a surplus that carries the expansion (Britain had started one after a single positive month and fell straight back into deficit).
 [*]DIP_GG_Fixes 1.11.36 / Iron Admiral 1.2.19: refits ordered in the same month - one prototype, the rest at base; no ship parts left on the world map after the refit screen; series gap measured from the last completed sister; war diagnostics in the log.
 [*]DIP_GG_Fixes 1.11.38 / Iron Admiral 1.2.20: coalition wars against a dominant power (player or AI) when the hostile powers together are clearly stronger at sea; AI nations skip new ship designs while they cannot build.
@@ -188,8 +195,8 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.22_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.22_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.23_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.23_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [*]Mods_only: extract it into the game folder so that you get <game folder>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll and the CSV files; MelonLoader 0.6.6 must already be installed.
 [*]Error about the .NET 6.0 runtime at game start: install the .NET Desktop Runtime 6.0 (Windows x64) from https://dotnet.microsoft.com/download/dotnet/6.0 - MelonLoader 0.6.6 runs on it. Back to the unmodded game: run Uninstall.bat from <game folder>\Iron_Admiral_backup, or delete version.dll, the MelonLoader folder and the Mods folder and let Steam verify the game files; campaigns saved with the mod are not meant for the unmodded game.
 [/list]
@@ -212,7 +219,7 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41).[/i]
+[i]Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
@@ -221,12 +228,18 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]Co nowego dziś (19 października 2026) - Iron Admiral 1.2.22, DIP_GG_Fixes 1.11.41[/b]
+[b]Co nowego dziś (19 października 2026) - Iron Admiral 1.2.23, DIP_GG_Fixes 1.11.49[/b]
 [list]
+[*][b]Zmasowany atak torpedowy:[/b] gdy masz więcej pancerników niż przeciwnik, wszystkie jego okręty torpedowe ruszają naraz. Jeden niszczyciel się nie przebije - część całej flotylli tak.
+[*][b]Taranowanie:[/b] lekkie okręty wroga bez torped, które nie mogą uciec, kierują się prosto w twoje okręty.
+[*][b]Bezradne pancerniki odchodzą:[/b] pancernik wroga, który nie przebije twojego pancerza nawet z bliska, wycofuje się, gdy może przetrwać bitwę, zamiast czekać na zatopienie.
+[*][b]Misje ucieczki:[/b] zespół, którego zadaniem jest ucieczka, nie rzuca się już na ciebie. Gdy jest szybszy - ucieka; gdy nie - rozdziela się i okręty uciekają w różnych kierunkach, więc część się wyrywa.
+[*][b]Zwrot od torped:[/b] dywizje wroga, które widzą nadpływające ślady torped, skręcają równolegle do nich.
+[*][b]Artyleria wg danych historycznych:[/b] pociski półprzeciwpancerne (SAPC) w latach 20., szybkostrzelność sprawdzona z NavWeaps, rykoszety wg Okuna, lekkie działa pomocnicze na niszczycielach.
 [*][b]Panel ustawień w grze (F10):[/b] każda funkcja moda z przełącznikiem ON/OFF i krótkim opisem, w grupach: AI w bitwie, załogi i pryzy, AI kampanii, ekonomia, dyplomacja, informacje. Chcesz tylko AI bitewne, załogi i pryzy? Wyłącz grupę ekonomii - bez edycji pliku konfiguracyjnego. Zmiany działają od razu i są zapisywane.
 [/list]
 
-[b]18 października 2026 - Iron Admiral 1.2.226-1.2.21[/b]
+[b]18 października 2026 - Iron Admiral 1.2.14-1.2.21[/b]
 [list]
 [*][b]Produkcja seryjna działa:[/b] pierwszy okręt nowego projektu to drogi prototyp. Okręty położone po wejściu prototypu do służby są tym tańsze i szybsze, im dłużej trwa seria; zamówienie klasy razem się opłaca, a małe okręty budowane obok siebie schodzą z pochylni w ułamku czasu. Okręty siostrzane są tańsze w utrzymaniu, stocznia bez zleceń bierze je na lepszych warunkach niż przeciążona, a refity działają tak samo - dla Ciebie i dla AI.
 [*][b]Jak zamawiać nową klasę:[/b] najpierw zbuduj jeden okręt i poczekaj, aż wejdzie do służby, potem zamów resztę razem. Z kampanii testowej: niszczyciel, który jako prototyp powstaje 7 miesięcy - jego 29 sióstr zamówionych razem po wejściu prototypu do służby powstało w ułamku tego czasu i wyraźnie taniej. Zamówione wszystkie naraz kosztowałyby pełną cenę.
@@ -378,16 +391,17 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [*]1.11.20 / Iron Admiral 1.2.12: trwający środek zaradczy nie blokuje następnego, gdy dług znów jest głęboki (Brytania siedziała na -4,5 mld z trwającą pożyczką; koszty blokady i reparacje omijają dochód) - w wojnie z pożyczką AI dodrukowuje pieniądze, inflacja się sumuje; diagnostyka pokazuje pożyczkę, inflację, cięcia i niewyjaśnione wydatki 'other'.
 [*]1.11.21 / Iron Admiral 1.2.13: stan kryzysu skarbu chroniony przed zmianami z zewnątrz (Brytania i Portugalia miały fantomowe 63% inflacji i po dodruku 99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do 99%.
 [/list]
-[b]19 października 2026 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22[/b]
+[b]19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.49 / Iron Admiral 1.2.22-1.2.23[/b]
 [list]
-[*]DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: panel ustawień w grze (F10) - każda funkcja włącz/wyłącz z opisem, zapis od razu; pomoc w grze wskazuje panel.
+[*]DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: panel ustawień w grze (F10) - każda funkcja włącz/wyłącz z opisem, zapis od razu; pomoc w grze wskazuje na niego.
+[*]DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: zmasowany atak torpedowy, gdy wróg ma więcej pancerników; taranowanie przez lekkie okręty bez torped; pancerniki, które nie przebiją pancerza, wycofują się, gdy mogą przetrwać; misje ucieczki - ucieczka, gdy szybsi, rozproszenie, gdy nie; zwrot od śladów torped; pociski SAPC, szybkostrzelność, rykoszety i działa pomocnicze niszczycieli wg danych historycznych; panel ustawień nie rzuca już błędów na mapie kampanii; diagnostyka pancerza w logu.
 [/list]
 [b]18 października 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zipy zapisywane ze ścieżkami z ukośnikiem / (gracze zgłosili, że zipy Mods_only i Nexus rozpakowują się płasko, więc MelonLoader nic nie ładował); instalator sprawdza środowisko .NET 6 i proponuje instalację przez winget albo podaje link; sekcja rozwiązywania problemów w readme.
 [*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.15: skrypt instalacyjny w jednym pliku Install-IronAdmiral.ps1 (.NET 6, VC++ Redistributable, MelonLoader 0.6.6 ze sprawdzeniem SHA-256, najnowsza paczka Mods z sumą kontrolną z pliku VERSION, stary Mods jako kopia); instrukcja ręcznej instalacji MelonLoadera z linkami w readme i opisach; opisy wyróżniają ostatnie nowości i to, co jest w testach.
 [*]DIP_GG_Fixes 1.11.31 / Iron Admiral 1.2.16: produkcja seryjna (prototyp, krzywa uczenia, zamawianie razem, puste i przeciążone stocznie, tańsze siostry; również refity); inflacja względem gospodarki z ratingiem kredytowym, odsetkami i zmniejszaniem długu; panel skarbu (F8), inflacja w oknie Finanse, miesięczny raport skarbu; rozdział w pomocy gry; poradnik kampanii GUIDE_EN.md.
-[*]Iron Admiral 1.2.22: wyjaśnienie inflacji w pomocy, poradniku i opisach - dopłata na czas jej trwania, nie rosnący poziom cen; budżety w dzisiejszych pieniądzach.
+[*]Iron Admiral 1.2.17: wyjaśnienie inflacji w pomocy, poradniku i opisach - dopłata na czas jej trwania, nie rosnący poziom cen; budżety w dzisiejszych pieniądzach.
 [*]DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: rozbudowa stoczni AI tylko po okresie stałej nadwyżki z gotówką albo przy nadwyżce, która udźwignie rozbudowę (Brytania zaczęła ją po jednym dodatnim miesiącu i od razu wróciła do deficytu).
 [*]DIP_GG_Fixes 1.11.36 / Iron Admiral 1.2.19: refity zlecone w tym samym miesiącu - jeden prototyp, reszta po cenie bazowej; po ekranie refitu bez części okrętów na mapie świata; przerwa w serii liczona od ukończenia ostatniej siostry; diagnostyka wojen w logu.
 [*]DIP_GG_Fixes 1.11.38 / Iron Admiral 1.2.20: wojny koalicyjne przeciw dominującemu mocarstwu (gracz lub AI), gdy wrogowie razem są wyraźnie silniejsi na morzu; państwa AI nie projektują okrętów, gdy nie mogą ich budować.
@@ -397,8 +411,8 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.22_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.22_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.23_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.23_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [*]Mods_only: rozpakuj do folderu gry tak, żeby powstało <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV; MelonLoader 0.6.6 musi być już zainstalowany.
 [*]Błąd ".NET 6.0 runtime" przy starcie gry: zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony https://dotnet.microsoft.com/download/dotnet/6.0 - na nim działa MelonLoader 0.6.6. Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup albo usuń version.dll, folder MelonLoader i folder Mods, a potem zweryfikuj pliki gry w Steam; kampanie zapisane z modem nie są przeznaczone dla gry bez moda.
 [/list]

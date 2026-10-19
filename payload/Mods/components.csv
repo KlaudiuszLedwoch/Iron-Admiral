@@ -148,6 +148,7 @@ ap_0,,shell_ap,$Ui_CrewQuarters_Standard,50,$technology_name_projectile_shell_28
 ap_1,,shell_ap,$component_name_short_ap_1,60,$technology_name_projectile_shell_29,$technology_desc_projectile_shell_29,,
 ap_2,,shell_ap,$component_name_short_ap_2,80,$technology_name_projectile_shell_30,$technology_desc_projectile_shell_30,,
 ap_5,,shell_ap,$component_name_short_ap_5,100,$technology_name_projectile_shell_31,$technology_desc_projectile_shell_31,,
+ap_6,,shell_ap,$component_name_short_ap_6,35,$technology_name_projectile_shell_ia_sapc,$technology_desc_projectile_shell_ia_sapc,,
 ##,,,,,,,,
 ammo_torp_less,,ammo_torp,$component_name_short_ammo_shell_less,1,$technology_name_projectile_explosive_4,$technology_desc_projectile_explosive_4,,
 ammo_torp_normal,,ammo_torp,$Ui_CrewQuarters_Standard,2,$technology_name_projectile_explosive_5,$technology_desc_projectile_explosive_5,,
