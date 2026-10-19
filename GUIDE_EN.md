@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.23. Updated with every release._
+_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.24. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -35,9 +35,9 @@ Another early tester, thunderspirit2014, singled out exactly this: the base-game
 
 **From the test campaign (February 1916).** Three German *Hildebrand*-class battleships met 40 US ships – 2 battleships, 5 heavy and 15 light cruisers, 11 destroyers and 7 torpedo boats. The log shows why numbers did not decide it: the German main guns reached 25 km against 12–15 km for the US ships, and no American gun in the fight could penetrate the German belt at any range in the log. The only real danger was torpedoes – 20 charges by US destroyers, torpedo boats and light cruisers. This battle is also where the old AI's mistakes showed: some charges started far beyond any chance of reaching the target, and cruisers kept closing in although their guns could not do any harm. Version 1.2.21 fixes both and adds the zigzag on the approach.
 
-**When you outnumber them in battleships.** The enemy no longer feeds its destroyers in one by one. If you bring more battleships than it has, its whole torpedo force goes in together – a single ship would be sunk on the way, but a flotilla attacking at once gets some of its torpedoes into the water. In a battle from the test campaign (19 October 1916) four German battleships met nine US light cruisers: the cruisers went in division after division, two of them surrendered and were taken as prizes, and one German battleship came out of it with a quarter of its hull damaged. Light ships that have spent their torpedoes and cannot get away will try to ram. Screen your line, and keep your secondaries free for the boats that get close.
+**When you bring the stronger force.** The enemy no longer feeds its destroyers in one by one. If your force in the battle is stronger than its own – battleships or not – its whole torpedo force goes in together – a single ship would be sunk on the way, but a flotilla attacking at once gets some of its torpedoes into the water. In a battle from the test campaign (19 October 1916) four German battleships met nine US light cruisers: the cruisers went in division after division, two of them surrendered and were taken as prizes, and one German battleship came out of it with a quarter of its hull damaged. Light ships that have spent their torpedoes and cannot get away will try to ram. Screen your line, and keep your secondaries free for the boats that get close.
 
-**Battleships that cannot hurt you, and task forces that only want to get away.** An enemy battleship whose guns cannot penetrate your armour even at close range now withdraws when it can survive the battle – it will not wait to be sunk. A task force whose mission is to escape no longer attacks: if it is faster it simply runs, and if it is not it splits up and the ships run in different directions. Catching all of them takes several divisions; decide early which ones are worth chasing. Enemy divisions that see torpedo tracks coming also turn to run along them, so long-range spreads from your own destroyers hit less often than before.
+**Main ships that cannot hurt you, and task forces that only want to get away.** The enemy's largest ships – its battleships, or its armoured cruisers when it has no battleships – withdraw when their guns cannot penetrate your armour even at close range when they can survive the battle – they will not wait to be sunk. Enemy torpedo craft now go for anything clearly bigger than themselves, so in a cruiser action your cruisers and transports draw the torpedo runs that battleships used to. A task force whose mission is to escape no longer attacks: if it is faster it simply runs, and if it is not it splits up and the ships run in different directions. Catching all of them takes several divisions; decide early which ones are worth chasing. Enemy divisions that see torpedo tracks coming also turn to run along them, so long-range spreads from your own destroyers hit less often than before.
 
 **Refits after the treaties.** If your battleships are already above the Washington Treaty limit, you can still refit them: a refit may add a limited amount of tonnage above the ship's present size, as the treaty itself allowed for anti-aircraft guns, torpedo bulges and deck armour. New construction keeps the treaty limit.
 
@@ -45,7 +45,7 @@ Another early tester, thunderspirit2014, singled out exactly this: the base-game
 
 - Crew experience matters much more than in the base game. A veteran crew is a different ship; a green one is a liability. Training money is well spent.
 - Green crews break off when badly damaged and surrender sooner; good crews fight on.
-- A ship that surrenders is taken as a prize if you still have ships in the battle. It arrives in repair with a green crew and brings its design, so you can build more of the class.
+- A ship that surrenders goes to the side that wins the battle. An enemy ship taken as a prize arrives in repair with a green crew and brings its design, so you can build more of the class. One of your own ships that surrendered comes back to you, damaged, when you win – a lost destroyer is not lost if the battle is won.
 
 ## 3. Building ships: think in classes, not in single ships
 
@@ -146,6 +146,7 @@ A player on the Steam thread asked for the battle AI, crew quality and surrender
 - **18 October 2026, Iron Admiral 1.2.20:** coalitions against the dominant power.
 - **18 October 2026, Iron Admiral 1.2.21:** refits of ships above the treaty limits; a 1916 battle from the test campaign (3 battleships against 40 ships); the enemy charges only what it can reach, does not close in without a chance to penetrate, and zigzags on the approach.
 - **19 October 2026, Iron Admiral 1.2.23:** massed torpedo attacks when you outnumber the enemy in battleships, ramming, enemy battleships that withdraw when they cannot hurt you, task forces that run or scatter instead of attacking, turning away from torpedo tracks.
+- **19 October 2026, Iron Admiral 1.2.24:** enemy tactics by ship size, not by battleships; surrendered ships go to the battle winner.
 
 ---
 

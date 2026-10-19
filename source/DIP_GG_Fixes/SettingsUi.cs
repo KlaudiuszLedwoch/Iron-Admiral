@@ -33,7 +33,7 @@ namespace DipGgFixes
             {"DetachSlowShips","Battle AI"},{"FocusFire","Battle AI"},{"SmartTargeting","Battle AI"},{"SmartTargetingAi","Battle AI"},
             {"PlayerScoutCharge","Battle AI"},{"TorpedoFriendlyLane","Battle AI"},{"BattleAiLog","Battle AI"},{"ArmorDiagnostics","Battle AI"},
             {"CrewLevelsRescale","Crews and prizes"},{"SurrenderByTraining","Crews and prizes"},{"CrewPanic","Crews and prizes"},
-            {"CaptureSurrenderedShips","Crews and prizes"},{"MinorFleetToConqueror","Crews and prizes"},
+            {"CaptureSurrenderedShips","Crews and prizes"},{"SurrenderedShipsToBattleWinner","Crews and prizes"},{"TorpedoTargetSizeRatio","Battle AI"},{"MassAttackStrengthRatio","Battle AI"},{"MainShipSizeRatio","Battle AI"},{"MinorFleetToConqueror","Crews and prizes"},
             {"AutoShareDesigns","Campaign AI"},{"ShareToAllNations","Campaign AI"},{"CruisersWhenPoor","Campaign AI"},
             {"AiTechBudgetBalance","Campaign AI"},{"AiDesignOnlyWhenBuildable","Campaign AI"},{"FixStalledConstruction","Campaign AI"},
             {"BankruptBuildsCheapShips","Campaign AI"},{"NationalTechBonuses","Campaign AI"},

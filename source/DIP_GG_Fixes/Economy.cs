@@ -133,7 +133,7 @@ namespace DipGgFixes
         internal struct Info { public bool Learn; public int N; public int Dock; public bool Batch; public int Sisters; public float Cost; public float Time; public float Maint; public float Occupancy; }
         private static readonly Dictionary<IntPtr, Info> cache = new Dictionary<IntPtr, Info>();
         private static readonly Dictionary<IntPtr, float> occ = new Dictionary<IntPtr, float>();
-        private static readonly HashSet<string> logged = new HashSet<string>();
+        private static readonly Dictionary<string, string> logged = new Dictionary<string, string>();
         private static float cacheTime = -100f; private static string cacheTurn;
         [ThreadStatic] internal static int Depth;
 
@@ -240,6 +240,8 @@ namespace DipGgFixes
                     bool oBuild = false, oRefit = false, gone = false;
                     try { oBuild = o.isBuilding; oRefit = o.isRefit; gone = o.isSunk || o.isScrapped; } catch { }
                     int oStart = MonthOf(o.dateCreated);
+                    // 1.11.50: a ship scrapped or sunk before completion is not part of the series
+                    if (gone) { int gf = MonthOf(o.dateFinished); if (gf <= 0 || gf > now || gf < oStart) continue; }
                     // 1.11.35: dateCreated is the design date; for a completed sister its completion month marks the last activity of the series
                     if (!oBuild && !oRefit) { int fin = MonthOf(o.dateFinished); if (fin > oStart && fin <= now) oStart = preview ? fin : Math.Min(fin, start); }
                     if (oBuild) oStart = LaidMonth(o, now, oStart, preview || InDesigner());
@@ -309,7 +311,9 @@ namespace DipGgFixes
                 if ((building || refit) && !preview)
                 {
                     string id = null; try { id = s.id.ToString() + (refit ? "r" : "b"); } catch { }
-                    if (id != null && logged.Add(id))
+                    string sig = n + "|" + batch + "|" + inf.Dock + "|" + (u < EcoPrefs.YardLow.Value ? 0 : u > EcoPrefs.YardHigh.Value ? 2 : 1); string prevSig;
+                    // 1.11.50: logged again when the series number, batch, dock or occupancy band changes (orders placed in one session are counted at turn end)
+                    if (id != null && (!logged.TryGetValue(id, out prevSig) || prevSig != sig) && (logged[id] = sig) != null)
                         MelonLogger.Msg($"[DIP GG Fixes][Series] {p.data?.nameUi}: {s.name} ({design.name}) {(refit ? "refit" : "construction")} #{n} of the series{(n > 1 && !learn ? " (prototype not finished yet - base cost and time)" : "")}{(batch ? ", batch" : "")}{(inf.Dock >= 2 ? $", {inf.Dock} in one dock" : "")}, shipyard occupancy {u:P0} - cost x{inf.Cost:F2}, time x{inf.Time:F2}; {sisters} active sisters, maintenance x{inf.Maint:F2}");
                 }
             }

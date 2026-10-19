@@ -1,6 +1,6 @@
-[h1]Iron Admiral 1.2.23 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
+[h1]Iron Admiral 1.2.24 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
-[i]Description as of 19 October 2026. Latest version: Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49).[/i]
+[i]Description as of 19 October 2026. Latest version: Iron Admiral 1.2.24 (DIP_GG_Fixes 1.11.50).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
@@ -9,15 +9,16 @@
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]What is new today (19 October 2026) - Iron Admiral 1.2.23, DIP_GG_Fixes 1.11.49[/b]
+[b]What is new today (19 October 2026) - Iron Admiral 1.2.24, DIP_GG_Fixes 1.11.50[/b]
 [list]
-[*][b]A massed torpedo attack:[/b] when you bring more battleships than the enemy, all its torpedo craft go in together. One destroyer alone would not get through - part of a whole flotilla does.
-[*][b]Ramming:[/b] enemy light ships with no torpedoes left that cannot escape steer straight into your ships.
-[*][b]Battleships that cannot hurt you leave:[/b] an enemy battleship that cannot penetrate your armour even at close range withdraws when it can survive the battle, instead of waiting to be sunk.
-[*][b]Escape missions:[/b] a task force whose job is to get away no longer throws itself at you. If it is faster it runs; if it is not, it splits up and the ships flee in different directions, so some of them escape.
-[*][b]Turning away from torpedoes:[/b] enemy divisions that spot torpedo tracks coming at them turn to run parallel to them.
-[*][b]Gunnery after historical data:[/b] semi-armour-piercing (SAPC) shells in the 1920s, rates of fire checked against NavWeaps, ricochets after Okun, light secondary guns on destroyers.
-[*][b]Settings panel in the game (F10):[/b] every feature of the mod with an ON/OFF switch and a short description, grouped by battle AI, crews and prizes, campaign AI, economy, diplomacy and information. Want only the battle AI, crews and prizes? Switch the economy group off - no config file editing needed. Changes apply at once and are saved.
+[*][b]Enemy tactics no longer need battleships:[/b] the size of the ships in the battle decides, not their class. Cruiser and destroyer fights now get massed torpedo attacks, torpedo runs and withdrawals too.
+[*][b]A massed torpedo attack:[/b] when you bring the stronger force, all enemy torpedo craft go in together. One destroyer alone would not get through - part of a whole flotilla does.
+[*][b]Torpedoes at anything bigger:[/b] enemy destroyers go for your cruisers, light cruisers go for your transports - any target clearly larger than the attacker.
+[*][b]Main ships that cannot hurt you leave:[/b] the largest enemy ships - battleships, or armoured cruisers when no battleships are present - withdraw when they cannot penetrate your armour even at close range and can survive the battle.
+[*][b]Surrendered ships go to the winner:[/b] if one of your ships surrenders but you win the battle, it comes back to you damaged instead of being lost. If the enemy wins, it takes the ship as a prize.
+[*][b]Series production fixes:[/b] ships scrapped before completion no longer count towards a series, and the log reports the real series effects after the turn ends.
+[*][b]Ramming, escape missions, turning away from torpedoes:[/b] enemy light ships with no torpedoes left that cannot escape ram; a task force whose job is to get away runs or scatters; divisions that spot torpedo tracks turn to run parallel to them.
+[*][b]Settings panel in the game (F10):[/b] every feature of the mod with an ON/OFF switch and a short description. Changes apply at once and are saved.
 [/list]
 
 [b]18 October 2026 - Iron Admiral 1.2.14-1.2.21[/b]
@@ -53,7 +54,7 @@
 
 [b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.49.
+Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.50.
 
 [h2]Battle: an enemy that fights like a navy[/h2]
 [list]
@@ -119,7 +120,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
 [*][b]Update check and one-click update.[/b] At start the add-on compares the installed version with the GitHub repository and shows a message when a newer build exists - one HTTPS request, nothing sent. The message has a Download button: only after you click it the Mods package is fetched from the GitHub release, verified (SHA-256) and installed; restart the game afterwards. Switches: CheckForUpdates, UpdateDownloadButton.
 [*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv, research profiles in Mods\techBonuses.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (72 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (73 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Version history[/h2]
@@ -172,10 +173,11 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [*]1.11.20 / Iron Admiral 1.2.12: a running treasury remedy no longer blocks the next one when the debt is deep again (Britain sat at -4.5 bn with a loan still running; blockade costs and reparations bypass the income figure) - at war with a loan running the AI prints money, inflation stacks; diagnostics show the loan, inflation, cuts and the unexplained 'other' expenses.
 [*]1.11.21 / Iron Admiral 1.2.13: the treasury state is guarded against outside changes (Britain and Portugal showed a phantom 63% inflation and ended at 99% after printing); printing on top of inflation adds 20 points instead of stacking to 99%.
 [/list]
-[b]19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.49 / Iron Admiral 1.2.22-1.2.23[/b]
+[b]19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.50 / Iron Admiral 1.2.22-1.2.24[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: in-game settings panel (F10) - every feature on/off with its description, saved at once; the in-game Help points to it.
 [*]DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: massed torpedo attack when the enemy has more battleships; ramming by light ships out of torpedoes; battleships that cannot penetrate withdraw when they can survive; escape missions - run when faster, scatter when not; turning away from torpedo tracks; SAPC shells, rates of fire, ricochets and destroyer secondaries from historical data; the settings panel no longer throws errors on the campaign map; armour diagnostics in the log.
+[*]DIP_GG_Fixes 1.11.50 / Iron Admiral 1.2.24: enemy tactics by ship size instead of battleship counts (massed attack by fleet strength, torpedo runs at any clearly larger target, main ships of any class withdraw when helpless); surrendered ships go to the side that won the battle - your own come back when you win; ships scrapped before completion leave the series; series effects logged again after the turn.
 [/list]
 [b]18 October 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21[/b]
 [list]
@@ -192,8 +194,8 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.23_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.23_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.24_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.24_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [*]Mods_only: extract it into the game folder so that you get <game folder>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll and the CSV files; MelonLoader 0.6.6 must already be installed.
 [*]Error about the .NET 6.0 runtime at game start: install the .NET Desktop Runtime 6.0 (Windows x64) from https://dotnet.microsoft.com/download/dotnet/6.0 - MelonLoader 0.6.6 runs on it. Back to the unmodded game: run Uninstall.bat from <game folder>\Iron_Admiral_backup, or delete version.dll, the MelonLoader folder and the Mods folder and let Steam verify the game files; campaigns saved with the mod are not meant for the unmodded game.
 [/list]
@@ -214,9 +216,9 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 ============================================================================
 
-[h1]Iron Admiral 1.2.23 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
+[h1]Iron Admiral 1.2.24 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
 
-[i]Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49).[/i]
+[i]Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.24 (DIP_GG_Fixes 1.11.50).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
@@ -225,15 +227,16 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]Co nowego dziś (19 października 2026) - Iron Admiral 1.2.23, DIP_GG_Fixes 1.11.49[/b]
+[b]Co nowego dziś (19 października 2026) - Iron Admiral 1.2.24, DIP_GG_Fixes 1.11.50[/b]
 [list]
-[*][b]Zmasowany atak torpedowy:[/b] gdy masz więcej pancerników niż przeciwnik, wszystkie jego okręty torpedowe ruszają naraz. Jeden niszczyciel się nie przebije - część całej flotylli tak.
-[*][b]Taranowanie:[/b] lekkie okręty wroga bez torped, które nie mogą uciec, kierują się prosto w twoje okręty.
-[*][b]Bezradne pancerniki odchodzą:[/b] pancernik wroga, który nie przebije twojego pancerza nawet z bliska, wycofuje się, gdy może przetrwać bitwę, zamiast czekać na zatopienie.
-[*][b]Misje ucieczki:[/b] zespół, którego zadaniem jest ucieczka, nie rzuca się już na ciebie. Gdy jest szybszy - ucieka; gdy nie - rozdziela się i okręty uciekają w różnych kierunkach, więc część się wyrywa.
-[*][b]Zwrot od torped:[/b] dywizje wroga, które widzą nadpływające ślady torped, skręcają równolegle do nich.
-[*][b]Artyleria wg danych historycznych:[/b] pociski półprzeciwpancerne (SAPC) w latach 20., szybkostrzelność sprawdzona z NavWeaps, rykoszety wg Okuna, lekkie działa pomocnicze na niszczycielach.
-[*][b]Panel ustawień w grze (F10):[/b] każda funkcja moda z przełącznikiem ON/OFF i krótkim opisem, w grupach: AI w bitwie, załogi i pryzy, AI kampanii, ekonomia, dyplomacja, informacje. Chcesz tylko AI bitewne, załogi i pryzy? Wyłącz grupę ekonomii - bez edycji pliku konfiguracyjnego. Zmiany działają od razu i są zapisywane.
+[*][b]Taktyka wroga nie potrzebuje już pancerników:[/b] decyduje wielkość okrętów w bitwie, a nie ich klasa. Starcia krążowników i niszczycieli też mają zmasowane ataki torpedowe, szarże i odwroty.
+[*][b]Zmasowany atak torpedowy:[/b] gdy przyprowadzasz silniejsze siły, wszystkie okręty torpedowe wroga ruszają naraz. Jeden niszczyciel się nie przebije - część całej flotylli tak.
+[*][b]Torpedy na wszystko, co większe:[/b] niszczyciele wroga idą na twoje krążowniki, lekkie krążowniki na twoje transportowce - na każdy cel wyraźnie większy od atakującego.
+[*][b]Główne okręty, które nie mogą ci zaszkodzić, odchodzą:[/b] największe okręty wroga - pancerniki, a bez pancerników krążowniki pancerne - wycofują się, gdy nie przebiją twojego pancerza nawet z bliska i mogą przetrwać bitwę.
+[*][b]Poddane okręty dla zwycięzcy:[/b] gdy twój okręt się podda, ale wygrasz bitwę, wraca do ciebie uszkodzony zamiast przepaść. Gdy wygra wróg, przejmuje go jako pryz.
+[*][b]Poprawki produkcji seryjnej:[/b] okręty zezłomowane przed ukończeniem nie liczą się już do serii, a log pokazuje rzeczywiste efekty serii po zakończeniu tury.
+[*][b]Taranowanie, misje ucieczki, zwrot od torped:[/b] lekkie okręty wroga bez torped, które nie mogą uciec, idą na taran; zespół, którego zadaniem jest ucieczka, ucieka albo się rozprasza; dywizje widzące ślady torped skręcają równolegle do nich.
+[*][b]Panel ustawień w grze (F10):[/b] każda funkcja moda z przełącznikiem ON/OFF i krótkim opisem. Zmiany działają od razu i są zapisywane.
 [/list]
 
 [b]18 października 2026 - Iron Admiral 1.2.14-1.2.21[/b]
@@ -269,7 +272,7 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 [b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.49.
+Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.50.
 
 [h2]Bitwa: przeciwnik, który walczy jak flota[/h2]
 [list]
@@ -335,7 +338,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
 [*][b]Sprawdzanie aktualizacji i aktualizacja jednym kliknięciem.[/b] Przy starcie dodatek porównuje zainstalowaną wersję z repozytorium GitHub i pokazuje komunikat, gdy jest nowsza - jedno żądanie HTTPS, nic nie jest wysyłane. Komunikat ma przycisk Pobierz: dopiero po kliknięciu paczka Mods jest pobierana z wydania GitHub, weryfikowana (SHA-256) i instalowana; potem restart gry. Wyłączniki: CheckForUpdates, UpdateDownloadButton.
 [*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv, profile badań w Mods\techBonuses.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (72 sekcje). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (73 sekcje). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Historia wersji[/h2]
@@ -388,10 +391,11 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [*]1.11.20 / Iron Admiral 1.2.12: trwający środek zaradczy nie blokuje następnego, gdy dług znów jest głęboki (Brytania siedziała na -4,5 mld z trwającą pożyczką; koszty blokady i reparacje omijają dochód) - w wojnie z pożyczką AI dodrukowuje pieniądze, inflacja się sumuje; diagnostyka pokazuje pożyczkę, inflację, cięcia i niewyjaśnione wydatki 'other'.
 [*]1.11.21 / Iron Admiral 1.2.13: stan kryzysu skarbu chroniony przed zmianami z zewnątrz (Brytania i Portugalia miały fantomowe 63% inflacji i po dodruku 99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do 99%.
 [/list]
-[b]19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.49 / Iron Admiral 1.2.22-1.2.23[/b]
+[b]19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.50 / Iron Admiral 1.2.22-1.2.24[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: panel ustawień w grze (F10) - każda funkcja włącz/wyłącz z opisem, zapis od razu; pomoc w grze wskazuje na niego.
 [*]DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: zmasowany atak torpedowy, gdy wróg ma więcej pancerników; taranowanie przez lekkie okręty bez torped; pancerniki, które nie przebiją pancerza, wycofują się, gdy mogą przetrwać; misje ucieczki - ucieczka, gdy szybsi, rozproszenie, gdy nie; zwrot od śladów torped; pociski SAPC, szybkostrzelność, rykoszety i działa pomocnicze niszczycieli wg danych historycznych; panel ustawień nie rzuca już błędów na mapie kampanii; diagnostyka pancerza w logu.
+[*]DIP_GG_Fixes 1.11.50 / Iron Admiral 1.2.24: taktyka wroga wg wielkości okrętów zamiast liczby pancerników (zmasowany atak wg siły floty, szarże torpedowe na każdy wyraźnie większy cel, odwrót bezradnych głównych okrętów każdej klasy); poddane okręty trafiają do strony, która wygrała bitwę - twoje wracają, gdy wygrasz; okręty zezłomowane przed ukończeniem wypadają z serii; efekty serii logowane ponownie po turze.
 [/list]
 [b]18 października 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21[/b]
 [list]
@@ -408,8 +412,8 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.23_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.23_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.24_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.24_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [*]Mods_only: rozpakuj do folderu gry tak, żeby powstało <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV; MelonLoader 0.6.6 musi być już zainstalowany.
 [*]Błąd ".NET 6.0 runtime" przy starcie gry: zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony https://dotnet.microsoft.com/download/dotnet/6.0 - na nim działa MelonLoader 0.6.6. Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup albo usuń version.dll, folder MelonLoader i folder Mods, a potem zweryfikuj pliki gry w Steam; kampanie zapisane z modem nie są przeznaczone dla gry bez moda.
 [/list]

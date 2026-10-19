@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.49", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.50", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -208,6 +208,10 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> PanicChance;
         internal static MelonPreferences_Entry<bool> CaptureSurrendered;
         internal static MelonPreferences_Entry<float> CaptureDamage;
+        internal static MelonPreferences_Entry<bool> SurrenderReturnToWinner;
+        internal static MelonPreferences_Entry<float> TorpedoTargetSizeRatio;
+        internal static MelonPreferences_Entry<float> MassAttackStrengthRatio;
+        internal static MelonPreferences_Entry<float> MainShipSizeRatio;
         internal static MelonPreferences_Entry<bool> MinorFleetToConqueror;
         internal static MelonPreferences_Entry<bool> NationalTech;
         internal static MelonPreferences_Entry<bool> CheckUpdates;
@@ -398,6 +402,14 @@ namespace DipGgFixes
                 "Chance per 3-second check for the worst-trained crew at the far end of the scale (scales with the excess over the thresholds and with rank)");
             CaptureSurrendered = cat.CreateEntry("CaptureSurrenderedShips", true, null,
                 "Ships that surrendered in a campaign battle are transferred to the winner if it still has ships in the battle; they go to repair with a green crew");
+            TorpedoTargetSizeRatio = cat.CreateEntry("TorpedoTargetSizeRatio", 1.5f, null,
+                "Torpedo craft charge capital ships or any enemy at least this many times larger (tonnage) than themselves");
+            MassAttackStrengthRatio = cat.CreateEntry("MassAttackStrengthRatio", 1.0f, null,
+                "Massed torpedo attack when the enemy's combat tonnage in the battle exceeds own combat tonnage times this value");
+            MainShipSizeRatio = cat.CreateEntry("MainShipSizeRatio", 0.75f, null,
+                "A ship counts as a main ship of its side (escape when it cannot hurt the enemy) when its tonnage is at least this share of the largest own ship in the battle");
+            SurrenderReturnToWinner = cat.CreateEntry("SurrenderedShipsToBattleWinner", true, null,
+                "Surrendered ships go to the side that won the battle: a ship whose own side won returns to its owner (damaged) instead of being lost");
             CaptureDamage = cat.CreateEntry("CaptureDamage", 0.6f, null,
                 "Structural damage (0-1) applied to a captured ship before it enters repair");
             MinorFleetToConqueror = cat.CreateEntry("MinorFleetToConqueror", true, null,
@@ -1185,7 +1197,7 @@ namespace DipGgFixes
             for (int i = 0; i < enemies.Count; i++)
             {
                 var e = enemies[i];
-                if (e == null || e.isSinking || e.isDead || e.IsSurrendered || !IsCapital(e)) continue;
+                if (e == null || e.isSinking || e.isDead || e.IsSurrendered || !TorpedoWorthy(leader, e)) continue;
                 if (!e.IsVisibleFor(leader)) continue;
                 float d = Dist(leader, e);
                 if (d < bestD) { bestD = d; best = e; }
@@ -1197,6 +1209,41 @@ namespace DipGgFixes
         static readonly Dictionary<IntPtr, float> fleetNext = new Dictionary<IntPtr, float>();
         static readonly Dictionary<IntPtr, bool> fleetOn = new Dictionary<IntPtr, bool>();
         static bool IsLine(Ship s) { var t = s != null ? s.shipType : null; return t != null && (t.name == "bb" || t.name == "bc"); }
+        // 1.11.50: AI tactics no longer depend on battleships being present - ship size relative to the fleets in the battle decides
+        static readonly Dictionary<IntPtr, float> tonCache = new Dictionary<IntPtr, float>(); static IntPtr tonBattle;
+        internal static float Ton(Ship s)
+        {
+            if (s == null) return 0f; float t;
+            IntPtr bp = IntPtr.Zero; try { var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb != null) bp = cb.Pointer; } catch { }
+            if (bp != tonBattle) { tonBattle = bp; tonCache.Clear(); }
+            if (tonCache.TryGetValue(s.Pointer, out t)) return t;
+            t = 0f; try { t = s.Tonnage(); } catch { }
+            tonCache[s.Pointer] = t; return t;
+        }
+        static bool Alive(Ship x) { return x != null && !x.isSinking && !x.isDead && !x.IsSurrendered; }
+        static bool Combat(Ship x) { var t = x.shipType; return t != null && t.name != "tr"; }
+        // torpedo target: a capital ship, or any enemy clearly larger than the attacker
+        internal static bool TorpedoWorthy(Ship leader, Ship e)
+        {
+            if (IsCapital(e)) return true;
+            float tl = Ton(leader), te = Ton(e);
+            return tl > 0f && te >= tl * DipGgFixesMod.TorpedoTargetSizeRatio.Value;
+        }
+        static float Strength(Il2CppSystem.Collections.Generic.List<Ship> l)
+        {
+            float t = 0f; if (l == null) return 0f;
+            for (int i = 0; i < l.Count; i++) { var x = l[i]; if (Alive(x) && Combat(x)) t += Ton(x); }
+            return t;
+        }
+        // main ship of its side: not a light ship and close in size to the largest ship of its side still in the battle
+        static bool IsMainShip(Ship s, CampaignBattle battle)
+        {
+            if (s == null || IsLight(s)) return false;
+            if (IsLine(s)) return true;
+            float mx = 0f;
+            try { var own = battle != null ? battle.ShipsOf(s.player, true) : null; if (own != null) for (int i = 0; i < own.Count; i++) { var x = own[i]; if (Alive(x) && Combat(x)) mx = UnityEngine.Mathf.Max(mx, Ton(x)); } } catch { }
+            return mx > 0f && Ton(s) >= mx * DipGgFixesMod.MainShipSizeRatio.Value;
+        }
         static int CountLine(Il2CppSystem.Collections.Generic.List<Ship> l)
         {
             int n = 0; if (l == null) return 0;
@@ -1209,11 +1256,11 @@ namespace DipGgFixes
             if (EscapeMission(player, battle)) return false;
             float now = UnityEngine.Time.time; float nx; bool on;
             if (fleetNext.TryGetValue(player.Pointer, out nx) && now < nx && fleetOn.TryGetValue(player.Pointer, out on)) return on;
-            int own = 0; try { own = CountLine(battle.ShipsOf(player, true)); } catch { }
-            int foe = CountLine(enemies);
+            float own = 0f; try { own = Strength(battle.ShipsOf(player, true)); } catch { }
+            float foe = Strength(enemies);
             bool was; fleetOn.TryGetValue(player.Pointer, out was);
-            on = foe > own;
-            if (on != was) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy battleships/battlecruisers {foe} vs own {own}");
+            on = foe > own * DipGgFixesMod.MassAttackStrengthRatio.Value;
+            if (on != was) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t");
             fleetOn[player.Pointer] = on; fleetNext[player.Pointer] = now + 5f;
             return on;
         }
@@ -1584,7 +1631,7 @@ namespace DipGgFixes
                 {
                     if (!st.hopelessLogged) { st.hopelessLogged = true; Log($"{st.name} ({leader.shipType.name}): cannot penetrate {best.name} even at {UnityEngine.Mathf.Min(stopAt, bestD):0} m (pen {penNear:0.0} vs belt {beltNear:0.0}) - no close-in, left to the game"); }
                     string sw;
-                    if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value && IsLine(leader) && !st.capEscape && CanSurvive(leader, div, doc, enemies, out sw))
+                    if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value && IsMainShip(leader, BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null) && !st.capEscape && CanSurvive(leader, div, doc, enemies, out sw))
                     {
                         st.capEscape = true; div.Retreat(true);
                         Log($"{st.name} ({leader.shipType.name}): cannot hurt {best.name} and can survive the battle ({sw}) - retreats to save the ship");
@@ -2011,8 +2058,37 @@ namespace DipGgFixes
                 if (!surrendered || !DipGgFixesMod.CaptureSurrendered.Value) return;
                 var battle = __2 as CampaignBattle; if (battle == null) { try { battle = __2.TryCast<CampaignBattle>(); } catch { } }
                 if (battle == null) { MelonLogger.Msg("[DIP GG Fixes][Capture] no CampaignBattle - skipped"); return; }
-                var loser = ship.player; if (loser == null) return;
-                var winner = battle.OppositePlayer(loser); if (winner == null) return;
+                var owner = ship.player; if (owner == null) return;
+                var opponent = battle.OppositePlayer(owner); if (opponent == null) return;
+                // 1.11.50: surrendered ships go to the side that won the battle; a ship whose own side won returns to its owner
+                Player victor = null; float vpA = 0f, vpD = 0f; string how = "condition";
+                try { victor = battle.ConditionWinner; } catch { }
+                if (victor == null)
+                {
+                    how = "victory points";
+                    try { vpA = battle.VictoryPointsAttacker; vpD = battle.VictoryPointsDefender; } catch { }
+                    Player att = null, def = null; try { att = battle.Attacker; def = battle.Defender; } catch { }
+                    if (vpA > vpD) victor = att; else if (vpD > vpA) victor = def;
+                }
+                bool ownSideWon = victor != null && (victor.Pointer == owner.Pointer || battle.OppositePlayer(victor) != null && battle.OppositePlayer(victor).Pointer == opponent.Pointer && victor.Pointer != opponent.Pointer);
+                if (victor == null) how = "no winner (VP " + vpA.ToString("0") + "/" + vpD.ToString("0") + ") - opponent";
+                if (ownSideWon && DipGgFixesMod.SurrenderReturnToWinner.Value)
+                {
+                    var cc0 = CampaignController.Instance; if (cc0 == null) return;
+                    int rem = 0;
+                    try { var l1 = battle.AttackerShipsSink; if (l1 != null && l1.Remove(ship)) rem++; } catch { }
+                    try { var l2 = battle.DefenderShipsSink; if (l2 != null && l2.Remove(ship)) rem++; } catch { }
+                    try { var l3 = battle.sunkShipsCached; if (l3 != null && l3.Remove(ship)) rem++; } catch { }
+                    float hp0 = 0f, crew0 = 0f; try { hp0 = ship.HP; } catch { } try { crew0 = ship.CrewPercents; } catch { }
+                    float minCrew0 = 0.7f; try { minCrew0 = UnityEngine.Mathf.Max(0.5f, MonoBehaviourExt.Param("min_crew_threshold", 0.7f)); } catch { }
+                    try { if (crew0 < minCrew0) ship.CrewPercents = minCrew0; } catch { }
+                    __1 = UnityEngine.Mathf.Max(__1, UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f));
+                    Captured.Add(ship.Pointer);
+                    MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered but {owner.data.name} won the battle ({how}) - ship returns to its owner; removed from {rem} sunk list(s), HP {hp0:0}, crew {crew0:0.00} -> {UnityEngine.Mathf.Max(crew0, minCrew0):0.00}, damage set to {__1:0.00}, status {ship.status}");
+                    return;
+                }
+                var loser = owner; var winner = opponent;
+                MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: battle won by {(victor != null ? victor.data.name : "nobody")} ({how})");
                 // the winner must still have ships in the battle
                 var ws = battle.ShipsOf(winner, true); int alive = 0;
                 if (ws != null) for (int i = 0; i < ws.Count; i++) { var w = ws[i]; if (w != null && !w.isDead && !w.isSinking && !w.isSunk && !w.IsSurrendered) alive++; }
