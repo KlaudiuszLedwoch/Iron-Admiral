@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 18 October 2026. Latest version: Iron Admiral 1.2.21. Updated with every release._
+_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.22. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -117,7 +117,13 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 - Naval invasions decide colonial wars. In the test campaign Germany took Guam, the Northern Marianas, the Caroline Islands and the eastern Philippines from Spain by landings, while France took the Seychelles and Mauritius from Britain the same way.
 - When a nation loses the port its ships are in and has nowhere to flee, its ships pass to whoever takes the port.
 
-## 7. A short checklist for a new campaign
+## 7. Choosing what you play with
+
+Press **F10** anywhere in the game – main menu, campaign map or battle – to open the settings panel. Every feature of the mod is there with an ON/OFF switch and a one-line description, grouped by battle AI, crews and prizes, campaign AI, economy, diplomacy and information. A click applies and saves at once.
+
+A player on the Steam thread asked for the battle AI, crew quality and surrendered ships without the economic layer. That is one panel away: open the *Economy* group and switch off series production, inflation and the treasury crisis, then the treasury panel and reports under *Information and updates*. Nothing else changes – the battle AI, crews, panic, surrender and prizes keep working. The economy never asked for micromanagement in the first place: it runs in the background and mostly decides what the AI can afford.
+
+## 8. A short checklist for a new campaign
 
 1. Design your first classes carefully – every new design starts with an expensive prototype.
 2. Build one of each new class, then order the rest in batches; leave room in the yards.
@@ -130,10 +136,11 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 
 ### Guide history
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
-- **18 October 2026, Iron Admiral 1.2.21:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
-- **18 October 2026, Iron Admiral 1.2.21:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
-- **18 October 2026, Iron Admiral 1.2.21:** coalitions against the dominant power.
-- **18 October 2026, Iron Admiral 1.2.21:** refits of ships above the treaty limits; a 1916 battle from the test campaign (3 battleships against 40 ships); the enemy charges only what it can reach, does not close in without a chance to penetrate, and zigzags on the approach.
+- **18 October 2026, Iron Admiral 1.2.22:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
+- **19 October 2026, Iron Admiral 1.2.22:** in-game settings panel (F10) and how to play with only the battle AI, crews and prizes.
+- **18 October 2026, Iron Admiral 1.2.22:** what inflation means in the mod – a temporary surcharge, not a growing price level; budgets stay in today's money.
+- **18 October 2026, Iron Admiral 1.2.22:** coalitions against the dominant power.
+- **18 October 2026, Iron Admiral 1.2.22:** refits of ships above the treaty limits; a 1916 battle from the test campaign (3 battleships against 40 ships); the enemy charges only what it can reach, does not close in without a chance to penetrate, and zigzags on the approach.
 
 ---
 
