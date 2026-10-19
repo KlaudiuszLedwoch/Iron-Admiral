@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.29. Updated with every release._
+_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.30. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -121,6 +121,8 @@ Broke AI powers stop ordering battleships and build cruisers, destroyers and tor
 - Naval invasions decide colonial wars. In the test campaign Germany took Guam, the Northern Marianas, the Caroline Islands and the eastern Philippines from Spain by landings, while France took the Seychelles and Mauritius from Britain the same way.
 - When a nation loses the port its ships are in and has nowhere to flee, its ships pass to whoever takes the port.
 
+**Holding what you conquer.** Taking the heartland of another great power is one thing, keeping it is another. Once peace is made, its people rise – the larger their nation compared with yours, the harder it gets. Germany can hold the Netherlands; holding France is a different story. When a rising breaks out you choose: put it down, paying in money, unrest at home and goodwill among your neighbours and rivals, or let it run and defend the province with your fleet. Provinces that break free go back to their nation, and a great power you destroyed can return. Colonies and lands of other peoples inside the old empires are not affected – only the nations' own heartlands.
+
 ## 7. Choosing what you play with
 
 Press **F10** anywhere in the game – main menu, campaign map or battle – to open the settings panel. Every feature of the mod is there with an ON/OFF switch and a one-line description, grouped by battle AI, crews and prizes, campaign AI, economy, diplomacy and information. A click applies and saves at once.
@@ -150,6 +152,7 @@ A player on the Steam thread asked for the battle AI, crew quality and surrender
 - **19 October 2026, Iron Admiral 1.2.25:** massed attacks only with enough torpedo craft; outmatched enemies withdraw.
 - **19 October 2026, Iron Admiral 1.2.26:** series savings apply right from loading a campaign.
 - **19 October 2026, Iron Admiral 1.2.27-1.2.29:** refits above the treaty limit can be saved (confirmed in 1.2.29).
+- **19 October 2026, Iron Admiral 1.2.30:** risings in conquered heartlands and the decision to put them down.
 
 ---
 

@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.56", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.57", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -209,6 +209,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> CaptureSurrendered;
         internal static MelonPreferences_Entry<float> CaptureDamage;
         internal static MelonPreferences_Entry<bool> SurrenderReturnToWinner;
+        internal static MelonPreferences_Entry<bool> CoreIndependence;
+        internal static MelonPreferences_Entry<float> CoreRevoltBonus, CoreRevoltRampMonths, CoreSuppressIncomeMonths, CoreSuppressUnrest, CoreSuppressRelations, CoreSuppressAiMaxUnrest, CoreSuppressCalmMonths;
         internal static MelonPreferences_Entry<float> TorpedoTargetSizeRatio;
         internal static MelonPreferences_Entry<float> MassAttackStrengthRatio;
         internal static MelonPreferences_Entry<float> MainShipSizeRatio;
@@ -226,6 +228,7 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
+            RevoltDecision.Tick();
             SaveCompat.Tick();
             ArmorDiag.Tick();
         }
@@ -234,6 +237,7 @@ namespace DipGgFixes
         {
             EconomyUi.OnGUI();
             SettingsUi.OnGUI();
+            RevoltDecision.OnGUI();
         }
 
         public override void OnInitializeMelon()
@@ -414,6 +418,17 @@ namespace DipGgFixes
                 "AI divisions withdraw when the enemy is stronger and there are too few torpedo craft for a massed attack - if they are faster than every visible enemy (or no enemy can penetrate them)");
             MainShipSizeRatio = cat.CreateEntry("MainShipSizeRatio", 0.75f, null,
                 "A ship counts as a main ship of its side (escape when it cannot hurt the enemy) when its tonnage is at least this share of the largest own ship in the battle");
+            CoreIndependence = cat.CreateEntry("CoreProvincesIndependence", true, null,
+                "Occupied national core provinces of a great power (historical list) rise for independence after peace is made; the larger the nation's home population compared with the occupier's, the sooner (all nations, the player included)");
+            CoreRevoltBonus = cat.CreateEntry("CoreRevoltBonus", 25f, null,
+                "Extra revolt chance (game's own rebellion) of an occupied national core province in peacetime, scaled by home population: nation equal to the occupier -> 2/3 of it, a tenth of the occupier -> 1/6 (game's default for home provinces is about 2.5)");
+            CoreSuppressIncomeMonths = cat.CreateEntry("CoreSuppressIncomeMonths", 1.0f, null, "Putting down a rising in a national core province costs this many months of income (x0.5-1.5 by the strength of the rising)");
+            CoreSuppressUnrest = cat.CreateEntry("CoreSuppressUnrest", 6f, null, "Unrest added at home when a rising is put down (x0.5-1.5 by the strength of the rising)");
+            CoreSuppressRelations = cat.CreateEntry("CoreSuppressRelations", 8f, null, "Attitude lost with every other great power when a rising is put down (neighbours of the province and its own nation: x1.5)");
+            CoreSuppressAiMaxUnrest = cat.CreateEntry("CoreSuppressAiMaxUnrest", 40f, null, "The AI puts a rising down only if its unrest stays below this value (and it has three times the cost in cash)");
+            CoreSuppressCalmMonths = cat.CreateEntry("CoreSuppressCalmMonths", 12f, null, "Months a province stays calm after a rising was put down (game's revolt cooldown)");
+            CoreRevoltRampMonths = cat.CreateEntry("CoreRevoltRampMonths", 12f, null,
+                "Months of peace over which the extra revolt chance builds up to its full value");
             SurrenderReturnToWinner = cat.CreateEntry("SurrenderedShipsToBattleWinner", true, null,
                 "Surrendered ships go to the side that won the battle: a ship whose own side won returns to its owner (damaged) instead of being lost");
             CaptureDamage = cat.CreateEntry("CaptureDamage", 0.6f, null,
@@ -2174,7 +2189,7 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(CampaignController), "TransferProvinceToNewOwner")]
     internal static class Patch_TransferProvinceToNewOwner
     {
-        private static void Prefix(Player __0, string __1) { ConquestCtx.NewOwner = __0; ConquestCtx.ProvinceId = __1; }
+        private static void Prefix(Player __0, string __1) { ConquestCtx.NewOwner = __0; ConquestCtx.ProvinceId = __1; Independence.BeforeTransfer(__0, __1); }
         private static void Finalizer() { ConquestCtx.NewOwner = null; ConquestCtx.ProvinceId = null; }
     }
 

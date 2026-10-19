@@ -45,6 +45,7 @@ using System.Text;
 using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
+using UnityEngine;
 
 namespace DipGgFixes
 {
@@ -458,6 +459,7 @@ namespace DipGgFixes
     internal static class Economy
     {
         private static readonly Dictionary<string, EconState> states = new Dictionary<string, EconState>();
+        private static readonly System.Random rng = new System.Random();
         private static IntPtr session = IntPtr.Zero; private static bool loaded; private static float lastTry = -100f; private static int tries;
         [ThreadStatic] internal static bool Raw;
 
@@ -496,7 +498,7 @@ namespace DipGgFixes
             var cc = CampaignController.Instance;
             if (cc == null || cc.CampaignData == null) return;
             IntPtr ptr = cc.CampaignData.Pointer;
-            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); loaded = false; tries = 0; lastTry = -100f; }
+            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); Independence.peaceSince.Clear(); Independence.ResetBaseline(); loaded = false; tries = 0; lastTry = -100f; }
             if (loaded) return;
             float t = UnityEngine.Time.realtimeSinceStartup;
             if (t - lastTry < 1f) return;
@@ -516,6 +518,7 @@ namespace DipGgFixes
                 {
                     string k; EconState st;
                     if (Series.ParseLaid(line)) continue;
+                    if (Independence.Parse(line)) continue;
                     if (EconState.Parse(line, out k, out st)) { states[k] = st; n++; }
                 }
                 MelonLogger.Msg($"[DIP GG Fixes][Economy] loaded the economy state of {n} great powers ({Path.GetFileName(f)})");
@@ -537,6 +540,7 @@ namespace DipGgFixes
                 foreach (var p in Majors()) { var st = Get(p); if (st != null) lines.Add(st.Serialize(Key(p))); }
                 int keepFrom = Month() - 120;
                 foreach (var kv in Series.laidDown) if (kv.Value.Month >= keepFrom) lines.Add(Series.SerializeLaid(kv.Key, kv.Value));
+                lines.AddRange(Independence.Serialize());
                 string f = Path.Combine(dir, "eco_" + Fingerprint() + ".txt");
                 File.WriteAllLines(f, lines);
                 var files = new DirectoryInfo(dir).GetFiles("eco_*.txt").OrderByDescending(x => x.LastWriteTimeUtc).ToList();
@@ -804,7 +808,6 @@ namespace DipGgFixes
         }
 
         // 1.11.37: coalition wars against a dominant power (player or AI)
-        static readonly System.Random rng = new System.Random();
         static Relation RelationOf(Player a, Player b)
         {
             try { foreach (var kv in CampaignController.Instance.CampaignData.Relations) { var r = kv.Value; if (r != null && r.AnyOnePlayerIs(a) && r.AnyOnePlayerIs(b) && a.Pointer != b.Pointer) return r; } } catch { }
@@ -905,5 +908,306 @@ namespace DipGgFixes
     internal static class Patch_SaveInternal
     {
         private static void Postfix() { Economy.Save(); }
+    }
+}
+
+
+namespace DipGgFixes
+{
+    // =====================================================================================
+    // 1.11.57: core provinces of a great power occupied by another power rise for independence
+    // after the war: a rebellion that is very hard to put down. While the occupier is at war with
+    // the original owner the province can be held; once peace is made the rebellion grows month by
+    // month, faster the larger the original nation's home population is compared with the
+    // occupier's - Germany can hold Belgium or the Netherlands, the reverse is not realistic.
+    // When the rebellion succeeds the province returns to its nation; a nation that was dissolved
+    // is restored.
+    // =====================================================================================
+    internal static class Independence
+    {
+        internal static readonly Dictionary<string, int> peaceSince = new Dictionary<string, int>();
+        static readonly Dictionary<string, float> baseline = new Dictionary<string, float>();
+        // national cores around 1890-1914 (Iron Admiral 1.2.30, section 79): the nation's own people, not colonies or
+        // lands of other nationalities inside multinational empires
+        internal static readonly Dictionary<string, string> Cores = Build(new Dictionary<string, string[]> {
+            { "britain", new[] { "eastern_england", "north_east_england", "north_west_england", "southern_england", "scotland", "wales", "northern_ireland", "shetland" } },
+            { "france", new[] { "northern_france", "southern_france", "western_france", "corsica" } },
+            { "germany", new[] { "eastern_germany", "prussia", "southern_germany", "western_germany", "heligoland" } },
+            { "italy", new[] { "central_italy", "eastern_sicily", "northeast_italy", "northwest_italy", "sardinia", "southern_italy", "western_sicily" } },
+            { "austria", new[] { "austria", "hungary" } },
+            { "russia", new[] { "central_russia", "northern_russia", "southern_russia", "siberian_russia", "southern_siberia", "eastern_siberia", "russian_far_east", "crimaia" } },
+            { "japan", new[] { "kyushu", "north_hokkaido", "north_honshu", "okinawa_islands", "shikoku", "south_hokkaido", "south_honshu" } },
+            { "usa", new[] { "central_usa", "eastern_usa", "gulf_coast", "maine", "southeastern_seaboard", "western_usa" } },
+            { "spain", new[] { "northern_spain", "southern_spain", "western_spain", "balearic_islands", "canary_islands" } },
+            { "china", new[] { "central_china", "eastern_china", "northern_china", "southern_china", "northeast_china", "liaodong_peninsula", "manchuria", "penghu" } },
+            { "portugal", new[] { "portugal", "madeira", "azores" } },
+            { "netherlands", new[] { "netherlands" } },
+            { "scandinavia", new[] { "eastern_denmark", "western_denmark", "eastern_sweden", "western_sweden", "northern_norway", "southern_norway" } },
+            { "greece", new[] { "southern_greece", "northern_greece", "crete", "dodecanese", "bosporus", "dardanelles" } },
+        });
+        static Dictionary<string, string> Build(Dictionary<string, string[]> d) { var r = new Dictionary<string, string>(); foreach (var kv in d) foreach (var p in kv.Value) r[p] = kv.Key; return r; }
+
+        static int lastMonth = -1;
+        internal static bool Parse(string line)
+        {
+            if (line == null || !line.StartsWith("I|")) return false;
+            var a = line.Split('|'); int m; if (a.Length >= 3 && int.TryParse(a[2], out m)) peaceSince[a[1]] = m;
+            return true;
+        }
+        internal static IEnumerable<string> Serialize() { foreach (var kv in peaceSince) yield return "I|" + kv.Key + "|" + kv.Value; }
+        static int Month() { try { var d = CampaignController.Instance.CurrentDate.AsDate(); return d.Year * 12 + d.Month; } catch { return 0; } }
+
+        static bool AtWar(CampaignController cc, Player a, Player b)
+        {
+            try { foreach (var kv in cc.CampaignData.Relations) { var r = kv.Value; if (r != null && r.isWar && r.AnyOnePlayerIs(a) && r.AnyOnePlayerIs(b)) return true; } } catch { }
+            return false;
+        }
+
+        internal static void Tick()
+        {
+            var on = DipGgFixesMod.CoreIndependence; if (on == null || !on.Value) return;
+            var cc = CampaignController.Instance; if (cc == null || cc.CampaignData == null) return;
+            int now = Month(); if (now <= 0 || now == lastMonth) return; lastMonth = now;
+            try
+            {
+                var map = CampaignMap.Instance; if (map == null || map.Provinces == null) return;
+                var byId = map.Provinces.ProvinceById; if (byId == null) return;
+                // players by data name; national core provinces (historical list, not the game's isHome flag)
+                var players = new Dictionary<string, Player>(); var ps = cc.CampaignData.Players;
+                for (int i = 0; i < ps.Count; i++) { var pl = ps[i]; if (pl != null && pl.data != null) players[pl.data.name] = pl; }
+                var homePop = new Dictionary<string, float>();
+                var list = new List<KeyValuePair<string, Province>>();
+                foreach (var kv in byId)
+                {
+                    var pr = kv.Value; if (pr == null) continue;
+                    string nation; if (!Cores.TryGetValue(kv.Key, out nation)) continue;
+                    float pop = 0f; try { pop = pr.Population; } catch { }
+                    float v; homePop.TryGetValue(nation, out v); homePop[nation] = v + Math.Max(0f, pop);
+                    list.Add(new KeyValuePair<string, Province>(kv.Key, pr));
+                }
+                int seen = 0, raised = 0; var sb = new System.Text.StringBuilder();
+                foreach (var kv in list)
+                {
+                    var pr = kv.Value; string id = kv.Key;
+                    string nationKey = Cores[id]; Player occ = null;
+                    try { occ = pr.ControllerPlayer; } catch { }
+                    float cur = 0f; try { cur = pr.RevoltChance; } catch { }
+                    float baseC; if (!baseline.TryGetValue(id, out baseC)) { baseC = cur; baseline[id] = cur; }
+                    bool occupied = occ != null && occ.data != null && occ.data.name != nationKey;
+                    Player orig = null; if (occupied) players.TryGetValue(nationKey, out orig);
+                    bool disabled = false; if (orig != null) { try { disabled = orig.isDisabled; } catch { } }
+                    bool war = !occupied || orig == null ? true : (disabled ? SafeAtWar(occ) : AtWar(cc, occ, orig));
+                    if (!occupied || orig == null || war)
+                    {
+                        peaceSince.Remove(id);
+                        if (Math.Abs(cur - baseC) > 0.001f) { try { pr.RevoltChance = baseC; } catch { } }   // back to the game's own value
+                        continue;
+                    }
+                    seen++;
+                    int since; if (!peaceSince.TryGetValue(id, out since)) { since = now; peaceSince[id] = now; }
+                    int months = now - since;
+                    float po, pc; homePop.TryGetValue(nationKey, out po); homePop.TryGetValue(occ.data.name, out pc);
+                    float r = pc > 0f ? po / pc : 1f;
+                    float ramp = Math.Min(1f, (months + 1) / Math.Max(1f, DipGgFixesMod.CoreRevoltRampMonths.Value));
+                    float bonus = DipGgFixesMod.CoreRevoltBonus.Value * ramp * r / (r + 0.5f);
+                    strength[id] = r / (r + 0.5f);
+                    float target = baseC + bonus;
+                    try { pr.RevoltChance = target; pr.CanRevolt = true; } catch { }
+                    raised++;
+                    if (sb.Length < 1500) sb.Append($"\n   {id} ({nationKey}, held by {Economy.Name(occ)}): revolt chance {baseC:0.##} -> {target:0.##} after {months} months of peace (home population {po / 1e6f:0.0}M vs {pc / 1e6f:0.0}M)");
+                }
+                if (seen > 0) MelonLogger.Msg($"[DIP GG Fixes][Independence] {raised} occupied national core province(s) with a stronger rising:{sb}");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Independence] " + e.Message); }
+        }
+        static bool SafeAtWar(Player p) { try { return p.IsAtWar(); } catch { return false; } }
+        internal static void ResetBaseline() { baseline.Clear(); lastMonth = -1; strength.Clear(); }
+        static readonly Dictionary<string, float> strength = new Dictionary<string, float>();
+        internal static float Strength(string id, Player occ) { float v; return strength.TryGetValue(id, out v) ? v : 0.5f; }
+        // after a rising was put down: the build-up starts again and the game's revolt cooldown applies
+        internal static void Calm(string id, Province pr)
+        {
+            int now = Month(); peaceSince[id] = now;
+            float b; if (baseline.TryGetValue(id, out b)) { try { pr.RevoltChance = b; } catch { } }
+            try { pr.RevoltCooldown = Math.Max(pr.RevoltCooldown, (int)DipGgFixesMod.CoreSuppressCalmMonths.Value); } catch { }
+        }
+        // a rising that succeeds hands the province to its nation; a dissolved nation is restored first
+        internal static void BeforeTransfer(Player newOwner, string provinceId)
+        {
+            try
+            {
+                if (newOwner == null || provinceId == null) return;
+                string nation; if (!Cores.TryGetValue(provinceId, out nation)) return;
+                if (newOwner.data == null || newOwner.data.name != nation) return;
+                bool disabled = false; try { disabled = newOwner.isDisabled; } catch { }
+                MelonLogger.Msg($"[DIP GG Fixes][Independence] {provinceId} returns to {Economy.Name(newOwner)}{(disabled ? " - the nation is restored" : "")}");
+                if (disabled) newOwner.EnablePlayer();
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Independence] restore: " + e.Message); }
+        }
+    }
+
+    [HarmonyLib.HarmonyPatch(typeof(CampaignController), "CheckProvincesRevolt")]
+    internal static class Patch_CheckProvincesRevolt_Independence
+    {
+        private static void Prefix() { Independence.Tick(); }
+    }
+}
+
+namespace DipGgFixes
+{
+}
+
+namespace DipGgFixes
+{
+    // =====================================================================================
+    // 1.11.57: a rising in an occupied national core province is an event with a decision for the occupier:
+    // put it down (money, unrest at home, worse relations with the neighbours and the other great powers) or
+    // let the game's own rebellion run (the province can still be defended with a task force, or is lost).
+    // The player decides in a window on the campaign map; the AI decides by its treasury and unrest.
+    // =====================================================================================
+    internal static class RevoltDecision
+    {
+        internal class Pending { public string Id, Nation; public Province Prov; public Player Attacker, Defender, Ally; public int Tf; public bool Land; public float Cost, Unrest, Rival, Neighbour; }
+        internal static readonly List<Pending> queue = new List<Pending>();
+        internal static bool bypass;
+        static readonly List<KeyValuePair<Rect, Action>> clicks = new List<KeyValuePair<Rect, Action>>(), next = new List<KeyValuePair<Rect, Action>>();
+        static GUIStyle sTitle, sText, sBtn; static int errors;
+
+        static string IdOf(Province pr)
+        {
+            try { var byId = CampaignMap.Instance.Provinces.ProvinceById; foreach (var kv in byId) if (kv.Value != null && kv.Value.Pointer == pr.Pointer) return kv.Key; } catch { }
+            return null;
+        }
+
+        // true = let the game create its rebellion now
+        internal static bool Intercept(Player attacker, Player defender, Player ally, int tf, Province pr, bool land)
+        {
+            try
+            {
+                if (bypass || pr == null || defender == null || defender.data == null) return true;
+                var on = DipGgFixesMod.CoreIndependence; if (on == null || !on.Value) return true;
+                string id = IdOf(pr); if (id == null) return true;
+                string nation; if (!Independence.Cores.TryGetValue(id, out nation) || defender.data.name == nation) return true;
+                float f = Independence.Strength(id, defender);           // 0..1, how strong the rising is against this occupier
+                float income = 0f; try { income = defender.Income(); } catch { }
+                var d = new Pending { Id = id, Nation = nation, Prov = pr, Attacker = attacker, Defender = defender, Ally = ally, Tf = tf, Land = land,
+                    Cost = Math.Max(0f, income) * DipGgFixesMod.CoreSuppressIncomeMonths.Value * (0.5f + f),
+                    Unrest = DipGgFixesMod.CoreSuppressUnrest.Value * (0.5f + f),
+                    Rival = DipGgFixesMod.CoreSuppressRelations.Value, Neighbour = DipGgFixesMod.CoreSuppressRelations.Value * 1.5f };
+                bool player = false; try { player = defender.isMain; } catch { }
+                if (player)
+                {
+                    queue.Add(d);
+                    MelonLogger.Msg($"[DIP GG Fixes][Independence] rising in {id} ({nation}) against {Economy.Name(defender)} - waiting for the player's decision (put down: {d.Cost / 1e6f:0.0}M, unrest +{d.Unrest:0.#}, relations -{d.Rival:0}/-{d.Neighbour:0})");
+                    return false;
+                }
+                float cash = 0f, unrest = 0f; try { cash = defender.cash; unrest = defender.unrest; } catch { }
+                bool suppress = cash >= d.Cost * 3f && unrest + d.Unrest < DipGgFixesMod.CoreSuppressAiMaxUnrest.Value && f < 0.6f;
+                MelonLogger.Msg($"[DIP GG Fixes][Independence] rising in {id} ({nation}) against {Economy.Name(defender)} (AI): {(suppress ? "puts it down" : "lets the rebellion run")} - cost {d.Cost / 1e6f:0.0}M of {cash / 1e6f:0.0}M, unrest {unrest:0.#} +{d.Unrest:0.#}, rising strength {f:0.00}");
+                if (suppress) { Suppress(d); return false; }
+                return true;
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Independence] rising: " + e.Message); return true; }
+        }
+
+        static void Suppress(Pending d)
+        {
+            var p = d.Defender;
+            try { p.cash = p.cash - d.Cost; } catch { }
+            try { p.AddUnrest(d.Unrest); } catch { }
+            int nRival = 0, nNeigh = 0;
+            try
+            {
+                var neighbours = new HashSet<string>();
+                try { var nb = d.Prov.NeighbourProvinces; for (int i = 0; i < nb.Count; i++) { var q = nb[i]; var c = q != null ? q.ControllerPlayer : null; if (c != null && c.data != null) neighbours.Add(c.data.name); } } catch { }
+                foreach (var kv in CampaignController.Instance.CampaignData.Relations)
+                {
+                    var r = kv.Value; if (r == null || !r.AnyOnePlayerIs(p)) continue;
+                    var o = r.OppositePlayer(p); if (o == null || o.data == null) continue;
+                    bool dis = false, major = false; try { dis = o.isDisabled; major = o.isMajor; } catch { }
+                    if (dis) continue;
+                    float pen = 0f;
+                    if (neighbours.Contains(o.data.name) || o.data.name == d.Nation) { pen = d.Neighbour; nNeigh++; }
+                    else if (major) { pen = d.Rival; nRival++; }
+                    if (pen > 0f) r.attitude = r.attitude - pen;
+                }
+            }
+            catch { }
+            Independence.Calm(d.Id, d.Prov);
+            MelonLogger.Msg($"[DIP GG Fixes][Independence] {Economy.Name(p)} puts down the rising in {d.Id}: {d.Cost / 1e6f:0.0}M, unrest +{d.Unrest:0.#}, relations -{d.Neighbour:0} with {nNeigh} neighbour(s), -{d.Rival:0} with {nRival} great power(s); the province stays calm for a while");
+        }
+
+        static void LetGo(Pending d)
+        {
+            MelonLogger.Msg($"[DIP GG Fixes][Independence] {Economy.Name(d.Defender)} lets the rebellion in {d.Id} run (game's rebellion)");
+            bypass = true;
+            try
+            {
+                var cc = CampaignController.Instance;
+                if (d.Land) cc.CreateLandRebellionEvent(d.Attacker, d.Defender, d.Tf, d.Prov);
+                else cc.CreateRebellionEvent(d.Attacker, d.Defender, d.Ally, d.Tf, d.Prov);
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Independence] rebellion: " + e.Message); }
+            finally { bypass = false; }
+        }
+
+        static bool OnMap() { bool w = false; try { w = GameManager.IsWorldMap; } catch { } return w; }
+
+        internal static void Tick()
+        {
+            try
+            {
+                if (queue.Count == 0 || !OnMap()) return;
+                if (Input.GetMouseButtonDown(0))
+                {
+                    var mp = Input.mousePosition; var pt = new Vector2(mp.x, Screen.height - mp.y);
+                    foreach (var kv in clicks) if (kv.Key.Contains(pt)) { kv.Value(); break; }
+                }
+            }
+            catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Independence] tick: " + e.Message); }
+        }
+
+        internal static void OnGUI()
+        {
+            if (queue.Count == 0 || !OnMap()) { if (clicks.Count > 0) clicks.Clear(); return; }
+            try
+            {
+                if (sTitle == null)
+                {
+                    sTitle = new GUIStyle(); sTitle.fontSize = 16; sTitle.richText = true; sTitle.normal.textColor = Color.white;
+                    sText = new GUIStyle(); sText.fontSize = 13; sText.richText = true; sText.wordWrap = true; sText.normal.textColor = new Color(0.88f, 0.88f, 0.88f);
+                    sBtn = new GUIStyle(); sBtn.fontSize = 13; sBtn.richText = true; sBtn.wordWrap = true; sBtn.alignment = TextAnchor.MiddleCenter; sBtn.normal.textColor = Color.white;
+                }
+                next.Clear();
+                var d = queue[0];
+                float w = Math.Min(560f, Screen.width - 40f), h = 270f;
+                var r = new Rect((Screen.width - w) / 2f, (Screen.height - h) / 2f, w, h);
+                GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
+                string prov = d.Prov != null ? d.Id.Replace('_', ' ') : d.Id;
+                GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 28f, 24f), $"<b>Rising in {prov}</b>", sTitle);
+                GUI.Label(new Rect(r.x + 14f, r.y + 40f, w - 28f, 120f),
+                    $"The people of {prov} rise against our rule and call for a return to {Cap(d.Nation)}.\n\n" +
+                    $"Putting the rising down costs about {d.Cost / 1e6f:0.0}M, raises unrest at home by {d.Unrest:0.#} and worsens relations with the neighbours (-{d.Neighbour:0}) and the other great powers (-{d.Rival:0}). " +
+                    "If we let it run, the rebellion follows its course: the province can still be held by force at sea, or it is lost.", sText);
+                Btn(new Rect(r.x + 14f, r.yMax - 64f, (w - 42f) / 2f, 48f), "<b>Put the rising down</b>", () => { queue.RemoveAt(0); Suppress(d); });
+                Btn(new Rect(r.x + 28f + (w - 42f) / 2f, r.yMax - 64f, (w - 42f) / 2f, 48f), "<b>Let the rebellion run</b>", () => { queue.RemoveAt(0); LetGo(d); });
+                clicks.Clear(); clicks.AddRange(next);
+            }
+            catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Independence] window: " + e); }
+        }
+        static void Btn(Rect r, string label, Action a) { GUI.Box(r, ""); GUI.Label(r, label, sBtn); next.Add(new KeyValuePair<Rect, Action>(r, a)); }
+        static string Cap(string s) { return string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + s.Substring(1); }
+    }
+
+    [HarmonyLib.HarmonyPatch(typeof(CampaignController), "CreateRebellionEvent")]
+    internal static class Patch_RebellionEvent_Decision
+    {
+        private static bool Prefix(Player __0, Player __1, Player __2, int __3, Province __4) { return RevoltDecision.Intercept(__0, __1, __2, __3, __4, false); }
+    }
+    [HarmonyLib.HarmonyPatch(typeof(CampaignController), "CreateLandRebellionEvent")]
+    internal static class Patch_LandRebellionEvent_Decision
+    {
+        private static bool Prefix(Player __0, Player __1, int __2, Province __3) { return RevoltDecision.Intercept(__0, __1, null, __2, __3, true); }
     }
 }
