@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.52", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.53", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -3088,16 +3088,42 @@ namespace DipGgFixes
     {
         private static readonly Dictionary<IntPtr, float> origin = new Dictionary<IntPtr, float>();
         private static readonly HashSet<IntPtr> logged = new HashSet<IntPtr>();
+        internal static Ship lastRefit; internal static float lastAllowed;
+        static readonly HashSet<string> limitLogged = new HashSet<string>();
+        // 1.11.53: the save check of the refit screen compares the design with the player's treaty limit
+        // (Player.TonnageLimit), not with Ship.TonnageMax - a 55,690 t battleship could not be refitted under a 35,000 t limit
+        internal static void ApplyLimit(Player p, ShipType t, ref float result)
+        {
+            try
+            {
+                var a = DipGgFixesMod.RefitTreatyAllowance; if (a == null || a.Value <= 0f || t == null) return;
+                var s = lastRefit; if (s == null) return;
+                bool designer = false; try { designer = GameManager.IsConstructor; } catch { }
+                if (!designer) return;
+                bool refit = false; try { refit = s.isRefitDesign; } catch { }
+                if (!refit) return;
+                var st = s.shipType; if (st == null || st.name != t.name) return;
+                if (p != null && s.player != null && s.player.Pointer != p.Pointer) return;
+                if (lastAllowed > result)
+                {
+                    string key = s.Pointer.ToString() + "|" + result.ToString("F0");
+                    if (limitLogged.Add(key)) MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: treaty limit for {t.name} {result:F0} t -> {lastAllowed:F0} t for this refit");
+                    result = lastAllowed;
+                }
+            }
+            catch { }
+        }
         internal static void Apply(Ship s, ref float result)
         {
             try
             {
                 var a = DipGgFixesMod.RefitTreatyAllowance; if (a == null || a.Value <= 0f || s == null) return;
-                if (!s.isRefitDesign) return;
+                if (!s.isRefitDesign) { lastRefit = null; return; }
                 float o; if (!origin.TryGetValue(s.Pointer, out o)) { o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return; origin[s.Pointer] = o; }
                 float allowed = o + a.Value;
                 float hullMax = 0f; try { var h = s.hull; if (h != null && h.data != null) hullMax = h.data.tonnageMax; } catch { }
                 if (hullMax > 0f) allowed = Math.Min(allowed, hullMax);
+                lastRefit = s; lastAllowed = allowed;
                 if (allowed > result)
                 {
                     if (logged.Add(s.Pointer)) MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: refit tonnage limit {result:F0} t -> {allowed:F0} t (ship {o:F0} t + treaty modernisation allowance, hull max {(hullMax > 0 ? hullMax.ToString("F0") : "-")} t)");
@@ -3118,5 +3144,11 @@ namespace DipGgFixes
     internal static class Patch_TonnageMaxStatic_Refit
     {
         private static void Postfix(Ship __1, ref float __result) { RefitTreaty.Apply(__1, ref __result); }
+    }
+
+    [HarmonyPatch(typeof(Player), "TonnageLimit", new Type[] { typeof(ShipType) })]
+    internal static class Patch_TonnageLimit_Refit
+    {
+        private static void Postfix(Player __instance, ShipType __0, ref float __result) { RefitTreaty.ApplyLimit(__instance, __0, ref __result); }
     }
 }
