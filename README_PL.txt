@@ -16,6 +16,10 @@ kliknięcie, odinstalowanie przywraca stan sprzed instalacji.
 Autor rozszerzenia: Klaudiusz Ledwoch (Steam: Klod76).
 Nexus: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66
 GitHub (kod źródłowy): https://github.com/KlaudiuszLedwoch/Iron-Admiral
+Filmy (AI bitewne w akcji, napisy z dziennika bitwy):
+  https://youtu.be/DjmOu0KVnwE (trzy bitwy, 6 min)
+  https://youtu.be/ZAPta33uJXE (dwie bitwy, 4 min)
+  https://youtu.be/SZzuVT4X2qY (pierwsza bitwa w całości, 5 min)
 
 --------------------------------------------------------------------------
 DLACZEGO WARTO

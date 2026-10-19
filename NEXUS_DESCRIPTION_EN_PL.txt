@@ -5,9 +5,10 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 [i]Description as of 19 October 2026. Latest version: Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41).[/i]
 
-[b]Watch the battle AI in action - every caption comes from the mod's own battle log:[/b]
+[b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
-[*]Two battles, 4 min, English captions and Polish subtitles: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
+[*]Three battles, 6 min, ending with two surrendered destroyers taken as prizes: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
+[*]Two battles, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
@@ -213,9 +214,10 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [i]Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41).[/i]
 
-[b]Zobacz AI bitewne w akcji - każdy napis pochodzi z dziennika bitwy moda:[/b]
+[b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
-[*]Dwie bitwy, 4 min, napisy angielskie i polskie: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
+[*]Trzy bitwy, 6 min, na końcu dwa poddane niszczyciele przejęte jako pryzy: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
+[*]Dwie bitwy, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 

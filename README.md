@@ -6,6 +6,14 @@ _Description as of 18 October 2026. Latest version: Iron Admiral 1.2.22 (DIP_GG_
 
 Download / Nexus page: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66
 
+## Videos
+
+The battle AI in action - every caption comes from the mod's own battle log:
+
+- [Three battles, 6 min, ending with two surrendered destroyers taken as prizes](https://youtu.be/DjmOu0KVnwE)
+- [Two battles, 4 min](https://youtu.be/ZAPta33uJXE)
+- [The first battle uncut, 5 min](https://youtu.be/SZzuVT4X2qY)
+
 ## What it adds
 
 - **Battle AI that fights like a navy** (DIP_GG_Fixes add-on): torpedo charges by destroyers, torpedo boats and light cruisers; divisions that cannot outrun a pursuit turn and fight; crippled ships are detached so the healthy ones keep speed; focus fire on damaged targets; national doctrines read from `Mods/battleDoctrines.csv`.
