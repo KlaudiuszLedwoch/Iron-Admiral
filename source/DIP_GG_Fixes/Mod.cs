@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.50", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.51", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -212,6 +212,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> TorpedoTargetSizeRatio;
         internal static MelonPreferences_Entry<float> MassAttackStrengthRatio;
         internal static MelonPreferences_Entry<float> MainShipSizeRatio;
+        internal static MelonPreferences_Entry<float> MassAttackPerTarget;
+        internal static MelonPreferences_Entry<bool> WithdrawWhenOutmatched;
         internal static MelonPreferences_Entry<bool> MinorFleetToConqueror;
         internal static MelonPreferences_Entry<bool> NationalTech;
         internal static MelonPreferences_Entry<bool> CheckUpdates;
@@ -406,6 +408,10 @@ namespace DipGgFixes
                 "Torpedo craft charge capital ships or any enemy at least this many times larger (tonnage) than themselves");
             MassAttackStrengthRatio = cat.CreateEntry("MassAttackStrengthRatio", 1.0f, null,
                 "Massed torpedo attack when the enemy's combat tonnage in the battle exceeds own combat tonnage times this value");
+            MassAttackPerTarget = cat.CreateEntry("MassAttackPerTarget", 3f, null,
+                "Massed torpedo attack only when the side has at least this many torpedo craft per enemy target (capital ships and ships clearly larger than its torpedo craft)");
+            WithdrawWhenOutmatched = cat.CreateEntry("WithdrawWhenOutmatched", true, null,
+                "AI divisions withdraw when the enemy is stronger and there are too few torpedo craft for a massed attack - if they are faster than every visible enemy (or no enemy can penetrate them)");
             MainShipSizeRatio = cat.CreateEntry("MainShipSizeRatio", 0.75f, null,
                 "A ship counts as a main ship of its side (escape when it cannot hurt the enemy) when its tonnage is at least this share of the largest own ship in the battle");
             SurrenderReturnToWinner = cat.CreateEntry("SurrenderedShipsToBattleWinner", true, null,
@@ -1208,6 +1214,8 @@ namespace DipGgFixes
         // 1.11.47: massed torpedo attack - the enemy has more battleships/battlecruisers than this side
         static readonly Dictionary<IntPtr, float> fleetNext = new Dictionary<IntPtr, float>();
         static readonly Dictionary<IntPtr, bool> fleetOn = new Dictionary<IntPtr, bool>();
+        static readonly Dictionary<IntPtr, bool> fleetHopeless = new Dictionary<IntPtr, bool>();
+        internal static bool Hopeless(Player player, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies) { if (player == null || battle == null) return false; MassAttack(player, battle, enemies); bool h; return fleetHopeless.TryGetValue(player.Pointer, out h) && h; }
         static bool IsLine(Ship s) { var t = s != null ? s.shipType : null; return t != null && (t.name == "bb" || t.name == "bc"); }
         // 1.11.50: AI tactics no longer depend on battleships being present - ship size relative to the fleets in the battle decides
         static readonly Dictionary<IntPtr, float> tonCache = new Dictionary<IntPtr, float>(); static IntPtr tonBattle;
@@ -1256,12 +1264,22 @@ namespace DipGgFixes
             if (EscapeMission(player, battle)) return false;
             float now = UnityEngine.Time.time; float nx; bool on;
             if (fleetNext.TryGetValue(player.Pointer, out nx) && now < nx && fleetOn.TryGetValue(player.Pointer, out on)) return on;
-            float own = 0f; try { own = Strength(battle.ShipsOf(player, true)); } catch { }
+            Il2CppSystem.Collections.Generic.List<Ship> mine = null; try { mine = battle.ShipsOf(player, true); } catch { }
+            float own = Strength(mine);
             float foe = Strength(enemies);
+            // 1.11.51: the attack must be big enough for part of it to get through - torpedo craft counted against their targets
+            int attackers = 0; float minTon = float.MaxValue;
+            if (mine != null) for (int i = 0; i < mine.Count; i++) { var x = mine[i]; if (Alive(x) && IsLight(x) && x.haveTorpedoes) { attackers++; minTon = UnityEngine.Mathf.Min(minTon, Ton(x)); } }
+            int targets = 0;
+            if (attackers > 0) for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (Alive(e) && Combat(e) && (IsCapital(e) || Ton(e) >= minTon * DipGgFixesMod.TorpedoTargetSizeRatio.Value)) targets++; }
+            bool stronger = foe > own * DipGgFixesMod.MassAttackStrengthRatio.Value;
+            bool enough = targets > 0 && attackers >= DipGgFixesMod.MassAttackPerTarget.Value * targets;
             bool was; fleetOn.TryGetValue(player.Pointer, out was);
-            on = foe > own * DipGgFixesMod.MassAttackStrengthRatio.Value;
-            if (on != was) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t");
-            fleetOn[player.Pointer] = on; fleetNext[player.Pointer] = now + 5f;
+            on = stronger && enough;
+            bool hopeless = stronger && !enough;
+            bool wasH; fleetHopeless.TryGetValue(player.Pointer, out wasH);
+            if (on != was || hopeless != wasH) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t, {attackers} torpedo craft vs {targets} targets (needed {DipGgFixesMod.MassAttackPerTarget.Value} per target){(hopeless ? " - too few to get through, ships faster than the enemy withdraw" : "")}");
+            fleetOn[player.Pointer] = on; fleetHopeless[player.Pointer] = hopeless; fleetNext[player.Pointer] = now + 5f;
             return on;
         }
         // 1.11.47: ramming - steer into the nearest enemy ship within RamRange (aim a little ahead of it)
@@ -1399,6 +1417,17 @@ namespace DipGgFixes
 
             // 1.11.49: escape missions take precedence over every other AI rule
             if (EscapeMission(player, battle) && EscapeLogic(leader, div, st, doc, enemies)) return;
+            // 1.11.51: outnumbered and too few torpedo craft for a massed attack - divisions faster than the enemy withdraw
+            if (DipGgFixesMod.WithdrawWhenOutmatched.Value && !st.capEscape && Hopeless(player, battle, enemies))
+            {
+                string sw;
+                if (CanSurvive(leader, div, doc, enemies, out sw))
+                {
+                    st.capEscape = true; st.charging = false; st.closing = false; div.Retreat(true);
+                    Log($"{st.name} ({leader.shipType.name}): enemy force too strong and too few torpedo craft for a massed attack - withdraws ({sw})");
+                    Why(st, "withdrawing - outmatched"); return;
+                }
+            }
 
             // --- rule for every AI division: ships that slow the division down leave it and retreat alone
             if (DipGgFixesMod.DetachSlowShips.Value && now >= st.nextDetach && TryDetachSlow(div, leader, st)) { st.nextDetach = now + DipGgFixesMod.DetachCooldownSeconds.Value; return; }
