@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.41", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.49", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -176,6 +176,15 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> Evasive;
         internal static MelonPreferences_Entry<float> EvasiveAngle;
         internal static MelonPreferences_Entry<float> EvasiveSeconds;
+        internal static MelonPreferences_Entry<bool> TorpedoTurnAway;
+        internal static MelonPreferences_Entry<float> TorpedoTurnAwayRange;
+        internal static MelonPreferences_Entry<float> TorpedoTurnAwaySeconds;
+        internal static MelonPreferences_Entry<bool> FleetTorpedoAttack;
+        internal static MelonPreferences_Entry<bool> Ramming;
+        internal static MelonPreferences_Entry<float> RamRange;
+        internal static MelonPreferences_Entry<bool> CapitalEscapeWhenHopeless;
+        internal static MelonPreferences_Entry<bool> EscapeMissionLogic;
+        internal static MelonPreferences_Entry<string> EscapeBattleTypes;
         internal static MelonPreferences_Entry<float> OutrangedFactor;
         internal static MelonPreferences_Entry<float> PenetrationFactor;
         internal static MelonPreferences_Entry<float> CloseInStopRange;
@@ -211,6 +220,8 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
+            SaveCompat.Tick();
+            ArmorDiag.Tick();
         }
 
         public override void OnGUI()
@@ -329,6 +340,20 @@ namespace DipGgFixes
                 "AI ships zigzag while approaching (torpedo charge, close-in out of own range or without penetration): target turning lowers enemy accuracy (params acc_turning_target), own turning lowers own accuracy, so it is used only when own guns are not effective");
             EvasiveAngle = cat.CreateEntry("EvasiveAngle", 30f, null, "Zigzag: course offset to each side from the direct course (degrees)");
             EvasiveSeconds = cat.CreateEntry("EvasiveLegSeconds", 25f, null, "Zigzag: average leg length in seconds (randomised +-30%)");
+            TorpedoTurnAway = cat.CreateEntry("TorpedoTurnAway", true, null,
+                "AI divisions that are not charging turn away from sighted enemy torpedo tracks and steer parallel to them (combing the tracks, as the Grand Fleet did at Jutland); only tracks the leader can see and that would pass close to it count");
+            TorpedoTurnAwayRange = cat.CreateEntry("TorpedoTurnAwayRange", 4000f, null, "Turn-away: torpedoes within this distance of the division leader (m) are checked");
+            TorpedoTurnAwaySeconds = cat.CreateEntry("TorpedoTurnAwaySeconds", 45f, null, "Turn-away: how long the division keeps the evasive course (s)");
+            FleetTorpedoAttack = cat.CreateEntry("FleetTorpedoAttack", true, null,
+                "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
+            Ramming = cat.CreateEntry("Ramming", true, null,
+                "AI light ships without torpedoes (or out of torpedoes) that cannot escape, or take part in a massed attack, steer into the nearest enemy ship within ramming range");
+            RamRange = cat.CreateEntry("RamRange", 2000f, null, "Ramming: an enemy ship closer than this (m) is rammed");
+            CapitalEscapeWhenHopeless = cat.CreateEntry("CapitalEscapeWhenHopeless", true, null,
+                "AI battleships/battlecruisers that cannot penetrate the enemy even at close range retreat when they can survive to the end of the battle: they are faster than every visible enemy, or no visible enemy can penetrate their belt");
+            EscapeMissionLogic = cat.CreateEntry("EscapeMissionLogic", true, null,
+                "In battles where the AI side's task is to get away (EscapeBattleTypes): no massed torpedo attack; divisions that are faster than the enemy retreat, divisions that cannot outrun it split up and flee in different directions so that part of the force gets away");
+            EscapeBattleTypes = cat.CreateEntry("EscapeBattleTypes", "escape_taskforce", null, "Battle types (battleTypeEx.csv names, comma separated) in which the defending side tries to escape");
             OutrangedFactor = cat.CreateEntry("OutrangedFactor", 1.1f, null,
                 "Outranged when the target's gun range > own gun range x this");
             PenetrationFactor = cat.CreateEntry("PenetrationFactor", 1.0f, null,
@@ -387,6 +412,8 @@ namespace DipGgFixes
                 "Show a Download button in the update message; the download starts only after the player clicks it (1.11.11). false = message with a link only");
             EcoPrefs.Create(cat);
             EconomyUi.CreatePrefs(cat);
+            SaveCompat.CreatePrefs(cat);
+            ArmorDiag.CreatePrefs(cat);
             SettingsUi.CreatePrefs(cat);
             Doctrines.Load();
             TechBonuses.Load();
@@ -988,7 +1015,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; }
+        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -1166,6 +1193,121 @@ namespace DipGgFixes
             return best;
         }
 
+        // 1.11.47: massed torpedo attack - the enemy has more battleships/battlecruisers than this side
+        static readonly Dictionary<IntPtr, float> fleetNext = new Dictionary<IntPtr, float>();
+        static readonly Dictionary<IntPtr, bool> fleetOn = new Dictionary<IntPtr, bool>();
+        static bool IsLine(Ship s) { var t = s != null ? s.shipType : null; return t != null && (t.name == "bb" || t.name == "bc"); }
+        static int CountLine(Il2CppSystem.Collections.Generic.List<Ship> l)
+        {
+            int n = 0; if (l == null) return 0;
+            for (int i = 0; i < l.Count; i++) { var x = l[i]; if (x != null && !x.isSinking && !x.isDead && !x.IsSurrendered && IsLine(x)) n++; }
+            return n;
+        }
+        internal static bool MassAttack(Player player, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            if (!DipGgFixesMod.FleetTorpedoAttack.Value || player == null) return false;
+            if (EscapeMission(player, battle)) return false;
+            float now = UnityEngine.Time.time; float nx; bool on;
+            if (fleetNext.TryGetValue(player.Pointer, out nx) && now < nx && fleetOn.TryGetValue(player.Pointer, out on)) return on;
+            int own = 0; try { own = CountLine(battle.ShipsOf(player, true)); } catch { }
+            int foe = CountLine(enemies);
+            bool was; fleetOn.TryGetValue(player.Pointer, out was);
+            on = foe > own;
+            if (on != was) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy battleships/battlecruisers {foe} vs own {own}");
+            fleetOn[player.Pointer] = on; fleetNext[player.Pointer] = now + 5f;
+            return on;
+        }
+        // 1.11.47: ramming - steer into the nearest enemy ship within RamRange (aim a little ahead of it)
+        internal static bool TryRam(Ship leader, Division div, DivState st, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            if (!DipGgFixesMod.Ramming.Value) return false;
+            Ship best = null; float bd = DipGgFixesMod.RamRange.Value;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (e == null || e.isSinking || e.isDead || e.IsSurrendered || !e.IsVisibleFor(leader)) continue;
+                float d = Dist(leader, e); if (d < bd) { bd = d; best = e; }
+            }
+            if (best == null) return false;
+            var tt = best.transform; if (tt == null) return false;
+            var f = tt.forward; f.y = 0f;
+            div.MoveTo(tt.position + f.normalized * UnityEngine.Mathf.Min(bd * 0.5f, 600f));
+            if (st.ramTarget != best.Pointer) { st.ramTarget = best.Pointer; Log($"{st.name} ({leader.shipType.name}) rams {best.name} ({best.shipType.name}) at {bd:0} m"); }
+            Why(st, "ramming");
+            return true;
+        }
+        // 1.11.47: can a capital division survive to the end of the battle if it leaves - faster than every visible enemy, or armour holds
+        static bool CanSurvive(Ship leader, Division div, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, out string why)
+        {
+            float own = DivSpeed(div, leader); float fastest = 0f; bool armour = true; int seen = 0;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (e == null || e.isSinking || e.isDead || e.IsSurrendered || !e.IsVisibleFor(leader)) continue;
+                seen++; float v = Speed(e); if (v > fastest) fastest = v;
+                if (armour) { float pen, belt; float d = UnityEngine.Mathf.Max(3000f, Dist(leader, e) * 0.5f); if (!CannotPenetrate(e, leader, d, out pen, out belt)) armour = false; }
+            }
+            bool faster = own > fastest * EscapeMargin(doc);
+            why = faster ? $"faster than every visible enemy ({own:0.0} vs {fastest:0.0})" : armour ? "no visible enemy can penetrate its belt" : "";
+            return seen > 0 && (faster || armour);
+        }
+
+        // 1.11.49: escape missions - the defending side's task is to get away
+        internal static bool EscapeMission(Player player, CampaignBattle battle)
+        {
+            try
+            {
+                if (!DipGgFixesMod.EscapeMissionLogic.Value || battle == null || player == null) return false;
+                var t = battle.Type; if (t == null) return false;
+                string n = t.name; if (string.IsNullOrEmpty(n)) return false;
+                bool listed = false;
+                foreach (var x in DipGgFixesMod.EscapeBattleTypes.Value.Split(',')) if (x.Trim().Length > 0 && string.Equals(x.Trim(), n, StringComparison.OrdinalIgnoreCase)) listed = true;
+                return listed && battle.IsDefender(player);
+            }
+            catch { return false; }
+        }
+        // escape mission logic for one AI division; returns true when it took over the division
+        static bool EscapeLogic(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            float own = DivSpeed(div, leader); float fastest = 0f; Ship pursuer = null;
+            var c = UnityEngine.Vector3.zero; int n = 0;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (e == null || e.isSinking || e.isDead || e.IsSurrendered) continue;
+                c += e.transform.position; n++;
+                if (!e.IsVisibleFor(leader) || Dist(leader, e) > DipGgFixesMod.PursuitRange.Value) continue;
+                float v = Speed(e); if (v > fastest) { fastest = v; pursuer = e; }
+            }
+            if (n == 0) return false;
+            var lp = leader.transform.position; var away = lp - c / n; away.y = 0f; if (away.sqrMagnitude < 1f) away = leader.transform.forward; away.Normalize();
+            if (pursuer == null || own > fastest * EscapeMargin(doc))
+            {
+                if (!div.isRetreating && !div.retreat) div.Retreat(true);
+                if (!st.escapeLogged) { st.escapeLogged = true; Log($"{st.name} ({leader.shipType.name}): escape mission - {(pursuer == null ? "no pursuer in range" : $"faster than {pursuer.name} ({own:0.0} vs {fastest:0.0})")}, retreats instead of attacking"); }
+                st.fighting = false; st.charging = false; st.closing = false;
+                Why(st, "escape mission - retreating"); return true;
+            }
+            // cannot outrun: split the division and flee in different directions
+            var ships = div.ships;
+            if (ships != null && ships.Count > 1)
+            {
+                var il = new Il2CppSystem.Collections.Generic.List<Ship>(); var names = new List<string>();
+                for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (s == null || s.isSinking || s.isDead || s.Pointer == leader.Pointer || !s.CanDetach()) continue; il.Add(s); names.Add(s.name); }
+                if (il.Count > 0)
+                {
+                    foreach (var s in il) { var one = new Il2CppSystem.Collections.Generic.List<Ship>(); one.Add(s); try { Ship.DetachShips(one); } catch { } }
+                    Log($"{st.name} ({leader.shipType.name}): escape mission - cannot outrun {pursuer.name} ({own:0.0} vs {fastest:0.0}), the division scatters: {string.Join(", ", names)} flee on their own in different directions");
+                }
+            }
+            // each ship flees on its own bearing, fanned out from the direction away from the enemy
+            int h = (int)((leader.Pointer.ToInt64() >> 4) & 0x7fffffff);
+            float ang = ((h % 7) - 3) * 25f; // -75..+75 deg
+            var dir = UnityEngine.Quaternion.Euler(0f, ang, 0f) * away;
+            if (div.isRetreating || div.retreat) div.Retreat(false);
+            div.MoveTo(lp + dir * 6000f);
+            if (!st.scatterLogged) { st.scatterLogged = true; Log($"{st.name} ({leader.shipType.name}): escape mission - flees alone, {ang:+0;-0;0} deg off the direction away from the enemy"); }
+            st.fighting = false; st.charging = false; st.closing = false;
+            Why(st, "escape mission - scattering"); return true;
+        }
+
         // Think for AI division leaders (from Ship.AILogic) and for player division leaders (from the per-ship tick).
         internal static void Think(Ship leader) { Think(leader, false); }
         internal static void Think(Ship leader, bool playerSide)
@@ -1196,6 +1338,7 @@ namespace DipGgFixes
             if (battle == null) { Why(st, "no CurrentBattle"); return; }
             var enemies = battle.ShipsOf(battle.OppositePlayer(player), true);
             if (enemies == null) { Why(st, "no enemy list"); return; }
+            ArmorDiag.Probe(leader, enemies);
 
             if (playerSide)
             {
@@ -1206,6 +1349,9 @@ namespace DipGgFixes
                 TorpedoCharge(leader, div, st, doc, enemies, true);
                 return;
             }
+
+            // 1.11.49: escape missions take precedence over every other AI rule
+            if (EscapeMission(player, battle) && EscapeLogic(leader, div, st, doc, enemies)) return;
 
             // --- rule for every AI division: ships that slow the division down leave it and retreat alone
             if (DipGgFixesMod.DetachSlowShips.Value && now >= st.nextDetach && TryDetachSlow(div, leader, st)) { st.nextDetach = now + DipGgFixesMod.DetachCooldownSeconds.Value; return; }
@@ -1225,11 +1371,15 @@ namespace DipGgFixes
                     float v = Speed(e); if (v > pv) { pv = v; pursuer = e; pd = d; }
                 }
                 bool cannotEscape = pursuer != null && own <= pv * EscapeMargin(doc);
+                if (cannotEscape && st.capEscape && retreating)
+                {
+                    string sw; if (CanSurvive(leader, div, doc, enemies, out sw)) { Why(st, "escaping - " + sw); return; }
+                }
                 if (cannotEscape)
                 {
                     if (retreating) div.Retreat(false);
                     if (!st.fighting) { st.fighting = true; Log($"{st.name} ({leader.shipType.name}) cannot outrun {pursuer.name} ({pursuer.shipType.name}, {pv:0.0} vs own {own:0.0} speed units, {pd:0} m) - retreat cancelled, fighting"); }
-                    if (!leader.haveTorpedoes) { Why(st, "fighting (cannot escape)"); return; } // gun ships: the game's own combat AI takes over
+                    if (!leader.haveTorpedoes) { if (light && TryRam(leader, div, st, enemies)) return; Why(st, "fighting (cannot escape)"); return; } // gun ships: the game's own combat AI takes over
                 }
                 else
                 {
@@ -1244,13 +1394,82 @@ namespace DipGgFixes
                 }
             }
 
+            // 1.11.44: turn away from sighted torpedo tracks (not while charging - a charging flotilla presses on)
+            if (!st.charging && DipGgFixesMod.TorpedoTurnAway.Value)
+            {
+                if (now < st.evadeUntil) { try { div.MoveTo(leader.transform.position + st.evadeDir * 3000f); } catch { } Why(st, "turning away from torpedoes"); return; }
+                if (TorpedoEvasion.Check(leader, div, st, player, battle, enemies)) return;
+            }
+
             if (light)
             {
-                if (!leader.haveTorpedoes || !DipGgFixesMod.LightShipCharge.Value) return;
+                if (!leader.haveTorpedoes) { if ((st.fighting || MassAttack(player, battle, enemies)) && TryRam(leader, div, st, enemies)) return; return; }
+                if (!DipGgFixesMod.LightShipCharge.Value) return;
                 TorpedoCharge(leader, div, st, doc, enemies, false);
                 return;
             }
             if (capital) CapitalLogic(leader, div, st, doc, enemies);
+        }
+
+        internal static class TorpedoEvasion
+        {
+            static readonly Dictionary<IntPtr, IntPtr> owner = new Dictionary<IntPtr, IntPtr>();
+            static int errors;
+            // owner of a torpedo = player of the ship nearest to its launch point (cached per torpedo)
+            static IntPtr Owner(Torpedo t, Il2CppSystem.Collections.Generic.List<Ship> a, Il2CppSystem.Collections.Generic.List<Ship> b)
+            {
+                IntPtr o;
+                if (owner.TryGetValue(t.Pointer, out o)) return o;
+                var start = t.torpedoStart; float best = float.MaxValue; Ship near = null;
+                foreach (var list in new[] { a, b })
+                {
+                    if (list == null) continue;
+                    for (int i = 0; i < list.Count; i++) { var s = list[i]; if (s == null) continue; float d = (s.transform.position - start).sqrMagnitude; if (d < best) { best = d; near = s; } }
+                }
+                o = near != null && near.player != null ? near.player.Pointer : IntPtr.Zero;
+                if (owner.Count > 2000) owner.Clear();
+                owner[t.Pointer] = o; return o;
+            }
+            internal static bool Check(Ship leader, Division div, DivState st, Player player, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+            {
+                try
+                {
+                    var all = Torpedo.AllTorpedo; if (all == null || all.Count == 0) return false;
+                    var own = battle.ShipsOf(player, true);
+                    var lp = leader.transform.position; float range = DipGgFixesMod.TorpedoTurnAwayRange.Value;
+                    int n = 0; float closest = float.MaxValue; UnityEngine.Vector3 dirSum = UnityEngine.Vector3.zero;
+                    for (int i = 0; i < all.Count; i++)
+                    {
+                        var t = all[i]; if (t == null) continue;
+                        var tp = t.transform.position; var rel0 = lp - tp; rel0.y = 0f;
+                        if (rel0.magnitude > range) continue;
+                        if (!t.IsVisibleFor(leader)) continue;
+                        if (Owner(t, own, enemies) == player.Pointer) continue;
+                        var f = t.transform.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) continue; f.Normalize();
+                        // closest approach of the track to any ship of the division still ahead of the torpedo
+                        float pass = float.MaxValue;
+                        var ships = div.ships;
+                        for (int k = 0; ships != null && k < ships.Count; k++)
+                        {
+                            var sh = ships[k]; if (sh == null || sh.isSinking || sh.isDead) continue;
+                            var rel = sh.transform.position - tp; rel.y = 0f;
+                            float along = UnityEngine.Vector3.Dot(rel, f); if (along <= 0f) continue;
+                            float p = (rel - f * along).magnitude; if (p < pass) pass = p;
+                        }
+                        if (pass > 500f) continue;
+                        n++; if (pass < closest) closest = pass; dirSum += f;
+                    }
+                    if (n == 0) return false;
+                    var away = dirSum.normalized; // steer parallel to the tracks, running with them: fewer hits, longer torpedo run
+                    div.MoveTo(lp + away * 3000f); st.evadeDir = away;
+                    st.evadeUntil = UnityEngine.Time.time + DipGgFixesMod.TorpedoTurnAwaySeconds.Value;
+                    st.closing = false;
+                    Why(st, "turning away from torpedoes");
+                    Log($"{st.name} ({leader.shipType.name}): {n} enemy torpedo track(s) sighted, closest pass {closest:0} m - division turns away and combs the tracks for {DipGgFixesMod.TorpedoTurnAwaySeconds.Value:0} s");
+                    return true;
+                }
+                catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] torpedo evasion failed: " + e.Message); return false; }
+            }
         }
 
         static readonly System.Random zigRnd = new System.Random();
@@ -1288,7 +1507,9 @@ namespace DipGgFixes
                 Log($"{st.name}: charge aborted ({(ammo ? "damage " + dmg.ToString("0.00") : "no torpedoes")}) - {(st.fighting ? "keeps fighting with guns (cannot escape)" : "retreating")}");
                 return;
             }
-            if (!ammo) { Why(st, "no torpedo ammo"); return; }
+            bool mass = false;
+            if (!playerSide) { var bt = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (bt != null) mass = MassAttack(leader.player, bt, enemies); }
+            if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; Why(st, "no torpedo ammo"); return; }
             if (dmg > AbortDamage(doc)) { Why(st, "too damaged for a charge"); return; }
 
             float bestD;
@@ -1303,7 +1524,12 @@ namespace DipGgFixes
                 float start = ChargeStartFor(leader, best, doc, torp);
                 // 1.11.40: battle log 2026-10-18 - CL Omaha charged from 14.6 km at 4.3 vs 12.1 speed units (torpedoes 1.6 km):
                 // a division that cannot escape charges only when the target is reachable
-                if (st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
+                if (mass)
+                {
+                    if (!st.massLogged) { st.massLogged = true; Log($"{st.name} ({leader.shipType.name}): massed torpedo attack - charges {best.name} from {bestD:0} m (torpedoes {torp:0} m); alone it would not get through, part of the attack will"); }
+                    start = float.MaxValue;
+                }
+                else if (st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
                 {
                     if (!st.reachLogged) { st.reachLogged = true; Log($"{st.name}: charge on {best.name} not feasible ({bestD:0} m, start distance {start:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0}) - fighting with guns"); }
                     Why(st, "charge not feasible - guns"); return;
@@ -1315,7 +1541,7 @@ namespace DipGgFixes
                 }
                 st.charging = true; st.target = best.Pointer;
                 Why(st, "charging");
-                Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, start distance {start:0} m");
+                Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : $"start distance {start:0} m")}");
             }
             if (bestD > launchAt)
             {
@@ -1357,6 +1583,13 @@ namespace DipGgFixes
                 if (hopeless)
                 {
                     if (!st.hopelessLogged) { st.hopelessLogged = true; Log($"{st.name} ({leader.shipType.name}): cannot penetrate {best.name} even at {UnityEngine.Mathf.Min(stopAt, bestD):0} m (pen {penNear:0.0} vs belt {beltNear:0.0}) - no close-in, left to the game"); }
+                    string sw;
+                    if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value && IsLine(leader) && !st.capEscape && CanSurvive(leader, div, doc, enemies, out sw))
+                    {
+                        st.capEscape = true; div.Retreat(true);
+                        Log($"{st.name} ({leader.shipType.name}): cannot hurt {best.name} and can survive the battle ({sw}) - retreats to save the ship");
+                        Why(st, "escaping - " + sw); return;
+                    }
                     Why(st, "hopeless penetration - no close-in"); return;
                 }
             }

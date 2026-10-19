@@ -1,4 +1,4 @@
-# Iron Admiral 1.2.22 (DIP GG Extended) - shared helpers (game folder detection)
+# Iron Admiral 1.2.23 (DIP GG Extended) - shared helpers (game folder detection)
 $AppId   = "1069660"
 $GameExe = "Ultimate Admiral Dreadnoughts.exe"
 function Test-GameDir($p) { return ($p -and (Test-Path (Join-Path $p $GameExe))) }

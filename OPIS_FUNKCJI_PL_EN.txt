@@ -1,6 +1,6 @@
-Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41) - CO DAJE TEN MOD
-Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (71 sekcji).
+Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49) - CO DAJE TEN MOD
+Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (72 sekcje).
 ============================================================================
 
 FILMY Z BITEW (YouTube) - każdy napis pochodzi z dziennika bitwy moda:
@@ -38,6 +38,20 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
   Włochy walczą tylko z przewagą, Niemcy osłaniają zwrot flotyllami torpedowymi.
   Na podstawie Grand Fleet Battle Orders, USN War Instructions i literatury o
   Kaisen Yōmurei.
+- Zmasowany atak torpedowy. Gdy przeciwnik ma więcej pancerników, wszystkie
+  okręty torpedowe AI ruszają naraz - jeden by się nie przebił, część całej
+  flotylli dochodzi na dystans odpalenia. Lekkie okręty bez torped, które nie
+  mogą uciec, idą na taran.
+- Bezradne pancerniki odchodzą. Pancernik AI, który nie przebije pancerza
+  przeciwnika nawet z bliska, wycofuje się, gdy może przetrwać bitwę.
+- Misje ucieczki. Zespół, którego zadaniem jest ucieczka, nie atakuje: gdy
+  jest szybszy, odchodzi; gdy nie, rozdziela się i okręty uciekają w różnych
+  kierunkach.
+- Zwrot od torped. Dywizje AI, które widzą nadpływające ślady torped,
+  skręcają równolegle do nich.
+- Artyleria wg danych historycznych: pociski półprzeciwpancerne (SAPC),
+  szybkostrzelność wg NavWeaps, rykoszety wg Okuna, działa pomocnicze na
+  niszczycielach.
 
 2. TWOJE OKRĘTY: MNIEJ MIKROZARZĄDZANIA, MNIEJ WŁASNYCH TORPED W BURCIE
 ----------------------------------------------------------------------------
@@ -318,9 +332,16 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do
   99%.
 
-19 października 2026 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22
-- Panel ustawień w grze (F10): każda funkcja włącz/wyłącz z opisem, zapis
-  od razu.
+19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.49 / Iron Admiral 1.2.22-1.2.23
+- DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: panel ustawień w grze (F10):
+  każda funkcja włącz/wyłącz z opisem, zapis od razu.
+- DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: zmasowany atak torpedowy, gdy
+  wróg ma więcej pancerników; taranowanie przez lekkie okręty bez torped;
+  bezradne pancerniki wycofują się, gdy mogą przetrwać; misje ucieczki -
+  ucieczka albo rozproszenie; zwrot od śladów torped; pociski SAPC,
+  szybkostrzelność, rykoszety i działa pomocnicze niszczycieli wg danych
+  historycznych; panel ustawień bez błędów na mapie kampanii; diagnostyka
+  pancerza w logu.
 
 18 października 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21
 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zipy zapisywane ze ścieżkami z
@@ -337,7 +358,7 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   siostry, refity); inflacja względem gospodarki z ratingiem kredytowym,
   odsetkami i zmniejszaniem długu; panel skarbu (F8), inflacja w oknie
   Finanse, miesięczny raport; rozdział w pomocy gry; poradnik GUIDE_EN.md.
-- Iron Admiral 1.2.22: wyjaśnienie inflacji (dopłata, nie poziom cen) w
+- Iron Admiral 1.2.17: wyjaśnienie inflacji (dopłata, nie poziom cen) w
   pomocy, poradniku i opisach.
 - DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: rozbudowa stoczni AI tylko po
   okresie stałej nadwyżki z gotówką albo przy nadwyżce pokrywającej koszt.
@@ -351,15 +372,15 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   dystansu bez szans na przebicie, zygzak w podejściu.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.22_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.22_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.23_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.23_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41) - WHAT THIS MOD DOES
-Description as of 19 October 2026. Latest version: Iron Admiral 1.2.22 (DIP_GG_Fixes 1.11.41).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (71 sections).
+Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49) - WHAT THIS MOD DOES
+Description as of 19 October 2026. Latest version: Iron Admiral 1.2.23 (DIP_GG_Fixes 1.11.49).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (72 sections).
 ============================================================================
 
 BATTLE VIDEOS (YouTube) - every caption comes from the mod's own battle log:
@@ -396,6 +417,19 @@ files cannot reach. One-click install, full uninstall, source code included.
   losses, Italy fights only with an advantage, Germany covers the turn-away
   with torpedo flotillas. Based on the Grand Fleet Battle Orders, the USN War
   Instructions and the Kaisen Yōmurei literature.
+- A massed torpedo attack. When the enemy has more battleships, every AI
+  torpedo craft goes in at once - one ship alone would not get through, part
+  of a whole flotilla reaches launch range. Light ships out of torpedoes that
+  cannot escape ram.
+- Helpless battleships withdraw. An AI battleship that cannot penetrate its
+  opponent even at close range withdraws when it can survive the battle.
+- Escape missions. A task force whose job is to get away does not attack:
+  when it is faster it runs, when it is not it splits up and the ships flee in
+  different directions.
+- Turning away from torpedoes. AI divisions that sight torpedo tracks coming
+  at them turn to run parallel to them.
+- Gunnery after historical data: semi-armour-piercing (SAPC) shells, rates of
+  fire after NavWeaps, ricochets after Okun, secondary guns on destroyers.
 
 2. YOUR SHIPS: LESS MICROMANAGEMENT, FEWER OWN TORPEDOES IN YOUR OWN SIDE
 ----------------------------------------------------------------------------
@@ -676,9 +710,15 @@ when the DLL does.
   99% after printing); printing on top of inflation adds 20 points instead of
   stacking to 99%.
 
-19 October 2026 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22
-- In-game settings panel (F10): every feature on/off with its description,
-  saved at once.
+19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.49 / Iron Admiral 1.2.22-1.2.23
+- DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: in-game settings panel (F10):
+  every feature on/off with its description, saved at once.
+- DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: massed torpedo attack when the
+  enemy has more battleships; ramming by light ships out of torpedoes;
+  helpless battleships withdraw when they can survive; escape missions - run
+  or scatter; turning away from torpedo tracks; SAPC shells, rates of fire,
+  ricochets and destroyer secondaries from historical data; settings panel
+  without errors on the campaign map; armour diagnostics in the log.
 
 18 October 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21
 - DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zips written with forward-slash
@@ -695,7 +735,7 @@ when the DLL does.
   sister ships, refits); inflation relative to the economy with credit
   ratings, interest and debt erosion; treasury panel (F8), inflation in the
   Finances window, monthly report; in-game Help chapter; guide GUIDE_EN.md.
-- Iron Admiral 1.2.22: inflation explained (a surcharge, not a price level)
+- Iron Admiral 1.2.17: inflation explained (a surcharge, not a price level)
   in the Help, the guide and the descriptions.
 - DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: AI shipyard expansion only after
   a steady surplus with cash in hand, or with a surplus covering the cost.
@@ -709,6 +749,6 @@ when the DLL does.
   without a chance to penetrate, evasive zigzag on the approach.
 
 
-Two downloads: Iron_Admiral_1.2.22_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.22_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.23_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.23_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).

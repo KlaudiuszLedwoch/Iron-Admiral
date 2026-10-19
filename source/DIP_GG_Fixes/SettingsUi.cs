@@ -2,8 +2,7 @@
 // Every on/off option of the mod (bool entries of the [DIP_GG_Fixes] preferences category) in groups, with its description.
 // A click changes the value at once and saves UserData/MelonPreferences.cfg. Drawing uses only GUI.Box/GUI.Label (as the
 // treasury panel, confirmed in game); clicks are read with Input.GetMouseButtonDown in OnUpdate and hit-tested against the
-// rectangles of the last frame, so the panel does not depend on IMGUI event handling. While the panel is open the game's
-// own UI event system is disabled, so clicks do not fall through to the map or the menus.
+// rectangles of the last frame, so the panel does not depend on IMGUI event handling.
 using System;
 using System.Collections.Generic;
 using MelonLoader;
@@ -24,17 +23,15 @@ namespace DipGgFixes
         static string status = "";
         static float statusUntil;
         static int errors;
-        static bool esWasEnabled = true;
-        static UnityEngine.EventSystems.EventSystem esOff;
 
         // group order and membership; anything not listed lands in "Other"
         static readonly string[] Groups = { "Battle AI", "Crews and prizes", "Campaign AI", "Economy", "Diplomacy", "Information and updates", "Other" };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
             {"LightShipTorpedoCharge","Battle AI"},{"CapitalTorpedoCharge","Battle AI"},{"CapitalCloseInWhenOutgunned","Battle AI"},
-            {"CloseInOnlyIfPenetrates","Battle AI"},{"EvasiveManeuvers","Battle AI"},{"FightWhenCannotEscape","Battle AI"},
+            {"CloseInOnlyIfPenetrates","Battle AI"},{"EvasiveManeuvers","Battle AI"},{"TorpedoTurnAway","Battle AI"},{"FleetTorpedoAttack","Battle AI"},{"Ramming","Battle AI"},{"CapitalEscapeWhenHopeless","Battle AI"},{"EscapeMissionLogic","Battle AI"},{"FightWhenCannotEscape","Battle AI"},
             {"DetachSlowShips","Battle AI"},{"FocusFire","Battle AI"},{"SmartTargeting","Battle AI"},{"SmartTargetingAi","Battle AI"},
-            {"PlayerScoutCharge","Battle AI"},{"TorpedoFriendlyLane","Battle AI"},{"BattleAiLog","Battle AI"},
+            {"PlayerScoutCharge","Battle AI"},{"TorpedoFriendlyLane","Battle AI"},{"BattleAiLog","Battle AI"},{"ArmorDiagnostics","Battle AI"},
             {"CrewLevelsRescale","Crews and prizes"},{"SurrenderByTraining","Crews and prizes"},{"CrewPanic","Crews and prizes"},
             {"CaptureSurrenderedShips","Crews and prizes"},{"MinorFleetToConqueror","Crews and prizes"},
             {"AutoShareDesigns","Campaign AI"},{"ShareToAllNations","Campaign AI"},{"CruisersWhenPoor","Campaign AI"},
@@ -43,7 +40,7 @@ namespace DipGgFixes
             {"SeriesProduction","Economy"},{"InflationEconomy","Economy"},{"FinancialCrisis","Economy"},
             {"BalanceOfPowerEvents","Diplomacy"},{"BalanceGrantOnlyWhenSolvent","Diplomacy"},{"CoalitionWar","Diplomacy"},
             {"TreasuryPanel","Information and updates"},{"TreasuryMonthlyReport","Information and updates"},{"TreasuryWarnings","Information and updates"},
-            {"TreasuryInFinancesWindow","Information and updates"},{"CheckForUpdates","Information and updates"},{"UpdateDownloadButton","Information and updates"},
+            {"TreasuryInFinancesWindow","Information and updates"},{"SaveCompatibilityFix","Information and updates"},{"CheckForUpdates","Information and updates"},{"UpdateDownloadButton","Information and updates"},
         };
         // options that only take effect at the next game start
         static readonly HashSet<string> RestartOnly = new HashSet<string> { "CheckForUpdates", "UpdateDownloadButton" };
@@ -68,19 +65,12 @@ namespace DipGgFixes
             return list;
         }
 
+        // 1.11.47: the game's EventSystem is no longer disabled while the panel is open. GameManager.CanHandleMouseInput (called
+        // every frame by the TweaksAndFixes campaign camera) reads EventSystem.current and threw a NullReferenceException every
+        // frame (about 4500 errors in 20 s in 1.11.46). A click on the panel may now also reach the map behind it.
         static void SetOpen(bool v)
         {
             open = v;
-            try
-            {
-                if (v)
-                {
-                    var es = UnityEngine.EventSystems.EventSystem.current;
-                    if (es != null) { esOff = es; esWasEnabled = es.enabled; es.enabled = false; }
-                }
-                else if (esOff != null) { esOff.enabled = esWasEnabled; esOff = null; }
-            }
-            catch { }
             MelonLogger.Msg("[DIP GG Fixes][Settings] panel " + (v ? "opened" : "closed"));
         }
 
