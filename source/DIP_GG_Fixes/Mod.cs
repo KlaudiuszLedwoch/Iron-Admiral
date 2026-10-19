@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.54", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.56", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -3117,6 +3117,7 @@ namespace DipGgFixes
             }
             catch { }
         }
+        internal static float AllowedFor(Ship s, float allowance) { return Allowed(s, allowance); }
         static float Allowed(Ship s, float allowance)
         {
             float o; if (!origin.TryGetValue(s.Pointer, out o)) { o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return 0f; origin[s.Pointer] = o; }
@@ -3162,5 +3163,77 @@ namespace DipGgFixes
     internal static class Patch_TonnageLimit_Refit
     {
         private static void Postfix(Player __instance, ShipType __0, ref float __result) { RefitTreaty.ApplyLimit(__instance, __0, ref __result); }
+    }
+
+    // 1.11.55: the "can not build" check of the designer (PlayerController.CanBuildShipsFromDesign) does not go through
+    // Player.TonnageLimit; a refit above the treaty limit failed with "Above displacement limit for BB: 35,000 t".
+    // When that is the only reason and the refit stays within the ship's tonnage plus the modernisation allowance, it passes.
+    internal static class RefitBuildCheck
+    {
+        static int logged;
+        internal static void Fix(Ship s, ref bool result, ref string reason, string where)
+        {
+            try
+            {
+                if (result || s == null) return;
+                var a = DipGgFixesMod.RefitTreatyAllowance; if (a == null || a.Value <= 0f) return;
+                bool refit = false; try { refit = s.isRefitDesign; } catch { }
+                string r = reason ?? "";
+                if (logged < 40 && (where == "save button" || logged < 10)) { logged++; MelonLogger.Msg($"[DIP GG Fixes][Refit] {where}: {s.name} refit={refit} tonnage {SafeTon(s):F0} t - cannot build: {StripTags(r)}"); }
+                if (!refit) return;
+                string plain = StripTags(r).Trim();
+                if (plain.Contains("\n")) return;
+                string low = plain.ToLowerInvariant();
+                bool displacementOnly = low == "tonnage" || low.Contains("above displacement limit for") && plain.Split(':').Length <= 4 && low.TrimEnd('.', ' ').EndsWith("t");
+                if (!displacementOnly) return;
+                float allowed = RefitTreaty.AllowedFor(s, a.Value); float ton = SafeTon(s);
+                if (allowed <= 0f || ton > allowed + 0.5f) { MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: {ton:F0} t is above the refit allowance ({allowed:F0} t) - stays blocked"); return; }
+                result = true; reason = "";
+                MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: refit of {ton:F0} t allowed above the treaty limit (allowance up to {allowed:F0} t) - {where}");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Refit] build check: " + e.Message); }
+        }
+        static float SafeTon(Ship s) { try { return s.Tonnage(); } catch { return 0f; } }
+        static string StripTags(string r) { var sb = new System.Text.StringBuilder(); bool tag = false; foreach (char c in r ?? "") { if (c == '<') tag = true; else if (c == '>') tag = false; else if (!tag) sb.Append(c); } return sb.ToString(); }
+    }
+
+    [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref })]
+    internal static class Patch_CanBuild2_Refit
+    {
+        private static void Postfix(Ship __0, ref string __1, ref bool __result) { RefitBuildCheck.Fix(__0, ref __result, ref __1, "CanBuildShipsFromDesign"); }
+    }
+
+    [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(int), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
+    internal static class Patch_CanBuild3_Refit
+    {
+        private static void Postfix(Ship __0, ref string __2, ref bool __result) { RefitBuildCheck.Fix(__0, ref __result, ref __2, "CanBuildShipsFromDesign(n)"); }
+    }
+
+    [HarmonyPatch(typeof(PlayerController), "CanBuildFromDesignOnInit", new Type[] { typeof(Ship), typeof(int), typeof(bool), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
+    internal static class Patch_CanBuildInit_Refit
+    {
+        private static void Postfix(Ship __0, ref string __3, ref bool __result) { RefitBuildCheck.Fix(__0, ref __result, ref __3, "CanBuildFromDesignOnInit"); }
+    }
+
+    // 1.11.56: the save button of the designer (Ui.RefreshConstructorInfo, closure 489_21) reads canBuild / canNotBuildText,
+    // computed inside RefreshConstructorInfo itself; TweaksAndFixes blocks the save on it ("Saving ship: ... | False / Design invalid").
+    // A refit whose only problem is the treaty displacement limit and which stays within the allowance is let through.
+    [HarmonyPatch(typeof(Ui.__c__DisplayClass489_21), "_RefreshConstructorInfo_b__89")]
+    internal static class Patch_SaveButton_Refit
+    {
+        [HarmonyPriority(Priority.First)]
+        private static void Prefix(Ui.__c__DisplayClass489_21 __instance)
+        {
+            try
+            {
+                if (__instance == null || __instance.canBuild) return;
+                Ship s = null; try { var pc = PlayerController.Instance; if (pc != null) s = pc.Ship; } catch { }
+                if (s == null) return;
+                string reason = __instance.canNotBuildText; bool ok = false;
+                RefitBuildCheck.Fix(s, ref ok, ref reason, "save button");
+                if (ok) { __instance.canBuild = true; __instance.canNotBuildText = ""; }
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Refit] save button: " + e.Message); }
+        }
     }
 }

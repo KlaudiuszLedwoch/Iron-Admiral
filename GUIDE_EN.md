@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.28. Updated with every release._
+_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.29. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -39,7 +39,7 @@ Another early tester, thunderspirit2014, singled out exactly this: the base-game
 
 **Main ships that cannot hurt you, and task forces that only want to get away.** The enemy's largest ships – its battleships, or its armoured cruisers when it has no battleships – withdraw when their guns cannot penetrate your armour even at close range when they can survive the battle – they will not wait to be sunk. Enemy torpedo craft now go for anything clearly bigger than themselves, so in a cruiser action your cruisers and transports draw the torpedo runs that battleships used to. A task force whose mission is to escape no longer attacks: if it is faster it simply runs, and if it is not it splits up and the ships run in different directions. Catching all of them takes several divisions; decide early which ones are worth chasing. Enemy divisions that see torpedo tracks coming also turn to run along them, so long-range spreads from your own destroyers hit less often than before.
 
-**Refits after the treaties.** If your battleships are already above the Washington Treaty limit, you can still refit them: a refit may add a limited amount of tonnage above the ship's present size, as the treaty itself allowed for anti-aircraft guns, torpedo bulges and deck armour. Since version 1.2.28 such a refit can also be saved. New construction keeps the treaty limit.
+**Refits after the treaties.** If your battleships are already above the Washington Treaty limit, you can still refit them: a refit may add a limited amount of tonnage above the ship's present size, as the treaty itself allowed for anti-aircraft guns, torpedo bulges and deck armour. Since version 1.2.29 such a refit can also be saved. New construction keeps the treaty limit.
 
 ## 2. Crews, surrender and prizes
 
@@ -149,7 +149,7 @@ A player on the Steam thread asked for the battle AI, crew quality and surrender
 - **19 October 2026, Iron Admiral 1.2.24:** enemy tactics by ship size, not by battleships; surrendered ships go to the battle winner.
 - **19 October 2026, Iron Admiral 1.2.25:** massed attacks only with enough torpedo craft; outmatched enemies withdraw.
 - **19 October 2026, Iron Admiral 1.2.26:** series savings apply right from loading a campaign.
-- **19 October 2026, Iron Admiral 1.2.27-1.2.28:** refits above the treaty limit can be saved.
+- **19 October 2026, Iron Admiral 1.2.27-1.2.29:** refits above the treaty limit can be saved (confirmed in 1.2.29).
 
 ---
 
