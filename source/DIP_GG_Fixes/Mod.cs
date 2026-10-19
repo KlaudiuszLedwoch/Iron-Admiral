@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.40", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.41", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -210,11 +210,13 @@ namespace DipGgFixes
             UpdateCheck.Tick();
             FinanceCrisis.Tick();
             EconomyUi.Tick();
+            SettingsUi.Tick();
         }
 
         public override void OnGUI()
         {
             EconomyUi.OnGUI();
+            SettingsUi.OnGUI();
         }
 
         public override void OnInitializeMelon()
@@ -385,6 +387,7 @@ namespace DipGgFixes
                 "Show a Download button in the update message; the download starts only after the player clicks it (1.11.11). false = message with a link only");
             EcoPrefs.Create(cat);
             EconomyUi.CreatePrefs(cat);
+            SettingsUi.CreatePrefs(cat);
             Doctrines.Load();
             TechBonuses.Load();
             UpdateCheck.Start();
