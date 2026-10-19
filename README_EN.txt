@@ -16,6 +16,10 @@ One-click install; uninstalling restores the pre-install state.
 Extension author: Klaudiusz Ledwoch (Steam: Klod76).
 Nexus: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66
 GitHub (source code): https://github.com/KlaudiuszLedwoch/Iron-Admiral
+Videos (the battle AI in action, captions from the battle log):
+  https://youtu.be/DjmOu0KVnwE (three battles, 6 min)
+  https://youtu.be/ZAPta33uJXE (two battles, 4 min)
+  https://youtu.be/SZzuVT4X2qY (first battle uncut, 5 min)
 
 --------------------------------------------------------------------------
 WHY INSTALL IT
