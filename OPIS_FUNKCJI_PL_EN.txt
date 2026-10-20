@@ -1,6 +1,6 @@
-Iron Admiral 1.2.35 (DIP_GG_Fixes 1.11.62) - CO DAJE TEN MOD
-Opis z dnia 20 października 2026. Najnowsza wersja: Iron Admiral 1.2.35 (DIP_GG_Fixes 1.11.62).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (84 sekcji).
+Iron Admiral 1.2.36 (DIP_GG_Fixes 1.11.64) - CO DAJE TEN MOD
+Opis z dnia 20 października 2026. Najnowsza wersja: Iron Admiral 1.2.36 (DIP_GG_Fixes 1.11.64).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (86 sekcji).
 ============================================================================
 
 FILMY Z BITEW (YouTube) - każdy napis pochodzi z dziennika bitwy moda:
@@ -361,7 +361,7 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do
   99%.
 
-20 października 2026 - DIP_GG_Fixes 1.11.58-1.11.62 / Iron Admiral 1.2.31-1.2.35
+20 października 2026 - DIP_GG_Fixes 1.11.58-1.11.64 / Iron Admiral 1.2.31-1.2.36
 - DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: mgła wojny - mapa
   strategiczna, meldunki o kontakcie, identyfikacja w bitwie, AI w tej samej
   mgle, przechwycenia zależne od wywiadu.
@@ -373,6 +373,8 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   (tylko log).
 - DIP_GG_Fixes 1.11.62 / Iron Admiral 1.2.35: noc i pogoda skracają
   dystans rozpoznania.
+- DIP_GG_Fixes 1.11.63-1.11.64 / Iron Admiral 1.2.36: panel nierozpoznanego
+  okrętu wroga bez dział i pancerza; znaczniki flot nie na lądzie.
 
 19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.57 / Iron Admiral 1.2.22-1.2.30
 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: panel ustawień w grze (F10):
@@ -432,15 +434,15 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   dystansu bez szans na przebicie, zygzak w podejściu.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.35_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.35_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.36_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.36_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.35 (DIP_GG_Fixes 1.11.62) - WHAT THIS MOD DOES
-Description as of 20 October 2026. Latest version: Iron Admiral 1.2.35 (DIP_GG_Fixes 1.11.62).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (84 sections).
+Iron Admiral 1.2.36 (DIP_GG_Fixes 1.11.64) - WHAT THIS MOD DOES
+Description as of 20 October 2026. Latest version: Iron Admiral 1.2.36 (DIP_GG_Fixes 1.11.64).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (86 sections).
 ============================================================================
 
 BATTLE VIDEOS (YouTube) - every caption comes from the mod's own battle log:
@@ -801,7 +803,7 @@ when the DLL does.
   99% after printing); printing on top of inflation adds 20 points instead of
   stacking to 99%.
 
-20 October 2026 - DIP_GG_Fixes 1.11.58-1.11.62 / Iron Admiral 1.2.31-1.2.35
+20 October 2026 - DIP_GG_Fixes 1.11.58-1.11.64 / Iron Admiral 1.2.31-1.2.36
 - DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: fog of war - strategic map,
   contact reports, identification in battle, the AI in the same fog,
   interceptions depending on intelligence.
@@ -813,6 +815,8 @@ when the DLL does.
   (log only).
 - DIP_GG_Fixes 1.11.62 / Iron Admiral 1.2.35: night and weather shorten
   the identification range.
+- DIP_GG_Fixes 1.11.63-1.11.64 / Iron Admiral 1.2.36: no guns or armour in the
+  panel of an unidentified enemy ship; fleet markers never over land.
 
 19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.57 / Iron Admiral 1.2.22-1.2.30
 - DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: in-game settings panel (F10):
@@ -871,6 +875,6 @@ when the DLL does.
   without a chance to penetrate, evasive zigzag on the approach.
 
 
-Two downloads: Iron_Admiral_1.2.35_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.35_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.36_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.36_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
