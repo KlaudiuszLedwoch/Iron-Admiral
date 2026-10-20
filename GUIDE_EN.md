@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 20 October 2026. Latest version: Iron Admiral 1.2.31. Updated with every release._
+_Guide as of 20 October 2026. Latest version: Iron Admiral 1.2.32. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -146,7 +146,7 @@ What to do with it:
 
 1. Keep light ships with your main fleet. They improve the contact report you get before a battle and the picture of the sea around the fleet.
 2. Station patrols on the sea lanes that matter. A stationary group watches a wider area than a moving one.
-3. Do not trust the battle window blindly. "2 battleships (reported)" may be two armoured cruisers - or there may be a third ship nobody reported. That is how 1916 felt: four of seven Zeppelin reports on 19 August were wrong.
+3. Do not trust the battle window blindly. "2 battleships (reported)" may be two heavy cruisers - or there may be a third ship nobody reported. A report only names ship types the enemy navy actually has. That is how 1916 felt: four of seven Zeppelin reports on 19 August were wrong.
 4. In battle, an enemy you have only detected is an "Unidentified ship (large)". Closer, it becomes a "Probable battlecruiser?" - which can still be wrong. Its name, class and details appear once one of your ships closes to identification range. At night, in rain and behind smoke that range is short.
 5. The enemy has the same problem. It judges your force by what it has seen, so a fast scouting screen can make it commit - or withdraw - on a wrong picture.
 

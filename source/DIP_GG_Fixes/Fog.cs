@@ -84,14 +84,48 @@ namespace DipGgFixes
         static string Cap(string s) { return string.IsNullOrEmpty(s) ? s : char.ToUpper(s[0]) + s.Substring(1); }
         internal static string SizeClass(string t) { switch (t) { case "bb": case "bc": return "large"; case "ca": case "cl": return "medium"; default: return "small"; } }
         // a reported type: wrong with probability p (one step up or down the size scale, two steps when the picture is very poor)
-        internal static string Misreport(string actual, float p, string key)
+        // a reported type: wrong with probability p (one step up or down the size scale, two steps when the picture is very poor).
+        // 1.11.59: only into types the owner's navy actually has - a navy without battlecruisers is never reported with one.
+        internal static string Misreport(string actual, float p, string key, Player owner)
         {
             int i = ScaleIdx(actual); if (i < 0 || Roll(key + "|m") >= p) return actual;
+            var have = NavyTypes(owner);
             int step = Roll(key + "|2") < (p > 0.45f ? 0.3f : 0.1f) ? 2 : 1;
             int dir = Roll(key + "|d") < 0.55f ? 1 : -1; // reports erred on the side of overestimating slightly more often
-            int j = i + dir * step; if (j < 0 || j >= Scale.Length) j = i - dir * step;
-            j = Math.Max(0, Math.Min(Scale.Length - 1, j));
-            return Scale[j];
+            foreach (int d in new[] { dir, -dir })
+            {
+                // the step-th type the navy has in that direction, or the nearest one if it has fewer
+                int found = -1, n = 0;
+                for (int j = i + d; j >= 0 && j < Scale.Length; j += d)
+                {
+                    if (have != null && !have.Contains(Scale[j])) continue;
+                    found = j; n++; if (n >= step) break;
+                }
+                if (found >= 0) return Scale[found];
+            }
+            return actual;
+        }
+        static int navyMonth = -1; static readonly Dictionary<IntPtr, HashSet<string>> navy = new Dictionary<IntPtr, HashSet<string>>();
+        static HashSet<string> NavyTypes(Player owner)
+        {
+            if (owner == null) return null;
+            int m = Month(); if (m != navyMonth) { navyMonth = m; navy.Clear(); }
+            HashSet<string> set; if (navy.TryGetValue(owner.Pointer, out set)) return set;
+            set = new HashSet<string>();
+            try
+            {
+                var ships = CampaignController.Instance.CampaignData.GetShips;
+                for (int k = 0; ships != null && k < ships.Count; k++)
+                {
+                    var s = ships[k]; if (s == null || s.player == null || s.player.Pointer != owner.Pointer) continue;
+                    bool ok = false; try { ok = !s.isSunk && !s.isScrapped && !s.isBuilding; } catch { }
+                    if (ok) set.Add(TypeName(s));
+                }
+            }
+            catch { }
+            // ships of that navy present in the current battle count as well (temporary battle ships, custom battles)
+            try { var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (b != null) { var l = b.Ships; for (int k = 0; l != null && k < l.Count; k++) { var s = l[k]; if (s != null && s.player != null && s.player.Pointer == owner.Pointer) set.Add(TypeName(s)); } } } catch { }
+            navy[owner.Pointer] = set; return set;
         }
         static float Era(int y)
         {
@@ -338,7 +372,7 @@ namespace DipGgFixes
                     Ship s = null; try { var v = el.CurrentVessel; if (v != null) s = v.TryCast<Ship>(); } catch { }
                     string id = s != null ? s.id.ToString() : i.ToString();
                     if (shown > 0 && Roll($"gp|{m}|{id}|h") < 0.5f * p) { go.SetActive(false); hiddenN++; continue; }
-                    string rep = s != null ? Misreport(TypeName(s), p, $"gp|{m}|{id}") : "?";
+                    string rep = s != null ? Misreport(TypeName(s), p, $"gp|{m}|{id}", s.player) : "?";
                     Set(el.Name, Cap(FullName(rep)) + " (reported)");
                     Set(el.Tonnes, "?"); Set(el.Damage, "?"); Set(el.Ammo, "?"); Set(el.Fuel, "?"); Set(el.Crew, "?"); Set(el.Speed, "?"); Set(el.Range, "?"); Set(el.Weapons, "?");
                     shown++;
@@ -389,7 +423,7 @@ namespace DipGgFixes
                 {
                     var s = enemy[i]; if (s == null) continue; string id = s.id.ToString();
                     if (shown > 0 && Roll($"bw|{bk}|{id}|h") < 0.5f * p) { hiddenN++; continue; }
-                    string rep = Misreport(TypeName(s), p, $"bw|{bk}|{id}"); int c; counts.TryGetValue(rep, out c); counts[rep] = c + 1; shown++;
+                    string rep = Misreport(TypeName(s), p, $"bw|{bk}|{id}", s.player); int c; counts.TryGetValue(rep, out c); counts[rep] = c + 1; shown++;
                 }
                 // replace the enemy entries by the report
                 for (int i = 0; i < root.childCount; i++) { var ch = root.GetChild(i); if (ch != null && ch.gameObject.activeSelf) ch.gameObject.SetActive(false); }
@@ -508,7 +542,7 @@ namespace DipGgFixes
                             st.seen = true; st.label = null;
                             float q = Clamp01(1f - (d - idR) / Mathf.Max(1f, det - idR));
                             float p = Mathf.Clamp(0.6f * (1f - q) * Strength.Value, 0f, 0.6f);
-                            st.reported = Misreport(at, p, $"tac|{bk}|{t.id}|{side}");
+                            st.reported = Misreport(at, p, $"tac|{bk}|{t.id}|{side}", t.player);
                             Changed(t, obsSide);
                         }
                         string lbl = d <= idR * 1.6f ? "Probable " + FullName(st.reported) + "?" : "Unidentified ship (" + SizeClass(st.reported) + ")";
