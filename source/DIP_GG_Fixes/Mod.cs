@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.68", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.69", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -234,9 +234,10 @@ namespace DipGgFixes
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
+            Narrative.Tick();
         }
 
-        public override void OnLateUpdate() { try { Fog.LateTick(); } catch { } }
+        public override void OnLateUpdate() { try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } }
 
         public override void OnApplicationQuit() { try { Diagnostics.OnQuit(); } catch { } }
 
@@ -458,8 +459,10 @@ namespace DipGgFixes
             Fog.CreatePrefs(cat);
             Diagnostics.CreatePrefs(cat, Info.Version);
             ModDesigns.CreatePrefs(cat);
+            Narrative.CreatePrefs(cat);
             ModDesigns.Install();
             SettingsUi.CreatePrefs(cat);
+            try { Narrative.Apply(HarmonyInstance); } catch { }
             try { Scenarios.Apply(HarmonyInstance); } catch (Exception e) { LoggerInstance.Warning("[Scenario] hooks not applied: " + e.Message); }
             try { Fog.Apply(HarmonyInstance); Fog.ReportPatches(); } catch (Exception e) { LoggerInstance.Warning("[Fog] hooks not applied: " + e.Message); }
             Doctrines.Load();
@@ -1770,6 +1773,7 @@ namespace DipGgFixes
 
         internal static void Log(string m)
         {
+            try { Narrative.FromLog(m); } catch { }
             if (DipGgFixesMod.BattleAiLog != null && DipGgFixesMod.BattleAiLog.Value) MelonLogger.Msg("[DIP GG Fixes][Battle] " + m);
         }
     }
@@ -2163,6 +2167,7 @@ namespace DipGgFixes
                     try { if (crew0 < minCrew0) ship.CrewPercents = minCrew0; } catch { }
                     __1 = UnityEngine.Mathf.Max(__1, UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f));
                     Captured.Add(ship.Pointer);
+                    try { Narrative.Record("prize|" + ship.Pointer, 9, $"{ship.name.Split(new[] { " (" }, StringSplitOptions.None)[0]} had surrendered, but her side won - she returns to {owner.data.name}"); } catch { }
                     MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered but {owner.data.name} won the battle ({how}) - ship returns to its owner; removed from {rem} sunk list(s), HP {hp0:0}, crew {crew0:0.00} -> {UnityEngine.Mathf.Max(crew0, minCrew0):0.00}, damage set to {__1:0.00}, status {ship.status}");
                     return;
                 }
@@ -2189,6 +2194,7 @@ namespace DipGgFixes
                 try { if (crew < minCrew) ship.CrewPercents = minCrew; } catch { }
                 __1 = UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f);
                 Captured.Add(ship.Pointer);
+                try { Narrative.Record("prize|" + ship.Pointer, 9, $"{ship.name.Split(new[] { " (" }, StringSplitOptions.None)[0]} was taken as a prize by {winner.data.name}"); } catch { }
                 MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered to {winner.data.name} and was taken as a prize ({loser.data.name} -> {winner.data.name}); removed from {removed} sunk list(s), HP {hp:0}, crew {crew:0.00} -> {UnityEngine.Mathf.Max(crew, minCrew):0.00}, damage set to {__1:0.00}, crew training reset, status {ship.status}, new owner {(ship.player != null ? ship.player.data.name : "?")}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] DamageShip prefix: " + e.Message); }

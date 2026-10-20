@@ -31,7 +31,7 @@ namespace DipGgFixes
             {"LightShipTorpedoCharge","Battle AI"},{"CapitalTorpedoCharge","Battle AI"},{"CapitalCloseInWhenOutgunned","Battle AI"},
             {"CloseInOnlyIfPenetrates","Battle AI"},{"EvasiveManeuvers","Battle AI"},{"TorpedoTurnAway","Battle AI"},{"FleetTorpedoAttack","Battle AI"},{"Ramming","Battle AI"},{"CapitalEscapeWhenHopeless","Battle AI"},{"EscapeMissionLogic","Battle AI"},{"FightWhenCannotEscape","Battle AI"},
             {"DetachSlowShips","Battle AI"},{"FocusFire","Battle AI"},{"SmartTargeting","Battle AI"},{"SmartTargetingAi","Battle AI"},
-            {"PlayerScoutCharge","Battle AI"},{"TorpedoFriendlyLane","Battle AI"},{"BattleAiLog","Battle AI"},{"ArmorDiagnostics","Battle AI"},
+            {"PlayerScoutCharge","Battle AI"},{"TorpedoFriendlyLane","Battle AI"},{"BattleReport","Battle AI"},{"BattleAiLog","Battle AI"},{"ArmorDiagnostics","Battle AI"},
             {"CrewLevelsRescale","Crews and prizes"},{"SurrenderByTraining","Crews and prizes"},{"CrewPanic","Crews and prizes"},
             {"CaptureSurrenderedShips","Crews and prizes"},{"SurrenderedShipsToBattleWinner","Crews and prizes"},{"CoreProvincesIndependence","Campaign AI"},{"CoreRevoltBonus","Campaign AI"},{"CoreRevoltRampMonths","Campaign AI"},{"TorpedoTargetSizeRatio","Battle AI"},{"MassAttackStrengthRatio","Battle AI"},{"MainShipSizeRatio","Battle AI"},{"MassAttackPerTarget","Battle AI"},{"WithdrawWhenOutmatched","Battle AI"},{"MinorFleetToConqueror","Crews and prizes"},
             {"FogOfWar","Fog of war"},{"FogStrategicMap","Fog of war"},{"FogBattleReports","Fog of war"},{"FogTacticalIdentification","Fog of war"},{"FogAiPerception","Fog of war"},{"FogInterceptions","Fog of war"},{"FogStrength","Fog of war"},

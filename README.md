@@ -1,6 +1,6 @@
 # Iron Admiral — DIP The Great Game Extended
 
-_Description as of 20 October 2026. Latest version: Iron Admiral 1.2.40 (DIP_GG_Fixes 1.11.68)._
+_Description as of 20 October 2026. Latest version: Iron Admiral 1.2.41 (DIP_GG_Fixes 1.11.69)._
 
 **AI overhaul for Ultimate Admiral: Dreadnoughts, built on the Dreadnought Improvement Project (DIP) "The Great Game" 1.3.5, TweaksAndFixes 3.21.1 and MelonLoader 0.6.6.**
 
@@ -27,15 +27,15 @@ The battle AI in action - every caption comes from the mod's own battle log:
 
 Problem? F10 > Tools > *Create problem report* writes logs, settings and a Mods folder check into one zip on your desktop - attach it to your report (nothing is sent by the mod).
 
-Full, reasoned change history: `CHANGELOG_EN.txt` / `CHANGELOG_PL.txt` (90 sections). Readme: `README_EN.txt` / `README_PL.txt`.
+Full, reasoned change history: `CHANGELOG_EN.txt` / `CHANGELOG_PL.txt` (91 sections). Readme: `README_EN.txt` / `README_PL.txt`.
 
 Latest in the current 1.1 package: DIP_GG_Fixes 1.11.0 (torpedo charges start by torpedo range and speed advantage; AI capital ships charge or close in when outgunned; player scout divisions charge; torpedoes held while a friendly ship is in the lane; smart target selection for all guns; non-linear veterancy up to +100%/-50%; surrender threshold by crew training; panic of green crews; surrendered ships captured by the winner - experimental), DIP_GG_Fixes 1.10.2 (shared designs are no longer re-exported every turn), a save migration tool for 1.0 campaigns (`source/save_tools`), work on the AI ship generator (lower minimum battleship belt for 1890-1900: 6"/7.5" instead of 9"; "Experimental Small Ironclad" relaxed to a 10" calibre limit and 1 turret minimum; full generator diagnostics in the log via taf_debug_shipgen_info=2 while the remaining failed designs are tracked down), and new campaigns start correctly again (predefined designs disabled, as the package ships without `predefinedDesigns.bin`).
 
 ## Install
 
-Download `releases/Iron_Admiral_1.2.40_Nexus.zip`, extract anywhere, run `Install.bat` (plain PowerShell, no exe). It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing (downloaded from the official LavaGang release, SHA-256 verified) and copies the mod. `Uninstall.bat` restores the previous state. Start a new campaign.
+Download `releases/Iron_Admiral_1.2.41_Nexus.zip`, extract anywhere, run `Install.bat` (plain PowerShell, no exe). It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing (downloaded from the official LavaGang release, SHA-256 verified) and copies the mod. `Uninstall.bat` restores the previous state. Start a new campaign.
 
-Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.40_Mods_only.zip` and extract it into the game folder, so that you get `<game>/Mods/TweaksAndFixes.dll`, `DIP_GG_Fixes.dll` and the CSV files.
+Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.41_Mods_only.zip` and extract it into the game folder, so that you get `<game>/Mods/TweaksAndFixes.dll`, `DIP_GG_Fixes.dll` and the CSV files.
 
 **".NET 6.0 runtime" error at game start:** MelonLoader 0.6.6 runs on .NET 6 - install the [.NET Desktop Runtime 6.0 (x64)](https://dotnet.microsoft.com/download/dotnet/6.0). Back to the unmodded game: `Uninstall.bat` from `<game>/Iron_Admiral_backup`, or delete `version.dll`, `MelonLoader/` and `Mods/` and verify the game files in Steam.
 

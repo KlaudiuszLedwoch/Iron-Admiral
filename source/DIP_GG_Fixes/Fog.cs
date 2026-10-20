@@ -615,6 +615,7 @@ namespace DipGgFixes
                         if (d <= idR)
                         {
                             st.identified = true; st.label = null; Changed(t, obsSide);
+                            if (obsSide == SideOf(b, tacMain)) Narrative.Record("ident-first", 2, $"First enemy ship identified: {Narrative_Short(t.name)} at {d / 1000f:0.0} km{(st.reported != at ? " - it had been reported as a " + FullName(st.reported) : "")}");
                             if (idLogged++ < 40) Log($"{(obsSide == SideOf(b, tacMain) ? "player side" : "AI side")} identified {t.name} ({at}{(st.reported != at ? ", first reported as " + st.reported : "")}) at {d:0} m (identification range {idR:0} m, detection {det:0} m, daylight {day:0.0}, weather {wx:0.0}{(smoke < 1f ? ", smoke" : "")})");
                         }
                     }
@@ -622,6 +623,7 @@ namespace DipGgFixes
             }
             catch (Exception e) { Err("tick", e); }
         }
+        static string Narrative_Short(string n) { if (string.IsNullOrEmpty(n)) return n; int i = n.IndexOf(" ("); return i > 0 ? n.Substring(0, i) : n; }
         static bool Alive(Ship x) { try { return x != null && !x.isSinking && !x.isDead && !x.IsSurrendered; } catch { return false; } }
         static void Changed(Ship t, bool obsSide)
         {
@@ -794,7 +796,7 @@ namespace DipGgFixes
         static void Pre_GroupPopup(ShipGroupPopupUI __instance) { try { if (popupFog) { popupFog = false; if (__instance.DesignShipInfoRoot != null) __instance.DesignShipInfoRoot.SetActive(true); } } catch { } }
         static void Post_GroupPopup(ShipGroupPopupUI __instance, CampaignController.TaskForce group) { try { GroupPopup(__instance, group); } catch { } }
         static bool Pre_GroupShipInfo(ShipGroupPopupUI __instance) { try { return GroupPopupShipInfo(__instance); } catch { return true; } }
-        static void Post_BattlePopup(BattlePopup __instance, CampaignBattle battle) { BattleWindow(__instance, battle); }
+        static void Post_BattlePopup(BattlePopup __instance, CampaignBattle battle) { try { Narrative.SetPopup(__instance); } catch { } BattleWindow(__instance, battle); }
         static void Post_Recon(Il2CppSystem.Collections.Generic.List<Ship> attackerShips, Il2CppSystem.Collections.Generic.List<Ship> defenderShips, ref bool __result) { Intercept(attackerShips, defenderShips, ref __result); }
         static void Post_ReconV(Il2CppSystem.Collections.Generic.List<VesselEntity> attackerShips, Il2CppSystem.Collections.Generic.List<VesselEntity> defenderShips, ref bool __result)
         {
