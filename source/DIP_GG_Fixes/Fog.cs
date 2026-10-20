@@ -561,10 +561,14 @@ namespace DipGgFixes
                 if (b.Pointer != tacBattle) { tacBattle = b.Pointer; tacBattleObj = b; tac.Clear(); savedNames.Clear(); idLogged = 0; tacInfoLogged = false; tacMain = Main(); }
                 var ships = b.Ships; if (ships == null) return;
                 float day = 1f, wx = 1f; try { day = BattleManager.Instance.GetDaytimeDetection(); } catch { } try { wx = BattleManager.Instance.GetWeatherDetection(); } catch { }
-                if (!tacInfoLogged) { tacInfoLogged = true; Log($"battle visibility: daytime detection {day:0.00}, weather detection {wx:0.00} (identification light factor {Mathf.Clamp(day > 1.5f ? day / 100f : day, 0.15f, 1f) * Mathf.Clamp(wx > 1.5f ? wx / 100f : wx, 0.3f, 1.2f):0.00})"); }
+                if (!tacInfoLogged) { tacInfoLogged = true; Log($"battle visibility: daytime detection {day:0.00}, weather detection {wx:0.00} -> visibility {((day > 1.5f && wx > 1.5f) ? Mathf.Min(day, wx) : 0f):0.0} km, battleship identification up to {(day > 1.5f && wx > 1.5f ? Mathf.Min(day, wx) * 0.45f : 0f):0.0} km"); }
                 // 1.11.62: the game reports these as percentages (log of 2026-10-20: daytime 41.67, weather 50.00); read 0-100 as 0-1
-                float dayN = day > 1.5f ? day / 100f : day, wxN = wx > 1.5f ? wx / 100f : wx;
-                float light = Mathf.Clamp(dayN, 0.15f, 1f) * Mathf.Clamp(wxN, 0.3f, 1.2f);
+                // 1.11.67: these are visibility distances in km, not shares - a daylight battle reported daytime 34.63 and weather
+                // 50.00 (1.11.62 read them as 35% / 50% and cut identification to night-time ranges in broad daylight).
+                // Visibility = the smaller of the two; identification cap = 45% of it x ship size (a battleship in 34 km
+                // visibility ~15.6 km, a torpedo boat ~7.8 km; in 5 km night visibility a battleship ~2.3 km).
+                float visKm = (day > 1.5f && wx > 1.5f) ? Mathf.Min(day, wx) : 15f * Mathf.Clamp(day, 0.15f, 1f) * Mathf.Clamp(wx, 0.3f, 1.2f) / 0.45f * 0.45f;
+                if (!(day > 1.5f && wx > 1.5f)) visKm = 15f / 0.45f * Mathf.Clamp(day, 0.15f, 1f) * Mathf.Clamp(wx, 0.3f, 1.2f);
                 string bk = b.Id.ToString();
                 // cache once per tick: alive, side, position (interop calls are the expensive part)
                 int n = ships.Count; var arr = new Ship[n]; var al = new bool[n]; var sd = new bool[n]; var ps = new Vector3[n];
@@ -595,7 +599,7 @@ namespace DipGgFixes
                         string at = TypeName(t);
                         float sizeF = at == "bb" || at == "bc" ? 1f : at == "ca" ? 0.85f : at == "cl" ? 0.75f : at == "dd" ? 0.6f : at == "tb" ? 0.5f : 0.8f;
                         float smoke = 1f; try { var dv = t.division; if (dv != null && dv.smokeActive != null && dv.smokeActive.isRunning) smoke = 0.5f; } catch { }
-                        float cap = 15000f * sizeF * light * smoke / Mathf.Max(0.25f, Strength.Value);
+                        float cap = 1000f * visKm * 0.45f * sizeF * smoke / Mathf.Max(0.25f, Strength.Value);
                         float idR = Mathf.Clamp(Mathf.Min(det * 0.6f, cap), 1200f, 20000f);
                         st.idRange = idR;
                         if (!st.seen)
