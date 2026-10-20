@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.57", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.58", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -231,6 +231,7 @@ namespace DipGgFixes
             RevoltDecision.Tick();
             SaveCompat.Tick();
             ArmorDiag.Tick();
+            Fog.Tick();
         }
 
         public override void OnGUI()
@@ -447,7 +448,9 @@ namespace DipGgFixes
             EconomyUi.CreatePrefs(cat);
             SaveCompat.CreatePrefs(cat);
             ArmorDiag.CreatePrefs(cat);
+            Fog.CreatePrefs(cat);
             SettingsUi.CreatePrefs(cat);
+            try { Fog.Apply(HarmonyInstance); Fog.ReportPatches(); } catch (Exception e) { LoggerInstance.Warning("[Fog] hooks not applied: " + e.Message); }
             Doctrines.Load();
             TechBonuses.Load();
             UpdateCheck.Start();
@@ -1248,9 +1251,24 @@ namespace DipGgFixes
         // torpedo target: a capital ship, or any enemy clearly larger than the attacker
         internal static bool TorpedoWorthy(Ship leader, Ship e)
         {
+            // 1.11.58: fog of war - the AI judges an unidentified enemy by its reported type
+            if (Fog.AiActive && leader != null && leader.player != null && !leader.player.isMain)
+            {
+                var rep = Fog.PType(leader.player, e); if (rep == null) return false;
+                if (Fog.PCapital(rep)) return true;
+                float tl2 = Ton(leader), te2 = Fog.PTon(leader.player, e, Ton(e));
+                return tl2 > 0f && te2 >= tl2 * DipGgFixesMod.TorpedoTargetSizeRatio.Value;
+            }
             if (IsCapital(e)) return true;
             float tl = Ton(leader), te = Ton(e);
             return tl > 0f && te >= tl * DipGgFixesMod.TorpedoTargetSizeRatio.Value;
+        }
+        // 1.11.58: enemy strength as the side sees it - ships never seen do not count, unidentified ones by their reported type
+        static float PerceivedStrength(Player obs, Il2CppSystem.Collections.Generic.List<Ship> l)
+        {
+            float t = 0f; if (l == null) return 0f;
+            for (int i = 0; i < l.Count; i++) { var x = l[i]; if (Alive(x) && Combat(x)) t += Fog.PTon(obs, x, Ton(x)); }
+            return t;
         }
         static float Strength(Il2CppSystem.Collections.Generic.List<Ship> l)
         {
@@ -1281,12 +1299,18 @@ namespace DipGgFixes
             if (fleetNext.TryGetValue(player.Pointer, out nx) && now < nx && fleetOn.TryGetValue(player.Pointer, out on)) return on;
             Il2CppSystem.Collections.Generic.List<Ship> mine = null; try { mine = battle.ShipsOf(player, true); } catch { }
             float own = Strength(mine);
-            float foe = Strength(enemies);
+            bool fog = Fog.AiActive && !player.isMain;
+            float foe = fog ? PerceivedStrength(player, enemies) : Strength(enemies);
             // 1.11.51: the attack must be big enough for part of it to get through - torpedo craft counted against their targets
             int attackers = 0; float minTon = float.MaxValue;
             if (mine != null) for (int i = 0; i < mine.Count; i++) { var x = mine[i]; if (Alive(x) && IsLight(x) && x.haveTorpedoes) { attackers++; minTon = UnityEngine.Mathf.Min(minTon, Ton(x)); } }
             int targets = 0;
-            if (attackers > 0) for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (Alive(e) && Combat(e) && (IsCapital(e) || Ton(e) >= minTon * DipGgFixesMod.TorpedoTargetSizeRatio.Value)) targets++; }
+            if (attackers > 0) for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Alive(e) || !Combat(e)) continue;
+                if (fog) { var rep = Fog.PType(player, e); if (rep == null) continue; if (Fog.PCapital(rep) || Fog.PTon(player, e, Ton(e)) >= minTon * DipGgFixesMod.TorpedoTargetSizeRatio.Value) targets++; }
+                else if (IsCapital(e) || Ton(e) >= minTon * DipGgFixesMod.TorpedoTargetSizeRatio.Value) targets++;
+            }
             bool stronger = foe > own * DipGgFixesMod.MassAttackStrengthRatio.Value;
             bool enough = targets > 0 && attackers >= DipGgFixesMod.MassAttackPerTarget.Value * targets;
             bool was; fleetOn.TryGetValue(player.Pointer, out was);

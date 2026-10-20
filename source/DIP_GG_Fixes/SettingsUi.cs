@@ -25,7 +25,7 @@ namespace DipGgFixes
         static int errors;
 
         // group order and membership; anything not listed lands in "Other"
-        static readonly string[] Groups = { "Battle AI", "Crews and prizes", "Campaign AI", "Economy", "Diplomacy", "Information and updates", "Other" };
+        static readonly string[] Groups = { "Battle AI", "Fog of war", "Crews and prizes", "Campaign AI", "Economy", "Diplomacy", "Information and updates", "Other" };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
             {"LightShipTorpedoCharge","Battle AI"},{"CapitalTorpedoCharge","Battle AI"},{"CapitalCloseInWhenOutgunned","Battle AI"},
@@ -34,6 +34,7 @@ namespace DipGgFixes
             {"PlayerScoutCharge","Battle AI"},{"TorpedoFriendlyLane","Battle AI"},{"BattleAiLog","Battle AI"},{"ArmorDiagnostics","Battle AI"},
             {"CrewLevelsRescale","Crews and prizes"},{"SurrenderByTraining","Crews and prizes"},{"CrewPanic","Crews and prizes"},
             {"CaptureSurrenderedShips","Crews and prizes"},{"SurrenderedShipsToBattleWinner","Crews and prizes"},{"CoreProvincesIndependence","Campaign AI"},{"CoreRevoltBonus","Campaign AI"},{"CoreRevoltRampMonths","Campaign AI"},{"TorpedoTargetSizeRatio","Battle AI"},{"MassAttackStrengthRatio","Battle AI"},{"MainShipSizeRatio","Battle AI"},{"MassAttackPerTarget","Battle AI"},{"WithdrawWhenOutmatched","Battle AI"},{"MinorFleetToConqueror","Crews and prizes"},
+            {"FogOfWar","Fog of war"},{"FogStrategicMap","Fog of war"},{"FogBattleReports","Fog of war"},{"FogTacticalIdentification","Fog of war"},{"FogAiPerception","Fog of war"},{"FogInterceptions","Fog of war"},{"FogStrength","Fog of war"},
             {"AutoShareDesigns","Campaign AI"},{"ShareToAllNations","Campaign AI"},{"CruisersWhenPoor","Campaign AI"},
             {"AiTechBudgetBalance","Campaign AI"},{"AiDesignOnlyWhenBuildable","Campaign AI"},{"FixStalledConstruction","Campaign AI"},
             {"BankruptBuildsCheapShips","Campaign AI"},{"NationalTechBonuses","Campaign AI"},
