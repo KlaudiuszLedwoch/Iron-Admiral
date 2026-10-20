@@ -29,6 +29,7 @@ using MelonLoader;
 using Il2Cpp;
 using Il2CppTMPro;
 using UnityEngine;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
 namespace DipGgFixes
 {
@@ -288,8 +289,10 @@ namespace DipGgFixes
                         float r = 0f; try { r = tf.GetZoneRadius(false); } catch { }
                         if (r <= 0f) r = 300f / KmPerUnit();
                         float mag = (ExactQ - q) / (ExactQ - HiddenQ) * 1.5f * r * Mathf.Sqrt(Roll($"off|{m}|{tf.Id}"));
-                        float ang = Roll($"ang|{m}|{tf.Id}") * Mathf.PI * 2f;
-                        st.offset = new Vector3(Mathf.Cos(ang) * mag, 0f, Mathf.Sin(ang) * mag);
+                        // 1.11.64: the error runs along the force's own sea route (ahead of or behind it), so the marker never
+                        // lands on land; a force with no route is shown where it is (still without its route line)
+                        float sign = Roll($"ang|{m}|{tf.Id}") < 0.5f ? -1f : 1f;
+                        st.offset = AlongRoute(tf, sign * mag);
                     }
                     else { st.mode = Mode.Normal; exact++; Restore(el, st); }
                 }
@@ -297,6 +300,40 @@ namespace DipGgFixes
             catch (Exception e) { Err("map", e); }
             var gone = new List<IntPtr>(); foreach (var k in mapStates.Keys) if (!seen.Contains(k)) gone.Add(k); foreach (var k in gone) mapStates.Remove(k);
             if (newMonth && (hidden + blurred + exact) > 0) Log($"strategic map: foreign forces - {hidden} not seen, {blurred} inexact, {exact} located");
+        }
+        static Vector3 AlongRoute(CampaignController.TaskForce tf, float dist)
+        {
+            try
+            {
+                Il2CppStructArray<Vector3> path = null;
+                try { path = tf.FullPath; } catch { }
+                if (path == null || path.Length < 2) { try { path = tf.Path; } catch { } }
+                if (path == null || path.Length < 2) return Vector3.zero;
+                var pos = tf.WorldPos; int n = path.Length;
+                // nearest segment to the force
+                int best = 0; float bestD = float.MaxValue; float bestT = 0f;
+                for (int i = 0; i < n - 1; i++)
+                {
+                    Vector3 a = path[i], b = path[i + 1]; var ab = b - a; float len2 = ab.sqrMagnitude; if (len2 < 1e-6f) continue;
+                    float t = Mathf.Clamp01(Vector3.Dot(pos - a, ab) / len2); float d = (a + ab * t - pos).sqrMagnitude;
+                    if (d < bestD) { bestD = d; best = i; bestT = t; }
+                }
+                Vector3 cur = path[best] + (path[best + 1] - path[best]) * bestT;
+                float left = Mathf.Abs(dist);
+                if (dist >= 0f)
+                {
+                    int i = best; Vector3 p0 = cur;
+                    while (i < n - 1) { Vector3 p1 = path[i + 1]; float sl = Vector3.Distance(p0, p1); if (sl >= left) return p0 + (p1 - p0).normalized * left - pos; left -= sl; p0 = p1; i++; }
+                    return p0 - pos;
+                }
+                else
+                {
+                    int i = best; Vector3 p0 = cur;
+                    while (i >= 0) { Vector3 p1 = path[i]; float sl = Vector3.Distance(p0, p1); if (sl >= left && sl > 0f) return p0 + (p1 - p0).normalized * left - pos; left -= sl; p0 = p1; i--; }
+                    return p0 - pos;
+                }
+            }
+            catch { return Vector3.zero; }
         }
         static void Save(CampaignMapElement el, MapState st)
         {
@@ -493,7 +530,7 @@ namespace DipGgFixes
         internal static void Tick()
         {
             bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-            if (!battle) { if (tacBattle != IntPtr.Zero) { tacBattle = IntPtr.Zero; tac.Clear(); savedNames.Clear(); tacBattleObj = null; } return; }
+            if (!battle) { if (tacBattle != IntPtr.Zero) { tacBattle = IntPtr.Zero; tac.Clear(); savedNames.Clear(); tacBattleObj = null; panelHidden = false; } return; }
             if (!TacActive) return;
             float now = Time.time; if (now < nextTac) return; nextTac = now + 0.5f;
             try
@@ -562,7 +599,36 @@ namespace DipGgFixes
         static bool Alive(Ship x) { try { return x != null && !x.isSinking && !x.isDead && !x.IsSurrendered; } catch { return false; } }
         static void Changed(Ship t, bool obsSide)
         {
-            try { if (tacMain != null && tacBattleObj != null && obsSide == SideOf(tacBattleObj, tacMain)) t.RefreshOverheadUi(); } catch { }
+            try { if (tacMain != null && tacBattleObj != null && obsSide == SideOf(tacBattleObj, tacMain)) { t.RefreshOverheadUi(); RefreshPanelIfSelected(t); } } catch { }
+        }
+        // 1.11.63: the ship info panel shown after clicking a ship (class, guns, armour, damage plan) - for an unidentified
+        // enemy the panel is replaced by the game's own stub text until the ship is identified
+        static bool panelHidden;
+        static void RefreshPanelIfSelected(Ship t)
+        {
+            try { var ui = G.ui; if (ui == null) return; var sel = ui.selectedShipMain; if (sel != null && sel.Pointer == t.Pointer) ui.RefreshShipInfo(); } catch { }
+        }
+        internal static void ShipPanel(Ui ui)
+        {
+            if (ui == null) return;
+            try
+            {
+                Ship sel = null; try { sel = ui.selectedShipMain; } catch { }
+                var lbl = PlayerLabel(sel);
+                if (lbl != null)
+                {
+                    if (ui.shipInfoPanel != null && ui.shipInfoPanel.activeSelf) ui.shipInfoPanel.SetActive(false);
+                    if (ui.shipInfoStub != null && !ui.shipInfoStub.activeSelf) ui.shipInfoStub.SetActive(true);
+                    if (ui.shipInfoStubText != null) ui.shipInfoStubText.text = lbl + "\nClass, guns and armour unknown until one of your ships identifies it.";
+                    panelHidden = true;
+                }
+                else if (panelHidden)
+                {
+                    panelHidden = false;
+                    if (sel != null && ui.shipInfoPanel != null && !ui.shipInfoPanel.activeSelf) { ui.shipInfoPanel.SetActive(true); if (ui.shipInfoStub != null) ui.shipInfoStub.SetActive(false); }
+                }
+            }
+            catch (Exception e) { Err("ship panel", e); }
         }
         // what the player's side sees of an enemy ship: null when identified (or not an enemy)
         internal static string PlayerLabel(Ship s)
@@ -636,7 +702,7 @@ namespace DipGgFixes
         }
         internal static bool InfoText(Ship ship, bool battle, ref string result)
         {
-            if (!battle) return true; var lbl = PlayerLabel(ship); if (lbl == null) return true;
+            var lbl = PlayerLabel(ship); if (lbl == null) return true; // 1.11.63: also when the game asks without the battle flag
             result = lbl + "\nType, armament and armour unconfirmed until the ship is identified."; return false;
         }
         internal static void Tooltip(DivisionTooltip t)
@@ -672,6 +738,8 @@ namespace DipGgFixes
             P(h, AccessTools.Method(typeof(Ship), "RefreshOverheadUi"), null, nameof(Post_Overhead));
             P(h, AccessTools.Method(typeof(Ui), "GetShipInfoText"), nameof(Pre_InfoText), null);
             P(h, AccessTools.Method(typeof(DivisionTooltip), "UpdateElements"), null, nameof(Post_Tooltip));
+            P(h, AccessTools.Method(typeof(Ui), "RefreshShipInfo"), null, nameof(Post_ShipPanel));
+            P(h, AccessTools.Method(typeof(Ui), "UpdateCrewInfoPanel", new[] { typeof(Ship) }), nameof(Pre_CrewPanel), null);
         }
         static int applied, failed;
         static void P(HarmonyLib.Harmony h, System.Reflection.MethodBase target, string pre, string post)
@@ -713,5 +781,7 @@ namespace DipGgFixes
         static void Post_Overhead(Ship __instance) { if (tacBattleObj != null) Overhead(__instance); }
         static bool Pre_InfoText(Ship ship, bool battle, ref string __result) { try { if (tacBattleObj == null) return true; return InfoText(ship, battle, ref __result); } catch { return true; } }
         static void Post_Tooltip(DivisionTooltip __instance) { if (tacBattleObj != null) Tooltip(__instance); }
+        static void Post_ShipPanel(Ui __instance) { if (tacBattleObj != null || panelHidden) ShipPanel(__instance); }
+        static bool Pre_CrewPanel(Ship ship) { try { return tacBattleObj == null || PlayerLabel(ship) == null; } catch { return true; } }
     }
 }
