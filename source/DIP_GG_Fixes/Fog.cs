@@ -291,8 +291,7 @@ namespace DipGgFixes
                         float mag = (ExactQ - q) / (ExactQ - HiddenQ) * 1.5f * r * Mathf.Sqrt(Roll($"off|{m}|{tf.Id}"));
                         // 1.11.64: the error runs along the force's own sea route (ahead of or behind it), so the marker never
                         // lands on land; a force with no route is shown where it is (still without its route line)
-                        float sign = Roll($"ang|{m}|{tf.Id}") < 0.5f ? -1f : 1f;
-                        st.offset = AlongRoute(tf, sign * mag);
+                        st.offset = SeaOffset(tf, mag, m);
                     }
                     else { st.mode = Mode.Normal; exact++; Restore(el, st); }
                 }
@@ -300,6 +299,29 @@ namespace DipGgFixes
             catch (Exception e) { Err("map", e); }
             var gone = new List<IntPtr>(); foreach (var k in mapStates.Keys) if (!seen.Contains(k)) gone.Add(k); foreach (var k in gone) mapStates.Remove(k);
             if (newMonth && (hidden + blurred + exact) > 0) Log($"strategic map: foreign forces - {hidden} not seen, {blurred} inexact, {exact} located");
+        }
+        // 1.11.65: any direction (moving or stationary force), checked with the game's own land test (CampaignMap.RaycastLand):
+        // the straight line from the force to the shown position must not cross land. Up to 12 tries with other directions and
+        // a shorter distance, then the force's sea route, then the true position.
+        static int seaLogged;
+        static Vector3 SeaOffset(CampaignController.TaskForce tf, float mag, int m)
+        {
+            var pos = tf.WorldPos; CampaignMap cm = null; try { cm = CampaignMap.Instance; } catch { }
+            float a0 = Roll($"ang|{m}|{tf.Id}") * Mathf.PI * 2f;
+            // sanity: a zero-length test at the force's own (sea) position must report no land, otherwise do not trust the test
+            bool selfLand = true; try { if (cm != null) selfLand = cm.RaycastLand(pos, pos + new Vector3(0.01f, 0f, 0.01f)); } catch { }
+            if (seaLogged < 6) { seaLogged++; Log($"position error check: land test at the force itself = {selfLand} (expected False), error {mag * KmPerUnit():0} km"); }
+            if (selfLand) cm = null;
+            for (int i = 0; i < 12 && cm != null; i++)
+            {
+                float ang = a0 + i * 2.39996f; // golden angle - spreads the tries around the circle
+                float d = mag * (i < 6 ? 1f : 0.5f);
+                var off = new Vector3(Mathf.Cos(ang) * d, 0f, Mathf.Sin(ang) * d);
+                bool land = true; try { land = cm.RaycastLand(pos, pos + off); } catch { land = true; }
+                if (!land) return off;
+            }
+            float sign = Roll($"dir|{m}|{tf.Id}") < 0.5f ? -1f : 1f;
+            return AlongRoute(tf, sign * mag);
         }
         static Vector3 AlongRoute(CampaignController.TaskForce tf, float dist)
         {
