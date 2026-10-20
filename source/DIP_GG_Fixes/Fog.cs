@@ -288,7 +288,7 @@ namespace DipGgFixes
                         st.mode = Mode.Blurred; blurred++;
                         float r = 0f; try { r = tf.GetZoneRadius(false); } catch { }
                         if (r <= 0f) r = 300f / KmPerUnit();
-                        float mag = (ExactQ - q) / (ExactQ - HiddenQ) * 1.5f * r * Mathf.Sqrt(Roll($"off|{m}|{tf.Id}"));
+                        float mag = (ExactQ - q) / (ExactQ - HiddenQ) * 180f / KmPerUnit() * Mathf.Sqrt(Roll($"off|{m}|{tf.Id}")); // 1.11.70: at most 180 km (the zone radius gave 500-2600 km)
                         // 1.11.64: the error runs along the force's own sea route (ahead of or behind it), so the marker never
                         // lands on land; a force with no route is shown where it is (still without its route line)
                         st.offset = SeaOffset(tf, mag, m);

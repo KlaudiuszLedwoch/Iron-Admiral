@@ -38,6 +38,24 @@ namespace DipGgFixes
             Consent = cat.CreateEntry("UsageStatisticsAsked", "", null, "Internal: answer to the one-time question about usage statistics (yes/no; empty = ask at the next start)");
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Diagnostics] " + m); }
+        // 1.11.70: a preferences file left as zeros by an interrupted write (seen 2026-10-20) is never rewritten by MelonLoader -
+        // keep a copy and save the current values so the file is valid again
+        internal static void RepairPreferences()
+        {
+            try
+            {
+                var cfg = Path.Combine(MelonUtils.UserDataDirectory, "MelonPreferences.cfg");
+                if (!File.Exists(cfg)) return;
+                var b = File.ReadAllBytes(cfg); if (b.Length == 0) return;
+                int zeros = 0; for (int i = 0; i < b.Length; i++) if (b[i] == 0) zeros++;
+                if (zeros < b.Length / 2) return;
+                var bak = cfg + ".corrupt_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                File.Copy(cfg, bak, true);
+                MelonPreferences.Save();
+                Log("MelonPreferences.cfg was unreadable (" + zeros + " zero bytes of " + b.Length + ") - copy kept as " + Path.GetFileName(bak) + ", file rewritten with the current settings");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Diagnostics] preferences repair failed: " + e.Message); }
+        }
 
         // ------------------------------------------------------------------ usage counters
         static void Load()
