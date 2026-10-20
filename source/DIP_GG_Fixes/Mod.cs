@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.60", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.61", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -233,6 +233,7 @@ namespace DipGgFixes
             ArmorDiag.Tick();
             Fog.Tick();
             Diagnostics.Tick();
+            Scenarios.Tick();
         }
 
         public override void OnApplicationQuit() { try { Diagnostics.OnQuit(); } catch { } }
@@ -455,6 +456,7 @@ namespace DipGgFixes
             Fog.CreatePrefs(cat);
             Diagnostics.CreatePrefs(cat, Info.Version);
             SettingsUi.CreatePrefs(cat);
+            try { Scenarios.Apply(HarmonyInstance); } catch (Exception e) { LoggerInstance.Warning("[Scenario] hooks not applied: " + e.Message); }
             try { Fog.Apply(HarmonyInstance); Fog.ReportPatches(); } catch (Exception e) { LoggerInstance.Warning("[Fog] hooks not applied: " + e.Message); }
             Doctrines.Load();
             TechBonuses.Load();
