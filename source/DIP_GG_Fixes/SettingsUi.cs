@@ -25,7 +25,7 @@ namespace DipGgFixes
         static int errors;
 
         // group order and membership; anything not listed lands in "Other"
-        static readonly string[] Groups = { "Battle AI", "Fog of war", "Crews and prizes", "Campaign AI", "Economy", "Diplomacy", "Information and updates", "Other" };
+        static readonly string[] Groups = { "Battle AI", "Fog of war", "Crews and prizes", "Campaign AI", "Economy", "Diplomacy", "Information and updates", "Tools", "Other" };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
             {"LightShipTorpedoCharge","Battle AI"},{"CapitalTorpedoCharge","Battle AI"},{"CapitalCloseInWhenOutgunned","Battle AI"},
@@ -40,7 +40,7 @@ namespace DipGgFixes
             {"BankruptBuildsCheapShips","Campaign AI"},{"NationalTechBonuses","Campaign AI"},
             {"SeriesProduction","Economy"},{"InflationEconomy","Economy"},{"FinancialCrisis","Economy"},
             {"BalanceOfPowerEvents","Diplomacy"},{"BalanceGrantOnlyWhenSolvent","Diplomacy"},{"CoalitionWar","Diplomacy"},
-            {"TreasuryPanel","Information and updates"},{"TreasuryMonthlyReport","Information and updates"},{"TreasuryWarnings","Information and updates"},
+            {"UsageStatistics","Information and updates"},{"TreasuryPanel","Information and updates"},{"TreasuryMonthlyReport","Information and updates"},{"TreasuryWarnings","Information and updates"},
             {"TreasuryInFinancesWindow","Information and updates"},{"SaveCompatibilityFix","Information and updates"},{"CheckForUpdates","Information and updates"},{"UpdateDownloadButton","Information and updates"},
         };
         // options that only take effect at the next game start
@@ -115,6 +115,32 @@ namespace DipGgFixes
             MelonLogger.Msg("[DIP GG Fixes][Settings] " + status);
         }
 
+        // Tools tab: problem report (1.11.60); scenarios are added here later
+        static void DrawTools(Rect r, float top, float w)
+        {
+            float y = top;
+            GUI.Label(new Rect(r.x + 14f, y, w - 28f, 22f), "<b>Problem report</b>", sName);
+            GUI.Label(new Rect(r.x + 14f, y + 22f, w - 28f, 64f), "Writes one zip file to your desktop with the game logs, the mod's settings, the version file, a list of your Mods folder, system info and an error summary" + (Diagnostics.Usage != null && Diagnostics.Usage.Value ? " plus your usage counters" : "") + ". Nothing is sent - attach the file yourself to a post on Nexus, Steam or GitHub and describe what happened. Your Windows user and PC names are replaced in the files.", sDesc);
+            Button(new Rect(r.x + 14f, y + 90f, 260f, 28f), "<b>Create problem report</b>", sBtn, () =>
+            {
+                var f = Diagnostics.CreateReport();
+                status = f != null ? "Report written: " + System.IO.Path.GetFileName(f) + " (desktop)" : "Report failed - see Latest.log";
+                statusUntil = Time.realtimeSinceStartup + 12f;
+            });
+            y += 136f;
+            bool u = Diagnostics.Usage != null && Diagnostics.Usage.Value;
+            GUI.Label(new Rect(r.x + 14f, y, w - 28f, 22f), "<b>Usage statistics</b>", sName);
+            Button(new Rect(r.x + 14f, y + 24f, 64f, 24f), u ? "<color=#7CFC7C><b>ON</b></color>" : "<color=#FF8080><b>OFF</b></color>", sBtn, () =>
+            {
+                Diagnostics.Usage.Value = !Diagnostics.Usage.Value; if (Diagnostics.Consent != null) Diagnostics.Consent.Value = Diagnostics.Usage.Value ? "yes" : "no";
+                Save("UsageStatistics = " + (Diagnostics.Usage.Value ? "on" : "off"));
+            });
+            GUI.Label(new Rect(r.x + 90f, y + 24f, w - 110f, 60f), "Simple counters kept on this PC only (sessions per mod version, campaign turns, battles and their length, nation and year). They help the author balance the mod when you include them in a problem report.", sDesc);
+            float fy = r.yMax - 40f;
+            string tip = Time.realtimeSinceStartup < statusUntil ? status : "";
+            GUI.Label(new Rect(r.x + 14f, fy + 5f, w - 28f, 22f), tip, sDesc);
+        }
+
         internal static void OnGUI()
         {
             if (!open) { if (clicks.Count > 0) clicks.Clear(); return; }
@@ -133,13 +159,14 @@ namespace DipGgFixes
                 for (int i = 0; i < Groups.Length; i++)
                 {
                     int gi = i;
-                    if (Entries(Groups[i]).Count == 0) continue;
+                    if (Groups[i] != "Tools" && Entries(Groups[i]).Count == 0) continue;
                     var tr = new Rect(tx, ty, tw - 4f, 26f);
                     Button(tr, Groups[i], i == tab ? sTabOn : sTab, () => { tab = gi; page = 0; });
                     tx += tw; if (tx + tw > r.xMax) { tx = r.x + 10f; ty += 30f; }
                 }
                 float top = ty + 38f;
 
+                if (Groups[tab] == "Tools") { DrawTools(r, top, w); clicks.Clear(); clicks.AddRange(next); return; }
                 var list = Entries(Groups[tab]);
                 float rowH = 46f;
                 int per = Math.Max(1, (int)((r.yMax - 70f - top) / rowH));

@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 20 October 2026. Latest version: Iron Admiral 1.2.32. Updated with every release._
+_Guide as of 20 October 2026. Latest version: Iron Admiral 1.2.33. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -129,6 +129,8 @@ Press **F10** anywhere in the game – main menu, campaign map or battle – to 
 
 A player on the Steam thread asked for the battle AI, crew quality and surrendered ships without the economic layer. That is one panel away: open the *Economy* group and switch off series production, inflation and the treasury crisis, then the treasury panel and reports under *Information and updates*. Nothing else changes – the battle AI, crews, panic, surrender and prizes keep working. The economy never asked for micromanagement in the first place: it runs in the background and mostly decides what the AI can afford.
 
+**Something looks wrong?** Open F10, go to the *Tools* tab and click *Create problem report*. One zip appears on your desktop with the logs, your mod settings and a check of your Mods folder - attach it to your post on Nexus, Steam or GitHub and say what happened. The mod sends nothing by itself.
+
 ## 8. A short checklist for a new campaign
 
 1. Design your first classes carefully – every new design starts with an expensive prototype.
@@ -167,6 +169,7 @@ Everything can be switched off in the F10 panel ("Fog of war"). FogStrength in M
 - **19 October 2026, Iron Admiral 1.2.26:** series savings apply right from loading a campaign.
 - **19 October 2026, Iron Admiral 1.2.27-1.2.29:** refits above the treaty limit can be saved (confirmed in 1.2.29).
 - **19 October 2026, Iron Admiral 1.2.30:** risings in conquered heartlands and the decision to put them down.
+- **20 October 2026, Iron Admiral 1.2.33:** problem report from the F10 panel.
 - **20 October 2026, Iron Admiral 1.2.31:** fog of war - what you see of enemy fleets, contact reports and identification in battle.
 
 ---
