@@ -502,8 +502,10 @@ namespace DipGgFixes
                 if (b.Pointer != tacBattle) { tacBattle = b.Pointer; tacBattleObj = b; tac.Clear(); savedNames.Clear(); idLogged = 0; tacInfoLogged = false; tacMain = Main(); }
                 var ships = b.Ships; if (ships == null) return;
                 float day = 1f, wx = 1f; try { day = BattleManager.Instance.GetDaytimeDetection(); } catch { } try { wx = BattleManager.Instance.GetWeatherDetection(); } catch { }
-                if (!tacInfoLogged) { tacInfoLogged = true; Log($"battle visibility: daytime detection {day:0.00}, weather detection {wx:0.00}"); }
-                float light = Mathf.Clamp(day, 0.15f, 1f) * Mathf.Clamp(wx, 0.3f, 1.2f);
+                if (!tacInfoLogged) { tacInfoLogged = true; Log($"battle visibility: daytime detection {day:0.00}, weather detection {wx:0.00} (identification light factor {Mathf.Clamp(day > 1.5f ? day / 100f : day, 0.15f, 1f) * Mathf.Clamp(wx > 1.5f ? wx / 100f : wx, 0.3f, 1.2f):0.00})"); }
+                // 1.11.62: the game reports these as percentages (log of 2026-10-20: daytime 41.67, weather 50.00); read 0-100 as 0-1
+                float dayN = day > 1.5f ? day / 100f : day, wxN = wx > 1.5f ? wx / 100f : wx;
+                float light = Mathf.Clamp(dayN, 0.15f, 1f) * Mathf.Clamp(wxN, 0.3f, 1.2f);
                 string bk = b.Id.ToString();
                 // cache once per tick: alive, side, position (interop calls are the expensive part)
                 int n = ships.Count; var arr = new Ship[n]; var al = new bool[n]; var sd = new bool[n]; var ps = new Vector3[n];
@@ -550,7 +552,7 @@ namespace DipGgFixes
                         if (d <= idR)
                         {
                             st.identified = true; st.label = null; Changed(t, obsSide);
-                            if (idLogged++ < 40) Log($"{(obsSide == SideOf(b, tacMain) ? "player side" : "AI side")} identified {t.name} ({at}{(st.reported != at ? ", first reported as " + st.reported : "")}) at {d:0} m (identification range {idR:0} m, detection {det:0} m, daylight x{day:0.00}, weather x{wx:0.00}{(smoke < 1f ? ", smoke" : "")})");
+                            if (idLogged++ < 40) Log($"{(obsSide == SideOf(b, tacMain) ? "player side" : "AI side")} identified {t.name} ({at}{(st.reported != at ? ", first reported as " + st.reported : "")}) at {d:0} m (identification range {idR:0} m, detection {det:0} m, daylight {day:0.0}, weather {wx:0.0}{(smoke < 1f ? ", smoke" : "")})");
                         }
                     }
                 }
