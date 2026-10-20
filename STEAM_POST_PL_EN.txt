@@ -1,6 +1,6 @@
-[h1]Iron Admiral 1.2.31 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
+[h1]Iron Admiral 1.2.32 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
-[i]Description as of 20 October 2026. Latest version: Iron Admiral 1.2.31 (DIP_GG_Fixes 1.11.58).[/i]
+[i]Description as of 20 October 2026. Latest version: Iron Admiral 1.2.32 (DIP_GG_Fixes 1.11.59).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
@@ -9,10 +9,10 @@
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]What is new today (20 October 2026) - Iron Admiral 1.2.31, DIP_GG_Fixes 1.11.58[/b]
+[b]What is new today (20 October 2026) - Iron Admiral 1.2.32, DIP_GG_Fixes 1.11.59[/b]
 [list]
 [*][b]Fog of war on the strategic map:[/b] foreign fleets are seen only as well as your reconnaissance allows. Close to your ports, where your patrols and scouting cruisers and destroyers are, with better technology and a larger intelligence budget, you know where they are. Far out at sea they disappear, or show up in the wrong place with an unknown course.
-[*][b]Contact reports can be wrong:[/b] the battle window and the enemy group window show the enemy as reported - cruisers taken for battleships, ships missing from the report. Scouts in your own force make the report better.
+[*][b]Contact reports can be wrong:[/b] the battle window and the enemy group window show the enemy as reported - cruisers taken for battleships, ships missing from the report. Scouts in your own force make the report better, and a navy is only ever reported with ship types it actually has.
 [*][b]Seen is not identified:[/b] in battle an enemy ship is first only an "unidentified ship (large)" and then a "probable battlecruiser?" - no name, class or details until your ships close in. Night, bad weather and smoke shorten the range at which you can tell what you are fighting.
 [*][b]The enemy is in the same fog:[/b] the AI judges your strength by what it has seen and identified, and may attack or withdraw on a wrong picture.
 [*][b]Interceptions need intelligence:[/b] a force at sea that nobody has found cannot be intercepted - for you and for the AI.
@@ -51,7 +51,7 @@
 
 [b]Download (both zips, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.58.
+Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.59.
 
 [h2]Battle: an enemy that fights like a navy[/h2]
 [list]
@@ -125,7 +125,7 @@ Iron Admiral is an extended edition of the Dreadnought Improvement Project "The 
 [*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
 [*][b]Update check and one-click update.[/b] At start the add-on compares the installed version with the GitHub repository and shows a message when a newer build exists - one HTTPS request, nothing sent. The message has a Download button: only after you click it the Mods package is fetched from the GitHub release, verified (SHA-256) and installed; restart the game afterwards. Switches: CheckForUpdates, UpdateDownloadButton.
 [*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv, research profiles in Mods\techBonuses.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (80 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
+[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (81 sections). Source code included (Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Version history[/h2]
@@ -178,9 +178,10 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [*]1.11.20 / Iron Admiral 1.2.12: a running treasury remedy no longer blocks the next one when the debt is deep again (Britain sat at -4.5 bn with a loan still running; blockade costs and reparations bypass the income figure) - at war with a loan running the AI prints money, inflation stacks; diagnostics show the loan, inflation, cuts and the unexplained 'other' expenses.
 [*]1.11.21 / Iron Admiral 1.2.13: the treasury state is guarded against outside changes (Britain and Portugal showed a phantom 63% inflation and ended at 99% after printing); printing on top of inflation adds 20 points instead of stacking to 99%.
 [/list]
-[b]20 October 2026 - DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31[/b]
+[b]20 October 2026 - DIP_GG_Fixes 1.11.58-1.11.59 / Iron Admiral 1.2.31-1.2.32[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: fog of war - enemy fleets on the strategic map hidden or shown inexactly by reconnaissance, contact reports with possible misidentification, enemy ships in battle unidentified until your ships close in (night, weather, smoke), the AI in the same fog, interceptions depending on intelligence.
+[*]DIP_GG_Fixes 1.11.59 / Iron Admiral 1.2.32: misidentified ship types in reports are limited to types the enemy navy actually has.
 [/list]
 [b]19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.57 / Iron Admiral 1.2.22-1.2.30[/b]
 [list]
@@ -209,8 +210,8 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.31_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.31_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.32_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.32_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [*]Mods_only: extract it into the game folder so that you get <game folder>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll and the CSV files; MelonLoader 0.6.6 must already be installed.
 [*]Error about the .NET 6.0 runtime at game start: install the .NET Desktop Runtime 6.0 (Windows x64) from https://dotnet.microsoft.com/download/dotnet/6.0 - MelonLoader 0.6.6 runs on it. Back to the unmodded game: run Uninstall.bat from <game folder>\Iron_Admiral_backup, or delete version.dll, the MelonLoader folder and the Mods folder and let Steam verify the game files; campaigns saved with the mod are not meant for the unmodded game.
 [/list]
@@ -231,9 +232,9 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 ============================================================================
 
-[h1]Iron Admiral 1.2.31 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
+[h1]Iron Admiral 1.2.32 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
 
-[i]Opis z dnia 20 października 2026. Najnowsza wersja: Iron Admiral 1.2.31 (DIP_GG_Fixes 1.11.58).[/i]
+[i]Opis z dnia 20 października 2026. Najnowsza wersja: Iron Admiral 1.2.32 (DIP_GG_Fixes 1.11.59).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
@@ -242,10 +243,10 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]Co nowego dziś (20 października 2026) - Iron Admiral 1.2.31, DIP_GG_Fixes 1.11.58[/b]
+[b]Co nowego dziś (20 października 2026) - Iron Admiral 1.2.32, DIP_GG_Fixes 1.11.59[/b]
 [list]
 [*][b]Mgła wojny na mapie strategicznej:[/b] obce floty widać tylko tak dobrze, jak pozwala rozpoznanie. Blisko własnych portów, tam gdzie są twoje patrole i krążowniki oraz niszczyciele rozpoznawcze, przy lepszej technice i większym budżecie wywiadu wiesz, gdzie są. Daleko na morzu znikają albo pojawiają się w złym miejscu, z nieznanym kursem.
-[*][b]Meldunki o kontakcie bywają błędne:[/b] okno bitwy i okno wrogiego zespołu pokazują przeciwnika według meldunków - krążowniki wzięte za pancerniki, okręty pominięte w meldunku. Zwiad we własnym zespole poprawia meldunek.
+[*][b]Meldunki o kontakcie bywają błędne:[/b] okno bitwy i okno wrogiego zespołu pokazują przeciwnika według meldunków - krążowniki wzięte za pancerniki, okręty pominięte w meldunku. Zwiad we własnym zespole poprawia meldunek, a flota bywa zgłaszana tylko z typami okrętów, które naprawdę ma.
 [*][b]Wykryty to nie rozpoznany:[/b] w bitwie okręt wroga to najpierw tylko "niezidentyfikowany okręt (duży)", potem "prawdopodobnie krążownik liniowy?" - bez nazwy, klasy i szczegółów, dopóki twoje okręty się nie zbliżą. Noc, zła pogoda i dym skracają dystans, z którego wiesz, z kim walczysz.
 [*][b]Przeciwnik w tej samej mgle:[/b] AI ocenia twoje siły według tego, co zobaczyło i rozpoznało, i może zaatakować albo się wycofać na podstawie błędnego obrazu.
 [*][b]Przechwycenie wymaga wywiadu:[/b] zespołu na morzu, którego nikt nie odnalazł, nie da się przechwycić - dotyczy ciebie i AI.
@@ -284,7 +285,7 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 [b]Pobieranie (oba pliki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 
-Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.58.
+Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.59.
 
 [h2]Bitwa: przeciwnik, który walczy jak flota[/h2]
 [list]
@@ -358,7 +359,7 @@ Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Ga
 [*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
 [*][b]Sprawdzanie aktualizacji i aktualizacja jednym kliknięciem.[/b] Przy starcie dodatek porównuje zainstalowaną wersję z repozytorium GitHub i pokazuje komunikat, gdy jest nowsza - jedno żądanie HTTPS, nic nie jest wysyłane. Komunikat ma przycisk Pobierz: dopiero po kliknięciu paczka Mods jest pobierana z wydania GitHub, weryfikowana (SHA-256) i instalowana; potem restart gry. Wyłączniki: CheckForUpdates, UpdateDownloadButton.
 [*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv, profile badań w Mods\techBonuses.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (80 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
+[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (81 sekcji). Kod źródłowy w paczce (Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
 [/list]
 
 [h2]Historia wersji[/h2]
@@ -411,9 +412,10 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [*]1.11.20 / Iron Admiral 1.2.12: trwający środek zaradczy nie blokuje następnego, gdy dług znów jest głęboki (Brytania siedziała na -4,5 mld z trwającą pożyczką; koszty blokady i reparacje omijają dochód) - w wojnie z pożyczką AI dodrukowuje pieniądze, inflacja się sumuje; diagnostyka pokazuje pożyczkę, inflację, cięcia i niewyjaśnione wydatki 'other'.
 [*]1.11.21 / Iron Admiral 1.2.13: stan kryzysu skarbu chroniony przed zmianami z zewnątrz (Brytania i Portugalia miały fantomowe 63% inflacji i po dodruku 99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do 99%.
 [/list]
-[b]20 października 2026 - DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31[/b]
+[b]20 października 2026 - DIP_GG_Fixes 1.11.58-1.11.59 / Iron Admiral 1.2.31-1.2.32[/b]
 [list]
 [*]DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: mgła wojny - wrogie floty na mapie ukryte albo niedokładne zależnie od rozpoznania, meldunki o kontakcie z możliwymi pomyłkami, okręty wroga w bitwie nierozpoznane do zbliżenia (noc, pogoda, dym), AI w tej samej mgle, przechwycenia zależne od wywiadu.
+[*]DIP_GG_Fixes 1.11.59 / Iron Admiral 1.2.32: pomyłki co do typów w meldunkach ograniczone do typów, które flota przeciwnika naprawdę ma.
 [/list]
 [b]19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.57 / Iron Admiral 1.2.22-1.2.30[/b]
 [list]
@@ -442,8 +444,8 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.31_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.31_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.32_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.32_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [*]Mods_only: rozpakuj do folderu gry tak, żeby powstało <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV; MelonLoader 0.6.6 musi być już zainstalowany.
 [*]Błąd ".NET 6.0 runtime" przy starcie gry: zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony https://dotnet.microsoft.com/download/dotnet/6.0 - na nim działa MelonLoader 0.6.6. Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup albo usuń version.dll, folder MelonLoader i folder Mods, a potem zweryfikuj pliki gry w Steam; kampanie zapisane z modem nie są przeznaczone dla gry bez moda.
 [/list]
