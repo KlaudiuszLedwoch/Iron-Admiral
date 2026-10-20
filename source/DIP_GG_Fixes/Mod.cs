@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.71", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.72", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -235,6 +235,7 @@ namespace DipGgFixes
             Diagnostics.Tick();
             Scenarios.Tick();
             Narrative.Tick();
+            try { Portless.Tick(); } catch { }
         }
 
         public override void OnLateUpdate() { try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } }
@@ -460,10 +461,12 @@ namespace DipGgFixes
             Diagnostics.CreatePrefs(cat, Info.Version);
             ModDesigns.CreatePrefs(cat);
             Narrative.CreatePrefs(cat);
+            Portless.CreatePrefs(cat);
             Diagnostics.RepairPreferences();
             ModDesigns.Install();
             SettingsUi.CreatePrefs(cat);
             try { Narrative.Apply(HarmonyInstance); } catch { }
+            try { Portless.Apply(HarmonyInstance); } catch { }
             try { Scenarios.Apply(HarmonyInstance); } catch (Exception e) { LoggerInstance.Warning("[Scenario] hooks not applied: " + e.Message); }
             try { Fog.Apply(HarmonyInstance); Fog.ReportPatches(); } catch (Exception e) { LoggerInstance.Warning("[Fog] hooks not applied: " + e.Message); }
             Doctrines.Load();
@@ -820,6 +823,7 @@ namespace DipGgFixes
         {
             try
             {
+                if (Portless.KeepAlive(__instance)) { __result = false; return false; } // 1.11.72
                 var g = DipGgFixesMod.CollapseGraceMonths;
                 if (g == null || g.Value <= 0) return true;
                 var p = __instance;
@@ -2281,6 +2285,8 @@ namespace DipGgFixes
         {
             try
             {
+                // 1.11.72: a great power losing its last port keeps its ships in an allied port
+                if (ConquestCtx.NewOwner != null && __0 != null && __0.player != null && Portless.TryRelocate(__0, __0.player, ConquestCtx.ProvinceId)) return false;
                 if (DipGgFixesMod.MinorFleetToConqueror == null || !DipGgFixesMod.MinorFleetToConqueror.Value) return true;
                 var ship = __0; if (ship == null) return true;
                 var loser = ship.player; if (loser == null) return true;

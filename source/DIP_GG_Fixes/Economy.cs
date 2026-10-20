@@ -865,6 +865,7 @@ namespace DipGgFixes
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][War] coalitions: " + e.Message); }
         }
+        internal static void DeclareWarPublic(Player a, Player t, string why) { DeclareWar(a, t, why); }
         static void DeclareWar(Player a, Player t, string why)
         {
             var r = RelationOf(a, t); if (r == null) return;
