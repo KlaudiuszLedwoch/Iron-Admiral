@@ -630,6 +630,13 @@ namespace DipGgFixes
         {
             try { var ui = G.ui; if (ui == null) return; var sel = ui.selectedShipMain; if (sel != null && sel.Pointer == t.Pointer) ui.RefreshShipInfo(); } catch { }
         }
+        // 1.11.66: the game re-opens the ship panel outside RefreshShipInfo (report from the game: details showed up again for an
+        // unidentified ship), so the hidden state is enforced every frame while such a ship is selected
+        internal static void LateTick()
+        {
+            if (tacBattleObj == null || !TacActive) return;
+            try { var ui = G.ui; if (ui == null) return; var sel = ui.selectedShipMain; if (sel == null && !panelHidden) return; if (PlayerLabel(sel) != null || panelHidden) ShipPanel(ui); } catch { }
+        }
         internal static void ShipPanel(Ui ui)
         {
             if (ui == null) return;
