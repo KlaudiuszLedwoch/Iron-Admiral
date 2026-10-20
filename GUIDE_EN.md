@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 19 October 2026. Latest version: Iron Admiral 1.2.30. Updated with every release._
+_Guide as of 20 October 2026. Latest version: Iron Admiral 1.2.31. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -138,6 +138,20 @@ A player on the Steam thread asked for the battle AI, crew quality and surrender
 5. Keep a reserve; check the treasury panel (F8) after every few turns.
 6. Expect the AI to fight back – at sea and in its budget.
 
+## 9. Fog of war: you see what your scouts see
+
+Enemy fleets on the campaign map are no longer drawn exactly. Each foreign task force is seen as well as your reconnaissance allows that month: the era (wireless, direction finding, aircraft, radar), your reconnaissance technology and intelligence budget compared with the other powers, how far it is from your nearest port, and whether one of your task forces - especially one with cruisers and destroyers, or one lying at anchor as a patrol - is nearby. A force you know well is drawn where it is. One you know poorly is drawn in roughly the right area with no route. One nobody has found is not drawn at all.
+
+What to do with it:
+
+1. Keep light ships with your main fleet. They improve the contact report you get before a battle and the picture of the sea around the fleet.
+2. Station patrols on the sea lanes that matter. A stationary group watches a wider area than a moving one.
+3. Do not trust the battle window blindly. "2 battleships (reported)" may be two armoured cruisers - or there may be a third ship nobody reported. That is how 1916 felt: four of seven Zeppelin reports on 19 August were wrong.
+4. In battle, an enemy you have only detected is an "Unidentified ship (large)". Closer, it becomes a "Probable battlecruiser?" - which can still be wrong. Its name, class and details appear once one of your ships closes to identification range. At night, in rain and behind smoke that range is short.
+5. The enemy has the same problem. It judges your force by what it has seen, so a fast scouting screen can make it commit - or withdraw - on a wrong picture.
+
+Everything can be switched off in the F10 panel ("Fog of war"). FogStrength in MelonPreferences.cfg makes it lighter or harsher.
+
 ---
 
 ### Guide history
@@ -153,6 +167,7 @@ A player on the Steam thread asked for the battle AI, crew quality and surrender
 - **19 October 2026, Iron Admiral 1.2.26:** series savings apply right from loading a campaign.
 - **19 October 2026, Iron Admiral 1.2.27-1.2.29:** refits above the treaty limit can be saved (confirmed in 1.2.29).
 - **19 October 2026, Iron Admiral 1.2.30:** risings in conquered heartlands and the decision to put them down.
+- **20 October 2026, Iron Admiral 1.2.31:** fog of war - what you see of enemy fleets, contact reports and identification in battle.
 
 ---
 

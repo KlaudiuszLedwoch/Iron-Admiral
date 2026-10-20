@@ -3,7 +3,7 @@ DIP The Great Game Extended (AI overhaul, one-click install)
 for Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
 
-Description as of 19 October 2026. Latest version: Iron Admiral 1.2.30 (DIP_GG_Fixes 1.11.49).
+Description as of 19 October 2026. Latest version: Iron Admiral 1.2.31 (DIP_GG_Fixes 1.11.49).
 
 Iron Admiral is an extended edition of the Dreadnought Improvement
 Project (DIP) "The Great Game": the same data, map and nations, plus dozens of balance,
