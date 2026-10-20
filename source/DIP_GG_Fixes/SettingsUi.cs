@@ -35,7 +35,7 @@ namespace DipGgFixes
             {"CrewLevelsRescale","Crews and prizes"},{"SurrenderByTraining","Crews and prizes"},{"CrewPanic","Crews and prizes"},
             {"CaptureSurrenderedShips","Crews and prizes"},{"SurrenderedShipsToBattleWinner","Crews and prizes"},{"CoreProvincesIndependence","Campaign AI"},{"CoreRevoltBonus","Campaign AI"},{"CoreRevoltRampMonths","Campaign AI"},{"TorpedoTargetSizeRatio","Battle AI"},{"MassAttackStrengthRatio","Battle AI"},{"MainShipSizeRatio","Battle AI"},{"MassAttackPerTarget","Battle AI"},{"WithdrawWhenOutmatched","Battle AI"},{"MinorFleetToConqueror","Crews and prizes"},
             {"FogOfWar","Fog of war"},{"FogStrategicMap","Fog of war"},{"FogBattleReports","Fog of war"},{"FogTacticalIdentification","Fog of war"},{"FogAiPerception","Fog of war"},{"FogInterceptions","Fog of war"},{"FogStrength","Fog of war"},
-            {"AutoShareDesigns","Campaign AI"},{"ShareToAllNations","Campaign AI"},{"CruisersWhenPoor","Campaign AI"},
+            {"InstallModDesigns","Campaign AI"},{"AutoShareDesigns","Campaign AI"},{"ShareToAllNations","Campaign AI"},{"CruisersWhenPoor","Campaign AI"},
             {"AiTechBudgetBalance","Campaign AI"},{"AiDesignOnlyWhenBuildable","Campaign AI"},{"FixStalledConstruction","Campaign AI"},
             {"BankruptBuildsCheapShips","Campaign AI"},{"NationalTechBonuses","Campaign AI"},
             {"SeriesProduction","Economy"},{"InflationEconomy","Economy"},{"FinancialCrisis","Economy"},
