@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 21 October 2026. Latest version: Iron Admiral 1.2.50. Updated with every release._
+_Guide as of 21 October 2026. Latest version: Iron Admiral 1.2.51. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -197,6 +197,7 @@ The trade window (F9) has two uses.
 - **21 October 2026, Iron Admiral 1.2.48:** angled armour; buying and selling ships (F9).
 - **21 October 2026, Iron Admiral 1.2.49:** trade window fixed; armour angle measured as the game does it.
 - **21 October 2026, Iron Admiral 1.2.50:** battle report in its own panel beside the result window.
+- **21 October 2026, Iron Admiral 1.2.51:** the 920 Shippack designs load again.
 
 ---
 
