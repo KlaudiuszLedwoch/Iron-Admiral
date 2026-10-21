@@ -1,6 +1,6 @@
-Iron Admiral 1.2.45 (DIP_GG_Fixes 1.11.73) - CO DAJE TEN MOD
-Opis z dnia 21 października 2026. Najnowsza wersja: Iron Admiral 1.2.45 (DIP_GG_Fixes 1.11.73).
-Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (95 sekcji).
+Iron Admiral 1.2.46 (DIP_GG_Fixes 1.11.74) - CO DAJE TEN MOD
+Opis z dnia 21 października 2026. Najnowsza wersja: Iron Admiral 1.2.46 (DIP_GG_Fixes 1.11.74).
+Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (96 sekcji).
 ============================================================================
 
 FILMY Z BITEW (YouTube) - każdy napis pochodzi z dziennika bitwy moda:
@@ -361,8 +361,9 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do
   99%.
 
-21 października 2026 - DIP_GG_Fixes 1.11.73 / Iron Admiral 1.2.45
+21 października 2026 - DIP_GG_Fixes 1.11.73-1.11.74 / Iron Admiral 1.2.45-1.2.46
 - DIP_GG_Fixes 1.11.73 / Iron Admiral 1.2.45: meldunki z bitwy w logu (dramatyczne relacje uczestników bitwy).
+- DIP_GG_Fixes 1.11.74 / Iron Admiral 1.2.46: starzejące się meldunki o kontaktach; noc zdradza strzelających.
 
 20 października 2026 - DIP_GG_Fixes 1.11.58-1.11.72 / Iron Admiral 1.2.31-1.2.44
 - DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: mgła wojny - mapa
@@ -452,15 +453,15 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   dystansu bez szans na przebicie, zygzak w podejściu.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.45_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.45_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.46_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.46_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.45 (DIP_GG_Fixes 1.11.73) - WHAT THIS MOD DOES
-Description as of 21 October 2026. Latest version: Iron Admiral 1.2.45 (DIP_GG_Fixes 1.11.73).
-Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (95 sections).
+Iron Admiral 1.2.46 (DIP_GG_Fixes 1.11.74) - WHAT THIS MOD DOES
+Description as of 21 October 2026. Latest version: Iron Admiral 1.2.46 (DIP_GG_Fixes 1.11.74).
+Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (96 sections).
 ============================================================================
 
 BATTLE VIDEOS (YouTube) - every caption comes from the mod's own battle log:
@@ -821,8 +822,9 @@ when the DLL does.
   99% after printing); printing on top of inflation adds 20 points instead of
   stacking to 99%.
 
-21 October 2026 - DIP_GG_Fixes 1.11.73 / Iron Admiral 1.2.45
+21 October 2026 - DIP_GG_Fixes 1.11.73-1.11.74 / Iron Admiral 1.2.45-1.2.46
 - DIP_GG_Fixes 1.11.73 / Iron Admiral 1.2.45: battle dispatches in the log (dramatic accounts from those taking part).
+- DIP_GG_Fixes 1.11.74 / Iron Admiral 1.2.46: ageing contact reports; night gives away ships that fire.
 
 20 October 2026 - DIP_GG_Fixes 1.11.58-1.11.72 / Iron Admiral 1.2.31-1.2.44
 - DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: fog of war - strategic map,
@@ -911,6 +913,6 @@ when the DLL does.
   without a chance to penetrate, evasive zigzag on the approach.
 
 
-Two downloads: Iron_Admiral_1.2.45_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.45_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.46_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.46_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
