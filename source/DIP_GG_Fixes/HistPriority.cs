@@ -65,7 +65,10 @@ namespace DipGgFixes
             finally { try { cleanup?.Invoke(null, null); } catch { } }
         }
 
-        internal static Ship Pick(Player player, ShipType shipType, int year)
+        internal static Ship Pick(Player player, ShipType shipType, int year) { return Pick(player, shipType, year, true, null); }
+        // 1.11.82: also used for custom battles (TweaksAndFixes' own shared-design call, no technology check, ignore list = designs
+        // already placed in this battle)
+        internal static Ship Pick(Player player, ShipType shipType, int year, bool checkTech, System.Collections.Generic.List<Il2CppSystem.Guid> ignore)
         {
             if (On == null || !On.Value || player == null || shipType == null) return null;
             var set = Ids(); if (set.Count == 0) return null;
@@ -79,6 +82,7 @@ namespace DipGgFixes
                 var st = tuple.Item1; if (st == null) continue;
                 string id; try { id = st.id.ToString(); } catch { continue; }
                 if (!set.Contains(id) || owned.Contains(id)) continue;
+                if (ignore != null) { bool skip = false; foreach (var g in ignore) if (g.ToString() == id) { skip = true; break; } if (skip) continue; }
                 if (st.shipType != shipType.name) continue;
                 int y = st.YearCreated;
                 if (y > year || y < year - YearsBack.Value) continue;
@@ -89,7 +93,7 @@ namespace DipGgFixes
                 var ship = Ship.Create(null, null, false, false, false);
                 if (!ship.FromStore(st, new Il2CppSystem.Nullable<Il2CppSystem.Guid>(), null, null, false)) { try { ship.Erase(); } catch { } continue; }
                 ship.SetActive(false);
-                float r = TechRatio(player, ship);
+                float r = checkTech ? TechRatio(player, ship) : -1f;
                 if (r >= 0f && r < 0.9f) { try { ship.Erase(); } catch { } continue; }   // nation lacks the technology of this class
                 if (ship.id == Il2CppSystem.Guid.Empty) ship.id = Il2CppSystem.Guid.NewGuid();
                 if (logged++ < 40) MelonLogger.Msg($"[DIP GG Fixes][Historical] {player.data.name} {shipType.name} {year}: historical class {st.vesselName} ({st.YearCreated}) chosen{(r >= 0f ? $", tech match {r:0.00}" : "")}");
