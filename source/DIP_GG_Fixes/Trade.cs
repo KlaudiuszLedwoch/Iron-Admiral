@@ -7,6 +7,7 @@
 //     design built in its yard. It costs more than at home (premium by relations), is paid month by month to the builder,
 //     takes no slip at home, and the builder may requisition it on completion if relations have turned hostile or there
 //     is war between them.
+// 1.11.84 (review): no instalments to a builder at war with the buyer; AI sales never charge the player without his consent.
 // State per campaign: UserData\IronAdmiral_Economy\trade_<fingerprint>.txt (saved with the game). Log: "[Trade]".
 using System;
 using System.Collections.Generic;
@@ -194,6 +195,8 @@ namespace DipGgFixes
                 if (buyer == null || seller == null || s == null) { orders.Remove(o); continue; }
                 bool building = false; try { building = s.isBuilding; } catch { }
                 float due = o.Months > 0 ? o.Price / o.Months : o.Price;
+                // 1.11.84: no instalments go to a builder the buyer is at war with (the ship will be seized on completion anyway)
+                if (building && AtWar(buyer, seller)) continue;
                 if (building && o.Paid < o.Price)
                 {
                     float pay = Math.Min(due, o.Price - o.Paid);
@@ -239,6 +242,8 @@ namespace DipGgFixes
             foreach (var b in AllPlayers())
             {
                 if (b.Pointer == seller.Pointer || taken.Contains(K(b)) || AtWar(seller, b)) continue;
+                // 1.11.84: an AI sale is completed at once, so the player is never chosen as its buyer (he would pay without being asked)
+                try { if (!seller.isMain && b.isMain) continue; } catch { }
                 if (Att(seller, b) < -50f) continue;
                 if (b.cash < v * 0.5f) continue;
                 cands.Add(b);

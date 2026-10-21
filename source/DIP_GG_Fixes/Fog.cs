@@ -319,12 +319,15 @@ namespace DipGgFixes
         // fails the line test from its own position, so for it only the target is tested. The route fallback is checked the same
         // way (a route ends in a port, which is land); if nothing passes, the force is shown where it is.
         static int seaLogged; static int seaDirect, seaRoute, seaTrue, seaMonth = -1;
+        // 1.11.84: the monthly summary counts each force once (the placement is recomputed every frame; 1.11.65-1.11.83 counted calls)
+        static readonly HashSet<string> seaSeen = new HashSet<string>();
+        static bool First(CampaignController.TaskForce tf, string kind) { try { return seaSeen.Add(kind + "|" + tf.Id.ToString()); } catch { return false; } }
         static bool PointLand(CampaignMap cm, Vector3 p) { try { return cm.RaycastLand(p, p + new Vector3(0.01f, 0f, 0.01f)); } catch { return true; } }
         static Vector3 SeaOffset(CampaignController.TaskForce tf, float mag, int m, Vector3 pos, bool allowRoute)
         {
-            if (m != seaMonth) { if (seaMonth >= 0 && seaDirect + seaRoute + seaTrue > 0) Log($"position error placement: {seaDirect} shifted, {seaRoute} along the route, {seaTrue} shown at the true position (no sea point found)"); seaMonth = m; seaDirect = seaRoute = seaTrue = 0; seaLogged = 0; }
+            if (m != seaMonth) { if (seaMonth >= 0 && seaDirect + seaRoute + seaTrue > 0) Log($"position error placement: {seaDirect} shifted, {seaRoute} along the route, {seaTrue} shown at the true position (no sea point found)"); seaMonth = m; seaDirect = seaRoute = seaTrue = 0; seaLogged = 0; seaSeen.Clear(); }
             CampaignMap cm = null; try { cm = CampaignMap.Instance; } catch { }
-            if (cm == null) { seaTrue++; return Vector3.zero; }
+            if (cm == null) { if (First(tf, "t")) seaTrue++; return Vector3.zero; }
             float a0 = Roll($"ang|{m}|{tf.Id}") * Mathf.PI * 2f;
             bool selfLand = PointLand(cm, pos);
             if (seaLogged < 6) { seaLogged++; Log($"position error check: force itself on a land cell = {selfLand} (in port or by the coast), error {mag * KmPerUnit():0} km"); }
@@ -335,15 +338,15 @@ namespace DipGgFixes
                 var off = new Vector3(Mathf.Cos(ang) * d, 0f, Mathf.Sin(ang) * d);
                 if (PointLand(cm, pos + off)) continue;
                 if (!selfLand) { bool line = true; try { line = cm.RaycastLand(pos, pos + off); } catch { } if (line) continue; }
-                seaDirect++; return off;
+                if (First(tf, "d")) seaDirect++; return off;
             }
             float sign = Roll($"dir|{m}|{tf.Id}") < 0.5f ? -1f : 1f;
             if (allowRoute) foreach (var f in new[] { 1f, 0.5f, -1f, -0.5f })
             {
                 var r = AlongRoute(tf, sign * f * mag);
-                if (r.sqrMagnitude > 1e-6f && !PointLand(cm, pos + r)) { seaRoute++; return r; }
+                if (r.sqrMagnitude > 1e-6f && !PointLand(cm, pos + r)) { if (First(tf, "r")) seaRoute++; return r; }
             }
-            seaTrue++; return Vector3.zero;
+            if (First(tf, "t")) seaTrue++; return Vector3.zero;
         }
         static string Heading(CampaignController.TaskForce tf)
         {
