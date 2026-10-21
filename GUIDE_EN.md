@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 21 October 2026. Latest version: Iron Admiral 1.2.51. Updated with every release._
+_Guide as of 21 October 2026. Latest version: Iron Admiral 1.2.52. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -177,6 +177,21 @@ The trade window (F9) has two uses.
 - When your yards are full, order a prototype or a few escorts abroad. Pick a builder you trust.
 - Sell obsolete ships to minors you want as friends. Selling to a power's enemy annoys that power.
 
+## 12. Custom battles: where the ships come from
+
+For every ship of a custom battle the game looks in three places, in this order:
+
+1. **Shared designs** – your Designs folder. Iron Admiral puts its historical classes there (real ships rebuilt from historical data and saved only when the game accepts them), together with the Shippack designs; your own designs count too. When a historical class of the nation exists for the battle year, it is taken first.
+2. **Pregenerated designs** – predefined design files. Iron Admiral ships none. The base game's built-in ones were made for technologies that DIP removed, so not one of them can load: the game used to spend several seconds on them, log a stream of errors and then fall back to step 3 anyway.
+3. **The ship generator** – builds a new ship for the nation and year.
+
+That is why the **Pregenerated** button in the custom battle screen is **Off** when the game starts: the game skips step 2 and goes from your shared designs straight to the generator.
+
+**What to do:**
+- Keep **Shared Designs** on to fight with historical classes. Their number grows with every release, so more nations and years get real ships.
+- Turn **Pregenerated** on only if you have installed predefined design files made for DIP yourself. The button holds until you quit the game; to keep it on for good, switch on *CustomBattlePregenerated* in the F10 panel.
+- Why not ship DIP's ready-made designs? They load, but they are generator output with historical names: in the British file the 1906 "Bellerophon" carries five twin 14-inch turrets (the real ship: ten 12-inch guns in five twin turrets) and the 1912 "Warspite" six twin 14-inch turrets (the real Queen Elizabeth class: eight 15-inch guns in four twin turrets).
+
 ---
 
 ### Guide history
@@ -198,6 +213,7 @@ The trade window (F9) has two uses.
 - **21 October 2026, Iron Admiral 1.2.49:** trade window fixed; armour angle measured as the game does it.
 - **21 October 2026, Iron Admiral 1.2.50:** battle report in its own panel beside the result window.
 - **21 October 2026, Iron Admiral 1.2.51:** the 920 Shippack designs load again.
+- **21 October 2026, Iron Admiral 1.2.52:** custom battles – where the ships come from (chapter 12): historical classes first, the "Pregenerated" button off by default.
 
 ---
 
