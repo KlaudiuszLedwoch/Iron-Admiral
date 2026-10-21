@@ -6,8 +6,8 @@
 //   beyond 45 deg the cap is knocked aside (Okun, navweaps Type 91 note 2) - the excess angle counts like an uncapped shell
 //   uncapped shells (before CappedShellYear): effective = plate / cos(obliquity)^UncappedExponent
 // capped at ObliquityMaxFactor. Decks keep the game's own deck penetration (already a function of the fall angle).
-// The angle is taken from the game's own impact computation (Shell.ImpactForwardToAngleSideForward, same frame) and the
-// target's axes. Per battle summary: "[Armor] obliquity ...".
+// The angle is taken from the game's own impact computation (Shell.ImpactForwardToAngleSideForward, same frame): the angle
+// between its two arguments (shell direction and the side normal) in the horizontal plane (1.11.79). Per battle summary: "[Armor] obliquity ...".
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
@@ -48,17 +48,15 @@ namespace DipGgFixes
             string zn = zone.ToString();
             if (zoneNames.Add(zn)) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity: armour zone seen in hits: {zn}");
             if (zn.IndexOf("Belt", StringComparison.OrdinalIgnoreCase) < 0) return 1f;
-            var tr = target.transform; if (tr == null) return 1f;
-            Vector3 fwd = tr.forward; fwd.y = 0f; fwd.Normalize();
-            Vector3 right = tr.right; right.y = 0f; right.Normalize();
-            // the shell direction is the argument that is not one of the target's axes
+            // Calibration in battle (21.10): the game calls ImpactForwardToAngleSideForward(direction, side normal) with both
+            // vectors in the same frame - world (target.right as the 2nd argument) or the target's local frame ((1,0,0)).
+            // The obliquity is therefore the angle between the two arguments in the horizontal plane.
             Vector3 dir = capA; dir.y = 0f;
-            Vector3 alt = capB; alt.y = 0f;
-            if (dir.sqrMagnitude < 1e-6f || IsAxis(dir, fwd, right)) dir = alt;
-            if (dir.sqrMagnitude < 1e-6f) return 1f;
-            dir.Normalize();
-            if (calib++ < 5) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity calibration: args {capA} / {capB}, target forward {fwd}, shell dir used {dir}");
-            float cos = Mathf.Abs(Vector3.Dot(dir, right));                 // 1 = square to the belt
+            Vector3 nrm = capB; nrm.y = 0f;
+            if (dir.sqrMagnitude < 1e-6f || nrm.sqrMagnitude < 1e-6f) return 1f;
+            dir.Normalize(); nrm.Normalize();
+            if (calib++ < 5) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity calibration: direction {capA}, side normal {capB}, angle {Mathf.Acos(Mathf.Clamp01(Mathf.Abs(Vector3.Dot(dir, nrm)))) * Mathf.Rad2Deg:0} deg");
+            float cos = Mathf.Abs(Vector3.Dot(dir, nrm));                 // 1 = square to the belt
             float ang = Mathf.Acos(Mathf.Clamp01(cos)) * Mathf.Rad2Deg;
             bool capped = Year() >= CappedYear.Value;
             float f;
