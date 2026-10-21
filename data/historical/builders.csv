@@ -1,0 +1,412 @@
+file,class,operator_nation_csv,builder_country,builder_game_nation,yards,notes,source_url
+capital_ships.csv,Swiftsure (1903),United Kingdom,United Kingdom,britain,"Armstrong Whitworth, Elswick; Vickers, Barrow","EXPORT_REQUISITIONED: built for Chile (Constitucion, Libertad), purchased by RN 1903; builder = operator",https://en.wikipedia.org/wiki/Swiftsure-class_battleship
+capital_ships.csv,Agincourt,United Kingdom,United Kingdom,britain,"Armstrong Whitworth, Elswick","EXPORT_REQUISITIONED: ordered by Brazil (Rio de Janeiro), sold to Ottoman Empire (Sultan Osman I), seized 1914; builder = operator",https://en.wikipedia.org/wiki/HMS_Agincourt_(1913)
+capital_ships.csv,Erin,United Kingdom,United Kingdom,britain,Vickers,"EXPORT_REQUISITIONED: ordered 1911 by Ottoman Empire (Resadiye), seized 1914; builder = operator",https://en.wikipedia.org/wiki/HMS_Erin
+capital_ships.csv,Canada,United Kingdom,United Kingdom,britain,"Armstrong Whitworth, Elswick","EXPORT_REQUISITIONED: built for Chile (Almirante Latorre), purchased 1914, returned to Chile; builder = operator",https://en.wikipedia.org/wiki/Chilean_battleship_Almirante_Latorre
+capital_ships.csv,Indefatigable,United Kingdom,United Kingdom,britain,"John Brown, Clydebank (HMAS Australia)",MIXED/DOMINION: class row is RN; HMAS Australia built in UK for Royal Australian Navy (see Australia row),https://en.wikipedia.org/wiki/HMAS_Australia_(1911)
+capital_ships.csv,Fuji,Japan,United Kingdom,britain,"Thames Iron Works, London (Fuji); Armstrong Whitworth, Elswick (Yashima)",,https://en.wikipedia.org/wiki/Fuji-class_battleship
+capital_ships.csv,Shikishima,Japan,United Kingdom,britain,"Thames Iron Works (Shikishima); Armstrong, Elswick (Hatsuse)",,https://en.wikipedia.org/wiki/Shikishima-class_battleship
+capital_ships.csv,Asahi,Japan,United Kingdom,britain,"John Brown & Co, Clydebank",,https://en.wikipedia.org/wiki/Japanese_battleship_Asahi
+capital_ships.csv,Mikasa,Japan,United Kingdom,britain,"Vickers, Sons & Maxim, Barrow",,https://en.wikipedia.org/wiki/Japanese_battleship_Mikasa
+capital_ships.csv,Katori,Japan,United Kingdom,britain,"Vickers, Barrow (Katori); Armstrong, Elswick (Kashima)",,https://en.wikipedia.org/wiki/Katori-class_battleship
+capital_ships.csv,Kongo,Japan,United Kingdom,britain,"Vickers, Barrow (Kongo only)","MIXED: lead ship UK-built; Hiei, Kirishima, Haruna built in Japan (Yokosuka, Mitsubishi Nagasaki, Kawasaki Kobe)",https://en.wikipedia.org/wiki/Kong%C5%8D-class_battlecruiser
+capital_ships.csv,Kongo (as rebuilt 1930s),Japan,United Kingdom,britain,"Vickers, Barrow (Kongo only)","MIXED: rebuild variant of Kongo class; only Kongo UK-built, rebuilt in Japan",https://en.wikipedia.org/wiki/Kong%C5%8D-class_battlecruiser
+capital_ships.csv,Retvizan,Russia,USA,usa,"William Cramp & Sons, Philadelphia",,https://en.wikipedia.org/wiki/Russian_battleship_Retvizan
+capital_ships.csv,Tsesarevich,Russia,France,france,"Forges et Chantiers de la Mediterranee, La Seyne",,https://en.wikipedia.org/wiki/Russian_battleship_Tsesarevich
+capital_ships.csv,Barbaros Hayreddin (ex-Brandenburg),Ottoman Empire,Germany,germany,(not verified in this pass),"SECOND_HAND: ex-German Brandenburg class bought 1910, not export-built; yards not verified",https://en.wikipedia.org/wiki/Ottoman_battleship_Barbaros_Hayreddin
+capital_ships.csv,Yavuz Sultan Selim (ex-Goeben),Ottoman Empire,Germany,germany,(not verified in this pass),"SECOND_HAND: ex-SMS Goeben transferred 1914, not export-built; yards not verified",https://en.wikipedia.org/wiki/SMS_Goeben
+capital_ships.csv,Yavuz Sultan Selim (as rebuilt 1930),Ottoman Empire,Germany,germany,(not verified in this pass),SECOND_HAND: rebuild of ex-Goeben,https://en.wikipedia.org/wiki/SMS_Goeben
+capital_ships.csv,Mesudiye (as rebuilt 1903),Ottoman Empire,United Kingdom,britain,Thames Ironworks,Original hull UK-built (1870s); rebuilt 1903 (rebuild yard not checked),https://en.wikipedia.org/wiki/Ottoman_ironclad_Mesudiye
+capital_ships.csv,Reşadiye,Ottoman Empire,United Kingdom,britain,"Vickers (Resadiye); Fatih Sultan Mehmed laid down 1914, cancelled",NOT_DELIVERED: Resadiye seized 1914 -> HMS Erin,https://en.wikipedia.org/wiki/Reşadiye-class_battleship
+capital_ships.csv,Sultan Osman I (ex-Rio de Janeiro),Ottoman Empire,United Kingdom,britain,"Armstrong Whitworth, Elswick",NOT_DELIVERED: seized 1914 -> HMS Agincourt; originally ordered by Brazil,https://en.wikipedia.org/wiki/HMS_Agincourt_(1913)
+capital_ships.csv,Hydra,Greece,France,france,"FCM (2), Ateliers et Chantiers de la Loire (1)",,https://en.wikipedia.org/wiki/Hydra-class_ironclad
+capital_ships.csv,Kilkis (ex-Mississippi),Greece,USA,usa,William Cramp & Sons,"SECOND_HAND: ex-USS Mississippi/Idaho sold 1914, not export-built",https://en.wikipedia.org/wiki/Mississippi-class_battleship
+capital_ships.csv,Salamis,Greece,Germany,germany,"AG Vulcan, Hamburg",NOT_DELIVERED: never completed for Greece,https://en.wikipedia.org/wiki/Greek_battleship_Salamis
+capital_ships.csv,Vasilefs Konstantinos,Greece,France,france,"A C de la Loire et Penhoet, St-Nazaire","NOT_DELIVERED: laid down 12.6.1914, suspended 8.1914 (navypedia)",https://navypedia.org/ships/greece/gr_bb_vasilefs_constantinos.htm
+capital_ships.csv,Almirante Brown,Argentina,United Kingdom,britain,"Samuda Brothers, London",Pre-1890 build (1880),https://en.wikipedia.org/wiki/ARA_Almirante_Brown_(1880)
+capital_ships.csv,Almirante Brown (as rebuilt 1898),Argentina,United Kingdom,britain,"Samuda Brothers, London",Rebuild variant; rebuild yard not checked,https://en.wikipedia.org/wiki/ARA_Almirante_Brown_(1880)
+capital_ships.csv,Libertad,Argentina,United Kingdom,britain,"Laird Brothers, Birkenhead",,https://en.wikipedia.org/wiki/ARA_Libertad_(1892)
+capital_ships.csv,Rivadavia,Argentina,USA,usa,Fore River Shipbuilding (Rivadavia); New York Shipbuilding (Moreno),,https://en.wikipedia.org/wiki/Rivadavia-class_battleship
+capital_ships.csv,Rivadavia (as rebuilt 1926),Argentina,USA,usa,Fore River (Rivadavia); New York Shipbuilding (Moreno),Rebuild variant; rebuild yard not checked,https://en.wikipedia.org/wiki/Rivadavia-class_battleship
+capital_ships.csv,Riachuelo,Brazil,United Kingdom,britain,"Samuda Brothers, London",Pre-1890 build,https://en.wikipedia.org/wiki/Brazilian_battleship_Riachuelo
+capital_ships.csv,Riachuelo (as rebuilt 1894),Brazil,United Kingdom,britain,"Samuda Brothers, London",Rebuild variant; rebuild yard not checked,https://en.wikipedia.org/wiki/Brazilian_battleship_Riachuelo
+capital_ships.csv,Aquidabã,Brazil,United Kingdom,britain,"Samuda Brothers, Cubitt Town, London",Pre-1890 build,https://en.wikipedia.org/wiki/Brazilian_battleship_Aquidab%C3%A3
+capital_ships.csv,Marshal Deodoro,Brazil,France,france,"FCM, La Seyne",,https://en.wikipedia.org/wiki/Brazilian_coastal_defense_ship_Deodoro
+capital_ships.csv,Minas Geraes,Brazil,United Kingdom,britain,"Armstrong Whitworth, Elswick (Minas Geraes); Vickers, Barrow (Sao Paulo)",Third ship Rio de Janeiro (Armstrong) cancelled 1910 and redesigned,https://en.wikipedia.org/wiki/Minas_Geraes-class_battleship
+capital_ships.csv,Minas Geraes (as rebuilt 1938),Brazil,United Kingdom,britain,"Armstrong Whitworth, Elswick",Rebuild variant (rebuilt in Brazil per CSV),https://en.wikipedia.org/wiki/Minas_Geraes-class_battleship
+capital_ships.csv,Capitán Prat,Chile,France,france,Forges et Chantiers de la Mediterranee,,https://en.wikipedia.org/wiki/Chilean_battleship_Capit%C3%A1n_Prat
+capital_ships.csv,Constitución,Chile,United Kingdom,britain,"Armstrong Whitworth, Elswick; Vickers, Barrow","NOT_DELIVERED: purchased by RN 1903 (HMS Swiftsure, Triumph)",https://en.wikipedia.org/wiki/Swiftsure-class_battleship
+capital_ships.csv,Almirante Latorre,Chile,United Kingdom,britain,"Armstrong Whitworth, Elswick","Requisitioned 1914 as HMS Canada, delivered to Chile 1920; sister Almirante Cochrane completed as HMS Eagle",https://en.wikipedia.org/wiki/Chilean_battleship_Almirante_Latorre
+capital_ships.csv,Almirante Latorre (as rebuilt 1931),Chile,United Kingdom,britain,"Armstrong Whitworth, Elswick",Rebuild variant (rebuild yard not checked),https://en.wikipedia.org/wiki/Chilean_battleship_Almirante_Latorre
+capital_ships.csv,Vasco da Gama (as rebuilt 1903),Portugal,United Kingdom,britain,"Thames Iron Works, Blackwall",Original hull 1876; rebuild yard not checked,https://en.wikipedia.org/wiki/Portuguese_ironclad_Vasco_da_Gama
+capital_ships.csv,Australia (Indefatigable class),Australia,United Kingdom,britain,"John Brown & Co, Clydebank",Built in UK for Royal Australian Navy,https://en.wikipedia.org/wiki/HMAS_Australia_(1911)
+capital_ships.csv,Tordenskjold,Norway,United Kingdom,britain,"Armstrong, Mitchell & Co",,https://en.wikipedia.org/wiki/Tordenskjold-class_coastal_defence_ship
+capital_ships.csv,Eidsvold,Norway,United Kingdom,britain,Armstrong Whitworth,,https://en.wikipedia.org/wiki/Eidsvold-class_coastal_defence_ship
+capital_ships.csv,Bjørgvin,Norway,United Kingdom,britain,Armstrong Whitworth,"NOT_DELIVERED: requisitioned 1914 as HMS Glatton, Gorgon",https://en.wikipedia.org/wiki/HMS_Glatton_(1914)
+capital_ships.csv,Thonburi,Thailand,Japan,japan,Kawasaki Dockyard Co,,https://en.wikipedia.org/wiki/Thonburi-class_coastal_defence_ship
+capital_ships.csv,Pelayo,Spain,France,france,"FCM, La Seyne",Pre-1890 build (1885),https://en.wikipedia.org/wiki/Spanish_battleship_Pelayo
+capital_ships.csv,Pelayo (as rebuilt 1898),Spain,France,france,"FCM, La Seyne",Rebuild variant (rebuild yard not checked),https://en.wikipedia.org/wiki/Spanish_battleship_Pelayo
+capital_ships.csv,Dingyuan,China,Germany,germany,"AG Vulcan, Stettin",Pre-1890 build,https://en.wikipedia.org/wiki/Dingyuan-class_ironclad
+cruisers.csv,Town class (1910) - Birkenhead group,United Kingdom,United Kingdom,britain,"Cammell Laird, Birkenhead","EXPORT_REQUISITIONED: ordered by Greece (Antinavarchos Kountouriotis, Lambros Katsonis); builder = operator",https://en.wikipedia.org/wiki/HMS_Birkenhead_(1915)
+cruisers.csv,C class - Centaur group,United Kingdom,United Kingdom,britain,Vickers,EXPORT_REQUISITIONED: built from material for two Turkish scout cruisers (per CSV notes); builder = operator,https://en.wikipedia.org/wiki/HMS_Centaur_(1916)
+cruisers.csv,County class - Kent group,United Kingdom,United Kingdom,britain,"John Brown, Clydebank (HMAS Australia, HMAS Canberra)",MIXED/DOMINION: two ships built in UK for RAN,https://en.wikipedia.org/wiki/HMAS_Canberra_(D33)
+cruisers.csv,Leander class (1931) - Amphion/Perth group (Modified Leander),United Kingdom; Australia,United Kingdom,britain,"Swan Hunter (Sydney), Devonport DYd (Hobart), Portsmouth DYd (Perth)","Built for RN, transferred to RAN (second-hand transfer, not export-built)",https://navypedia.org/ships/australia/aus_cr_sydney.htm
+cruisers.csv,Libia,Italy,Italy,italy,"Gio. Ansaldo & C., Genoa","EXPORT_REQUISITIONED: laid down for Ottoman Empire (Drama), seized 1911; builder = operator",https://en.wikipedia.org/wiki/Italian_cruiser_Libia
+cruisers.csv,Etna (1939),Italy,Italy,italy,"CRDA, Trieste","EXPORT_REQUISITIONED: ordered by Siam (Taksin, Naresuan), confiscated 1942; builder = operator",https://en.wikipedia.org/wiki/Etna-class_cruiser_(1941)
+cruisers.csv,Giuseppe Garibaldi,Italy,Italy,italy,Ansaldo; Orlando,"Italian row; 7 of 10 hulls exported (Argentina 4, Spain 1, Japan 2) - see buyer rows",https://en.wikipedia.org/wiki/Giuseppe_Garibaldi-class_cruiser
+cruisers.csv,New Orleans (1896),USA,United Kingdom,britain,"Armstrong Whitworth, Elswick","NOT_DELIVERED_TO_ORIGINAL_BUYER: built for Brazil (Amazonas, Almirante Abreu), sold to USA 1898",https://en.wikipedia.org/wiki/New_Orleans-class_cruiser_(1896)
+cruisers.csv,Tsukushi,Japan,United Kingdom,britain,Armstrong,Pre-1890 build (laid down 1879),https://en.wikipedia.org/wiki/Japanese_cruiser_Tsukushi
+cruisers.csv,Naniwa,Japan,United Kingdom,britain,Armstrong Mitchell,,https://en.wikipedia.org/wiki/Naniwa-class_cruiser
+cruisers.csv,Unebi,Japan,France,france,"FCM, Le Havre",,https://en.wikipedia.org/wiki/Japanese_cruiser_Unebi
+cruisers.csv,Chishima,Japan,France,france,Ateliers et Chantiers de la Loire,,https://en.wikipedia.org/wiki/Japanese_cruiser_Chishima
+cruisers.csv,Matsushima,Japan,France,france,"FCM, La Seyne (Matsushima, Itsukushima)",MIXED: Hashidate built at Yokosuka,https://en.wikipedia.org/wiki/Japanese_cruiser_Matsushima
+cruisers.csv,Chiyoda,Japan,United Kingdom,britain,J & G Thomson,,https://en.wikipedia.org/wiki/Japanese_cruiser_Chiyoda
+cruisers.csv,Yoshino,Japan,United Kingdom,britain,Armstrong Whitworth,,https://en.wikipedia.org/wiki/Japanese_cruiser_Yoshino
+cruisers.csv,Tatsuta (1894),Japan,United Kingdom,britain,Armstrong Mitchell,,https://en.wikipedia.org/wiki/Japanese_cruiser_Tatsuta_(1894)
+cruisers.csv,Izumi (ex-Esmeralda),Japan,United Kingdom,britain,"Armstrong Mitchell, Elswick","SECOND_HAND: ex-Chilean Esmeralda (1883), built UK for Chile, sold to Japan 1894",https://en.wikipedia.org/wiki/Chilean_cruiser_Esmeralda_(1883)
+cruisers.csv,Kasagi,Japan,USA,usa,William Cramp & Sons (Kasagi); Union Iron Works (Chitose),,https://en.wikipedia.org/wiki/Kasagi-class_cruiser
+cruisers.csv,Takasago,Japan,United Kingdom,britain,Armstrong Whitworth,,https://en.wikipedia.org/wiki/Japanese_cruiser_Takasago
+cruisers.csv,Asama,Japan,United Kingdom,britain,"Armstrong Whitworth, Elswick",,https://en.wikipedia.org/wiki/Asama-class_cruiser
+cruisers.csv,Yakumo,Japan,Germany,germany,AG Vulcan Stettin,,https://en.wikipedia.org/wiki/Japanese_cruiser_Yakumo
+cruisers.csv,Azuma,Japan,France,france,"Ateliers et Chantiers de la Loire, Saint-Nazaire",,https://en.wikipedia.org/wiki/Japanese_cruiser_Azuma
+cruisers.csv,Izumo,Japan,United Kingdom,britain,"Armstrong Whitworth, Elswick",,https://en.wikipedia.org/wiki/Izumo-class_cruiser
+cruisers.csv,Kasuga,Japan,Italy,italy,"Gio. Ansaldo & C., Genoa","Laid down for Argentina (Mitra/Rivadavia, Roca/Moreno), sold to Japan 1903-04",https://en.wikipedia.org/wiki/Kasuga-class_cruiser
+cruisers.csv,Admiral Kornilov (1887),Russia,France,france,St. Nazaire (yard name not given),Pre-1890 build,https://en.wikipedia.org/wiki/Russian_cruiser_Admiral_Kornilov
+cruisers.csv,Svetlana (1896),Russia,France,france,"FCM, Le Havre",,https://en.wikipedia.org/wiki/Russian_cruiser_Svetlana_(1896)
+cruisers.csv,Varyag (1899),Russia,USA,usa,"William Cramp & Sons, Philadelphia",,https://en.wikipedia.org/wiki/Russian_cruiser_Varyag_(1899)
+cruisers.csv,Askold,Russia,Germany,germany,"Germaniawerft, Kiel",,https://en.wikipedia.org/wiki/Russian_cruiser_Askold
+cruisers.csv,Novik (1900),Russia,Germany,germany,Schichau,,https://en.wikipedia.org/wiki/Russian_cruiser_Novik
+cruisers.csv,Bogatyr,Russia,Germany,germany,Vulcan Stettin (Bogatyr only),"MIXED: Oleg, Kagul, Pamiat Merkuria built in Russia",https://en.wikipedia.org/wiki/Russian_cruiser_Bogatyr
+cruisers.csv,Boyarin,Russia,Denmark,scandinavia,"Burmeister & Wain, Copenhagen",,https://en.wikipedia.org/wiki/Russian_cruiser_Boyarin
+cruisers.csv,Bayan (1900),Russia,France,france,"FCM, La Seyne",,https://en.wikipedia.org/wiki/Russian_cruiser_Bayan_(1900)
+cruisers.csv,Bayan (Admiral Makarov group),Russia,France,france,"FCM, La Seyne (Admiral Makarov only)","MIXED: Pallada (1906), Bayan (1907) built at Admiralty Shipyard, St Petersburg",https://en.wikipedia.org/wiki/Russian_cruiser_Admiral_Makarov
+cruisers.csv,Rurik (1906),Russia,United Kingdom,britain,"Vickers, Sons & Maxim",,https://en.wikipedia.org/wiki/Russian_cruiser_Rurik_(1906)
+cruisers.csv,Muraviev Amurskiy,Russia,Germany,germany,"Schichau, Danzig","NOT_DELIVERED: requisitioned by Germany 1914 (SMS Pillau, Elbing)",https://en.wikipedia.org/wiki/Pillau-class_cruiser
+cruisers.csv,"Petropavlovsk (Project 83, ex-Lutzow)",USSR,Germany,germany,"Deschimag, Bremen",Incomplete hull sold to USSR 1940 (built as German cruiser; sale while incomplete),https://en.wikipedia.org/wiki/German_cruiser_L%C3%BCtzow_(1939)
+cruisers.csv,Velasco,Spain,United Kingdom,britain,"Thames Iron Works, Blackwall (Velasco, Gravina)",MIXED: 6 of 8 built in Spanish arsenals; pre-1890,https://navypedia.org/ships/spain/sp_cr_velasco.htm
+cruisers.csv,Isla de Luzón,Spain,United Kingdom,britain,"Armstrong, Elswick (Isla de Luzon, Isla de Cuba)",MIXED: Marques de la Ensenada built at La Carraca; pre-1890,https://navypedia.org/ships/spain/sp_cr_isla_de_luzon.htm
+cruisers.csv,Reina Regente (1887),Spain,United Kingdom,britain,"J & G Thomson, Clydebank (Reina Regente)","MIXED: Alfonso XIII, Lepanto built in Spain",https://navypedia.org/ships/spain/sp_cr_reina_regente88.htm
+cruisers.csv,Cristóbal Colón (Giuseppe Garibaldi class),Spain,Italy,italy,"Gio. Ansaldo, Sestri Ponente","Laid down as Giuseppe Garibaldi, bought by Spain 1896",https://en.wikipedia.org/wiki/Spanish_cruiser_Crist%C3%B3bal_Col%C3%B3n
+cruisers.csv,Río de la Plata,Spain,France,france,"Normand, Le Havre",,https://navypedia.org/ships/spain/sp_cr_rio_de_la_plata.htm
+cruisers.csv,Chaoyong,China,United Kingdom,britain,"Charles Mitchell & Co, Newcastle",Pre-1890 build,https://en.wikipedia.org/wiki/Chinese_cruiser_Chaoyong
+cruisers.csv,Nan Shui,China,Germany,germany,"Howaldtswerke, Kiel",Pre-1890 build,https://navypedia.org/ships/china/ch_cr_nan_shui.htm
+cruisers.csv,Jiyuan,China,Germany,germany,AG Vulcan Stettin,Pre-1890 build,https://en.wikipedia.org/wiki/Chinese_cruiser_Jiyuan
+cruisers.csv,Zhiyuan,China,United Kingdom,britain,"Armstrong Whitworth, Elswick",Pre-1890 build,https://en.wikipedia.org/wiki/Zhiyuan-class_cruiser
+cruisers.csv,Jingyuan (1887),China,Germany,germany,Stettiner AG Vulcan,Pre-1890 build,https://en.wikipedia.org/wiki/Chinese_cruiser_Jingyuan_(1887)
+cruisers.csv,Hai Yung,China,Germany,germany,"Vulkan, Bremen (per navypedia)","UNCERTAIN: navypedia gives ""Vulkan, Bremen""; Wikipedia not checked",https://navypedia.org/ships/china/ch_cr_hai_yung.htm
+cruisers.csv,Hai Chi,China,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/china/ch_cr_hai_chi.htm
+cruisers.csv,Ying Swei (Chao Ho class),China,United Kingdom,britain,"Vickers, Barrow",,https://navypedia.org/ships/china/ch_cr_ying_swei.htm
+cruisers.csv,Chao Ho,China,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/china/ch_cr_chao_ho.htm
+cruisers.csv,Ning Hai,China,Japan,japan,"Harima Zosensho, Aioi (Ning Hai); Ping Hai Kiangnan DY with Harima",MIXED: Ping Hai built in China with Japanese assistance,https://navypedia.org/ships/china/ch_cr_ning_hai.htm
+cruisers.csv,Mecidiye,Ottoman Empire/Turkey,USA,usa,"Cramp, Philadelphia",,https://navypedia.org/ships/turkey/tu_cr_mecidiye.htm
+cruisers.csv,Hamidiye,Ottoman Empire/Turkey,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/turkey/tu_cr_hamidiye.htm
+cruisers.csv,Midilli (ex-Breslau),Ottoman Empire/Turkey,Germany,germany,(not verified in this pass),SECOND_HAND: ex-SMS Breslau transferred 1914,https://navypedia.org/ships/turkey/tu_cr_midilli.htm
+cruisers.csv,Georgios Averof,Greece,Italy,italy,"Orlando, Livorno",Third ship of Pisa class (per Italian CSV row),https://navypedia.org/ships/greece/gr_cr_averof.htm
+cruisers.csv,Elli (ex-Fei Hung),Greece,USA,usa,"New York Shipbuilding, Camden","Built for China (Fei Hung), sold to Greece 1914",https://navypedia.org/ships/greece/gr_cr_elli.htm
+cruisers.csv,Elli (as rebuilt 1929),Greece,USA,usa,"New York Shipbuilding, Camden",Rebuild variant (rebuild yard not checked),https://navypedia.org/ships/greece/gr_cr_elli.htm
+cruisers.csv,Patagonia,Argentina,Austria-Hungary,austria,"Stabilimento Tecnico Triestino, San Rocco",Pre-1890 build,https://navypedia.org/ships/argentina/arg_cr_patagonia.htm
+cruisers.csv,Veinticinco de Mayo (1890),Argentina,United Kingdom,britain,"Armstrong, Elswick",Ex-Nicochea,https://navypedia.org/ships/argentina/arg_cr_25_de_mayo91.htm
+cruisers.csv,Nueve de Julio,Argentina,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/argentina/arg_cr_9_de_julio.htm
+cruisers.csv,Buenos Aires,Argentina,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/argentina/arg_cr_buenos_aires.htm
+cruisers.csv,Garibaldi,Argentina,Italy,italy,"Ansaldo, Genoa (2); Orlando, Livorno (2)","Includes Rivadavia, Moreno (Ansaldo) sold incomplete to Japan",https://navypedia.org/ships/argentina/arg_cr_garibaldi.htm
+cruisers.csv,Veinticinco de Mayo (1929),Argentina,Italy,italy,"OTO, Sestri Ponente; OTO, Livorno",,https://navypedia.org/ships/argentina/arg_cr_25_de_mayo.htm
+cruisers.csv,La Argentina,Argentina,United Kingdom,britain,"Vickers-Armstrong, Barrow",,https://navypedia.org/ships/argentina/arg_cr_la_argentina.htm
+cruisers.csv,Benjamin Constant,Brazil,France,france,"FCM, La Seyne",,https://navypedia.org/ships/brazil/br_cr_benjamin_constant.htm
+cruisers.csv,República,Brazil,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/brazil/br_cr_republica.htm
+cruisers.csv,Almirante Barroso (1896),Brazil,United Kingdom,britain,"Armstrong, Newcastle","Amazonas, Almirante Abreu sold incomplete to USA (New Orleans class)",https://navypedia.org/ships/brazil/br_cr_almirante_barroso.htm
+cruisers.csv,Bahia,Brazil,United Kingdom,britain,"Armstrong, Newcastle",,https://navypedia.org/ships/brazil/br_cr_bahia.htm
+cruisers.csv,Bahia (as rebuilt 1926),Brazil,United Kingdom,britain,"Armstrong, Newcastle",Rebuild variant (rebuild yard not checked),https://navypedia.org/ships/brazil/br_cr_bahia.htm
+cruisers.csv,Esmeralda (1883),Chile,United Kingdom,britain,"Armstrong Mitchell, Elswick",Pre-1890 build; sold to Japan 1894 (Izumi),https://en.wikipedia.org/wiki/Chilean_cruiser_Esmeralda_(1883)
+cruisers.csv,Presidente Errázuriz,Chile,France,france,"FCM, La Seyne",,https://navypedia.org/ships/chile/chi_cr_presidente_errazuriz.htm
+cruisers.csv,Blanco Encalada,Chile,United Kingdom,britain,"Armstrong, Newcastle",,https://navypedia.org/ships/chile/chi_cr_blanco_encalada.htm
+cruisers.csv,Esmeralda (1894),Chile,United Kingdom,britain,"Armstrong, Newcastle",,https://navypedia.org/ships/chile/chi_cr_esmeralda.htm
+cruisers.csv,Ministro Zenteno,Chile,United Kingdom,britain,"Armstrong, Newcastle",,https://navypedia.org/ships/chile/chi_cr_ministro_zenteno.htm
+cruisers.csv,O'Higgins (1897),Chile,United Kingdom,britain,"Armstrong, Newcastle",,https://navypedia.org/ships/chile/chi_cr_ohiggins.htm
+cruisers.csv,Chacabuco,Chile,United Kingdom,britain,"Armstrong, Newcastle",Built speculatively as Fourth of July,https://navypedia.org/ships/chile/chi_cr_chacabuco.htm
+cruisers.csv,Lima,Peru,Germany,germany,"Howaldtswerke, Kiel",Lima ex-Socrates; sister Callao (ex-Diogenes) sold incomplete to USA 1898 (USS Topeka),https://navypedia.org/ships/peru/per_cr_lima.htm
+cruisers.csv,Almirante Grau (1906),Peru,United Kingdom,britain,"Vickers, Barrow",,https://navypedia.org/ships/peru/per_cr_almirante_grau.htm
+cruisers.csv,Adamastor,Portugal,Italy,italy,"Orlando, Livorno",,https://navypedia.org/ships/portugal/pr_cr_adamastor.htm
+cruisers.csv,Dom Carlos I,Portugal,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/portugal/pr_cr_dom_carlos_i.htm
+cruisers.csv,São Gabriel,Portugal,France,france,"Normand, Le Havre",,https://navypedia.org/ships/portugal/pr_cr_sao_gabriel.htm
+cruisers.csv,Elisabeta,Romania,United Kingdom,britain,"Armstrong, Elswick",,https://navypedia.org/ships/romania/ro_cr_elisabeta.htm
+cruisers.csv,Porfirio Díaz (Zaragoza),Mexico,France,france,"FCM, Graville (Le Havre)",,https://navypedia.org/ships/mexico/mex_cr_zaragoza.htm
+cruisers.csv,Maha Chakri,Siam/Thailand,United Kingdom,britain,Leith (yard name not given),,https://navypedia.org/ships/thailand/th_cr_maha_chakri.htm
+cruisers.csv,Taksin,Siam/Thailand,Italy,italy,"CRDA, Trieste","NOT_DELIVERED: confiscated by Italy 1942 (Etna, Vesuvio)",https://navypedia.org/ships/thailand/th_cr_taksin.htm
+carriers.csv,Eagle (1918),UK,United Kingdom,britain,Armstrong Whitworth,"EXPORT_REQUISITIONED: ordered 1912 as Chilean battleship Almirante Cochrane, completed as carrier; builder = operator",https://en.wikipedia.org/wiki/HMS_Eagle_(1918)
+carriers.csv,Archer,UK,USA,usa,"Sun Shipbuilding & Drydock Co, Chester PA",US-built merchant hull (Mormacland) converted in USA for RN,https://en.wikipedia.org/wiki/HMS_Archer_(D78)
+carriers.csv,Avenger,UK,USA,usa,Sun Shipbuilding Company,US-built merchant hulls converted for RN (Charger retained by USN),https://en.wikipedia.org/wiki/Avenger-class_escort_carrier
+carriers.csv,Attacker,UK,USA,usa,"Ingalls (4), Western Pipe & Steel (4), Seattle-Tacoma (3)",US-built escort carriers for RN,https://en.wikipedia.org/wiki/Attacker-class_escort_carrier
+carriers.csv,Ruler,UK,USA,usa,Seattle-Tacoma Shipbuilding,US-built escort carriers for RN,https://en.wikipedia.org/wiki/Ruler-class_escort_carrier
+destroyers_torpedo_boats.csv,Talisman,United Kingdom,United Kingdom,britain,"Hawthorn Leslie, Newcastle",EXPORT_REQUISITIONED: ex-Turkish order taken over 1914; builder = operator,https://en.wikipedia.org/wiki/Talisman-class_destroyer
+destroyers_torpedo_boats.csv,Medea,United Kingdom,United Kingdom,britain,"John Brown, Clydebank (2); Fairfield, Govan (2)",EXPORT_REQUISITIONED: ex-Greek Kriti class; builder = operator,https://www.navypedia.org/ships/greece/gr_dd_kriti.htm
+destroyers_torpedo_boats.csv,Faulknor (leader),United Kingdom,United Kingdom,britain,"J. Samuel White, Cowes",EXPORT_REQUISITIONED: ex-Chilean Almirante class; 3 returned to Chile 1920; builder = operator,https://www.navypedia.org/ships/chile/chi_dd_almirante_williams.htm
+destroyers_torpedo_boats.csv,Havant (ex-Brazilian H class),United Kingdom,United Kingdom,britain,"Vickers-Armstrong Barrow (2), J. Samuel White (2), Thornycroft Woolston (2)",EXPORT_REQUISITIONED: ex-Brazilian Jurua class 1939; builder = operator,https://www.navypedia.org/ships/brazil/br_dd_juruena.htm
+destroyers_torpedo_boats.csv,Ithuriel (ex-Turkish I class),United Kingdom,United Kingdom,britain,"Vickers-Armstrong, Barrow","EXPORT_REQUISITIONED: ex-Turkish Muavenet, Gayret; Inconstant returned to Turkey 1946; builder = operator",https://www.navypedia.org/ships/turkey/tu_dd_demirhisar_2.htm
+destroyers_torpedo_boats.csv,Aventurier,France,France,france,"Dyle et Bacalan, Bordeaux (2); A C de Bretagne, Nantes (2)",EXPORT_REQUISITIONED: ex-Argentine Mendoza class seized 1914; builder = operator,https://www.navypedia.org/ships/argentina/arg_dd_mendoza14.htm
+destroyers_torpedo_boats.csv,G101,Germany,Germany,germany,"Germaniawerft, Kiel (per CSV notes)","EXPORT_REQUISITIONED: ex-Argentine order (Santiago, San Luis, Santa Fe, Tucuman); builder = operator",https://www.navypedia.org/ships/germany/ger_dd_g101.htm
+destroyers_torpedo_boats.csv,V105,Germany,Germany,germany,"AG Vulcan, Stettin","EXPORT_REQUISITIONED: ordered by Netherlands as Z1-Z4, taken over 1914; builder = operator",https://en.wikipedia.org/wiki/Z-class_torpedo_boat
+destroyers_torpedo_boats.csv,Ascaro,Italy,Italy,italy,"Ansaldo, Genoa","EXPORT_REQUISITIONED: ordered by China (Ching Po), taken over; builder = operator",https://navypedia.org/ships/italy/it_dd_ascaro.htm
+destroyers_torpedo_boats.csv,Aquila (esploratore),Italy,Italy,italy,"Pattison, Naples",EXPORT_REQUISITIONED: ex-Romanian Vifor class requisitioned 1915; builder = operator,https://en.wikipedia.org/wiki/Vifor-class_destroyer
+destroyers_torpedo_boats.csv,Warasdiner,Austria-Hungary,Austria-Hungary,austria,"STT, San Marco",EXPORT_REQUISITIONED: ex-Chinese Lung Tuan; builder = operator,https://navypedia.org/ships/austrohungary/ah_dd_warasdiner.htm
+destroyers_torpedo_boats.csv,Audace (ex-Kawakaze),Italy,United Kingdom,britain,"Yarrow, Scotstoun","Built for Japan (Urakaze class), sold to Italy before completion",https://en.wikipedia.org/wiki/Urakaze-class_destroyer
+destroyers_torpedo_boats.csv,Doris (ex-Greek Aigli),France,Germany,germany,"AG Vulcan, Stettin",SECOND_HAND: Greek boats seized by France 1916-18,https://www.navypedia.org/ships/greece/gr_dd_aigli.htm
+destroyers_torpedo_boats.csv,Niki (ex-Greek),France,Germany,germany,"AG Vulcan, Stettin",SECOND_HAND: Greek boats seized by France 1916-18,https://www.navypedia.org/ships/greece/gr_dd_niki.htm
+destroyers_torpedo_boats.csv,Thyella (ex-Greek),France,United Kingdom,britain,"Yarrow, Glasgow",SECOND_HAND: Greek boats seized by France 1916-18,https://www.navypedia.org/ships/greece/gr_dd_thyella.htm
+destroyers_torpedo_boats.csv,Aetos (ex-Greek),France,United Kingdom,britain,"Cammell Laird, Birkenhead",SECOND_HAND: Greek boats seized by France 1916-18; originally ordered by Argentina,https://www.navypedia.org/ships/greece/gr_dd_aetos.htm
+destroyers_torpedo_boats.csv,Takou,France,Germany,germany,"Schichau, Elbing",SECOND_HAND: ex-Chinese Hai Lung class captured 1900,https://www.navypedia.org/ships/china/ch_dd_hai_lung.htm
+destroyers_torpedo_boats.csv,Leytenant Burakov (1900),Russia,Germany,germany,"Schichau, Elbing",SECOND_HAND: ex-Chinese Hai Hoha captured 1900,https://www.navypedia.org/ships/russia/ru_dd_leytenant_burakov00.htm
+destroyers_torpedo_boats.csv,Lastochka,Russia,United Kingdom,britain,Yarrow,SECOND_HAND: ex-Yarrow experimental boat Carolina bought 1905 (per CSV notes; builder not re-verified),https://www.navypedia.org/ships/russia/ru_dd_lastochka.htm
+destroyers_torpedo_boats.csv,Fukuryu,Japan,Germany,germany,"Schichau, Elbing (per CSV notes)","SECOND_HAND: ex-Chinese, captured 1895",https://www.navypedia.org/ships/japan/jap_tb_fukuryu.htm
+destroyers_torpedo_boats.csv,28-go,Japan,Germany,germany,"Vulcan, Stettin (per CSV notes)",SECOND_HAND: ex-Chinese torpedo launch salvaged 1895,https://www.navypedia.org/ships/japan/jap_tb_28.htm
+destroyers_torpedo_boats.csv,26-go,Japan,Germany,germany,"Vulcan, Stettin (per CSV notes)","SECOND_HAND: ex-Chinese, salvaged 1895",https://www.navypedia.org/ships/japan/jap_tb_26.htm
+destroyers_torpedo_boats.csv,Pierre Durand (ex-V79),France,Germany,germany,(not verified),SECOND_HAND: German war reparation 1920,https://navypedia.org/ships/france/fr_dd_pierre_durand.htm
+destroyers_torpedo_boats.csv,Buino (ex-V130),France,Germany,germany,(not verified),SECOND_HAND: German war reparation 1920,https://navypedia.org/ships/france/fr_dd_buino.htm
+destroyers_torpedo_boats.csv,Matelot Leblanc (ex-Dukla),France,Austria-Hungary,austria,(not verified),SECOND_HAND: A-H war reparation 1920,https://navypedia.org/ships/france/fr_dd_matelot_leblanc.htm
+destroyers_torpedo_boats.csv,Premuda (ex-V116),Italy,Germany,germany,(not verified),SECOND_HAND: German war reparation,https://navypedia.org/ships/italy/it_dd_premuda.htm
+destroyers_torpedo_boats.csv,Cesare Rossarol (ex-B97),Italy,Germany,germany,(not verified),SECOND_HAND: German war reparation,https://navypedia.org/ships/italy/it_dd_rossarol.htm
+destroyers_torpedo_boats.csv,Ardimentoso (ex-S63),Italy,Germany,germany,(not verified),SECOND_HAND: German war reparation,https://navypedia.org/ships/italy/it_dd_ardimentoso.htm
+destroyers_torpedo_boats.csv,Fasana (ex-Austrian Tátra/Ersatz Tátra),Italy,Austria-Hungary,austria,(not verified),SECOND_HAND: A-H war reparation 1920,https://navypedia.org/ships/italy/it_dd_fasana.htm
+destroyers_torpedo_boats.csv,"Derzkiy (ex-US flush-deckers, 1944)",USSR,USA,usa,(not verified),SECOND_HAND: ex-US flush-deck destroyers via UK 1944,https://www.navypedia.org/ships/russia/ru_dd_derzkiy.htm
+destroyers_torpedo_boats.csv,Deyatelnyy (ex-Churchill),USSR,USA,usa,(not verified),SECOND_HAND: ex-HMS Churchill (ex-US flush-decker),https://www.navypedia.org/ships/russia/ru_dd_deyatelnyy.htm
+destroyers_torpedo_boats.csv,Lyogkiy (ex-Romanian Marasti),USSR,Italy,italy,"Pattison, Naples","SECOND_HAND: ex-Romanian Vifor class, seized by USSR 1944",https://en.wikipedia.org/wiki/Vifor-class_destroyer
+destroyers_torpedo_boats.csv,Porazhayushchiy (ex-T107),USSR,Germany,germany,(not verified),SECOND_HAND: ex-German torpedo boat,https://www.navypedia.org/ships/russia/ru_dd_porazhayushchiy.htm
+destroyers_torpedo_boats.csv,Pronzitelnyy (ex-T196),USSR,Germany,germany,(not verified),SECOND_HAND: ex-German G196 (Germaniawerft prefix per S138-class list),https://www.navypedia.org/ships/russia/ru_dd_pronzitelnyy.htm
+destroyers_torpedo_boats.csv,Prozorlivyy (ex-T158),USSR,Germany,germany,(not verified),SECOND_HAND: ex-German torpedo boat,https://www.navypedia.org/ships/russia/ru_dd_prozorlivyy.htm
+destroyers_torpedo_boats.csv,1-go,Japan,United Kingdom,britain,"Yarrow, Poplar",Pre-1890 (1880),https://www.navypedia.org/ships/japan/jap_tb_1.htm
+destroyers_torpedo_boats.csv,Kotaka,Japan,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/japan/jap_tb_kotaka.htm
+destroyers_torpedo_boats.csv,5-go,Japan,France,france,"Schneider, Chalon-sur-Saone (assembled Onohama)",Knocked-down boats assembled in Japan,https://www.navypedia.org/ships/japan/jap_tb_5.htm
+destroyers_torpedo_boats.csv,22-go,Japan,Germany,germany,"Schichau, Elbing (22-go, 23-go)",MIXED: 25-go built Onohama,https://www.navypedia.org/ships/japan/jap_tb_22.htm
+destroyers_torpedo_boats.csv,15-go,Japan,France,france,"Normand, Le Havre",,https://www.navypedia.org/ships/japan/jap_tb_15.htm
+destroyers_torpedo_boats.csv,21-go,Japan,France,france,"Normand, Le Havre / Onohama (21-go)",MIXED: 24-go built Onohama,https://www.navypedia.org/ships/japan/jap_tb_21.htm
+destroyers_torpedo_boats.csv,Shirataka,Japan,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/japan/jap_tb_shirataka.htm
+destroyers_torpedo_boats.csv,29-go,Japan,France,france,"Normand, Le Havre",,https://www.navypedia.org/ships/japan/jap_tb_29.htm
+destroyers_torpedo_boats.csv,31-go,Japan,Germany,germany,"Schichau parts, assembled Kawasaki/Mitsubishi (31-38-go)","MIXED: 44-49, 60, 61-go fully built by Kawasaki",https://www.navypedia.org/ships/japan/jap_tb_31.htm
+destroyers_torpedo_boats.csv,Hayabusa,Japan,France,france,"A. Normand, Le Havre (Chidori, Hayabusa, Kasasagi, Manazuru)",MIXED: 12 of 16 built in Japan,https://www.navypedia.org/ships/japan/jap_tb_hayabusa.htm
+destroyers_torpedo_boats.csv,39-go,Japan,United Kingdom,britain,"Yarrow, Poplar",,https://www.navypedia.org/ships/japan/jap_tb_39.htm
+destroyers_torpedo_boats.csv,Ikazuchi,Japan,United Kingdom,britain,"Yarrow & Co, Poplar",,https://en.wikipedia.org/wiki/Ikazuchi-class_destroyer
+destroyers_torpedo_boats.csv,Murakumo,Japan,United Kingdom,britain,"Thornycroft, Chiswick",,https://en.wikipedia.org/wiki/Murakumo-class_destroyer
+destroyers_torpedo_boats.csv,Akatsuki (1901),Japan,United Kingdom,britain,"Yarrow & Co, Cubitt Town",,https://en.wikipedia.org/wiki/Akatsuki-class_destroyer_(1901)
+destroyers_torpedo_boats.csv,Shirakumo,Japan,United Kingdom,britain,"Thornycroft, Chiswick",,https://en.wikipedia.org/wiki/Shirakumo-class_destroyer
+destroyers_torpedo_boats.csv,Batum,Russia,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/russia/ru_dd_batum.htm
+destroyers_torpedo_boats.csv,Sukhum,Russia,United Kingdom,britain,"Thornycroft, Southampton",Pre-1890,https://www.navypedia.org/ships/russia/ru_dd_sukhum2.htm
+destroyers_torpedo_boats.csv,Poti,Russia,France,france,"Augustin Normand, Le Havre",Pre-1890,https://www.navypedia.org/ships/russia/ru_dd_sukhum.htm
+destroyers_torpedo_boats.csv,Gagry,Russia,France,france,"Claparede, Paris",Pre-1890,https://www.navypedia.org/ships/russia/ru_dd_gagry.htm
+destroyers_torpedo_boats.csv,Gelendzhik,Russia,France,france,"FCM, La Seyne",Pre-1890,https://www.navypedia.org/ships/russia/ru_dd_gelendzhik.htm
+destroyers_torpedo_boats.csv,Kazarskiy,Russia,Germany,germany,"Schichau, Elbing (Kazarskiy, Voevoda, Posadnik)","MIXED: 2 Crichton Abo, 1 Nikolayev",https://www.navypedia.org/ships/russia/ru_dd_kazarskiy.htm
+destroyers_torpedo_boats.csv,Sokol,Russia,United Kingdom,britain,"Yarrow, Scotstoun (per navypedia)",UNCERTAIN: navypedia says Scotstoun for 1895 (Yarrow was at Poplar then); prototype; Krechet-type sisters domestic,https://www.navypedia.org/ships/russia/ru_dd_sokol.htm
+destroyers_torpedo_boats.csv,Kit,Russia,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/russia/ru_dd_kit.htm
+destroyers_torpedo_boats.csv,Som,Russia,United Kingdom,britain,"Laird, Birkenhead",,https://www.navypedia.org/ships/russia/ru_dd_som.htm
+destroyers_torpedo_boats.csv,Forel,Russia,France,france,"Normand, Le Havre (3); FCM, Le Havre (2)",,https://www.navypedia.org/ships/russia/ru_dd_forel.htm
+destroyers_torpedo_boats.csv,Leytenant Burakov (1905),Russia,France,france,"FCM, Le Havre",,https://www.navypedia.org/ships/russia/ru_dd_leytenant_burakov.htm
+destroyers_torpedo_boats.csv,Inzhener-mekhanik Zverev,Russia,Germany,germany,"Schichau, Elbing",2 boats reassembled at Vladivostok,https://www.navypedia.org/ships/russia/ru_dd_inzhener_mekhanik_zverev.htm
+destroyers_torpedo_boats.csv,Vsadnik (1906),Russia,Germany,germany,"Germaniawerft, Kiel (Vsadnik, Gaydamak)","MIXED: Amurets, Ussuriets built Helsingfors",https://www.navypedia.org/ships/russia/ru_dd_vsadnik.htm
+destroyers_torpedo_boats.csv,Tashkent,USSR,Italy,italy,"OTO, Livorno",,https://en.wikipedia.org/wiki/Soviet_destroyer_Tashkent
+destroyers_torpedo_boats.csv,Lampo,Italy,Germany,germany,"Schichau, Elbing",,https://navypedia.org/ships/italy/it_dd_lampo.htm
+destroyers_torpedo_boats.csv,Nibbio (1881),Italy,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://navypedia.org/ships/italy/it_dd_nibbio.htm
+destroyers_torpedo_boats.csv,Avvoltoio (1881),Italy,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://navypedia.org/ships/italy/it_dd_avvoltoio.htm
+destroyers_torpedo_boats.csv,Sparviero (1881),Italy,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://navypedia.org/ships/italy/it_dd_sparviero.htm
+destroyers_torpedo_boats.csv,Aquila (1882),Italy,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://navypedia.org/ships/italy/it_dd_aquila82.htm
+destroyers_torpedo_boats.csv,Aldebaran (1st group),Italy,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890; navypedia lists 10 of 11 names as Thornycroft (Perseo not listed),https://navypedia.org/ships/italy/it_dd_aldebaran.htm
+destroyers_torpedo_boats.csv,"Euterpe (2nd group, Lucciola)",Italy,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://navypedia.org/ships/italy/it_dd_euterpe_2.htm
+destroyers_torpedo_boats.csv,Clio (1885),Italy,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://navypedia.org/ships/italy/it_dd_clio.htm
+destroyers_torpedo_boats.csv,56S (Schichau-built),Italy,Germany,germany,"Schichau, Elbing",Pre-1890,https://navypedia.org/ships/italy/it_dd_56s.htm
+destroyers_torpedo_boats.csv,76Ya,Italy,United Kingdom,britain,"Yarrow, Poplar (76Ya, 77Ya)","MIXED: 78Ya, 79Ya built Venice; pre-1890",https://navypedia.org/ships/italy/it_dd_76ya.htm
+destroyers_torpedo_boats.csv,Aquila (1888),Italy,Germany,germany,"Schichau, Elbing",,https://navypedia.org/ships/italy/it_dd_aquila88.htm
+destroyers_torpedo_boats.csv,Blitz,Austria-Hungary,Germany,germany,"Schichau, Elbing",,https://navypedia.org/ships/austrohungary/ah_dd_blitz.htm
+destroyers_torpedo_boats.csv,Meteor,Austria-Hungary,Germany,germany,"Schichau, Elbing",,https://navypedia.org/ships/austrohungary/ah_dd_meteor.htm
+destroyers_torpedo_boats.csv,Planet,Austria-Hungary,United Kingdom,britain,"Palmer, Jarrow",,https://navypedia.org/ships/austrohungary/ah_dd_planet.htm
+destroyers_torpedo_boats.csv,Satellit,Austria-Hungary,Germany,germany,"Schichau, Elbing",,https://navypedia.org/ships/austrohungary/ah_dd_satellit.htm
+destroyers_torpedo_boats.csv,Magnet,Austria-Hungary,Germany,germany,"Schichau, Elbing",,https://navypedia.org/ships/austrohungary/ah_dd_magnet.htm
+destroyers_torpedo_boats.csv,Tb IX,Austria-Hungary,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://navypedia.org/ships/austrohungary/ah_dd_ix.htm
+destroyers_torpedo_boats.csv,Adler,Austria-Hungary,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://navypedia.org/ships/austrohungary/ah_dd_adler.htm
+destroyers_torpedo_boats.csv,Sperber,Austria-Hungary,Germany,germany,"Schichau, Elbing",Pre-1890,https://navypedia.org/ships/austrohungary/ah_dd_sperber.htm
+destroyers_torpedo_boats.csv,Bussard,Austria-Hungary,Austria-Hungary,austria,"Pola (10), STT (6); Schichau (4: Kukuk, Staar, Krahe, Rabe)",MIXED: main builder domestic; 4 German-built,https://navypedia.org/ships/austrohungary/ah_dd_bussard.htm
+destroyers_torpedo_boats.csv,Tb XXXIV (D-type),Austria-Hungary,Germany,germany,"Schichau, Elbing (XXXIV only)",MIXED: 5 built Pola,https://navypedia.org/ships/austrohungary/ah_dd_xxxiv.htm
+destroyers_torpedo_boats.csv,Huszár,Austria-Hungary,United Kingdom,britain,"Yarrow, Poplar (first Huszar)",MIXED: prototype only; 12 built STT/Pola/Danubius,https://navypedia.org/ships/austrohungary/ah_dd_huszar.htm
+destroyers_torpedo_boats.csv,Kaiman,Austria-Hungary,United Kingdom,britain,"Yarrow, Cubitt Town (Kaiman)",MIXED: prototype only; 23 built STT/Danubius,https://navypedia.org/ships/austrohungary/ah_dd_kaiman.htm
+destroyers_torpedo_boats.csv,Python,Austria-Hungary,United Kingdom,britain,"Yarrow, Cubitt Town",,https://navypedia.org/ships/austrohungary/ah_dd_python.htm
+destroyers_torpedo_boats.csv,Viper,Austria-Hungary,United Kingdom,britain,"Yarrow, Cubitt Town",,https://navypedia.org/ships/austrohungary/ah_dd_viper.htm
+destroyers_torpedo_boats.csv,Natter,Austria-Hungary,Germany,germany,"Schichau, Elbing",,https://navypedia.org/ships/austrohungary/ah_dd_natter.htm
+destroyers_torpedo_boats.csv,Lei Fu,China,Germany,germany,"Vulcan, Bremen (per navypedia)",UNCERTAIN yard name; pre-1890,https://www.navypedia.org/ships/china/ch_dd_lei_fu.htm
+destroyers_torpedo_boats.csv,Lei Chen,China,Germany,germany,"Schichau, Elbing",Pre-1890,https://www.navypedia.org/ships/china/ch_dd_lei_chen.htm
+destroyers_torpedo_boats.csv,Fei Ting,China,United Kingdom,britain,"White, Cowes / Armstrong, Elswick","Built 1887 as Sea Serpent, completed for China 1894-95",https://www.navypedia.org/ships/china/ch_dd_fei_ting.htm
+destroyers_torpedo_boats.csv,Chang Tze,China,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/china/ch_dd_chang_tse.htm
+destroyers_torpedo_boats.csv,Chen Tze,China,Germany,germany,"Vulcan, Bremen (per navypedia)",UNCERTAIN yard name,https://www.navypedia.org/ships/china/ch_dd_chen_tse.htm
+destroyers_torpedo_boats.csv,Fei Ying,China,Germany,germany,"Vulcan, Bremen (per navypedia)",UNCERTAIN yard name,https://www.navypedia.org/ships/china/ch_dd_fei_ying.htm
+destroyers_torpedo_boats.csv,Hai Lung,China,Germany,germany,"Schichau, Elbing","All 4 captured 1900 by UK, France, Germany, Russia",https://www.navypedia.org/ships/china/ch_dd_hai_lung.htm
+destroyers_torpedo_boats.csv,Hu Peng,China,Japan,japan,"Kawasaki, Kobe",,https://www.navypedia.org/ships/china/ch_dd_hu_peng.htm
+destroyers_torpedo_boats.csv,Chang Feng (Chien Kang),China,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/china/ch_dd_fu_po.htm
+destroyers_torpedo_boats.csv,Ching Po,China,Italy,italy,"Ansaldo, Genoa",NOT_DELIVERED: completed for Italy as Ascaro,https://www.navypedia.org/ships/china/ch_dd_ching_po.htm
+destroyers_torpedo_boats.csv,Lung Tuan,China,Austria-Hungary,austria,"STT, Trieste",NOT_DELIVERED: completed for A-H as Warasdiner,https://www.navypedia.org/ships/china/ch_dd_lung_tuan.htm
+destroyers_torpedo_boats.csv,Furor,Spain,United Kingdom,britain,J & G Thomson / Clydebank Engineering & Shipbuilding,"Terror, Pluton, Audaz, Proserpina verified individually; Furor, Osado not individually checked",https://en.wikipedia.org/wiki/Spanish_destroyer_Terror
+destroyers_torpedo_boats.csv,Destructor,Spain,United Kingdom,britain,"J & G Thomson, Clydebank",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_destructor.htm
+destroyers_torpedo_boats.csv,Rigel,Spain,Germany,germany,"Weser, Bremen",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_rigel.htm
+destroyers_torpedo_boats.csv,Acevedo,Spain,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_acevedo.htm
+destroyers_torpedo_boats.csv,Retamosa,Spain,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_retamosa.htm
+destroyers_torpedo_boats.csv,Orión,Spain,Germany,germany,"Germaniawerft, Kiel",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_orion.htm
+destroyers_torpedo_boats.csv,Barceló,Spain,France,france,"Normand, Le Havre (Barcelo)","MIXED: Bustamante built Gil & Otero, Ferrol; pre-1890",https://www.navypedia.org/ships/spain/sp_dd_barcelo.htm
+destroyers_torpedo_boats.csv,Habana,Spain,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_habana.htm
+destroyers_torpedo_boats.csv,Azor,Spain,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_azor.htm
+destroyers_torpedo_boats.csv,Ariete (1887),Spain,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/spain/sp_dd_ariete.htm
+destroyers_torpedo_boats.csv,Vedette,Spain,United Kingdom,britain,"J. Samuel White, Cowes",,https://www.navypedia.org/ships/spain/sp_dd_vedette.htm
+destroyers_torpedo_boats.csv,No.XXI (Hekla),Netherlands,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/netherlands/nl_dd_xxi_etna.htm
+destroyers_torpedo_boats.csv,Ardjoeno,Netherlands,Netherlands,netherlands,"Rijkswerf (7), Fijenoord (1); Yarrow (Ardjoeno, Empong)",MIXED: main builder domestic; 2 UK-built; pre-1890,https://www.navypedia.org/ships/netherlands/nl_dd_ardjoeno.htm
+destroyers_torpedo_boats.csv,Hydra (1900),Netherlands,United Kingdom,britain,"Yarrow, Poplar (Hydra, Scylla)",MIXED: 3 built De Schelde,https://www.navypedia.org/ships/netherlands/nl_dd_hydra.htm
+destroyers_torpedo_boats.csv,Ophir,Netherlands,United Kingdom,britain,"Yarrow, Poplar (Ophir, Pangrango, Rindjani)",MIXED: 3 built De Schelde,https://www.navypedia.org/ships/netherlands/nl_dd_ophir.htm
+destroyers_torpedo_boats.csv,Mode (1902),Sweden,United Kingdom,britain,"Yarrow, Scotstoun",,https://www.navypedia.org/ships/sweden/sw_dd_mode.htm
+destroyers_torpedo_boats.csv,Magne (1905),Sweden,United Kingdom,britain,"Thornycroft, Woolston",,https://www.navypedia.org/ships/sweden/sw_dd_magne.htm
+destroyers_torpedo_boats.csv,Hugin (1884),Sweden,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/sweden/sw_dd_hugin1.htm
+destroyers_torpedo_boats.csv,Komet,Sweden,Germany,germany,"Schichau, Elbing (Komet only)",MIXED: prototype; 11 built in Sweden,https://www.navypedia.org/ships/sweden/sw_dd_komet.htm
+destroyers_torpedo_boats.csv,Plejad,Sweden,France,france,"Normand, Le Havre (Plejad only)",MIXED: prototype; 16 built in Sweden,https://www.navypedia.org/ships/sweden/sw_dd_plejad.htm
+destroyers_torpedo_boats.csv,Nr.6 (Sværdfisken),Denmark,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/denmark/dk_dd_svaerdfisken.htm
+destroyers_torpedo_boats.csv,Delfinen,Denmark,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/denmark/dk_dd_delfinen.htm
+destroyers_torpedo_boats.csv,Hvalrossen (1884),Denmark,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/denmark/dk_dd_hvalrossen84.htm
+destroyers_torpedo_boats.csv,Støren,Denmark,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/denmark/dk_dd_stoeren.htm
+destroyers_torpedo_boats.csv,Narhvalen,Denmark,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/denmark/dk_dd_narhvalen.htm
+destroyers_torpedo_boats.csv,Tumleren,Denmark,Germany,germany,"Schichau, Elbing (Tumleren)",MIXED: 2 built Copenhagen,https://www.navypedia.org/ships/denmark/dk_dd_tumleren.htm
+destroyers_torpedo_boats.csv,Søridderen,Denmark,United Kingdom,britain,"Yarrow, Glasgow (Soridderen)",MIXED: 2 built Burmeister & Wain,https://www.navypedia.org/ships/denmark/dk_dd_soridderen.htm
+destroyers_torpedo_boats.csv,Nr.5 (1880),Denmark,France,france,"Normand, Le Havre",Pre-1890,https://www.navypedia.org/ships/denmark/dk_dd_nr5.htm
+destroyers_torpedo_boats.csv,Valkyrjen,Norway,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/norway/no_dd_valkirjen.htm
+destroyers_torpedo_boats.csv,Hval,Norway,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/norway/no_dd_hval.htm
+destroyers_torpedo_boats.csv,Vifor (Mărăști),Romania,Italy,italy,"Pattison, Naples","Ordered by Romania 1913-14, requisitioned by Italy 1915; 2 delivered to Romania 1920",https://en.wikipedia.org/wiki/Vifor-class_destroyer
+destroyers_torpedo_boats.csv,Regele Ferdinand,Romania,Italy,italy,"Pattison, Naples",,https://en.wikipedia.org/wiki/Regele_Ferdinand-class_destroyer
+destroyers_torpedo_boats.csv,Năluca (1888),Romania,France,france,"Normand, Le Havre",Pre-1890,https://www.navypedia.org/ships/romania/ro_dd_naluca88.htm
+destroyers_torpedo_boats.csv,Căpitan Nicolae Lascăr Bogdan,Romania,United Kingdom,britain,"Thames Iron Works, Blackwall",River torpedo boats,https://www.navypedia.org/ships/romania/ro_dd_capitan_bogdan.htm
+destroyers_torpedo_boats.csv,Wicher,Poland,France,france,"Chantiers Navals Francais, Blainville",,https://en.wikipedia.org/wiki/ORP_Wicher_(1928)
+destroyers_torpedo_boats.csv,Grom,Poland,United Kingdom,britain,"J. Samuel White, East Cowes",Builder verified for Blyskawica only,https://en.wikipedia.org/wiki/ORP_B%C5%82yskawica
+destroyers_torpedo_boats.csv,Dubrovnik,Yugoslavia,United Kingdom,britain,"Yarrow, Scotstoun",,https://www.navypedia.org/ships/yugoslavia/yu_dd_dubrovnik.htm
+destroyers_torpedo_boats.csv,Beograd,Yugoslavia,Yugoslavia,Yugoslavia,"Jadranska, Split (Zagreb, Ljubljana); ACL Nantes (Beograd)",MIXED: lead ship French-built,https://www.navypedia.org/ships/yugoslavia/yu_dd_beograd.htm
+destroyers_torpedo_boats.csv,Drazki,Bulgaria,France,france,"Schneider, Chalon-sur-Saone",,https://www.navypedia.org/ships/bulgaria/bu_dd_drzki.htm
+destroyers_torpedo_boats.csv,Saguenay (A class variant),Canada,United Kingdom,britain,"Thornycroft, Woolston",Built in UK for Royal Canadian Navy,https://en.wikipedia.org/wiki/A-_and_B-class_destroyer
+destroyers_torpedo_boats.csv,Peleng-i Derya,Turkey,Germany,germany,"Germaniawerft, Kiel",Nimet suspended 1893,https://www.navypedia.org/ships/turkey/tu_dd_pelengi_derya.htm
+destroyers_torpedo_boats.csv,Peyk-i Şevket,Turkey,Germany,germany,"Germaniawerft, Kiel",,https://www.navypedia.org/ships/turkey/tu_dd_berk.htm
+destroyers_torpedo_boats.csv,Samsun,Turkey,France,france,"CA de la Gironde, Bordeaux (3); Schneider, Nantes (1)",,https://www.navypedia.org/ships/turkey/tu_dd_samsun.htm
+destroyers_torpedo_boats.csv,Kocatepe,Turkey,Italy,italy,"Ansaldo, Genoa",,https://www.navypedia.org/ships/turkey/tu_dd_kocatepe.htm
+destroyers_torpedo_boats.csv,Tinaztepe (Zafer),Turkey,Italy,italy,"CT, Riva Trigoso",,https://www.navypedia.org/ships/turkey/tu_dd_zafer.htm
+destroyers_torpedo_boats.csv,Demirhisar (1939),Turkey,United Kingdom,britain,"Vickers-Armstrong Barrow (2); Denny, Dumbarton (2)",Gayret taken by RN (Ithuriel); Muavenet served as HMS Inconstant 1942-46,https://www.navypedia.org/ships/turkey/tu_dd_demirhisar_2.htm
+destroyers_torpedo_boats.csv,Burhaneddin,Turkey,France,france,"FCM, La Seyne",Pre-1890,https://www.navypedia.org/ships/turkey/tu_dd_burhaneddin.htm
+destroyers_torpedo_boats.csv,Gilyum,Turkey,Germany,germany,"Schichau, Elbing",Pre-1890,https://www.navypedia.org/ships/turkey/tu_dd_gilyum.htm
+destroyers_torpedo_boats.csv,Nasir,Turkey,Germany,germany,"Germaniawerft, Kiel",,https://www.navypedia.org/ships/turkey/tu_dd_nasir.htm
+destroyers_torpedo_boats.csv,Ejder,Turkey,Germany,germany,"Germaniawerft, Kiel",,https://www.navypedia.org/ships/turkey/tu_dd_ejder.htm
+destroyers_torpedo_boats.csv,Berk Efşan,Turkey,Germany,germany,"Germaniawerft, Kiel / assembled Tersane-i Amire",,https://www.navypedia.org/ships/turkey/tu_dd_berk_efsan.htm
+destroyers_torpedo_boats.csv,Hamidiye (1902),Turkey,Italy,italy,"Ansaldo, Genoa",,https://www.navypedia.org/ships/turkey/tu_dd_hamidiye.htm
+destroyers_torpedo_boats.csv,Akhisar,Turkey,Italy,italy,"Ansaldo, Sestri Ponente",,https://www.navypedia.org/ships/turkey/tu_dd_akhisar.htm
+destroyers_torpedo_boats.csv,Antalya,Turkey,Italy,italy,"Ansaldo, Sestri Ponente",,https://www.navypedia.org/ships/turkey/tu_dd_antalya.htm
+destroyers_torpedo_boats.csv,Demirhisar (1907),Turkey,France,france,"Schneider, Chalon-sur-Saone",,https://www.navypedia.org/ships/turkey/tu_dd_demirhisar.htm
+destroyers_torpedo_boats.csv,Niki,Greece,Germany,germany,"AG Vulcan, Stettin",,https://www.navypedia.org/ships/greece/gr_dd_niki.htm
+destroyers_torpedo_boats.csv,Thyella,Greece,United Kingdom,britain,"Yarrow, Glasgow",,https://www.navypedia.org/ships/greece/gr_dd_thyella.htm
+destroyers_torpedo_boats.csv,Aetos,Greece,United Kingdom,britain,"Cammell Laird, Birkenhead","Originally ordered by Argentina (San Luis, Santa Fe, Santiago, Tucuman), bought by Greece 1912",https://www.navypedia.org/ships/greece/gr_dd_aetos.htm
+destroyers_torpedo_boats.csv,Kriti (Chios),Greece,United Kingdom,britain,"Fairfield, Govan (2); John Brown, Clydebank (2)",NOT_DELIVERED: completed for RN as Medea class,https://www.navypedia.org/ships/greece/gr_dd_kriti.htm
+destroyers_torpedo_boats.csv,Kountouriotis (Hydra),Greece,Italy,italy,"Odero, Sestri Ponente",,https://www.navypedia.org/ships/greece/gr_dd_hydra.htm
+destroyers_torpedo_boats.csv,Vasilefs Georgios,Greece,United Kingdom,britain,"Yarrow, Glasgow",,https://www.navypedia.org/ships/greece/gr_dd_vasilefs_georgios.htm
+destroyers_torpedo_boats.csv,Ionia (Sfinx),Greece,France,france,"FCM, La Seyne",Pre-1890,https://www.navypedia.org/ships/greece/gr_dd_ionia.htm
+destroyers_torpedo_boats.csv,Fereniki,Greece,France,france,"FCM, La Seyne",Pre-1890,https://www.navypedia.org/ships/greece/gr_dd_fereniki.htm
+destroyers_torpedo_boats.csv,Samos (1881),Greece,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/greece/gr_dd_samos.htm
+destroyers_torpedo_boats.csv,Torpilovolo 11,Greece,Germany,germany,"AG Vulcan, Stettin",Pre-1890,https://www.navypedia.org/ships/greece/gr_dd_11.htm
+destroyers_torpedo_boats.csv,Aigli,Greece,Germany,germany,"AG Vulcan, Stettin",,https://www.navypedia.org/ships/greece/gr_dd_aigli.htm
+destroyers_torpedo_boats.csv,Guadiana (Douro 1913),Portugal,United Kingdom,britain,"Yarrow, Scotstoun // assembled Estaleiro Real de Lisboa","Kits built by Yarrow, assembled in Lisbon",https://www.navypedia.org/ships/portugal/pr_dd_guadina.htm
+destroyers_torpedo_boats.csv,Douro (1933),Portugal,Portugal,portugal,"Estaleiro Real de Lisboa (5); Yarrow, Scotstoun (Lima, Vouga)",MIXED: 2 of 7 hulls UK-built; 2 Lisbon hulls sold incomplete to Colombia,https://www.navypedia.org/ships/portugal/pr_dd_douro.htm
+destroyers_torpedo_boats.csv,Espadarte,Portugal,United Kingdom,britain,Yarrow (navypedia: Scotstoun),UNCERTAIN yard location for 1881; pre-1890,https://www.navypedia.org/ships/portugal/pr_dd_no1.htm
+destroyers_torpedo_boats.csv,No.2,Portugal,United Kingdom,britain,Yarrow (navypedia: Scotstoun),UNCERTAIN yard location for 1886; pre-1890,https://www.navypedia.org/ships/portugal/pr_dd_no2.htm
+destroyers_torpedo_boats.csv,Maipú,Argentina,United Kingdom,britain,"Elder, Glasgow",Pre-1890,https://www.navypedia.org/ships/argentina/arg_dd_maipu.htm
+destroyers_torpedo_boats.csv,Espora,Argentina,United Kingdom,britain,"Laird, Birkenhead",,https://www.navypedia.org/ships/argentina/arg_dd_espora.htm
+destroyers_torpedo_boats.csv,Patria,Argentina,United Kingdom,britain,"Laird, Birkenhead",,https://www.navypedia.org/ships/argentina/arg_dd_patria.htm
+destroyers_torpedo_boats.csv,Corrientes,Argentina,United Kingdom,britain,"Yarrow, Poplar",,https://www.navypedia.org/ships/argentina/arg_dd_corrientes.htm
+destroyers_torpedo_boats.csv,Catamarca,Argentina,Germany,germany,"Germaniawerft, Kiel",,https://www.navypedia.org/ships/argentina/arg_dd_catamarca.htm
+destroyers_torpedo_boats.csv,La Plata,Argentina,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/argentina/arg_dd_la_plata.htm
+destroyers_torpedo_boats.csv,Mendoza (1911),Argentina,France,france,"Dyle et Bacalan, Bordeaux (2); A C de Bretagne, Nantes (2)",NOT_DELIVERED: completed for France as Aventurier class,https://www.navypedia.org/ships/argentina/arg_dd_mendoza14.htm
+destroyers_torpedo_boats.csv,Mendoza,Argentina,United Kingdom,britain,"J. Samuel White, Cowes",,https://www.navypedia.org/ships/argentina/arg_dd_mendoza.htm
+destroyers_torpedo_boats.csv,Buenos Aires,Argentina,United Kingdom,britain,"Vickers-Armstrong Barrow (3), John Brown (2), Cammell Laird (2)",,https://www.navypedia.org/ships/argentina/arg_dd_buenos_aires.htm
+destroyers_torpedo_boats.csv,Ferré,Argentina,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/argentina/arg_dd_ferre.htm
+destroyers_torpedo_boats.csv,Nr.1 (1881),Argentina,United Kingdom,britain,"Thornycroft, Chiswick",Pre-1890,https://www.navypedia.org/ships/argentina/arg_dd_nr1.htm
+destroyers_torpedo_boats.csv,Nr.1 (1890),Argentina,United Kingdom,britain,"Yarrow, Poplar",,https://www.navypedia.org/ships/argentina/arg_dd_nr1_90.htm
+destroyers_torpedo_boats.csv,Bouchard,Argentina,United Kingdom,britain,"Yarrow, Poplar",,https://www.navypedia.org/ships/argentina/arg_dd_buchardo.htm
+destroyers_torpedo_boats.csv,Comodoro Py,Argentina,United Kingdom,britain,"Thornycroft, Chiswick",,https://www.navypedia.org/ships/argentina/arg_dd_commodoro_py.htm
+destroyers_torpedo_boats.csv,Tiradentes,Brazil,United Kingdom,britain,"Armstrong, Newcastle",,https://www.navypedia.org/ships/brazil/br_dd_tiradentes.htm
+destroyers_torpedo_boats.csv,Gustavo Sampaio,Brazil,United Kingdom,britain,"Armstrong, Elswick",,https://www.navypedia.org/ships/brazil/br_dd_gustavo_sampaio.htm
+destroyers_torpedo_boats.csv,Tupi,Brazil,Germany,germany,"Germaniawerft, Kiel",,https://www.navypedia.org/ships/brazil/br_dd_tupi.htm
+destroyers_torpedo_boats.csv,Tamoio,Brazil,Germany,germany,"Germaniawerft, Kiel",,https://www.navypedia.org/ships/brazil/br_dd_tamoio.htm
+destroyers_torpedo_boats.csv,Pará,Brazil,United Kingdom,britain,"Yarrow, Scotstoun",,https://www.navypedia.org/ships/brazil/br_dd_para.htm
+destroyers_torpedo_boats.csv,Juruá (Havant),Brazil,United Kingdom,britain,"Vickers-Armstrong Barrow (2), J. Samuel White (2), Thornycroft (2)",NOT_DELIVERED: taken over by RN 9.1939 (Havant class),https://www.navypedia.org/ships/brazil/br_dd_juruena.htm
+destroyers_torpedo_boats.csv,Núm.1,Brazil,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/brazil/br_dd_no1.htm
+destroyers_torpedo_boats.csv,Tamborim,Brazil,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/brazil/br_dd_tamborim.htm
+destroyers_torpedo_boats.csv,Sabino Vieira,Brazil,United Kingdom,britain,"Thornycroft, Woolston",Pre-1890,https://www.navypedia.org/ships/brazil/br_dd_sabino_voera.htm
+destroyers_torpedo_boats.csv,Alpha,Brazil,United Kingdom,britain,"Thornycroft, Woolston",Pre-1890,https://www.navypedia.org/ships/brazil/br_dd_alpha.htm
+destroyers_torpedo_boats.csv,Piratini,Brazil,USA,usa,John Ericsson,SECOND_HAND: ex-Destroyer (1878) acquired 1891,https://www.navypedia.org/ships/brazil/br_dd_piratini.htm
+destroyers_torpedo_boats.csv,Panne,Brazil,Germany,germany,"Schichau, Elbing",,https://www.navypedia.org/ships/brazil/br_dd_panne.htm
+destroyers_torpedo_boats.csv,Araguari (1893),Brazil,United Kingdom,britain,"Thornycroft, Woolston",,https://www.navypedia.org/ships/brazil/br_dd_araguary.htm
+destroyers_torpedo_boats.csv,Moxotó,Brazil,United Kingdom,britain,"Yarrow, Poplar",,https://www.navypedia.org/ships/brazil/br_dd_moxoto.htm
+destroyers_torpedo_boats.csv,Goiás,Brazil,United Kingdom,britain,"Yarrow, Scotstoun",,https://www.navypedia.org/ships/brazil/br_dd_goias.htm
+destroyers_torpedo_boats.csv,Almirante Lynch (1890),Chile,United Kingdom,britain,"Laird, Birkenhead",,https://www.navypedia.org/ships/chile/chi_dd_almirante_lynch90.htm
+destroyers_torpedo_boats.csv,Almirante Simpson,Chile,United Kingdom,britain,"Laird, Birkenhead",,https://www.navypedia.org/ships/chile/chi_dd_almirante_simpson.htm
+destroyers_torpedo_boats.csv,Capitán Orella,Chile,United Kingdom,britain,"Laird, Birkenhead",,https://www.navypedia.org/ships/chile/chi_dd_capitan_orella.htm
+destroyers_torpedo_boats.csv,Capitán Merino Jarpa,Chile,United Kingdom,britain,"Laird, Birkenhead",,https://www.navypedia.org/ships/chile/chi_dd_capitan_merino_harpa.htm
+destroyers_torpedo_boats.csv,Almirante Lynch (1912),Chile,United Kingdom,britain,"J. Samuel White, Cowes",,https://www.navypedia.org/ships/chile/chi_dd_almirante_lynch.htm
+destroyers_torpedo_boats.csv,Almirante Williams (Faulknor),Chile,United Kingdom,britain,"J. Samuel White, Cowes",Taken over by RN 1914 (Faulknor class); 3 delivered 1920,https://www.navypedia.org/ships/chile/chi_dd_almirante_williams.htm
+destroyers_torpedo_boats.csv,Serrano,Chile,United Kingdom,britain,"Thornycroft, Southampton",,https://www.navypedia.org/ships/chile/chi_dd_serrano.htm
+destroyers_torpedo_boats.csv,Glaura (Janequeo),Chile,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/chile/chi_dd_colocolo.htm
+destroyers_torpedo_boats.csv,Fresia,Chile,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/chile/chi_dd_fresia.htm
+destroyers_torpedo_boats.csv,Sargento Aldea (1886),Chile,United Kingdom,britain,"Yarrow, Poplar",Pre-1890,https://www.navypedia.org/ships/chile/chi_dd_sargente_aldea.htm
+destroyers_torpedo_boats.csv,Ingeniero Hyatt (1896),Chile,United Kingdom,britain,"Yarrow, Poplar",,https://www.navypedia.org/ships/chile/chi_dd_ingeniero_hyatt.htm
+destroyers_torpedo_boats.csv,Sua Tayanchon,Thailand,Japan,japan,"Kawasaki, Kobe",,https://www.navypedia.org/ships/thailand/th_dd_sua_thayan_chon.htm
+destroyers_torpedo_boats.csv,No.1 (1908),Thailand,Japan,japan,"Kawasaki, Kobe",,https://www.navypedia.org/ships/thailand/th_dd_no1.htm
+destroyers_torpedo_boats.csv,Trad,Thailand,Italy,italy,"CRDA, Monfalcone",,https://www.navypedia.org/ships/thailand/th_dd_trad.htm
+destroyers_torpedo_boats.csv,Kantang,Thailand,Japan,japan,"Ishikawajima, Tokyo (3)",MIXED: 4th (Sattahip) built Bangkok 1956-58,https://www.navypedia.org/ships/thailand/th_dd_kantang.htm
+submarines.csv,H (H1 group),United Kingdom,Canada,Canada,"Canadian Vickers, Montreal (H1-H10); Fore River, Quincy USA (H11-H20)","MIXED: 10 Canada, 10 USA; built for RN; H13, H16-H20 to Chile 1917",https://navypedia.org/ships/uk/brit_ss_h1.htm
+submarines.csv,U66,Germany,Germany,germany,"Germaniawerft, Kiel",EXPORT_REQUISITIONED: ordered by Austria-Hungary as U7-U11; builder = operator,https://navypedia.org/ships/germany/ger_ss_u66.htm
+submarines.csv,Balilla (1913),Italy,Italy,italy,"FIAT-San Giorgio, La Spezia","EXPORT_REQUISITIONED: ordered by Germany as U42, requisitioned 1915; builder = operator",https://navypedia.org/ships/italy/it_ss_balilla16.htm
+submarines.csv,Glauco (1932),Italy,Italy,italy,"CRDA, Monfalcone","EXPORT_REQUISITIONED: ordered by Portugal (Delfim, Espadarte), reordered by Italy; builder = operator",https://navypedia.org/ships/italy/it_ss_glauco.htm
+submarines.csv,Holland type (No. 1-5),Japan,USA,usa,"Fore River, Quincy",,https://navypedia.org/ships/japan/jap_ss_c1_holland.htm
+submarines.csv,"C1 (Vickers C type, No. 8-9)",Japan,United Kingdom,britain,"Vickers, Barrow",,https://navypedia.org/ships/japan/jap_ss_c1_vickers.htm
+submarines.csv,"C2 (Vickers C type, No. 10-12)",Japan,United Kingdom,britain,"Vickers, Barrow / Kure (assembly)",,https://navypedia.org/ships/japan/jap_ss_c2_vickers.htm
+submarines.csv,Schneider-Laubeuf (No. 15),Japan,France,france,"Schneider, Chalon-sur-Saone",14-go(i) purchased by France 1915 (Armide); 14-go(ii) built Kure,https://navypedia.org/ships/japan/jap_ss_schneider_laubeuf.htm
+submarines.csv,Som (Holland type),Russia,USA,usa,"Lewis Nixon, San Francisco (Som ex-Fulton)","MIXED/SECOND_HAND: lead boat bought 1904; 6 built Nevsky, St Petersburg",https://navypedia.org/ships/russia/ru_ss_som.htm
+submarines.csv,Osyotr (Lake type),Russia,USA,usa,"Lake, Bridgeport (Osyotr ex-Protector); Newport News (5, reassembled Libava)",Lead boat bought; 5 built for Russia,https://navypedia.org/ships/russia/ru_ss_osyotr.htm
+submarines.csv,Karp,Russia,Germany,germany,"Germaniawerft, Kiel",,https://navypedia.org/ships/russia/ru_ss_karp.htm
+submarines.csv,AG (Holland 602),Russia,Canada,Canada,"Electric Boat, Vancouver (components); assembled Baltic Wks Petrograd / Naval Nikolayev",Knocked-down boats assembled in Russia,https://navypedia.org/ships/russia/ru_ss_ag11.htm
+submarines.csv,U3,Austria-Hungary,Germany,germany,"Germaniawerft, Kiel",,https://navypedia.org/ships/austrohungary/ah_ss_u3.htm
+submarines.csv,U10,Austria-Hungary,Germany,germany,"Germaniawerft (U10 ex-UB1); Weser, Bremen (4)","UB-I type; U10, U11 ex-German UB1, UB15",https://navypedia.org/ships/austrohungary/ah_ss_u10.htm
+submarines.csv,Hvalen,Sweden,Italy,italy,"Fiat-San Giorgio, La Spezia",,https://navypedia.org/ships/sweden/sw_ss_hvalen.htm
+submarines.csv,Dykkeren,Denmark,Italy,italy,"Fiat-San Giorgio, La Spezia",,https://navypedia.org/ships/denmark/dk_ss_dykkeren.htm
+submarines.csv,Havmanden (1911),Denmark,Austria-Hungary,austria,"Whitehead, Fiume (3)",MIXED: 3 built Copenhagen,https://navypedia.org/ships/denmark/dk_ss_havmanden.htm
+submarines.csv,Kobben,Norway,Germany,germany,"Germaniawerft, Kiel",,https://navypedia.org/ships/norway/no_ss_kobben.htm
+submarines.csv,A (A2),Norway,Germany,germany,"Germaniawerft, Kiel",A5 completed for Germany 1914 (UA),https://navypedia.org/ships/norway/no_ss_a2.htm
+submarines.csv,Isaac Peral (1916),Spain,USA,usa,"Fore River, Quincy",,https://navypedia.org/ships/spain/sp_ss_isaac_peral.htm
+submarines.csv,A (Narciso Monturiol),Spain,Italy,italy,"Fiat-San Giorgio, La Spezia",Ex-F22-F24,https://navypedia.org/ships/spain/sp_ss_a1.htm
+submarines.csv,Espadarte (1912),Portugal,Italy,italy,"Fiat-San Giorgio, La Spezia",,https://navypedia.org/ships/portugal/pr_ss_espadarte.htm
+submarines.csv,Foca (1917),Portugal,Italy,italy,"Fiat-San Giorgio, La Spezia",Ex-F19-F21,https://navypedia.org/ships/portugal/pr_ss_foca.htm
+submarines.csv,Delfim (1934),Portugal,United Kingdom,britain,"Vickers-Armstrong, Barrow",,https://navypedia.org/ships/portugal/pr_ss_delfim_2.htm
+submarines.csv,Delfin,Greece,France,france,"Schneider, Chalon-sur-Saone",,https://navypedia.org/ships/greece/gr_ss_delfin.htm
+submarines.csv,Katsonis,Greece,France,france,"FC de la Gironde, Bordeaux; ACL Nantes",,https://navypedia.org/ships/greece/gr_ss_katsonis.htm
+submarines.csv,Glafkos (Protefs),Greece,France,france,ACL Nantes (3); CNF Blainville (1),,https://navypedia.org/ships/greece/gr_ss_glafkos.htm
+submarines.csv,Birinci İnönü,Turkey,Netherlands,netherlands,"Wilton-Fijenoord, Schiedam",,https://navypedia.org/ships/turkey/tu_ss_birinci_inonu.htm
+submarines.csv,Dumlupınar,Turkey,Italy,italy,"CNT, Monfalcone",,https://navypedia.org/ships/turkey/tu_ss_dumlupinar.htm
+submarines.csv,Sakarya,Turkey,Italy,italy,"CNT, Monfalcone",,https://navypedia.org/ships/turkey/tu_ss_sakarya.htm
+submarines.csv,Gür,Turkey,Spain,spain,"Echevarrieta y Larrinaga, Cadiz",Ex-E1,https://navypedia.org/ships/turkey/tu_ss_gur.htm
+submarines.csv,Saldıray,Turkey,Germany,germany,"Germaniawerft, Kiel (Saldiray)","MIXED: Atilay, Yildiray built Istanbul",https://navypedia.org/ships/turkey/tu_ss_saldiray.htm
+submarines.csv,Oruç Reis,Turkey,United Kingdom,britain,"Vickers-Armstrong, Barrow",Uluc Ali Reis completed for RN (P615); 3 served RN before delivery,https://navypedia.org/ships/turkey/tu_ss_oruc_reis.htm
+submarines.csv,Wilk,Poland,France,france,"ACL Nantes; A. Normand, Le Havre; CNF Caen",,https://navypedia.org/ships/poland/pl_ss_wilk.htm
+submarines.csv,Orzeł,Poland,Netherlands,netherlands,"De Schelde, Vlissingen; RDM, Rotterdam",,https://navypedia.org/ships/poland/pl_ss_orzel.htm
+submarines.csv,Hrabri,Yugoslavia,United Kingdom,britain,"Vickers-Armstrong, Barrow","Hulls laid down 1917 as RN L67, L68, completed 1927-28 for Yugoslavia",https://navypedia.org/ships/yugoslavia/yu_ss_hrabri.htm
+submarines.csv,Smeli (Osvetnik),Yugoslavia,France,france,ACL Nantes,,https://navypedia.org/ships/yugoslavia/yu_ss_smeli.htm
+submarines.csv,Delfinul,Romania,Italy,italy,"CNQ, Fiume",,https://navypedia.org/ships/romania/ro_ss_delfinul.htm
+submarines.csv,Santa Fe (1931),Argentina,Italy,italy,"Tosi, Taranto",,https://navypedia.org/ships/argentina/arg_ss_santa_fe.htm
+submarines.csv,F1,Brazil,Italy,italy,"Fiat-San Giorgio, La Spezia",,https://navypedia.org/ships/brazil/br_ss_f1.htm
+submarines.csv,Humaitá,Brazil,Italy,italy,"OTO, Livorno",,https://navypedia.org/ships/brazil/br_ss_humayta.htm
+submarines.csv,Tupi (Perla type),Brazil,Italy,italy,"Tosi, Taranto","Ex-Neghelli, Gondor, Ascianghi",https://navypedia.org/ships/brazil/br_ss_tupi.htm
+submarines.csv,H (Guacolda),Chile,USA,usa,"Fore River, Quincy","Built 1915 for RN (H13, H16-H20), transferred to Chile 1917",https://navypedia.org/ships/chile/chi_ss_h1.htm
+submarines.csv,Capitán O'Brien,Chile,United Kingdom,britain,"Vickers-Armstrong, Barrow",,https://navypedia.org/ships/chile/chi_ss_capitan_obrien.htm
+submarines.csv,Ferré,Peru,France,france,"Schneider, Chalon-sur-Saone",,https://navypedia.org/ships/peru/per_ss_ferre.htm
+submarines.csv,R (Islay),Peru,USA,usa,"Electric Boat, Groton",,https://navypedia.org/ships/peru/per_ss_r1.htm
+submarines.csv,Vilun (Machanu),Thailand,Japan,japan,"Mitsubishi, Kobe",,https://navypedia.org/ships/thailand/th_ss_vilun.htm
+submarines.csv,Kalev (minelayers),Estonia,United Kingdom,britain,"Vickers-Armstrong, Barrow",,https://navypedia.org/ships/estonia/es_ss_kalev.htm
+submarines.csv,Ronis,Latvia,France,france,ACL Nantes,,https://navypedia.org/ships/latvia/lv_ss_ronis.htm
+destroyers_torpedo_boats.csv,Arabe,France,Japan,japan,"Yokosuka, Kure, Sasebo, Maizuru Naval Arsenals; Kawasaki Kobe; Mitsubishi Nagasaki",Built in Japan for French Navy 1917 (export version of Kaba class),https://en.wikipedia.org/wiki/Arabe-class_destroyer
+destroyers_torpedo_boats.csv,No 29,France,France,france,Thornycroft and FCM La Seyne (per CSV notes; split per ship not verified),MIXED/UNCERTAIN: part UK-built (Thornycroft); builder_country given as main/domestic; pre-1890,https://navypedia.org/ships/france/fr_dd_no29.htm
+destroyers_torpedo_boats.csv,C (small TB),France,United Kingdom,britain,Yarrow (per CSV notes),"Experimental aluminium boat for La Foudre; builder from CSV notes, not re-verified",https://navypedia.org/ships/france/fr_dd_c.htm
+destroyers_torpedo_boats.csv,D10,Germany,United Kingdom,britain,Thornycroft (per CSV notes),"Divisionsboot bought from Thornycroft; builder from CSV notes, not re-verified",https://www.navypedia.org/ships/germany/ger_dd_d10.htm
+destroyers_torpedo_boats.csv,"S165 (1909, for Turkey)",Germany,Germany,germany,"Schichau, Elbing","EXPORT: sold to Ottoman Navy during construction 1910 (Muavenet-i Milliye, Yadigar-i Millet, Numune-i Hamiyet, Gayret-i Vataniye); builder = operator row",https://en.wikipedia.org/wiki/S138-class_torpedo_boat
+destroyers_torpedo_boats.csv,V1,Germany,Germany,germany,Vulcan,"PARTIAL_EXPORT: first V5, V6 sold to Greece 7.1912 before completion (Nea Genea, Keravnos), replaced by new V5, V6; builder = operator",https://www.navypedia.org/ships/germany/ger_dd_v1.htm
+destroyers_torpedo_boats.csv,Somers (1897),USA,Germany,germany,"Schichau, Elbing","Built as private speculation, purchased by USN 1898 (per CSV notes)",https://www.navypedia.org/ships/usa/us_dd_somers98.htm
+destroyers_torpedo_boats.csv,Sirio (1905),Italy,Germany,germany,"Schichau-Werke, Elbing (Wikipedia infobox)","CONFLICT: CSV notes say Thornycroft-built; Wikipedia infobox gives Schichau, Elbing - needs checking",https://en.wikipedia.org/wiki/Sirio-class_torpedo_boat
+submarines.csv,Armide,France,France,france,"Schneider, Chalon-sur-Saone (Armide)","EXPORT_REQUISITIONED: Armide laid down for Japan (14-go), purchased by France 6.1915; builder = operator; Antigone, Amazone not checked",https://navypedia.org/ships/japan/jap_ss_schneider_laubeuf.htm
