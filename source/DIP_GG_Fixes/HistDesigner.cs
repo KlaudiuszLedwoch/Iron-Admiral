@@ -221,8 +221,14 @@ namespace DipGgFixes
                     int bestDiff = templ ? 0 : 999; int tries = templ ? 0 : Math.Max(1, Tries.Value); bool bestValid = false;
                     if (templ) { try { ship.SetTonnage(wantT); } catch { } }
                     CapMainMm = wantIn * 25.4f + 6f; CapSecMm = s.N("sec_mm") > 0f ? s.N("sec_mm") + 6f : (s.N("sec_in") > 0f ? s.N("sec_in") * 25.4f + 6f : 0f); MainPerTurret = (int)s.N("main_per_turret"); if (MainPerTurret > 0 && wantMain % MainPerTurret != 0) MainPerTurret = 0; /* mixed layouts such as 2x4 + 1x2 */ WantMain = wantMain;
+                    // cruisers with an unknown mount layout: the generator mirrors twin mounts (2 wanted -> 2 twins = 4 guns), so an odd
+                    // number of main guns or an early cruiser (single mounts were the rule before about 1910) gets single mounts on every
+                    // other try (the remaining tries stay free, in case the hull offers no single mount of that calibre)
+                    int mptBase = MainPerTurret;
+                    bool singles = mptBase == 0 && wantMain > 0 && (s["type"] == "ca" || s["type"] == "cl") && (wantMain % 2 == 1 || s.N("year") < 1910f);
                     for (int t = 0; t < tries; t++)
                     {
+                        MainPerTurret = singles && t % 2 == 0 ? 1 : mptBase;
                         try { ship.SetTonnage(wantT); } catch { }
                         bool fin = false;
                         try
@@ -357,7 +363,7 @@ namespace DipGgFixes
                 float cap = HistDesigner.CapMainMm;
                 if (a.caliber > cap) { __result = false; return; }
                 bool mainCal = a.caliber > cap - 20f;   // the historical main calibre (cap = main + 6 mm)
-                if (mainCal && HistDesigner.MainPerTurret > 0 && a.barrels != HistDesigner.MainPerTurret) { __result = false; return; }
+                if (mainCal && HistDesigner.MainPerTurret > 0 && Math.Max(1, a.barrels) != HistDesigner.MainPerTurret) { __result = false; return; }
                 if (mainCal && HistDesigner.WantMain > 0)
                 {
                     // no more main-calibre mounts once the historical number of main guns is on the slip
