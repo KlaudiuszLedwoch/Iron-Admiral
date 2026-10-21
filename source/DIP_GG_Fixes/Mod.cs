@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.75", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.77", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -237,6 +237,8 @@ namespace DipGgFixes
             Narrative.Tick();
             try { Portless.Tick(); } catch { }
             try { Dispatch.Tick(); } catch { }
+            try { HistDesigner.Tick(); } catch { }
+            try { Trade.Tick(); } catch { }
         }
 
         public override void OnLateUpdate() { try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } }
@@ -246,6 +248,7 @@ namespace DipGgFixes
         public override void OnGUI()
         {
             EconomyUi.OnGUI();
+            try { Trade.OnGUI(); } catch { }
             SettingsUi.OnGUI();
             RevoltDecision.OnGUI();
             Diagnostics.OnGUI();
@@ -464,6 +467,10 @@ namespace DipGgFixes
             Narrative.CreatePrefs(cat);
             Portless.CreatePrefs(cat);
             Dispatch.CreatePrefs(cat);
+            HistDesigner.CreatePrefs(cat);
+            HistPriority.CreatePrefs(cat);
+            Trade.CreatePrefs(cat);
+            Obliquity.CreatePrefs(cat);
             Diagnostics.RepairPreferences();
             ModDesigns.Install();
             SettingsUi.CreatePrefs(cat);

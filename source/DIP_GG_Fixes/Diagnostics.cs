@@ -48,9 +48,18 @@ namespace DipGgFixes
                 if (!File.Exists(cfg)) return;
                 var b = File.ReadAllBytes(cfg); if (b.Length == 0) return;
                 int zeros = 0; for (int i = 0; i < b.Length; i++) if (b[i] == 0) zeros++;
-                if (zeros < b.Length / 2) return;
+                string good = cfg + ".lastgood";
+                // 1.11.76: a healthy file is kept as .lastgood; a zeroed file is restored from it (the settings survive)
+                if (zeros < b.Length / 2) { try { File.Copy(cfg, good, true); } catch { } return; }
                 var bak = cfg + ".corrupt_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 File.Copy(cfg, bak, true);
+                if (File.Exists(good))
+                {
+                    File.Copy(good, cfg, true);
+                    try { MelonPreferences.Load(); } catch { }
+                    Log("MelonPreferences.cfg was unreadable (" + zeros + " zero bytes of " + b.Length + ") - copy kept as " + Path.GetFileName(bak) + ", settings restored from the last good copy");
+                    return;
+                }
                 MelonPreferences.Save();
                 Log("MelonPreferences.cfg was unreadable (" + zeros + " zero bytes of " + b.Length + ") - copy kept as " + Path.GetFileName(bak) + ", file rewritten with the current settings");
             }

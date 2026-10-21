@@ -116,6 +116,7 @@ namespace DipGgFixes
                     MelonLogger.Msg("[DIP GG Fixes][Armor] battle summary - impact angle side-forward (deg bands): " + Bands(sideFwd));
                     MelonLogger.Msg("[DIP GG Fixes][Armor] battle summary - side (belt) hit chance by angle: " + (sc.Count > 0 ? string.Join(", ", sc) : "no calls"));
                     MelonLogger.Msg("[DIP GG Fixes][Armor] battle summary - hit types: " + (hitTypes.Count > 0 ? string.Join(", ", hitTypes.OrderByDescending(kv => kv.Value).Select(kv => $"{kv.Key} {kv.Value}")) : "none recorded"));
+                    try { Obliquity.Summary(); } catch { }
                 }
                 catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Armor] summary failed: " + e.Message); }
             }

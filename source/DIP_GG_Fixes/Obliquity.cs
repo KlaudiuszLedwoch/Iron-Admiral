@@ -1,0 +1,100 @@
+// 1.11.77: armour obliquity. The 1.11.43 diagnostics showed that the game's penetration does not depend on the target's
+// aspect (EstimatePenetration and GetPenetration identical at 0-90 deg, also with an oblique direction), while real hits
+// arrive at every horizontal angle (side-forward bands 0-90 deg roughly even). Only the ricochet chance used the angle.
+// Here the belt armour a shell meets is thickened by the line-of-sight factor of the horizontal obliquity:
+//   effective = plate / cos(obliquity)                               (capped shells, up to 45 deg)
+//   beyond 45 deg the cap is knocked aside (Okun, navweaps Type 91 note 2) - the excess angle counts like an uncapped shell
+//   uncapped shells (before CappedShellYear): effective = plate / cos(obliquity)^UncappedExponent
+// capped at ObliquityMaxFactor. Decks keep the game's own deck penetration (already a function of the fall angle).
+// The angle is taken from the game's own impact computation (Shell.ImpactForwardToAngleSideForward, same frame) and the
+// target's axes. Per battle summary: "[Armor] obliquity ...".
+using System;
+using System.Collections.Generic;
+using HarmonyLib;
+using MelonLoader;
+using Il2Cpp;
+using UnityEngine;
+
+namespace DipGgFixes
+{
+    internal static class Obliquity
+    {
+        internal static MelonPreferences_Entry<bool> On;
+        internal static MelonPreferences_Entry<float> MaxFactor, UncappedExp;
+        internal static MelonPreferences_Entry<int> CappedYear;
+        static Vector3 capA, capB; static int capFrame = -1;
+        static readonly HashSet<string> zoneNames = new HashSet<string>(); static int calib;
+        static readonly int[] bands = new int[7]; static double sumFactor; static int nFactor;
+
+        internal static void CreatePrefs(MelonPreferences_Category cat)
+        {
+            On = cat.CreateEntry("ArmorObliquity", true, null, "Belt armour counts thicker when a shell strikes it at a horizontal angle (line of sight through the plate); the cap stops helping above 45 degrees; uncapped shells suffer more");
+            MaxFactor = cat.CreateEntry("ObliquityMaxFactor", 3f, null, "Upper limit of the obliquity thickness factor (3 = about 70 degrees; steeper hits are left to the ricochet rules)");
+            UncappedExp = cat.CreateEntry("ObliquityUncappedExponent", 1.3f, null, "Exponent of 1/cos(angle) for uncapped shells (capped shells use 1 up to 45 degrees)");
+            CappedYear = cat.CreateEntry("CappedShellYear", 1905, null, "From this year on AP shells are treated as capped");
+        }
+
+        internal static void Capture(Vector3 a, Vector3 b) { capA = a; capB = b; capFrame = Time.frameCount; }
+
+        static int Year()
+        {
+            try { if (CampaignController.Instance != null && GameManager.IsCampaign) return CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
+            return 1920;
+        }
+
+        internal static float Factor(Ship target, Ship.A zone)
+        {
+            if (On == null || !On.Value || target == null || capFrame != Time.frameCount) return 1f;
+            string zn = zone.ToString();
+            if (zoneNames.Add(zn)) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity: armour zone seen in hits: {zn}");
+            if (zn.IndexOf("Belt", StringComparison.OrdinalIgnoreCase) < 0) return 1f;
+            var tr = target.transform; if (tr == null) return 1f;
+            Vector3 fwd = tr.forward; fwd.y = 0f; fwd.Normalize();
+            Vector3 right = tr.right; right.y = 0f; right.Normalize();
+            // the shell direction is the argument that is not one of the target's axes
+            Vector3 dir = capA; dir.y = 0f;
+            Vector3 alt = capB; alt.y = 0f;
+            if (dir.sqrMagnitude < 1e-6f || IsAxis(dir, fwd, right)) dir = alt;
+            if (dir.sqrMagnitude < 1e-6f) return 1f;
+            dir.Normalize();
+            if (calib++ < 5) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity calibration: args {capA} / {capB}, target forward {fwd}, shell dir used {dir}");
+            float cos = Mathf.Abs(Vector3.Dot(dir, right));                 // 1 = square to the belt
+            float ang = Mathf.Acos(Mathf.Clamp01(cos)) * Mathf.Rad2Deg;
+            bool capped = Year() >= CappedYear.Value;
+            float f;
+            if (capped)
+            {
+                float c45 = Mathf.Cos(45f * Mathf.Deg2Rad);
+                f = ang <= 45f ? 1f / Mathf.Max(cos, 0.05f) : (1f / c45) * Mathf.Pow(c45 / Mathf.Max(cos, 0.05f), UncappedExp.Value);
+            }
+            else f = Mathf.Pow(1f / Mathf.Max(cos, 0.05f), UncappedExp.Value);
+            f = Mathf.Clamp(f, 1f, Mathf.Max(1f, MaxFactor.Value));
+            int b = Math.Min(5, (int)(ang / 15f)); bands[b]++; sumFactor += f; nFactor++;
+            return f;
+        }
+        static bool IsAxis(Vector3 v, Vector3 fwd, Vector3 right)
+        {
+            var n = v.normalized;
+            return Mathf.Abs(Vector3.Dot(n, fwd)) > 0.9995f || Mathf.Abs(Vector3.Dot(n, right)) > 0.9995f;
+        }
+
+        internal static void Summary()
+        {
+            if (nFactor == 0) return;
+            MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity - belt hits by horizontal angle 0-15/15-30/30-45/45-60/60-75/75-90: {bands[0]}/{bands[1]}/{bands[2]}/{bands[3]}/{bands[4]}/{bands[5]}, average belt thickness factor x{sumFactor / nFactor:0.00} ({nFactor} computations)");
+            Array.Clear(bands, 0, bands.Length); sumFactor = 0; nFactor = 0;
+        }
+    }
+
+    [HarmonyPatch(typeof(Shell), "ImpactForwardToAngleSideForward")]
+    internal static class Patch_ObliquityCapture { private static void Prefix(Vector3 __0, Vector3 __1) { try { Obliquity.Capture(__0, __1); } catch { } } }
+
+    [HarmonyPatch(typeof(Ship), "GetEffectiveArmor")]
+    internal static class Patch_ObliquityArmor
+    {
+        private static void Postfix(Ship __instance, Ship.A __0, ref float __result)
+        {
+            try { if (__result > 0f) { float f = Obliquity.Factor(__instance, __0); if (f > 1f) __result *= f; } } catch { }
+        }
+    }
+}

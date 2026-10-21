@@ -36,6 +36,8 @@ namespace DipGgFixes
                 var files = new System.Collections.Generic.List<string>(Directory.GetFiles(src, "*.bindesign"));
                 string sp = Path.Combine(src, "Shippack");
                 if (Shippack != null && Shippack.Value && Directory.Exists(sp)) files.AddRange(Directory.GetFiles(sp, "*.bindesign"));
+                string hp = Path.Combine(src, "Historical");   // historical classes (1.11.77)
+                if (Directory.Exists(hp)) files.AddRange(Directory.GetFiles(hp, "*.bindesign"));
                 foreach (var f in files)
                 {
                     string to = Path.Combine(dst, Path.GetFileName(f));

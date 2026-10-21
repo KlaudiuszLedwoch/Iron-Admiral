@@ -477,7 +477,7 @@ namespace DipGgFixes
             return l;
         }
 
-        static string Fingerprint()
+        internal static string Fingerprint()
         {
             var sb = new StringBuilder();
             try { sb.Append(CampaignController.Instance.CurrentDate.ToString()); } catch { }
