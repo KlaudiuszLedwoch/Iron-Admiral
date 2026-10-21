@@ -26,7 +26,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<string> Key;
         internal static MelonPreferences_Entry<float> PremiumMin, PremiumMax;
         static KeyCode key = KeyCode.F9;
-        static bool visible; static int tab; static Vector2 scroll; static int sellerIdx;
+        static bool visible; static int tab; static int sellerIdx;
         static readonly System.Random rng = new System.Random();
 
         class Offer { public string Buyer; public float Price; public int Month; }
@@ -159,7 +159,8 @@ namespace DipGgFixes
             if (On == null || !On.Value) return;
             try
             {
-                if (Input.GetKeyDown(key)) visible = !visible;
+                if (Input.GetKeyDown(key)) { visible = !visible; rowsBuilt = -10f; }
+                Clicks();
                 bool map = false; try { map = GameManager.IsCampaign && !GameManager.IsLoadingAny && CC != null && CC.CampaignData != null; } catch { }
                 if (!map) { if (visible && !GameManager.IsCampaign) visible = false; return; }
                 EnsureSession();
@@ -293,7 +294,30 @@ namespace DipGgFixes
         }
 
         // ------------------------------------------------------------------ window
-        static GUIStyle lab;
+        // Drawn with GUI.Box / GUI.Label only (GUILayout is stripped from the game build); clicks are read in Tick with
+        // Input.GetMouseButtonDown and hit-tested against the rectangles of the last frame (same method as the F10 panel).
+        class Row { public string Text; public string Btn; public Action Act; public bool Head; }
+        static GUIStyle sTxt, sHead, sBtn, sTitle;
+        static readonly List<KeyValuePair<Rect, Action>> clicks = new List<KeyValuePair<Rect, Action>>();
+        static readonly List<KeyValuePair<Rect, Action>> next = new List<KeyValuePair<Rect, Action>>();
+        static int page; static List<Row> rows = new List<Row>(); static float rowsBuilt = -10f; static int guiErr;
+
+        internal static void Clicks()
+        {
+            if (!visible || !Input.GetMouseButtonDown(0)) return;
+            var mp = Input.mousePosition; var p = new Vector2(mp.x, Screen.height - mp.y);
+            foreach (var kv in clicks.ToList()) if (kv.Key.Contains(p)) { try { kv.Value(); } catch (Exception e) { Log("click: " + e.Message); } rowsBuilt = -10f; break; }
+        }
+        static void Styles()
+        {
+            if (sTxt != null) return;
+            sTitle = new GUIStyle(); sTitle.fontSize = 16; sTitle.richText = true; sTitle.normal.textColor = Color.white;
+            sHead = new GUIStyle(); sHead.fontSize = 14; sHead.richText = true; sHead.normal.textColor = new Color(1f, 0.85f, 0.35f);
+            sTxt = new GUIStyle(); sTxt.fontSize = 13; sTxt.richText = true; sTxt.wordWrap = true; sTxt.normal.textColor = Color.white;
+            sBtn = new GUIStyle(); sBtn.fontSize = 13; sBtn.alignment = TextAnchor.MiddleCenter; sBtn.richText = true; sBtn.normal.textColor = Color.white;
+        }
+        static void Button(Rect r, string label, Action a) { GUI.Box(r, ""); GUI.Label(r, label, sBtn); next.Add(new KeyValuePair<Rect, Action>(r, a)); }
+
         internal static void OnGUI()
         {
             if (On == null || !On.Value || !visible) return;
@@ -301,71 +325,92 @@ namespace DipGgFixes
             {
                 if (!GameManager.IsCampaign || GameManager.IsLoadingAny) return;
                 var main = Main(); if (main == null) return;
-                if (lab == null) { lab = new GUIStyle(); lab.normal.textColor = Color.white; lab.richText = true; lab.fontSize = 13; lab.wordWrap = true; }
-                var r = new Rect(Screen.width / 2f - 330f, 80f, 660f, Screen.height - 160f);
+                Styles();
+                next.Clear();
+                float w = Math.Min(760f, Screen.width - 40f), h = Math.Min(640f, Screen.height - 120f);
+                var r = new Rect((Screen.width - w) / 2f, 80f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, "");
-                GUILayout.BeginArea(new Rect(r.x + 10f, r.y + 8f, r.width - 20f, r.height - 16f));
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"<b>SHIP TRADE</b>  ({Key.Value} closes)", lab);
-                if (GUILayout.Toggle(tab == 0, "Sell ships", "Button")) tab = 0;
-                if (GUILayout.Toggle(tab == 1, "Order abroad", "Button")) tab = 1;
-                if (GUILayout.Toggle(tab == 2, $"Orders ({orders.Count(o => o.Buyer == K(main))})", "Button")) tab = 2;
-                GUILayout.EndHorizontal();
-                scroll = GUILayout.BeginScrollView(scroll);
-                if (tab == 0) DrawSell(main); else if (tab == 1) DrawOrder(main); else DrawOrders(main);
-                GUILayout.EndScrollView();
-                GUILayout.EndArea();
+                GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 120f, 24f), $"<b>Ship trade</b>   ({Key.Value} closes)", sTitle);
+                Button(new Rect(r.xMax - 40f, r.y + 8f, 30f, 26f), "X", () => visible = false);
+                string[] tabs = { "Sell ships", "Order abroad", $"My orders ({orders.Count(o => o.Buyer == K(main))})" };
+                for (int i = 0; i < 3; i++) { int ti = i; Button(new Rect(r.x + 14f + i * 170f, r.y + 40f, 160f, 26f), (tab == i ? "<color=#FFD95A><b>" : "") + tabs[i] + (tab == i ? "</b></color>" : ""), () => { tab = ti; page = 0; }); }
+                if (Time.realtimeSinceStartup - rowsBuilt > 1f) { rows = BuildRows(main); rowsBuilt = Time.realtimeSinceStartup; }
+                float y0 = r.y + 76f, rowH = 26f; int per = Math.Max(1, (int)((h - 76f - 44f) / rowH));
+                int pages = Math.Max(1, (rows.Count + per - 1) / per); page = Mathf.Clamp(page, 0, pages - 1);
+                float y = y0;
+                foreach (var row in rows.Skip(page * per).Take(per))
+                {
+                    if (row.Head) GUI.Label(new Rect(r.x + 14f, y + 3f, w - 28f, rowH), row.Text, sHead);
+                    else
+                    {
+                        GUI.Label(new Rect(r.x + 14f, y + 3f, w - (row.Btn != null ? 200f : 28f), rowH), row.Text, sTxt);
+                        if (row.Btn != null) Button(new Rect(r.xMax - 180f, y + 1f, 166f, rowH - 3f), row.Btn, row.Act);
+                    }
+                    y += rowH;
+                }
+                float fy = r.yMax - 36f;
+                if (pages > 1)
+                {
+                    Button(new Rect(r.x + 14f, fy, 40f, 26f), "<", () => { if (page > 0) page--; });
+                    GUI.Label(new Rect(r.x + 60f, fy + 4f, 120f, 22f), $"page {page + 1}/{pages}", sTxt);
+                    Button(new Rect(r.x + 180f, fy, 40f, 26f), ">", () => { page++; });
+                }
+                clicks.Clear(); clicks.AddRange(next);
             }
-            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Trade] window: " + e.Message); }
+            catch (Exception e) { if (guiErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][Trade] window: " + e); }
         }
 
-        static void DrawSell(Player main)
+        static List<Row> BuildRows(Player main)
         {
-            GUILayout.Label("Ships put up for sale receive offers from states at peace with you over the following months. Selling improves relations with the buyer and annoys the buyer's enemies.", lab);
-            foreach (var s in Fleet(main).Where(Sellable).OrderBy(x => TypeName(x)).ThenByDescending(x => Age(x)))
+            var l = new List<Row>();
+            if (tab == 0)
             {
-                string id = s.id.ToString();
-                Listing l; listings.TryGetValue(id, out l);
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"{TypeName(s)} <b>{s.name}</b> - {Age(s)} years, value about {M(Value(s))}", lab, GUILayout.Width(420f));
-                if (l == null) { if (GUILayout.Button("Put up for sale", GUILayout.Width(150f))) { listings[id] = new Listing { ShipId = id, Month = Economy.Month() }; Log($"listed {s.name}"); Save(); } }
-                else if (GUILayout.Button("Withdraw", GUILayout.Width(150f))) { listings.Remove(id); Save(); }
-                GUILayout.EndHorizontal();
-                if (l != null)
+                l.Add(new Row { Head = true, Text = "Put ships up for sale - states at peace with you send offers in the following months" });
+                foreach (var s in Fleet(main).Where(Sellable).OrderBy(x => TypeName(x)).ThenByDescending(x => Age(x)))
                 {
-                    if (l.Offers.Count == 0) GUILayout.Label("    waiting for offers", lab);
-                    foreach (var o in l.Offers.ToList())
+                    string id = s.id.ToString(); var ship = s;
+                    Listing li; listings.TryGetValue(id, out li);
+                    if (li == null) l.Add(new Row { Text = $"{TypeName(s)} <b>{s.name}</b> - {Age(s)} years, value about {M(Value(s))}", Btn = "Put up for sale", Act = () => { listings[id] = new Listing { ShipId = id, Month = Economy.Month() }; Log($"listed {ship.name}"); Save(); } });
+                    else
                     {
-                        var b = ByKey(o.Buyer); if (b == null) continue;
-                        GUILayout.BeginHorizontal();
-                        GUILayout.Label($"    {N(b)} offers <b>{M(o.Price)}</b>", lab, GUILayout.Width(420f));
-                        if (GUILayout.Button("Accept", GUILayout.Width(150f))) { Sell(main, s, b, o.Price); Save(); GUILayout.EndHorizontal(); return; }
-                        GUILayout.EndHorizontal();
+                        l.Add(new Row { Text = $"{TypeName(s)} <b>{s.name}</b> - <color=#FFD95A>for sale</color>{(li.Offers.Count == 0 ? ", waiting for offers" : "")}", Btn = "Withdraw", Act = () => { listings.Remove(id); Save(); } });
+                        foreach (var o in li.Offers.ToList())
+                        {
+                            var b = ByKey(o.Buyer); if (b == null) continue; float price = o.Price; var buyer = b;
+                            l.Add(new Row { Text = $"      {N(b)} offers <b>{M(o.Price)}</b>", Btn = "Accept", Act = () => { Sell(main, ship, buyer, price); Save(); } });
+                        }
                     }
                 }
+                if (l.Count == 1) l.Add(new Row { Text = "No ship can be sold now (ships in service, not building or in refit)." });
             }
+            else if (tab == 1)
+            {
+                var sellers = AllPlayers().Where(p => p.isMajor && !p.isMain && !AtWar(main, p)).OrderBy(N).ToList();
+                if (sellers.Count == 0) { l.Add(new Row { Text = "No great power at peace with you can take orders." }); return l; }
+                sellerIdx = ((sellerIdx % sellers.Count) + sellers.Count) % sellers.Count;
+                var sel = sellers[sellerIdx];
+                float prem = Mathf.Lerp(PremiumMax.Value, PremiumMin.Value, Mathf.Clamp01((Att(main, sel) + 20f) / 120f));
+                l.Add(new Row { Text = $"Builder: <b>{N(sel)}</b> (attitude {Att(main, sel):0}, price x{prem:0.00} of its cost)", Btn = "Next builder >", Act = () => { sellerIdx++; page = 0; } });
+                l.Add(new Row { Head = true, Text = $"{N(sel)}'s designs" });
+                DesignRows(l, main, sel, sel, false, prem);
+                l.Add(new Row { Head = true, Text = $"Your designs, built in {N(sel)}" });
+                DesignRows(l, main, sel, main, true, prem);
+            }
+            else
+            {
+                var mine = orders.Where(o => o.Buyer == K(main)).ToList();
+                if (mine.Count == 0) l.Add(new Row { Text = "No ships on order abroad." });
+                foreach (var o in mine)
+                {
+                    var s = FindShip(o.ShipId);
+                    string st = s == null ? "?" : (s.isBuilding ? "building" : "completed");
+                    l.Add(new Row { Text = $"<b>{o.Name}</b> in {N(ByKey(o.Seller))}: {st}, paid {M(o.Paid)} of {M(o.Price)}{(o.Missed > 0 ? $" - {o.Missed} payment(s) missed" : "")}" });
+                }
+            }
+            return l;
         }
 
-        static void DrawOrder(Player main)
-        {
-            var sellers = AllPlayers().Where(p => p.isMajor && !p.isMain && !AtWar(main, p)).OrderBy(N).ToList();
-            if (sellers.Count == 0) { GUILayout.Label("No great power at peace with you can take orders.", lab); return; }
-            sellerIdx = Mathf.Clamp(sellerIdx, 0, sellers.Count - 1);
-            GUILayout.Label("Order a ship from a foreign yard: one of the builder's designs, or your own design built there. It costs more than at home, is paid month by month, takes no slip at home - and the builder may keep it if relations turn hostile.", lab);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("<", GUILayout.Width(40f))) sellerIdx = (sellerIdx + sellers.Count - 1) % sellers.Count;
-            var sel = sellers[sellerIdx];
-            float prem = Mathf.Lerp(PremiumMax.Value, PremiumMin.Value, Mathf.Clamp01((Att(main, sel) + 20f) / 120f));
-            GUILayout.Label($"<b>{N(sel)}</b> (attitude {Att(main, sel):0}, price x{prem:0.00})", lab, GUILayout.Width(400f));
-            if (GUILayout.Button(">", GUILayout.Width(40f))) sellerIdx = (sellerIdx + 1) % sellers.Count;
-            GUILayout.EndHorizontal();
-            GUILayout.Label($"<b>{N(sel)}'s designs</b>", lab);
-            DesignRows(main, sel, sel, false, prem);
-            GUILayout.Label("<b>Your designs, built in " + N(sel) + "</b>", lab);
-            DesignRows(main, sel, main, true, prem);
-        }
-
-        static void DesignRows(Player buyer, Player seller, Player owner, bool own, float prem)
+        static void DesignRows(List<Row> l, Player buyer, Player seller, Player owner, bool own, float prem)
         {
             int n = 0;
             try
@@ -377,27 +422,13 @@ namespace DipGgFixes
                     bool refit = false; try { refit = d.isRefitDesign; } catch { }
                     if (refit) continue;
                     float cost = 0f; try { cost = d.Cost(); } catch { }
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label($"    {TypeName(d)} {d.name} - about {M(cost * prem)}", lab, GUILayout.Width(470f));
-                    if (GUILayout.Button("Order", GUILayout.Width(100f))) PlaceOrder(buyer, seller, d, own);
-                    GUILayout.EndHorizontal();
-                    if (++n >= 40) break;
+                    var dd = d;
+                    l.Add(new Row { Text = $"    {TypeName(d)} {d.name} - about {M(cost * prem)}", Btn = "Order", Act = () => PlaceOrder(buyer, seller, dd, own) });
+                    if (++n >= 60) break;
                 }
             }
             catch { }
-            if (n == 0) GUILayout.Label("    none", lab);
-        }
-
-        static void DrawOrders(Player main)
-        {
-            var mine = orders.Where(o => o.Buyer == K(main)).ToList();
-            if (mine.Count == 0) { GUILayout.Label("No ships on order abroad.", lab); return; }
-            foreach (var o in mine)
-            {
-                var s = FindShip(o.ShipId);
-                string st = s == null ? "?" : (s.isBuilding ? "building" : "completed");
-                GUILayout.Label($"<b>{o.Name}</b> in {N(ByKey(o.Seller))}: {st}, paid {M(o.Paid)} of {M(o.Price)}{(o.Missed > 0 ? $" - {o.Missed} payment(s) missed" : "")}", lab);
-            }
+            if (n == 0) l.Add(new Row { Text = "    none" });
         }
     }
 
