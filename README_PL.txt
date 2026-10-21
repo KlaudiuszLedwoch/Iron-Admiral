@@ -3,7 +3,7 @@ DIP The Great Game Extended (AI overhaul, one-click install)
 dla Ultimate Admiral: Dreadnoughts (Steam, Windows)
 ============================================================
 
-Opis z dnia 19 października 2026. Najnowsza wersja: Iron Admiral 1.2.47 (DIP_GG_Fixes 1.11.49).
+Opis z dnia 21 października 2026. Najnowsza wersja: Iron Admiral 1.2.48 (DIP_GG_Fixes 1.11.77).
 
 Iron Admiral to rozszerzona wersja Dreadnought Improvement Project
 (DIP) "The Great Game": te same dane, mapa i nacje, do tego kilkadziesiąt zmian w
@@ -323,11 +323,16 @@ AUTORZY I LICENCJE (folder licenses)
 - Dreadnought Improvement Project (DIP) "The Great Game" - Brother Munro
   i zespół DIP. Licencja Apache 2.0. Ta paczka modyfikuje pliki DIP;
   zmiany są opisane w CHANGELOG_PL.txt.
-- TweaksAndFixes - NathanKell. Licencja MIT.
+- TweaksAndFixes - NathanKell, DukeDagor. Licencja MIT.
 - MelonLoader - LavaGang. Licencja Apache 2.0.
 - Iron Admiral / DIP GG Extended (zmiany danych, dodatek DIP_GG_Fixes,
   instalator) -
-  Klaudiusz Ledwoch (Steam: Klod76). Kod źródłowy w folderze source,
-  licencja Apache 2.0.
+  Klaudiusz Ledwoch (Steam: Klod76). Kod źródłowy w folderze source.
+  Od 1.2.48 na warunkach z LICENSE / IronAdmiral_LICENSE.md: granie,
+  zmiany na własny użytek i filmy - swobodnie; ponowna publikacja, forki
+  i użycie w innych modach - za zgodą autora; bez użytku komercyjnego.
+  Wersje do 1.2.47: Apache 2.0.
+- Ultimate Admiral's Shippack - Badkapp / MarineWerft (z podaniem
+  autora, nie w modach płatnych).
 - Ultimate Admiral: Dreadnoughts - Game-Labs. To nieoficjalna
   modyfikacja fanowska; problemów zmodowanej gry nie zgłaszaj Game-Labs.

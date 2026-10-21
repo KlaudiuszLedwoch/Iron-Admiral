@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 21 October 2026. Latest version: Iron Admiral 1.2.47. Updated with every release._
+_Guide as of 21 October 2026. Latest version: Iron Admiral 1.2.48. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -154,6 +154,29 @@ What to do with it:
 
 Everything can be switched off in the F10 panel ("Fog of war"). FogStrength in MelonPreferences.cfg makes it lighter or harsher.
 
+## 10. Angle your armour
+
+Until now the game resolved every hit on the belt as if it struck square on. A battleship turned 60 degrees away presented the same belt as one lying broadside on. The battle logs showed it plainly: identical penetration at every aspect, while the real hits came from every angle.
+
+Now the belt counts thicker along the shell's path the more obliquely it is hit. Capped shells keep their bite up to moderate angles but lose it at steep ones, and the early uncapped shells of the 1890s suffer more.
+
+**What to do:**
+- In a gunnery duel, turn your ships some 30-50 degrees away from the enemy's line of fire. You give up part of your broadside, but your belt becomes much harder to break.
+- Close in only when you can hit his belt square on, and expect the AI to angle too.
+- In early campaigns armour wins more often: uncapped shells lose more against angled plates.
+
+## 11. Buying and selling ships
+
+The trade window (F9) has two uses.
+
+**Selling.** Old ships can go on sale instead of to the scrapyard. Over the following months states at peace with you make offers: the price follows the ship's value, its age and condition, the buyer's money and relations. A sale wins you the buyer's goodwill and annoys his enemies. AI great powers sell their old ships the same way, so a minor navy may suddenly field a pre-dreadnought.
+
+**Ordering abroad.** You can order a ship from any great power at peace with you, using its design or your own. It costs more than at home and is paid month by month, but it takes no slip of your own. If relations turn hostile before delivery, the builder may keep the ship, as Britain did with the Turkish battleships in 1914.
+
+**What to do:**
+- When your yards are full, order a prototype or a few escorts abroad. Pick a builder you trust.
+- Sell obsolete ships to minors you want as friends. Selling to a power's enemy annoys that power.
+
 ---
 
 ### Guide history
@@ -171,6 +194,7 @@ Everything can be switched off in the F10 panel ("Fog of war"). FogStrength in M
 - **19 October 2026, Iron Admiral 1.2.30:** risings in conquered heartlands and the decision to put them down.
 - **20 October 2026, Iron Admiral 1.2.33:** problem report from the F10 panel.
 - **20 October 2026, Iron Admiral 1.2.31:** fog of war - what you see of enemy fleets, contact reports and identification in battle.
+- **21 October 2026, Iron Admiral 1.2.48:** angled armour; buying and selling ships (F9).
 
 ---
 
