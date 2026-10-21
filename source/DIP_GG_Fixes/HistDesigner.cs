@@ -247,6 +247,9 @@ namespace DipGgFixes
                         Log($"{s["name"]} ({s["nation"]} {s["year"]}): try {t + 1}: main battery {mainBuilt}, wanted {wantMain} x {wantIn} in, speedMax {ShipSpeed(ship):0.0}, valid {tv}{(tv ? "" : " - " + Why(ship))}");
                         if (diff < bestDiff) { bestDiff = diff; bestValid = tv; }
                         if (diff == 0) break;
+                        // the slip keeps only the last try: stop at the first valid try that is close enough to the historical battery,
+                        // otherwise a later, worse try would replace it (e.g. 11 of 13 guns valid, then 10 of 13 invalid)
+                        if (tv && Mathf.Abs(cal - wantIn) <= 0.6f && Math.Abs(barrels - wantMain) <= Math.Max(1, wantMain / 4)) { Log($"{s["name"]}: try {t + 1} kept (valid, close to the historical battery)"); break; }
                     }
                     CapMainMm = 0f; CapSecMm = 0f; MainPerTurret = 0; WantMain = 0;
                     // the last try is what stays on the slip; if it is not the historical battery, do not save a wrong design
