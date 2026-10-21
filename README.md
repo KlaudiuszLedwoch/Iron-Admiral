@@ -64,6 +64,9 @@ Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.47_Mods_only.
 - Dreadnought Improvement Project "The Great Game" — Brother Munro and the DIP team (Apache 2.0)
 - TweaksAndFixes — NathanKell, DukeDagor (MIT)
 - MelonLoader — LavaGang (Apache 2.0)
-- Iron Admiral data changes, DIP_GG_Fixes add-on and installer — Klaudiusz Ledwoch (Steam: Klod76), Apache 2.0
+- Ultimate Admiral's Shippack — Badkapp / MarineWerft (free use with credit, not for paid mods)
+- Iron Admiral data changes, DIP_GG_Fixes add-on, installer, historical data and designs — Klaudiusz Ledwoch (Steam: Klod76)
+
+Licence: from version 1.2.48 the author's own work is covered by [LICENSE](LICENSE) - free to play, change for private use and make videos about; republishing, forks and reuse in other mods need the author's written permission; no commercial use. Versions up to 1.2.47 remain under Apache 2.0. Third-party parts keep their own licences, see [NOTICE.md](NOTICE.md). Contributions are welcome under [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Unofficial fan modification; do not report issues with the modded game to Game-Labs.
