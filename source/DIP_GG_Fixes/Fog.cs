@@ -37,6 +37,8 @@ namespace DipGgFixes
     {
         internal static MelonPreferences_Entry<bool> On, MapOn, ReportOn, TacOn, AiOn, InterceptOn;
         internal static MelonPreferences_Entry<float> Strength;
+        internal static MelonPreferences_Entry<bool> StaleContacts, NightFactors;
+        static readonly Dictionary<IntPtr, float> lastShot = new Dictionary<IntPtr, float>();
         const float HiddenQ = 0.35f, ExactQ = 0.70f;
         static int errors;
 
@@ -48,6 +50,8 @@ namespace DipGgFixes
             TacOn = cat.CreateEntry("FogTacticalIdentification", true, null, "Battle: detected enemy ships stay unidentified (no name, class or details) until an own ship closes to identification range - shorter at night, in bad weather and behind smoke");
             AiOn = cat.CreateEntry("FogAiPerception", true, null, "The AI judges the enemy in battle by the same uncertain picture (strength estimate for massed attacks and withdrawals, torpedo targets)");
             InterceptOn = cat.CreateEntry("FogInterceptions", true, null, "A battle at sea needs the attacker to find the enemy force: poor intelligence on that force can prevent the battle (player and AI alike)");
+            StaleContacts = cat.CreateEntry("FogStaleContacts", true, null, "Strategic map: an inexactly known enemy force stays marked where it was last reported; the enemy group window tells how old the report is and the course seen");
+            NightFactors = cat.CreateEntry("FogNightFactors", true, null, "Battle at night or in poor visibility: ships firing their guns and burning ships are identified from further away; Japanese lookouts identify at night from further away (night optics)");
             Strength = cat.CreateEntry("FogStrength", 1.0f, null, "Strength of the fog of war: 1 = historical calibration, 0 = no fog, values above 1 make reconnaissance harder");
         }
         static bool Act(MelonPreferences_Entry<bool> e) { return On != null && On.Value && e != null && e.Value && Strength.Value > 0.001f; }
@@ -263,7 +267,7 @@ namespace DipGgFixes
 
         // ---------------------------------------------------------------- strategic map (player view)
         enum Mode { Normal, Hidden, Blurred }
-        class MapState { public Mode mode; public Vector3 offset; public CampaignController.TaskForce tf; public float q; public bool saved, elActive, routeActive; }
+        class MapState { public Mode mode; public Vector3 offset; public CampaignController.TaskForce tf; public float q; public bool saved, elActive, routeActive; public bool hasSeen; public Vector3 seenPos; public int seenMonth = -1, checkedMonth = -1; public string seenHeading; }
         static readonly Dictionary<IntPtr, MapState> mapStates = new Dictionary<IntPtr, MapState>();
         static float nextMap; static int mapMonth = -1; static MapUI mapUi;
         static void MapRecompute(MapUI ui)
@@ -291,7 +295,15 @@ namespace DipGgFixes
                         float mag = (ExactQ - q) / (ExactQ - HiddenQ) * 180f / KmPerUnit() * Mathf.Sqrt(Roll($"off|{m}|{tf.Id}")); // 1.11.70: at most 180 km (the zone radius gave 500-2600 km)
                         // 1.11.64: the error runs along the force's own sea route (ahead of or behind it), so the marker never
                         // lands on land; a force with no route is shown where it is (still without its route line)
-                        st.offset = SeaOffset(tf, mag, m);
+                        // 1.11.74: contact reports age (Task Force 1942 style) - the marker stays where the force was last reported;
+                        // each month the force is re-sighted with a chance that grows with intelligence quality
+                        var cur = tf.WorldPos;
+                        if (!st.hasSeen || (st.checkedMonth != m && Roll($"sight|{m}|{tf.Id}") < Mathf.Clamp((q - HiddenQ) / (ExactQ - HiddenQ), 0.2f, 0.9f)))
+                        { st.hasSeen = true; st.seenPos = cur; st.seenMonth = m; st.seenHeading = Heading(tf); }
+                        st.checkedMonth = m;
+                        if (!StaleContacts.Value) { st.seenPos = cur; st.seenMonth = m; }
+                        bool stale = st.seenMonth != m && (st.seenPos - cur).sqrMagnitude > 1e-4f;
+                        st.offset = (st.seenPos - cur) + SeaOffset(tf, mag, m, st.seenPos, !stale);
                     }
                     else { st.mode = Mode.Normal; exact++; Restore(el, st); }
                 }
@@ -308,10 +320,10 @@ namespace DipGgFixes
         // way (a route ends in a port, which is land); if nothing passes, the force is shown where it is.
         static int seaLogged; static int seaDirect, seaRoute, seaTrue, seaMonth = -1;
         static bool PointLand(CampaignMap cm, Vector3 p) { try { return cm.RaycastLand(p, p + new Vector3(0.01f, 0f, 0.01f)); } catch { return true; } }
-        static Vector3 SeaOffset(CampaignController.TaskForce tf, float mag, int m)
+        static Vector3 SeaOffset(CampaignController.TaskForce tf, float mag, int m, Vector3 pos, bool allowRoute)
         {
             if (m != seaMonth) { if (seaMonth >= 0 && seaDirect + seaRoute + seaTrue > 0) Log($"position error placement: {seaDirect} shifted, {seaRoute} along the route, {seaTrue} shown at the true position (no sea point found)"); seaMonth = m; seaDirect = seaRoute = seaTrue = 0; seaLogged = 0; }
-            var pos = tf.WorldPos; CampaignMap cm = null; try { cm = CampaignMap.Instance; } catch { }
+            CampaignMap cm = null; try { cm = CampaignMap.Instance; } catch { }
             if (cm == null) { seaTrue++; return Vector3.zero; }
             float a0 = Roll($"ang|{m}|{tf.Id}") * Mathf.PI * 2f;
             bool selfLand = PointLand(cm, pos);
@@ -326,13 +338,30 @@ namespace DipGgFixes
                 seaDirect++; return off;
             }
             float sign = Roll($"dir|{m}|{tf.Id}") < 0.5f ? -1f : 1f;
-            foreach (var f in new[] { 1f, 0.5f, -1f, -0.5f })
+            if (allowRoute) foreach (var f in new[] { 1f, 0.5f, -1f, -0.5f })
             {
                 var r = AlongRoute(tf, sign * f * mag);
                 if (r.sqrMagnitude > 1e-6f && !PointLand(cm, pos + r)) { seaRoute++; return r; }
             }
             seaTrue++; return Vector3.zero;
         }
+        static string Heading(CampaignController.TaskForce tf)
+        {
+            try
+            {
+                bool moving = false; try { moving = tf.IsMoving(); } catch { }
+                if (!moving) return "stationary";
+                Il2CppStructArray<Vector3> path = null; try { path = tf.FullPath; } catch { }
+                if (path == null || path.Length < 2) { try { path = tf.Path; } catch { } }
+                if (path == null || path.Length < 1) return "under way";
+                var d = path[path.Length - 1] - tf.WorldPos; if (d.sqrMagnitude < 1e-6f) return "under way";
+                float a = Mathf.Atan2(d.x, d.z) * Mathf.Rad2Deg; if (a < 0) a += 360f;
+                string[] c = { "north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west" };
+                return "heading " + c[(int)Mathf.Round(a / 45f) % 8];
+            }
+            catch { return "under way"; }
+        }
+        static MapState StateOf(CampaignController.TaskForce tf) { if (tf == null) return null; foreach (var v in mapStates.Values) { try { if (v.tf != null && v.tf.Pointer == tf.Pointer) return v; } catch { } } return null; }
         static Vector3 AlongRoute(CampaignController.TaskForce tf, float dist)
         {
             try
@@ -447,7 +476,8 @@ namespace DipGgFixes
                     shown++;
                 }
                 Set(ui.Header, hiddenN > 0 || q < 0.5f ? "Reported enemy force (incomplete)" : "Reported enemy force");
-                Set(ui.FromTo, "Course and destination unknown");
+                var ms = StateOf(tf); int age = ms != null && ms.hasSeen ? Month() - ms.seenMonth : 0;
+                Set(ui.FromTo, ms == null || !ms.hasSeen ? "Course and destination unknown" : (age <= 0 ? "Reported this month, " : $"Last reported {age} month{(age > 1 ? "s" : "")} ago, ") + (ms.seenHeading ?? "course unknown") + "; destination unknown");
                 try { if (ui.DesignShipInfoRoot != null) ui.DesignShipInfoRoot.SetActive(false); } catch { }
                 if (popupLogged++ < 6) Log($"enemy group window: intelligence Q {q:0.00}, misidentification chance {p:0.00}, {shown} ships reported, {hiddenN} not reported");
             }
@@ -610,6 +640,14 @@ namespace DipGgFixes
                         float sizeF = at == "bb" || at == "bc" ? 1f : at == "ca" ? 0.85f : at == "cl" ? 0.75f : at == "dd" ? 0.6f : at == "tb" ? 0.5f : 0.8f;
                         float smoke = 1f; try { var dv = t.division; if (dv != null && dv.smokeActive != null && dv.smokeActive.isRunning) smoke = 0.5f; } catch { }
                         float cap = 1000f * visKm * 0.45f * sizeF * smoke / Mathf.Max(0.25f, Strength.Value);
+                        // 1.11.74: at night / in poor visibility muzzle flashes and fires give a ship away; Japanese night optics
+                        if (NightFactors.Value && visKm < 20f)
+                        {
+                            float nf = 1f; float ls; if (lastShot.TryGetValue(t.Pointer, out ls) && Time.time - ls < 20f) nf *= 1.6f;
+                            bool burning = false; try { burning = t.HaveAnyFireOnShip(); } catch { } if (burning) nf *= 1.5f;
+                            try { if (o.player != null && o.player.data != null && o.player.data.name == "japan") nf *= 1.3f; } catch { }
+                            cap *= Mathf.Min(nf, 2.5f);
+                        }
                         float idR = Mathf.Clamp(Mathf.Min(det * 0.6f, cap), 1200f, 20000f);
                         st.idRange = idR;
                         if (!st.seen)
@@ -773,6 +811,7 @@ namespace DipGgFixes
         {
             var me = typeof(Fog);
             P(h, AccessTools.Method(typeof(MapUI), "LateUpdate"), null, nameof(Post_MapLate));
+            P(h, AccessTools.Method(typeof(Effect), "GunShoot"), null, nameof(Post_GunShoot));
             P(h, AccessTools.Method(typeof(ShipUI), "UpdatePositionScale", new[] { typeof(Vector3), typeof(float) }), nameof(Pre_ShipUiPos), null);
             P(h, AccessTools.Method(typeof(ShipGroupPopupUI), "Init", new[] { typeof(CampaignController.TaskForce) }), nameof(Pre_GroupPopup), nameof(Post_GroupPopup));
             P(h, AccessTools.Method(typeof(ShipGroupPopupUI), "SetShipInfoAndImage", new[] { typeof(Ship) }), nameof(Pre_GroupShipInfo), null);
@@ -803,6 +842,10 @@ namespace DipGgFixes
         }
         internal static void ReportPatches() { Log($"{applied} hooks active{(failed > 0 ? ", " + failed + " failed" : "")}"); }
 
+        static void Post_GunShoot(GameObject parent)
+        {
+            try { if (parent == null || !TacActive) return; var sh = parent.GetComponentInParent<Ship>(); if (sh != null) lastShot[sh.Pointer] = Time.time; } catch { }
+        }
         static void Post_MapLate(MapUI __instance) { try { MapLateUpdate(__instance); } catch { } }
         static void Pre_ShipUiPos(ShipUI __instance, ref Vector3 newPosition) { try { if (MapActive) ShiftPosition(__instance, ref newPosition); } catch { } }
         static void Pre_GroupPopup(ShipGroupPopupUI __instance) { try { if (popupFog) { popupFog = false; if (__instance.DesignShipInfoRoot != null) __instance.DesignShipInfoRoot.SetActive(true); } } catch { } }
