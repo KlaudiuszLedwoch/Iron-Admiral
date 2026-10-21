@@ -619,6 +619,7 @@ namespace DipGgFixes
                             float p = Mathf.Clamp(0.6f * (1f - q) * Strength.Value, 0f, 0.6f);
                             st.reported = Misreport(at, p, $"tac|{bk}|{t.id}|{side}", t.player);
                             Changed(t, obsSide);
+                            try { Dispatch.Sighted(SizeClass(st.reported), d, obsSide == SideOf(b, tacMain)); } catch { }
                         }
                         string lbl = d <= idR * 1.6f ? "Probable " + FullName(st.reported) + "?" : "Unidentified ship (" + SizeClass(st.reported) + ")";
                         if (lbl != st.label) { st.label = lbl; Changed(t, obsSide); }
@@ -626,6 +627,7 @@ namespace DipGgFixes
                         {
                             st.identified = true; st.label = null; Changed(t, obsSide);
                             if (obsSide == SideOf(b, tacMain)) Narrative.Record("ident-first", 2, $"First enemy ship identified: {Narrative_Short(t.name)} at {d / 1000f:0.0} km{(st.reported != at ? " - it had been reported as a " + FullName(st.reported) : "")}");
+                            try { Dispatch.Identified(t.name, FullName(at), FullName(st.reported), d, obsSide == SideOf(b, tacMain)); } catch { }
                             if (idLogged++ < 40) Log($"{(obsSide == SideOf(b, tacMain) ? "player side" : "AI side")} identified {t.name} ({at}{(st.reported != at ? ", first reported as " + st.reported : "")}) at {d:0} m (identification range {idR:0} m, detection {det:0} m, daylight {day:0.0}, weather {wx:0.0}{(smoke < 1f ? ", smoke" : "")})");
                         }
                     }

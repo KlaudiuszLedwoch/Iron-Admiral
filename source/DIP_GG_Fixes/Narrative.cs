@@ -38,6 +38,7 @@ namespace DipGgFixes
         }
         internal static void Record(string key, int prio, string text)
         {
+            if (key != null && key.StartsWith("prize|")) { try { Dispatch.Prize(text); } catch { } }
             if (!Active || !inBattle && prio < 9) return;
             try
             {
@@ -113,12 +114,12 @@ namespace DipGgFixes
                 {
                     var s = ships[i]; if (s == null) continue;
                     bool sur = false; try { sur = s.IsSurrendered; } catch { }
-                    if (sur && surrendered.Add(s.Pointer)) Record("surr|" + s.Pointer, 8, $"{Short(s.name)} struck her colours");
+                    if (sur && surrendered.Add(s.Pointer)) { try { Dispatch.Surrendered(s.name); } catch { } } if (sur && surrendered.Contains(s.Pointer)) Record("surr|" + s.Pointer, 8, $"{Short(s.name)} struck her colours");
                 }
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][Report] scan: " + e.Message); }
         }
-        internal static void Sunk(Ship s) { if (s == null || !inBattle) return; try { Record("sunk|" + s.Pointer, 9, $"{Short(s.name)} was sunk"); } catch { } }
+        internal static void Sunk(Ship s) { try { if (s != null) Dispatch.Sunk(s.name); } catch { } if (s == null || !inBattle) return; try { Record("sunk|" + s.Pointer, 9, $"{Short(s.name)} was sunk"); } catch { } }
         static void Store()
         {
             if (battleId == null || evs.Count == 0) return;

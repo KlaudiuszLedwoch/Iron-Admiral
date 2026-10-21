@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.72", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.73", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -236,6 +236,7 @@ namespace DipGgFixes
             Scenarios.Tick();
             Narrative.Tick();
             try { Portless.Tick(); } catch { }
+            try { Dispatch.Tick(); } catch { }
         }
 
         public override void OnLateUpdate() { try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } }
@@ -462,6 +463,7 @@ namespace DipGgFixes
             ModDesigns.CreatePrefs(cat);
             Narrative.CreatePrefs(cat);
             Portless.CreatePrefs(cat);
+            Dispatch.CreatePrefs(cat);
             Diagnostics.RepairPreferences();
             ModDesigns.Install();
             SettingsUi.CreatePrefs(cat);
@@ -1779,6 +1781,7 @@ namespace DipGgFixes
         internal static void Log(string m)
         {
             try { Narrative.FromLog(m); } catch { }
+            try { Dispatch.FromLog(m); } catch { }
             if (DipGgFixesMod.BattleAiLog != null && DipGgFixesMod.BattleAiLog.Value) MelonLogger.Msg("[DIP GG Fixes][Battle] " + m);
         }
     }
