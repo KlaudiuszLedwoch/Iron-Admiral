@@ -34,7 +34,8 @@ namespace DipGgFixes
             CappedYear = cat.CreateEntry("CappedShellYear", 1905, null, "From this year on AP shells are treated as capped");
         }
 
-        internal static void Capture(Vector3 a, Vector3 b) { capA = a; capB = b; capFrame = Time.frameCount; }
+        internal static float capRes = float.NaN;
+        internal static void Capture(Vector3 a, Vector3 b) { capA = a; capB = b; capFrame = Time.frameCount; capRes = float.NaN; }
 
         static int Year()
         {
@@ -55,7 +56,7 @@ namespace DipGgFixes
             Vector3 nrm = capB; nrm.y = 0f;
             if (dir.sqrMagnitude < 1e-6f || nrm.sqrMagnitude < 1e-6f) return 1f;
             dir.Normalize(); nrm.Normalize();
-            if (calib++ < 5) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity calibration: direction {capA}, side normal {capB}, angle {Mathf.Acos(Mathf.Clamp01(Mathf.Abs(Vector3.Dot(dir, nrm)))) * Mathf.Rad2Deg:0} deg");
+            if (calib++ < 5) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity calibration: direction {capA}, side normal {capB}, angle {Mathf.Acos(Mathf.Clamp01(Mathf.Abs(Vector3.Dot(dir, nrm)))) * Mathf.Rad2Deg:0} deg, game's own result {capRes:0.0}");
             float cos = Mathf.Abs(Vector3.Dot(dir, nrm));                 // 1 = square to the belt
             float ang = Mathf.Acos(Mathf.Clamp01(cos)) * Mathf.Rad2Deg;
             bool capped = Year() >= CappedYear.Value;
@@ -85,7 +86,11 @@ namespace DipGgFixes
     }
 
     [HarmonyPatch(typeof(Shell), "ImpactForwardToAngleSideForward")]
-    internal static class Patch_ObliquityCapture { private static void Prefix(Vector3 __0, Vector3 __1) { try { Obliquity.Capture(__0, __1); } catch { } } }
+    internal static class Patch_ObliquityCapture
+    {
+        private static void Prefix(Vector3 __0, Vector3 __1) { try { Obliquity.Capture(__0, __1); } catch { } }
+        private static void Postfix(float __result) { Obliquity.capRes = __result; }
+    }
 
     [HarmonyPatch(typeof(Ship), "GetEffectiveArmor")]
     internal static class Patch_ObliquityArmor
