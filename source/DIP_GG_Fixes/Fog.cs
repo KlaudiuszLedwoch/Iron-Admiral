@@ -68,9 +68,9 @@ namespace DipGgFixes
         internal static float Roll(string s) { return (Hash(s) & 0xFFFFFF) / 16777216f; }
         static float Clamp01(float v) { return v < 0f ? 0f : v > 1f ? 1f : v; }
         static float Fogged(float q) { return Clamp01(1f - (1f - q) * Strength.Value); }
-        static int Month() { return Independence_Month(); }
+        internal static int Month() { return Independence_Month(); }
         static int Independence_Month() { try { var d = CampaignController.Instance.CurrentDate.AsDate(); return d.Year * 12 + d.Month; } catch { return 0; } }
-        static int Year() { try { return CampaignController.Instance.CurrentDate.AsDate().Year; } catch { return 1910; } }
+        internal static int Year() { try { return CampaignController.Instance.CurrentDate.AsDate().Year; } catch { return 1910; } }
         static Player Main()
         {
             try { var ps = CampaignController.Instance.CampaignData.Players; for (int i = 0; i < ps.Count; i++) if (ps[i] != null && ps[i].isMain) return ps[i]; } catch { }
@@ -132,7 +132,7 @@ namespace DipGgFixes
             try { var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (b != null) { var l = b.Ships; for (int k = 0; l != null && k < l.Count; k++) { var s = l[k]; if (s != null && s.player != null && s.player.Pointer == owner.Pointer) set.Add(TypeName(s)); } } } catch { }
             navy[owner.Pointer] = set; return set;
         }
-        static float Era(int y)
+        internal static float Era(int y)
         {
             int[] ys = { 1890, 1905, 1914, 1918, 1930, 1939, 1942, 1945, 1950 };
             float[] v = { 0.15f, 0.20f, 0.25f, 0.30f, 0.34f, 0.40f, 0.48f, 0.55f, 0.58f };
@@ -196,8 +196,8 @@ namespace DipGgFixes
             }
             catch (Exception e) { Err("factors", e); }
         }
-        static float TechF(Player p) { Factors(); float f; return p != null && techF.TryGetValue(p.Pointer, out f) ? f : 1f; }
-        static float BudgetF(Player p) { Factors(); float f; return p != null && budgetF.TryGetValue(p.Pointer, out f) ? f : 1f; }
+        internal static float TechF(Player p) { Factors(); float f; return p != null && techF.TryGetValue(p.Pointer, out f) ? f : 1f; }
+        internal static float BudgetF(Player p) { Factors(); float f; return p != null && budgetF.TryGetValue(p.Pointer, out f) ? f : 1f; }
 
         // ---------------------------------------------------------------- strategic intelligence quality
         static float KmPerUnit() { try { if (CampaignMap.UnityDistanceToWorldKmMultiplier > 0f) return CampaignMap.UnityDistanceToWorldKmMultiplier; } catch { } return 1f; }
