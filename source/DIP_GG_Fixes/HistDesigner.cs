@@ -128,6 +128,14 @@ namespace DipGgFixes
                     int b2 = specs.Count; specs = specs.Where(s => !failedSet.Contains(s["nation"] + "|" + s["name"] + "|" + s["year"])).ToList();
                     if (b2 != specs.Count) Log($"skipping {b2 - specs.Count} classes that failed earlier (HistBuilderRetryFailed = false)");
                 }
+                else
+                {
+                    // retry mode: classes that failed earlier go to the end of the queue, so a restart does not spend its first hour on the same failures
+                    var failedSet = new HashSet<string>();
+                    try { var rp = Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "hist_builder.csv"); if (File.Exists(rp)) foreach (var l in File.ReadAllLines(rp).Skip(1)) { var c = SplitCsv(l); if (c.Count > 5 && c[5] == "failed") failedSet.Add(c[1] + "|" + c[3] + "|" + c[2]); } } catch { }
+                    int nf = specs.Count(s => failedSet.Contains(s["nation"] + "|" + s["name"] + "|" + s["year"]));
+                    if (nf > 0) { specs = specs.OrderBy(s => failedSet.Contains(s["nation"] + "|" + s["name"] + "|" + s["year"]) ? 1 : 0).ToList(); Log($"{nf} classes that failed earlier moved to the end of the queue"); }
+                }
             }
             if (Limit.Value > 0 && specs.Count > Limit.Value) specs = specs.Take(Limit.Value).ToList();
             Log($"starting: {specs.Count} classes to build, {cands.Count} prepared templates");
