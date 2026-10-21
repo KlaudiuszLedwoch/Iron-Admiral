@@ -24,6 +24,11 @@ namespace DipGgFixes
             if (string.IsNullOrEmpty(root)) root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Game Labs", "Ultimate Admiral Dreadnoughts");
             return Path.Combine(root, "Designs");
         }
+        static bool SameFile(string a, string b)
+        {
+            try { var fa = new FileInfo(a); var fb = new FileInfo(b); if (fa.Length != fb.Length) return false; return File.ReadAllBytes(a).AsSpan().SequenceEqual(File.ReadAllBytes(b)); }
+            catch { return true; }
+        }
         internal static void Install()
         {
             if (On == null || !On.Value) return;
@@ -38,13 +43,27 @@ namespace DipGgFixes
                 if (Shippack != null && Shippack.Value && Directory.Exists(sp)) files.AddRange(Directory.GetFiles(sp, "*.bindesign"));
                 string hp = Path.Combine(src, "Historical");   // historical classes (1.11.77)
                 if (Directory.Exists(hp)) files.AddRange(Directory.GetFiles(hp, "*.bindesign"));
+                int replaced = 0; string aside = null;
                 foreach (var f in files)
                 {
                     string to = Path.Combine(dst, Path.GetFileName(f));
-                    if (File.Exists(to)) { kept++; continue; }
+                    if (File.Exists(to))
+                    {
+                        // 1.11.81: the Shippack files of 1.2.47-1.2.50 carried technologies that do not exist in DIP (submarine_exp_*,
+                        // submarine_hull_*), so the game could not load any of them ("no such TechnologyData", "Couldn't load ...").
+                        // A copy of a Shippack file that differs from the corrected one is moved aside (never deleted), then replaced.
+                        if (f.StartsWith(sp, StringComparison.OrdinalIgnoreCase) && !SameFile(f, to))
+                        {
+                            if (aside == null) { aside = Path.Combine(Path.GetDirectoryName(dst), "Designs_replaced_by_IronAdmiral", DateTime.Now.ToString("yyyy-MM-dd_HHmm")); Directory.CreateDirectory(aside); }
+                            string bak = Path.Combine(aside, Path.GetFileName(f));
+                            if (!File.Exists(bak)) File.Move(to, bak); else File.Move(to, bak + "." + DateTime.Now.Ticks);
+                            File.Copy(f, to); replaced++; continue;
+                        }
+                        kept++; continue;
+                    }
                     File.Copy(f, to); copied++;
                 }
-                MelonLogger.Msg($"[DIP GG Fixes][Designs] mod shared designs: {copied} copied to the game's design folder, {kept} already there (not overwritten)");
+                MelonLogger.Msg($"[DIP GG Fixes][Designs] mod shared designs: {copied} copied to the game's design folder, {kept} already there (not overwritten)" + (replaced > 0 ? $", {replaced} older Shippack copies replaced (previous files moved to {aside})" : ""));
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Designs] install failed: " + e.Message); }
         }
