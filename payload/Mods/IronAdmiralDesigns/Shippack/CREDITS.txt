@@ -1,0 +1,10 @@
+Ultimate Admiral's Shippack - designs by Badkapp (MarineWerft)
+Source: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/45 (version 4, 16 January 2026)
+Permissions on the source page: assets may be used without permission as long as the author is credited; not for sold mods.
+
+Iron Admiral includes 920 of the pack's 937 designs - the ones whose hull and parts exist in Iron Admiral
+(DIP The Great Game 1.3.5 data) for the design's nation. 17 designs were left out:
+2 use a hull that does not exist (ca_1_italian_exp_japan_3mast), 6 use parts that do not exist, 6 use hulls disabled
+in DIP GG, 4 use a hull not available to that nation. The designs were made for vanilla 1.7.0.0; the author gives no
+guarantee for other mods. Installed by Iron Admiral (switch InstallShippackDesigns) into the game's shared designs,
+never overwriting existing files.
