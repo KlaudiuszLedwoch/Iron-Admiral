@@ -46,13 +46,35 @@ namespace DipGgFixes
             return go;
         }
 
+        // 1.11.101: the game covers the area left and right of the map with black planes ("Border", "BorderLeft", "BorderRight")
+        // drawn above the map (y 1.1) - they hid the copies (22.10 test: black beyond the Pacific). They are hidden while the
+        // continuous map is on and shown again when it is off.
+        static readonly System.Collections.Generic.List<Renderer> sideBorders = new System.Collections.Generic.List<Renderer>();
+        static void FindBorders()
+        {
+            if (sideBorders.Count > 0) return;
+            try
+            {
+                var root = CampaignMap.Instance.MapRenderer.transform.root;
+                foreach (var r in root.GetComponentsInChildren<Renderer>(true))
+                {
+                    if (r == null) continue; var n = r.gameObject.name; if (!n.StartsWith("Border")) continue;
+                    var b = r.bounds;
+                    if (b.min.x >= maxX - 1f || b.max.x <= minX + 1f) sideBorders.Add(r); // only the left/right ones, not top/bottom
+                }
+                MelonLogger.Msg($"[DIP GG Fixes][Map] {sideBorders.Count} side border plane(s) found");
+            }
+            catch (Exception e) { Warn("borders: " + e.Message); }
+        }
         static void Show(bool v)
         {
             try { if (left != null) left.SetActive(v); if (right != null) right.SetActive(v); } catch { left = right = null; }
+            try { foreach (var r in sideBorders) if (r != null) r.enabled = !v; } catch { sideBorders.Clear(); }
         }
 
         static void Ensure()
         {
+            FindBorders();
             if (left != null && right != null) return;
             var src = CampaignMap.Instance.MapRenderer; float w = maxX - minX;
             left = Make(src, -w); right = Make(src, w);
