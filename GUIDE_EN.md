@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.54. Updated with every release._
+_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.55. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -231,6 +231,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **21 October 2026, Iron Admiral 1.2.52:** custom battles – where the ships come from (chapter 12): historical classes first, the "Pregenerated" button off by default.
 - **22 October 2026, Iron Admiral 1.2.53:** 147 historical classes (battleships, battlecruisers, cruisers).
 - **22 October 2026, Iron Admiral 1.2.54:** fleet battle doctrine - who attacks first and how each navy fights (chapter 13); dispatches above the ships.
+- **22 October 2026, Iron Admiral 1.2.55:** intelligence window and treasury panel display fixes; screenshots of the new features in the mod's image gallery.
 
 ---
 
