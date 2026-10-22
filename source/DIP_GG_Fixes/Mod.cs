@@ -2248,9 +2248,15 @@ namespace DipGgFixes
             if (d <= DipGgFixesMod.TorpedoSenseClose.Value) return false;
             float range = BattleAi.TorpedoRange(s);
             if (range > 0f && d > range) { why = $"{t.name} at {d:0} m beyond torpedo range {range:0} m"; return true; }
-            if (!BattleAi.TorpedoWorthy(s, t)) { why = $"{t.name} is a small target at {d:0} m"; return true; }
             var ps = s.transform.position; var pt = t.transform.position; ps.y = 0f; pt.y = 0f;
             var P = pt - ps; var V = Vel(t, now); Vel(s, now);
+            if (!BattleAi.TorpedoWorthy(s, t))
+            {
+                // 1.11.99: self-defence - a small ship closing in (a torpedo attack on us) may be met with torpedoes inside 60% of
+                // their range; only small targets that are far or not closing are not worth a torpedo
+                bool closing = UnityEngine.Vector3.Dot(V, P) < -0.5f * P.magnitude; // closing at more than 0.5 m/s
+                if (!(closing && range > 0f && d <= 0.6f * range)) { why = $"{t.name} is a small target at {d:0} m{(closing ? "" : ", not closing")}"; return true; }
+            }
             // 1.11.98: the measured velocity is capped at the target's top speed (22.10: "outruns the torpedo" for a 21-knot cruiser at 1.5 km)
             float vmax = BattleAi.Speed(t) * 1.15f;
             if (vmax > 0f && V.magnitude > vmax) V = V.normalized * vmax;
