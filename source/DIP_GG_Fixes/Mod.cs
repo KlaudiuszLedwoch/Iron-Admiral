@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.87", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.88", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -182,6 +182,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> FleetTorpedoAttack;
         internal static MelonPreferences_Entry<bool> Ramming;
         internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort;
+        internal static MelonPreferences_Entry<bool> NightRules, CruiserRoles, FireDistributionOn; internal static MelonPreferences_Entry<float> NightVisibilityKm;
         internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
         internal static MelonPreferences_Entry<bool> CapitalEscapeWhenHopeless;
@@ -388,6 +389,13 @@ namespace DipGgFixes
                 "When the AI torpedo attack has failed and the enemy is stronger, the most valuable ships (cost and build time) withdraw while the cheaper ones attack the pursuers or lay smoke between them");
             CoverRetreatStrengthRatio = cat.CreateEntry("CoverRetreatStrengthRatio", 1.2f, null, "Covering retreat: enemy combat tonnage must exceed own x this");
             CoverValueRatio = cat.CreateEntry("CoverValueRatio", 0.6f, null, "Covering retreat: ships worth at least this share of the side's most valuable ship withdraw, cheaper ones cover");
+            NightRules = cat.CreateEntry("NightRules", true, null,
+                "Night battles (War Instructions 1944, chapter 8, and national doctrine): heavy ships do not close the range, flotillas attack by surprise and break off when spotted early by a stronger enemy; nations that avoid night action hold their flotillas back, nations that seek it attack without waiting for the battle lines");
+            NightVisibilityKm = cat.CreateEntry("NightVisibilityKm", 10f, null, "Night rules: a battle counts as night when the game's daytime visibility is below this (km)");
+            CruiserRoles = cat.CreateEntry("CruiserRoles", true, null,
+                "AI cruisers (heavy always, light when the side has destroyers): defend the battle line against enemy flotillas, support own flotilla attacks, pin the enemy line from the opposite flank, keep out of the enemy line's concentrated fire; flying squadron where the doctrine has it");
+            FireDistributionOn = cat.CreateEntry("FireDistribution", true, null,
+                "Main gun fire distribution (War Instructions 1944, 12164-12166): at most the doctrine's number of ships on one target (default 3), one ship per target when outnumbered, targets combining hitting power with weak protection first");
             ValueBasedAbort = cat.CreateEntry("ValueBasedAbort", true, null, "AI charge abort damage scaled by ship value: cheap ships fight longer (x1.2), the most valuable break off earlier (x0.8)");
             Ramming = cat.CreateEntry("Ramming", true, null,
                 "AI light ships without torpedoes (or out of torpedoes) that cannot escape, or take part in a massed attack, steer into the nearest enemy ship within ramming range");
@@ -1047,10 +1055,22 @@ namespace DipGgFixes
     internal class Doctrine
     {
         public string nation = "default"; public float distanceMult = 1f; public float chargeStart = 12000f; public float abortDamage = 0.6f; public float escapeMargin = 1f;
+        // 1.11.88: period and behaviour (see battleDoctrines.csv header)
+        public int yearFrom = 0, yearTo = 9999;
+        public bool lineFirst = true;      // battle line engages first, flotillas attack once the lines are engaged (WI 1944, 12124)
+        public int night = 0;              // -1 avoids night action, 0 accepts it, 1 seeks it (night torpedo attacks)
+        public float heavyProtect = 0f;    // 0..1: how strongly the battle line is kept out of an unfavourable fight
+        public bool turnAwayAlways = true; // true: always turn away from torpedoes; false: hold course when the enemy line is nearly beaten
+        public bool flyingSquadron = false;// fast cruisers act as a separate manoeuvre group against the enemy flank
+        public float commandDelay = 0f;    // extra seconds between AI division decisions (centralised command)
+        public bool hitAndRun = false;     // light forces withdraw after their attack instead of fighting the enemy light forces
+        public int maxPerTarget = 3;       // most ships firing main guns at one target (WI 1944, 12165)
+        public string source = "";
     }
     internal static class Doctrines
     {
         internal static readonly Dictionary<string, Doctrine> ByNation = new Dictionary<string, Doctrine>(StringComparer.OrdinalIgnoreCase);
+        internal static readonly Dictionary<string, List<Doctrine>> ByNationYears = new Dictionary<string, List<Doctrine>>(StringComparer.OrdinalIgnoreCase);
         internal static Doctrine Default = new Doctrine();
         internal static bool Loaded;
 
@@ -1061,16 +1081,32 @@ namespace DipGgFixes
                 string path = Path.Combine(MelonUtils.GameDirectory, "Mods", "battleDoctrines.csv");
                 if (!File.Exists(path)) { MelonLogger.Msg("[DIP GG Fixes] battleDoctrines.csv not found - global battle AI settings apply to all nations"); return; }
                 int n = 0;
+                // 1.11.88: columns are read by header name, so old files (nation,distanceMult,chargeStartRange,abortDamage,escapeMargin,comment) still load
+                var col = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
                 foreach (var raw in File.ReadAllLines(path))
                 {
                     var line = raw.Trim();
-                    if (line.Length == 0 || line.StartsWith("#") || line.StartsWith("nation,")) continue;
+                    if (line.Length == 0 || line.StartsWith("#")) continue;
                     var c = line.Split(',');
+                    if (line.StartsWith("nation,")) { col.Clear(); for (int i = 0; i < c.Length; i++) col[c[i].Trim()] = i; continue; }
                     if (c.Length < 5) continue;
+                    Func<string, string> G = k => { int i; return col.TryGetValue(k, out i) && i < c.Length ? c[i].Trim() : null; };
+                    Func<string, float, float> Fv = (k, def) => { var v = G(k); return v == null || v.Length == 0 ? def : F(v, def); };
                     var d = new Doctrine { nation = c[0].Trim().ToLowerInvariant() };
-                    d.distanceMult = F(c[1], 1f); d.chargeStart = F(c[2], 12000f); d.abortDamage = F(c[3], 0.6f); d.escapeMargin = F(c[4], 1f);
-                    ByNation[d.nation] = d; n++;
-                    if (d.nation == "default") Default = d;
+                    if (col.Count == 0) { d.distanceMult = F(c[1], 1f); d.chargeStart = F(c[2], 12000f); d.abortDamage = F(c[3], 0.6f); d.escapeMargin = F(c[4], 1f); }
+                    else
+                    {
+                        d.distanceMult = Fv("distanceMult", 1f); d.chargeStart = Fv("chargeStartRange", 12000f); d.abortDamage = Fv("abortDamage", 0.6f); d.escapeMargin = Fv("escapeMargin", 1f);
+                        d.yearFrom = (int)Fv("yearFrom", 0f); d.yearTo = (int)Fv("yearTo", 9999f);
+                        d.lineFirst = Fv("lineFirst", 1f) > 0.5f; d.night = (int)Math.Round(Fv("night", 0f)); d.heavyProtect = UnityEngine.Mathf.Clamp01(Fv("heavyProtect", 0f));
+                        d.turnAwayAlways = Fv("turnAwayAlways", 1f) > 0.5f; d.flyingSquadron = Fv("flyingSquadron", 0f) > 0.5f; d.commandDelay = Math.Max(0f, Fv("commandDelay", 0f));
+                        d.hitAndRun = Fv("hitAndRun", 0f) > 0.5f; d.maxPerTarget = Math.Max(1, (int)Fv("maxPerTarget", 3f)); d.source = G("source") ?? "";
+                    }
+                    List<Doctrine> lst; if (!ByNationYears.TryGetValue(d.nation, out lst)) { lst = new List<Doctrine>(); ByNationYears[d.nation] = lst; }
+                    lst.Add(d);
+                    if (!ByNation.ContainsKey(d.nation)) ByNation[d.nation] = d;
+                    n++;
+                    if (d.nation == "default" && d.yearFrom <= 0 && d.yearTo >= 9999) Default = d;
                 }
                 Loaded = n > 0;
                 MelonLogger.Msg($"[DIP GG Fixes] Loaded {n} national battle doctrines from battleDoctrines.csv");
@@ -1085,6 +1121,11 @@ namespace DipGgFixes
             try
             {
                 var pd = p != null ? p.data : null; var name = pd != null ? pd.name : null;
+                // 1.11.88: the row whose year range contains the current year; nation rows first, then default rows
+                int y = Fog.Year();
+                List<Doctrine> lst;
+                if (name != null && ByNationYears.TryGetValue(name, out lst)) foreach (var x in lst) if (y >= x.yearFrom && y <= x.yearTo) return x;
+                if (ByNationYears.TryGetValue("default", out lst)) foreach (var x in lst) if (y >= x.yearFrom && y <= x.yearTo) return x;
                 if (name != null && ByNation.TryGetValue(name, out var d)) return d;
             }
             catch { }
@@ -1489,6 +1530,8 @@ namespace DipGgFixes
             if (now < st.nextThink) return;
             st.nextThink = now + UnityEngine.Mathf.Max(1f, DipGgFixesMod.BattleThinkSeconds.Value);
             st.playerPtr = player.Pointer; st.activeAt = now; try { st.pos = leader.transform.position; } catch { }
+            // 1.11.88: centralised command (doctrine) - AI divisions react more slowly
+            if (!playerSide && doc != null && doc.commandDelay > 0f) st.nextThink += doc.commandDelay;
 
             var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
             if (battle == null) { Why(st, "no CurrentBattle"); return; }
@@ -1565,11 +1608,14 @@ namespace DipGgFixes
             }
 
             // 1.11.44: turn away from sighted torpedo tracks (not while charging - a charging flotilla presses on)
-            if (!st.charging && DipGgFixesMod.TorpedoTurnAway.Value)
+            if (!st.charging && DipGgFixesMod.TorpedoTurnAway.Value && !HoldCourseThroughTorpedoes(player, battle, enemies, doc))
             {
                 if (now < st.evadeUntil) { try { div.MoveTo(leader.transform.position + st.evadeDir * 3000f); } catch { } Why(st, "turning away from torpedoes"); return; }
                 if (TorpedoEvasion.Check(leader, div, st, player, battle, enemies)) return;
             }
+
+            // 1.11.88: cruiser roles (heavy cruisers always, light cruisers when the side has destroyers/torpedo boats)
+            if (CruiserRole(leader, div, st, doc, enemies, battle, player)) return;
 
             if (light)
             {
@@ -1695,6 +1741,8 @@ namespace DipGgFixes
             float torp = TorpedoRange(leader);
             if (torp <= 0f) { Why(st, "torpedo range 0"); return; }
             float launchAt = torp * DipGgFixesMod.ChargeTorpedoMargin.Value;
+            // 1.11.88: night rules (War Instructions 1944, 827; national doctrine: avoid / accept / seek night action)
+            if (!playerSide && NightFlotilla(leader, div, st, doc, enemies, bestD, launchAt)) return;
             if (!st.charging)
             {
                 float start = ChargeStartFor(leader, best, doc, torp);
@@ -1712,8 +1760,10 @@ namespace DipGgFixes
                     start = float.MaxValue;
                 }
                 else if (!playerSide && !st.fighting && !st.covering && DipGgFixesMod.CapitalSupportScreen.Value && IsLight(leader)
+                         && (doc == null || doc.lineFirst) && !(doc != null && doc.night > 0 && IsNight())
                          && BattleManager.Instance != null && BattleManager.Instance.CurrentBattle != null
-                         && LinesEngaged(leader.player, BattleManager.Instance.CurrentBattle, enemies) == 1)
+                         && LinesEngaged(leader.player, BattleManager.Instance.CurrentBattle, enemies) == 1
+                         && LineWillEngage(leader.player, BattleManager.Instance.CurrentBattle, enemies, doc))
                 {
                     // 1.11.87 (War Instructions 1944, 12124): own battle line present but not yet engaged - torpedoes are held back
                     Why(st, "holding torpedoes until the battle lines are engaged"); return;
@@ -1876,7 +1926,8 @@ namespace DipGgFixes
     // =====================================================================================
     internal static class ShipTick
     {
-        internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>(); }
+        internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>();
+            public IntPtr playerPtr; public IntPtr mainTarget; public float mainAt; } // 1.11.88: fire distribution
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
@@ -2010,8 +2061,9 @@ namespace DipGgFixes
                 float range = 0f; if (cache != null) cache.TryGetValue(pd, out range);
                 if (range <= 0f) { Release(aim, st, pd); continue; }
                 bool isMain = main != null && pd.Pointer == main.Pointer;
-                var pick = isMain ? PickMain(s, enemies, range, heavy) : PickSecondary(s, enemies, range);
+                var pick = isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range);
                 if (pick == null) { Release(aim, st, pd); continue; }
+                if (isMain) { try { st.playerPtr = s.player.Pointer; } catch { } st.mainTarget = pick.Pointer; st.mainAt = UnityEngine.Time.time; }
                 if (cur != null && cur.Pointer == pick.Pointer)
                 {
                     // same target: only (re)assert the lock, never touch the aiming progress
@@ -2030,20 +2082,31 @@ namespace DipGgFixes
         internal static float Dmg(Ship e) { try { return UnityEngine.Mathf.Clamp01(e.DamageEstimation()); } catch { return 0f; } }
         static bool Usable(Ship s, Ship e) { return e != null && !e.isDead && !e.isSinking && !e.IsSurrendered && e.IsVisibleFor(s); }
         // main guns: most damaged enemy in range; bb/bc: among the enemies with the heaviest calibre (within 25 mm of the max)
-        static Ship PickMain(Ship s, Il2CppSystem.Collections.Generic.List<Ship> enemies, float range, bool heavy)
+        static Ship PickMain(Ship s, Il2CppSystem.Collections.Generic.List<Ship> enemies, float range, bool heavy, Ship cur = null, bool distribute = false)
         {
             var inRange = new List<Ship>();
             for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (Usable(s, e) && BattleAi.Dist(s, e) <= range) inRange.Add(e); }
             if (inRange.Count == 0) return null;
+            float maxCal = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxCal) maxCal = c; }
             if (heavy)
             {
-                float maxCal = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxCal) maxCal = c; }
                 if (maxCal > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxCal - 25f);
+            }
+            // 1.11.88: fire distribution (War Instructions 1944): at most N own ships on one target, 1 when outnumbered; the
+            // current target is kept so the aiming progress is not lost
+            bool dist = distribute && DipGgFixesMod.FireDistributionOn.Value;
+            if (dist && inRange.Count > 1)
+            {
+                int lim = FireDistribution.Limit(s);
+                var free = inRange.FindAll(e => (cur != null && e.Pointer == cur.Pointer) || FireDistribution.Shooters(s, e) < lim);
+                if (free.Count > 0) inRange = free;
             }
             Ship best = null; float bestScore = float.MinValue;
             foreach (var e in inRange)
             {
-                float score = Dmg(e) * 10f - BattleAi.Dist(s, e) / range; // damage first, then proximity
+                float d = BattleAi.Dist(s, e);
+                float score = Dmg(e) * 10f - d / range; // damage first ("sink one rather than damage two"), then proximity
+                if (dist) score += 2f * FireDistribution.Priority(s, e, d, maxCal); // hitting power x weak protection (12166)
                 if (score > bestScore) { bestScore = score; best = e; }
             }
             return best;

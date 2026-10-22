@@ -190,10 +190,13 @@ namespace DipGgFixes
             Il2CppSystem.Collections.Generic.List<Ship> mine = null; try { mine = battle.ShipsOf(p, true); } catch { }
             bool fog = Fog.AiActive && !p.isMain;
             float own = Strength(mine), foe = fog ? PerceivedStrength(p, enemies) : Strength(enemies);
-            bool weaker = foe > own * DipGgFixesMod.CoverRetreatStrengthRatio.Value;
-            if (weaker || DivDamage(div) > AbortFor(leader, doc))
+            // 1.11.88: doctrines that protect the battle line (heavyProtect) avoid the engagement already at smaller enemy superiority;
+            // at night heavy ships do not close the range unnecessarily (War Instructions 1944, 829)
+            bool weaker = !LineWillEngage(own, foe, doc);
+            bool night = DipGgFixesMod.NightRules.Value && IsNight();
+            if (weaker || night || DivDamage(div) > AbortFor(leader, doc))
             {
-                if (st.supporting) { st.supporting = false; Log($"{st.name}: {(weaker ? "enemy stronger - the line does not seek the engagement, torpedoes first" : "too damaged")} - left to the game"); }
+                if (st.supporting) { st.supporting = false; Log($"{st.name}: {(night ? "night - heavy ships do not close the range" : weaker ? "enemy stronger - the line does not seek the engagement, torpedoes first" : "too damaged")} - left to the game"); }
                 return false;
             }
             // target: the enemy nearest to an attacking own flotilla, otherwise the nearest enemy capital ship
@@ -233,6 +236,20 @@ namespace DipGgFixes
             return true;
         }
 
+        // 1.11.88: does the own battle line seek the engagement? Not when the enemy is clearly stronger; doctrines that protect the
+        // battle line (heavyProtect 0..1) already at parity
+        internal static bool LineWillEngage(float own, float foe, Doctrine doc)
+        {
+            float ratio = DipGgFixesMod.CoverRetreatStrengthRatio.Value - 0.2f * (doc != null ? doc.heavyProtect : 0f);
+            return foe <= own * UnityEngine.Mathf.Max(1f, ratio);
+        }
+        internal static bool LineWillEngage(Player p, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies, Doctrine doc)
+        {
+            Il2CppSystem.Collections.Generic.List<Ship> mine = null; try { mine = battle.ShipsOf(p, true); } catch { }
+            bool fog = Fog.AiActive && !p.isMain;
+            return LineWillEngage(Strength(mine), fog ? PerceivedStrength(p, enemies) : Strength(enemies), doc);
+        }
+
         // ---- 1.11.87: are the battle lines engaged? (War Instructions 1944, 12124: torpedo attacks are normally delayed until then)
         static readonly Dictionary<IntPtr, float> engagedNext = new Dictionary<IntPtr, float>();
         static readonly Dictionary<IntPtr, int> engagedState = new Dictionary<IntPtr, int>(); // 0 no capitals, 1 not engaged, 2 engaged
@@ -265,6 +282,7 @@ namespace DipGgFixes
         internal static bool EngageLightForces(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies)
         {
             if (!DipGgFixesMod.TorpedoReloadCycle.Value) return false;
+            if (doc != null && doc.hitAndRun) return false; // 1.11.88: hit-and-run doctrine - the flotilla withdraws after its attack
             if (DivDamage(div) > AbortFor(leader, doc)) return false;
             Ship best = null; float bd = float.MaxValue;
             for (int i = 0; i < enemies.Count; i++)
