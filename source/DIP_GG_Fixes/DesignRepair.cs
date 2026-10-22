@@ -42,6 +42,10 @@ namespace DipGgFixes
             var inList = new HashSet<IntPtr>();
             var en = main.designsAll.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
             while (un.MoveNext()) { var x = en.Current; if (x != null) inList.Add(x.Pointer); }
+            // 1.11.105: the visible design list (designs) can differ from designsAll - ships whose design is in designsAll but not
+            // in the visible list, or whose design belongs to another nation, are listed in the log (22.10: Magnanime-class prize)
+            var visible = new HashSet<IntPtr>();
+            try { var ve = main.designs.GetEnumerator(); var vu = ve.Cast<Il2CppSystem.Collections.IEnumerator>(); while (vu.MoveNext()) { var x = ve.Current; if (x != null) visible.Add(x.Pointer); } } catch { }
             var ships = new List<Ship>();
             var fe = main.fleetAll.GetEnumerator(); var fu = fe.Cast<Il2CppSystem.Collections.IEnumerator>();
             while (fu.MoveNext()) { var s = fe.Current; if (s != null) ships.Add(s); }
@@ -52,7 +56,19 @@ namespace DipGgFixes
             {
                 checkedN++;
                 Ship d = null; try { d = s.design; } catch { }
-                if (d == null || inList.Contains(d.Pointer)) continue;
+                if (d != null && inList.Contains(d.Pointer))
+                {
+                    string owner = null; try { owner = d.player != null ? d.player.data.name : null; } catch { }
+                    bool vis = visible.Contains(d.Pointer);
+                    if (!vis || (owner != null && owner != main.data.name))
+                    {
+                        bool refit = false, isDes = false; try { refit = d.isRefitDesign; isDes = d.isDesign; } catch { }
+                        string hull = "?"; try { hull = d.hull != null && d.hull.data != null ? d.hull.data.name : "?"; } catch { }
+                        MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] check: {s.name} - design {d.name}, owner {owner ?? "?"}, in visible list {vis}, isDesign {isDes}, refit design {refit}, hull {hull}");
+                    }
+                    continue;
+                }
+                if (d == null) continue;
                 try
                 {
                     if (!cloned.TryGetValue(d.Pointer, out var c))
