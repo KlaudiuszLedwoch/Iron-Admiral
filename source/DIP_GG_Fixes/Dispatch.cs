@@ -23,9 +23,11 @@ namespace DipGgFixes
         static System.Random rng = new System.Random();
 
         internal static MelonPreferences_Entry<bool> Bubbles;
+        internal static MelonPreferences_Entry<float> BubbleScale; // 1.11.102
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             Bubbles = cat.CreateEntry("BattleDispatchBubbles", true, null, "During battle a dispatch about a ship is also shown for a few seconds above that ship (only ships you can identify: your own and enemy ships already identified)");
+            BubbleScale = cat.CreateEntry("BattleDispatchBubbleScale", 0.55f, null, "Size of the dispatch bubbles above the ships relative to the mod's panels (1 = panel size)");
             On = cat.CreateEntry("BattleDispatches", true, null, "During fought battles the log also tells the story as dramatic dispatches from the officers and lookouts involved (Latest.log '[Dispatch]' lines and one file per battle in UserData\\IronAdmiral\\Dispatches)");
         }
         static bool Active { get { return On != null && On.Value && inBattle; } }
@@ -95,7 +97,11 @@ namespace DipGgFixes
                 var cam = Camera.main; if (cam == null) return;
                 var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb == null) return;
                 var ships = cb.Ships; if (ships == null) return;
-                if (sB == null) { sB = new GUIStyle(); sB.fontSize = Mathf.Clamp((int)(UiScale.H / 80f), 12, 18); sB.wordWrap = true; sB.richText = true; sB.alignment = TextAnchor.LowerCenter; sB.normal.textColor = new Color(1f, 0.95f, 0.8f); }
+                if (sB == null) { sB = new GUIStyle(); sB.fontSize = 14; sB.wordWrap = true; sB.richText = true; sB.alignment = TextAnchor.LowerCenter; sB.normal.textColor = new Color(1f, 0.95f, 0.8f); }
+                // 1.11.102: bubbles have their own, smaller scale (22.10: at the panel scale they were far too large in battle)
+                float k = UiScale.F * Mathf.Clamp(BubbleScale != null ? BubbleScale.Value : 0.55f, 0.2f, 2f); if (k < 0.5f) k = 0.5f;
+                float BW = Screen.width / k, BH = Screen.height / k;
+                GUI.matrix = Matrix4x4.Scale(new Vector3(k, k, 1f));
                 foreach (var b in bubbles)
                 {
                     Ship ship = null;
@@ -104,9 +110,9 @@ namespace DipGgFixes
                     try { if (Fog.PlayerLabel(ship) != null) continue; } catch { }   // fog of war: nothing above an unidentified enemy
                     Vector3 wp; try { wp = ship.transform.position; } catch { continue; }
                     var sp = cam.WorldToScreenPoint(wp + Vector3.up * 40f); if (sp.z <= 0f) continue;
-                    float w = Mathf.Min(420f, UiScale.W * 0.3f), h = sB.fontSize * 4.6f;
-                    var r = new Rect(sp.x / UiScale.F - w / 2f, UiScale.H - sp.y / UiScale.F - h - 8f, w, h);
-                    if (r.yMax < 0 || r.y > UiScale.H || r.xMax < 0 || r.x > UiScale.W) continue;
+                    float w = Mathf.Min(360f, BW * 0.28f), h = sB.fontSize * 4.6f;
+                    var r = new Rect(sp.x / k - w / 2f, BH - sp.y / k - h - 8f, w, h);
+                    if (r.yMax < 0 || r.y > BH || r.xMax < 0 || r.x > BW) continue;
                     float age = Time.unscaledTime - b.T; float a = age > 7f ? Mathf.Clamp01(1f - (age - 7f) / 2f) : 1f;
                     var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, a);
                     GUI.Box(r, ""); GUI.Box(r, "");
@@ -117,6 +123,7 @@ namespace DipGgFixes
                 }
             }
             catch (Exception e) { if (bErr++ < 3) MelonLogger.Warning("[DIP GG Fixes][Dispatch] bubbles: " + e.Message); }
+            finally { GUI.matrix = Matrix4x4.Scale(new Vector3(UiScale.F, UiScale.F, 1f)); }
         }
 
         // "BB König Albert (Hildebrand (Mar. 1918)) [germany]" -> "König Albert"
