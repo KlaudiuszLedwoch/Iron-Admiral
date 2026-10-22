@@ -143,7 +143,7 @@ namespace DipGgFixes
         // ---- torpedo attack cycle; returns true when the cycle took over the division
         internal static bool ReloadCycle(Ship leader, Division div, DivState st, Il2CppSystem.Collections.Generic.List<Ship> enemies)
         {
-            if (!DipGgFixesMod.TorpedoReloadCycle.Value) return false;
+            if (!DipGgFixesMod.TorpedoReloadCycle.Value || st.noReloads) return false;
             float now = UnityEngine.Time.time;
             if (st.reloading)
             {
@@ -157,7 +157,14 @@ namespace DipGgFixes
                     Log($"{st.name} ({leader.shipType.name}): torpedo tubes reloaded ({(lt < 0f ? "state unknown" : (lt * 100f).ToString("0") + "%")}) after {now - st.reloadStart:0} s - back to the attack");
                     return false;
                 }
-                if (near != null && nd < safe) { AwayFrom(div, leader, enemies, 4000f); TrySmoke(div, leader, st); }
+                // 1.11.89 (test 22.10): the tubes never showed as reloaded when the ship had no reloads left - give up after 1.5 x the limit
+                if (!ready && now - st.reloadStart > DipGgFixesMod.ReloadMaxSeconds.Value * 1.5f)
+                {
+                    st.reloading = false; st.returnAttack = false; st.noReloads = true;
+                    Log($"{st.name} ({leader.shipType.name}): tubes not reloaded after {now - st.reloadStart:0} s ({(lt < 0f ? "state unknown" : (lt * 100f).ToString("0") + "% loaded")}) - no reloads on board, the flotilla rejoins the fight");
+                    return false;
+                }                if (near != null && nd < safe) { AwayFrom(div, leader, enemies, 4000f); TrySmoke(div, leader, st); st.holding = false; }
+                else if (!st.holding) { st.holding = true; try { div.MoveTo(leader.transform.position + leader.transform.forward * 300f); } catch { } } // 1.11.89: at a safe distance the flotilla waits (test: it ran 50 km away)
                 Why(st, "reloading torpedoes");
                 return true;
             }

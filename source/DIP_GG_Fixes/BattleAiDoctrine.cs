@@ -185,12 +185,12 @@ namespace DipGgFixes
     internal static partial class FireDistribution
     {
         // number of other own ships whose main guns are on this target (from the per-ship target locks)
-        internal static int Shooters(Ship self, Ship target)
+        internal static int Shooters(Ship self, Ship target, bool lowerIdsOnly = false)
         {
             int n = 0; float now = UnityEngine.Time.time; var pp = self.player; if (pp == null) return 0;
             foreach (var kv in ShipTick.States)
             {
-                if (kv.Key == self.Pointer) continue; var st = kv.Value;
+                if (kv.Key == self.Pointer) continue; if (lowerIdsOnly && kv.Key.ToInt64() > self.Pointer.ToInt64()) continue; var st = kv.Value;
                 if (st.playerPtr == pp.Pointer && st.mainTarget == target.Pointer && now - st.mainAt < 6f) n++;
             }
             return n;

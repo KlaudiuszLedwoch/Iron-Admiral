@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.88", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.89", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -242,6 +242,7 @@ namespace DipGgFixes
             try { Portless.Tick(); } catch { }
             try { Dispatch.Tick(); } catch { }
             try { HistDesigner.Tick(); } catch { }
+            try { AutoTest.Tick(); } catch { }
             try { Trade.Tick(); } catch { }
             try { Intel.Tick(); } catch { }
         }
@@ -381,7 +382,7 @@ namespace DipGgFixes
             TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
                 "AI torpedo craft press the attack until every tube is empty; ships with reload torpedoes on board then turn away (smoke when available), open the range, reload and return, ships without reloads turn on the enemy light forces");
             ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
-            ReloadMaxSeconds = cat.CreateEntry("ReloadMaxSeconds", 240f, null, "Attack cycle: a reloaded flotilla returns after this many seconds even when it could not reach a safe distance");
+            ReloadMaxSeconds = cat.CreateEntry("ReloadMaxSeconds", 1200f, null, "Attack cycle: a reloaded flotilla returns after this many game seconds even when it could not reach a safe distance; with no reload after 1.5 x this the ship counts as having no reloads (test 22.10: reloading took about 950 s)");
             CapitalSupportScreen = cat.CreateEntry("CapitalSupportScreen", true, null,
                 "Battle line first: AI bb/bc/ca move up to effective gun range instead of waiting at extreme range (unless the enemy is clearly stronger), AI flotillas hold their torpedoes until the battle lines are engaged, then the line supports them by engaging the enemies nearest to the attacking flotillas");
             SupportRangeFraction = cat.CreateEntry("SupportRangeFraction", 0.6f, null, "Screen support: capital ships close to this share of their gun range");
@@ -496,6 +497,7 @@ namespace DipGgFixes
             Portless.CreatePrefs(cat);
             Dispatch.CreatePrefs(cat);
             HistDesigner.CreatePrefs(cat);
+            AutoTest.CreatePrefs(cat);
             HistPriority.CreatePrefs(cat);
             Trade.CreatePrefs(cat);
             Intel.CreatePrefs(cat);
@@ -1143,7 +1145,7 @@ namespace DipGgFixes
 
         internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
             // 1.11.86
-            public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; }
+            public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -1288,7 +1290,7 @@ namespace DipGgFixes
                 // branch never fired.
                 float penBelt = Ship.GetPenetration(g, shooter, dist, true, noShell, noVec);
                 pen = penBelt;
-                try { belt = target.GetEffectiveArmor(Ship.A.Belt, null, g, shooter, false); } catch { belt = 0f; }
+                Obliquity.Suspend = true; try { belt = target.GetEffectiveArmor(Ship.A.Belt, null, g, shooter, false); } catch { belt = 0f; } finally { Obliquity.Suspend = false; }
                 if (penLogged < 8)
                 {
                     penLogged++;
@@ -1406,8 +1408,11 @@ namespace DipGgFixes
             bool stronger = foe > own * DipGgFixesMod.MassAttackStrengthRatio.Value;
             bool enough = targets > 0 && attackers >= DipGgFixesMod.MassAttackPerTarget.Value * targets;
             bool was; fleetOn.TryGetValue(player.Pointer, out was);
-            on = stronger && enough;
-            bool hopeless = stronger && !enough;
+            // 1.11.89 (War Instructions 1944, 12298: an inferior battle line first weakens the enemy with torpedoes - delay action):
+            // with at least one torpedo craft per target the attack goes in even when it is short of the full massed strength
+            bool delay = stronger && !enough && targets > 0 && attackers >= targets;
+            on = stronger && (enough || delay);
+            bool hopeless = stronger && !enough && !delay;
             bool wasH; fleetHopeless.TryGetValue(player.Pointer, out wasH);
             if (on != was || hopeless != wasH) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t, {attackers} torpedo craft vs {targets} targets (needed {DipGgFixesMod.MassAttackPerTarget.Value} per target){(hopeless ? " - too few to get through, ships faster than the enemy withdraw" : "")}");
             fleetOn[player.Pointer] = on; fleetHopeless[player.Pointer] = hopeless; fleetNext[player.Pointer] = now + 5f;
@@ -1731,6 +1736,8 @@ namespace DipGgFixes
             bool mass = false;
             if (!playerSide) { var bt = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (bt != null) mass = MassAttack(leader.player, bt, enemies); }
             if (!ammo || dmg > abort) { st.reloading = false; st.returnAttack = false; }
+            // 1.11.89: tubes empty and no reload came - fight the light forces with guns instead of charging again (test: endless empty charges)
+            if (!playerSide && ammo && st.noReloads && LoadedTubes(div, leader) == 0f) { st.charging = false; if (IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; Why(st, "torpedoes expended - no reloads"); return; }
             if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; if (!playerSide && IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; Why(st, "no torpedo ammo"); return; }
             if (dmg > abort) { Why(st, "too damaged for a charge"); return; }
 
@@ -2088,18 +2095,21 @@ namespace DipGgFixes
             for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (Usable(s, e) && BattleAi.Dist(s, e) <= range) inRange.Add(e); }
             if (inRange.Count == 0) return null;
             float maxCal = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxCal) maxCal = c; }
-            if (heavy)
-            {
-                if (maxCal > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxCal - 25f);
-            }
             // 1.11.88: fire distribution (War Instructions 1944): at most N own ships on one target, 1 when outnumbered; the
             // current target is kept so the aiming progress is not lost
             bool dist = distribute && DipGgFixesMod.FireDistributionOn.Value;
             if (dist && inRange.Count > 1)
             {
                 int lim = FireDistribution.Limit(s);
-                var free = inRange.FindAll(e => (cur != null && e.Pointer == cur.Pointer) || FireDistribution.Shooters(s, e) < lim);
+                // the current target is kept unless more than the limit are on it; then the ships with the lowest ids keep it (no oscillation)
+                var free = inRange.FindAll(e => (cur != null && e.Pointer == cur.Pointer) ? FireDistribution.Shooters(s, e, true) < lim : FireDistribution.Shooters(s, e) < lim);
                 if (free.Count > 0) inRange = free;
+            }
+            if (heavy)
+            {
+                // 1.11.89: heaviest calibre among the targets still free under the fire distribution limit (test: 4 BB on one CA)
+                float maxFree = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxFree) maxFree = c; }
+                if (maxFree > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxFree - 25f);
             }
             Ship best = null; float bestScore = float.MinValue;
             foreach (var e in inRange)

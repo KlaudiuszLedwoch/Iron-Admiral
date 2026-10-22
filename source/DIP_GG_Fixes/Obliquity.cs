@@ -35,6 +35,8 @@ namespace DipGgFixes
         }
 
         internal static float capRes = float.NaN;
+        // 1.11.89: the AI's own penetration estimates must not pick up the angle of a shell impact handled in the same frame
+        [ThreadStatic] internal static bool Suspend;
         internal static void Capture(Vector3 a, Vector3 b) { capA = a; capB = b; capFrame = Time.frameCount; capRes = float.NaN; }
 
         static int Year()
@@ -45,7 +47,7 @@ namespace DipGgFixes
 
         internal static float Factor(Ship target, Ship.A zone)
         {
-            if (On == null || !On.Value || target == null || capFrame != Time.frameCount) return 1f;
+            if (Suspend || On == null || !On.Value || target == null || capFrame != Time.frameCount) return 1f;
             string zn = zone.ToString();
             if (zoneNames.Add(zn)) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity: armour zone seen in hits: {zn}");
             if (zn.IndexOf("Belt", StringComparison.OrdinalIgnoreCase) < 0) return 1f;

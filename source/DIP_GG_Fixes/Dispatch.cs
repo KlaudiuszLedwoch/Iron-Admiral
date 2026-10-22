@@ -69,6 +69,7 @@ namespace DipGgFixes
         {
             if (!Active) return; if (key != null && !once.Add(key)) return;
             string text = Pick(variants); Write(text);
+            // 1.11.89: bubbles timed in real seconds (9 s), not game time - at x4 speed they vanished after 2 s
             // 1.11.85: the subject ship is the second part of the key ("charge|<ship>|..."); its dispatch is also shown above it
             if (key != null) { var k = key.Split('|'); if (k.Length >= 2 && k[1].Length > 0) AddBubble(k[1], text); }
         }
@@ -81,7 +82,7 @@ namespace DipGgFixes
         {
             if (Bubbles == null || !Bubbles.Value) return;
             if (text.Length > 170) text = text.Substring(0, 167) + "...";
-            bubbles.RemoveAll(b => b.Ship == ship); bubbles.Add(new Bubble { Ship = ship, Text = text, T = Time.time });
+            bubbles.RemoveAll(b => b.Ship == ship); bubbles.Add(new Bubble { Ship = ship, Text = text, T = Time.unscaledTime });
             if (bubbles.Count > 6) bubbles.RemoveAt(0);
         }
         internal static void OnGUI()
@@ -89,7 +90,7 @@ namespace DipGgFixes
             if (Bubbles == null || !Bubbles.Value || !inBattle || bubbles.Count == 0) return;
             try
             {
-                bubbles.RemoveAll(b => Time.time - b.T > 9f);
+                bubbles.RemoveAll(b => Time.unscaledTime - b.T > 9f);
                 if (bubbles.Count == 0) return;
                 var cam = Camera.main; if (cam == null) return;
                 var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb == null) return;
@@ -106,7 +107,7 @@ namespace DipGgFixes
                     float w = Mathf.Min(420f, Screen.width * 0.3f), h = sB.fontSize * 4.6f;
                     var r = new Rect(sp.x - w / 2f, Screen.height - sp.y - h - 8f, w, h);
                     if (r.yMax < 0 || r.y > Screen.height || r.xMax < 0 || r.x > Screen.width) continue;
-                    float age = Time.time - b.T; float a = age > 7f ? Mathf.Clamp01(1f - (age - 7f) / 2f) : 1f;
+                    float age = Time.unscaledTime - b.T; float a = age > 7f ? Mathf.Clamp01(1f - (age - 7f) / 2f) : 1f;
                     var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, a);
                     GUI.Box(r, ""); GUI.Box(r, "");
                     GUI.Label(new Rect(r.x + 6f, r.y + 4f, r.width - 12f, r.height - 8f), b.Text, sB);
@@ -248,7 +249,107 @@ namespace DipGgFixes
                     Say("zig|" + s, $"{s} begins to zigzag, throwing the enemy gunlayers off their aim.", $"{s}, helm: \"Port fifteen... starboard fifteen...\" She weaves through the shell splashes.");
                     return;
                 }
-                if (m.Contains(": charge aborted"))
+                // 1.11.89: dispatches for the doctrine rules of 1.11.86-1.11.88 (also shown above the ship)
+                if (m.Contains("): all torpedoes away"))
+                {
+                    var s = Ship(Before(m, ": all torpedoes away")); var t = Ship(Before(After(m, " m from ") ?? "", " - turns"));
+                    Say("reload|" + s,
+                        $"{s}, torpedo officer: \"All tubes fired at {t}!\" - Captain: \"Hard a-starboard, make smoke. We reload and come back.\"",
+                        $"{s} heels away from {t} behind a curtain of smoke; on deck the torpedo crews swing the reloads into the tubes.");
+                    return;
+                }
+                if (m.Contains("): returns to the attack on "))
+                {
+                    var s = Ship(Before(m, ": returns to the attack")); var t = Ship(Before(After(m, "attack on ") ?? "", " at "));
+                    Say("return|" + s, $"{s}: \"Tubes reloaded and ready. Once more - steer for {t}!\"", $"{s} comes about and races back towards {t}, tubes trained out.");
+                    return;
+                }
+                if (m.Contains("): torpedoes expended, no reloads"))
+                {
+                    var s = Ship(Before(m, ": torpedoes expended")); var t = Ship(Before(After(m, "light forces, ") ?? "", " ("));
+                    Say("guns|" + s, $"{s}: \"No more fish on board. Guns it is - go for {t}!\"", $"{s}, the tubes empty, turns her guns on {t}.");
+                    return;
+                }
+                if (m.Contains("): tubes not reloaded after"))
+                {
+                    var s = Ship(Before(m, ": tubes not reloaded"));
+                    Say("noreload|" + s, $"{s}, torpedo officer: \"No reloads left in the racks, sir.\" - \"Then we rejoin the line.\"");
+                    return;
+                }
+                if (m.Contains("battle line moves up to effective range") || m.Contains("own flotillas attacking - supports them"))
+                {
+                    var s = Ship(Before(m, ": ")); var t = Ship(Before(After(m, " and engages ") ?? "", " ("));
+                    Say("lineup|" + s,
+                        m.Contains("supports them") ? $"{s}: \"Our destroyers are going in - cover them! Close the range and engage {t}!\"" : $"{s}, captain: \"Close to fighting range. Main battery - target {t}!\"",
+                        $"{s} increases speed and turns towards {t}, her turrets swinging round.");
+                    return;
+                }
+                if (m.Contains(": the battle lines are engaged"))
+                {
+                    var nat = Before(m, ": the battle lines"); var N = Nation(nat);
+                    Say("engaged|" + nat, $"{N} flagship: \"The lines are engaged. Flotillas - attack!\"", $"Signal from the {N} flag: the battleships are in action - the destroyers are released.");
+                    return;
+                }
+                if (m.Contains("): holding torpedoes until"))
+                {
+                    var s = Ship(Before(m, ": holding torpedoes"));
+                    Say("hold|" + s, $"{s}: \"Not yet. We wait until the battleships are at it.\"");
+                    return;
+                }
+                if (m.Contains(" - moves to break up the attack"))
+                {
+                    var s = Ship(Before(m, ": enemy ")); var t = Ship(Before(After(m, ": enemy ") ?? "", " ("));
+                    Say("defend|" + s, $"{s}: \"Enemy destroyers making for our battleships - intercept {t}! All guns, rapid fire!\"", $"{s} cuts across the bows of the line to meet {t}.");
+                    return;
+                }
+                if (m.Contains("threatens the enemy line from the opposite flank"))
+                {
+                    var s = Ship(Before(m, ": own flotillas"));
+                    Say("pin|" + s, $"{s}: \"Our destroyers attack from the other side. Show ourselves on this flank - keep their line busy!\"");
+                    return;
+                }
+                if (m.Contains("): supports the flotilla attack"))
+                {
+                    var s = Ship(Before(m, ": supports"));
+                    Say("support|" + s, $"{s}: \"Follow the destroyers in - keep the enemy light ships off them!\"");
+                    return;
+                }
+                if (m.Contains("): flying squadron"))
+                {
+                    var s = Ship(Before(m, ": flying squadron")); var t = Ship(Before(After(m, " at ") ?? "", " ("));
+                    Say("flying|" + s, $"{s}: \"We are faster than their line. Round the flank - at {t}!\"");
+                    return;
+                }
+                if (m.Contains("opens the range to avoid its concentrated fire"))
+                {
+                    var s = Ship(Before(m, ": "));
+                    Say("open|" + s, $"{s}: \"We're inside their battleships' range - open the distance before they concentrate on us!\"");
+                    return;
+                }
+                if (m.Contains("withdraws while the lighter ships cover it"))
+                {
+                    var s = Ship(Before(m, ": the attack has failed"));
+                    Say("coverwd|" + s, $"{s}: \"The attack has failed. We withdraw - the light ships will cover us.\"", $"{s} turns away; behind her the destroyers lay smoke.");
+                    return;
+                }
+                if (m.Contains("): covers the withdrawal of "))
+                {
+                    var s = Ship(Before(m, ": covers")); var mn = Ship(Before(After(m, "withdrawal of ") ?? "", " - "));
+                    Say("cover|" + s, $"{s}: \"{mn} must get away. Between her and the enemy - make smoke, attack!\"", $"{s} turns back towards the pursuers to cover {mn}.");
+                    return;
+                }
+                if (m.Contains("): night attack spotted"))
+                {
+                    var s = Ship(Before(m, ": night attack spotted"));
+                    Say("nightab|" + s, $"{s}: \"Searchlights on us - they've seen us! Too strong - turn away, full speed!\"");
+                    return;
+                }
+                if (m.Contains(" lay a smoke screen"))
+                {
+                    var s = Ship(Before(m, ": "));
+                    Say("smoke|" + s, $"{s}: \"Make smoke!\" Thick black clouds roll from her funnels.");
+                    return;
+                }                if (m.Contains(": charge aborted"))
                 {
                     var s = Ship(Before(m, ": charge aborted"));
                     Say("abort|" + s,
