@@ -1,0 +1,298 @@
+// 1.11.86: battle AI lessons from a vanilla 1.7 test battle (1916: 4 BB against BB + CA + 3 CL + 6 DD). The AI battleship
+// held back at extreme range until its screen had been destroyed, and the destroyers fired once and then hovered just
+// outside their torpedo range. Three rules:
+//  - ScreenSupport: AI bb/bc/ca close to effective gun range while their own light divisions are attacking and engage
+//    the enemy ships nearest to the attacking screen (closer range = higher hit chance = heavier fire).
+//  - Torpedo attack cycle: light divisions press the attack until no tube is loaded, then turn away (smoke when the
+//    ship has it), open the range, reload and come back.
+//  - Covering retreat: when the attack has failed and the enemy is stronger, the most valuable ships (cost and build
+//    time) withdraw while the cheaper ones attack the pursuers or lay smoke between them and the main ships.
+using System;
+using System.Collections.Generic;
+using MelonLoader;
+using Il2Cpp;
+
+namespace DipGgFixes
+{
+    internal static partial class BattleAi
+    {
+        static int tubeErr, valueErr, smokeErr;
+
+        // fraction of the division's torpedo tubes (with ammunition left) that are loaded; -1 when the state cannot be read
+        internal static float LoadedTubes(Division div, Ship leader)
+        {
+            int n = 0, loaded = 0;
+            var ships = div.ships; int cnt = ships != null ? ships.Count : 0;
+            for (int k = -1; k < cnt; k++)
+            {
+                var s = k < 0 ? leader : ships[k];
+                if (s == null || s.isSinking || s.isDead) continue;
+                if (k >= 0 && s.Pointer == leader.Pointer) continue;
+                var parts = s.torpedoesAll; if (parts == null) continue;
+                for (int i = 0; i < parts.Count; i++)
+                {
+                    var p = parts[i]; if (p == null) continue;
+                    try { if (s.GetTotalAmmo(p.data) <= 0) continue; } catch { }
+                    n++;
+                    try { var r = p.reloading; if (r == null || r.isDone) loaded++; }
+                    catch (Exception e) { if (tubeErr++ < 3) Log("torpedo tube state unknown: " + e.Message); return -1f; }
+                }
+            }
+            return n == 0 ? 0f : (float)loaded / n;
+        }
+
+        static Ship NearestVisibleEnemy(Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, out float bestD)
+        {
+            Ship best = null; bestD = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Alive(e) || !e.IsVisibleFor(leader)) continue;
+                float d = Dist(leader, e); if (d < bestD) { bestD = d; best = e; }
+            }
+            return best;
+        }
+
+        // distance at which a reloading flotilla stops opening the range
+        static float SafeDistance(Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            float mx = 0f;
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (!Alive(e) || !e.IsVisibleFor(leader)) continue; mx = UnityEngine.Mathf.Max(mx, GunRange(e)); }
+            float torp = TorpedoRange(leader);
+            return UnityEngine.Mathf.Clamp(mx * 0.7f, torp * 1.3f, 15000f);
+        }
+
+        static void AwayFrom(Division div, Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, float dist)
+        {
+            var lp = leader.transform.position; var c = UnityEngine.Vector3.zero; int n = 0;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Alive(e) || !e.IsVisibleFor(leader)) continue;
+                if (Dist(leader, e) > 25000f) continue;
+                c += e.transform.position; n++;
+            }
+            var away = n > 0 ? lp - c / n : -leader.transform.forward; away.y = 0f;
+            if (away.sqrMagnitude < 1f) away = leader.transform.forward;
+            away.Normalize();
+            try { div.MoveTo(lp + away * dist); } catch { }
+        }
+
+        static void TrySmoke(Division div, Ship leader, DivState st)
+        {
+            float now = UnityEngine.Time.time; if (now < st.nextSmoke) return;
+            st.nextSmoke = now + 30f;
+            var ships = div.ships; int cnt = ships != null ? ships.Count : 0; int laid = 0;
+            for (int k = -1; k < cnt; k++)
+            {
+                var s = k < 0 ? leader : ships[k];
+                if (s == null || s.isSinking || s.isDead || (k >= 0 && s.Pointer == leader.Pointer)) continue;
+                try { if (s.CanLaunchSmokeScreen()) { s.LaunchSmokeScreen(); laid++; } }
+                catch (Exception e) { if (smokeErr++ < 3) Log("smoke screen failed: " + e.Message); return; }
+            }
+            if (laid > 0) Log($"{st.name}: {laid} ship(s) lay a smoke screen");
+        }
+
+        // ---- ship value: cost and build time relative to the most valuable ship of the same side (0..1)
+        static readonly Dictionary<IntPtr, float> valueCache = new Dictionary<IntPtr, float>();
+        static readonly Dictionary<IntPtr, float> sideMaxValue = new Dictionary<IntPtr, float>();
+        static IntPtr valueBattle;
+        static float RawValue(Ship s, out float cost, out float months)
+        {
+            cost = 0f; months = 0f;
+            try { cost = s.Cost(); } catch (Exception e) { if (valueErr++ < 3) Log("ship cost unknown: " + e.Message); }
+            try { months = s.BuildingTime(false); } catch (Exception e) { if (valueErr++ < 3) Log("build time unknown: " + e.Message); }
+            if (cost <= 0f) cost = Ton(s);
+            return cost;
+        }
+        internal static float RelValue(Ship s)
+        {
+            if (s == null || s.player == null) return 0.5f;
+            var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
+            IntPtr bp = battle != null ? battle.Pointer : IntPtr.Zero;
+            if (bp != valueBattle) { valueBattle = bp; valueCache.Clear(); sideMaxValue.Clear(); }
+            float v;
+            if (!sideMaxValue.TryGetValue(s.player.Pointer, out v))
+            {
+                // side maximum of cost and build time, combined 50/50
+                float mc = 0f, mt = 0f;
+                var own = battle != null ? battle.ShipsOf(s.player, true) : null;
+                var cm = new Dictionary<IntPtr, float>(); var tm = new Dictionary<IntPtr, float>();
+                for (int i = 0; own != null && i < own.Count; i++)
+                {
+                    var x = own[i]; if (x == null) continue;
+                    float c, t; RawValue(x, out c, out t); cm[x.Pointer] = c; tm[x.Pointer] = t;
+                    mc = UnityEngine.Mathf.Max(mc, c); mt = UnityEngine.Mathf.Max(mt, t);
+                }
+                foreach (var kv in cm)
+                {
+                    float r = mc > 0f ? kv.Value / mc : 0.5f;
+                    float t = tm[kv.Key]; float rt = mt > 0f ? t / mt : r;
+                    valueCache[kv.Key] = 0.5f * r + 0.5f * rt;
+                }
+                sideMaxValue[s.player.Pointer] = 1f;
+            }
+            return valueCache.TryGetValue(s.Pointer, out v) ? v : 0.5f;
+        }
+        // damage at which a charge is aborted: cheap ships fight longer, the most valuable ones break off earlier
+        internal static float AbortFor(Ship leader, Doctrine doc)
+        {
+            float a = AbortDamage(doc);
+            if (!DipGgFixesMod.ValueBasedAbort.Value) return a;
+            return a * UnityEngine.Mathf.Lerp(1.2f, 0.8f, RelValue(leader));
+        }
+
+        // ---- torpedo attack cycle; returns true when the cycle took over the division
+        internal static bool ReloadCycle(Ship leader, Division div, DivState st, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            if (!DipGgFixesMod.TorpedoReloadCycle.Value) return false;
+            float now = UnityEngine.Time.time;
+            if (st.reloading)
+            {
+                float lt = LoadedTubes(div, leader);
+                float nd; var near = NearestVisibleEnemy(leader, enemies, out nd);
+                float safe = SafeDistance(leader, enemies);
+                bool ready = lt < 0f || lt >= DipGgFixesMod.ReloadReturnFraction.Value;
+                if (ready && (near == null || nd >= safe * 0.8f || now - st.reloadStart > DipGgFixesMod.ReloadMaxSeconds.Value))
+                {
+                    st.reloading = false; st.returnAttack = true;
+                    Log($"{st.name} ({leader.shipType.name}): torpedo tubes reloaded ({(lt < 0f ? "state unknown" : (lt * 100f).ToString("0") + "%")}) after {now - st.reloadStart:0} s - back to the attack");
+                    return false;
+                }
+                if (near != null && nd < safe) { AwayFrom(div, leader, enemies, 4000f); TrySmoke(div, leader, st); }
+                Why(st, "reloading torpedoes");
+                return true;
+            }
+            if (!st.charging) { st.firstInRange = 0f; return false; }
+            float bestD; var best = NearestVisibleCapital(leader, enemies, out bestD);
+            float torp = TorpedoRange(leader);
+            if (best == null || bestD > torp * 1.1f) { st.firstInRange = 0f; return false; }
+            if (st.firstInRange <= 0f) st.firstInRange = now;
+            float l2 = LoadedTubes(div, leader);
+            if (l2 < 0f || l2 > 0.001f) return false;   // tubes left: keep pressing
+            if (now - st.firstInRange < 3f) return false;
+            st.charging = false; st.reloading = true; st.reloadStart = now; st.firstInRange = 0f;
+            AwayFrom(div, leader, enemies, 4000f); TrySmoke(div, leader, st);
+            Log($"{st.name} ({leader.shipType.name}): all torpedoes away at {bestD:0} m from {best.name} - turns away to reload");
+            Why(st, "reloading torpedoes");
+            return true;
+        }
+
+        // ---- capital ships support their attacking screen; returns true when it took over the division
+        internal static bool ScreenSupport(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            if (!DipGgFixesMod.CapitalSupportScreen.Value) return false;
+            var p = leader.player; if (p == null) return false;
+            float now = UnityEngine.Time.time;
+            var c = UnityEngine.Vector3.zero; int n = 0;
+            foreach (var kv in States)
+            {
+                var s2 = kv.Value; if (s2 == st || s2.playerPtr != p.Pointer) continue;
+                if ((s2.charging || s2.reloading) && now - s2.activeAt < 15f) { c += s2.pos; n++; }
+            }
+            if (n == 0 || DivDamage(div) > AbortFor(leader, doc))
+            {
+                if (st.supporting) { st.supporting = false; Log($"{st.name}: screen no longer attacking - support ended, left to the game"); }
+                return false;
+            }
+            c /= n;
+            Ship tgt = null; float td = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Alive(e) || !Combat(e) || !e.IsVisibleFor(leader)) continue;
+                var dv = e.transform.position - c; dv.y = 0f; float d = dv.magnitude;
+                if (d < td) { td = d; tgt = e; }
+            }
+            if (tgt == null) return false;
+            float ownR = GunRange(leader); if (ownR <= 0f) return false;
+            float want = ownR * DipGgFixesMod.SupportRangeFraction.Value;
+            float pen, belt;
+            if (CannotPenetrate(leader, tgt, want, out pen, out belt)) return false; // the close-in rules decide for armoured targets
+            float dist = Dist(leader, tgt);
+            if (!st.supporting || st.supportTarget != tgt.Pointer)
+                Log($"{st.name} ({leader.shipType.name}): own screen is attacking - closes to {want:0} m to support it and engages {tgt.name} ({tgt.shipType.name}, {dist:0} m)");
+            st.supporting = true; st.supportTarget = tgt.Pointer;
+            if (dist > want)
+            {
+                var tt = tgt.transform;
+                if (tt != null) { if (dist > ownR) MoveEvasive(div, leader, st, tt.position, "moving up to support the screen"); else div.MoveTo(tt.position); }
+            }
+            Why(st, "supporting the screen");
+            return true;
+        }
+
+        // ---- covering retreat
+        class SideState { public float next; public bool attacked; public float screenTon0 = -1f; public bool failed; }
+        static readonly Dictionary<IntPtr, SideState> sides = new Dictionary<IntPtr, SideState>();
+        static IntPtr sidesBattle;
+        static bool AttackFailed(Player p, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies, Doctrine doc)
+        {
+            if (battle.Pointer != sidesBattle) { sidesBattle = battle.Pointer; sides.Clear(); }
+            SideState ss; if (!sides.TryGetValue(p.Pointer, out ss)) { ss = new SideState(); sides[p.Pointer] = ss; }
+            float now = UnityEngine.Time.time;
+            foreach (var kv in States) { var s2 = kv.Value; if (s2.playerPtr == p.Pointer && (s2.charging || s2.reloading)) ss.attacked = true; }
+            if (now < ss.next) return ss.failed;
+            ss.next = now + 5f;
+            Il2CppSystem.Collections.Generic.List<Ship> mine = null; try { mine = battle.ShipsOf(p, true); } catch { }
+            if (mine == null) return false;
+            float screen = 0f; int able = 0;
+            for (int i = 0; i < mine.Count; i++)
+            {
+                var x = mine[i]; if (!Alive(x) || !IsLight(x) || !x.haveTorpedoes) continue;
+                screen += Ton(x);
+                float dmg = 0f; try { dmg = x.DamageEstimation(); } catch { }
+                if (HasTorpedoAmmo(x) && dmg <= AbortFor(x, doc)) able++;
+            }
+            if (ss.screenTon0 < 0f) ss.screenTon0 = screen;
+            float own = Strength(mine);
+            bool fog = Fog.AiActive && !p.isMain;
+            float foe = fog ? PerceivedStrength(p, enemies) : Strength(enemies);
+            bool lost = able == 0 || (ss.screenTon0 > 0f && screen < ss.screenTon0 * 0.5f);
+            bool failed = ss.attacked && lost && foe > own * DipGgFixesMod.CoverRetreatStrengthRatio.Value;
+            if (failed != ss.failed)
+                Log($"{p.data.name}: torpedo attack {(failed ? "has failed" : "no longer failed")} - {able} torpedo craft still able to attack, screen {screen:0} t of {ss.screenTon0:0} t, enemy {foe:0} t vs own {own:0} t{(failed ? " - covering retreat" : "")}");
+            ss.failed = failed;
+            return failed;
+        }
+
+        static Ship MostValuableOwn(Player p, CampaignBattle battle)
+        {
+            Ship best = null; float bv = -1f;
+            var own = battle.ShipsOf(p, true);
+            for (int i = 0; own != null && i < own.Count; i++) { var x = own[i]; if (!Alive(x)) continue; float v = RelValue(x); if (v > bv) { bv = v; best = x; } }
+            return best;
+        }
+
+        internal static bool CoverRetreat(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, CampaignBattle battle, Player player)
+        {
+            if (!DipGgFixesMod.CoverRetreat.Value) return false;
+            if (!AttackFailed(player, battle, enemies, doc)) { st.covering = false; return false; }
+            float rel = RelValue(leader);
+            if (rel >= DipGgFixesMod.CoverValueRatio.Value)
+            {
+                if (!div.isRetreating && !div.retreat) div.Retreat(true);
+                if (!st.covering) Log($"{st.name} ({leader.shipType.name}): the attack has failed and the enemy is stronger - withdraws while the lighter ships cover it");
+                st.covering = true; st.charging = false; st.closing = false; st.fighting = false; st.supporting = false;
+                Why(st, "withdrawing under cover");
+                return true;
+            }
+            var main = MostValuableOwn(player, battle);
+            if (main == null || main.Pointer == leader.Pointer) return false;
+            Ship pursuer = null; float pd = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Alive(e) || !Combat(e) || !e.IsVisibleFor(leader)) continue;
+                float d = Dist(main, e); if (d < pd) { pd = d; pursuer = e; }
+            }
+            if (pursuer == null) return false;
+            if (div.isRetreating || div.retreat) div.Retreat(false);
+            st.fighting = false; st.supporting = false;
+            TrySmoke(div, leader, st);
+            float lt = leader.haveTorpedoes ? LoadedTubes(div, leader) : 0f;
+            bool torp = leader.haveTorpedoes && HasTorpedoAmmo(leader) && lt != 0f;
+            if (!st.covering) Log($"{st.name} ({leader.shipType.name}): covers the withdrawal of {main.name} - {(torp ? "torpedo attack on" : "moves between the main ships and")} {pursuer.name} ({pursuer.shipType.name})");
+            st.covering = true;
+            if (torp) { st.charging = true; st.target = pursuer.Pointer; div.MoveTo(pursuer.transform.position); Why(st, "covering the retreat - attacking the pursuer"); }
+            else { st.charging = false; var mid = UnityEngine.Vector3.Lerp(main.transform.position, pursuer.transform.position, 0.4f); div.MoveTo(mid); Why(st, "covering the retreat - screening"); }
+            return true;
+        }
+    }
+}

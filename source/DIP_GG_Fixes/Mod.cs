@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.85", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.86", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -181,6 +181,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> TorpedoTurnAwaySeconds;
         internal static MelonPreferences_Entry<bool> FleetTorpedoAttack;
         internal static MelonPreferences_Entry<bool> Ramming;
+        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort;
+        internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
         internal static MelonPreferences_Entry<bool> CapitalEscapeWhenHopeless;
         internal static MelonPreferences_Entry<bool> EscapeMissionLogic;
@@ -375,6 +377,18 @@ namespace DipGgFixes
             TorpedoTurnAwaySeconds = cat.CreateEntry("TorpedoTurnAwaySeconds", 45f, null, "Turn-away: how long the division keeps the evasive course (s)");
             FleetTorpedoAttack = cat.CreateEntry("FleetTorpedoAttack", true, null,
                 "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
+            TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
+                "AI torpedo craft press the attack until every tube is empty, then turn away (smoke when available), open the range, reload and return");
+            ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
+            ReloadMaxSeconds = cat.CreateEntry("ReloadMaxSeconds", 240f, null, "Attack cycle: a reloaded flotilla returns after this many seconds even when it could not reach a safe distance");
+            CapitalSupportScreen = cat.CreateEntry("CapitalSupportScreen", true, null,
+                "AI bb/bc/ca move up to effective gun range and engage the enemies nearest to their own screen while it is attacking, instead of waiting at extreme range");
+            SupportRangeFraction = cat.CreateEntry("SupportRangeFraction", 0.6f, null, "Screen support: capital ships close to this share of their gun range");
+            CoverRetreat = cat.CreateEntry("CoverRetreat", true, null,
+                "When the AI torpedo attack has failed and the enemy is stronger, the most valuable ships (cost and build time) withdraw while the cheaper ones attack the pursuers or lay smoke between them");
+            CoverRetreatStrengthRatio = cat.CreateEntry("CoverRetreatStrengthRatio", 1.2f, null, "Covering retreat: enemy combat tonnage must exceed own x this");
+            CoverValueRatio = cat.CreateEntry("CoverValueRatio", 0.6f, null, "Covering retreat: ships worth at least this share of the side's most valuable ship withdraw, cheaper ones cover");
+            ValueBasedAbort = cat.CreateEntry("ValueBasedAbort", true, null, "AI charge abort damage scaled by ship value: cheap ships fight longer (x1.2), the most valuable break off earlier (x0.8)");
             Ramming = cat.CreateEntry("Ramming", true, null,
                 "AI light ships without torpedoes (or out of torpedoes) that cannot escape, or take part in a massed attack, steer into the nearest enemy ship within ramming range");
             RamRange = cat.CreateEntry("RamRange", 2000f, null, "Ramming: an enemy ship closer than this (m) is rammed");
@@ -1079,14 +1093,16 @@ namespace DipGgFixes
     }
 
     // ---------------------------------------------------------------- battle AI
-    internal static class BattleAi
+    internal static partial class BattleAi
     {
         [ThreadStatic] internal static float CurrentDistanceMult;
         internal static float ChargeStart(Doctrine d) { return d != null ? d.chargeStart : DipGgFixesMod.ChargeStartRange.Value; }
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged; }
+        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
+            // 1.11.86
+            public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -1472,6 +1488,7 @@ namespace DipGgFixes
             float now = UnityEngine.Time.time;
             if (now < st.nextThink) return;
             st.nextThink = now + UnityEngine.Mathf.Max(1f, DipGgFixesMod.BattleThinkSeconds.Value);
+            st.playerPtr = player.Pointer; st.activeAt = now; try { st.pos = leader.transform.position; } catch { }
 
             var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
             if (battle == null) { Why(st, "no CurrentBattle"); return; }
@@ -1505,6 +1522,9 @@ namespace DipGgFixes
 
             // --- rule for every AI division: ships that slow the division down leave it and retreat alone
             if (DipGgFixesMod.DetachSlowShips.Value && now >= st.nextDetach && TryDetachSlow(div, leader, st)) { st.nextDetach = now + DipGgFixesMod.DetachCooldownSeconds.Value; return; }
+
+            // 1.11.86: the attack has failed and the enemy is stronger - the most valuable ships withdraw, the cheaper ones cover them
+            if (CoverRetreat(leader, div, st, doc, enemies, battle, player)) return;
 
             // --- rule for every AI division: a retreat that cannot succeed becomes a fight
             bool retreating = div.isRetreating || div.retreat;
@@ -1650,7 +1670,10 @@ namespace DipGgFixes
         {
             float dmg = DivDamage(div);
             bool ammo = HasTorpedoAmmo(leader);
-            if (st.charging && (dmg > AbortDamage(doc) || !ammo))
+            float abort = playerSide ? AbortDamage(doc) : AbortFor(leader, doc);
+            // 1.11.86: AI attack cycle - press until every tube is empty, turn away, reload, come back
+            if (!playerSide && ammo && dmg <= abort && ReloadCycle(leader, div, st, enemies)) return;
+            if (st.charging && (dmg > abort || !ammo))
             {
                 st.charging = false;
                 if (!st.fighting) div.Retreat(true);
@@ -1659,8 +1682,9 @@ namespace DipGgFixes
             }
             bool mass = false;
             if (!playerSide) { var bt = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (bt != null) mass = MassAttack(leader.player, bt, enemies); }
+            if (!ammo || dmg > abort) { st.reloading = false; st.returnAttack = false; }
             if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; Why(st, "no torpedo ammo"); return; }
-            if (dmg > AbortDamage(doc)) { Why(st, "too damaged for a charge"); return; }
+            if (dmg > abort) { Why(st, "too damaged for a charge"); return; }
 
             float bestD;
             var best = NearestVisibleCapital(leader, enemies, out bestD);
@@ -1674,7 +1698,13 @@ namespace DipGgFixes
                 float start = ChargeStartFor(leader, best, doc, torp);
                 // 1.11.40: battle log 2026-10-18 - CL Omaha charged from 14.6 km at 4.3 vs 12.1 speed units (torpedoes 1.6 km):
                 // a division that cannot escape charges only when the target is reachable
-                if (mass)
+                if (st.returnAttack && !playerSide)
+                {
+                    // 1.11.86: back from reloading - the attack resumes at once (it was already under way)
+                    start = float.MaxValue; st.returnAttack = false;
+                    Log($"{st.name} ({leader.shipType.name}): returns to the attack on {best.name} at {bestD:0} m with reloaded tubes");
+                }
+                else if (mass)
                 {
                     if (!st.massLogged) { st.massLogged = true; Log($"{st.name} ({leader.shipType.name}): massed torpedo attack - charges {best.name} from {bestD:0} m (torpedoes {torp:0} m); alone it would not get through, part of the attack will"); }
                     start = float.MaxValue;
@@ -1698,7 +1728,12 @@ namespace DipGgFixes
                 var tt = best.transform;
                 if (tt != null) { if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, tt.position, "charging"); else div.MoveTo(tt.position); }
             }
-            // inside launch range: leave movement to the game, the torpedo logic fires on its own
+            // inside launch range: the game's torpedo logic fires on its own.
+            // 1.11.86: the AI keeps closing while tubes are still loaded (vanilla 1.7 test: flotillas hovered just outside range after one salvo)
+            else if (!playerSide && DipGgFixesMod.TorpedoReloadCycle.Value && bestD > launchAt * 0.6f)
+            {
+                var tt2 = best.transform; if (tt2 != null) div.MoveTo(tt2.position);
+            }
         }
 
         // Capital AI divisions: torpedo charge when faster and armed with torpedoes; otherwise close in
@@ -1758,6 +1793,8 @@ namespace DipGgFixes
                 return;
             }
             if (st.closing) { st.closing = false; st.closeResumeAt = ownR * (DipGgFixesMod.CloseInStopRange.Value + 0.15f); Log($"{st.name}: close-in ended at {bestD:0} m ({(noPen ? "still cannot penetrate" : "penetration ok")}, {(outranged ? "still outranged" : "range ok")}) - left to the game"); }
+            // 1.11.86: while the own screen attacks, the capital ships move up and engage the enemies fighting it
+            if (ScreenSupport(leader, div, st, doc, enemies)) return;
             Why(st, "guns adequate - left to the game");
         }
 
