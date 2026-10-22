@@ -31,10 +31,23 @@ namespace DipGgFixes
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("ArmorDiagnostics", true, null,
+            On = cat.CreateEntry("ArmorDiagnostics", false, null,
                 "Log only: tests whether the game's penetration depends on target aspect, records impact angles, side/deck hit chances and hit types per battle ([Armor] lines). No effect on gameplay");
         }
         static bool Active { get { return On != null && On.Value; } }
+        internal static void ApplyHooks(HarmonyLib.Harmony h)
+        {
+            if (!Active) { MelonLogger.Msg("[DIP GG Fixes][Armor] diagnostics off - impact/hit hooks not installed"); return; }
+            try
+            {
+                h.Patch(AccessTools.Method(typeof(Shell), "ImpactForwardToAngleSideUp"), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagSideUp), "Postfix"));
+                h.Patch(AccessTools.Method(typeof(Shell), "ImpactForwardToAngleSideForward"), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagSideFwd), "Postfix"));
+                h.Patch(AccessTools.Method(typeof(Ship), "CalcSideHitChance"), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagSideChance), "Postfix"));
+                h.Patch(AccessTools.Method(typeof(Ship), "HitTypeText"), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagHitType), "Postfix"));
+                MelonLogger.Msg("[DIP GG Fixes][Armor] diagnostics hooks installed");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Armor] diagnostics hooks failed: " + e.Message); }
+        }
         static int Band(float deg) { if (float.IsNaN(deg)) return 6; deg = Math.Abs(deg) % 180f; if (deg > 90f) deg = 180f - deg; return Math.Min(5, (int)(deg / 15f)); }
 
         internal static void Probe(Ship shooter, Il2CppSystem.Collections.Generic.List<Ship> enemies)
@@ -128,15 +141,9 @@ namespace DipGgFixes
         }
     }
 
-    [HarmonyPatch(typeof(Shell), "ImpactForwardToAngleSideUp")]
-    internal static class Patch_ArmorDiagSideUp { private static void Postfix(float __result) { try { ArmorDiag.RecordSideUp(__result); } catch { } } }
-
-    [HarmonyPatch(typeof(Shell), "ImpactForwardToAngleSideForward")]
-    internal static class Patch_ArmorDiagSideFwd { private static void Postfix(float __result) { try { ArmorDiag.RecordSideFwd(__result); } catch { } } }
-
-    [HarmonyPatch(typeof(Ship), "CalcSideHitChance")]
-    internal static class Patch_ArmorDiagSideChance { private static void Postfix(float __0, float __result) { try { ArmorDiag.RecordSideChance(__0, __result); } catch { } } }
-
-    [HarmonyPatch(typeof(Ship), "HitTypeText")]
-    internal static class Patch_ArmorDiagHitType { private static void Postfix(string __result) { try { ArmorDiag.RecordHitType(__result); } catch { } } }
+    // 1.11.96: installed by ArmorDiag.ApplyHooks only when ArmorDiagnostics is on (they ran on every shell impact and hit)
+    internal static class Patch_ArmorDiagSideUp { internal static void Postfix(float __result) { try { ArmorDiag.RecordSideUp(__result); } catch { } } }
+    internal static class Patch_ArmorDiagSideFwd { internal static void Postfix(float __result) { try { ArmorDiag.RecordSideFwd(__result); } catch { } } }
+    internal static class Patch_ArmorDiagSideChance { internal static void Postfix(float __0, float __result) { try { ArmorDiag.RecordSideChance(__0, __result); } catch { } } }
+    internal static class Patch_ArmorDiagHitType { internal static void Postfix(string __result) { try { ArmorDiag.RecordHitType(__result); } catch { } } }
 }

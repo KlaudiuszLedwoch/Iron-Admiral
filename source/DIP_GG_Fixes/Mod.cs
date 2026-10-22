@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.95", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.96", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -230,6 +230,12 @@ namespace DipGgFixes
 
         public override void OnUpdate()
         {
+            try { Perf.Frame(); } catch { }
+            long t0 = Perf.Enabled ? Perf.T() : 0;
+            try { Update0(); } finally { if (t0 != 0) Perf.Add(Perf.UPD, t0); }
+        }
+        void Update0()
+        {
             UpdateCheck.Tick();
             FinanceCrisis.Tick();
             EconomyUi.Tick();
@@ -250,11 +256,21 @@ namespace DipGgFixes
             try { Intel.Tick(); } catch { }
         }
 
-        public override void OnLateUpdate() { try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } }
+        public override void OnLateUpdate()
+        {
+            long t0 = Perf.Enabled ? Perf.T() : 0;
+            try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { }
+            if (t0 != 0) Perf.Add(Perf.LATE, t0);
+        }
 
         public override void OnApplicationQuit() { try { Diagnostics.OnQuit(); } catch { } }
 
         public override void OnGUI()
+        {
+            long t0 = Perf.Enabled ? Perf.T() : 0;
+            try { Gui0(); } finally { if (t0 != 0) Perf.Add(Perf.GUI, t0); }
+        }
+        void Gui0()
         {
             EconomyUi.OnGUI();
             try { Trade.OnGUI(); } catch { }
@@ -266,8 +282,10 @@ namespace DipGgFixes
             Diagnostics.OnGUI();
         }
 
+        internal static HarmonyLib.Harmony Harm; // 1.11.96
         public override void OnInitializeMelon()
         {
+            Harm = HarmonyInstance;
             var cat = MelonPreferences.CreateCategory("DIP_GG_Fixes");
             AutoShare = cat.CreateEntry("AutoShareDesigns", true, null,
                 "Copy the player's campaign designs to shared designs when leaving the constructor");
@@ -518,6 +536,8 @@ namespace DipGgFixes
             Intel.CreatePrefs(cat);
             Obliquity.CreatePrefs(cat);
             ContinuousMap.CreatePrefs(cat);
+            Perf.CreatePrefs(cat); // 1.11.96 (after ArmorDiag: switches the diagnostics off once)
+            ArmorDiag.ApplyHooks(HarmonyInstance);
             Diagnostics.RepairPreferences();
             ModDesigns.Install();
             SettingsUi.CreatePrefs(cat);
@@ -1922,25 +1942,33 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Ship), "AILogic")]
     internal static class Patch_AILogic
     {
+        [ThreadStatic] static bool tweaked;
         private static void Prefix(Ship __instance)
         {
-            BattleAi.CurrentDistanceMult = 1f;
+            long t0 = Perf.Enabled ? Perf.T() : 0;
+            BattleAi.CurrentDistanceMult = 1f; tweaked = false;
             try
             {
                 if (__instance == null || !Doctrines.Loaded) return;
                 var p = __instance.player; if (p == null || p.isMain) return;
                 var d = Doctrines.For(p); if (d != null) BattleAi.CurrentDistanceMult = d.distanceMult;
+                float m = BattleAi.CurrentDistanceMult;
+                // 1.11.96: the parameter itself is set for this call (no hook on MonoBehaviourExt.Param)
+                if (m != 1f && m > 0f) tweaked = ParamTweak.Begin("ai_distance_mod", ParamTweak.Base("ai_distance_mod", 1f) * m);
             }
             catch { }
+            finally { if (t0 != 0) Perf.Add(Perf.AI, t0); }
         }
-        private static void Finalizer() { BattleAi.CurrentDistanceMult = 1f; }
+        private static void Finalizer() { if (tweaked) { tweaked = false; ParamTweak.End("ai_distance_mod"); } BattleAi.CurrentDistanceMult = 1f; }
         private static void Postfix(Ship __instance)
         {
+            long t0 = Perf.Enabled ? Perf.T() : 0;
             try { BattleAi.Think(__instance); }
             catch (Exception e)
             {
                 if (BattleAi.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] AILogic postfix: " + e.Message);
             }
+            finally { if (t0 != 0) Perf.Add(Perf.AI, t0); }
         }
     }
 
@@ -1951,7 +1979,7 @@ namespace DipGgFixes
     {
         internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>();
             public IntPtr playerPtr; public IntPtr mainTarget; public float mainAt; // 1.11.88: fire distribution
-            public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; public float nextSide; } // 1.11.93: hopeless torpedo shots
+            public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; public float nextSide, nextSideFast; } // 1.11.93: hopeless torpedo shots
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
@@ -1973,7 +2001,7 @@ namespace DipGgFixes
             bool isPlayer = player.isMain && !s.isAiControlled;
             if (isPlayer && DipGgFixesMod.TorpedoFriendlyLane.Value && s.haveTorpedoes && now >= st.nextLane) { st.nextLane = now + 0.5f; TorpedoLane(s, st, now); }
             AuditTorpedoes(s, now); // 1.11.94
-            if (DipGgFixesMod.TorpedoSideCheck.Value && s.haveTorpedoes) { bool cal = now >= st.nextSide; if (cal) st.nextSide = now + 1f; TorpedoSides(s, cal); } // 1.11.94
+            if (DipGgFixesMod.TorpedoSideCheck.Value && s.haveTorpedoes && now >= st.nextSideFast) { st.nextSideFast = now + 0.2f; bool cal = now >= st.nextSide; if (cal) st.nextSide = now + 1f; TorpedoSides(s, cal); } // 1.11.94 (1.11.96: 5x per second)
             // 1.11.93: hold a hopeless torpedo shot (mode set Off while hopeless, the saved mode restored afterwards)
             if (DipGgFixesMod.TorpedoSense.Value && s.haveTorpedoes && !st.laneBlocked && (!isPlayer || DipGgFixesMod.TorpedoSensePlayer.Value))
             {
@@ -2401,13 +2429,17 @@ namespace DipGgFixes
     {
         private static void Prefix(Ship __instance)
         {
-            try { ShipTick.Pre(__instance); }
+            long t0 = Perf.Enabled ? Perf.T() : 0;
+            try { ShipTick.Pre(__instance); if (t0 != 0 && __instance != null) Perf.Ship(__instance.Pointer); }
             catch (Exception e) { if (ShipTick.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] AimAndShoot prefix: " + e.Message); }
+            finally { if (t0 != 0) Perf.Add(Perf.AIM, t0); }
         }
         private static void Postfix(Ship __instance)
         {
+            long t0 = Perf.Enabled ? Perf.T() : 0;
             try { ShipTick.Post(__instance); }
             catch (Exception e) { if (ShipTick.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] AimAndShoot postfix: " + e.Message); }
+            finally { if (t0 != 0) Perf.Add(Perf.AIM, t0); }
         }
     }
 
@@ -2480,8 +2512,24 @@ namespace DipGgFixes
     internal static class Patch_CheckForSurrender
     {
         [ThreadStatic] internal static Ship Current;
-        private static void Prefix(Ship __instance) { Current = __instance; if (!CrewLevels.Done) CrewLevels.Apply(); }
-        private static void Finalizer() { Current = null; }
+        [ThreadStatic] static bool tweaked;
+        static int logged;
+        private static void Prefix(Ship __instance)
+        {
+            Current = __instance; tweaked = false; if (!CrewLevels.Done) CrewLevels.Apply();
+            // 1.11.96: the threshold parameter itself is set for this call (no hook on MonoBehaviourExt.Param)
+            try
+            {
+                if (__instance != null && DipGgFixesMod.SurrenderByTraining.Value)
+                {
+                    float t = Threshold(__instance);
+                    tweaked = ParamTweak.Begin("crew_percents_surrender_threshold", t);
+                    if (tweaked && logged < 5) { logged++; BattleAi.Log($"surrender threshold for {__instance.name}: {t:0.00} (vanilla {ParamTweak.Base("crew_percents_surrender_threshold", 0f):0.00}, crew rank {CrewLevels.Rank(__instance):0.00})"); }
+                }
+            }
+            catch { }
+        }
+        private static void Finalizer() { if (tweaked) { tweaked = false; ParamTweak.End("crew_percents_surrender_threshold"); } Current = null; }
         internal static float Threshold(Ship s)
         {
             float r = CrewLevels.Rank(s);
@@ -3036,11 +3084,15 @@ namespace DipGgFixes
 
     // ai_distance_mod (preferred engagement distance) scaled per nation while the game
     // evaluates an AI ship's range inside Ship.AILogic (RangeCalc).
-    [HarmonyPatch(typeof(MonoBehaviourExt), "Param", new Type[] { typeof(string), typeof(float) })]
+    // 1.11.96: no longer an attribute patch - installed only as a fallback by ParamTweak (see Perf.cs)
     internal static class Patch_Param
     {
         static int surrLogged;
-        private static void Postfix(string __0, ref float __result)
+        internal static void Postfix(string __0, ref float __result)
+        {
+            long t0 = Perf.Enabled ? Perf.T() : 0; try { Body(__0, ref __result); } finally { if (t0 != 0) Perf.Add(Perf.PARAM, t0); }
+        }
+        static void Body(string __0, ref float __result)
         {
             if (__0 == "crew_percents_surrender_threshold" && DipGgFixesMod.SurrenderByTraining.Value)
             {

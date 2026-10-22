@@ -99,7 +99,9 @@ namespace DipGgFixes
     {
         private static void Postfix(Ship __instance, Ship.A __0, ref float __result)
         {
+            long t0 = Perf.Enabled ? Perf.T() : 0;
             try { if (__result > 0f) { float f = Obliquity.Factor(__instance, __0); if (f > 1f) __result *= f; } } catch { }
+            if (t0 != 0) Perf.Add(Perf.ARMOR, t0);
         }
     }
 }
