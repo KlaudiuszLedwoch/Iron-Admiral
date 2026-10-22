@@ -25,9 +25,12 @@ namespace DipGgFixes
 
         static void Warn(string m) { if (errs++ < 5) MelonLogger.Warning("[DIP GG Fixes][Map] " + m); }
 
+        static IntPtr mapPtr;
         static bool Bounds()
         {
             var m = CampaignMap.Instance; if (m == null || m.MapRenderer == null) return false;
+            // 1.11.106: a new map (after a battle or a load) - forget the copies and border planes of the old one
+            if (m.Pointer != mapPtr) { mapPtr = m.Pointer; left = right = null; sideBorders.Clear(); MelonLogger.Msg("[DIP GG Fixes][Map] campaign map (re)created - continuous map set up again"); }
             var b = m.MapRenderer.bounds; minX = b.min.x; maxX = b.max.x;
             return maxX - minX > 1f;
         }
@@ -123,8 +126,10 @@ namespace DipGgFixes
             try
             {
                 float w = maxX - minX, x = x0;
-                while (x < minX) x += w;
-                while (x >= maxX) x -= w;
+                // 1.11.106: no loops - a far-away or invalid camera position (NaN, infinity, a battle camera) could spin the
+                // old while-loops forever (float precision); positions far outside the map are left to the game
+                if (w <= 1f || float.IsNaN(x) || float.IsInfinity(x) || Mathf.Abs(x) > 10f * w) { wantWrap = false; return; }
+                x = minX + Mathf.Repeat(x - minX, w);
                 var p = cam.transform.position; p.x = x;
                 cam.transform.position = p;
                 try { cam.newCameraPos = new Vector3(x, cam.newCameraPos.y, p.z); } catch { }
