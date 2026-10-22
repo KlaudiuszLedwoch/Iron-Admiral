@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.58. Updated with every release._
+_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.59. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -235,6 +235,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **22 October 2026, Iron Admiral 1.2.56:** sixteen towers load again (and the shared designs using them); doctrines for Japan 1906-1921, France 1906-1918, Russia and the Soviet navy, Spain, the Netherlands, Scandinavia and Greece.
 - **22 October 2026, Iron Admiral 1.2.57:** main-gun target choice prefers the close enemy and keeps the current target; no more switching between a distant light cruiser and a close armoured cruiser.
 - **22 October 2026, Iron Admiral 1.2.58:** AI ships hold their torpedoes while the shot is hopeless (out of reach, small target, target outrunning the torpedo).
+- **22 October 2026, Iron Admiral 1.2.59:** torpedo aims whose target lies on the other side of the ship are dropped; torpedo launch audit in the battle log.
 
 ---
 
