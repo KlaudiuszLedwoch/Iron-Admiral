@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.53. Updated with every release._
+_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.54. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -192,6 +192,21 @@ That is why the **Pregenerated** button in the custom battle screen is **Off** w
 - Turn **Pregenerated** on only if you have installed predefined design files made for DIP yourself. The button holds until you quit the game; to keep it on for good, switch on *CustomBattlePregenerated* in the F10 panel.
 - Why not ship DIP's ready-made designs? They load, but they are generator output with historical names: in the British file the 1906 "Bellerophon" carries five twin 14-inch turrets (the real ship: ten 12-inch guns in five twin turrets) and the 1912 "Warspite" six twin 14-inch turrets (the real Queen Elizabeth class: eight 15-inch guns in four twin turrets).
 
+
+## 13. Fleet battle doctrine: who attacks first, and how each navy fights
+
+Since 1.2.54 the battle AI follows the fleet battle instructions of the period (the US Navy War Instructions of 1944 as the default) and a doctrine for each navy and period.
+
+- **The battle line goes in first.** Enemy battleships move up to fighting range instead of waiting at the edge of the map; their destroyers hold their torpedoes until the lines are in action. Expect the destroyer attack when your battleships are busy with theirs - keep a few ships ready to meet it.
+- **A weaker enemy attacks with torpedoes, not with guns.** If you are clearly stronger, the enemy sends its destroyers in first (a delaying action) and keeps its battle line back. Kill the flotillas and the rest will try to get away - the expensive ships first, covered by smoke and by the cheaper ones.
+- **Destroyers come back.** A flotilla that has fired everything turns away behind smoke. If it carries reload torpedoes it waits out of range and returns - do not forget it. Without reloads it turns its guns on your destroyers.
+- **Cruisers have jobs:** guarding their battleships against your destroyers, supporting their own torpedo attack, appearing on the other flank to pin your line while the torpedoes come from the opposite side.
+- **Fire is spread.** No more than three enemy ships usually fire at one of yours; when the enemy is outnumbered each of its ships takes a different target.
+- **Night.** Battleships keep their distance; destroyers try to surprise you and turn away if spotted too early by a stronger force.
+- **Each navy differs:** the Grand Fleet always turns away from torpedoes and avoids night action until the 1930s; Japan attacks with torpedoes at night before the main battle; Austria-Hungary raids and runs; the French Jeune Ecole relies on torpedo boats. The full table with sources is `Mods\battleDoctrines.csv`.
+
+Every rule can be switched off in the F10 panel (group Battle AI).
+
 ---
 
 ### Guide history
@@ -215,6 +230,7 @@ That is why the **Pregenerated** button in the custom battle screen is **Off** w
 - **21 October 2026, Iron Admiral 1.2.51:** the 920 Shippack designs load again.
 - **21 October 2026, Iron Admiral 1.2.52:** custom battles – where the ships come from (chapter 12): historical classes first, the "Pregenerated" button off by default.
 - **22 October 2026, Iron Admiral 1.2.53:** 147 historical classes (battleships, battlecruisers, cruisers).
+- **22 October 2026, Iron Admiral 1.2.54:** fleet battle doctrine - who attacks first and how each navy fights (chapter 13); dispatches above the ships.
 
 ---
 

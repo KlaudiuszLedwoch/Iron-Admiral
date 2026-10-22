@@ -75,9 +75,9 @@ namespace DipGgFixes
         }
 
         // ------------------------------------------------------------------ 1.11.85: dispatches above the ships in battle
-        class Bubble { public string Ship, Text; public float T; }
+        class Bubble { public string Ship, Text; public float T; public bool Logged; }
         static readonly List<Bubble> bubbles = new List<Bubble>();
-        static GUIStyle sB; static int bErr;
+        static GUIStyle sB; static int bErr, bLog;
         static void AddBubble(string ship, string text)
         {
             if (Bubbles == null || !Bubbles.Value) return;
@@ -111,6 +111,7 @@ namespace DipGgFixes
                     var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, a);
                     GUI.Box(r, ""); GUI.Box(r, "");
                     GUI.Label(new Rect(r.x + 6f, r.y + 4f, r.width - 12f, r.height - 8f), b.Text, sB);
+                    if (!b.Logged && bLog < 12) { b.Logged = true; bLog++; MelonLogger.Msg($"[DIP GG Fixes][Dispatch] bubble shown above {b.Ship} at screen {r.x:0},{r.y:0}: {b.Text}"); }
                     GUI.color = old;
                 }
             }
