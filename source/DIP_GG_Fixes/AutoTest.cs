@@ -66,6 +66,8 @@ namespace DipGgFixes
 
         internal static void Tick()
         {
+            // F11 (screenshot mode only): full-resolution screenshot of the game frame, including the mod's windows
+            try { if (Shots != null && Shots.Value && Input.GetKeyDown(KeyCode.F11)) Shot("manual"); } catch { }
             if (started || Spec == null || string.IsNullOrEmpty(Spec.Value)) return;
             bool menu = false; try { menu = GameManager.IsMainMenu && !GameManager.IsLoadingAny; } catch { }
             if (!menu || Time.realtimeSinceStartup < 20f) return;

@@ -95,7 +95,8 @@ namespace DipGgFixes
                     style.fontSize = 13; style.wordWrap = false; style.richText = true;
                     style.normal.textColor = Color.white;
                 }
-                float w = 470f, h = 18f + lines * 16.5f;
+                // 1.11.90: height from the real text height (the fixed 16.5 px per line left the lower half without a background)
+                float w = 470f, h = Mathf.Max(18f + lines * 16.5f, style.CalcHeight(new GUIContent(text), w - 16f) + 14f);
                 var r = new Rect(Screen.width - w - 12f, 90f, w, h);
                 GUI.Box(r, "");
                 GUI.Box(r, "");
