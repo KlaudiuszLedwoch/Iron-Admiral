@@ -24,6 +24,55 @@ namespace DipGgFixes
         static bool started;
         // active limits for the generator while a class is built (mm); 0 = inactive
         internal static float CapMainMm, CapSecMm; internal static int MainPerTurret, WantMain;
+        // era filter: parts whose needunlock technology dates from after the class's year are not offered to the generator
+        // (the shared-design constructor does not apply needunlock, so without this an 1899 battleship could get a 1921 tower)
+        internal static int EraYear; internal static readonly Dictionary<string, int> PartEra = new Dictionary<string, int>(StringComparer.Ordinal);
+        // arguments of every fn(...) in a param/effect cell, e.g. FnArgs("need(a), needunlock(b)", "needunlock") -> [b]
+        static List<string> FnArgs(string s, string fn)
+        {
+            var r = new List<string>(); if (string.IsNullOrEmpty(s)) return r;
+            string key = fn + "("; int i = 0;
+            while ((i = s.IndexOf(key, i, StringComparison.Ordinal)) >= 0)
+            {
+                int a = i + key.Length, b = s.IndexOf(')', a); if (b < 0) break;
+                r.Add(s.Substring(a, b - a).Trim()); i = b;
+            }
+            return r;
+        }
+        static void LoadPartEra()
+        {
+            PartEra.Clear();
+            try
+            {
+                var mods = Path.Combine(MelonUtils.GameDirectory, "Mods");
+                var unlock = new Dictionary<string, int>(StringComparer.Ordinal);
+                var tl = File.ReadAllLines(Path.Combine(mods, "technologies.csv"));
+                int th = Array.FindIndex(tl, l => l.StartsWith("@name,"));
+                if (th < 0) { Log("era filter: technologies.csv header not found"); return; }
+                var thd = SplitCsv(tl[th]); int iy = thd.IndexOf("year"), ie = thd.IndexOf("effect");
+                if (iy < 0 || ie < 0) { Log("era filter: year/effect columns not found"); return; }
+                for (int i = th + 1; i < tl.Length; i++)
+                {
+                    var c = SplitCsv(tl[i]); if (c.Count <= Math.Max(iy, ie)) continue;
+                    int y; if (!int.TryParse(c[iy], out y) || y <= 0) continue;
+                    foreach (var k in FnArgs(c[ie], "unlockpart")) { int o; if (!unlock.TryGetValue(k, out o) || y < o) unlock[k] = y; }
+                }
+                var pl = File.ReadAllLines(Path.Combine(mods, "parts.csv"));
+                int ph = Array.FindIndex(pl, l => l.StartsWith("@name,"));
+                if (ph < 0) { Log("era filter: parts.csv header not found"); return; }
+                var phd = SplitCsv(pl[ph]); int ip = phd.IndexOf("param");
+                if (ip < 0) { Log("era filter: param column not found"); return; }
+                for (int i = ph + 1; i < pl.Length; i++)
+                {
+                    var c = SplitCsv(pl[i]); if (c.Count <= ip || c[0].Length == 0 || c[0].StartsWith("#")) continue;
+                    int best = 0;
+                    foreach (var k in FnArgs(c[ip], "needunlock")) { int y; if (unlock.TryGetValue(k, out y) && y > best) best = y; }
+                    if (best > 0) PartEra[c[0]] = best;
+                }
+                Log($"era filter: {PartEra.Count} parts carry a technology date ({unlock.Count} unlock groups)");
+            }
+            catch (Exception e) { Log("era filter: " + e.Message); }
+        }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
@@ -109,6 +158,7 @@ namespace DipGgFixes
         static IEnumerator Build()
         {
             var specs = LoadSpecs(); var cands = LoadCandidates(); int fromTemplate = 0;
+            LoadPartEra();
             dupNames = new HashSet<string>(specs.GroupBy(x => x["nation"] + "|" + x["name"]).Where(g => g.Count() > 1).Select(g => g.Key));
             var filt = (Filter.Value ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim().ToLowerInvariant()).ToList();
             if (filt.Count > 0) specs = specs.Where(s => filt.Contains(s["nation"].ToLowerInvariant()) || filt.Contains(s["name"].ToLowerInvariant()) || filt.Contains(s["cls"].ToLowerInvariant())).ToList();
@@ -228,7 +278,7 @@ namespace DipGgFixes
                     // 3. generator tries: match main calibre and gun count
                     int bestDiff = templ ? 0 : 999; int tries = templ ? 0 : Math.Max(1, Tries.Value); bool bestValid = false;
                     if (templ) { try { ship.SetTonnage(wantT); } catch { } }
-                    CapMainMm = wantIn * 25.4f + 6f; CapSecMm = s.N("sec_mm") > 0f ? s.N("sec_mm") + 6f : (s.N("sec_in") > 0f ? s.N("sec_in") * 25.4f + 6f : 0f); MainPerTurret = (int)s.N("main_per_turret"); if (MainPerTurret > 0 && wantMain % MainPerTurret != 0) MainPerTurret = 0; /* mixed layouts such as 2x4 + 1x2 */ WantMain = wantMain;
+                    CapMainMm = wantIn * 25.4f + 6f; CapSecMm = s.N("sec_mm") > 0f ? s.N("sec_mm") + 6f : (s.N("sec_in") > 0f ? s.N("sec_in") * 25.4f + 6f : 0f); MainPerTurret = (int)s.N("main_per_turret"); if (MainPerTurret > 0 && wantMain % MainPerTurret != 0) MainPerTurret = 0; /* mixed layouts such as 2x4 + 1x2 */ WantMain = wantMain; EraYear = (int)s.N("year");
                     // cruisers with an unknown mount layout: the generator mirrors twin mounts (2 wanted -> 2 twins = 4 guns), so an odd
                     // number of main guns or an early cruiser (single mounts were the rule before about 1910) gets single mounts on every
                     // other try (the remaining tries stay free, in case the hull offers no single mount of that calibre)
@@ -265,7 +315,7 @@ namespace DipGgFixes
                         // otherwise a later, worse try would replace it (e.g. 11 of 13 guns valid, then 10 of 13 invalid)
                         if (tv && Mathf.Abs(cal - wantIn) <= 0.6f && Math.Abs(barrels - wantMain) <= Math.Max(1, wantMain / 4)) { Log($"{s["name"]}: try {t + 1} kept (valid, close to the historical battery)"); break; }
                     }
-                    CapMainMm = 0f; CapSecMm = 0f; MainPerTurret = 0; WantMain = 0;
+                    CapMainMm = 0f; CapSecMm = 0f; MainPerTurret = 0; WantMain = 0; EraYear = 0;
                     // the last try is what stays on the slip; if it is not the historical battery, do not save a wrong design
                     { float c2; int b2; MainBattery(ship, out c2, out b2); if (Mathf.Abs(c2 - wantIn) > 0.6f || Math.Abs(b2 - wantMain) > Math.Max(1, wantMain / 4)) { notes += $"main battery {b2} x {c2:0.#} in, not saved; "; result = "failed"; goto report; } }
                     if (bestDiff != 0) notes += $"main battery {mainBuilt} instead of {wantMain} x {wantIn} in; ";
@@ -290,11 +340,24 @@ namespace DipGgFixes
                     if (scale < 0.999f) notes += $"armour thinned to {scale * 100f:0}%; ";
                     if (weight > tonnage) notes += "still overweight; ";
                     if (!valid) notes += "game reports design invalid: " + Why(ship) + "; ";
+                    // parts from later years (e.g. from a prepared template) make the class unhistorical: do not save it
+                    int late = 0; string lateList = "";
+                    try
+                    {
+                        var lps = ship.parts; int dy = (int)s.N("year");
+                        for (int i = 0; lps != null && i < lps.Count; i++)
+                        {
+                            var d = lps[i] != null ? lps[i].data : null; int py;
+                            if (d != null && PartEra.TryGetValue(d.name, out py) && py > dy) { late++; if (lateList.Length < 160) lateList += d.name + " (" + py + ") "; }
+                        }
+                    }
+                    catch { }
+                    if (late > 0) notes += $"{late} part(s) from later years: {lateList.Trim()}; ";
                     // 6. save as shared design
                     string name = DesignName(s);
                     try { ship.vesselName = name; } catch { }
                     // only designs the game accepts are saved - an invalid design would be useless to the player and the AI
-                    if (valid && weight <= tonnage) { try { G.ui.SaveSharedDesign(name); result = "saved"; } catch (Exception e) { notes += "save: " + e.Message; } }
+                    if (valid && weight <= tonnage && late == 0) { try { G.ui.SaveSharedDesign(name); result = "saved"; } catch (Exception e) { notes += "save: " + e.Message; } }
                     else { result = "failed"; notes += "not saved; "; }
                     if (result == "saved") { try { File.AppendAllText(idsFile, ship.id.ToString() + "," + s["nation"] + "," + name + "\n"); } catch { } }
                     yield return Wait(0.5f);
@@ -364,7 +427,12 @@ namespace DipGgFixes
         [HarmonyLib.HarmonyPostfix]
         static void Post(PartData a, ref bool __result)
         {
-            if (!__result || HistDesigner.CapMainMm <= 0f || a == null) return;
+            if (!__result || a == null) return;
+            if (HistDesigner.EraYear > 0)
+            {
+                try { int py; if (HistDesigner.PartEra.TryGetValue(a.name, out py) && py > HistDesigner.EraYear) { __result = false; return; } } catch { }
+            }
+            if (HistDesigner.CapMainMm <= 0f) return;
             try
             {
                 if (!a.isGun) return;
