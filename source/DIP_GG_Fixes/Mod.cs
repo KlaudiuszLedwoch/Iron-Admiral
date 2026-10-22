@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.93", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.94", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -195,6 +195,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> TorpedoFriendlyLane;
         internal static MelonPreferences_Entry<float> LaneHalfWidth;
         internal static MelonPreferences_Entry<bool> TorpedoSense, TorpedoSensePlayer; // 1.11.93
+        internal static MelonPreferences_Entry<bool> TorpedoSideCheck; // 1.11.94
         internal static MelonPreferences_Entry<float> TorpedoSenseClose, TorpedoSenseSpeed, TorpedoSenseMargin;
         internal static MelonPreferences_Entry<bool> SmartTargeting;
         internal static MelonPreferences_Entry<bool> SmartTargetingAi;
@@ -422,6 +423,8 @@ namespace DipGgFixes
                 "Half width (m) of the lane checked for friendly ships");
             TorpedoSense = cat.CreateEntry("TorpedoSense", true, null,
                 "AI ships hold torpedoes when the shot is hopeless: the target outruns the torpedo, the run to the intercept point exceeds the torpedo range, or the target is a small ship beyond close range");
+            TorpedoSideCheck = cat.CreateEntry("TorpedoSideCheck", true, null,
+                "Drop a torpedo aim of one side's launchers whose target lies on the other side of the ship (no torpedoes into empty sea); player-set torpedo targets are never touched");
             TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
                 "Apply the same torpedo check to the player's ships under automatic torpedo fire");
             TorpedoSenseClose = cat.CreateEntry("TorpedoSenseCloseRange", 1500f, null,
@@ -1948,7 +1951,7 @@ namespace DipGgFixes
     {
         internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>();
             public IntPtr playerPtr; public IntPtr mainTarget; public float mainAt; // 1.11.88: fire distribution
-            public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; } // 1.11.93: hopeless torpedo shots
+            public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; public float nextSide; } // 1.11.93: hopeless torpedo shots
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
@@ -1969,6 +1972,8 @@ namespace DipGgFixes
             float now = UnityEngine.Time.time;
             bool isPlayer = player.isMain && !s.isAiControlled;
             if (isPlayer && DipGgFixesMod.TorpedoFriendlyLane.Value && s.haveTorpedoes && now >= st.nextLane) { st.nextLane = now + 0.5f; TorpedoLane(s, st, now); }
+            AuditTorpedoes(s, now); // 1.11.94
+            if (DipGgFixesMod.TorpedoSideCheck.Value && s.haveTorpedoes) { bool cal = now >= st.nextSide; if (cal) st.nextSide = now + 1f; TorpedoSides(s, cal); } // 1.11.94
             // 1.11.93: hold a hopeless torpedo shot (mode set Off while hopeless, the saved mode restored afterwards)
             if (DipGgFixesMod.TorpedoSense.Value && s.haveTorpedoes && !st.laneBlocked && (!isPlayer || DipGgFixesMod.TorpedoSensePlayer.Value))
             {
@@ -2042,6 +2047,119 @@ namespace DipGgFixes
             catch { }
             return null;
         }
+        // ---- 1.11.94: torpedo launch audit (player report 22.10: an enemy CA fired torpedoes to a side with no ships at all).
+        // Every new torpedo is checked once: shooter = ship nearest to the launch point; when no enemy within reach lies
+        // within 40 deg of the torpedo course the launch is logged with the shooter's torpedo aims (both sides).
+        static readonly HashSet<IntPtr> seenTorps = new HashSet<IntPtr>();
+        static float nextAudit; internal static int torpsAudited, torpsWasted; static int auditLogs;
+        static string AimInfo(Ship s, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict)
+        {
+            if (dict == null) return "none";
+            var sb = new System.Text.StringBuilder();
+            foreach (var kv in dict)
+            {
+                var pd = kv.Key; var a = kv.Value; if (pd == null || a == null || !pd.isTorpedo) continue;
+                var tg = a.target; string side = "-";
+                if (tg != null) { var rel = tg.transform.position - s.transform.position; rel.y = 0f; side = UnityEngine.Vector3.Dot(s.transform.right, rel) >= 0f ? "starboard" : "port"; }
+                sb.Append($"[{(tg != null ? tg.name : "no target")} on {side}, manual {a.manual}, angleFine {a.isAngleFine}, bearing {a.lastBearing:0}, hit {a.lastHitChance:0.###}, range {a.lastRange:0}] ");
+            }
+            return sb.Length > 0 ? sb.ToString() : "none";
+        }
+        static void AuditTorpedoes(Ship any, float now)
+        {
+            if (now < nextAudit) return; nextAudit = now + 0.5f;
+            try
+            {
+                var all = Torpedo.AllTorpedo; if (all == null || all.Count == 0) return;
+                var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return;
+                var pa = any.player; if (pa == null) return; var pb = battle.OppositePlayer(pa); if (pb == null) return;
+                var la = battle.ShipsOf(pa, true); var lb = battle.ShipsOf(pb, true);
+                if (seenTorps.Count > 5000) seenTorps.Clear();
+                for (int i = 0; i < all.Count; i++)
+                {
+                    var t = all[i]; if (t == null || !seenTorps.Add(t.Pointer)) continue;
+                    var start = t.torpedoStart; start.y = 0f;
+                    Ship sh = null; float bd = float.MaxValue; bool shA = true;
+                    foreach (var pair in new[] { new { l = la, a = true }, new { l = lb, a = false } })
+                    {
+                        if (pair.l == null) continue;
+                        for (int k = 0; k < pair.l.Count; k++) { var x = pair.l[k]; if (x == null) continue; var p = x.transform.position; p.y = 0f; float d = (p - start).sqrMagnitude; if (d < bd) { bd = d; sh = x; shA = pair.a; } }
+                    }
+                    if (sh == null) continue;
+                    var f = t.transform.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) continue; f.Normalize();
+                    torpsAudited++;
+                    var foes = shA ? lb : la; float range = BattleAi.TorpedoRange(sh);
+                    float best = 180f; Ship bestE = null; float bestD = 0f;
+                    for (int k = 0; foes != null && k < foes.Count; k++)
+                    {
+                        var e = foes[k]; if (e == null || e.isDead || e.isSinking) continue;
+                        var rel = e.transform.position - start; rel.y = 0f; float d = rel.magnitude; if (d > range * 1.2f) continue;
+                        float ang = UnityEngine.Vector3.Angle(f, rel); if (ang < best) { best = ang; bestE = e; bestD = d; }
+                    }
+                    if (best <= 40f) continue;
+                    torpsWasted++;
+                    if (auditLogs++ >= 40) continue;
+                    string dir = UnityEngine.Vector3.Dot(sh.transform.right, f) >= 0f ? "starboard" : "port";
+                    float relB = UnityEngine.Vector3.SignedAngle(new UnityEngine.Vector3(sh.transform.forward.x, 0f, sh.transform.forward.z), f, UnityEngine.Vector3.up);
+                    BattleAi.Log($"torpedo audit: {sh.name} ({(sh.player != null && sh.player.isMain ? "player" : "AI")}) launched a torpedo to {dir} (relative bearing {relB:0} deg, speed {t.speed:0.0}) with no enemy within 40 deg of its course" +
+                        $" (nearest by angle: {(bestE != null ? bestE.name + " " + best.ToString("0") + " deg off, " + bestD.ToString("0") + " m" : "none within reach")}); torpedo mode {sh.torpedoMode};" +
+                        $" right-side aims {AimInfo(sh, sh.enemies)}; left-side aims {AimInfo(sh, sh.enemiesLeftSide)}");
+                }
+            }
+            catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] torpedo audit: " + e.Message); }
+        }
+
+        // ---- 1.11.94: wrong-side torpedo aims. The game keeps separate aims for the right-side (enemies) and left-side
+        // (enemiesLeftSide) weapon groups. A torpedo aim of one side whose target lies on the other side is dropped (the
+        // game then picks again). The side of each group is not assumed: it is confirmed per battle from the gun aims of
+        // that group (at least 15 samples, 80% on one side); a group with mixed sides (centre-line mounts) is left alone.
+        // A torpedo aim set by the player (manual) is never touched.
+        static IntPtr calBattle; static readonly int[] calN = new int[2], calStar = new int[2];
+        internal static int sideDrops; static int sideLogs;
+        static int SideSign(Ship s, Ship tg)
+        {
+            var rel = tg.transform.position - s.transform.position; rel.y = 0f;
+            return UnityEngine.Vector3.Dot(s.transform.right, rel) >= 0f ? 1 : -1;
+        }
+        // +1 = the group fires to starboard, -1 = to port, 0 = not confirmed
+        static int GroupSide(int idx)
+        {
+            if (calN[idx] < 15) return 0;
+            if (calStar[idx] >= 0.8f * calN[idx]) return 1;
+            if (calStar[idx] <= 0.2f * calN[idx]) return -1;
+            return 0;
+        }
+        static void TorpedoSides(Ship s, bool calibrate)
+        {
+            try
+            {
+                var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return;
+                if (battle.Pointer != calBattle) { calBattle = battle.Pointer; calN[0] = calN[1] = calStar[0] = calStar[1] = 0; }
+                var dicts = new[] { s.enemies, s.enemiesLeftSide };
+                for (int idx = 0; idx < 2; idx++)
+                {
+                    var dict = dicts[idx]; if (dict == null) continue;
+                    if (calibrate && calN[idx] < 400)
+                        foreach (var kv in dict)
+                        {
+                            var pd = kv.Key; var a = kv.Value; if (pd == null || a == null || !pd.isGun) continue;
+                            var tg = a.target; if (tg == null || tg.isDead) continue;
+                            calN[idx]++; if (SideSign(s, tg) > 0) calStar[idx]++;
+                        }
+                    int side = GroupSide(idx); if (side == 0) continue;
+                    foreach (var kv in dict)
+                    {
+                        var pd = kv.Key; var a = kv.Value; if (pd == null || a == null || !pd.isTorpedo) continue;
+                        var tg = a.target; if (tg == null || a.manual) continue;
+                        if (SideSign(s, tg) == side) continue;
+                        a.target = null; sideDrops++;
+                        if (sideLogs++ < 30) BattleAi.Log($"{s.name}: {(idx == 0 ? "right" : "left")}-side torpedo aim on {tg.name} dropped - the target is on the other side ({(side > 0 ? "port" : "starboard")}); group side confirmed from {calN[idx]} gun aims");
+                    }
+                }
+            }
+            catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] torpedo sides: " + e.Message); }
+        }
+
         // ---- 1.11.93: hopeless torpedo shot (player report 22.10: an enemy CA kept firing torpedoes without a chance)
         internal static int senseLogs, senseHolds;
         class Track { public UnityEngine.Vector3 pos, vel; public float t; }
