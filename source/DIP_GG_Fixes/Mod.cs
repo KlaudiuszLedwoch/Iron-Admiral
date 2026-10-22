@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.94", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.95", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -1998,7 +1998,8 @@ namespace DipGgFixes
                 }
             }
             if (DipGgFixesMod.Panic.Value && now >= st.nextPanic) { st.nextPanic = now + 3f; PanicCheck(s, st); }
-            if (isPlayer && s.isDivLeader && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
+            bool surrSelf = false; try { surrSelf = s.IsSurrendered; } catch { }
+            if (isPlayer && s.isDivLeader && !surrSelf && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
         }
         // called after Ship.AimAndShoot
         internal static void Post(Ship s)
@@ -2115,7 +2116,7 @@ namespace DipGgFixes
         // that group (at least 15 samples, 80% on one side); a group with mixed sides (centre-line mounts) is left alone.
         // A torpedo aim set by the player (manual) is never touched.
         static IntPtr calBattle; static readonly int[] calN = new int[2], calStar = new int[2];
-        internal static int sideDrops; static int sideLogs;
+        internal static int sideDrops, surrDrops; static int sideLogs, surrLogs;
         static int SideSign(Ship s, Ship tg)
         {
             var rel = tg.transform.position - s.transform.position; rel.y = 0f;
@@ -2139,6 +2140,16 @@ namespace DipGgFixes
                 for (int idx = 0; idx < 2; idx++)
                 {
                     var dict = dicts[idx]; if (dict == null) continue;
+                    // 1.11.95: never a torpedo at a ship that has struck her colours (the game's own torpedo aim does not skip them)
+                    foreach (var kv in dict)
+                    {
+                        var pd = kv.Key; var a = kv.Value; if (pd == null || a == null || !pd.isTorpedo) continue;
+                        var tg = a.target; if (tg == null || a.manual) continue;
+                        bool surr = false; try { surr = tg.IsSurrendered; } catch { }
+                        if (!surr) continue;
+                        a.target = null; surrDrops++;
+                        if (surrLogs++ < 30) BattleAi.Log($"{s.name}: torpedo aim on {tg.name} dropped - she has surrendered");
+                    }
                     if (calibrate && calN[idx] < 400)
                         foreach (var kv in dict)
                         {
@@ -2183,6 +2194,8 @@ namespace DipGgFixes
             if (t != null) st.senseTarget = t;
             else if (st.senseHold) t = st.senseTarget; // the game may drop the torpedo aim while the mode is Off
             if (t == null || t.isDead || t.isSinking) return false;
+            bool surr = false; try { surr = t.IsSurrendered; } catch { }
+            if (surr) { why = $"{t.name} has surrendered"; return true; } // 1.11.95
             float d = BattleAi.Dist(s, t);
             if (d <= DipGgFixesMod.TorpedoSenseClose.Value) return false;
             float range = BattleAi.TorpedoRange(s);
@@ -2517,7 +2530,8 @@ namespace DipGgFixes
                     float hp0 = 0f, crew0 = 0f; try { hp0 = ship.HP; } catch { } try { crew0 = ship.CrewPercents; } catch { }
                     float minCrew0 = 0.7f; try { minCrew0 = UnityEngine.Mathf.Max(0.5f, MonoBehaviourExt.Param("min_crew_threshold", 0.7f)); } catch { }
                     try { if (crew0 < minCrew0) ship.CrewPercents = minCrew0; } catch { }
-                    __1 = UnityEngine.Mathf.Max(__1, UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f));
+                    // 1.11.95: capped below 1.00 - damage 1.00 sinks the ship (22.10: DD V-2 "returned" with damage 1.00 and was lost)
+                    __1 = UnityEngine.Mathf.Min(0.95f, UnityEngine.Mathf.Max(__1, UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f)));
                     Captured.Add(ship.Pointer);
                     try { Narrative.Record("prize|" + ship.Pointer, 9, $"{ship.name.Split(new[] { " (" }, StringSplitOptions.None)[0]} had surrendered, but her side won - she returns to {owner.data.name}"); } catch { }
                     MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered but {owner.data.name} won the battle ({how}) - ship returns to its owner; removed from {rem} sunk list(s), HP {hp0:0}, crew {crew0:0.00} -> {UnityEngine.Mathf.Max(crew0, minCrew0):0.00}, damage set to {__1:0.00}, status {ship.status}");
