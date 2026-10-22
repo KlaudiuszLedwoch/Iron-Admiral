@@ -14,13 +14,52 @@ namespace DipGgFixes
     {
         internal static MelonPreferences_Entry<string> Spec;
         internal static MelonPreferences_Entry<float> Seconds, Speed;
-        static bool started;
+        internal static MelonPreferences_Entry<bool> Shots;
+        static bool started, running;
+        static int shotN; static float nextBubbleShot;
+
+        // 1.11.90: screenshots for the mod page (UserData\IronAdmiral\screens). ScreenCapture is looked up at run time, so the
+        // build needs no extra reference.
+        internal static void Shot(string tag)
+        {
+            try
+            {
+                var dir = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "screens");
+                System.IO.Directory.CreateDirectory(dir);
+                foreach (var ch in System.IO.Path.GetInvalidFileNameChars()) tag = tag.Replace(ch, '_');
+                tag = tag.Replace(' ', '_');
+                var f = System.IO.Path.Combine(dir, $"{DateTime.Now:yyyyMMdd_HHmmss}_{++shotN:00}_{tag}.png");
+                Type t = null;
+                foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) { t = a.GetType("UnityEngine.ScreenCapture"); if (t != null) break; }
+                if (t == null) { Log("screenshot: ScreenCapture not found"); return; }
+                var m = t.GetMethod("CaptureScreenshot", new[] { typeof(string) });
+                m.Invoke(null, new object[] { f });
+                Log("screenshot " + f);
+            }
+            catch (Exception e) { Log("screenshot: " + e.Message); }
+        }
+
+        static IEnumerator Later(float s, Action a)
+        {
+            for (float w = Time.realtimeSinceStartup + s; Time.realtimeSinceStartup < w;) yield return null;
+            try { a(); } catch (Exception e) { Log("later: " + e.Message); }
+        }
+
+        // a dispatch is being drawn on screen above a ship: capture this frame (at most one per 12 s); the battle camera follows
+        // the player's ships, so only dispatches in view are captured
+        internal static void BubbleDrawn(string ship)
+        {
+            if (!running || Shots == null || !Shots.Value || Time.realtimeSinceStartup < nextBubbleShot || shotN > 45) return;
+            nextBubbleShot = Time.realtimeSinceStartup + 8f;
+            Shot("dispatch_" + ship);
+        }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             Spec = cat.CreateEntry("AutoTestBattle", "", null, "Author's tool: unattended custom battle test from the main menu, e.g. 1916;germany:bb=4;usa:bb=1,ca=1,cl=3,dd=6 (empty = off). The game quits when the test ends.");
             Seconds = cat.CreateEntry("AutoTestSeconds", 900f, null, "Author's tool: real-time length of the unattended battle test (s)");
             Speed = cat.CreateEntry("AutoTestTimeScale", 4f, null, "Author's tool: Unity time scale during the unattended battle test");
+            Shots = cat.CreateEntry("AutoTestScreenshots", false, null, "Author's tool: take screenshots during the unattended battle test (UserData\\IronAdmiral\\screens)");
         }
 
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][AutoTest] " + m); }
@@ -111,17 +150,41 @@ namespace DipGgFixes
             try { var b = G.ui.loadingUiButton; if (b != null) { b.onClick.Invoke(); Log("loading screen: continue pressed"); } } catch (Exception e) { Log("continue: " + e.Message); }
             try { G.ui.HideLoadingScreen(false, null); } catch (Exception e) { Log("hide loading: " + e.Message); }
             try { var h = G.ui.popupHelp; if (h != null) { h.SetActive(false); Log("help window closed"); } } catch (Exception e) { Log("help: " + e.Message); }
-            try { Log("paused = " + TimeControl.IsPaused()); if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch (Exception e) { Log("pause: " + e.Message); }
+            bool shots = Shots != null && Shots.Value;
+            if (shots)
+            {
+                // screenshot run: the battle stays paused behind the pre-battle panel until "Start Battle" is pressed (up to 10 min)
+                float wt = Time.realtimeSinceStartup + 600f; bool p = true;
+                while (Time.realtimeSinceStartup < wt) { try { p = TimeControl.IsPaused(); } catch { p = false; } if (!p) break; yield return null; }
+                Log("screenshot run: battle " + (p ? "still paused - unpausing" : "started by the player"));
+                try { if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch { }
+                try { var c = Cam.Instance; c.distanceMax *= 3f; c.distanceSelectedCamYmax *= 3f; c.distanceDesired = c.distanceDesired * 2.5f; Log($"camera distance max {c.distanceMax:0}, selected max {c.distanceSelectedCamYmax:0}"); } catch (Exception e) { Log("camera: " + e.Message); }
+            }
+            else
+                try { Log("paused = " + TimeControl.IsPaused()); if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch (Exception e) { Log("pause: " + e.Message); }
             float end = Time.realtimeSinceStartup + Seconds.Value; float next = 0f;
+            running = true;
+            float firstShot = Time.realtimeSinceStartup + 3f, nextOverview = firstShot + 5f; bool f10Done = false;
+            nextBubbleShot = firstShot;
             while (Time.realtimeSinceStartup < end)
             {
                 try { if (Time.timeScale < Speed.Value) Time.timeScale = Speed.Value; } catch { }
                 if (Time.realtimeSinceStartup > next) { next = Time.realtimeSinceStartup + 60f; Summary("progress"); }
+                if (shots && !f10Done && Time.realtimeSinceStartup > firstShot)
+                {
+                    f10Done = true;
+                    try { SettingsUi.SetOpen(true); } catch (Exception e) { Log("F10: " + e.Message); }
+                    MelonCoroutines.Start(Later(1.5f, () => Shot("f10_settings")));
+                    MelonCoroutines.Start(Later(3f, () => SettingsUi.SetOpen(false)));
+                }
+                if (shots && Time.realtimeSinceStartup > nextOverview && shotN <= 40) { nextOverview = Time.realtimeSinceStartup + 120f; Shot("battle_view"); }
                 bool inBattle = false; try { inBattle = GameManager.IsBattle; } catch { }
                 if (!inBattle) { Log("battle ended before the time limit"); break; }
                 yield return null;
             }
             Summary("final");
+            running = false;
+            if (shots) { Shot("battle_final"); for (float w = Time.realtimeSinceStartup + 2f; Time.realtimeSinceStartup < w;) yield return null; }
             Log("test finished - quitting");
             Application.Quit();
         }

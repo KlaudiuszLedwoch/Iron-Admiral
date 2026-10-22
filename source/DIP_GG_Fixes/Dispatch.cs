@@ -111,6 +111,7 @@ namespace DipGgFixes
                     var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, a);
                     GUI.Box(r, ""); GUI.Box(r, "");
                     GUI.Label(new Rect(r.x + 6f, r.y + 4f, r.width - 12f, r.height - 8f), b.Text, sB);
+                    try { AutoTest.BubbleDrawn(b.Ship); } catch { }
                     if (!b.Logged && bLog < 12) { b.Logged = true; bLog++; MelonLogger.Msg($"[DIP GG Fixes][Dispatch] bubble shown above {b.Ship} at screen {r.x:0},{r.y:0}: {b.Text}"); }
                     GUI.color = old;
                 }

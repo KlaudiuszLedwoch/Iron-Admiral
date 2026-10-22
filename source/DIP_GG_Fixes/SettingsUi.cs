@@ -69,7 +69,7 @@ namespace DipGgFixes
         // 1.11.47: the game's EventSystem is no longer disabled while the panel is open. GameManager.CanHandleMouseInput (called
         // every frame by the TweaksAndFixes campaign camera) reads EventSystem.current and threw a NullReferenceException every
         // frame (about 4500 errors in 20 s in 1.11.46). A click on the panel may now also reach the map behind it.
-        static void SetOpen(bool v)
+        internal static void SetOpen(bool v)
         {
             open = v;
             MelonLogger.Msg("[DIP GG Fixes][Settings] panel " + (v ? "opened" : "closed"));

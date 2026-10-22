@@ -235,10 +235,15 @@ namespace DipGgFixes
                 by += 32f;
                 int key2 = sel * 10 + tab;
                 if (Time.realtimeSinceStartup - rowsBuilt > 2f || builtFor != key2) { rows = Build(main, majors[sel]); rowsBuilt = Time.realtimeSinceStartup; builtFor = key2; }
-                float rowH = 22f; int per = Math.Max(1, (int)((r.yMax - 44f - by) / rowH));
-                int pages = Math.Max(1, (rows.Count + per - 1) / per); page = Mathf.Clamp(page, 0, pages - 1);
-                float y = by;
-                foreach (var row in rows.Skip(page * per).Take(per)) { GUI.Label(new Rect(r.x + 14f, y, w - 28f, rowH), row.Text, row.Head ? sHead : sTxt); y += rowH; }
+                // 1.11.90: rows that wrap onto a second line get their own height (a wrapped row overlapped the next one)
+                float rowH = 22f, avail = r.yMax - 44f - by, tw = w - 28f;
+                var heights = new List<float>(rows.Count);
+                foreach (var row in rows) heights.Add(Mathf.Max(rowH, (row.Head ? sHead : sTxt).CalcHeight(new GUIContent(row.Text), tw) + 4f));
+                var starts = new List<int> { 0 }; float acc = 0f;
+                for (int i = 0; i < rows.Count; i++) { if (acc + heights[i] > avail && acc > 0f) { starts.Add(i); acc = 0f; } acc += heights[i]; }
+                int pages = starts.Count; page = Mathf.Clamp(page, 0, pages - 1);
+                float y = by; int end = page + 1 < pages ? starts[page + 1] : rows.Count;
+                for (int i = starts[page]; i < end; i++) { GUI.Label(new Rect(r.x + 14f, y, tw, heights[i]), rows[i].Text, rows[i].Head ? sHead : sTxt); y += heights[i]; }
                 float fy = r.yMax - 34f;
                 GUI.Label(new Rect(r.x + 14f, fy + 4f, w - 260f, 22f), "Accuracy depends on reconnaissance technology, intelligence budget and the age of each ship or design.", sDim);
                 if (pages > 1)

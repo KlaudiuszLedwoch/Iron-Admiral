@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.89", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.90", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -1408,7 +1408,7 @@ namespace DipGgFixes
             bool stronger = foe > own * DipGgFixesMod.MassAttackStrengthRatio.Value;
             bool enough = targets > 0 && attackers >= DipGgFixesMod.MassAttackPerTarget.Value * targets;
             bool was; fleetOn.TryGetValue(player.Pointer, out was);
-            // 1.11.89 (War Instructions 1944, 12298: an inferior battle line first weakens the enemy with torpedoes - delay action):
+            // 1.11.90 (War Instructions 1944, 12298: an inferior battle line first weakens the enemy with torpedoes - delay action):
             // with at least one torpedo craft per target the attack goes in even when it is short of the full massed strength
             bool delay = stronger && !enough && targets > 0 && attackers >= targets;
             on = stronger && (enough || delay);
@@ -1736,7 +1736,7 @@ namespace DipGgFixes
             bool mass = false;
             if (!playerSide) { var bt = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (bt != null) mass = MassAttack(leader.player, bt, enemies); }
             if (!ammo || dmg > abort) { st.reloading = false; st.returnAttack = false; }
-            // 1.11.89: tubes empty and no reload came - fight the light forces with guns instead of charging again (test: endless empty charges)
+            // 1.11.90: tubes empty and no reload came - fight the light forces with guns instead of charging again (test: endless empty charges)
             if (!playerSide && ammo && st.noReloads && LoadedTubes(div, leader) == 0f) { st.charging = false; if (IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; Why(st, "torpedoes expended - no reloads"); return; }
             if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; if (!playerSide && IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; Why(st, "no torpedo ammo"); return; }
             if (dmg > abort) { Why(st, "too damaged for a charge"); return; }
@@ -2107,7 +2107,7 @@ namespace DipGgFixes
             }
             if (heavy)
             {
-                // 1.11.89: heaviest calibre among the targets still free under the fire distribution limit (test: 4 BB on one CA)
+                // 1.11.90: heaviest calibre among the targets still free under the fire distribution limit (test: 4 BB on one CA)
                 float maxFree = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxFree) maxFree = c; }
                 if (maxFree > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxFree - 25f);
             }
