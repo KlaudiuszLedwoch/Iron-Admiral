@@ -18,7 +18,7 @@ $csc = Get-ChildItem 'C:\Program Files\dotnet\sdk\*\Roslyn\bincore\csc.dll' | So
 $R = Join-Path $K 'ref\net'; $ML = Join-Path $K 'ref\ml'
 New-Item -ItemType Directory -Force $Out | Out-Null
 $net = 'System.Private.CoreLib','System.Runtime','System.Collections','System.Linq','System.Console','System.Runtime.InteropServices','System.Reflection','netstandard','System.Net.Http','System.Net.Primitives','System.Threading','System.Threading.Tasks','System.Threading.Thread','System.Private.Uri','System.IO.Compression','System.IO.Compression.ZipFile','System.Security.Cryptography.Algorithms','System.Security.Cryptography.Primitives'
-$mls = 'MelonLoader','0Harmony','Il2CppInterop.Runtime','Il2CppInterop.Common','Assembly-CSharp','Il2Cppmscorlib','Il2CppSystem','Il2CppSystem.Core','UnityEngine.CoreModule','UnityEngine.IMGUIModule','UnityEngine.InputLegacyModule','UnityEngine.TextRenderingModule','Unity.TextMeshPro','UnityEngine.UI'
+$mls = 'MelonLoader','0Harmony','Il2CppInterop.Runtime','Il2CppInterop.Common','Assembly-CSharp','Il2Cppmscorlib','Il2CppSystem','Il2CppSystem.Core','UnityEngine.CoreModule','UnityEngine.IMGUIModule','UnityEngine.InputLegacyModule','UnityEngine.TextRenderingModule','Unity.TextMeshPro','UnityEngine.UI','UnityEngine.UIModule'
 $files = @(Get-ChildItem (Join-Path $Src '*.cs') | ForEach-Object { $_.Name } | Where-Object { $_ -ne 'AssemblyInfo.cs' }) + 'AssemblyInfo.cs'  # every source file in -Src
 $a = @('-nologo','-noconfig','-nostdlib+','-target:library','-optimize+','-deterministic','-langversion:latest','-nullable:disable',"-out:$(Join-Path $Out 'DIP_GG_Fixes.dll')")
 $a += $net | ForEach-Object { "-r:$(Join-Path $R "$_.dll")" }
