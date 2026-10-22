@@ -189,7 +189,7 @@ namespace DipGgFixes
                 if (Input.GetKeyDown(key)) { visible = !visible; rowsBuilt = -10f; if (visible) Log("report opened"); }
                 if (visible && Input.GetMouseButtonDown(0))
                 {
-                    var mp = Input.mousePosition; var p = new Vector2(mp.x, Screen.height - mp.y);
+                    var p = UiScale.Mouse();
                     foreach (var kv in clicks.ToList()) if (kv.Key.Contains(p)) { try { kv.Value(); } catch (Exception e) { Log("click: " + e.Message); } rowsBuilt = -10f; break; }
                 }
             }
@@ -215,8 +215,8 @@ namespace DipGgFixes
                 var majors = Majors(); if (majors.Count == 0) return;
                 sel = Mathf.Clamp(sel, 0, majors.Count - 1);
                 Styles(); next.Clear();
-                float w = Math.Min(860f, Screen.width - 40f), h = Math.Min(660f, Screen.height - 120f);
-                var r = new Rect((Screen.width - w) / 2f, 80f, w, h);
+                float w = Math.Min(860f, UiScale.W - 40f), h = Math.Min(660f, UiScale.H - 120f);
+                var r = new Rect((UiScale.W - w) / 2f, 80f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 120f, 24f), $"<b>Naval intelligence</b>   ({Key.Value} closes)", sTitle);
                 Button(new Rect(r.xMax - 40f, r.y + 8f, 30f, 26f), "X", () => visible = false);

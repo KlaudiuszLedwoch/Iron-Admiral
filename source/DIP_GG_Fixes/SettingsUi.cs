@@ -84,7 +84,7 @@ namespace DipGgFixes
                 if (Input.GetKeyDown(KeyCode.Escape)) { SetOpen(false); return; }
                 if (Input.GetMouseButtonDown(0))
                 {
-                    var mp = Input.mousePosition; var p = new Vector2(mp.x, Screen.height - mp.y);
+                    var p = UiScale.Mouse();
                     foreach (var kv in clicks) if (kv.Key.Contains(p)) { kv.Value(); break; }
                 }
             }
@@ -148,8 +148,8 @@ namespace DipGgFixes
             {
                 Styles();
                 next.Clear();
-                float w = Math.Min(760f, Screen.width - 40f), h = Math.Min(640f, Screen.height - 60f);
-                var r = new Rect((Screen.width - w) / 2f, (Screen.height - h) / 2f, w, h);
+                float w = Math.Min(760f, UiScale.W - 40f), h = Math.Min(640f, UiScale.H - 60f);
+                var r = new Rect((UiScale.W - w) / 2f, (UiScale.H - h) / 2f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 120f, 24f), "<b>Iron Admiral - mod settings</b>   (" + Key.Value + " or Esc closes)", sTitle);
                 Button(new Rect(r.xMax - 40f, r.y + 8f, 30f, 26f), "X", sBtn, () => SetOpen(false));

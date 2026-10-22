@@ -110,7 +110,7 @@ namespace DipGgFixes
         static void ConsentTick()
         {
             if (!ShowConsent || !Input.GetMouseButtonDown(0)) return;
-            var mp = Input.mousePosition; var p = new Vector2(mp.x, Screen.height - mp.y);
+            var p = UiScale.Mouse();
             foreach (var kv in cclicks) if (kv.Key.Contains(p)) { kv.Value(); break; }
         }
         static void Answer(bool yes)
@@ -132,8 +132,8 @@ namespace DipGgFixes
                     sB = new GUIStyle(); sB.fontSize = 14; sB.alignment = TextAnchor.MiddleCenter; sB.richText = true; sB.normal.textColor = Color.white;
                 }
                 cnext.Clear();
-                float w = Math.Min(560f, Screen.width - 40f), h = 250f;
-                var r = new Rect((Screen.width - w) / 2f, (Screen.height - h) / 2f, w, h);
+                float w = Math.Min(560f, UiScale.W - 40f), h = 250f;
+                var r = new Rect((UiScale.W - w) / 2f, (UiScale.H - h) / 2f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
                 GUI.Label(new Rect(r.x + 16f, r.y + 12f, w - 32f, 24f), "<b>Iron Admiral - usage statistics</b>", sT);
                 GUI.Label(new Rect(r.x + 16f, r.y + 44f, w - 32f, 140f),
@@ -242,7 +242,7 @@ namespace DipGgFixes
             try { sb.AppendLine("Game: " + Application.version + " (Unity " + Application.unityVersion + ")"); } catch { }
             try { sb.AppendLine("OS: " + SystemInfo_("os")); } catch { }
             try { sb.AppendLine(".NET: " + Environment.Version); } catch { }
-            try { sb.AppendLine("Screen: " + Screen.width + "x" + Screen.height); } catch { }
+            try { sb.AppendLine("Screen: " + Screen.width + "x" + Screen.height + ", mod UI scale " + UiScale.F.ToString("0.00")); } catch { }
             try { sb.AppendLine("CPU/GPU/RAM: " + SystemInfo_("hw")); } catch { }
             try { sb.AppendLine("In battle: " + SafeBattle() + ", campaign month: " + Economy.Month()); } catch { }
             return sb.ToString();

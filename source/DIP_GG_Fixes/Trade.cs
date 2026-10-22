@@ -310,7 +310,7 @@ namespace DipGgFixes
         internal static void Clicks()
         {
             if (!visible || !Input.GetMouseButtonDown(0)) return;
-            var mp = Input.mousePosition; var p = new Vector2(mp.x, Screen.height - mp.y);
+            var p = UiScale.Mouse();
             foreach (var kv in clicks.ToList()) if (kv.Key.Contains(p)) { try { kv.Value(); } catch (Exception e) { Log("click: " + e.Message); } rowsBuilt = -10f; break; }
         }
         static void Styles()
@@ -332,8 +332,8 @@ namespace DipGgFixes
                 var main = Main(); if (main == null) return;
                 Styles();
                 next.Clear();
-                float w = Math.Min(760f, Screen.width - 40f), h = Math.Min(640f, Screen.height - 120f);
-                var r = new Rect((Screen.width - w) / 2f, 80f, w, h);
+                float w = Math.Min(760f, UiScale.W - 40f), h = Math.Min(640f, UiScale.H - 120f);
+                var r = new Rect((UiScale.W - w) / 2f, 80f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, "");
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 120f, 24f), $"<b>Ship trade</b>   ({Key.Value} closes)", sTitle);
                 Button(new Rect(r.xMax - 40f, r.y + 8f, 30f, 26f), "X", () => visible = false);

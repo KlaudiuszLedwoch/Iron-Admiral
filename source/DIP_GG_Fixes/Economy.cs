@@ -1169,7 +1169,7 @@ namespace DipGgFixes
                 if (queue.Count == 0 || !OnMap()) return;
                 if (Input.GetMouseButtonDown(0))
                 {
-                    var mp = Input.mousePosition; var pt = new Vector2(mp.x, Screen.height - mp.y);
+                    var pt = UiScale.Mouse();
                     foreach (var kv in clicks) if (kv.Key.Contains(pt)) { kv.Value(); break; }
                 }
             }
@@ -1189,8 +1189,8 @@ namespace DipGgFixes
                 }
                 next.Clear();
                 var d = queue[0];
-                float w = Math.Min(560f, Screen.width - 40f), h = 270f;
-                var r = new Rect((Screen.width - w) / 2f, (Screen.height - h) / 2f, w, h);
+                float w = Math.Min(560f, UiScale.W - 40f), h = 270f;
+                var r = new Rect((UiScale.W - w) / 2f, (UiScale.H - h) / 2f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
                 string prov = d.Prov != null ? d.Id.Replace('_', ' ') : d.Id;
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 28f, 24f), $"<b>Rising in {prov}</b>", sTitle);

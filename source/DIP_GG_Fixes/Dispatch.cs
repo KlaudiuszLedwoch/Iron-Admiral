@@ -95,7 +95,7 @@ namespace DipGgFixes
                 var cam = Camera.main; if (cam == null) return;
                 var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb == null) return;
                 var ships = cb.Ships; if (ships == null) return;
-                if (sB == null) { sB = new GUIStyle(); sB.fontSize = Mathf.Clamp(Screen.height / 80, 12, 18); sB.wordWrap = true; sB.richText = true; sB.alignment = TextAnchor.LowerCenter; sB.normal.textColor = new Color(1f, 0.95f, 0.8f); }
+                if (sB == null) { sB = new GUIStyle(); sB.fontSize = Mathf.Clamp((int)(UiScale.H / 80f), 12, 18); sB.wordWrap = true; sB.richText = true; sB.alignment = TextAnchor.LowerCenter; sB.normal.textColor = new Color(1f, 0.95f, 0.8f); }
                 foreach (var b in bubbles)
                 {
                     Ship ship = null;
@@ -104,9 +104,9 @@ namespace DipGgFixes
                     try { if (Fog.PlayerLabel(ship) != null) continue; } catch { }   // fog of war: nothing above an unidentified enemy
                     Vector3 wp; try { wp = ship.transform.position; } catch { continue; }
                     var sp = cam.WorldToScreenPoint(wp + Vector3.up * 40f); if (sp.z <= 0f) continue;
-                    float w = Mathf.Min(420f, Screen.width * 0.3f), h = sB.fontSize * 4.6f;
-                    var r = new Rect(sp.x - w / 2f, Screen.height - sp.y - h - 8f, w, h);
-                    if (r.yMax < 0 || r.y > Screen.height || r.xMax < 0 || r.x > Screen.width) continue;
+                    float w = Mathf.Min(420f, UiScale.W * 0.3f), h = sB.fontSize * 4.6f;
+                    var r = new Rect(sp.x / UiScale.F - w / 2f, UiScale.H - sp.y / UiScale.F - h - 8f, w, h);
+                    if (r.yMax < 0 || r.y > UiScale.H || r.xMax < 0 || r.x > UiScale.W) continue;
                     float age = Time.unscaledTime - b.T; float a = age > 7f ? Mathf.Clamp01(1f - (age - 7f) / 2f) : 1f;
                     var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, a);
                     GUI.Box(r, ""); GUI.Box(r, "");
