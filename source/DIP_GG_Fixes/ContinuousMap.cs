@@ -60,6 +60,22 @@ namespace DipGgFixes
             {
                 logged = true;
                 MelonLogger.Msg($"[DIP GG Fixes][Map] continuous map on: plane x {minX:0.00}..{maxX:0.00} (width {w:0.00}), CampaignMap.mapWidth {CampaignMap.mapWidth:0.00}");
+                // 1.11.97: the copies stayed black in the first test (22.10) - list what draws the map
+                try
+                {
+                    var root = src.transform.root;
+                    var rs = root.GetComponentsInChildren<Renderer>(true);
+                    int n = 0;
+                    foreach (var r in rs)
+                    {
+                        if (r == null || n++ > 60) continue;
+                        string sh = "?"; try { var m = r.sharedMaterial; sh = m != null ? m.name + "/" + (m.shader != null ? m.shader.name : "?") : "none"; } catch { }
+                        var b = r.bounds;
+                        MelonLogger.Msg($"[DIP GG Fixes][Map] renderer {r.gameObject.name} ({r.GetIl2CppType().Name}) enabled {r.enabled}/{r.gameObject.activeInHierarchy} layer {r.gameObject.layer} x {b.min.x:0.0}..{b.max.x:0.0} y {b.min.y:0.0}..{b.max.y:0.0} z {b.min.z:0.0}..{b.max.z:0.0} material {sh}{(r.Pointer == src.Pointer ? " <- MapRenderer" : "")}");
+                    }
+                    MelonLogger.Msg($"[DIP GG Fixes][Map] {rs.Length} renderers under {root.name}; copy left x {left?.GetComponent<Renderer>()?.bounds.min.x:0.0}..{left?.GetComponent<Renderer>()?.bounds.max.x:0.0}, right x {right?.GetComponent<Renderer>()?.bounds.min.x:0.0}..{right?.GetComponent<Renderer>()?.bounds.max.x:0.0}; camera {(Camera.main != null ? Camera.main.name + " cullingMask " + Camera.main.cullingMask + " far " + Camera.main.farClipPlane : "none")}");
+                }
+                catch (Exception e) { Warn("renderer list: " + e.Message); }
             }
         }
 
