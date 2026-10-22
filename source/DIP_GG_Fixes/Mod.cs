@@ -1982,7 +1982,7 @@ namespace DipGgFixes
     {
         internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>();
             public IntPtr playerPtr; public IntPtr mainTarget; public float mainAt; // 1.11.88: fire distribution
-            public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; public float nextSide, nextSideFast; } // 1.11.93: hopeless torpedo shots
+            public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; public float nextSide, nextSideFast, senseChanged = -100f; } // 1.11.93: hopeless torpedo shots
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
@@ -2018,6 +2018,9 @@ namespace DipGgFixes
                     st.nextSense = now + 0.5f; string why = null;
                     bool hold = false;
                     try { hold = TorpedoHopeless(s, st, now, out why); } catch { hold = false; }
+                    // 1.11.99: no flicker - a decision stands for at least 4 s (22.10: held/released every second near the limit)
+                    if (hold != st.senseHold && now - st.senseChanged < 4f) hold = st.senseHold;
+                    if (hold != st.senseHold) st.senseChanged = now;
                     if (hold != st.senseHold && senseLogs < 80) { senseLogs++; BattleAi.Log(hold ? $"{s.name}: torpedoes held - {why}" : $"{s.name}: torpedo shot possible again (was: {st.senseWhy})"); }
                     if (hold) { if (!st.senseHold) senseHolds++; st.senseWhy = why; }
                     st.senseHold = hold;
@@ -2265,7 +2268,7 @@ namespace DipGgFixes
                 }
             }
             if (T <= 0f) { why = $"{t.name} at {d:0} m outruns the torpedo"; return true; }
-            float run = vt * T, lim = range * DipGgFixesMod.TorpedoSenseMargin.Value;
+            float run = vt * T, lim = range * DipGgFixesMod.TorpedoSenseMargin.Value * (st.senseHold ? 0.95f : 1f); // 1.11.99: hysteresis
             if (range > 0f && run > lim) { why = $"{t.name} at {d:0} m: run to the intercept point {run:0} m > {lim:0} m usable torpedo range"; return true; }
             return false;
         }
