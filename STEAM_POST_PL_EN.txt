@@ -1,6 +1,6 @@
-[h1]Iron Admiral 1.2.55 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
+[h1]Iron Admiral 1.2.56 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.55 (DIP_GG_Fixes 1.11.89).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.56 (DIP_GG_Fixes 1.11.89).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
@@ -9,8 +9,10 @@
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]What is new (21-22 October 2026) - Iron Admiral 1.2.45-1.2.55, DIP_GG_Fixes 1.11.73-1.11.90[/b]
+[b]What is new (21-22 October 2026) - Iron Admiral 1.2.45-1.2.56, DIP_GG_Fixes 1.11.73-1.11.90[/b]
 [list]
+[*][b]Missing towers restored:[/b] sixteen cruiser and secondary towers that the game refused to load are available again, and so are the shared designs that use them.
+[*][b]More navies with a doctrine:[/b] Japan before the Washington Treaty, France in the First World War, Imperial Russia after Tsushima and the Soviet navy, Spain, the Netherlands, Scandinavia and Greece now fight after their own historical habits.
 [*][b]Screenshots in the gallery:[/b] the mod page now shows the new features in game - dispatches above the ships, the fog of war in battle and on the map, the intelligence and trade windows, a historical class in the designer and the battle report.
 [*][b]Display fixes:[/b] long rows in the intelligence window (F7) no longer overlap, and the treasury panel (F8) has its background behind every line.
 [*][b]The battle line fights first:[/b] AI battleships no longer wait at extreme range while their destroyers are shot to pieces - they move up and engage, and the flotillas attack once the lines are in action, as the fleet battle instructions of the time prescribed. A clearly weaker side sends its torpedoes in first instead of running away.
@@ -273,8 +275,8 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.55_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.55_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.56_Nexus.zip[/b] - one-click installer: unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.56_Mods_only.zip[/b] - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [*]Mods_only: extract it into the game folder so that you get <game folder>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll and the CSV files; MelonLoader 0.6.6 must already be installed.
 [*]Error about the .NET 6.0 runtime at game start: install the .NET Desktop Runtime 6.0 (Windows x64) from https://dotnet.microsoft.com/download/dotnet/6.0 - MelonLoader 0.6.6 runs on it. Back to the unmodded game: run Uninstall.bat from <game folder>\Iron_Admiral_backup, or delete version.dll, the MelonLoader folder and the Mods folder and let Steam verify the game files; campaigns saved with the mod are not meant for the unmodded game.
 [/list]
@@ -295,9 +297,9 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 ============================================================================
 
-[h1]Iron Admiral 1.2.55 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
+[h1]Iron Admiral 1.2.56 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.55 (DIP_GG_Fixes 1.11.89).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.56 (DIP_GG_Fixes 1.11.89).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
@@ -306,8 +308,10 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
-[b]Co nowego (21-22 października 2026) - Iron Admiral 1.2.45-1.2.55, DIP_GG_Fixes 1.11.73-1.11.90[/b]
+[b]Co nowego (21-22 października 2026) - Iron Admiral 1.2.45-1.2.56, DIP_GG_Fixes 1.11.73-1.11.90[/b]
 [list]
+[*][b]Brakujące wieże wróciły:[/b] szesnaście wież krążowników i wież rufowych, których gra nie chciała wczytać, jest znów dostępnych, a razem z nimi projekty współdzielone, które ich używają.
+[*][b]Więcej flot z doktryną:[/b] Japonia przed traktatem waszyngtońskim, Francja w I wojnie światowej, Rosja carska po Cuszimie i flota radziecka, Hiszpania, Holandia, Skandynawia i Grecja walczą teraz według własnych historycznych zwyczajów.
 [*][b]Zrzuty ekranu w galerii:[/b] strona moda pokazuje nowe funkcje w grze - meldunki nad okrętami, mgłę wojny w bitwie i na mapie, okna wywiadu i handlu, klasę historyczną w konstruktorze i raport z bitwy.
 [*][b]Poprawki wyświetlania:[/b] długie wiersze w oknie wywiadu (F7) już na siebie nie nachodzą, a panel skarbu (F8) ma tło pod każdym wierszem.
 [*][b]Najpierw walczy linia:[/b] pancerniki AI nie czekają już na skrajnym dystansie, gdy ich niszczyciele giną - podchodzą i wchodzą do walki, a flotylle atakują, gdy linie są już w ogniu, tak jak przewidywały regulaminy walki flot z epoki. Wyraźnie słabsza strona zamiast uciekać najpierw wysyła torpedy.
@@ -570,8 +574,8 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.55_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.55_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.56_Nexus.zip[/b] - instalator jednym kliknięciem: rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.56_Mods_only.zip[/b] - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [*]Mods_only: rozpakuj do folderu gry tak, żeby powstało <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV; MelonLoader 0.6.6 musi być już zainstalowany.
 [*]Błąd ".NET 6.0 runtime" przy starcie gry: zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony https://dotnet.microsoft.com/download/dotnet/6.0 - na nim działa MelonLoader 0.6.6. Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup albo usuń version.dll, folder MelonLoader i folder Mods, a potem zweryfikuj pliki gry w Steam; kampanie zapisane z modem nie są przeznaczone dla gry bez moda.
 [/list]
