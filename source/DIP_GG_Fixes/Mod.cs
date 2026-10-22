@@ -286,7 +286,7 @@ namespace DipGgFixes
         internal static HarmonyLib.Harmony Harm; // 1.11.96
         // 1.11.99: one-time setting changes run on the first frame - MelonLoader loads the saved values after OnInitializeMelon,
         // so a change made there was overwritten (1.11.96/1.11.98 migrations had no effect on existing installs)
-        internal static MelonPreferences_Entry<bool> MigSide, MigArmor;
+        internal static MelonPreferences_Entry<bool> MigSide; // the armour diagnostics stay as the player set them
         static bool migDone;
         static void Migrations()
         {
@@ -294,7 +294,6 @@ namespace DipGgFixes
             {
                 bool save = false;
                 if (MigSide != null && !MigSide.Value) { TorpedoSideCheck.Value = false; MigSide.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: TorpedoSideCheck switched off once (1.11.99)"); }
-                if (MigArmor != null && !MigArmor.Value) { if (ArmorDiag.On != null) ArmorDiag.On.Value = false; MigArmor.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: ArmorDiagnostics switched off once (1.11.99)"); }
                 if (save) MelonPreferences.Save();
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] settings migration: " + e.Message); }
@@ -460,7 +459,6 @@ namespace DipGgFixes
             TorpedoSideCheck = cat.CreateEntry("TorpedoSideCheck", false, null,
                 "Experimental (off): drop a torpedo aim of one side's launchers whose target lies on the other side of the ship; player-set torpedo targets are never touched");
             MigSide = cat.CreateEntry("MigrationTorpedoSideOff199", false, null, "Internal: 1.11.99 switched TorpedoSideCheck off once (it dropped valid torpedo aims)");
-            MigArmor = cat.CreateEntry("MigrationArmorDiagOff199", false, null, "Internal: 1.11.99 switched the armour diagnostics off once (they slowed large battles)");
             TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
                 "Apply the same torpedo check to the player's ships under automatic torpedo fire");
             TorpedoSenseClose = cat.CreateEntry("TorpedoSenseCloseRange", 1500f, null,
