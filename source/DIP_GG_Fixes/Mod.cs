@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.91", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.92", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -2099,27 +2099,35 @@ namespace DipGgFixes
             // 1.11.88: fire distribution (War Instructions 1944): at most N own ships on one target, 1 when outnumbered; the
             // current target is kept so the aiming progress is not lost
             bool dist = distribute && DipGgFixesMod.FireDistributionOn.Value;
+            // 1.11.92: a close enemy is always a candidate and is preferred (player report 22.10: three CAs fired at a light
+            // cruiser over ten km away while an enemy CA 4 km off went untouched - the fire distribution limit had pushed them
+            // off the close target because the battleships were already on it)
+            float closeD = UnityEngine.Mathf.Max(5000f, 0.3f * range);
             if (dist && inRange.Count > 1)
             {
                 int lim = FireDistribution.Limit(s);
                 // the current target is kept unless more than the limit are on it; then the ships with the lowest ids keep it (no oscillation)
-                var free = inRange.FindAll(e => (cur != null && e.Pointer == cur.Pointer) ? FireDistribution.Shooters(s, e, true) < lim : FireDistribution.Shooters(s, e) < lim);
+                var free = inRange.FindAll(e => BattleAi.Dist(s, e) <= closeD || ((cur != null && e.Pointer == cur.Pointer) ? FireDistribution.Shooters(s, e, true) < lim : FireDistribution.Shooters(s, e) < lim));
                 if (free.Count > 0) inRange = free;
             }
             if (heavy)
             {
                 // 1.11.91: heaviest calibre among the targets still free under the fire distribution limit (test: 4 BB on one CA)
                 float maxFree = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxFree) maxFree = c; }
-                if (maxFree > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxFree - 25f);
+                if (maxFree > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxFree - 25f && BattleAi.Dist(s, e) > closeD);
             }
-            Ship best = null; float bestScore = float.MinValue;
+            Ship best = null; float bestScore = float.MinValue, curScore = float.MinValue;
             foreach (var e in inRange)
             {
                 float d = BattleAi.Dist(s, e);
-                float score = Dmg(e) * 10f - d / range; // damage first ("sink one rather than damage two"), then proximity
+                float score = Dmg(e) * 10f - 2f * d / range; // damage first ("sink one rather than damage two"), then proximity
                 if (dist) score += 2f * FireDistribution.Priority(s, e, d, maxCal); // hitting power x weak protection (12166)
+                if (d <= closeD) score += 4f * (1f - d / closeD); // 1.11.92: the close enemy is the immediate danger
+                if (cur != null && e.Pointer == cur.Pointer) curScore = score;
                 if (score > bestScore) { bestScore = score; best = e; }
             }
+            // 1.11.92: hysteresis - keep the current target unless the new one is clearly better (stops switching back and forth)
+            if (cur != null && best != null && best.Pointer != cur.Pointer && curScore > float.MinValue && bestScore - curScore < 0.75f) return cur;
             return best;
         }
         // secondary guns: nearest torpedo threat (enemy with torpedoes inside its torpedo range x mult), else most damaged in range
