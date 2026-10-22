@@ -1984,8 +1984,13 @@ namespace DipGgFixes
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
 
+        static readonly System.Random jitter = new System.Random();
+        static IntPtr stBattle; static int stFrame = -1;
         internal static St Get(Ship s)
         {
+            // 1.11.96: per-battle states (they were kept for every ship of the session; the fire distribution scanned them all)
+            int fc = UnityEngine.Time.frameCount;
+            if (fc != stFrame) try { stFrame = fc; var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; var bp = b != null ? b.Pointer : IntPtr.Zero; if (bp != stBattle) { stBattle = bp; States.Clear(); tracks.Clear(); } } catch { }
             if (!States.TryGetValue(s.Pointer, out var st)) { st = new St(); States[s.Pointer] = st; }
             return st;
         }
@@ -2039,7 +2044,7 @@ namespace DipGgFixes
             var st = Get(s);
             float now = UnityEngine.Time.time;
             if (now < st.nextTarget) return;
-            st.nextTarget = now + 2f;
+            st.nextTarget = now + 1.8f + 0.4f * (float)jitter.NextDouble(); // 1.11.96: spread the ships over frames
             SmartTargets(s, player, st);
         }
 
@@ -2287,6 +2292,7 @@ namespace DipGgFixes
                 var cache = s.weaponRangesCache;
                 var main = s.mainGunsGroup;
                 bool heavy = false; try { var tn = s.shipType != null ? s.shipType.name : null; heavy = tn == "bb" || tn == "bc"; } catch { }
+                MemoReset(); // 1.11.96
                 Apply(s, st, s.enemies, enemies, cache, main, heavy);
                 Apply(s, st, s.enemiesLeftSide, enemies, cache, main, heavy);
             }
@@ -2333,12 +2339,32 @@ namespace DipGgFixes
         internal static float Dmg(Ship e) { try { return UnityEngine.Mathf.Clamp01(e.DamageEstimation()); } catch { return 0f; } }
         static bool Usable(Ship s, Ship e) { return e != null && !e.isDead && !e.isSinking && !e.IsSurrendered && e.IsVisibleFor(s); }
         // main guns: most damaged enemy in range; bb/bc: among the enemies with the heaviest calibre (within 25 mm of the max)
+        // 1.11.96: per-call memo - the enemy data (visibility, distance, damage, calibre, torpedo range, penetration) is computed
+        // once per SmartTargets call and shared by all gun groups of the ship (the 13-ship test spent ~1.8 ms per frame here)
+        static readonly Dictionary<IntPtr, float> mDist = new Dictionary<IntPtr, float>(), mDmg = new Dictionary<IntPtr, float>(), mCal = new Dictionary<IntPtr, float>(), mTorp = new Dictionary<IntPtr, float>();
+        static readonly Dictionary<IntPtr, bool> mUse = new Dictionary<IntPtr, bool>(), mNoPen = new Dictionary<IntPtr, bool>();
+        static readonly Dictionary<IntPtr, int> mShoot = new Dictionary<IntPtr, int>(), mShootLow = new Dictionary<IntPtr, int>();
+        static int mLimit = -1;
+        static void MemoReset() { mDist.Clear(); mDmg.Clear(); mCal.Clear(); mTorp.Clear(); mUse.Clear(); mNoPen.Clear(); mShoot.Clear(); mShootLow.Clear(); mLimit = -1; }
+        static bool U(Ship s, Ship e) { if (e == null) return false; if (!mUse.TryGetValue(e.Pointer, out var v)) { v = Usable(s, e); mUse[e.Pointer] = v; } return v; }
+        static float D(Ship s, Ship e) { if (!mDist.TryGetValue(e.Pointer, out var v)) { v = BattleAi.Dist(s, e); mDist[e.Pointer] = v; } return v; }
+        static float Dm(Ship e) { if (!mDmg.TryGetValue(e.Pointer, out var v)) { v = Dmg(e); mDmg[e.Pointer] = v; } return v; }
+        static float Cal(Ship e) { if (!mCal.TryGetValue(e.Pointer, out var v)) { v = BattleAi.MainCaliber(e); mCal[e.Pointer] = v; } return v; }
+        static float Tr(Ship e) { if (!mTorp.TryGetValue(e.Pointer, out var v)) { v = BattleAi.TorpedoRange(e); mTorp[e.Pointer] = v; } return v; }
+        static int Lim(Ship s) { if (mLimit < 0) mLimit = FireDistribution.Limit(s); return mLimit; }
+        static int Sh(Ship s, Ship e, bool low) { var m = low ? mShootLow : mShoot; if (!m.TryGetValue(e.Pointer, out var v)) { v = FireDistribution.Shooters(s, e, low); m[e.Pointer] = v; } return v; }
+        static float Prio(Ship s, Ship e, float d, float maxCal)
+        {
+            if (!mNoPen.TryGetValue(e.Pointer, out var noPen)) { float pen, belt; noPen = BattleAi.CannotPenetrate(s, e, d, out pen, out belt); mNoPen[e.Pointer] = noPen; }
+            float power = maxCal > 0f ? Cal(e) / maxCal : 0.5f;
+            return power * (noPen ? 0.3f : 1f);
+        }
         static Ship PickMain(Ship s, Il2CppSystem.Collections.Generic.List<Ship> enemies, float range, bool heavy, Ship cur = null, bool distribute = false)
         {
             var inRange = new List<Ship>();
-            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (Usable(s, e) && BattleAi.Dist(s, e) <= range) inRange.Add(e); }
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (U(s, e) && D(s, e) <= range) inRange.Add(e); }
             if (inRange.Count == 0) return null;
-            float maxCal = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxCal) maxCal = c; }
+            float maxCal = 0f; foreach (var e in inRange) { float c = Cal(e); if (c > maxCal) maxCal = c; }
             // 1.11.88: fire distribution (War Instructions 1944): at most N own ships on one target, 1 when outnumbered; the
             // current target is kept so the aiming progress is not lost
             bool dist = distribute && DipGgFixesMod.FireDistributionOn.Value;
@@ -2348,23 +2374,23 @@ namespace DipGgFixes
             float closeD = UnityEngine.Mathf.Max(5000f, 0.3f * range);
             if (dist && inRange.Count > 1)
             {
-                int lim = FireDistribution.Limit(s);
+                int lim = Lim(s);
                 // the current target is kept unless more than the limit are on it; then the ships with the lowest ids keep it (no oscillation)
-                var free = inRange.FindAll(e => BattleAi.Dist(s, e) <= closeD || ((cur != null && e.Pointer == cur.Pointer) ? FireDistribution.Shooters(s, e, true) < lim : FireDistribution.Shooters(s, e) < lim));
+                var free = inRange.FindAll(e => D(s, e) <= closeD || ((cur != null && e.Pointer == cur.Pointer) ? Sh(s, e, true) < lim : Sh(s, e, false) < lim));
                 if (free.Count > 0) inRange = free;
             }
             if (heavy)
             {
                 // 1.11.91: heaviest calibre among the targets still free under the fire distribution limit (test: 4 BB on one CA)
-                float maxFree = 0f; foreach (var e in inRange) { float c = BattleAi.MainCaliber(e); if (c > maxFree) maxFree = c; }
-                if (maxFree > 0f) inRange.RemoveAll(e => BattleAi.MainCaliber(e) < maxFree - 25f && BattleAi.Dist(s, e) > closeD);
+                float maxFree = 0f; foreach (var e in inRange) { float c = Cal(e); if (c > maxFree) maxFree = c; }
+                if (maxFree > 0f) inRange.RemoveAll(e => Cal(e) < maxFree - 25f && D(s, e) > closeD);
             }
             Ship best = null; float bestScore = float.MinValue, curScore = float.MinValue;
             foreach (var e in inRange)
             {
-                float d = BattleAi.Dist(s, e);
-                float score = Dmg(e) * 10f - 2f * d / range; // damage first ("sink one rather than damage two"), then proximity
-                if (dist) score += 2f * FireDistribution.Priority(s, e, d, maxCal); // hitting power x weak protection (12166)
+                float d = D(s, e);
+                float score = Dm(e) * 10f - 2f * d / range; // damage first ("sink one rather than damage two"), then proximity
+                if (dist) score += 2f * Prio(s, e, d, maxCal); // hitting power x weak protection (12166)
                 if (d <= closeD) score += 4f * (1f - d / closeD); // 1.11.92: the close enemy is the immediate danger
                 if (cur != null && e.Pointer == cur.Pointer) curScore = score;
                 if (score > bestScore) { bestScore = score; best = e; }
@@ -2379,9 +2405,9 @@ namespace DipGgFixes
             Ship threat = null; float threatD = float.MaxValue;
             for (int i = 0; i < enemies.Count; i++)
             {
-                var e = enemies[i]; if (!Usable(s, e) || !e.haveTorpedoes) continue;
-                float d = BattleAi.Dist(s, e); if (d > range) continue;
-                float tr = BattleAi.TorpedoRange(e) * DipGgFixesMod.TorpedoThreatRangeMult.Value;
+                var e = enemies[i]; if (!U(s, e) || !e.haveTorpedoes) continue;
+                float d = D(s, e); if (d > range) continue;
+                float tr = Tr(e) * DipGgFixesMod.TorpedoThreatRangeMult.Value;
                 if (d <= tr && d < threatD) { threatD = d; threat = e; }
             }
             if (threat != null) return threat;
