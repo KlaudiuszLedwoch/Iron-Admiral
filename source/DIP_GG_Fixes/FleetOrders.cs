@@ -28,7 +28,7 @@ namespace DipGgFixes
         enum Kind { None, Readiness, Shadow, Escort }
         class Order { public Kind K; public string Target; public float RadiusKm; public Vector3 Station; public bool HasStation; public Vector3 LastSeen; public bool HasLastSeen; }
         static readonly Dictionary<string, Order> orders = new Dictionary<string, Order>();
-        static string loadedFor; static bool visible; static int page; static int errors;
+        static string loadedFor, lastDay; static bool visible; static int page; static int errors;
         static GUIStyle sTxt, sBtn, sTitle, sDim;
         static readonly List<KeyValuePair<Rect, Action>> clicks = new List<KeyValuePair<Rect, Action>>();
         static readonly List<KeyValuePair<Rect, Action>> next = new List<KeyValuePair<Rect, Action>>();
@@ -108,6 +108,9 @@ namespace DipGgFixes
         internal static void BeforeTurn()
         {
             if (On == null || !On.Value) return;
+            // ProcessTaskForces may run more than once per turn: apply orders once per campaign date
+            string day = null; try { day = CampaignController.Instance.CurrentDate.AsDate().ToString("yyyy-MM-dd"); } catch { }
+            if (day != null && day == lastDay) return; lastDay = day;
             try
             {
                 EnsureLoaded(); if (orders.Count == 0) return;
