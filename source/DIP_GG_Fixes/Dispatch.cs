@@ -4,6 +4,8 @@
 // captains, gunnery and torpedo officers, flagships. They go to MelonLoader\Latest.log as "[Dispatch]" lines and to one
 // text file per battle in UserData\IronAdmiral\Dispatches. The technical "[Battle]" lines stay (BattleAiLog switch) - they
 // are what problem reports need. Switch: BattleDispatches.
+// 1.11.85: a dispatch about a ship is also shown for a few seconds above that ship in battle (own ships and identified enemies
+// only - fog of war). Switch: BattleDispatchBubbles.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,8 +22,10 @@ namespace DipGgFixes
         static readonly HashSet<string> once = new HashSet<string>();
         static System.Random rng = new System.Random();
 
+        internal static MelonPreferences_Entry<bool> Bubbles;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
+            Bubbles = cat.CreateEntry("BattleDispatchBubbles", true, null, "During battle a dispatch about a ship is also shown for a few seconds above that ship (only ships you can identify: your own and enemy ships already identified)");
             On = cat.CreateEntry("BattleDispatches", true, null, "During fought battles the log also tells the story as dramatic dispatches from the officers and lookouts involved (Latest.log '[Dispatch]' lines and one file per battle in UserData\\IronAdmiral\\Dispatches)");
         }
         static bool Active { get { return On != null && On.Value && inBattle; } }
@@ -31,7 +35,7 @@ namespace DipGgFixes
             bool b = false; try { b = GameManager.IsBattle; } catch { }
             if (b && !inBattle)
             {
-                inBattle = true; start = Time.time; once.Clear(); sightings = 0; file = null;
+                inBattle = true; start = Time.time; once.Clear(); sightings = 0; file = null; bubbles.Clear();
                 rng = new System.Random(Environment.TickCount);
                 if (On != null && On.Value) Write("The battle begins. All stations report ready; the guns are loaded and the lookouts strain their eyes at the horizon.");
             }
@@ -61,7 +65,56 @@ namespace DipGgFixes
             catch { }
         }
         static string Pick(params string[] v) { return v[rng.Next(v.Length)]; }
-        static void Say(string key, params string[] variants) { if (!Active) return; if (key != null && !once.Add(key)) return; Write(Pick(variants)); }
+        static void Say(string key, params string[] variants)
+        {
+            if (!Active) return; if (key != null && !once.Add(key)) return;
+            string text = Pick(variants); Write(text);
+            // 1.11.85: the subject ship is the second part of the key ("charge|<ship>|..."); its dispatch is also shown above it
+            if (key != null) { var k = key.Split('|'); if (k.Length >= 2 && k[1].Length > 0) AddBubble(k[1], text); }
+        }
+
+        // ------------------------------------------------------------------ 1.11.85: dispatches above the ships in battle
+        class Bubble { public string Ship, Text; public float T; }
+        static readonly List<Bubble> bubbles = new List<Bubble>();
+        static GUIStyle sB; static int bErr;
+        static void AddBubble(string ship, string text)
+        {
+            if (Bubbles == null || !Bubbles.Value) return;
+            if (text.Length > 170) text = text.Substring(0, 167) + "...";
+            bubbles.RemoveAll(b => b.Ship == ship); bubbles.Add(new Bubble { Ship = ship, Text = text, T = Time.time });
+            if (bubbles.Count > 6) bubbles.RemoveAt(0);
+        }
+        internal static void OnGUI()
+        {
+            if (Bubbles == null || !Bubbles.Value || !inBattle || bubbles.Count == 0) return;
+            try
+            {
+                bubbles.RemoveAll(b => Time.time - b.T > 9f);
+                if (bubbles.Count == 0) return;
+                var cam = Camera.main; if (cam == null) return;
+                var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb == null) return;
+                var ships = cb.Ships; if (ships == null) return;
+                if (sB == null) { sB = new GUIStyle(); sB.fontSize = Mathf.Clamp(Screen.height / 80, 12, 18); sB.wordWrap = true; sB.richText = true; sB.alignment = TextAnchor.LowerCenter; sB.normal.textColor = new Color(1f, 0.95f, 0.8f); }
+                foreach (var b in bubbles)
+                {
+                    Ship ship = null;
+                    for (int i = 0; i < ships.Count; i++) { var x = ships[i]; if (x != null && Ship(x.name) == b.Ship) { ship = x; break; } }
+                    if (ship == null) continue;
+                    try { if (Fog.PlayerLabel(ship) != null) continue; } catch { }   // fog of war: nothing above an unidentified enemy
+                    Vector3 wp; try { wp = ship.transform.position; } catch { continue; }
+                    var sp = cam.WorldToScreenPoint(wp + Vector3.up * 40f); if (sp.z <= 0f) continue;
+                    float w = Mathf.Min(420f, Screen.width * 0.3f), h = sB.fontSize * 4.6f;
+                    var r = new Rect(sp.x - w / 2f, Screen.height - sp.y - h - 8f, w, h);
+                    if (r.yMax < 0 || r.y > Screen.height || r.xMax < 0 || r.x > Screen.width) continue;
+                    float age = Time.time - b.T; float a = age > 7f ? Mathf.Clamp01(1f - (age - 7f) / 2f) : 1f;
+                    var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, a);
+                    GUI.Box(r, ""); GUI.Box(r, "");
+                    GUI.Label(new Rect(r.x + 6f, r.y + 4f, r.width - 12f, r.height - 8f), b.Text, sB);
+                    GUI.color = old;
+                }
+            }
+            catch (Exception e) { if (bErr++ < 3) MelonLogger.Warning("[DIP GG Fixes][Dispatch] bubbles: " + e.Message); }
+        }
 
         // "BB König Albert (Hildebrand (Mar. 1918)) [germany]" -> "König Albert"
         internal static string Ship(string n)
