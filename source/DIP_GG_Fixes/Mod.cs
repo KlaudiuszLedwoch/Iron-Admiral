@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.102", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.103", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -255,6 +255,7 @@ namespace DipGgFixes
             try { AutoTest.Tick(); } catch { }
             try { Trade.Tick(); } catch { }
             try { Intel.Tick(); } catch { }
+            try { DesignRepair.Tick(); } catch { }
         }
 
         public override void OnLateUpdate()
@@ -554,6 +555,7 @@ namespace DipGgFixes
             ContinuousMap.CreatePrefs(cat);
             ShipGenMemory.CreatePrefs(cat); // 1.11.99
             UiScale.CreatePrefs(cat); // 1.11.100
+            DesignRepair.CreatePrefs(cat); // 1.11.103
             Perf.CreatePrefs(cat); // 1.11.96 (after ArmorDiag: switches the diagnostics off once)
             ArmorDiag.ApplyHooks(HarmonyInstance);
             Diagnostics.RepairPreferences();
