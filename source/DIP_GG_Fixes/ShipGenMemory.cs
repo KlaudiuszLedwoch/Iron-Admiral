@@ -29,6 +29,31 @@ namespace DipGgFixes
             Tries = cat.CreateEntry("ShipGenMemoryTries", 1, null, "Ship generator memory: attempts for a remembered nation/hull pair (the game uses 4)");
         }
 
+        // 1.11.104: the memory is kept in UserData\IronAdmiral\shipgen_failures.txt (it was lost at every game start)
+        static bool loadedFile;
+        static string FilePath { get { return System.IO.Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "shipgen_failures.txt"); } }
+        static void LoadFile()
+        {
+            if (loadedFile) return; loadedFile = true;
+            try
+            {
+                if (!System.IO.File.Exists(FilePath)) return;
+                foreach (var l in System.IO.File.ReadAllLines(FilePath)) { int i = l.LastIndexOf('='); if (i > 0 && int.TryParse(l.Substring(i + 1), out int m)) failed[l.Substring(0, i)] = m; }
+                MelonLogger.Msg($"[DIP GG Fixes][ShipGen] {failed.Count} remembered failure(s) loaded");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] load: " + e.Message); }
+        }
+        static void SaveFile()
+        {
+            try
+            {
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(FilePath));
+                var lines = new List<string>(); foreach (var kv in failed) lines.Add(kv.Key + "=" + kv.Value);
+                System.IO.File.WriteAllLines(FilePath, lines);
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] save: " + e.Message); }
+        }
+
         static int MonthIndex()
         {
             try { var d = CampaignController.Instance.CurrentDate.AsDate(); return d.Year * 12 + d.Month; } catch { return -1; }
@@ -43,6 +68,7 @@ namespace DipGgFixes
             if (On == null || !On.Value || it == null) return;
             bool campaign = false; try { campaign = GameManager.IsCampaign && !GameManager.IsConstructor && !GameManager.IsBattle; } catch { }
             if (!campaign) return;
+            LoadFile();
             var p = it.Pointer;
             var ship = it.__4__this; if (ship == null) return;
             if (!keys.TryGetValue(p, out var key)) { key = Key(ship); if (key == null) return; keys[p] = key; started[p] = UnityEngine.Time.realtimeSinceStartup; }
@@ -67,8 +93,8 @@ namespace DipGgFixes
             bool success = it._tryN_5__5 != it._triesTotal_5__4;
             float secs = started.TryGetValue(p, out var t0) ? UnityEngine.Time.realtimeSinceStartup - t0 : 0f;
             int m = MonthIndex();
-            if (success) { succ++; failed.Remove(key); }
-            else { fails++; if (m >= 0) failed[key] = m; }
+            if (success) { succ++; if (failed.Remove(key)) SaveFile(); }
+            else { fails++; if (m >= 0) { failed[key] = m; SaveFile(); } }
             MelonLogger.Msg($"[DIP GG Fixes][ShipGen] {key.Replace("|", ": hull ")} - {(success ? "success" : "failure")} after {it._tryN_5__5} failed attempt(s) of {it._triesTotal_5__4}, {secs:0} s; remembered failures {failed.Count}, attempts saved this session {saved}");
             keys.Remove(p); limited.Remove(p); started.Remove(p);
         }
