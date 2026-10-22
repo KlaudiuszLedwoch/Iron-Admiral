@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.63. Updated with every release._
+_Guide as of 22 October 2026. Latest version: Iron Admiral 1.2.64. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -240,6 +240,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **22 October 2026, Iron Admiral 1.2.61:** the torpedo side check is off (it blocked valid shots); faster target selection in large battles; performance log.
 - **22 October 2026, Iron Admiral 1.2.62:** the mod's panels scale with the game's interface; the AI remembers failed ship designs and spends less time on them at the end of a turn; ships may answer a closing torpedo attack with torpedoes.
 - **22 October 2026, Iron Admiral 1.2.63:** the dispatch bubbles above the ships have their own, smaller scale in battle.
+- **22 October 2026, Iron Admiral 1.2.64:** the AI's ship generator memory survives a restart; own ships without a design in the list get one back for refits.
 
 ---
 
