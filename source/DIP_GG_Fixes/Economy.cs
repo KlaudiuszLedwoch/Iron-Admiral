@@ -331,6 +331,11 @@ namespace DipGgFixes
     {
         private static void Postfix(Ship __instance, ref int __result)
         {
+            long t0 = Perf.Enabled ? Perf.T() : 0;
+            try { Body(__instance, ref __result); } finally { if (t0 != 0) Perf.Add(Perf.ECON, t0); }
+        }
+        static void Body(Ship __instance, ref int __result)
+        {
             try
             {
                 if (!Series.On || Series.Depth > 0 || __instance == null || __result <= 0) return;
@@ -349,12 +354,14 @@ namespace DipGgFixes
         // vanilla: Cost x k x TimePenalty / BuildingTime; BuildingTime is already shortened, so the total equals Cost x cost factor
         private static void Postfix(Ship __instance, ref float __result)
         {
+            long t0 = Perf.Enabled ? Perf.T() : 0;
             try
             {
                 if (!Series.On || Series.Depth > 0 || __instance == null || __result <= 0f) return;
                 __result *= Series.Get(__instance).Cost;
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Series] BuildingCostPerMonth: " + e.Message); }
+            finally { if (t0 != 0) Perf.Add(Perf.ECON, t0); }
         }
     }
 

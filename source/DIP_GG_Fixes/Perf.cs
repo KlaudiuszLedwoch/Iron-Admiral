@@ -20,8 +20,8 @@ namespace DipGgFixes
     {
         internal static MelonPreferences_Entry<bool> On;
         static MelonPreferences_Entry<bool> mig196;
-        internal const int AIM = 0, AI = 1, UPD = 2, LATE = 3, GUI = 4, ARMOR = 5, PARAM = 6, N = 7;
-        static readonly string[] names = { "AimAndShoot", "AILogic", "OnUpdate", "OnLateUpdate", "OnGUI", "GetEffectiveArmor", "Param" };
+        internal const int AIM = 0, AI = 1, UPD = 2, LATE = 3, GUI = 4, ARMOR = 5, PARAM = 6, TON = 7, ECON = 8, CANB = 9, N = 10;
+        static readonly string[] names = { "AimAndShoot", "AILogic", "OnUpdate", "OnLateUpdate", "OnGUI", "GetEffectiveArmor", "Param", "TonnageMax/Limit", "series cost/time", "CanBuildShipsFromDesign" };
         static readonly long[] ticks = new long[N]; static readonly int[] calls = new int[N];
         static readonly Stopwatch clock = Stopwatch.StartNew();
         static readonly HashSet<IntPtr> ships = new HashSet<IntPtr>();
@@ -49,13 +49,37 @@ namespace DipGgFixes
             if (!Enabled) return;
             bool b = false; try { b = GameManager.IsBattle; } catch { }
             float now = UnityEngine.Time.unscaledTime;
-            if (!b) { if (wasBattle) { Report("battle end"); wasBattle = false; } return; }
-            if (!wasBattle) { wasBattle = true; reports = 0; Reset(now); return; }
+            if (!b)
+            {
+                if (wasBattle) { Report("battle end"); wasBattle = false; Reset(now); return; }
+                // 1.11.97: outside battle (turn processing, ship generator): report every 60 s when the mod's hooks were called
+                frames++; float dt0 = UnityEngine.Time.unscaledDeltaTime; if (dt0 > maxDt) maxDt = dt0;
+                if (now - winStart >= 60f) { CampaignReport(now - winStart); Reset(now); }
+                return;
+            }
+            if (!wasBattle) { CampaignReport(now - winStart); wasBattle = true; reports = 0; Reset(now); return; }
             frames++;
             float dt = UnityEngine.Time.unscaledDeltaTime; if (dt > maxDt) maxDt = dt;
             if (now - winStart >= 30f) { Report("30 s"); Reset(now); }
         }
         static void Reset(float now) { winStart = now; frames = 0; maxDt = 0f; Array.Clear(ticks, 0, N); Array.Clear(calls, 0, N); ships.Clear(); }
+        static int campReports;
+        static void CampaignReport(float el)
+        {
+            if (el <= 0f || campReports > 300) return;
+            double tpms = Stopwatch.Frequency / 1000.0, total = 0; long hooks = 0;
+            var sb = new System.Text.StringBuilder();
+            for (int k = 0; k < N; k++)
+            {
+                if (calls[k] == 0 || k == UPD || k == LATE || k == GUI) continue;
+                double ms = ticks[k] / tpms; total += ms; hooks += calls[k];
+                sb.Append($"{names[k]} {ms:0} ms ({calls[k]} calls), ");
+            }
+            double upd = (ticks[UPD] + ticks[LATE] + ticks[GUI]) / tpms;
+            if (hooks < 1000 && maxDt < 1f) return; // quiet map browsing - nothing to report
+            campReports++;
+            MelonLogger.Msg($"[DIP GG Fixes][Perf] campaign {el:0} s: {frames} frames, worst frame {maxDt * 1000f:0} ms; mod hooks {total:0} ms in total ({sb.ToString().TrimEnd(' ', ',')}); mod update/GUI {upd:0} ms");
+        }
         static void Report(string tag)
         {
             if (frames < 10 || reports++ > 400) return;

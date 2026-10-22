@@ -3652,19 +3652,19 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { })]
     internal static class Patch_TonnageMax_Refit
     {
-        private static void Postfix(Ship __instance, ref float __result) { RefitTreaty.Apply(__instance, ref __result); }
+        private static void Postfix(Ship __instance, ref float __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitTreaty.Apply(__instance, ref __result); if (t0 != 0) Perf.Add(Perf.TON, t0); }
     }
 
     [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { typeof(PartData), typeof(Ship) })]
     internal static class Patch_TonnageMaxStatic_Refit
     {
-        private static void Postfix(Ship __1, ref float __result) { RefitTreaty.Apply(__1, ref __result); }
+        private static void Postfix(Ship __1, ref float __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitTreaty.Apply(__1, ref __result); if (t0 != 0) Perf.Add(Perf.TON, t0); }
     }
 
     [HarmonyPatch(typeof(Player), "TonnageLimit", new Type[] { typeof(ShipType) })]
     internal static class Patch_TonnageLimit_Refit
     {
-        private static void Postfix(Player __instance, ShipType __0, ref float __result) { RefitTreaty.ApplyLimit(__instance, __0, ref __result); }
+        private static void Postfix(Player __instance, ShipType __0, ref float __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitTreaty.ApplyLimit(__instance, __0, ref __result); if (t0 != 0) Perf.Add(Perf.TON, t0); }
     }
 
     // 1.11.55: the "can not build" check of the designer (PlayerController.CanBuildShipsFromDesign) does not go through
@@ -3702,19 +3702,19 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuild2_Refit
     {
-        private static void Postfix(Ship __0, ref string __1, ref bool __result) { RefitBuildCheck.Fix(__0, ref __result, ref __1, "CanBuildShipsFromDesign"); }
+        private static void Postfix(Ship __0, ref string __1, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __1, "CanBuildShipsFromDesign"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(int), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuild3_Refit
     {
-        private static void Postfix(Ship __0, ref string __2, ref bool __result) { RefitBuildCheck.Fix(__0, ref __result, ref __2, "CanBuildShipsFromDesign(n)"); }
+        private static void Postfix(Ship __0, ref string __2, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __2, "CanBuildShipsFromDesign(n)"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     [HarmonyPatch(typeof(PlayerController), "CanBuildFromDesignOnInit", new Type[] { typeof(Ship), typeof(int), typeof(bool), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuildInit_Refit
     {
-        private static void Postfix(Ship __0, ref string __3, ref bool __result) { RefitBuildCheck.Fix(__0, ref __result, ref __3, "CanBuildFromDesignOnInit"); }
+        private static void Postfix(Ship __0, ref string __3, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __3, "CanBuildFromDesignOnInit"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     // 1.11.56: the save button of the designer (Ui.RefreshConstructorInfo, closure 489_21) reads canBuild / canNotBuildText,
