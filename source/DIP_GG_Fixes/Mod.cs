@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.86", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.87", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -378,11 +378,11 @@ namespace DipGgFixes
             FleetTorpedoAttack = cat.CreateEntry("FleetTorpedoAttack", true, null,
                 "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
             TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
-                "AI torpedo craft press the attack until every tube is empty, then turn away (smoke when available), open the range, reload and return");
+                "AI torpedo craft press the attack until every tube is empty; ships with reload torpedoes on board then turn away (smoke when available), open the range, reload and return, ships without reloads turn on the enemy light forces");
             ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
             ReloadMaxSeconds = cat.CreateEntry("ReloadMaxSeconds", 240f, null, "Attack cycle: a reloaded flotilla returns after this many seconds even when it could not reach a safe distance");
             CapitalSupportScreen = cat.CreateEntry("CapitalSupportScreen", true, null,
-                "AI bb/bc/ca move up to effective gun range and engage the enemies nearest to their own screen while it is attacking, instead of waiting at extreme range");
+                "Battle line first: AI bb/bc/ca move up to effective gun range instead of waiting at extreme range (unless the enemy is clearly stronger), AI flotillas hold their torpedoes until the battle lines are engaged, then the line supports them by engaging the enemies nearest to the attacking flotillas");
             SupportRangeFraction = cat.CreateEntry("SupportRangeFraction", 0.6f, null, "Screen support: capital ships close to this share of their gun range");
             CoverRetreat = cat.CreateEntry("CoverRetreat", true, null,
                 "When the AI torpedo attack has failed and the enemy is stronger, the most valuable ships (cost and build time) withdraw while the cheaper ones attack the pursuers or lay smoke between them");
@@ -1673,6 +1673,8 @@ namespace DipGgFixes
             float abort = playerSide ? AbortDamage(doc) : AbortFor(leader, doc);
             // 1.11.86: AI attack cycle - press until every tube is empty, turn away, reload, come back
             if (!playerSide && ammo && dmg <= abort && ReloadCycle(leader, div, st, enemies)) return;
+            // 1.11.87: torpedoes gone and no reloads on board - an AI flotilla that is still fit turns on the enemy light forces instead of retreating
+            if (st.charging && !ammo && dmg <= abort && !playerSide && IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) { st.charging = false; st.reloading = false; return; }
             if (st.charging && (dmg > abort || !ammo))
             {
                 st.charging = false;
@@ -1683,7 +1685,7 @@ namespace DipGgFixes
             bool mass = false;
             if (!playerSide) { var bt = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (bt != null) mass = MassAttack(leader.player, bt, enemies); }
             if (!ammo || dmg > abort) { st.reloading = false; st.returnAttack = false; }
-            if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; Why(st, "no torpedo ammo"); return; }
+            if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; if (!playerSide && IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; Why(st, "no torpedo ammo"); return; }
             if (dmg > abort) { Why(st, "too damaged for a charge"); return; }
 
             float bestD;
@@ -1708,6 +1710,13 @@ namespace DipGgFixes
                 {
                     if (!st.massLogged) { st.massLogged = true; Log($"{st.name} ({leader.shipType.name}): massed torpedo attack - charges {best.name} from {bestD:0} m (torpedoes {torp:0} m); alone it would not get through, part of the attack will"); }
                     start = float.MaxValue;
+                }
+                else if (!playerSide && !st.fighting && !st.covering && DipGgFixesMod.CapitalSupportScreen.Value && IsLight(leader)
+                         && BattleManager.Instance != null && BattleManager.Instance.CurrentBattle != null
+                         && LinesEngaged(leader.player, BattleManager.Instance.CurrentBattle, enemies) == 1)
+                {
+                    // 1.11.87 (War Instructions 1944, 12124): own battle line present but not yet engaged - torpedoes are held back
+                    Why(st, "holding torpedoes until the battle lines are engaged"); return;
                 }
                 else if (st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
                 {

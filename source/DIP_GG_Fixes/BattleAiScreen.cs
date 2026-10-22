@@ -179,28 +179,42 @@ namespace DipGgFixes
         // ---- capital ships support their attacking screen; returns true when it took over the division
         internal static bool ScreenSupport(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies)
         {
+            // 1.11.87 (War Instructions 1944): the battle line opens fire at the maximum effective range and keeps the enemy line under
+            // fire (1295, 1298); the flotillas attack once the lines are engaged (12124). The line moves up first, unless the enemy is
+            // clearly stronger - then the torpedoes go first (delay action, 12298) and the massed attack rule decides.
             if (!DipGgFixesMod.CapitalSupportScreen.Value) return false;
             var p = leader.player; if (p == null) return false;
             float now = UnityEngine.Time.time;
+            var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
+            if (battle == null) return false;
+            Il2CppSystem.Collections.Generic.List<Ship> mine = null; try { mine = battle.ShipsOf(p, true); } catch { }
+            bool fog = Fog.AiActive && !p.isMain;
+            float own = Strength(mine), foe = fog ? PerceivedStrength(p, enemies) : Strength(enemies);
+            bool weaker = foe > own * DipGgFixesMod.CoverRetreatStrengthRatio.Value;
+            if (weaker || DivDamage(div) > AbortFor(leader, doc))
+            {
+                if (st.supporting) { st.supporting = false; Log($"{st.name}: {(weaker ? "enemy stronger - the line does not seek the engagement, torpedoes first" : "too damaged")} - left to the game"); }
+                return false;
+            }
+            // target: the enemy nearest to an attacking own flotilla, otherwise the nearest enemy capital ship
             var c = UnityEngine.Vector3.zero; int n = 0;
             foreach (var kv in States)
             {
                 var s2 = kv.Value; if (s2 == st || s2.playerPtr != p.Pointer) continue;
                 if ((s2.charging || s2.reloading) && now - s2.activeAt < 15f) { c += s2.pos; n++; }
             }
-            if (n == 0 || DivDamage(div) > AbortFor(leader, doc))
-            {
-                if (st.supporting) { st.supporting = false; Log($"{st.name}: screen no longer attacking - support ended, left to the game"); }
-                return false;
-            }
-            c /= n;
             Ship tgt = null; float td = float.MaxValue;
-            for (int i = 0; i < enemies.Count; i++)
+            if (n > 0)
             {
-                var e = enemies[i]; if (!Alive(e) || !Combat(e) || !e.IsVisibleFor(leader)) continue;
-                var dv = e.transform.position - c; dv.y = 0f; float d = dv.magnitude;
-                if (d < td) { td = d; tgt = e; }
+                c /= n;
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    var e = enemies[i]; if (!Alive(e) || !Combat(e) || !e.IsVisibleFor(leader)) continue;
+                    var dv = e.transform.position - c; dv.y = 0f; float d = dv.magnitude;
+                    if (d < td) { td = d; tgt = e; }
+                }
             }
+            else tgt = NearestVisibleCapital(leader, enemies, out td);
             if (tgt == null) return false;
             float ownR = GunRange(leader); if (ownR <= 0f) return false;
             float want = ownR * DipGgFixesMod.SupportRangeFraction.Value;
@@ -208,7 +222,7 @@ namespace DipGgFixes
             if (CannotPenetrate(leader, tgt, want, out pen, out belt)) return false; // the close-in rules decide for armoured targets
             float dist = Dist(leader, tgt);
             if (!st.supporting || st.supportTarget != tgt.Pointer)
-                Log($"{st.name} ({leader.shipType.name}): own screen is attacking - closes to {want:0} m to support it and engages {tgt.name} ({tgt.shipType.name}, {dist:0} m)");
+                Log($"{st.name} ({leader.shipType.name}): {(n > 0 ? "own flotillas attacking - supports them" : "battle line moves up to effective range")}, closes to {want:0} m and engages {tgt.name} ({tgt.shipType.name}, {dist:0} m)");
             st.supporting = true; st.supportTarget = tgt.Pointer;
             if (dist > want)
             {
@@ -216,6 +230,54 @@ namespace DipGgFixes
                 if (tt != null) { if (dist > ownR) MoveEvasive(div, leader, st, tt.position, "moving up to support the screen"); else div.MoveTo(tt.position); }
             }
             Why(st, "supporting the screen");
+            return true;
+        }
+
+        // ---- 1.11.87: are the battle lines engaged? (War Instructions 1944, 12124: torpedo attacks are normally delayed until then)
+        static readonly Dictionary<IntPtr, float> engagedNext = new Dictionary<IntPtr, float>();
+        static readonly Dictionary<IntPtr, int> engagedState = new Dictionary<IntPtr, int>(); // 0 no capitals, 1 not engaged, 2 engaged
+        internal static int LinesEngaged(Player p, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            float now = UnityEngine.Time.time; float nx; int stt;
+            if (engagedNext.TryGetValue(p.Pointer, out nx) && now < nx && engagedState.TryGetValue(p.Pointer, out stt)) return stt;
+            stt = 0;
+            Il2CppSystem.Collections.Generic.List<Ship> mine = null; try { mine = battle.ShipsOf(p, true); } catch { }
+            for (int i = 0; mine != null && i < mine.Count; i++)
+            {
+                var x = mine[i]; if (!Alive(x) || !IsCapital(x)) continue;
+                if (stt == 0) stt = 1;
+                float r = GunRange(x); if (r <= 0f) continue;
+                for (int k = 0; k < enemies.Count; k++)
+                {
+                    var e = enemies[k]; if (!Alive(e) || !Combat(e) || !e.IsVisibleFor(x)) continue;
+                    if (!IsCapital(e) && Ton(e) < Ton(x) * 0.5f) continue;
+                    if (Dist(x, e) <= r * 0.9f) { stt = 2; break; }
+                }
+                if (stt == 2) break;
+            }
+            int was; engagedState.TryGetValue(p.Pointer, out was);
+            if (was != stt && stt == 2) Log($"{p.data.name}: the battle lines are engaged - flotillas cleared for torpedo attacks");
+            engagedState[p.Pointer] = stt; engagedNext[p.Pointer] = now + 3f;
+            return stt;
+        }
+
+        // ---- 1.11.87: torpedoes expended and no spares on board - the flotilla turns on the enemy light forces (12128-12129)
+        internal static bool EngageLightForces(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            if (!DipGgFixesMod.TorpedoReloadCycle.Value) return false;
+            if (DivDamage(div) > AbortFor(leader, doc)) return false;
+            Ship best = null; float bd = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Alive(e) || !IsLight(e) || !e.IsVisibleFor(leader)) continue;
+                float d = Dist(leader, e); if (d < bd) { bd = d; best = e; }
+            }
+            if (best == null) return false;
+            float r = GunRange(leader); if (r <= 0f) return false;
+            if (st.reason != "torpedoes expended - engaging enemy light forces")
+                Log($"{st.name} ({leader.shipType.name}): torpedoes expended, no reloads on board - turns on the enemy light forces, {best.name} ({best.shipType.name}) at {bd:0} m");
+            if (bd > r * 0.7f) { var tt = best.transform; if (tt != null) { if (div.isRetreating || div.retreat) div.Retreat(false); div.MoveTo(tt.position); } }
+            Why(st, "torpedoes expended - engaging enemy light forces");
             return true;
         }
 
