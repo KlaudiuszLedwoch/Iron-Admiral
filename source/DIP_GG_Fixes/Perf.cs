@@ -32,11 +32,7 @@ namespace DipGgFixes
             On = cat.CreateEntry("PerformanceLog", true, null,
                 "Battle: write a [Perf] line every 30 s with the frame rate and the time the mod takes per frame (for finding slowdowns in large battles)");
             mig196 = cat.CreateEntry("PerfDefaults196", false, null, "Internal: 1.11.96 switched the armour diagnostics off once (they slowed large battles)");
-            if (!mig196.Value)
-            {
-                try { if (ArmorDiag.On != null) ArmorDiag.On.Value = false; } catch { }
-                mig196.Value = true;
-            }
+            // (1.11.99: the one-time switch-off moved to DipGgFixesMod.Migrations on the first frame)
         }
         internal static bool Enabled { get { return On != null && On.Value; } }
         internal static long T() { return clock.ElapsedTicks; }

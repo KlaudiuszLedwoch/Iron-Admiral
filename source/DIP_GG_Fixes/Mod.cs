@@ -230,6 +230,7 @@ namespace DipGgFixes
 
         public override void OnUpdate()
         {
+            if (!migDone) { migDone = true; Migrations(); }
             try { Perf.Frame(); } catch { }
             long t0 = Perf.Enabled ? Perf.T() : 0;
             try { Update0(); } finally { if (t0 != 0) Perf.Add(Perf.UPD, t0); }
@@ -283,6 +284,21 @@ namespace DipGgFixes
         }
 
         internal static HarmonyLib.Harmony Harm; // 1.11.96
+        // 1.11.99: one-time setting changes run on the first frame - MelonLoader loads the saved values after OnInitializeMelon,
+        // so a change made there was overwritten (1.11.96/1.11.98 migrations had no effect on existing installs)
+        internal static MelonPreferences_Entry<bool> MigSide, MigArmor;
+        static bool migDone;
+        static void Migrations()
+        {
+            try
+            {
+                bool save = false;
+                if (MigSide != null && !MigSide.Value) { TorpedoSideCheck.Value = false; MigSide.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: TorpedoSideCheck switched off once (1.11.99)"); }
+                if (MigArmor != null && !MigArmor.Value) { if (ArmorDiag.On != null) ArmorDiag.On.Value = false; MigArmor.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: ArmorDiagnostics switched off once (1.11.99)"); }
+                if (save) MelonPreferences.Save();
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] settings migration: " + e.Message); }
+        }
         public override void OnInitializeMelon()
         {
             Harm = HarmonyInstance;
@@ -443,8 +459,8 @@ namespace DipGgFixes
                 "AI ships hold torpedoes when the shot is hopeless: the target outruns the torpedo, the run to the intercept point exceeds the torpedo range, or the target is a small ship beyond close range");
             TorpedoSideCheck = cat.CreateEntry("TorpedoSideCheck", false, null,
                 "Experimental (off): drop a torpedo aim of one side's launchers whose target lies on the other side of the ship; player-set torpedo targets are never touched");
-            var sideFix = cat.CreateEntry("TorpedoSideCheckOff198", false, null, "Internal: 1.11.98 switched TorpedoSideCheck off once (it dropped valid torpedo aims)");
-            if (!sideFix.Value) { TorpedoSideCheck.Value = false; sideFix.Value = true; }
+            MigSide = cat.CreateEntry("MigrationTorpedoSideOff199", false, null, "Internal: 1.11.99 switched TorpedoSideCheck off once (it dropped valid torpedo aims)");
+            MigArmor = cat.CreateEntry("MigrationArmorDiagOff199", false, null, "Internal: 1.11.99 switched the armour diagnostics off once (they slowed large battles)");
             TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
                 "Apply the same torpedo check to the player's ships under automatic torpedo fire");
             TorpedoSenseClose = cat.CreateEntry("TorpedoSenseCloseRange", 1500f, null,
