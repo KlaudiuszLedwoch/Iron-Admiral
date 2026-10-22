@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.92", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.93", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -194,6 +194,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> PlayerScoutCharge;
         internal static MelonPreferences_Entry<bool> TorpedoFriendlyLane;
         internal static MelonPreferences_Entry<float> LaneHalfWidth;
+        internal static MelonPreferences_Entry<bool> TorpedoSense, TorpedoSensePlayer; // 1.11.93
+        internal static MelonPreferences_Entry<float> TorpedoSenseClose, TorpedoSenseSpeed, TorpedoSenseMargin;
         internal static MelonPreferences_Entry<bool> SmartTargeting;
         internal static MelonPreferences_Entry<bool> SmartTargetingAi;
         internal static MelonPreferences_Entry<float> TorpedoThreatRangeMult;
@@ -418,6 +420,16 @@ namespace DipGgFixes
                 "Player ships hold their torpedoes while a friendly ship is in the lane towards the torpedo target");
             LaneHalfWidth = cat.CreateEntry("TorpedoLaneHalfWidth", 350f, null,
                 "Half width (m) of the lane checked for friendly ships");
+            TorpedoSense = cat.CreateEntry("TorpedoSense", true, null,
+                "AI ships hold torpedoes when the shot is hopeless: the target outruns the torpedo, the run to the intercept point exceeds the torpedo range, or the target is a small ship beyond close range");
+            TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
+                "Apply the same torpedo check to the player's ships under automatic torpedo fire");
+            TorpedoSenseClose = cat.CreateEntry("TorpedoSenseCloseRange", 1500f, null,
+                "Torpedo check: inside this distance (m) the torpedoes are never held");
+            TorpedoSenseSpeed = cat.CreateEntry("TorpedoSenseTorpedoSpeed", 20f, null,
+                "Torpedo check: assumed torpedo speed (m/s) for the intercept estimate");
+            TorpedoSenseMargin = cat.CreateEntry("TorpedoSenseRangeMargin", 0.85f, null,
+                "Torpedo check: the run to the intercept point may use at most this share of the torpedo range");
             SmartTargeting = cat.CreateEntry("SmartTargeting", true, null,
                 "Player ships without a manual target: guns pick the most damaged enemy in range; bb/bc main guns prefer the heaviest enemy calibre; secondary guns prefer the nearest torpedo threat");
             SmartTargetingAi = cat.CreateEntry("SmartTargetingAi", true, null,
@@ -1935,7 +1947,8 @@ namespace DipGgFixes
     internal static class ShipTick
     {
         internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>();
-            public IntPtr playerPtr; public IntPtr mainTarget; public float mainAt; } // 1.11.88: fire distribution
+            public IntPtr playerPtr; public IntPtr mainTarget; public float mainAt; // 1.11.88: fire distribution
+            public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; } // 1.11.93: hopeless torpedo shots
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
         internal static int targetChanges, laneHolds, panics;
@@ -1956,6 +1969,29 @@ namespace DipGgFixes
             float now = UnityEngine.Time.time;
             bool isPlayer = player.isMain && !s.isAiControlled;
             if (isPlayer && DipGgFixesMod.TorpedoFriendlyLane.Value && s.haveTorpedoes && now >= st.nextLane) { st.nextLane = now + 0.5f; TorpedoLane(s, st, now); }
+            // 1.11.93: hold a hopeless torpedo shot (mode set Off while hopeless, the saved mode restored afterwards)
+            if (DipGgFixesMod.TorpedoSense.Value && s.haveTorpedoes && !st.laneBlocked && (!isPlayer || DipGgFixesMod.TorpedoSensePlayer.Value))
+            {
+                if (now >= st.nextSense)
+                {
+                    st.nextSense = now + 0.5f; string why = null;
+                    bool hold = false;
+                    try { hold = TorpedoHopeless(s, st, now, out why); } catch { hold = false; }
+                    if (hold != st.senseHold && senseLogs < 80) { senseLogs++; BattleAi.Log(hold ? $"{s.name}: torpedoes held - {why}" : $"{s.name}: torpedo shot possible again (was: {st.senseWhy})"); }
+                    if (hold) { if (!st.senseHold) senseHolds++; st.senseWhy = why; }
+                    st.senseHold = hold;
+                }
+                var m = s.torpedoMode;
+                if (st.senseHold)
+                {
+                    if (m != Ship.ShootMode.Off && m != Ship.ShootMode.Invalid) { st.senseSaved = m; st.senseApplied = true; s.torpedoMode = Ship.ShootMode.Off; }
+                }
+                else if (st.senseApplied)
+                {
+                    st.senseApplied = false;
+                    if (m == Ship.ShootMode.Off) s.torpedoMode = st.senseSaved;
+                }
+            }
             if (DipGgFixesMod.Panic.Value && now >= st.nextPanic) { st.nextPanic = now + 3f; PanicCheck(s, st); }
             if (isPlayer && s.isDivLeader && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
         }
@@ -2005,6 +2041,54 @@ namespace DipGgFixes
             }
             catch { }
             return null;
+        }
+        // ---- 1.11.93: hopeless torpedo shot (player report 22.10: an enemy CA kept firing torpedoes without a chance)
+        internal static int senseLogs, senseHolds;
+        class Track { public UnityEngine.Vector3 pos, vel; public float t; }
+        static readonly Dictionary<IntPtr, Track> tracks = new Dictionary<IntPtr, Track>();
+        // ground velocity (m/s) of a ship estimated from its position between calls
+        static UnityEngine.Vector3 Vel(Ship x, float now)
+        {
+            var tr = x.transform; if (tr == null) return UnityEngine.Vector3.zero;
+            var p = tr.position; p.y = 0f;
+            if (tracks.Count > 2000) tracks.Clear();
+            if (!tracks.TryGetValue(x.Pointer, out var k)) { tracks[x.Pointer] = new Track { pos = p, t = now }; return UnityEngine.Vector3.zero; }
+            float dt = now - k.t;
+            if (dt > 30f) { k.pos = p; k.t = now; k.vel = UnityEngine.Vector3.zero; return k.vel; }
+            if (dt >= 0.25f) { var v = (p - k.pos) / dt; k.vel = k.vel == UnityEngine.Vector3.zero ? v : UnityEngine.Vector3.Lerp(k.vel, v, 0.5f); k.pos = p; k.t = now; }
+            return k.vel;
+        }
+        static bool TorpedoHopeless(Ship s, St st, float now, out string why)
+        {
+            why = null;
+            var t = TorpedoTarget(s);
+            if (t != null) st.senseTarget = t;
+            else if (st.senseHold) t = st.senseTarget; // the game may drop the torpedo aim while the mode is Off
+            if (t == null || t.isDead || t.isSinking) return false;
+            float d = BattleAi.Dist(s, t);
+            if (d <= DipGgFixesMod.TorpedoSenseClose.Value) return false;
+            float range = BattleAi.TorpedoRange(s);
+            if (range > 0f && d > range) { why = $"{t.name} at {d:0} m beyond torpedo range {range:0} m"; return true; }
+            if (!BattleAi.TorpedoWorthy(s, t)) { why = $"{t.name} is a small target at {d:0} m"; return true; }
+            var ps = s.transform.position; var pt = t.transform.position; ps.y = 0f; pt.y = 0f;
+            var P = pt - ps; var V = Vel(t, now); Vel(s, now);
+            float vt = DipGgFixesMod.TorpedoSenseSpeed.Value; if (vt < 5f) vt = 5f;
+            // intercept time T: |P + V T| = vt T
+            float a = V.sqrMagnitude - vt * vt, b = 2f * UnityEngine.Vector3.Dot(P, V), c = P.sqrMagnitude, T = -1f;
+            if (UnityEngine.Mathf.Abs(a) < 1e-3f) { if (b < 0f) T = -c / b; }
+            else
+            {
+                float disc = b * b - 4f * a * c;
+                if (disc >= 0f)
+                {
+                    float sq = UnityEngine.Mathf.Sqrt(disc), t1 = (-b - sq) / (2f * a), t2 = (-b + sq) / (2f * a);
+                    T = t1 > 0f && (t1 < t2 || t2 <= 0f) ? t1 : t2;
+                }
+            }
+            if (T <= 0f) { why = $"{t.name} at {d:0} m outruns the torpedo"; return true; }
+            float run = vt * T, lim = range * DipGgFixesMod.TorpedoSenseMargin.Value;
+            if (range > 0f && run > lim) { why = $"{t.name} at {d:0} m: run to the intercept point {run:0} m > {lim:0} m usable torpedo range"; return true; }
+            return false;
         }
         static bool LaneHasFriend(Ship s)
         {
