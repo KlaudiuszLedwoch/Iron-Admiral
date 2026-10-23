@@ -12,7 +12,7 @@ namespace DipGgFixes
 {
     internal static class VersionLabel
     {
-        static string ia;
+        static string ia; static bool logged;
         internal static string Package()
         {
             if (ia != null) return ia;
@@ -37,6 +37,7 @@ namespace DipGgFixes
                 if (cur.StartsWith("Iron Admiral")) return;
                 string p = Package(); if (p.Length == 0) return;
                 text.text = "Iron Admiral " + p + (cur.Length > 0 ? " | " + cur : "");
+                if (!logged) { logged = true; MelonLogger.Msg("[DIP GG Fixes][UI] version text: " + text.text); }
             }
             catch { }
         }
