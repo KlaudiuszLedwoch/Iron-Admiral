@@ -789,11 +789,26 @@ namespace DipGgFixes
             try { if (!ship.IsValidWeightOffset()) w.Add("weight offset/stability"); } catch { }
             try
             {
-                string r; Il2CppSystem.Collections.Generic.Dictionary<Part, string> d;
-                if (!ship.IsValidCostReqParts(out r, out _, out d)) { w.Add("parts: " + (r ?? "")); if (d != null) foreach (var kv in d) { try { w.Add((kv.Key != null && kv.Key.data != null ? kv.Key.data.name : "?") + "=" + kv.Value); } catch { } } }
+                string r; Il2CppSystem.Collections.Generic.Dictionary<Part, string> d; Il2CppSystem.Collections.Generic.List<ShipType.ReqInfo> rq;
+                if (!ship.IsValidCostReqParts(out r, out rq, out d))
+                {
+                    w.Add("parts: " + (r ?? ""));
+                    // 1.11.121: name the unmet stat requirements (stat = value, allowed min~max) instead of the bare "requirements"
+                    if (rq != null) foreach (var q in rq) { try { string sn = q.stat != null ? q.stat.name : "?"; float v = 0f; try { v = ship.stats[q.stat].total; } catch { } w.Add("req " + sn + "=" + v.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + " (" + q.min.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + "~" + q.max.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + ")"); } catch { } }
+                    if (d != null) foreach (var kv in d) { try { w.Add((kv.Key != null && kv.Key.data != null ? kv.Key.data.name : "?") + "=" + kv.Value); } catch { } }
+                }
             }
             catch (Exception e) { w.Add("req check: " + e.GetType().Name); }
-            try { string r; if (!ship.IsValidCostWeightBarbette(out r, out _)) w.Add("cost/weight/barbette: " + (r ?? "")); } catch { }
+            try
+            {
+                string r; Il2CppSystem.Collections.Generic.List<Part> eb;
+                if (!ship.IsValidCostWeightBarbette(out r, out eb))
+                {
+                    w.Add("cost/weight/barbette: " + (r ?? ""));
+                    if (eb != null && eb.Count > 0) { var names = new List<string>(); foreach (var p in eb) { try { names.Add(p != null && p.data != null ? p.data.name : "?"); } catch { } } w.Add("empty barbettes: " + string.Join(" ", names)); }
+                }
+            }
+            catch { }
             return string.Join(" | ", w).Replace(",", " ").Replace("\n", " ");
         }
         static float ShipSpeed(Ship s) { try { return s.speedMax * 1.94384f; } catch { return 0f; } }
