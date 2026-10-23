@@ -41,12 +41,37 @@ namespace DipGgFixes
                     var go = hits[i].gameObject; if (go == null) continue;
                     var cv = go.GetComponentInParent<Canvas>();
                     if (cv != null && cv.rootCanvas != null && cv.rootCanvas.renderMode == RenderMode.WorldSpace) continue;
-                    if (seenCover.Count < 15 && seenCover.Add(go.name)) Log("label hidden under interface element: " + go.name);
+                    // 1.11.129: log of 2026-10-23 - the map's own markers (port names, flags, province names) are screen-space interface
+                    // too and hid labels of neighbouring ports; anything under a map marker does not count as a window
+                    if (MapMarker(go.transform)) continue;
+                    if (seenCover.Count < 15 && seenCover.Add(go.name)) Log("label hidden under interface element: " + Path(go.transform));
                     return true;
                 }
             }
             catch (Exception ex) { if (errors++ < 5) Log("interface check: " + ex.Message); }
             return false;
+        }
+
+        static readonly Dictionary<IntPtr, bool> markerCache = new Dictionary<IntPtr, bool>();
+        static bool MapMarker(Transform t)
+        {
+            if (t == null) return false;
+            bool r; if (markerCache.TryGetValue(t.Pointer, out r)) return r;
+            r = false;
+            for (var p = t; p != null; p = p.parent)
+            {
+                string n = p.name;
+                if (n == "Port Name" || n == "Province" || n == "Flag" || n == "Lable")
+                { r = true; break; }
+                try { if (p.GetComponent<PortElement>() != null) { r = true; break; } } catch { }
+            }
+            if (markerCache.Count > 5000) markerCache.Clear();
+            markerCache[t.Pointer] = r; return r;
+        }
+        static string Path(Transform t)
+        {
+            var s = new List<string>(); for (var p = t; p != null && s.Count < 6; p = p.parent) s.Insert(0, p.name);
+            return string.Join("/", s);
         }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -132,7 +157,7 @@ namespace DipGgFixes
                 try { es = UnityEngine.EventSystems.EventSystem.current; if (es != null && es.IsPointerOverGameObject()) return; } catch { }
                 // labels under an open window (move ships, port, fleet...) are left out: the screen-space interface at the label
                 // is checked every 0.3 s (OnGUI draws above the game's interface, so it has to stay away from it)
-                bool recheck = Time.unscaledTime >= nextCover; if (recheck) nextCover = Time.unscaledTime + 0.3f;
+                bool recheck = Time.unscaledTime >= nextCover; if (recheck) nextCover = Time.unscaledTime + 0.5f;
                 if (st == null) { st = new GUIStyle(); st.fontSize = 12; st.alignment = TextAnchor.MiddleCenter; st.richText = false; }
                 float k = UiScale.F; if (k <= 0f) k = 1f;
                 float W = UiScale.W, H = UiScale.H;
