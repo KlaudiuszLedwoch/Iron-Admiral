@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.149", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.150", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -218,6 +218,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> CaptureDamage;
         internal static MelonPreferences_Entry<bool> SurrenderReturnToWinner;
         internal static MelonPreferences_Entry<bool> CoreIndependence;
+        internal static MelonPreferences_Entry<float> CoreSuppressEscalation, CoreOccupationUnrest, CoreOccupationCost; // 1.11.150
         internal static MelonPreferences_Entry<float> CoreRevoltBonus, CoreRevoltRampMonths, CoreSuppressIncomeMonths, CoreSuppressUnrest, CoreSuppressRelations, CoreSuppressAiMaxUnrest, CoreSuppressCalmMonths;
         internal static MelonPreferences_Entry<float> TorpedoTargetSizeRatio;
         internal static MelonPreferences_Entry<float> MassAttackStrengthRatio;
@@ -530,6 +531,9 @@ namespace DipGgFixes
             CoreSuppressRelations = cat.CreateEntry("CoreSuppressRelations", 8f, null, "Attitude lost with every other great power when a rising is put down (neighbours of the province and its own nation: x1.5)");
             CoreSuppressAiMaxUnrest = cat.CreateEntry("CoreSuppressAiMaxUnrest", 40f, null, "The AI puts a rising down only if its unrest stays below this value (and it has three times the cost in cash)");
             CoreSuppressCalmMonths = cat.CreateEntry("CoreSuppressCalmMonths", 12f, null, "Months a province stays calm after a rising was put down (game's revolt cooldown)");
+            CoreSuppressEscalation = cat.CreateEntry("CoreSuppressEscalation", 0.5f, null, "Every rising already put down in a province makes the next one dearer and angrier by this share (cost and unrest x1+0.5 per earlier rising); the calm that follows gets shorter (12 months, then 6, 4, 3)");
+            CoreOccupationUnrest = cat.CreateEntry("CoreOccupationUnrest", 0.5f, null, "Unrest added each month at home for every occupied foreign core province in peacetime (x the strength of the occupied nation, more after risings put down)");
+            CoreOccupationCost = cat.CreateEntry("CoreOccupationCost", 3f, null, "Garrison cost each month for every occupied foreign core province in peacetime, % of monthly income (x the strength of the occupied nation, more after risings put down)");
             CoreRevoltRampMonths = cat.CreateEntry("CoreRevoltRampMonths", 12f, null,
                 "Months of peace over which the extra revolt chance builds up to its full value");
             SurrenderReturnToWinner = cat.CreateEntry("SurrenderedShipsToBattleWinner", true, null,

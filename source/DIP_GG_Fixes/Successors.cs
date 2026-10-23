@@ -23,7 +23,7 @@ namespace DipGgFixes
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("UngovernedToSuccessors", true, null, "Campaign: a province left without a government goes at once to its historical successor state (claim in provinces.csv); a dissolved great power may later unite again from its successor states");
-            Reunify = cat.CreateEntry("ReunificationChance", 1.0f, null, "Campaign: chance per month (%) that a dissolved great power unites again when all its core provinces are held by small successor states at peace");
+            Reunify = cat.CreateEntry("ReunificationChance", 5.0f, null, "Campaign: chance per month (%) that a dissolved great power unites again when all its core provinces are held by small successor states at peace");
         }
 
         // provinces.csv: @name ... claim (column found by header name); quoted fields allowed
