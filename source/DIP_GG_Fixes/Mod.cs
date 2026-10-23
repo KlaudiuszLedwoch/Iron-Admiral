@@ -473,7 +473,7 @@ namespace DipGgFixes
             TorpedoSenseMargin = cat.CreateEntry("TorpedoSenseRangeMargin", 0.85f, null,
                 "Torpedo check: the run to the intercept point may use at most this share of the torpedo range");
             SmartTargeting = cat.CreateEntry("SmartTargeting", true, null,
-                "Player ships without a manual target: guns pick the most damaged enemy in range; bb/bc main guns prefer the heaviest enemy calibre; secondary guns prefer the nearest torpedo threat");
+                "Player ships without a manual target: guns pick the most damaged enemy in range; bb/bc main guns prefer the heaviest enemy calibre; secondary guns prefer the nearest torpedo threat, then the nearest enemy");
             SmartTargetingAi = cat.CreateEntry("SmartTargetingAi", true, null,
                 "Apply the same target selection to AI ships (replaces FocusFire)");
             TorpedoThreatRangeMult = cat.CreateEntry("TorpedoThreatRangeMult", 1.5f, null,
@@ -2459,7 +2459,15 @@ namespace DipGgFixes
                 if (d <= tr && d < threatD) { threatD = d; threat = e; }
             }
             if (threat != null) return threat;
-            return PickMain(s, enemies, range, false);
+            // 1.11.121: no torpedo threat - the nearest enemy in range (secondary guns lose and regain the range fastest and do most
+            // at short range; player report 23.10: a close enemy was ignored for a damaged ship far away); damage only decides
+            // between enemies at about the same distance (within 15% or 1 km of the nearest)
+            Ship near = null; float nearD = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (!U(s, e)) continue; float d = D(s, e); if (d <= range && d < nearD) { nearD = d; near = e; } }
+            if (near == null) return null;
+            float band = UnityEngine.Mathf.Max(nearD * 1.15f, nearD + 1000f); Ship best = near; float bestDm = Dm(near);
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (!U(s, e)) continue; float d = D(s, e); if (d > band || d > range) continue; float dm = Dm(e); if (dm > bestDm + 0.05f) { bestDm = dm; best = e; } }
+            return best;
         }
 
         // ---- panic: inexperienced crews on badly damaged ships break off
