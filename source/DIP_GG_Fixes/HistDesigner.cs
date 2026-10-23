@@ -558,7 +558,7 @@ namespace DipGgFixes
                 int n = wantMain / per; if (n <= 0) continue;
                 var gd = guns.Where(g => { try { return g.barrels == per; } catch { return false; } }).OrderBy(g => Mathf.Abs(InchOf(g) - wantIn)).FirstOrDefault();
                 if (gd == null) { log.Add($"no {per}-gun {wantIn:0.#} in turret"); continue; }
-                var free = FreeMounts(ship, gd);
+                var free = FreeMounts(ship, gd, per == 1);   // 1.11.113: single mounts may also go on wing (side) positions, as on early cruisers
                 if (free.Count < n)
                 {
                     // free centre-line mounts that take the turret but hold a smaller gun turret
@@ -593,6 +593,8 @@ namespace DipGgFixes
                         if (part == null) continue;
                         ship.AddPart(part);
                         try { part.LoadModel(ship, true); } catch { }
+                        // 1.11.113: colliders sized as the game's generator does - without it every new turret collided ("part")
+                        try { part.UpdateCollidersSize(ship); } catch { }
                         part.Mount(m, true);
                         string why = null; bool ok = true; try { ok = part.CanPlace(out why); } catch { }
                         if (!ok && why != "available") { ship.RemovePart(part, true, false); log.Add($"{gd.name}: {why}"); continue; }
@@ -611,7 +613,7 @@ namespace DipGgFixes
             }
             return 0;
         }
-        static List<Mount> FreeMounts(Ship ship, PartData gd)
+        static List<Mount> FreeMounts(Ship ship, PartData gd, bool allowSide = false)
         {
             var l = new List<Mount>();
             try
@@ -627,7 +629,7 @@ namespace DipGgFixes
                     bool side = false, cas = false; try { side = m.side; cas = m.casemate; } catch { }
                     if (cas) continue;
                     bool fits = false; try { fits = m.Fits(gd, null, null); } catch { }
-                    if (fits && !side) l.Add(m);
+                    if (fits && (allowSide || !side)) l.Add(m);
                 }
             }
             catch { }
