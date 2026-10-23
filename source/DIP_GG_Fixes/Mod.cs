@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.122", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.124", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -2948,17 +2948,24 @@ namespace DipGgFixes
         // 1.11.108: two release lines - stable (branch main) and beta (branch beta, versions "1.2.N-beta.K").
         // UpdateChannel: "auto" follows the installed package (a beta package checks the beta line), "stable" or "beta".
         internal static MelonPreferences_Entry<string> Channel;
+        // 1.11.123: switch in the F10 panel (the panel shows on/off settings only): on = the update check offers beta versions,
+        // off = stable versions (also back from a beta to the latest stable). Set once to "on" when a beta package is installed.
+        internal static MelonPreferences_Entry<bool> Beta, BetaInit;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            Channel = cat.CreateEntry("UpdateChannel", "auto", null, "Release line the update check follows: auto (as the installed package), stable or beta");
+            Channel = cat.CreateEntry("UpdateChannel", "auto", null, "Release line the update check follows: auto (the Beta updates switch decides), stable or beta");
+            Beta = cat.CreateEntry("BetaUpdates", false, null, "Beta updates: the update check offers beta versions (new features under test); off = stable versions, also back from a beta to the latest stable. Takes effect at the next start");
+            BetaInit = cat.CreateEntry("BetaUpdatesInitialised", false, null, "internal: the Beta updates switch was set from the installed package once", true);
         }
+        static bool LocalIsBeta => local != null && local.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) >= 0;
         static bool BetaLine
         {
             get
             {
                 string c = "auto"; try { c = (Channel != null ? Channel.Value : "auto").Trim().ToLowerInvariant(); } catch { }
                 if (c == "beta") return true; if (c == "stable") return false;
-                return local != null && local.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) >= 0;
+                try { if (Beta != null) return Beta.Value; } catch { }
+                return LocalIsBeta;
             }
         }
         static string Url => "https://raw.githubusercontent.com/KlaudiuszLedwoch/Iron-Admiral/" + (BetaLine ? "beta" : "main") + "/VERSION";
@@ -2982,6 +2989,9 @@ namespace DipGgFixes
                     if (File.Exists(vf)) { var l = File.ReadAllLines(vf); if (l.Length > 0) local = l[0].Trim(); if (l.Length > 1) localDll = l[1].Trim(); }
                 }
                 catch { }
+                // a beta package switches the Beta updates option on once (later the player decides in F10)
+                try { if (Beta != null && BetaInit != null && !BetaInit.Value) { BetaInit.Value = true; if (LocalIsBeta) Beta.Value = true; MelonPreferences.Save(); } } catch { }
+                MelonLogger.Msg($"[DIP GG Fixes][Update] release line: {(BetaLine ? "beta" : "stable")}");
                 System.Threading.Tasks.Task.Run(async () =>
                 {
                     // 1.11.12: the first HTTPS request from the game process can take well over 8 s (TLS and DNS
@@ -3052,6 +3062,8 @@ namespace DipGgFixes
             {
                 if (remote == null) { shown = true; return; }
                 bool newer = Newer(remote, local);
+                // 1.11.123: back from a beta to the stable line - the latest stable is offered even if its number is lower
+                if (!newer && !BetaLine && LocalIsBeta && !string.IsNullOrEmpty(remote) && remote != local && remote.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) < 0) newer = true;
                 if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}), latest on GitHub ({(BetaLine ? "beta" : "stable")} line) {remote} ({remoteDll}) - {(newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
                 if (!newer) { shown = true; return; }
                 if (UnityEngine.Time.realtimeSinceStartup - firstTry < 15f) return; // let the main menu appear first
