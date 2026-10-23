@@ -31,6 +31,16 @@ Full, reasoned change history: `CHANGELOG_EN.txt` / `CHANGELOG_PL.txt` (103 sect
 
 Latest in the current 1.1 package: DIP_GG_Fixes 1.11.0 (torpedo charges start by torpedo range and speed advantage; AI capital ships charge or close in when outgunned; player scout divisions charge; torpedoes held while a friendly ship is in the lane; smart target selection for all guns; non-linear veterancy up to +100%/-50%; surrender threshold by crew training; panic of green crews; surrendered ships captured by the winner - experimental), DIP_GG_Fixes 1.10.2 (shared designs are no longer re-exported every turn), a save migration tool for 1.0 campaigns (`source/save_tools`), work on the AI ship generator (lower minimum battleship belt for 1890-1900: 6"/7.5" instead of 9"; "Experimental Small Ironclad" relaxed to a 10" calibre limit and 1 turret minimum; full generator diagnostics in the log via taf_debug_shipgen_info=2 while the remaining failed designs are tracked down), and new campaigns start correctly again (predefined designs disabled, as the package ships without `predefinedDesigns.bin`).
 
+## Stable and beta
+
+Iron Admiral is released in two lines.
+
+- **Stable** - the main download (GitHub "Latest" release, Nexus main files). Only features that have been played and tested go here. Bug fixes are released here straight away.
+- **Beta** - new features that still need testing (GitHub pre-releases named 1.2.N-beta.K, a separate BETA file on Nexus). Every beta also contains all stable fixes. A feature moves to stable after it has been in the beta for a while without bug reports.
+
+The in-game update check follows the line you installed. To switch, install the package of the other line, or set UpdateChannel = stable / beta in UserData\MelonPreferences.cfg.
+
+Iron Admiral wydawany jest w dwóch liniach. **Stabilna** - główne pobranie (wydanie "Latest" na GitHubie, główne pliki na Nexusie); trafiają tu tylko funkcje sprawdzone w grze, a poprawki błędów od razu. **Beta** - nowe funkcje do testów (wydania wstępne 1.2.N-beta.K na GitHubie, osobny plik BETA na Nexusie); każda beta zawiera też wszystkie poprawki stabilnej. Funkcja przechodzi do stabilnej po pewnym czasie w becie bez zgłoszonych błędów. Sprawdzanie aktualizacji w grze podąża za zainstalowaną linią; zmiana linii: instalacja paczki drugiej linii albo UpdateChannel = stable / beta w UserData\MelonPreferences.cfg.
 ## Install
 
 Download `releases/Iron_Admiral_1.2.65_Nexus.zip`, extract anywhere, run `Install.bat` (plain PowerShell, no exe). It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing (downloaded from the official LavaGang release, SHA-256 verified) and copies the mod. `Uninstall.bat` restores the previous state. Start a new campaign.
