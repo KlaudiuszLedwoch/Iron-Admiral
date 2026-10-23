@@ -983,6 +983,7 @@ namespace DipGgFixes
                 // players by data name; national core provinces (historical list, not the game's isHome flag)
                 var players = new Dictionary<string, Player>(); var ps = cc.CampaignData.Players;
                 for (int i = 0; i < ps.Count; i++) { var pl = ps[i]; if (pl != null && pl.data != null) players[pl.data.name] = pl; }
+                try { Successors.Run(cc, players, byId); } catch (Exception se) { MelonLogger.Warning("[DIP GG Fixes][Independence] successors: " + se.Message); } // 1.11.149
                 var homePop = new Dictionary<string, float>();
                 var list = new List<KeyValuePair<string, Province>>();
                 foreach (var kv in byId)
