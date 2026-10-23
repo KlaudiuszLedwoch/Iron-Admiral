@@ -1,4 +1,4 @@
-﻿// DIP GG Fixes - MelonLoader add-on for DIP GG Extended.
+// DIP GG Fixes - MelonLoader add-on for DIP GG Extended.
 //
 // Fix 1: CampaignController.CheckMinorNationThreat sometimes throws
 //   "ArgumentException: An item with the same key has already been added.
@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.152", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.153", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 

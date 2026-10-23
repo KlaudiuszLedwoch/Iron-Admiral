@@ -48,6 +48,8 @@ namespace DipGgFixes
             catch (Exception e) { Log("provinces.csv: " + e.Message); }
             return claims;
         }
+        // 1.11.153: the historical successor state of a province (claim column), null if none
+        internal static string ClaimOf(string id) { try { var c = Claims(); string v; return c.TryGetValue(id, out v) ? v : null; } catch { return null; } }
         static List<string> Split(string s)
         {
             var r = new List<string>(); var sb = new System.Text.StringBuilder(); bool q = false;

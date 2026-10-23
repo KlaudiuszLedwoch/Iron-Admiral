@@ -61,6 +61,13 @@ namespace DipGgFixes
         }
         internal static void Reset() { autonomy.Clear(); hardUntil.Clear(); held.Clear(); queue.Clear(); }
 
+        // 1.11.153: cost base - the net monthly income, but never less than a quarter of the monthly revenue (Budget; Income =
+        // Budget - Expenses). 23.10 log: Germany, Spain, Russia paid 0.0M because their net income was not positive.
+        internal static float CostBase(Player p)
+        {
+            float inc = 0f, bud = 0f; try { inc = p.Income(); } catch { } try { bud = p.Budget(); } catch { }
+            return Math.Max(0f, Math.Max(inc, bud * 0.25f));
+        }
         static int Level(string id) { int n; return autonomy.TryGetValue(id, out n) ? n : 0; }
         static int MaxSteps() { return Math.Max(1, Steps != null ? (int)Math.Round(Steps.Value) : 3); }
         // share of the burden and of the rising pressure that is left after the autonomy granted
@@ -137,7 +144,7 @@ namespace DipGgFixes
         static void Event(Occ o, int now)
         {
             var who = o.Who;
-            float income = 0f; try { income = who.Income(); } catch { }
+            float income = CostBase(who);
             float sf = o.List.Sum(h => h.Sf);
             var d = new Decision
             {

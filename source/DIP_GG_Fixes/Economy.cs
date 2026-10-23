@@ -1018,6 +1018,9 @@ namespace DipGgFixes
                     float cur = 0f; try { cur = pr.RevoltChance; } catch { }
                     float baseC; if (!baseline.TryGetValue(id, out baseC)) { baseC = cur; baseline[id] = cur; }
                     bool occupied = occ != null && occ.data != null && occ.data.name != nationKey;
+                    // 1.11.153: a province held by its own historical successor state (e.g. Hungary holding hungary after
+                    // Austria-Hungary fell apart) is not foreign occupation - no rising against it, no occupation burden
+                    if (occupied) { var cl = Successors.ClaimOf(id); if (cl != null && string.Equals(cl, occ.data.name, StringComparison.OrdinalIgnoreCase)) occupied = false; }
                     Player orig = null; if (occupied) players.TryGetValue(nationKey, out orig);
                     bool disabled = false; if (orig != null) { try { disabled = orig.isDisabled; } catch { } }
                     bool war = !occupied || orig == null ? true : (disabled ? SafeAtWar(occ) : AtWar(cc, occ, orig));
@@ -1041,6 +1044,8 @@ namespace DipGgFixes
                     raised++;
                     // 1.11.150: holding another nation's core land costs every month - garrisons and police (money) and discontent at
                     // home (unrest), both by the strength of the occupied nation against the occupier and by risings already put down
+                    bool majorOcc = false; try { majorOcc = occ.isMajor; } catch { }
+                    if (majorOcc) // 1.11.153: only great powers carry the burden (minor states have no full treasury - the game's expenses throw for them)
                     {
                         float sf = r / (r + 0.5f) * (1f + 0.25f * Suppressions(id)) * Occupation.BurdenFactor(id); // 1.11.151: autonomy lowers the burden
                         Occupation.Collect(occ, id, nationKey, orig, pr, sf);
@@ -1061,8 +1066,7 @@ namespace DipGgFixes
                 foreach (var kv in burdenWho)
                 {
                     var who = kv.Value; float u = burdenUnrest[kv.Key], share = burdenCost[kv.Key];
-                    float income = 0f; try { income = who.Income(); } catch { }
-                    float money = Math.Max(0f, income) * share;
+                    float money = Occupation.CostBase(who) * share; // 1.11.153: budget when the net income is zero or negative (cost was 0)
                     try { if (u > 0f) who.AddUnrest(u); } catch { }
                     try { if (money > 0f) who.cash = who.cash - money; } catch { }
                     MelonLogger.Msg($"[DIP GG Fixes][Independence] occupation of {burdenCount[kv.Key]} foreign core province(s) by {Economy.Name(who)}: unrest +{u:0.##}, garrison cost {money / 1e6f:0.0}M this month");
