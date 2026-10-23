@@ -1,4 +1,4 @@
-﻿// DIP GG Fixes - MelonLoader add-on for DIP GG Extended.
+// DIP GG Fixes - MelonLoader add-on for DIP GG Extended.
 //
 // Fix 1: CampaignController.CheckMinorNationThreat sometimes throws
 //   "ArgumentException: An item with the same key has already been added.
@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.125", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.127", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -186,6 +186,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
         internal static MelonPreferences_Entry<bool> CapitalEscapeWhenHopeless;
+        internal static MelonPreferences_Entry<float> HopelessEscapeDelay;
         internal static MelonPreferences_Entry<bool> EscapeMissionLogic;
         internal static MelonPreferences_Entry<string> EscapeBattleTypes;
         internal static MelonPreferences_Entry<float> OutrangedFactor;
@@ -440,6 +441,8 @@ namespace DipGgFixes
             RamRange = cat.CreateEntry("RamRange", 2000f, null, "Ramming: an enemy ship closer than this (m) is rammed");
             CapitalEscapeWhenHopeless = cat.CreateEntry("CapitalEscapeWhenHopeless", true, null,
                 "AI battleships/battlecruisers that cannot penetrate the enemy even at close range retreat when they can survive to the end of the battle: they are faster than every visible enemy, or no visible enemy can penetrate their belt");
+            HopelessEscapeDelay = cat.CreateEntry("HopelessEscapeDelay", 120f, null,
+                "Seconds of battle time an AI capital ship keeps engaging an identified target it cannot penetrate before it breaks off (it never breaks off from a ship it has not identified)");
             EscapeMissionLogic = cat.CreateEntry("EscapeMissionLogic", true, null,
                 "In battles where the AI side's task is to get away (EscapeBattleTypes): no massed torpedo attack; divisions that are faster than the enemy retreat, divisions that cannot outrun it split up and flee in different directions so that part of the force gets away");
             EscapeBattleTypes = cat.CreateEntry("EscapeBattleTypes", "escape_taskforce", null, "Battle types (battleTypeEx.csv names, comma separated) in which the defending side tries to escape");
@@ -1200,7 +1203,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
+        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
             // 1.11.86
             public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
@@ -1892,6 +1895,18 @@ namespace DipGgFixes
                 {
                     if (!st.hopelessLogged) { st.hopelessLogged = true; Log($"{st.name} ({leader.shipType.name}): cannot penetrate {best.name} even at {UnityEngine.Mathf.Min(stopAt, bestD):0} m (pen {penNear:0.0} vs belt {beltNear:0.0}) - no close-in, left to the game"); }
                     string sw;
+                    // 1.11.127: battle log 2026-10-23 - CA Palestro turned away from CA Tonnerre (a ship of the same class) the moment she
+                    // was sighted at 17 km, before she was identified and before a shot was fired. The AI now breaks off only after the
+                    // target has been identified by its side and the guns have had time to prove the point (HopelessEscapeDelay s of
+                    // battle time while the target stays out of reach).
+                    if (st.hopelessSince < 0f) st.hopelessSince = UnityEngine.Time.time;
+                    bool known = Fog.Identified(leader.player, best);
+                    bool proven = UnityEngine.Time.time - st.hopelessSince >= DipGgFixesMod.HopelessEscapeDelay.Value;
+                    if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value && (!known || !proven))
+                    {
+                        if (!st.hopelessWaitLogged) { st.hopelessWaitLogged = true; Log($"{st.name}: no retreat yet from {best.name} - {(!known ? "target not identified" : "keeps firing first")}"); }
+                        Why(st, "hopeless penetration - waiting before breaking off"); return;
+                    }
                     if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value && IsMainShip(leader, BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null) && !st.capEscape && CanSurvive(leader, div, doc, enemies, out sw))
                     {
                         st.capEscape = true; div.Retreat(true);

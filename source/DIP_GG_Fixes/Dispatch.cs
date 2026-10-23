@@ -230,8 +230,8 @@ namespace DipGgFixes
                 {
                     var s = Ship(Subj(m, "): cannot hurt")); var t = Ship(Before(After(m, "cannot hurt ") ?? "", " and can"));
                     Say("withdraw|" + s,
-                        $"Gunnery officer, {s}: \"Our shells are bouncing off {t}'s belt, sir!\" - Captain: \"Then break off. No sense dying for nothing.\"",
-                        $"{s}: \"Hits, but no penetration on {t}. We're wasting shells - turn away.\"");
+                        $"Gunnery officer, {s}: \"Our guns won't get through {t}'s belt, sir!\" - Captain: \"Then break off. No sense dying for nothing.\"",
+                        $"{s}: \"{t}'s armour is too thick for our guns - turn away.\"");
                     return;
                 }
                 if (m.Contains(") closes in on "))
