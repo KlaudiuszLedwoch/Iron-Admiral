@@ -445,7 +445,7 @@ namespace DipGgFixes
                         if (!caAdded && NoGunSeen && hv == hulls.Count - 1 && s["type"] == "cl")
                         {
                             caAdded = true; ShipType ca = null; try { G.GameData.shipTypes.TryGetValue("ca", out ca); } catch { }
-                            List<PartData> cas = null; if (ca != null) { try { cas = AltHullsFor(ship, hull0, ca, wantT, s["nation"], (int)s.N("year"), 2); } catch (Exception e) { Log("ca hulls: " + e.Message); } }
+                            List<PartData> cas = null; if (ca != null) { try { cas = AltHullsFor(ship, hull0, ca, wantT, s["nation"], (int)s.N("year"), 2); if (cas == null || cas.Count == 0) cas = AltHullsFor(ship, hull0, ca, wantT, s["nation"], (int)s.N("year"), 2, 0.2f); } catch (Exception e) { Log("ca hulls: " + e.Message); } }
                             if (cas != null && cas.Count > 0) { foreach (var h in cas) hullSt[h.name] = ca; hulls.AddRange(cas); Log($"{s["name"]}: main gun not available to a light cruiser - heavy-cruiser hulls: {string.Join(", ", cas.Select(a => a.name))}"); }
                             else Log($"{s["name"]}: main gun not available to a light cruiser and no heavy-cruiser hull of the period covers {wantT:0} t");
                         }
@@ -763,7 +763,7 @@ namespace DipGgFixes
         }
         // other hulls of the same ship type the nation can use in that year, covering the historical displacement,
         // preferring hulls where the class sits in the lower-middle of the hull's tonnage range (room for guns and armour)
-        static List<PartData> AltHullsFor(Ship ship, PartData orig, ShipType st, float wantT, string nation, int year, int max)
+        static List<PartData> AltHullsFor(Ship ship, PartData orig, ShipType st, float wantT, string nation, int year, int max, float tol = 0f)
         {
             var res = new List<KeyValuePair<PartData, float>>();
             PlayerData pd = null; try { G.GameData.players.TryGetValue(nation, out pd); } catch { }
@@ -776,7 +776,7 @@ namespace DipGgFixes
                 bool avail = false; try { avail = ship.IsPartAvailable(p); } catch { }
                 if (!avail) continue;
                 float mn = p.tonnageMin, mx = p.tonnageMax;
-                if (wantT > 0f && (wantT < mn || wantT > mx)) continue;
+                if (wantT > 0f && (wantT < mn * (1f - tol) || wantT > mx * (1f + tol))) continue;   // 1.11.117: tol widens the range for the heavy-cruiser fallback
                 float score = mx > mn && wantT > 0f ? Mathf.Abs((wantT - mn) / (mx - mn) - 0.4f) : 1f;
                 res.Add(new KeyValuePair<PartData, float>(p, score));
             }
