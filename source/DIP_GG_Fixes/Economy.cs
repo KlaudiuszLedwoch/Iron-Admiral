@@ -994,6 +994,7 @@ namespace DipGgFixes
                     list.Add(new KeyValuePair<string, Province>(kv.Key, pr));
                 }
                 int seen = 0, raised = 0; var sb = new System.Text.StringBuilder();
+                var reborn = new Dictionary<string, List<string>>(); var rebornChance = new Dictionary<string, float>();
                 foreach (var kv in list)
                 {
                     var pr = kv.Value; string id = kv.Key;
@@ -1022,9 +1023,36 @@ namespace DipGgFixes
                     float target = baseC + bonus;
                     try { pr.RevoltChance = target; pr.CanRevolt = true; } catch { }
                     raised++;
+                    // 1.11.147: a dissolved great power whose core provinces are held by no one ("Ungoverned Territory", id neutral)
+                    // never rose again - the game's own rebellion needs a real holder to fight (23.10: Austria-Hungary, 27 months)
+                    if (disabled && occ.data.name == "neutral")
+                    {
+                        if (!reborn.TryGetValue(nationKey, out var lst)) { lst = new List<string>(); reborn[nationKey] = lst; }
+                        lst.Add(id); float bc; rebornChance.TryGetValue(nationKey, out bc); rebornChance[nationKey] = Math.Max(bc, target);
+                    }
                     if (sb.Length < 1500) sb.Append($"\n   {id} ({nationKey}, held by {Economy.Name(occ)}): revolt chance {baseC:0.##} -> {target:0.##} after {months} months of peace (home population {po / 1e6f:0.0}M vs {pc / 1e6f:0.0}M)");
                 }
                 if (seen > 0) MelonLogger.Msg($"[DIP GG Fixes][Independence] {raised} occupied national core province(s) with a stronger rising:{sb}");
+                // 1.11.147: rebirth of a dissolved great power from its ungoverned core provinces - once a month a rising with the
+                // province's (raised) revolt chance; when it succeeds all its ungoverned core provinces return to it (the game
+                // switches the nation back on when it receives a province)
+                foreach (var kv in reborn)
+                {
+                    Player back; if (!players.TryGetValue(kv.Key, out back) || back == null) continue;
+                    float ch; rebornChance.TryGetValue(kv.Key, out ch);
+                    float roll = UnityEngine.Random.value * 100f;
+                    bool rises = roll < ch;
+                    MelonLogger.Msg($"[DIP GG Fixes][Independence] {Economy.Name(back)} (dissolved): {kv.Value.Count} core province(s) without a government, rising chance {ch:0.#}% - {(rises ? "the nation rises again" : "no rising this month")}");
+                    if (!rises) continue;
+                    int done = 0;
+                    foreach (var pid in kv.Value)
+                    {
+                        try { cc.TransferProvinceToNewOwner(back, pid, true, true, "independence"); done++; peaceSince.Remove(pid); }
+                        catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][Independence] {pid} to {kv.Key}: {e.Message}"); }
+                    }
+                    bool on2 = false; try { on2 = !back.isDisabled; } catch { }
+                    MelonLogger.Msg($"[DIP GG Fixes][Independence] {Economy.Name(back)} restored: {done} province(s) returned ({string.Join(", ", kv.Value)}), nation active {on2}");
+                }
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Independence] " + e.Message); }
         }
