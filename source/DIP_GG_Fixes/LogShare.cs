@@ -22,6 +22,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On, Asked;
         internal static MelonPreferences_Entry<string> Id, UrlPref;
         static string Url { get { try { var u = UrlPref?.Value; if (!string.IsNullOrWhiteSpace(u)) return u.Trim(); } catch { } return DefaultUrl; } }
+        internal static bool Available => !string.IsNullOrEmpty(Url);
         internal static bool Active => On != null && On.Value && !string.IsNullOrEmpty(Url);
         static int battles, errorsSent, failures; static long battleStart = -1, scanPos; static bool inBattle, quitSent;
         static float nextScan, lastError = -9999f;

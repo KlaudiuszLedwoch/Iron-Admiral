@@ -1,0 +1,8 @@
+name = "ironadmiral-logs"
+main = "index.js"
+compatibility_date = "2025-06-01"
+workers_dev = true
+
+[[kv_namespaces]]
+binding = "LOGS"
+id = "REPLACE_WITH_KV_ID"

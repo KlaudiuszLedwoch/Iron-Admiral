@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.139", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.140", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3008,7 +3008,7 @@ namespace DipGgFixes
                 string c = "auto"; try { c = (Channel != null ? Channel.Value : "auto").Trim().ToLowerInvariant(); } catch { }
                 if (c == "beta") return true; if (c == "stable") return false;
                 // 1.11.139: Beta updates are the reward for log sharing (testers)
-                bool tester = LogShare.On != null && LogShare.On.Value;
+                bool tester = !LogShare.Available || (LogShare.On != null && LogShare.On.Value); // until the log reception runs, betas stay open to everyone
                 try { if (Beta != null) return Beta.Value && tester; } catch { }
                 return LocalIsBeta && tester;
             }
