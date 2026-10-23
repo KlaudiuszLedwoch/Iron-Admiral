@@ -1,0 +1,3 @@
+version 1
+url https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/reshade-naval-1/IronAdmiral_ReShade_Naval.zip
+sha256 de693c717f978d8066fa9243c4c360b8745d5f88059b452e6b845dc80c72ef50
