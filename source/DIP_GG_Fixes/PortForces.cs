@@ -18,7 +18,7 @@ namespace DipGgFixes
     internal static class PortForces
     {
         internal static MelonPreferences_Entry<bool> On, Splashes;
-        class Entry { public IntPtr Key; public Vector3 Pos; public int Ships; public float Tons; public string Text; public Color Col; }
+        class Entry { public IntPtr Key; public Vector3 Pos; public int Ships; public float Tons; public string Text; public Color Col; public float W; }
         static readonly List<Entry> entries = new List<Entry>();
         static float next, nextCover; static int errors; static GUIStyle st;
         static readonly Dictionary<IntPtr, bool> covered = new Dictionary<IntPtr, bool>();
@@ -146,7 +146,8 @@ namespace DipGgFixes
                     var sp = cam.WorldToScreenPoint(e.Pos); if (sp.z <= 0f) continue;
                     // below the port name (the game writes the name under the flag)
                     float x = sp.x / k, y = (Screen.height - sp.y) / k + 22f;
-                    float w = Mathf.Max(48f, st.CalcSize(new GUIContent(e.Text)).x + 8f);
+                    if (e.W <= 0f) e.W = Mathf.Max(48f, st.CalcSize(new GUIContent(e.Text)).x + 8f);
+                    float w = e.W;
                     var r = new Rect(x - w / 2f, y, w, 16f);
                     if (r.xMax < 0f || r.yMax < 0f || r.x > W || r.y > H) continue;
                     bool skip = false;
