@@ -19,7 +19,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<string> Kept;
         class Mod { public string Path, File, Folder, Note, Key; public int Level; public bool Moved; public string Result; }
         static readonly List<Mod> found = new List<Mod>();
-        static bool scanned, show, logged; static string backupDir; static int errors;
+        static bool scanned, show, logged;
+        internal static bool WindowOpen => show; static string backupDir; static int errors;
         static readonly HashSet<string> ours = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "DIP_GG_Fixes.dll", "TweaksAndFixes.dll" };
         // what is known about mods seen with Iron Admiral: level 0 = works alongside, 1 = overlaps (may conflict), 2 = changes battles/cheats
         static readonly Dictionary<string, (int, string)> known = new Dictionary<string, (int, string)>(StringComparer.OrdinalIgnoreCase)
@@ -52,7 +53,9 @@ namespace DipGgFixes
                         string name = System.IO.Path.GetFileName(f); if (ours.Contains(name)) continue;
                         long size = 0; try { size = new FileInfo(f).Length; } catch { }
                         var m = new Mod { Path = f, File = name, Folder = folder, Key = name + "|" + size };
-                        if (known.TryGetValue(name, out var k)) { m.Level = k.Item1; m.Note = k.Item2; } else { m.Level = 1; m.Note = "not tested with Iron Admiral"; }
+                        if (known.TryGetValue(name, out var k)) { m.Level = k.Item1; m.Note = k.Item2; }
+                        else if (name.StartsWith("DIP_GG_Fixes", StringComparison.OrdinalIgnoreCase)) { m.Level = 2; m.Note = "an old copy of Iron Admiral - MelonLoader may load it as well, so changes work twice; move it out"; }
+                        else { m.Level = 1; m.Note = "not tested with Iron Admiral"; }
                         found.Add(m);
                     }
                 }

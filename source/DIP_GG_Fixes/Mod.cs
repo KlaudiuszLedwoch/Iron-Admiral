@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.138", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.139", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -243,7 +243,7 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
-            RevoltDecision.Tick(); OtherMods.Tick();
+            RevoltDecision.Tick(); OtherMods.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
             ArmorDiag.Tick();
             Fog.Tick();
@@ -269,7 +269,7 @@ namespace DipGgFixes
             if (t0 != 0) Perf.Add(Perf.LATE, t0);
         }
 
-        public override void OnApplicationQuit() { try { Diagnostics.OnQuit(); } catch { } }
+        public override void OnApplicationQuit() { try { Diagnostics.OnQuit(); } catch { } try { LogShare.OnQuit(); } catch { } }
 
         public override void OnGUI()
         {
@@ -286,7 +286,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); OtherMods.OnGUI();
+            RevoltDecision.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -571,6 +571,7 @@ namespace DipGgFixes
             PortForces.CreatePrefs(cat); // 1.11.120
             ForeignPorts.CreatePrefs(cat); AutoArmor.CreatePrefs(cat); // 1.11.134
             OtherMods.CreatePrefs(cat); OtherMods.Scan(); // 1.11.138
+            LogShare.CreatePrefs(cat); // 1.11.139
             FleetOrders.CreatePrefs(cat); // 1.11.107
             Perf.CreatePrefs(cat); // 1.11.96 (after ArmorDiag: switches the diagnostics off once)
             ArmorDiag.ApplyHooks(HarmonyInstance);
@@ -2992,10 +2993,11 @@ namespace DipGgFixes
         // 1.11.123: switch in the F10 panel (the panel shows on/off settings only): on = the update check offers beta versions,
         // off = stable versions (also back from a beta to the latest stable). Set once to "on" when a beta package is installed.
         internal static MelonPreferences_Entry<bool> Beta, BetaInit;
+        internal static MelonPreferences_Entry<bool> BetaSwitch => Beta;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             Channel = cat.CreateEntry("UpdateChannel", "auto", null, "Release line the update check follows: auto (the Beta updates switch decides), stable or beta");
-            Beta = cat.CreateEntry("BetaUpdates", false, null, "Beta updates: the update check offers beta versions (new features under test); off = stable versions, also back from a beta to the latest stable. Takes effect at the next start");
+            Beta = cat.CreateEntry("BetaUpdates", false, null, "Beta updates (for testers - needs Share logs on): the update check offers beta versions (new features under test); off = stable versions, also back from a beta to the latest stable. Takes effect at the next start");
             BetaInit = cat.CreateEntry("BetaUpdatesInitialised", false, null, "internal: the Beta updates switch was set from the installed package once", true);
         }
         static bool LocalIsBeta => local != null && local.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) >= 0;
@@ -3005,8 +3007,10 @@ namespace DipGgFixes
             {
                 string c = "auto"; try { c = (Channel != null ? Channel.Value : "auto").Trim().ToLowerInvariant(); } catch { }
                 if (c == "beta") return true; if (c == "stable") return false;
-                try { if (Beta != null) return Beta.Value; } catch { }
-                return LocalIsBeta;
+                // 1.11.139: Beta updates are the reward for log sharing (testers)
+                bool tester = LogShare.On != null && LogShare.On.Value;
+                try { if (Beta != null) return Beta.Value && tester; } catch { }
+                return LocalIsBeta && tester;
             }
         }
         static string Url => "https://raw.githubusercontent.com/KlaudiuszLedwoch/Iron-Admiral/" + (BetaLine ? "beta" : "main") + "/VERSION";
