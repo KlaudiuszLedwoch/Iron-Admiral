@@ -25,6 +25,13 @@ namespace DipGgFixes
             catch { }
             return ia;
         }
+        // TweaksAndFixes rewrites the text whenever the game data is (re)loaded, not only in Ui.RefreshVersion: check every 2 s
+        static float next;
+        internal static void Tick()
+        {
+            if (UnityEngine.Time.realtimeSinceStartup < next) return; next = UnityEngine.Time.realtimeSinceStartup + 2f;
+            try { Apply(G.ui); } catch { }
+        }
         internal static void Apply(Ui ui)
         {
             try

@@ -256,6 +256,7 @@ namespace DipGgFixes
             try { Trade.Tick(); } catch { }
             try { Intel.Tick(); } catch { }
             try { DesignRepair.Tick(); } catch { }
+            try { VersionLabel.Tick(); } catch { } // 1.11.111
             try { FleetOrders.Tick(); } catch { } // 1.11.107
         }
 
