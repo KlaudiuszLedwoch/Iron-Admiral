@@ -60,6 +60,29 @@ namespace DipGgFixes
             Seconds = cat.CreateEntry("AutoTestSeconds", 900f, null, "Author's tool: real-time length of the unattended battle test (s)");
             Speed = cat.CreateEntry("AutoTestTimeScale", 4f, null, "Author's tool: Unity time scale during the unattended battle test");
             Shots = cat.CreateEntry("AutoTestScreenshots", false, null, "Author's tool: take screenshots during the unattended battle test (UserData\\IronAdmiral\\screens)");
+            Orders = cat.CreateEntry("AutoTestOrders", "", null, "Author's tool: division orders given to the player's light divisions at the start of the unattended battle test, in turn, e.g. Screen,Scout,Torpedo,Free (empty = none)");
+        }
+        internal static MelonPreferences_Entry<string> Orders;
+
+        // 1.11.157: the player's divisions get division orders (test of the autonomy) - light ships in turn, capital ships stay manual
+        static void GiveOrders()
+        {
+            if (Orders == null || string.IsNullOrEmpty(Orders.Value)) return;
+            try
+            {
+                var list = new List<BattleAi.DivOrder>();
+                foreach (var x in Orders.Value.Split(',')) { BattleAi.DivOrder o; if (Enum.TryParse(x.Trim(), true, out o) && o != BattleAi.DivOrder.None) list.Add(o); }
+                if (list.Count == 0) return;
+                var b = BattleManager.Instance.CurrentBattle; var ships = b.Ships; int k = 0;
+                for (int i = 0; i < ships.Count; i++)
+                {
+                    var s = ships[i]; if (s == null || s.player == null || !s.player.isMain || !s.isDivLeader || s.division == null) continue;
+                    if (BattleAi.IsCapital(s)) continue;
+                    BattleAi.SetOrder(s.division, list[k % list.Count], "auto test"); k++;
+                }
+                Log($"division orders given to {k} light division(s): {Orders.Value}");
+            }
+            catch (Exception e) { Log("orders: " + e.Message); }
         }
 
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][AutoTest] " + m); }
@@ -164,6 +187,7 @@ namespace DipGgFixes
             }
             else
                 try { Log("paused = " + TimeControl.IsPaused()); if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch (Exception e) { Log("pause: " + e.Message); }
+            GiveOrders(); // 1.11.157
             float end = Time.realtimeSinceStartup + Seconds.Value; float next = 0f;
             running = true;
             float firstShot = Time.realtimeSinceStartup + 3f, nextOverview = firstShot + 5f; bool f10Done = false;
