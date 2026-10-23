@@ -63,9 +63,13 @@ namespace DipGgFixes
         internal static DivOrder CurrentOrder(Division div) { var o = OrderOf(div, false); return o != null ? o.Order : DivOrder.None; }
 
         // the player gave the division a move order himself - command goes back to him
+        // 1.11.159: only a command right after a click or key of the player counts (2nd auto test: the game itself gave a
+        // retreating division a course order 1 s after "Free action" and the order ended at once)
+        internal static float lastInput = -100f;
         internal static void PlayerCommand(Division div, string what)
         {
             if (Issuing || div == null || !GameManager.IsBattle) return;
+            if (Time.realtimeSinceStartup - lastInput > 0.6f) return;
             if (!orders.TryGetValue(div.Pointer, out var o) || o.Order == DivOrder.None) return;
             Log($"{o.Name}: {what} by the player - order {OrderNames[(int)o.Order]} ends, manual command");
             o.Order = DivOrder.None; o.FromVanilla = false;
@@ -203,6 +207,7 @@ namespace DipGgFixes
             try
             {
                 if (OrdersOn == null || !OrdersOn.Value || !GameManager.IsBattle) return;
+                if (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButton(1) || Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) lastInput = Time.realtimeSinceStartup;
                 if (!(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))) return;
                 int k = -1;
                 if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4;
