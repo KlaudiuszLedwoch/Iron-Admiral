@@ -56,7 +56,10 @@ namespace DipGgFixes
             {
                 checkedN++;
                 Ship d = null; try { d = s.design; } catch { }
-                if (d != null && inList.Contains(d.Pointer))
+                // 1.11.125: the design list shown in the designer is designsAll without erased designs (Player.get_designs) - a prize whose
+                // design was erased (Magnanime, Implacable 23.10) keeps it in designsAll but cannot be refitted: it gets a fresh copy
+                bool erased = false; try { erased = d != null && d.isErased; } catch { }
+                if (d != null && inList.Contains(d.Pointer) && !erased)
                 {
                     string owner = null; try { owner = d.player != null ? d.player.data.name : null; } catch { }
                     bool vis = visible.Contains(d.Pointer);
@@ -76,7 +79,7 @@ namespace DipGgFixes
                         c = pc.CloneDesign(d, main);
                         cloned[d.Pointer] = c;
                         if (c != null) inList.Add(c.Pointer);
-                        MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {s.name}: design {d.name} (owner {(d.player != null ? d.player.data.name : "?")}) was not in the {main.data.name} design list - copied as {(c != null ? c.name : "null")}");
+                        MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {s.name}: design {d.name} (owner {(d.player != null ? d.player.data.name : "?")}) was not in the {main.data.name} design list{(erased ? " (erased)" : "")} - copied as {(c != null ? c.name : "null")}");
                     }
                     if (c != null) { s.design = c; fixedN++; }
                 }
