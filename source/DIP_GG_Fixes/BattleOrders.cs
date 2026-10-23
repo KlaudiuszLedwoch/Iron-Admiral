@@ -154,7 +154,7 @@ namespace DipGgFixes
             {
                 var safe = home - toEnemy * 2500f;
                 if ((me - safe).magnitude > 600f) Cmd(div, o, safe);
-                OWhy(o, $"damaged ({dmg:0%}) - falls back behind the main body"); return true;
+                OWhy(o, "damaged - falls back behind the main body"); return true;
             }
 
             if (o.Order == DivOrder.Screen)
@@ -163,7 +163,7 @@ namespace DipGgFixes
                 float threatR = 9000f;
                 if (nearLight != null && dl <= threatR && (P(nearLight) - home).magnitude <= leash)
                 {
-                    Cmd(div, o, P(nearLight)); OWhy(o, $"intercepting {nearLight.name} ({nearLight.shipType.name}) {dl:0} m from the main body"); return true;
+                    Cmd(div, o, P(nearLight)); OWhy(o, $"intercepting {nearLight.name} ({nearLight.shipType.name}) coming at the main body"); return true; // 1.11.158: no distance in the reason (logged every 1.5 s)
                 }
                 if (o.FromVanilla && !o.Issued) { OWhy(o, "on station (game's screen position)"); return true; }
                 // own station: between the main body and the enemy, closer in when enemy heavy guns reach it
@@ -174,7 +174,10 @@ namespace DipGgFixes
                 OWhy(o, main != null ? $"screening {main.name}" : "screening - no main body, holding position"); return true;
             }
 
-            // Scout
+            // Scout. 1.11.158: the leash always leaves room for contact at the edge of the enemy's gun range (auto test 23.10:
+            // the scout swung between "too far from the main body" and "opening the range" - leash 15 km, contact at 21 km)
+            float wantH = 0f; if (nearHeavy != null) { float hr0 = GunRange(nearHeavy); wantH = Mathf.Clamp(hr0 > 0f ? hr0 * 1.05f : 12000f, 7000f, 25000f); }
+            leash = Mathf.Max(leash, wantH + 6000f);
             if (main != null && (me - home).magnitude > leash) { Cmd(div, o, home + toEnemy * (leash * 0.6f)); OWhy(o, "too far from the main body - closing up"); return true; }
             if (nearLight != null && (P(nearLight) - me).magnitude < 5000f && MainCaliber(nearLight) > MainCaliber(leader) * 1.2f && main != null)
             { Cmd(div, o, home + toEnemy * 1500f); OWhy(o, $"stronger light force ({nearLight.name}) - falls back to the main body"); return true; }
@@ -184,7 +187,7 @@ namespace DipGgFixes
                 Vector3 hp = P(nearHeavy); Vector3 away = me - hp; away.y = 0f; if (away.sqrMagnitude < 1f) away = -toEnemy; away.Normalize();
                 if (dh < want * 0.9f) { Cmd(div, o, me + away * 3000f); OWhy(o, $"keeping contact with {nearHeavy.name} - opening the range"); }
                 else if (dh > want * 1.35f) { Cmd(div, o, hp + away * want); OWhy(o, $"keeping contact with {nearHeavy.name} - closing to the edge of his gun range"); }
-                else { var side = Vector3.Cross(Vector3.up, away); Cmd(div, o, me + side * 2000f); OWhy(o, $"shadowing {nearHeavy.name} at {dh:0} m"); }
+                else { var side = Vector3.Cross(Vector3.up, away); Cmd(div, o, me + side * 2000f); OWhy(o, $"shadowing {nearHeavy.name} at the edge of his gun range"); }
                 return true;
             }
             if (o.FromVanilla && !o.Issued && !o.Seen) { OWhy(o, "searching (game's scout position)"); return true; }
