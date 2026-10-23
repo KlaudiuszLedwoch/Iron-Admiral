@@ -710,10 +710,13 @@ namespace DipGgFixes
                     if (ui.shipInfoStubText != null) ui.shipInfoStubText.text = lbl + "\nClass, guns and armour unknown until one of your ships identifies it.";
                     panelHidden = true;
                 }
-                else if (panelHidden)
+                else if (panelHidden && sel != null)
                 {
+                    // 1.11.118: restored only when a ship is selected again - before, deselecting an unidentified enemy cleared the
+                    // flag with no ship to restore, and the panel stayed hidden for the player's own ships (only the crew panel showed)
                     panelHidden = false;
-                    if (sel != null && ui.shipInfoPanel != null && !ui.shipInfoPanel.activeSelf) { ui.shipInfoPanel.SetActive(true); if (ui.shipInfoStub != null) ui.shipInfoStub.SetActive(false); }
+                    if (ui.shipInfoPanel != null && !ui.shipInfoPanel.activeSelf) ui.shipInfoPanel.SetActive(true);
+                    if (ui.shipInfoStub != null && ui.shipInfoStub.activeSelf) ui.shipInfoStub.SetActive(false);
                 }
             }
             catch (Exception e) { Err("ship panel", e); }
