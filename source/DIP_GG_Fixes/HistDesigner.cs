@@ -296,7 +296,8 @@ namespace DipGgFixes
                     try { G.GameData.parts.TryGetValue(s["hull"], out hull0); G.GameData.shipTypes.TryGetValue(s["type"], out st); } catch { }
                     if (hull0 == null || st == null) { notes = "hull or ship type not found"; goto report; }
                     float wantT = s.N("tonnage"), wantKn = s.N("speed_kn"), wantIn = s.N("main_in"); int wantMain = (int)s.N("main_count");
-                    var hulls = new List<PartData> { hull0 }; bool altsAdded = false; string notes0 = notes, lastFail = "";
+                    var hulls = new List<PartData> { hull0 }; bool altsAdded = false, caAdded = false; string notes0 = notes, lastFail = "";
+                    var hullSt = new Dictionary<string, ShipType>(); NoGunSeen = false;   // 1.11.116: hulls of another type (cl -> ca)
                     for (int hv = 0; hv < hulls.Count; hv++)
                     {
                         PartData hull = hulls[hv]; bool useTempl = templ && hv == 0;
@@ -306,7 +307,9 @@ namespace DipGgFixes
                             weight = 0f; tonnage = 0f; beltBuilt = 0f; scale = 1f; mainBuilt = ""; result = "failed";
                             Log($"{s["name"]}: alternative hull {hv}/{hulls.Count - 1}: {hull.name} ({hull.nameUi}, {hull.tonnageMin:0}-{hull.tonnageMax:0} t)");
                         }
-                        if (!useTempl) { try { ship.ChangeHull(hull, null, st, true); } catch (Exception e) { notes += "ChangeHull: " + e.Message + "; "; lastFail = "hull change failed"; goto nextHull; } }
+                        ShipType stH = hullSt.TryGetValue(hull.name, out var stX) ? stX : st;
+                        if (stH != st) notes += $"built as {stH.name} (main calibre above the {st.name} limit); ";
+                        if (!useTempl) { try { ship.ChangeHull(hull, null, stH, true); } catch (Exception e) { notes += "ChangeHull: " + e.Message + "; "; lastFail = "hull change failed"; goto nextHull; } }
                         yield return Wait(0.5f);
                         // 3. generator tries: match main calibre and gun count
                         int bestDiff = useTempl ? 0 : 999; int tries = useTempl ? 0 : Math.Max(1, Tries.Value); bool bestValid = false;
@@ -437,6 +440,15 @@ namespace DipGgFixes
                             List<PartData> alts = null; try { alts = AltHullsFor(ship, hull0, st, wantT, s["nation"], (int)s.N("year"), AltHulls.Value); } catch (Exception e) { Log("alternative hulls: " + e.Message); }
                             if (alts != null && alts.Count > 0) { hulls.AddRange(alts); Log($"{s["name"]}: {hull0.name} failed ({lastFail}) - alternative hulls: {string.Join(", ", alts.Select(a => a.name))}"); }
                         }
+                        // 1.11.116: the historical main gun is not available to a light cruiser at all (large protected cruisers such as
+                        // Blake or Edgar): the class is built as a heavy cruiser on up to two heavy-cruiser hulls
+                        if (!caAdded && NoGunSeen && hv == hulls.Count - 1 && s["type"] == "cl")
+                        {
+                            caAdded = true; ShipType ca = null; try { G.GameData.shipTypes.TryGetValue("ca", out ca); } catch { }
+                            List<PartData> cas = null; if (ca != null) { try { cas = AltHullsFor(ship, hull0, ca, wantT, s["nation"], (int)s.N("year"), 2); } catch (Exception e) { Log("ca hulls: " + e.Message); } }
+                            if (cas != null && cas.Count > 0) { foreach (var h in cas) hullSt[h.name] = ca; hulls.AddRange(cas); Log($"{s["name"]}: main gun not available to a light cruiser - heavy-cruiser hulls: {string.Join(", ", cas.Select(a => a.name))}"); }
+                            else Log($"{s["name"]}: main gun not available to a light cruiser and no heavy-cruiser hull of the period covers {wantT:0} t");
+                        }
                     }
                     yield return null;
                 }
@@ -525,6 +537,7 @@ namespace DipGgFixes
         // other refusals -> part removed, except main guns and towers (the class would lose its identity or its validity);
         // the caller rejects the repair when more than a quarter of the secondary barrels had to go
         // ------------------------------------------------------------------ 1.11.112: main turrets placed by the builder
+        internal static bool NoGunSeen;
         static float InchOf(PartData d) { try { return d.caliber > 30f ? d.caliber / 25.4f : d.caliber; } catch { return 0f; } }
         static bool IsCasemate(PartData d) { try { return Ship.IsCasemateGun(d); } catch { return false; } }
         // removes guns of the historical calibre or larger, frees centre-line mounts taken by smaller turrets when needed, then
@@ -553,7 +566,22 @@ namespace DipGgFixes
                 bool av = false; try { av = ship.IsPartAvailable(d); } catch { }
                 if (av) guns.Add(d);
             }
-            if (guns.Count == 0) { log.Add($"no {wantIn:0.#} in gun available (nor one up to 0.9 in smaller)"); return 0; }
+            if (guns.Count == 0)
+            {
+                NoGunSeen = true;
+                // what the game does offer near that calibre (once per class in the log line)
+                var near = new List<string>();
+                foreach (var kv in G.GameData.parts)
+                {
+                    var d = kv.Value; if (d == null) continue;
+                    try { if (!d.isGun || IsCasemate(d)) continue; } catch { continue; }
+                    float ci = InchOf(d); if (ci < wantIn - 3f || ci > wantIn + 1f) continue;
+                    bool av = false; try { av = ship.IsPartAvailable(d); } catch { }
+                    if (av && near.Count < 8) near.Add($"{d.name}");
+                }
+                log.Add($"no {wantIn:0.#} in gun available (nor one up to 0.9 in smaller); available nearby: {(near.Count > 0 ? string.Join(",", near) : "none")}");
+                return 0;
+            }
             // old main guns of the historical calibre or larger go
             int removed = 0;
             foreach (var p in ship.parts.ToArray())
