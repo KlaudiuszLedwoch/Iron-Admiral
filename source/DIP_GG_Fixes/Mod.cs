@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.142", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.143", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -243,7 +243,7 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
-            RevoltDecision.Tick(); OtherMods.Tick(); LogShare.TickWindow(); LogShare.Tick();
+            RevoltDecision.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
             ArmorDiag.Tick();
             Fog.Tick();
@@ -2136,7 +2136,7 @@ namespace DipGgFixes
                 BattleAi.Log($"{s.name}: friendly ship in the torpedo lane - torpedoes held");
             }
         }
-        static Ship TorpedoTarget(Ship s)
+        internal static Ship TorpedoTarget(Ship s)
         {
             try
             {
@@ -2295,7 +2295,7 @@ namespace DipGgFixes
             if (!tracks.TryGetValue(x.Pointer, out var k)) { tracks[x.Pointer] = new Track { pos = p, t = now }; return UnityEngine.Vector3.zero; }
             float dt = now - k.t;
             if (dt > 30f) { k.pos = p; k.t = now; k.vel = UnityEngine.Vector3.zero; return k.vel; }
-            if (dt >= 0.25f) { var v = (p - k.pos) / dt; k.vel = k.vel == UnityEngine.Vector3.zero ? v : UnityEngine.Vector3.Lerp(k.vel, v, 0.5f); k.pos = p; k.t = now; }
+            if (dt >= 0.25f) { var v = (p - k.pos) / dt; k.vel = k.vel == UnityEngine.Vector3.zero ? v : UnityEngine.Vector3.Lerp(k.vel, v, 0.5f); k.pos = p; k.t = now; TorpedoLog.Velocity(x, k.vel); }
             return k.vel;
         }
         static bool TorpedoHopeless(Ship s, St st, float now, out string why)
