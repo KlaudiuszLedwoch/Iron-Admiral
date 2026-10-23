@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.127", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.131", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -186,7 +186,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
         internal static MelonPreferences_Entry<bool> CapitalEscapeWhenHopeless;
-        internal static MelonPreferences_Entry<float> HopelessEscapeDelay;
+        internal static MelonPreferences_Entry<float> HopelessEscapeDelay, HopelessFightOnRatio;
         internal static MelonPreferences_Entry<bool> EscapeMissionLogic;
         internal static MelonPreferences_Entry<string> EscapeBattleTypes;
         internal static MelonPreferences_Entry<float> OutrangedFactor;
@@ -443,6 +443,8 @@ namespace DipGgFixes
                 "AI battleships/battlecruisers that cannot penetrate the enemy even at close range retreat when they can survive to the end of the battle: they are faster than every visible enemy, or no visible enemy can penetrate their belt");
             HopelessEscapeDelay = cat.CreateEntry("HopelessEscapeDelay", 120f, null,
                 "Seconds of battle time an AI capital ship keeps engaging an identified target it cannot penetrate before it breaks off (it never breaks off from a ship it has not identified)");
+            HopelessFightOnRatio = cat.CreateEntry("HopelessFightOnRatio", 1.5f, null,
+                "An AI capital ship that cannot penetrate its target still fights on when its own side's combat tonnage is at least the enemy's x this");
             EscapeMissionLogic = cat.CreateEntry("EscapeMissionLogic", true, null,
                 "In battles where the AI side's task is to get away (EscapeBattleTypes): no massed torpedo attack; divisions that are faster than the enemy retreat, divisions that cannot outrun it split up and flee in different directions so that part of the force gets away");
             EscapeBattleTypes = cat.CreateEntry("EscapeBattleTypes", "escape_taskforce", null, "Battle types (battleTypeEx.csv names, comma separated) in which the defending side tries to escape");
@@ -1902,6 +1904,23 @@ namespace DipGgFixes
                     if (st.hopelessSince < 0f) st.hopelessSince = UnityEngine.Time.time;
                     bool known = Fog.Identified(leader.player, best);
                     bool proven = UnityEngine.Time.time - st.hopelessSince >= DipGgFixesMod.HopelessEscapeDelay.Value;
+                    // 1.11.131: battle log 2026-10-23 - two French CA of an attacking force of 5 CA + 6 CL broke off from 2 German CA because
+                    // their 254 mm guns could not pierce the belt; a side this much stronger fights on (superstructure, fires, partial hits)
+                    if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value)
+                    {
+                        float ownS = 0f, foeS = 0f;
+                        try
+                        {
+                            var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
+                            if (cb != null) { var mine = cb.ShipsOf(leader.player, true); ownS = Strength(mine); bool fog = Fog.AiActive && !leader.player.isMain; foeS = fog ? PerceivedStrength(leader.player, enemies) : Strength(enemies); }
+                        }
+                        catch { }
+                        if (ownS > 0f && foeS > 0f && ownS >= foeS * DipGgFixesMod.HopelessFightOnRatio.Value)
+                        {
+                            if (!st.hopelessWaitLogged) { st.hopelessWaitLogged = true; Log($"{st.name}: cannot penetrate {best.name} but fights on - own side {ownS:0} t vs enemy {foeS:0} t"); }
+                            Why(st, "hopeless penetration - fighting on, own side much stronger"); return;
+                        }
+                    }
                     if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value && (!known || !proven))
                     {
                         if (!st.hopelessWaitLogged) { st.hopelessWaitLogged = true; Log($"{st.name}: no retreat yet from {best.name} - {(!known ? "target not identified" : "keeps firing first")}"); }
