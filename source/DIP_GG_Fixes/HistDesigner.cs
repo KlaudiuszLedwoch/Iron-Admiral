@@ -363,6 +363,14 @@ namespace DipGgFixes
                                 var ml = new List<string>(); int placed = 0;
                                 try { placed = PlaceMainTurrets(ship, wantIn, wantMain, (int)s.N("main_per_turret"), (int)s.N("year"), ml); } catch (Exception e) { ml.Add("error " + e.GetType().Name + ": " + e.Message); }
                                 yield return Wait(0.5f);
+                                // 1.11.114: removed guns leave the scene only at the end of the frame - a second pass after a pause no longer meets them
+                                if (placed == 0 && ml.Any(x => x.Contains(": part")))
+                                {
+                                    var ml2 = new List<string>();
+                                    try { placed = PlaceMainTurrets(ship, wantIn, wantMain, (int)s.N("main_per_turret"), (int)s.N("year"), ml2); } catch (Exception e) { ml2.Add("error " + e.GetType().Name + ": " + e.Message); }
+                                    yield return Wait(0.5f);
+                                    ml.Clear(); ml.Add("second pass"); ml.AddRange(ml2);
+                                }
                                 MainBattery(ship, out c1, out b1);
                                 bool v1 = false; try { v1 = ship.IsValid(false); } catch { }
                                 Log($"{s["name"]}: builder placed {placed} main turret(s){(ml.Count > 0 ? " - " + string.Join("; ", ml.Take(14)) : "")}; main battery now {b1} x {c1:0.#} in, valid {v1}{(v1 ? "" : " - " + Why(ship))}");
@@ -596,8 +604,20 @@ namespace DipGgFixes
                         // 1.11.113: colliders sized as the game's generator does - without it every new turret collided ("part")
                         try { part.UpdateCollidersSize(ship); } catch { }
                         part.Mount(m, true);
-                        string why = null; bool ok = true; try { ok = part.CanPlace(out why); } catch { }
-                        if (!ok && why != "available") { ship.RemovePart(part, true, false); log.Add($"{gd.name}: {why}"); continue; }
+                        // 1.11.114: the refusal names the parts or borders it collides with
+                        string why = null; bool ok = true; Il2CppSystem.Collections.Generic.List<Part> ovp = null; Il2CppSystem.Collections.Generic.List<Collider> ovb = null;
+                        try { ok = part.CanPlace(out why, out ovp, out ovb); } catch { try { ok = part.CanPlace(out why); } catch { } }
+                        if (!ok && why != "available")
+                        {
+                            string with = "";
+                            try
+                            {
+                                if (ovp != null && ovp.Count > 0) { var nn = new List<string>(); for (int k = 0; k < ovp.Count && k < 3; k++) { var op = ovp[k]; nn.Add(op == null ? "?" : (op.Pointer == part.Pointer ? "self" : (op.data != null ? op.data.name : "?"))); } with = " with " + string.Join("/", nn); }
+                                if (ovb != null && ovb.Count > 0) with += " border(" + ovb.Count + ")";
+                            }
+                            catch { }
+                            ship.RemovePart(part, true, false); log.Add($"{gd.name}: {why}{with}"); continue;
+                        }
                         placed++;
                     }
                     catch (Exception e) { log.Add($"{gd.name}: {e.GetType().Name}"); try { if (part != null) ship.RemovePart(part, true, false); } catch { } }
