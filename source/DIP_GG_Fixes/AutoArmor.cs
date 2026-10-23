@@ -1,4 +1,4 @@
-// 1.11.134 (beta): "Auto armour" button in the ship designer. It builds a coherent armour scheme for the current design and
+// 1.11.134 (beta): "Auto armour" button in the ship designer (1.11.145: drawn by the mod above the random-ship button). It builds a coherent armour scheme for the current design and
 // spends the displacement that is left on armour:
 //  1. all zones are set to their minimum, turret armour to 0;
 //  2. one "profile" thickness is searched (bisection) so that the scheme just fits the displacement: belt and conning tower
@@ -25,7 +25,7 @@ namespace DipGgFixes
     internal static class AutoArmor
     {
         internal static MelonPreferences_Entry<bool> On;
-        const string ButtonName = "IronAdmiral_AutoArmor";
+        const string ButtonName = "IronAdmiral_AutoArmor"; // name of the old button copy, removed when found
         static readonly MethodInfo RefreshHull = AccessTools.Method(typeof(Ship), "RefreshHullStats", Type.EmptyTypes);
         static readonly MethodInfo RefreshGuns = AccessTools.Method(typeof(Ship), "RefreshGunsStats", Type.EmptyTypes);
         static readonly MethodInfo ConShipChanged = AccessTools.Method(typeof(Ui), "OnConShipChanged", new[] { typeof(bool) });
@@ -49,33 +49,54 @@ namespace DipGgFixes
             return null;
         }
 
+        // 1.11.145: the button is drawn by the mod right above the game's "random ship" button instead of being a copy of it -
+        // a copied game button kept TweaksAndFixes' confirmation and the game's own click and hover handlers (23.10: a click
+        // ran the confirmation of the random-ship action and the designer reloaded; hover threw errors)
+        static Transform src; static Rect btn; static bool visible; static float nextFind;
+        static readonly Vector3[] corners = new Vector3[4];
         internal static void Ensure(Ui ui)
         {
             if (On == null || !On.Value || ui == null) return;
             try
             {
-                var src = Deep(ui.transform, "RandomShip"); if (src == null) { if (!missingLogged) { missingLogged = true; Log("designer button template (RandomShip) not found - no Auto armour button"); } return; }
-                var b = Deep(ui.transform, ButtonName);
-                if (b == null)
-                {
-                    var go = UnityEngine.Object.Instantiate(src.gameObject, src.parent); go.name = ButtonName;
-                    go.transform.SetSiblingIndex(Math.Min(src.GetSiblingIndex() + 1, src.parent.childCount - 1));
-                    var btn = go.GetComponent<Button>() ?? go.GetComponentInChildren<Button>(true);
-                    if (btn != null) { btn.onClick.RemoveAllListeners(); btn.onClick.AddListener((Action)Run); }
-                    var tmp = go.GetComponentInChildren<TMP_Text>(true);
-                    if (tmp != null) { var loc = tmp.GetComponent<LocalizeText>(); if (loc != null) UnityEngine.Object.Destroy(loc); tmp.text = "Auto\narmour"; tmp.enableAutoSizing = true; tmp.fontSizeMin = 10f; }
-                    else { var tx = go.GetComponentInChildren<Text>(true); if (tx != null) { var loc = tx.GetComponent<LocalizeText>(); if (loc != null) UnityEngine.Object.Destroy(loc); tx.text = "Auto\narmour"; tx.resizeTextForBestFit = true; } }
-                    var oe = go.GetComponent<OnEnter>(); if (oe != null) UnityEngine.Object.Destroy(oe);
-                    var ol = go.GetComponent<OnLeave>(); if (ol != null) UnityEngine.Object.Destroy(ol);
-                    go.AddComponent<OnEnter>().action = (Action)(() => { try { G.ui.ShowTooltip("Builds a balanced armour scheme for this design and puts the displacement that is left into armour.", go); } catch { } });
-                    go.AddComponent<OnLeave>().action = (Action)(() => { try { G.ui.HideTooltip(); } catch { } });
-                    b = go.transform; Log("Auto armour button added to the designer");
-                }
-                bool edit = Safe(() => ui.allowEdit, false) && Safe(() => ui.mainShip != null, false);
-                if (b.gameObject.activeSelf != src.gameObject.activeSelf) b.gameObject.SetActive(src.gameObject.activeSelf);
-                var bb = b.GetComponent<Button>() ?? b.GetComponentInChildren<Button>(true); if (bb != null) bb.interactable = edit && !busy;
+                var old = Deep(ui.transform, ButtonName); if (old != null) UnityEngine.Object.Destroy(old.gameObject); // copies made by 1.11.134-1.11.144
+                if (src == null || Time.realtimeSinceStartup > nextFind) { nextFind = Time.realtimeSinceStartup + 5f; src = Deep(ui.transform, "RandomShip"); }
+                if (src == null && !missingLogged) { missingLogged = true; Log("designer button (RandomShip) not found - no Auto armour button"); }
             }
             catch (Exception e) { if (errors++ < 5) Log("button: " + e.Message); }
+        }
+        static bool Place()
+        {
+            visible = false;
+            if (On == null || !On.Value || src == null) return false;
+            bool con = false; try { con = GameManager.IsConstructor; } catch { }
+            if (!con || !src.gameObject.activeInHierarchy) return false;
+            var ui = Safe(() => G.ui, null); if (ui == null || !Safe(() => ui.allowEdit, false) || Safe(() => ui.mainShip, null) == null) return false;
+            var rt = src.GetComponent<RectTransform>(); if (rt == null) return false;
+            rt.GetWorldCorners(corners);
+            Camera cam = null; try { var cv = rt.GetComponentInParent<Canvas>(); if (cv != null && cv.rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay) cam = cv.rootCanvas.worldCamera; } catch { }
+            var p0 = RectTransformUtility.WorldToScreenPoint(cam, corners[0]); var p2 = RectTransformUtility.WorldToScreenPoint(cam, corners[2]);
+            float k = UiScale.F; if (k <= 0f) k = 1f;
+            float x = p0.x / k, w = (p2.x - p0.x) / k, h = (p2.y - p0.y) / k, yTop = (Screen.height - p2.y) / k;
+            if (w < 20f || h < 10f) return false;
+            btn = new Rect(x, yTop - h - 6f, w, h);
+            visible = true; return true;
+        }
+        static GUIStyle sBtn;
+        internal static void OnGUI()
+        {
+            try
+            {
+                if (!Place()) return;
+                if (sBtn == null) { sBtn = new GUIStyle(); sBtn.fontSize = 13; sBtn.richText = true; sBtn.wordWrap = true; sBtn.alignment = TextAnchor.MiddleCenter; sBtn.normal.textColor = Color.white; }
+                GUI.Box(btn, ""); GUI.Box(btn, "");
+                GUI.Label(btn, busy ? "<b>Auto armour...</b>" : "<b>Auto armour</b>", sBtn);
+            }
+            catch (Exception e) { if (errors++ < 5) Log("draw: " + e.Message); }
+        }
+        internal static void Tick()
+        {
+            try { if (visible && !busy && Input.GetMouseButtonDown(0) && btn.Contains(UiScale.Mouse())) Run(); } catch (Exception e) { if (errors++ < 5) Log("click: " + e.Message); }
         }
 
         // ---------------------------------------------------------------- armour
