@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.135", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.137", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -2302,11 +2302,8 @@ namespace DipGgFixes
             if (range > 0f && d > range) { why = $"{t.name} at {d:0} m beyond torpedo range {range:0} m"; return true; }
             var ps = s.transform.position; var pt = t.transform.position; ps.y = 0f; pt.y = 0f;
             var P = pt - ps; var V = Vel(t, now); Vel(s, now);
-            // 1.11.135: battle log 2026-10-23 (convoy battle) - the player's CA held torpedoes against French transports ("small
-            // target, not closing"); transports are the object of a convoy battle and slow, so they are always worth a torpedo
-            bool transport = false; try { var stp = t.shipType; transport = stp != null && stp.name == "tr"; } catch { }
             bool playerShip = false; try { playerShip = s.player != null && s.player.isMain && !s.isAiControlled; } catch { }
-            if (!transport && !BattleAi.TorpedoWorthy(s, t))
+            if (!BattleAi.TorpedoWorthy(s, t))
             {
                 // 1.11.99: self-defence - a small ship closing in (a torpedo attack on us) may be met with torpedoes inside 60% of
                 // their range; only small targets that are far or not closing are not worth a torpedo
