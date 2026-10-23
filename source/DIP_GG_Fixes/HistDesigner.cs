@@ -547,11 +547,13 @@ namespace DipGgFixes
             {
                 var d = kv.Value; if (d == null) continue;
                 try { if (!d.isGun || IsCasemate(d)) continue; } catch { continue; }
-                if (Mathf.Abs(InchOf(d) - wantIn) > 0.6f) continue;
+                float ci = InchOf(d);
+                // 1.11.115: also a smaller gun whose bore can be increased to the historical calibre (up to 0.9 in, as in the designer)
+                if (ci > wantIn + 0.6f || ci < wantIn - 0.95f) continue;
                 bool av = false; try { av = ship.IsPartAvailable(d); } catch { }
                 if (av) guns.Add(d);
             }
-            if (guns.Count == 0) { log.Add($"no {wantIn:0.#} in gun available"); return 0; }
+            if (guns.Count == 0) { log.Add($"no {wantIn:0.#} in gun available (nor one up to 0.9 in smaller)"); return 0; }
             // old main guns of the historical calibre or larger go
             int removed = 0;
             foreach (var p in ship.parts.ToArray())
@@ -564,7 +566,8 @@ namespace DipGgFixes
             foreach (int per in options)
             {
                 int n = wantMain / per; if (n <= 0) continue;
-                var gd = guns.Where(g => { try { return g.barrels == per; } catch { return false; } }).OrderBy(g => Mathf.Abs(InchOf(g) - wantIn)).FirstOrDefault();
+                // the historical calibre itself first, else the largest smaller gun (bore increased after placing)
+                var gd = guns.Where(g => { try { return g.barrels == per; } catch { return false; } }).OrderBy(g => Mathf.Abs(InchOf(g) - wantIn) <= 0.6f ? 0 : 1).ThenBy(g => Mathf.Abs(InchOf(g) - wantIn)).FirstOrDefault();
                 if (gd == null) { log.Add($"no {per}-gun {wantIn:0.#} in turret"); continue; }
                 var free = FreeMounts(ship, gd, per == 1);   // 1.11.113: single mounts may also go on wing (side) positions, as on early cruisers
                 if (free.Count < n)
@@ -627,7 +630,26 @@ namespace DipGgFixes
                 try { ship.CalcInstability(true); } catch { }
                 try { G.ui.Refresh(true); } catch { }
                 log.Add($"{placed} x {gd.name}");
-                if (placed >= n) return placed;
+                if (placed >= n)
+                {
+                    float gap = wantIn - InchOf(gd);
+                    if (gap > 0.6f)
+                    {
+                        float off = Mathf.Min(0.9f, Mathf.Round(gap * 10f) / 10f);
+                        try
+                        {
+                            var l = ship.shipGunCaliber; bool set = false;
+                            for (int i = 0; l != null && i < l.Count; i++)
+                            {
+                                var tc = l[i]; if (tc == null || tc.isCasemateGun || tc.turretPartData == null) continue;
+                                if (Mathf.Abs(tc.turretPartData.caliber - gd.caliber) < 0.01f) { ship.SetCaliberDiameter(tc, off); set = true; log.Add($"bore {InchOf(gd):0.#} in +{off:0.0} in -> {InchOf(gd) + tc.diameter:0.0#} in"); }
+                            }
+                            if (!set) log.Add("bore increase: turret calibre entry not found");
+                        }
+                        catch (Exception e) { log.Add("bore increase: " + e.Message); }
+                    }
+                    return placed;
+                }
                 // incomplete: take them off and try the next layout
                 foreach (var p in ship.parts.ToArray()) { try { if (p != null && p.data != null && p.data.name == gd.name) ship.RemovePart(p, true, false); } catch { } }
             }
@@ -756,8 +778,24 @@ namespace DipGgFixes
                 for (int i = 0; i < parts.Count; i++) { var p = parts[i]; var d = p != null ? p.data : null; if (d == null || !d.isGun) continue; float c = d.caliber; if (c > top) top = c; }
                 for (int i = 0; i < parts.Count; i++) { var p = parts[i]; var d = p != null ? p.data : null; if (d == null || !d.isGun) continue; if (Mathf.Abs(d.caliber - top) < 0.01f) barrels += Math.Max(1, d.barrels); }
                 cal = top > 30f ? top / 25.4f : top;   // PartData.caliber may be mm or inches - log shows which
+                cal += DiameterOffset(ship, top);       // 1.11.115: bore increase set in the designer (e.g. 8 in + 0.9 in)
             }
             catch { }
+        }
+        // bore increase (inches) of the turret calibre with this base calibre (non-casemate)
+        static float DiameterOffset(Ship ship, float baseCal)
+        {
+            try
+            {
+                var l = ship.shipGunCaliber;
+                for (int i = 0; l != null && i < l.Count; i++)
+                {
+                    var tc = l[i]; if (tc == null || tc.isCasemateGun || tc.turretPartData == null) continue;
+                    if (Mathf.Abs(tc.turretPartData.caliber - baseCal) < 0.01f) return tc.diameter;
+                }
+            }
+            catch { }
+            return 0f;
         }
         static float ArmourOf(Ship s, int zone) { try { float v; return s.armor.TryGetValue((Ship.A)zone, out v) ? v : 0f; } catch { return 0f; } }
         static void ApplyArmour(Ship ship, Dictionary<int, float> arm, float scale)
