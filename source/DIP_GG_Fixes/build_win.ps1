@@ -3,6 +3,8 @@
 param([string]$Work, [string]$Src, [string]$Out)
 $ErrorActionPreference = 'Stop'
 $K = Join-Path $Work 'buildkit'; $S = Join-Path $K 'src'
+# remove stale sources of an earlier build (a file deleted from the source folder must not stay in the build)
+Get-ChildItem $S -Filter '*.cs' -File -ErrorAction SilentlyContinue | Remove-Item -Force
 Copy-Item (Join-Path $Src '*.cs') $S -Force
 $mod = Get-Content (Join-Path $S 'Mod.cs') -Raw
 $ver = [regex]::Match($mod, 'MelonInfo\(typeof\(DipGgFixes.DipGgFixesMod\), "DIP GG Fixes", "([0-9.]+)"').Groups[1].Value
