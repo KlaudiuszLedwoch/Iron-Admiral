@@ -12,7 +12,7 @@ namespace DipGgFixes
 {
     internal static class VersionLabel
     {
-        static string ia; static bool logged;
+        static string ia; static bool logged, failed;
         internal static string Package()
         {
             if (ia != null) return ia;
@@ -30,16 +30,23 @@ namespace DipGgFixes
             try
             {
                 if (ui == null || ui.overlayUi == null) return;
-                var v = ui.overlayUi.transform.Find("Version"); if (v == null) return;
-                var tt = v.Find("VersionText"); if (tt == null) return;
-                var text = tt.GetComponent<Text>(); if (text == null) return;
+                var v = Deep(ui.overlayUi.transform, "Version"); if (v == null) { Fail("no Version object"); return; }
+                var tt = Deep(v, "VersionText"); if (tt == null) { Fail("no VersionText object"); return; }
+                var text = tt.GetComponent<Text>(); if (text == null) { Fail("no Text component"); return; }
                 string cur = text.text ?? "";
                 if (cur.StartsWith("Iron Admiral")) return;
                 string p = Package(); if (p.Length == 0) return;
                 text.text = "Iron Admiral " + p + (cur.Length > 0 ? " | " + cur : "");
                 if (!logged) { logged = true; MelonLogger.Msg("[DIP GG Fixes][UI] version text: " + text.text); }
             }
-            catch { }
+            catch (Exception e) { Fail(e.Message); }
+        }
+        static void Fail(string m) { if (failed) return; failed = true; MelonLogger.Msg("[DIP GG Fixes][UI] version text not set: " + m); }
+        static UnityEngine.Transform Deep(UnityEngine.Transform t, string name)
+        {
+            if (t == null) return null;
+            for (int i = 0; i < t.childCount; i++) { var c = t.GetChild(i); if (c.name == name) return c; var d = Deep(c, name); if (d != null) return d; }
+            return null;
         }
     }
 
