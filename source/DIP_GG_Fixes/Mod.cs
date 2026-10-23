@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.137", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.138", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -243,7 +243,7 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
-            RevoltDecision.Tick();
+            RevoltDecision.Tick(); OtherMods.Tick();
             SaveCompat.Tick();
             ArmorDiag.Tick();
             Fog.Tick();
@@ -286,7 +286,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI();
+            RevoltDecision.OnGUI(); OtherMods.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -570,6 +570,7 @@ namespace DipGgFixes
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
             ForeignPorts.CreatePrefs(cat); AutoArmor.CreatePrefs(cat); // 1.11.134
+            OtherMods.CreatePrefs(cat); OtherMods.Scan(); // 1.11.138
             FleetOrders.CreatePrefs(cat); // 1.11.107
             Perf.CreatePrefs(cat); // 1.11.96 (after ArmorDiag: switches the diagnostics off once)
             ArmorDiag.ApplyHooks(HarmonyInstance);
