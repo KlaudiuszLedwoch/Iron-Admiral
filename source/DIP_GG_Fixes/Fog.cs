@@ -266,6 +266,47 @@ namespace DipGgFixes
             return q;
         }
 
+        // 1.11.120: intelligence on a foreign port (ships lying there) - same factors as for a force at sea, without the force size:
+        // era x technology x intelligence budget, own ports nearby, own or allied forces near the port, monthly weather.
+        // Returns 1 when the fog is off. Thresholds: below HiddenQ nothing known, below ExactQ an estimate.
+        internal static float PortQ(Player obs, Vector3 pos, string key)
+        {
+            if (obs == null || !MapActive) return 1f;
+            int m = Month(); if (m != qMonth) { qMonth = m; qCache.Clear(); qLogged = 0; }
+            string ck = "port|" + PName(obs) + "|" + key; float q;
+            if (qCache.TryGetValue(ck, out q)) return q;
+            q = 1f;
+            try
+            {
+                float kpu = KmPerUnit();
+                float baseQ = Era(Year()) * TechF(obs) * BudgetF(obs);
+                float portKm = 99999f;
+                try { float sqr = float.MaxValue; var pt = CampaignMap.PortsDb.NearestPort(pos, out sqr, obs, true); if (pt != null && sqr < float.MaxValue) portKm = Mathf.Sqrt(sqr) * kpu; } catch { }
+                float port = 0.35f * Clamp01(1f - (portKm - 200f) / 1300f);
+                float fleet = 0f;
+                try
+                {
+                    var all = CampaignController.Instance.CampaignData.TaskForces;
+                    for (int i = 0; all != null && i < all.Count; i++)
+                    {
+                        var o = all[i]; if (o == null || o.Controller == null || !Friendly(obs, o.Controller)) continue;
+                        float dKm = Vector3.Distance(o.WorldPos, pos) * kpu; if (dKm > 700f) continue;
+                        int tot; int light = Light(o, out tot);
+                        float c = 0.30f * (1f - dKm / 700f) * (0.35f + 0.65f * Mathf.Min(1f, light / 3f));
+                        if (c > fleet) fleet = c;
+                    }
+                }
+                catch { }
+                int cx = (int)Mathf.Floor(pos.x * kpu / 800f), cz = (int)Mathf.Floor(pos.z * kpu / 800f);
+                float weather = -0.15f + 0.20f * Roll($"wx|{m}|{cx}|{cz}");
+                q = Fogged(Clamp01(baseQ + port + fleet + weather));
+            }
+            catch (Exception e) { Err("PortQ", e); q = 1f; }
+            qCache[ck] = q; return q;
+        }
+        internal static float HiddenLimit => HiddenQ;
+        internal static float ExactLimit => ExactQ;
+
         // ---------------------------------------------------------------- strategic map (player view)
         enum Mode { Normal, Hidden, Blurred }
         class MapState { public Mode mode; public Vector3 offset; public CampaignController.TaskForce tf; public float q; public bool saved, elActive, routeActive; public bool hasSeen; public Vector3 seenPos; public int seenMonth = -1, checkedMonth = -1; public string seenHeading; }
