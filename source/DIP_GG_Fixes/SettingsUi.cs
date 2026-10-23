@@ -40,6 +40,8 @@ namespace DipGgFixes
             {"BankruptBuildsCheapShips","Campaign AI"},{"NationalTechBonuses","Campaign AI"},
             {"SeriesProduction","Economy"},{"ForeignPortCapacity","Economy"},{"CheckOtherMods","Information and updates"},{"ShareLogs","Information and updates"},{"InflationEconomy","Economy"},{"FinancialCrisis","Economy"},
             {"BalanceOfPowerEvents","Diplomacy"},{"BalanceGrantOnlyWhenSolvent","Diplomacy"},{"CoalitionWar","Diplomacy"},{"PortlessPowersWait","Campaign AI"},{"BattleDispatches","Battle AI"},{"HistBuilderRun","Tools"},{"HistBuilderFilter","Tools"},{"HistBuilderLimit","Tools"},{"HistBuilderTries","Tools"},
+            {"OccupationEvents","Campaign AI"},{"OccupationRelations","Campaign AI"},{"OccupationPayShare","Campaign AI"},{"OccupationHardUnrest","Campaign AI"},{"OccupationHardRevolt","Campaign AI"},{"OccupationAutonomyRelief","Campaign AI"},{"OccupationAutonomySteps","Campaign AI"}, // 1.11.151
+            {"DivisionOrders","Battle AI"},{"DivisionOrdersVanilla","Battle AI"},{"DivisionLeash","Battle AI"},{"DivisionBreakOffDamage","Battle AI"}, // 1.11.154
             {"UsageStatistics","Information and updates"},{"TreasuryPanel","Information and updates"},{"TreasuryMonthlyReport","Information and updates"},{"TreasuryWarnings","Information and updates"},
             {"TreasuryInFinancesWindow","Information and updates"},{"SaveCompatibilityFix","Information and updates"},{"CheckForUpdates","Information and updates"},{"BetaUpdates","Information and updates"},{"UpdateChannel","Information and updates"},{"UpdateDownloadButton","Information and updates"},
         };

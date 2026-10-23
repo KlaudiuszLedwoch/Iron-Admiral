@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.153", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.154", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -244,7 +244,7 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
-            RevoltDecision.Tick(); Occupation.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
+            RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
             ArmorDiag.Tick();
             Fog.Tick();
@@ -287,7 +287,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); Occupation.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -574,7 +574,7 @@ namespace DipGgFixes
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
             ForeignPorts.CreatePrefs(cat); // 1.11.134
-            Successors.CreatePrefs(cat); Occupation.CreatePrefs(cat); // 1.11.151 // 1.11.149 (1.11.146: Auto armour button removed)
+            Successors.CreatePrefs(cat); Occupation.CreatePrefs(cat); BattleAi.CreateOrderPrefs(cat); // 1.11.151, 1.11.154 // 1.11.149 (1.11.146: Auto armour button removed)
             OtherMods.CreatePrefs(cat); OtherMods.Scan(); // 1.11.138
             LogShare.CreatePrefs(cat); // 1.11.139
             FleetOrders.CreatePrefs(cat); // 1.11.107
@@ -1589,7 +1589,7 @@ namespace DipGgFixes
 
         // Think for AI division leaders (from Ship.AILogic) and for player division leaders (from the per-ship tick).
         internal static void Think(Ship leader) { Think(leader, false); }
-        internal static void Think(Ship leader, bool playerSide)
+        internal static void Think(Ship leader, bool playerSide, bool autonomous = false) // 1.11.154: autonomous = player division under the "Free action" order
         {
             if (!GameManager.IsBattle) return;
             if (!announced) { announced = true; Log("AILogic patch active"); }
@@ -1622,7 +1622,7 @@ namespace DipGgFixes
             if (enemies == null) { Why(st, "no enemy list"); return; }
             ArmorDiag.Probe(leader, enemies);
 
-            if (playerSide)
+            if (playerSide && !autonomous)
             {
                 // player: only the scout torpedo charge (manual orders stay in force otherwise)
                 if (!DipGgFixesMod.PlayerScoutCharge.Value || !light || !leader.haveTorpedoes) return;
@@ -2106,7 +2106,12 @@ namespace DipGgFixes
             }
             if (DipGgFixesMod.Panic.Value && now >= st.nextPanic) { st.nextPanic = now + 3f; PanicCheck(s, st); }
             bool surrSelf = false; try { surrSelf = s.IsSurrendered; } catch { }
-            if (isPlayer && s.isDivLeader && !surrSelf && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
+            if (isPlayer && s.isDivLeader && !surrSelf)
+            {
+                bool handled = false; // 1.11.154: division orders with autonomy (screen, scout, torpedo attack, free action)
+                try { handled = BattleAi.OrdersThink(s); } catch (Exception e) { if (BattleAi.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] division orders: " + e.Message); }
+                if (!handled && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
+            }
         }
         // called after Ship.AimAndShoot
         internal static void Post(Ship s)
