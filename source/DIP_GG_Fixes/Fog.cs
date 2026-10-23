@@ -634,6 +634,18 @@ namespace DipGgFixes
         static float nextTac; static int idLogged; static bool tacInfoLogged; static Player tacMain; static CampaignBattle tacBattleObj;
         static long Key(bool sideAttacker, Ship t) { return ((long)t.Pointer << 1) | (sideAttacker ? 1L : 0L); }
         static bool SideOf(CampaignBattle b, Player p) { try { return b.IsAttacker(p); } catch { return false; } }
+        // 1.11.127: has the observer's side identified this ship (true when tactical identification is off or no campaign battle)
+        internal static bool Identified(Player observer, Ship t)
+        {
+            try
+            {
+                if (!TacActive || observer == null || t == null) return true;
+                var b = tacBattleObj; if (b == null || b.Pointer != tacBattle) return true;
+                Tac st; if (!tac.TryGetValue(Key(SideOf(b, observer), t), out st)) return false;
+                return st.identified;
+            }
+            catch { return true; }
+        }
         internal static void Tick()
         {
             bool battle = false; try { battle = GameManager.IsBattle; } catch { }
