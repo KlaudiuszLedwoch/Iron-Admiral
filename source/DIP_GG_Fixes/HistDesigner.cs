@@ -347,8 +347,12 @@ namespace DipGgFixes
                             // the slip keeps only the last try: stop at the first valid try that is close enough to the historical battery,
                             // otherwise a later, worse try would replace it (e.g. 11 of 13 guns valid, then 10 of 13 invalid)
                             if (tv && Mathf.Abs(cal - wantIn) <= 0.6f && Math.Abs(barrels - wantMain) <= Math.Max(1, wantMain / 4)) { Log($"{s["name"]}: try {t + 1} kept (valid, close to the historical battery)"); break; }
+                            // 1.11.109: a valid try with the historical calibre and surplus main guns is kept too - the surplus mounts are removed below
+                            if (tv && Mathf.Abs(cal - wantIn) <= 0.6f && barrels > wantMain && wantMain > 0) { Log($"{s["name"]}: try {t + 1} kept (valid, historical calibre, surplus mounts to remove)"); break; }
                         }
                         CapMainMm = 0f; CapSecMm = 0f; MainPerTurret = 0; WantMain = 0; EraYear = 0;
+                        // 1.11.109: surplus main mounts of the historical calibre (e.g. 10 of 8 or 12 of 9 guns) are removed before the battery check
+                        { var tl = new List<string>(); int tr = 0; try { tr = TrimMainBattery(ship, wantIn, wantMain, tl); } catch (Exception e) { Log("trim: " + e.Message); } if (tr > 0) { notes += $"{tr} surplus main mount(s) removed; "; Log($"{s["name"]}: main battery trimmed - {string.Join("; ", tl)}"); yield return Wait(0.3f); } }
                         // the last try is what stays on the slip; if it is not the historical battery, do not save a wrong design
                         { float c2; int b2; MainBattery(ship, out c2, out b2); if (Mathf.Abs(c2 - wantIn) > 0.6f || Math.Abs(b2 - wantMain) > Math.Max(1, wantMain / 4)) { notes += $"main battery {b2} x {c2:0.#} in, not saved; "; result = "failed"; lastFail = $"main battery {b2} x {c2:0.#} in"; goto nextHull; } }
                         if (bestDiff != 0) notes += $"main battery {mainBuilt} instead of {wantMain} x {wantIn} in; ";
@@ -428,6 +432,43 @@ namespace DipGgFixes
         static bool IsMainGun(Part p, float wantIn)
         {
             try { var d = p.data; if (d == null || !d.isGun) return false; float c = d.caliber > 30f ? d.caliber / 25.4f : d.caliber; return Mathf.Abs(c - wantIn) <= 0.6f; } catch { return false; }
+        }
+        // 1.11.109: the generator often mounts more main guns of the historical calibre than the class had (Nagato 10 of 8,
+        // Iowa 12 of 9, Cressy 4 of 2). Whole main mounts are removed one at a time until the count is historical: the mount whose
+        // removal comes closest to the historical count, wing mounts first, then the one nearest amidships. Never below the
+        // tolerance of the battery check and never the last main mount.
+        static int TrimMainBattery(Ship ship, float wantIn, int wantMain, List<string> log)
+        {
+            int removed = 0;
+            if (wantMain <= 0) return 0;
+            int tol = Math.Max(1, wantMain / 4);
+            for (int k = 0; k < 16; k++)
+            {
+                float cal; int barrels; MainBattery(ship, out cal, out barrels);
+                if (Mathf.Abs(cal - wantIn) > 0.6f || barrels <= wantMain) break;
+                float top = 0f; var arr = ship.parts.ToArray();
+                foreach (var p in arr) { var d = p != null ? p.data : null; if (d != null && d.isGun && d.caliber > top) top = d.caliber; }
+                Part best = null; float bestScore = float.MaxValue; int bestBar = 0; int mounts = 0;
+                foreach (var p in arr) { var d = p != null ? p.data : null; if (d != null && d.isGun && Mathf.Abs(d.caliber - top) < 0.01f) mounts++; }
+                if (mounts < 2) break;
+                Vector3 sp = Vector3.zero; Quaternion sr = Quaternion.identity;
+                try { sp = ship.transform.position; sr = ship.transform.rotation; } catch { }
+                foreach (var p in arr)
+                {
+                    var d = p != null ? p.data : null;
+                    if (d == null || !d.isGun || Mathf.Abs(d.caliber - top) >= 0.01f) continue;
+                    int b = Math.Max(1, d.barrels); int after = barrels - b;
+                    if (after <= 0 || after < wantMain - tol) continue;
+                    Vector3 lp = Vector3.zero; try { lp = Quaternion.Inverse(sr) * (p.transform.position - sp); } catch { }
+                    float score = Math.Abs(after - wantMain) * 100f - (Mathf.Abs(lp.x) > 1.5f ? 50f : 0f) + Mathf.Abs(lp.z) * 0.1f;
+                    if (score < bestScore) { bestScore = score; best = p; bestBar = b; }
+                }
+                if (best == null) break;
+                string nm = best.data.name;
+                try { ship.RemovePart(best, true, false); } catch { break; }
+                removed++; log.Add($"{nm} ({bestBar} gun(s)) removed, {barrels - bestBar} left");
+            }
+            return removed;
         }
         // nearest free mount that takes the part (as TweaksAndFixes' design validator does): within 2.5 units on each axis, then 6
         static Mount ClosestMount(Ship ship, Part part)
