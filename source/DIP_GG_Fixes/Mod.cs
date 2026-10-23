@@ -1,4 +1,4 @@
-// DIP GG Fixes - MelonLoader add-on for DIP GG Extended.
+﻿// DIP GG Fixes - MelonLoader add-on for DIP GG Extended.
 //
 // Fix 1: CampaignController.CheckMinorNationThreat sometimes throws
 //   "ArgumentException: An item with the same key has already been added.
@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.151", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.152", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3083,6 +3083,7 @@ namespace DipGgFixes
         internal static bool Newer(string a, string b)
         {
             if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
+            a = Num(a); b = Num(b); // 1.11.152: a version written as "Iron Admiral 1.2.67-beta.2" counted as 0 - "update available" for the installed version
             string ca = a, cb = b; int ba = int.MaxValue, bb = int.MaxValue;
             int ia = a.IndexOf("-beta", StringComparison.OrdinalIgnoreCase); if (ia >= 0) { ca = a.Substring(0, ia); var t = a.Substring(ia + 5).TrimStart('.'); if (!int.TryParse(t, out ba)) ba = 0; }
             int ib = b.IndexOf("-beta", StringComparison.OrdinalIgnoreCase); if (ib >= 0) { cb = b.Substring(0, ib); var t = b.Substring(ib + 5).TrimStart('.'); if (!int.TryParse(t, out bb)) bb = 0; }
@@ -3097,6 +3098,7 @@ namespace DipGgFixes
             return ba > bb;
         }
 
+        static string Num(string v) { int i = 0; while (i < v.Length && !char.IsDigit(v[i])) i++; return v.Substring(i).Trim(); }
         internal static Il2CppSystem.Action Act(Action a) { return Il2CppInterop.Runtime.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(a); }
 
         internal static void Tick()
