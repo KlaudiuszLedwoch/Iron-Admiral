@@ -20,7 +20,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On, Splashes;
         class Entry { public IntPtr Key; public Vector3 Pos; public int Ships; public float Tons; public string Text; public Color Col; public float W; }
         static readonly List<Entry> entries = new List<Entry>();
-        static float next, nextCover; static int errors; static GUIStyle st;
+        static float next, nextCover, nextPointer; static bool pointerWindow, pointerMarker; static int errors; static GUIStyle st;
         static readonly Dictionary<IntPtr, bool> covered = new Dictionary<IntPtr, bool>();
         static readonly HashSet<string> seenCover = new HashSet<string>();
         static UnityEngine.EventSystems.PointerEventData ped;
@@ -152,15 +152,26 @@ namespace DipGgFixes
                 if (Time.unscaledTime >= next) { next = Time.unscaledTime + 2f; Recompute(); }
                 if (entries.Count == 0) return;
                 var cam = Camera.main; if (cam == null) return;
-                // 1.11.126: nothing while the pointer is over the game's interface (port window, tooltips, panels)
                 UnityEngine.EventSystems.EventSystem es = null;
-                try { es = UnityEngine.EventSystems.EventSystem.current; if (es != null && es.IsPointerOverGameObject()) return; } catch { }
+                try { es = UnityEngine.EventSystems.EventSystem.current; } catch { }
                 // labels under an open window (move ships, port, fleet...) are left out: the screen-space interface at the label
-                // is checked every 0.3 s (OnGUI draws above the game's interface, so it has to stay away from it)
+                // is checked every 0.5 s (OnGUI draws above the game's interface, so it has to stay away from it)
                 bool recheck = Time.unscaledTime >= nextCover; if (recheck) nextCover = Time.unscaledTime + 0.5f;
-                if (st == null) { st = new GUIStyle(); st.fontSize = 12; st.alignment = TextAnchor.MiddleCenter; st.richText = false; }
+                if (st == null) { st = new GUIStyle(); st.fontSize = 10; st.alignment = TextAnchor.MiddleCenter; st.richText = false; }
                 float k = UiScale.F; if (k <= 0f) k = 1f;
                 float W = UiScale.W, H = UiScale.H;
+                // 1.11.130: labels flickered whenever the cursor crossed a port name or a province (1.11.126 hid all labels while the
+                // pointer was over any interface element). Now: the pointer state is checked every 0.25 s; over a window all labels
+                // stay hidden, over a map marker (port, province - the game shows its tooltip there) only the tooltip area is kept clear
+                var mp = Input.mousePosition;
+                if (Time.unscaledTime >= nextPointer)
+                {
+                    nextPointer = Time.unscaledTime + 0.25f; pointerWindow = false; pointerMarker = false;
+                    try { if (es != null && es.IsPointerOverGameObject()) { pointerWindow = UnderUi(es, mp.x, mp.y); pointerMarker = !pointerWindow; } } catch { }
+                }
+                if (pointerWindow) return;
+                Rect tip = new Rect(0f, 0f, 0f, 0f);
+                if (pointerMarker) { float mx = mp.x / k, my = (Screen.height - mp.y) / k; tip = new Rect(mx - 30f, my - 30f, 460f, 340f); }
                 // the game's fixed panels (fractions of the screen): top bar, minimap, right info panel, log, next-turn box
                 var blocked = new[] {
                     new Rect(0f, 0f, W, H * 0.085f), new Rect(0f, 0f, W * 0.2f, H * 0.31f), new Rect(W * 0.815f, 0f, W * 0.185f, H * 0.66f),
@@ -170,18 +181,18 @@ namespace DipGgFixes
                 {
                     var sp = cam.WorldToScreenPoint(e.Pos); if (sp.z <= 0f) continue;
                     // below the port name (the game writes the name under the flag)
-                    float x = sp.x / k, y = (Screen.height - sp.y) / k + 22f;
-                    if (e.W <= 0f) e.W = Mathf.Max(48f, st.CalcSize(new GUIContent(e.Text)).x + 8f);
+                    float x = sp.x / k, y = (Screen.height - sp.y) / k + 20f;
+                    if (e.W <= 0f) e.W = Mathf.Max(30f, st.CalcSize(new GUIContent(e.Text)).x + 6f);
                     float w = e.W;
-                    var r = new Rect(x - w / 2f, y, w, 16f);
+                    var r = new Rect(x - w / 2f, y, w, 13f);
                     if (r.xMax < 0f || r.yMax < 0f || r.x > W || r.y > H) continue;
-                    bool skip = false;
-                    foreach (var b in blocked) if (b.Overlaps(r)) { skip = true; break; }
+                    bool skip = tip.width > 0f && tip.Overlaps(r);
+                    if (!skip) foreach (var b in blocked) if (b.Overlaps(r)) { skip = true; break; }
                     // declutter: a label that would cover another one is left out (zoom in to see it)
                     if (!skip) foreach (var o in drawn) if (o.Overlaps(r)) { skip = true; break; }
                     if (!skip)
                     {
-                        if (recheck || !covered.ContainsKey(e.Key)) covered[e.Key] = UnderUi(es, sp.x, sp.y - 22f * k - 8f * k);
+                        if (recheck || !covered.ContainsKey(e.Key)) covered[e.Key] = UnderUi(es, sp.x, sp.y - 20f * k - 6f * k);
                         skip = covered[e.Key];
                     }
                     if (skip) continue;
