@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.107", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.108", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -537,6 +537,7 @@ namespace DipGgFixes
                 "At game start fetch the VERSION file of the Iron Admiral GitHub repository (one HTTPS request to raw.githubusercontent.com) and show a message when a newer release exists (1.11.9)");
             UpdateDownload = cat.CreateEntry("UpdateDownloadButton", true, null,
                 "Show a Download button in the update message; the download starts only after the player clicks it (1.11.11). false = message with a link only");
+            UpdateCheck.CreatePrefs(cat); // 1.11.108: stable / beta line
             EcoPrefs.Create(cat);
             EconomyUi.CreatePrefs(cat);
             SaveCompat.CreatePrefs(cat);
@@ -2933,7 +2934,23 @@ namespace DipGgFixes
     // =====================================================================================
     internal static class UpdateCheck
     {
-        const string Url = "https://raw.githubusercontent.com/KlaudiuszLedwoch/Iron-Admiral/main/VERSION";
+        // 1.11.108: two release lines - stable (branch main) and beta (branch beta, versions "1.2.N-beta.K").
+        // UpdateChannel: "auto" follows the installed package (a beta package checks the beta line), "stable" or "beta".
+        internal static MelonPreferences_Entry<string> Channel;
+        internal static void CreatePrefs(MelonPreferences_Category cat)
+        {
+            Channel = cat.CreateEntry("UpdateChannel", "auto", null, "Release line the update check follows: auto (as the installed package), stable or beta");
+        }
+        static bool BetaLine
+        {
+            get
+            {
+                string c = "auto"; try { c = (Channel != null ? Channel.Value : "auto").Trim().ToLowerInvariant(); } catch { }
+                if (c == "beta") return true; if (c == "stable") return false;
+                return local != null && local.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) >= 0;
+            }
+        }
+        static string Url => "https://raw.githubusercontent.com/KlaudiuszLedwoch/Iron-Admiral/" + (BetaLine ? "beta" : "main") + "/VERSION";
         const string Page = "https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases";
         static volatile string remote, remoteDll, remoteSha, remoteZipUrl; static volatile bool done, shown;
         static volatile string resultText; static volatile bool resultShown;
@@ -2991,10 +3008,14 @@ namespace DipGgFixes
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Update] " + e.Message); done = true; }
         }
 
-        static bool Newer(string a, string b)
+        // "1.2.66" > "1.2.66-beta.3" > "1.2.66-beta.2" > "1.2.65" (a release is newer than its own betas)
+        internal static bool Newer(string a, string b)
         {
             if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
-            var pa = a.Split('.'); var pb = b.Split('.');
+            string ca = a, cb = b; int ba = int.MaxValue, bb = int.MaxValue;
+            int ia = a.IndexOf("-beta", StringComparison.OrdinalIgnoreCase); if (ia >= 0) { ca = a.Substring(0, ia); var t = a.Substring(ia + 5).TrimStart('.'); if (!int.TryParse(t, out ba)) ba = 0; }
+            int ib = b.IndexOf("-beta", StringComparison.OrdinalIgnoreCase); if (ib >= 0) { cb = b.Substring(0, ib); var t = b.Substring(ib + 5).TrimStart('.'); if (!int.TryParse(t, out bb)) bb = 0; }
+            var pa = ca.Split('.'); var pb = cb.Split('.');
             for (int i = 0; i < Math.Max(pa.Length, pb.Length); i++)
             {
                 int x = 0, y = 0;
@@ -3002,7 +3023,7 @@ namespace DipGgFixes
                 if (i < pb.Length) int.TryParse(pb[i], out y);
                 if (x != y) return x > y;
             }
-            return false;
+            return ba > bb;
         }
 
         internal static Il2CppSystem.Action Act(Action a) { return Il2CppInterop.Runtime.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(a); }
@@ -3020,7 +3041,7 @@ namespace DipGgFixes
             {
                 if (remote == null) { shown = true; return; }
                 bool newer = Newer(remote, local);
-                if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}), latest on GitHub {remote} ({remoteDll}) - {(newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
+                if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}), latest on GitHub ({(BetaLine ? "beta" : "stable")} line) {remote} ({remoteDll}) - {(newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
                 if (!newer) { shown = true; return; }
                 if (UnityEngine.Time.realtimeSinceStartup - firstTry < 15f) return; // let the main menu appear first
                 // 1.11.13: never during a loading screen - the 15:44 log showed the message raised while a save was loading
@@ -3034,7 +3055,7 @@ namespace DipGgFixes
                 if (UnityEngine.Time.realtimeSinceStartup - settledAt < 3f) return;
                 var ui = G.ui; if (ui == null) return;
                 bool canDownload = DipGgFixesMod.UpdateDownload != null && DipGgFixesMod.UpdateDownload.Value && !string.IsNullOrEmpty(remoteZipUrl) && !string.IsNullOrEmpty(remoteSha);
-                string text = $"Iron Admiral {remote} is available on GitHub (installed: {local}).\n{remoteDll}\n{Page}";
+                string text = $"Iron Admiral {remote}{(BetaLine ? " (beta)" : "")} is available on GitHub (installed: {local}).\n{remoteDll}\n{Page}";
                 if (canDownload)
                 {
                     text += "\n\nDownload installs the Mods folder of the new version (SHA-256 verified); the game must be restarted afterwards. Nothing is downloaded unless you click.";

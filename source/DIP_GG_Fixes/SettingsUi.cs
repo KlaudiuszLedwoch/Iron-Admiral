@@ -41,10 +41,10 @@ namespace DipGgFixes
             {"SeriesProduction","Economy"},{"InflationEconomy","Economy"},{"FinancialCrisis","Economy"},
             {"BalanceOfPowerEvents","Diplomacy"},{"BalanceGrantOnlyWhenSolvent","Diplomacy"},{"CoalitionWar","Diplomacy"},{"PortlessPowersWait","Campaign AI"},{"BattleDispatches","Battle AI"},{"HistBuilderRun","Tools"},{"HistBuilderFilter","Tools"},{"HistBuilderLimit","Tools"},{"HistBuilderTries","Tools"},
             {"UsageStatistics","Information and updates"},{"TreasuryPanel","Information and updates"},{"TreasuryMonthlyReport","Information and updates"},{"TreasuryWarnings","Information and updates"},
-            {"TreasuryInFinancesWindow","Information and updates"},{"SaveCompatibilityFix","Information and updates"},{"CheckForUpdates","Information and updates"},{"UpdateDownloadButton","Information and updates"},
+            {"TreasuryInFinancesWindow","Information and updates"},{"SaveCompatibilityFix","Information and updates"},{"CheckForUpdates","Information and updates"},{"UpdateChannel","Information and updates"},{"UpdateDownloadButton","Information and updates"},
         };
         // options that only take effect at the next game start
-        static readonly HashSet<string> RestartOnly = new HashSet<string> { "CheckForUpdates", "UpdateDownloadButton" };
+        static readonly HashSet<string> RestartOnly = new HashSet<string> { "CheckForUpdates", "UpdateDownloadButton", "UpdateChannel" };
 
         internal static void CreatePrefs(MelonPreferences_Category c)
         {
