@@ -1,8 +1,14 @@
 // 1.11.91 (prototype, off by default): campaign map without a left/right edge. The game already routes fleets across the
 // map edge (Pathfinding.OtherSideOfMesh, split route lines; TAF wraps x < 0 by CampaignMap.mapWidth), only the camera
-// stops at the edges. Here the camera wraps around horizontally and two display-only copies of the map plane are drawn
-// left and right of the real one. Version 1: icons, labels and clicks stay on the real map only.
+// stops at the edges. Here the camera wraps around horizontally and display-only copies of the map are drawn left and right.
+// 1.11.133 (beta): the copies were drawn but stayed hidden (23.10: plain animated ocean beyond the date line). Rebuilt after
+// the approach of UADVanillaPlus (map wrap): each copy gets its own instances of the map materials (same shader and
+// properties), a render queue above the sea (>= 5000), and a small lift in height so the sea plane does not cover it;
+// BorderLeft/BorderRight are switched off. Besides the map surface the copies now include the country colours (the
+// borders manager's meshes, created a while after the map), the map grid and the area/province names. A side copy is only
+// active while the view reaches that map edge. Port and fleet markers, routes and clicks still live on the real map only.
 using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using MelonLoader;
 using UnityEngine;
@@ -13,95 +19,166 @@ namespace DipGgFixes
     internal static class ContinuousMap
     {
         internal static MelonPreferences_Entry<bool> On;
-        static GameObject left, right;
-        static float minX, maxX, x0;
-        static bool logged, wantWrap;
-        static int errs;
+        const float MapLift = 0.052f, OverlayLift = 0.06f, LabelLift = 0.08f;
+        const int MapQueue = 5000, OverlayQueue = 5100, LabelQueue = 5300;
+        static readonly List<GameObject> all = new List<GameObject>();
+        static readonly List<GameObject> lapLeft = new List<GameObject>(), lapRight = new List<GameObject>();
+        static readonly List<Renderer> borders = new List<Renderer>();
+        static IntPtr mapPtr; static bool built, overlays, leftOn, rightOn, logged; static int errs, nextOverlayFrame;
+        static float x0; static bool wantWrap;
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("ContinuousMap", false, null, "Campaign map without left/right edge: the camera wraps around and the map is drawn on both sides (prototype)");
+            On = cat.CreateEntry("ContinuousMap", false, null, "Campaign map without left/right edge: the camera wraps around and the map is drawn on both sides (test)");
+        }
+        static void Msg(string m) { MelonLogger.Msg("[DIP GG Fixes][Map] " + m); }
+        static void Warn(string m) { if (errs++ < 8) MelonLogger.Warning("[DIP GG Fixes][Map] " + m); }
+
+        static float Width()
+        {
+            try { if (CampaignMap.mapWidth > 0f) return CampaignMap.mapWidth; } catch { }
+            try { return CampaignMap.Instance.MapRenderer.bounds.size.x; } catch { return 0f; }
         }
 
-        static void Warn(string m) { if (errs++ < 5) MelonLogger.Warning("[DIP GG Fixes][Map] " + m); }
-
-        static IntPtr mapPtr;
-        static bool Bounds()
+        static void Clear()
         {
-            var m = CampaignMap.Instance; if (m == null || m.MapRenderer == null) return false;
-            // 1.11.106: a new map (after a battle or a load) - forget the copies and border planes of the old one
-            if (m.Pointer != mapPtr) { mapPtr = m.Pointer; left = right = null; sideBorders.Clear(); MelonLogger.Msg("[DIP GG Fixes][Map] campaign map (re)created - continuous map set up again"); }
-            var b = m.MapRenderer.bounds; minX = b.min.x; maxX = b.max.x;
-            return maxX - minX > 1f;
+            foreach (var g in all) { try { if (g != null) UnityEngine.Object.Destroy(g); } catch { } }
+            all.Clear(); lapLeft.Clear(); lapRight.Clear(); borders.Clear();
+            built = overlays = leftOn = rightOn = false;
         }
 
-        static GameObject Make(Renderer src, float dx)
+        static void Register(GameObject g, int lap)
         {
-            var mf = src.GetComponent<MeshFilter>(); if (mf == null) { Warn("map renderer has no MeshFilter"); return null; }
-            var go = new GameObject("IronAdmiral_MapWrap");
-            go.transform.SetParent(src.transform.parent, false);
-            go.transform.localScale = src.transform.localScale;
-            go.transform.rotation = src.transform.rotation;
-            go.transform.position = src.transform.position + new Vector3(dx, 0f, 0f);
-            go.layer = src.gameObject.layer;
-            var f = go.AddComponent<MeshFilter>(); f.sharedMesh = mf.sharedMesh;
-            var r = go.AddComponent<MeshRenderer>(); r.sharedMaterials = src.sharedMaterials;
+            all.Add(g); (lap < 0 ? lapLeft : lapRight).Add(g);
+            g.SetActive(lap < 0 ? leftOn : rightOn);
+        }
+
+        static Material[] Clone(Material[] src, int minQueue)
+        {
+            var r = new Material[src.Length];
+            for (int i = 0; i < src.Length; i++) { var m = src[i]; if (m == null) continue; var c = new Material(m); c.renderQueue = Mathf.Max(m.renderQueue, minQueue); r[i] = c; }
+            return r;
+        }
+
+        // a new object with the same mesh and copies of the materials, shifted by one map width and lifted a little
+        static GameObject MeshCopy(Renderer src, int lap, string name, float lift, int queue)
+        {
+            var mf = src.GetComponent<MeshFilter>(); if (mf == null || mf.sharedMesh == null) return null;
+            var so = src.gameObject;
+            var go = new GameObject(name); go.layer = so.layer;
+            go.transform.SetParent(so.transform.parent, false);
+            go.transform.localPosition = so.transform.localPosition; go.transform.localRotation = so.transform.localRotation; go.transform.localScale = so.transform.localScale;
+            var p = go.transform.position; p.x += Width() * lap; p.y += lift; go.transform.position = p;
+            go.AddComponent<MeshFilter>().sharedMesh = mf.sharedMesh;
+            var mr = go.AddComponent<MeshRenderer>(); mr.enabled = src.enabled;
+            try { mr.sortingLayerID = src.sortingLayerID; mr.sortingOrder = src.sortingOrder; } catch { }
+            mr.sharedMaterials = Clone(src.materials, queue);
+            Register(go, lap);
             return go;
         }
 
-        // 1.11.101: the game covers the area left and right of the map with black planes ("Border", "BorderLeft", "BorderRight")
-        // drawn above the map (y 1.1) - they hid the copies (22.10 test: black beyond the Pacific). They are hidden while the
-        // continuous map is on and shown again when it is off.
-        static readonly System.Collections.Generic.List<Renderer> sideBorders = new System.Collections.Generic.List<Renderer>();
-        static void FindBorders()
+        // Instantiate a whole layer (grid, names): only the text and the renderers stay active
+        static void LayerCopy(GameObject src, int lap, string name, float lift, int queue)
         {
-            if (sideBorders.Count > 0) return;
-            try
-            {
-                var root = CampaignMap.Instance.MapRenderer.transform.root;
-                foreach (var r in root.GetComponentsInChildren<Renderer>(true))
+            var go = UnityEngine.Object.Instantiate(src, src.transform.parent);
+            go.name = name;
+            go.transform.localPosition = src.transform.localPosition; go.transform.localRotation = src.transform.localRotation; go.transform.localScale = src.transform.localScale;
+            var p = src.transform.position; p.x += Width() * lap; p.y += lift; go.transform.position = p;
+            if (queue > 0)
+                foreach (var r in go.GetComponentsInChildren<Renderer>(true))
                 {
-                    if (r == null) continue; var n = r.gameObject.name; if (!n.StartsWith("Border")) continue;
-                    var b = r.bounds;
-                    if (b.min.x >= maxX - 1f || b.max.x <= minX + 1f) sideBorders.Add(r); // only the left/right ones, not top/bottom
+                    if (r == null) continue; var ms = r.materials;
+                    foreach (var m in ms) if (m != null) m.renderQueue = Mathf.Max(m.renderQueue, queue);
+                    r.materials = ms;
                 }
-                MelonLogger.Msg($"[DIP GG Fixes][Map] {sideBorders.Count} side border plane(s) found");
+            foreach (var b in go.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (b == null) continue; string t = ""; try { t = b.GetIl2CppType().FullName ?? ""; } catch { }
+                if (t.Contains("TMPro") || t.Contains("TextMeshPro")) continue;
+                b.enabled = false;
             }
-            catch (Exception e) { Warn("borders: " + e.Message); }
-        }
-        static void Show(bool v)
-        {
-            try { if (left != null) left.SetActive(v); if (right != null) right.SetActive(v); } catch { left = right = null; }
-            try { foreach (var r in sideBorders) if (r != null) r.enabled = !v; } catch { sideBorders.Clear(); }
+            foreach (var c in go.GetComponentsInChildren<Collider>(true)) if (c != null) UnityEngine.Object.Destroy(c);
+            Register(go, lap);
         }
 
-        static void Ensure()
+        static void Build()
         {
-            FindBorders();
-            if (left != null && right != null) return;
-            var src = CampaignMap.Instance.MapRenderer; float w = maxX - minX;
-            left = Make(src, -w); right = Make(src, w);
-            if (!logged)
+            var map = CampaignMap.Instance; var src = map.MapRenderer;
+            if (src.bounds.size.x <= 1f) return;
+            if (src.GetComponent<MeshFilter>() == null) { Warn("map renderer has no mesh - continuous map not built"); return; }
+            // the game's planes that cover the area beyond the left and right map edge
+            var par = src.transform.parent;
+            foreach (var n in new[] { "BorderLeft", "BorderRight" })
             {
-                logged = true;
-                MelonLogger.Msg($"[DIP GG Fixes][Map] continuous map on: plane x {minX:0.00}..{maxX:0.00} (width {w:0.00}), CampaignMap.mapWidth {CampaignMap.mapWidth:0.00}");
-                // 1.11.97: the copies stayed black in the first test (22.10) - list what draws the map
-                try
-                {
-                    var root = src.transform.root;
-                    var rs = root.GetComponentsInChildren<Renderer>(true);
-                    int n = 0;
-                    foreach (var r in rs)
-                    {
-                        if (r == null || n++ > 60) continue;
-                        string sh = "?"; try { var m = r.sharedMaterial; sh = m != null ? m.name + "/" + (m.shader != null ? m.shader.name : "?") : "none"; } catch { }
-                        var b = r.bounds;
-                        MelonLogger.Msg($"[DIP GG Fixes][Map] renderer {r.gameObject.name} ({r.GetIl2CppType().Name}) enabled {r.enabled}/{r.gameObject.activeInHierarchy} layer {r.gameObject.layer} x {b.min.x:0.0}..{b.max.x:0.0} y {b.min.y:0.0}..{b.max.y:0.0} z {b.min.z:0.0}..{b.max.z:0.0} material {sh}{(r.Pointer == src.Pointer ? " <- MapRenderer" : "")}");
-                    }
-                    MelonLogger.Msg($"[DIP GG Fixes][Map] {rs.Length} renderers under {root.name}; copy left x {left?.GetComponent<Renderer>()?.bounds.min.x:0.0}..{left?.GetComponent<Renderer>()?.bounds.max.x:0.0}, right x {right?.GetComponent<Renderer>()?.bounds.min.x:0.0}..{right?.GetComponent<Renderer>()?.bounds.max.x:0.0}; camera {(Camera.main != null ? Camera.main.name + " cullingMask " + Camera.main.cullingMask + " far " + Camera.main.farClipPlane : "none")}");
-                }
-                catch (Exception e) { Warn("renderer list: " + e.Message); }
+                var t = par != null ? par.Find(n) : null; if (t == null) { Warn("border not found: " + n); continue; }
+                foreach (var r in t.GetComponentsInChildren<Renderer>(true)) if (r != null) { borders.Add(r); r.enabled = false; }
             }
+            MeshCopy(src, -1, "IronAdmiral_MapWrap_Left", MapLift, MapQueue);
+            MeshCopy(src, 1, "IronAdmiral_MapWrap_Right", MapLift, MapQueue);
+            try
+            {
+                var grid = map.transform.root.Find("WorldEx/MapVisualGrid");
+                if (grid != null) { LayerCopy(grid.gameObject, -1, "IronAdmiral_MapWrap_GridL", 0f, 0); LayerCopy(grid.gameObject, 1, "IronAdmiral_MapWrap_GridR", 0f, 0); }
+                else Warn("map grid not found");
+            }
+            catch (Exception e) { Warn("grid: " + e.Message); }
+            try
+            {
+                if (map.LabelsAreaRoot != null) { LayerCopy(map.LabelsAreaRoot.gameObject, -1, "IronAdmiral_MapWrap_AreaL", LabelLift, LabelQueue); LayerCopy(map.LabelsAreaRoot.gameObject, 1, "IronAdmiral_MapWrap_AreaR", LabelLift, LabelQueue); }
+                if (map.LabelsProvincesRoot != null) { LayerCopy(map.LabelsProvincesRoot.gameObject, -1, "IronAdmiral_MapWrap_ProvL", LabelLift, LabelQueue); LayerCopy(map.LabelsProvincesRoot.gameObject, 1, "IronAdmiral_MapWrap_ProvR", LabelLift, LabelQueue); }
+            }
+            catch (Exception e) { Warn("names: " + e.Message); }
+            built = true;
+            Msg($"continuous map built: width {Width():0.00}, map x {src.bounds.min.x:0.00}..{src.bounds.max.x:0.00}, {all.Count} copies, {borders.Count} edge renderers hidden");
+        }
+
+        // the country colours are separate meshes made a while after the map; copy them once their player materials exist
+        static void Overlays()
+        {
+            if (overlays || Time.frameCount < nextOverlayFrame) return; nextOverlayFrame = Time.frameCount + 180;
+            try
+            {
+                var bm = CampaignMap.Instance.bordersManager; if (bm == null || bm.Countries == null) return;
+                bool ready = false;
+                foreach (var c in bm.Countries)
+                {
+                    if (c == null || c.MeshObjects == null) continue;
+                    for (int i = 0; i < c.MeshObjects.Count && !ready; i++)
+                    {
+                        var mr = c.MeshObjects[i]; if (mr == null) continue;
+                        foreach (var m in mr.sharedMaterials) if (m != null && m.name.Replace(" (Instance)", "").StartsWith("player-", StringComparison.OrdinalIgnoreCase)) { ready = true; break; }
+                    }
+                    if (ready) break;
+                }
+                if (!ready) return;
+                int n = 0;
+                foreach (var c in bm.Countries)
+                {
+                    if (c == null || c.MeshObjects == null) continue;
+                    for (int i = 0; i < c.MeshObjects.Count; i++)
+                    {
+                        var mr = c.MeshObjects[i]; if (mr == null) continue;
+                        if (MeshCopy(mr, -1, "IronAdmiral_MapWrap_CountryL", OverlayLift, OverlayQueue) != null) n++;
+                        if (MeshCopy(mr, 1, "IronAdmiral_MapWrap_CountryR", OverlayLift, OverlayQueue) != null) n++;
+                    }
+                }
+                overlays = true; Msg($"continuous map: {n} country colour copies");
+            }
+            catch (Exception e) { overlays = true; Warn("country colours: " + e.Message); }
+        }
+
+        static void Sides(Cam cam)
+        {
+            bool l = false, r = false;
+            try
+            {
+                var b = CampaignMap.Instance.MapRenderer.bounds; var c = cam.cameraComp;
+                float half = c.orthographicSize * cam.screenSizeRation; float x = cam.transform.position.x;
+                l = x - half <= b.min.x + 1.5f; r = x + half >= b.max.x - 1.5f;
+            }
+            catch { }
+            if (l != leftOn) { leftOn = l; foreach (var g in lapLeft) if (g != null) g.SetActive(l); }
+            if (r != rightOn) { rightOn = r; foreach (var g in lapRight) if (g != null) g.SetActive(r); }
         }
 
         // before the game's border check: remember where the camera wanted to go and whether to wrap it
@@ -111,9 +188,16 @@ namespace DipGgFixes
             try
             {
                 bool map = false; try { map = GameManager.IsWorldMap; } catch { }
-                if (On == null || !On.Value || !map) { Show(false); return; }
-                if (!Bounds()) return;
-                Ensure(); Show(true);
+                var m = CampaignMap.Instance;
+                if (On == null || !On.Value || !map || m == null || m.MapRenderer == null)
+                {
+                    if (built && (On == null || !On.Value)) { foreach (var r in borders) if (r != null) r.enabled = true; Clear(); Msg("continuous map off - copies removed"); }
+                    return;
+                }
+                if (m.Pointer != mapPtr) { mapPtr = m.Pointer; Clear(); }
+                if (!built) Build();
+                if (!built) return;
+                Overlays();
                 x0 = cam.transform.position.x; wantWrap = true;
             }
             catch (Exception e) { Warn("before: " + e.Message); }
@@ -125,14 +209,14 @@ namespace DipGgFixes
             if (!wantWrap) return;
             try
             {
-                float w = maxX - minX, x = x0;
-                // 1.11.106: no loops - a far-away or invalid camera position (NaN, infinity, a battle camera) could spin the
-                // old while-loops forever (float precision); positions far outside the map are left to the game
+                var b = CampaignMap.Instance.MapRenderer.bounds; float minX = b.min.x, w = b.max.x - b.min.x, x = x0;
+                // no loops - a far-away or invalid camera position is left to the game
                 if (w <= 1f || float.IsNaN(x) || float.IsInfinity(x) || Mathf.Abs(x) > 10f * w) { wantWrap = false; return; }
                 x = minX + Mathf.Repeat(x - minX, w);
-                var p = cam.transform.position; p.x = x;
-                cam.transform.position = p;
+                var p = cam.transform.position; p.x = x; cam.transform.position = p;
                 try { cam.newCameraPos = new Vector3(x, cam.newCameraPos.y, p.z); } catch { }
+                Sides(cam);
+                if (!logged) { logged = true; Msg("continuous map active"); }
             }
             catch (Exception e) { Warn("after: " + e.Message); }
         }
