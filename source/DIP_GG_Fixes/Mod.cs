@@ -108,8 +108,9 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.133", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.134", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
+[assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
 namespace DipGgFixes
 {
@@ -306,6 +307,7 @@ namespace DipGgFixes
         }
         public override void OnInitializeMelon()
         {
+            SafePatches.ApplyAll(HarmonyInstance); // 1.11.134
             Harm = HarmonyInstance;
             var cat = MelonPreferences.CreateCategory("DIP_GG_Fixes");
             AutoShare = cat.CreateEntry("AutoShareDesigns", true, null,
@@ -567,6 +569,7 @@ namespace DipGgFixes
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
+            ForeignPorts.CreatePrefs(cat); AutoArmor.CreatePrefs(cat); // 1.11.134
             FleetOrders.CreatePrefs(cat); // 1.11.107
             Perf.CreatePrefs(cat); // 1.11.96 (after ArmorDiag: switches the diagnostics off once)
             ArmorDiag.ApplyHooks(HarmonyInstance);
