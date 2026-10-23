@@ -6,7 +6,8 @@
 // properties), a render queue above the sea (>= 5000), and a small lift in height so the sea plane does not cover it;
 // BorderLeft/BorderRight are switched off. Besides the map surface the copies now include the country colours (the
 // borders manager's meshes, created a while after the map), the map grid and the area/province names. A side copy is only
-// active while the view reaches that map edge. Port and fleet markers, routes and clicks still live on the real map only.
+// active while the view reaches that map edge.
+// 1.11.144 (beta): the side copies of the map surface take clicks (mesh collider); markers and clicks: ContinuousMapMarkers.
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
@@ -26,6 +27,9 @@ namespace DipGgFixes
         static readonly List<Renderer> borders = new List<Renderer>();
         static IntPtr mapPtr; static bool built, overlays, leftOn, rightOn, logged; static int errs, nextOverlayFrame;
         static float x0; static bool wantWrap;
+        internal static bool Enabled => On != null && On.Value && built;
+        internal static float MapWidth => Width();
+        internal static bool LapActive(int lap) { return lap < 0 ? leftOn : lap > 0 ? rightOn : true; }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
@@ -44,6 +48,7 @@ namespace DipGgFixes
         {
             foreach (var g in all) { try { if (g != null) UnityEngine.Object.Destroy(g); } catch { } }
             all.Clear(); lapLeft.Clear(); lapRight.Clear(); borders.Clear();
+            try { ContinuousMapMarkers.Clear(); } catch { }
             built = overlays = leftOn = rightOn = false;
         }
 
@@ -113,8 +118,12 @@ namespace DipGgFixes
                 var t = par != null ? par.Find(n) : null; if (t == null) { Warn("border not found: " + n); continue; }
                 foreach (var r in t.GetComponentsInChildren<Renderer>(true)) if (r != null) { borders.Add(r); r.enabled = false; }
             }
-            MeshCopy(src, -1, "IronAdmiral_MapWrap_Left", MapLift, MapQueue);
-            MeshCopy(src, 1, "IronAdmiral_MapWrap_Right", MapLift, MapQueue);
+            foreach (var side in new[] { -1, 1 })
+            {
+                var mc = MeshCopy(src, side, side < 0 ? "IronAdmiral_MapWrap_Left" : "IronAdmiral_MapWrap_Right", MapLift, MapQueue);
+                // clicks on the copy: the map's own raycast hits it, the point is moved onto the real map (ContinuousMapMarkers)
+                try { if (mc != null) { var col = mc.AddComponent<MeshCollider>(); col.sharedMesh = src.GetComponent<MeshFilter>().sharedMesh; } } catch (Exception e) { Warn("map copy collider: " + e.Message); }
+            }
             try
             {
                 var grid = map.transform.root.Find("WorldEx/MapVisualGrid");
