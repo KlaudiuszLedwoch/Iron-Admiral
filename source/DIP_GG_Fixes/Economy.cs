@@ -505,7 +505,7 @@ namespace DipGgFixes
             var cc = CampaignController.Instance;
             if (cc == null || cc.CampaignData == null) return;
             IntPtr ptr = cc.CampaignData.Pointer;
-            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); Independence.peaceSince.Clear(); Independence.ResetBaseline(); loaded = false; tries = 0; lastTry = -100f; }
+            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); Independence.peaceSince.Clear(); Independence.ResetBaseline(); Occupation.Reset(); loaded = false; tries = 0; lastTry = -100f; }
             if (loaded) return;
             float t = UnityEngine.Time.realtimeSinceStartup;
             if (t - lastTry < 1f) return;
@@ -959,6 +959,7 @@ namespace DipGgFixes
         internal static bool Parse(string line)
         {
             if (line == null) return false;
+            if (Occupation.Parse(line)) return true; // 1.11.151
             if (line.StartsWith("S|")) { var s = line.Split('|'); int n; if (s.Length >= 3 && int.TryParse(s[2], out n)) suppressed[s[1]] = n; return true; } // 1.11.150
             if (!line.StartsWith("I|")) return false;
             var a = line.Split('|'); int m; if (a.Length >= 3 && int.TryParse(a[2], out m)) peaceSince[a[1]] = m;
@@ -968,6 +969,7 @@ namespace DipGgFixes
         {
             foreach (var kv in peaceSince) yield return "I|" + kv.Key + "|" + kv.Value;
             foreach (var kv in suppressed) yield return "S|" + kv.Key + "|" + kv.Value;
+            foreach (var s in Occupation.Serialize()) yield return s; // 1.11.151
         }
         // 1.11.150: risings already put down per province - every next one costs more, angers more and buys a shorter calm
         static readonly Dictionary<string, int> suppressed = new Dictionary<string, int>();
@@ -1006,6 +1008,7 @@ namespace DipGgFixes
                 }
                 int seen = 0, raised = 0; var sb = new System.Text.StringBuilder();
                 var reborn = new Dictionary<string, List<string>>(); var rebornChance = new Dictionary<string, float>();
+                Occupation.Begin(); // 1.11.151
                 var burdenUnrest = new Dictionary<IntPtr, float>(); var burdenCost = new Dictionary<IntPtr, float>(); var burdenCount = new Dictionary<IntPtr, int>(); var burdenWho = new Dictionary<IntPtr, Player>();
                 foreach (var kv in list)
                 {
@@ -1021,6 +1024,7 @@ namespace DipGgFixes
                     if (!occupied || orig == null || war)
                     {
                         peaceSince.Remove(id);
+                        if (!occupied) Occupation.Forget(id); // 1.11.151: autonomy ends when the province is back home
                         if (Math.Abs(cur - baseC) > 0.001f) { try { pr.RevoltChance = baseC; } catch { } }   // back to the game's own value
                         continue;
                     }
@@ -1030,7 +1034,7 @@ namespace DipGgFixes
                     float po, pc; homePop.TryGetValue(nationKey, out po); homePop.TryGetValue(occ.data.name, out pc);
                     float r = pc > 0f ? po / pc : 1f;
                     float ramp = Math.Min(1f, (months + 1) / Math.Max(1f, DipGgFixesMod.CoreRevoltRampMonths.Value));
-                    float bonus = DipGgFixesMod.CoreRevoltBonus.Value * ramp * r / (r + 0.5f);
+                    float bonus = DipGgFixesMod.CoreRevoltBonus.Value * ramp * r / (r + 0.5f) * Occupation.RevoltFactor(id, now); // 1.11.151: autonomy / hard hand
                     strength[id] = r / (r + 0.5f);
                     float target = baseC + bonus;
                     try { pr.RevoltChance = target; pr.CanRevolt = true; } catch { }
@@ -1038,7 +1042,8 @@ namespace DipGgFixes
                     // 1.11.150: holding another nation's core land costs every month - garrisons and police (money) and discontent at
                     // home (unrest), both by the strength of the occupied nation against the occupier and by risings already put down
                     {
-                        float sf = r / (r + 0.5f) * (1f + 0.25f * Suppressions(id));
+                        float sf = r / (r + 0.5f) * (1f + 0.25f * Suppressions(id)) * Occupation.BurdenFactor(id); // 1.11.151: autonomy lowers the burden
+                        Occupation.Collect(occ, id, nationKey, orig, pr, sf);
                         float u0; burdenUnrest.TryGetValue(occ.Pointer, out u0); burdenUnrest[occ.Pointer] = u0 + DipGgFixesMod.CoreOccupationUnrest.Value * sf;
                         float c0; burdenCost.TryGetValue(occ.Pointer, out c0); burdenCost[occ.Pointer] = c0 + DipGgFixesMod.CoreOccupationCost.Value / 100f * sf;
                         int n0; burdenCount.TryGetValue(occ.Pointer, out n0); burdenCount[occ.Pointer] = n0 + 1; burdenWho[occ.Pointer] = occ;
@@ -1062,6 +1067,7 @@ namespace DipGgFixes
                     try { if (money > 0f) who.cash = who.cash - money; } catch { }
                     MelonLogger.Msg($"[DIP GG Fixes][Independence] occupation of {burdenCount[kv.Key]} foreign core province(s) by {Economy.Name(who)}: unrest +{u:0.##}, garrison cost {money / 1e6f:0.0}M this month");
                 }
+                try { Occupation.Month(now); } catch (Exception oe) { MelonLogger.Warning("[DIP GG Fixes][Occupation] " + oe.Message); } // 1.11.151
                 // 1.11.147: rebirth of a dissolved great power from its ungoverned core provinces - once a month a rising with the
                 // province's (raised) revolt chance; when it succeeds all its ungoverned core provinces return to it (the game
                 // switches the nation back on when it receives a province)
