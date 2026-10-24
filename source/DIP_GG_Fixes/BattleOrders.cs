@@ -21,7 +21,7 @@ namespace DipGgFixes
     internal static partial class BattleAi
     {
         internal enum DivOrder { None, Screen, Scout, Torpedo, Free }
-        internal class OrderSt { public DivOrder Order; public bool FromVanilla; public bool Issued; public float NextThink; public string Name; public string Reason; public Vector3 LastSeen; public bool Seen; }
+        internal class OrderSt { public DivOrder Order; public bool FromVanilla; public bool Issued; public float NextThink; public string Name; public string Reason; public Vector3 LastSeen; public bool Seen; public Ship Leader; public float LastCmd; public Vector3 LastTarget; }
         static readonly Dictionary<IntPtr, OrderSt> orders = new Dictionary<IntPtr, OrderSt>();
         static IntPtr ordersBattle;
         internal static bool Issuing;   // our own commands - the Division.MoveTo/MoveDir patch ignores them
@@ -51,7 +51,7 @@ namespace DipGgFixes
             return o;
         }
         static void OWhy(OrderSt o, string r) { if (o.Reason != r) { o.Reason = r; Log($"{o.Name} [{OrderNames[(int)o.Order]}]: {r}"); } }
-        static void Cmd(Division div, OrderSt o, Vector3 to) { Issuing = true; try { div.MoveTo(to); o.Issued = true; } catch { } finally { Issuing = false; } }
+        static void Cmd(Division div, OrderSt o, Vector3 to) { Issuing = true; try { div.MoveTo(to); o.Issued = true; o.LastCmd = Time.time; o.LastTarget = to; } catch { } finally { Issuing = false; } }
 
         internal static void SetOrder(Division div, DivOrder ord, string how)
         {
@@ -103,6 +103,7 @@ namespace DipGgFixes
             var div = leader.division; if (div == null) return false;
             var o = OrderOf(div, true);
             if (o.Name == null) o.Name = leader.name ?? "division";
+            o.Leader = leader;
             // the game's own Screen / Scout orders give autonomy too
             if (o.Order == DivOrder.None && OrdersVanilla.Value)
             {
@@ -237,6 +238,7 @@ namespace DipGgFixes
         internal static void OrdersOnGUI()
         {
             if (OrdersOn == null || !OrdersOn.Value || !GameManager.IsBattle) return;
+            try { OrderTags(); } catch (Exception e) { if (oErrors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] order tags: " + e.Message); }
             try
             {
                 var div = SelectedDivision(); if (div == null) return;
@@ -248,7 +250,7 @@ namespace DipGgFixes
                 var o = OrderOf(div, false);
                 // 1.11.197 (author, 24.10): the panel sat over the sea in front of the ship cards - now a strip at the top of the
                 //          screen under the time controls, and it folds to a small tab (the Alt keys work either way)
-                float w = 470f, h = 58f; float x = (UiScale.W - w) / 2f, y = 54f;
+                float w = 600f, h = 58f; float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
                 if (oFolded)
                 {
                     var tab = new Rect(x + w - 150f, y, 150f, 20f);
@@ -264,10 +266,38 @@ namespace DipGgFixes
                 for (int i = 0; i < 5; i++)
                 {
                     var r = new Rect(x + 8f + i * (bw + 4f), y + 26f, bw, 26f);
-                    if (GUI.Button(r, i == (int)cur ? "[" + OrderNames[i] + "]" : OrderNames[i])) SetOrder(div, (DivOrder)i, "panel");
+                    bool active = i == (int)cur;
+                    var oldBg = GUI.backgroundColor; if (active) GUI.backgroundColor = new Color(0.35f, 1f, 0.45f); // 1.11.202: the active order stands out
+                    if (GUI.Button(r, active ? ">> " + OrderNames[i] + " <<" : OrderNames[i])) SetOrder(div, (DivOrder)i, "panel");
+                    GUI.backgroundColor = oldBg;
                 }
             }
             catch (Exception e) { if (oErrors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] orders panel: " + e.Message); }
+        }
+        // 1.11.202: a tag above every player's division under an order - the order and what the division is doing right now
+        static GUIStyle oTag;
+        static void OrderTags()
+        {
+            if (orders.Count == 0) return;
+            var cam = Camera.main; if (cam == null) return;
+            if (oTag == null) { oTag = new GUIStyle(); oTag.fontSize = 12; oTag.richText = true; oTag.wordWrap = true; oTag.alignment = TextAnchor.UpperCenter; oTag.normal.textColor = new Color(0.75f, 1f, 0.8f); }
+            float W = UiScale.W, H = UiScale.H;
+            foreach (var kv in orders)
+            {
+                var o = kv.Value; if (o == null || o.Order == DivOrder.None || o.Leader == null) continue;
+                Ship s = o.Leader; bool gone = true; try { gone = s.isDead || s.isSinking; } catch { }
+                if (gone) continue;
+                Vector3 wp; try { wp = s.transform.position; } catch { continue; }
+                var sp = cam.WorldToScreenPoint(wp + Vector3.up * 30f); if (sp.z <= 0f) continue;
+                float w = 260f, h = 34f;
+                var r = new Rect(sp.x / UiScale.F - w / 2f, H - sp.y / UiScale.F - h - 34f, w, h);
+                if (r.yMax < 0 || r.y > H || r.xMax < 0 || r.x > W) continue;
+                string doing = o.Reason ?? "awaiting the first decision";
+                float since = Time.time - o.LastCmd; string cmd = o.LastCmd > 0f && since < 120f ? $" (course set {since:0} s ago)" : "";
+                string txt = $"<b>{OrderNames[(int)o.Order]}</b>: {doing}{cmd}";
+                GUI.Box(r, ""); GUI.Box(r, "");
+                GUI.Label(new Rect(r.x + 4f, r.y + 3f, r.width - 8f, r.height - 6f), txt, oTag);
+            }
         }
     }
 
