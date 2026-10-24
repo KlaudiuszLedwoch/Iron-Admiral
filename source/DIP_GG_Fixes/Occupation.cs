@@ -238,16 +238,29 @@ namespace DipGgFixes
                 }
                 next.Clear();
                 var d = queue[0];
-                float w = Math.Min(640f, UiScale.W - 40f), h = 320f;
+                // 1.11.191: the province for autonomy is chosen by the player (one small button per held province, the strongest
+                //           rising preselected) - before, the window always proposed the same province (the strongest rising, e.g.
+                //           Penghu for a nation holding Chinese land) and the others could never get autonomy
+                var shown = d.List.OrderByDescending(x => x.Sf).Take(12).ToList();
+                int perRow = 4, rows = (shown.Count + perRow - 1) / perRow;
+                float w = Math.Min(640f, UiScale.W - 40f), h = 330f + rows * 30f;
                 var r = new Rect((UiScale.W - w) / 2f, (UiScale.H - h) / 2f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
-                string provs = string.Join(", ", d.List.Take(8).Select(x => Nice(x.Id) + (Level(x.Id) > 0 ? $" (autonomy {Level(x.Id)}/{MaxSteps()})" : "")));
-                if (d.List.Count > 8) provs += $" and {d.List.Count - 8} more";
                 string tgt = Nice(d.Target.Id); int lv = Level(d.Target.Id) + 1;
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 28f, 24f), "<b>Administration of the occupied lands</b>", sTitle);
-                GUI.Label(new Rect(r.x + 14f, r.y + 40f, w - 28f, 190f),
-                    $"We hold the national lands of other peoples: {provs}.\n\n" +
-                    "Their people do not accept our rule and the other powers watch us. How shall we govern them this turn?\n\n" +
+                GUI.Label(new Rect(r.x + 14f, r.y + 40f, w - 28f, 40f),
+                    $"We hold the national lands of other peoples ({d.List.Count}). Their people do not accept our rule and the other powers watch us. Choose the province for autonomy (strongest rising first):", sText);
+                float pbw = (w - 28f - (perRow - 1) * 6f) / perRow, py = r.y + 84f;
+                for (int i = 0; i < shown.Count; i++)
+                {
+                    var x = shown[i]; var pr = new Rect(r.x + 14f + (i % perRow) * (pbw + 6f), py + (i / perRow) * 30f, pbw, 26f);
+                    bool sel = x.Id == d.Target.Id;
+                    string lab = (sel ? "<b>> " : "") + Nice(x.Id) + (Level(x.Id) > 0 ? $" ({Level(x.Id)}/{MaxSteps()})" : "") + (sel ? "</b>" : "");
+                    Btn(pr, lab, () => { d.Target = x; });
+                }
+                float ty = py + rows * 30f + 6f;
+                GUI.Label(new Rect(r.x + 14f, ty, w - 28f, 150f),
+                    "How shall we govern them this turn?\n\n" +
                     $"<b>Pay</b> for garrisons and administration: about {d.Cost / 1e6f:0.0}M.\n" +
                     $"<b>Grant autonomy</b> to {tgt}: step {lv} of {MaxSteps()}" + (lv >= MaxSteps() ? " - the province returns peacefully to its nation" : " - less unrest and fewer risings there, better relations with its nation") + ".\n" +
                     $"<b>Hard hand</b>: no money, but unrest at home +{d.Unrest:0.#}, stronger risings for three months and worse relations.", sText);
