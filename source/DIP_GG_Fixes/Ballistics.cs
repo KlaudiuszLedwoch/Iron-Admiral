@@ -150,7 +150,7 @@ namespace DipGgFixes
                 var real = RealFor(mv, calIn, mass, Cd(ship), R);
                 if (!real.Ok && real.Beyond && real.T > 0.05f) beyond++; // 1.11.198: stretched maximum-elevation shot
                 else if (!real.Ok || real.T <= 0.05f) { skipped++; return; }
-                double T = real.T / WS, want = real.Fall, dy = rel.y; // game seconds (1.11.206)
+                double T = real.T, want = real.Fall, dy = rel.y; // real seconds; compressed to game time below (1.11.207)
                 // drag constant: the shell leaves the muzzle with (about) its muzzle velocity and arrives at the real time
                 double k = Math.Max(1e-6, (mv * Math.Cos(want * 0.5) * T / R - 1) / T);
                 // gravity of the arc: 9.81 m/s2, raised where needed so that the shell also falls at the real angle
@@ -162,6 +162,10 @@ namespace DipGgFixes
                     g = Math.Max(9.81, Math.Min(60.0, g * Math.Tan(want) / Math.Tan(f)));
                 }
                 Arc(k, g, R, dy, T, out vx0, out vy0, out vi, out q, out f);
+                // 1.11.207: the arc is fitted in real time and then put on the game clock (time / WS): the same path in space with drag constant
+                //           x WS and all velocities x WS (p(t) = p0 + vInf t + (v0 - vInf) t / (1 + k t) is invariant under that substitution).
+                //           1.11.206 compressed T before the fit, which flattened the arcs (24.10: 11 in at 25.8 km fell at 15 deg instead of 33).
+                double ws = WS; k *= ws; vx0 *= ws; vy0 *= ws; vi *= ws; T /= ws;
                 Vector2 dir = hz / R;
                 Vector3 v0 = new Vector3((float)(dir.x * vx0), (float)vy0, (float)(dir.y * vx0));
                 Vector3 vInf = new Vector3(0f, (float)vi, 0f);
