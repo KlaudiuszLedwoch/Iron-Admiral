@@ -107,6 +107,14 @@ namespace DipGgFixes
             return null;
         }
         static bool Allied(Player a, Player b) { if (a == null || b == null) return false; var r = Rel(a, b); try { return r != null && r.isAlliance; } catch { return false; } }
+        // 1.11.194: through the game's own AdjustAttitude (kept within -100..100). A direct write took Germany-China to -101.5,
+        //           which the game reported as "corrupt attitude / corrupted relation" - and no war could follow from it
+        internal static void Adjust(Relation r, float d, string why)
+        {
+            if (r == null || Math.Abs(d) < 0.001f) return;
+            try { CampaignController.Instance.AdjustAttitude(r, d, false, true, why, false, false, false); }
+            catch { try { r.attitude = Mathf.Clamp(r.attitude + d, -100f, 100f); } catch { } }
+        }
 
         // attitude lost with the other nations for holding these provinces (mult: 1 monthly, extra for the hard hand)
         static void Relations(Player who, List<Held> list, float mult, string why)
@@ -137,7 +145,7 @@ namespace DipGgFixes
                 }
                 pen = Math.Min(pen, rel * 5f);
                 if (pen <= 0.01f) continue;
-                try { r.attitude = r.attitude - pen; touched++; if (pen > most) { most = pen; mostName = Economy.Name(o); } } catch { }
+                try { Adjust(r, -pen, "occupation"); touched++; if (pen > most) { most = pen; mostName = Economy.Name(o); } } catch { }
             }
             if (touched > 0) Log($"{Economy.Name(who)} ({why}, {list.Count} occupied core province(s)): relations worse with {touched} nation(s), most with {mostName} (-{most:0.#})");
         }
@@ -202,7 +210,7 @@ namespace DipGgFixes
         {
             var h = d.Target; int lv = Level(h.Id) + 1;
             try { d.Who.AddUnrest(-Relief.Value); } catch { }
-            if (h.Orig != null) { var r = Rel(d.Who, h.Orig); try { if (r != null) r.attitude = r.attitude + RelMonthly.Value * 3f; } catch { } }
+            if (h.Orig != null) { var r = Rel(d.Who, h.Orig); try { if (r != null) Adjust(r, RelMonthly.Value * 3f, "autonomy"); } catch { } }
             if (lv < MaxSteps())
             {
                 autonomy[h.Id] = lv;

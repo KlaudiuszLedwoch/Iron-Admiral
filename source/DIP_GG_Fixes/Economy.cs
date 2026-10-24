@@ -1208,7 +1208,7 @@ namespace DipGgFixes
                     float pen = 0f;
                     if (neighbours.Contains(o.data.name) || o.data.name == d.Nation) { pen = d.Neighbour; nNeigh++; }
                     else if (major) { pen = d.Rival; nRival++; }
-                    if (pen > 0f) r.attitude = r.attitude - pen;
+                    if (pen > 0f) Occupation.Adjust(r, -pen, "rising"); // 1.11.194: clamped by the game (no "corrupt attitude" below -100)
                 }
             }
             catch { }
