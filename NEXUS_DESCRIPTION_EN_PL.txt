@@ -3,7 +3,7 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.66 (DIP_GG_Fixes 1.11.89).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.68 (DIP_GG_Fixes 1.11.89).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
@@ -292,9 +292,9 @@ Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer,
 [h2]Download and install[/h2]
 [b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.66_Nexus.zip[/b] - one-click installer, available on GitHub only (link above; Nexus hosts only the script-free packages below): unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.66_Nexus_manual.zip[/b] (Nexus and GitHub) - Mods folder plus step-by-step instructions (INSTALL_MANUAL_EN_PL.txt), no scripts; follow the manual MelonLoader steps below.
-[*][b]Iron_Admiral_1.2.66_Mods_only.zip[/b] (Nexus and GitHub) - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
+[*][b]Iron_Admiral_1.2.68_Nexus.zip[/b] - one-click installer, available on GitHub only (link above; Nexus hosts only the script-free packages below): unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
+[*][b]Iron_Admiral_1.2.68_Nexus_manual.zip[/b] (Nexus and GitHub) - Mods folder plus step-by-step instructions (INSTALL_MANUAL_EN_PL.txt), no scripts; follow the manual MelonLoader steps below.
+[*][b]Iron_Admiral_1.2.68_Mods_only.zip[/b] (Nexus and GitHub) - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
 [*]Mods_only: extract it into the game folder so that you get <game folder>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll and the CSV files; MelonLoader 0.6.6 must already be installed.
 [*]Error about the .NET 6.0 runtime at game start: install the .NET Desktop Runtime 6.0 (Windows x64) from https://dotnet.microsoft.com/download/dotnet/6.0 - MelonLoader 0.6.6 runs on it. Back to the unmodded game: run Uninstall.bat from <game folder>\Iron_Admiral_backup, or delete version.dll, the MelonLoader folder and the Mods folder and let Steam verify the game files; campaigns saved with the mod are not meant for the unmodded game.
 [/list]
@@ -317,7 +317,7 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.66 (DIP_GG_Fixes 1.11.89).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.68 (DIP_GG_Fixes 1.11.89).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
@@ -606,9 +606,9 @@ Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalato
 [h2]Pobieranie i instalacja[/h2]
 [b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
 [list]
-[*][b]Iron_Admiral_1.2.66_Nexus.zip[/b] - instalator jednym kliknięciem, dostępny tylko na GitHubie (link wyżej; Nexus ma wyłącznie poniższe paczki bez skryptów): rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.66_Nexus_manual.zip[/b] (Nexus i GitHub) - folder Mods z instrukcją krok po kroku (INSTALL_MANUAL_EN_PL.txt), bez skryptów; dalej według ręcznej instalacji MelonLoadera poniżej.
-[*][b]Iron_Admiral_1.2.66_Mods_only.zip[/b] (Nexus i GitHub) - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
+[*][b]Iron_Admiral_1.2.68_Nexus.zip[/b] - instalator jednym kliknięciem, dostępny tylko na GitHubie (link wyżej; Nexus ma wyłącznie poniższe paczki bez skryptów): rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
+[*][b]Iron_Admiral_1.2.68_Nexus_manual.zip[/b] (Nexus i GitHub) - folder Mods z instrukcją krok po kroku (INSTALL_MANUAL_EN_PL.txt), bez skryptów; dalej według ręcznej instalacji MelonLoadera poniżej.
+[*][b]Iron_Admiral_1.2.68_Mods_only.zip[/b] (Nexus i GitHub) - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
 [*]Mods_only: rozpakuj do folderu gry tak, żeby powstało <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV; MelonLoader 0.6.6 musi być już zainstalowany.
 [*]Błąd ".NET 6.0 runtime" przy starcie gry: zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony https://dotnet.microsoft.com/download/dotnet/6.0 - na nim działa MelonLoader 0.6.6. Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup albo usuń version.dll, folder MelonLoader i folder Mods, a potem zweryfikuj pliki gry w Steam; kampanie zapisane z modem nie są przeznaczone dla gry bez moda.
 [/list]
