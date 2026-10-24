@@ -65,19 +65,23 @@ namespace DipGgFixes
             catch (Exception e) { if (errors++ < 3) Log("report: " + e.Message); return null; }
         }
 
+        // 1.11.218: Part.mount is also null for many parts of ships that look right (24.10 log: 8 of 60 parts on a German CA, 25 of 58
+        //           on a CL), so a design is refused only when every part outside the hull is unmounted - the bare-hull pattern
+        //           (CA Black Prince: 17 of 17).
         internal static bool AllMounted(Ship s)
         {
             try
             {
                 var parts = s.parts; if (parts == null) return true;
+                int n = 0, un = 0;
                 for (int i = 0; i < parts.Count; i++)
                 {
                     var p = parts[i]; if (p == null || p.data == null) continue;
                     bool hull = false; try { hull = p.data.isHull; } catch { }
-                    if (hull) continue;
-                    try { if (p.mount == null) return false; } catch { }
+                    if (hull) continue; n++;
+                    try { if (p.mount == null) un++; } catch { }
                 }
-                return true;
+                return n == 0 || un < n;
             }
             catch { return true; }
         }

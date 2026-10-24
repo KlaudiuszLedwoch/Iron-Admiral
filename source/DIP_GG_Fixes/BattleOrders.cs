@@ -396,15 +396,18 @@ namespace DipGgFixes
     // instead of the game's "Battle Line" while an order is in force. The card's status text is found once by its game text.
     internal static class DivisionCardLabel
     {
-        static readonly Dictionary<IntPtr, Il2CppTMPro.TextMeshProUGUI> labels = new Dictionary<IntPtr, Il2CppTMPro.TextMeshProUGUI>();
+        // 1.11.218: the status text may be a TextMeshPro or a legacy UI.Text; both are searched, and the texts found are logged once
+        static readonly Dictionary<IntPtr, Component> labels = new Dictionary<IntPtr, Component>();
         static readonly Dictionary<IntPtr, string> written = new Dictionary<IntPtr, string>();
-        static HashSet<string> gameTexts; static int errors;
+        static HashSet<string> gameTexts; static int errors, dumped;
         static void Keys()
         {
             if (gameTexts != null) return; gameTexts = new HashSet<string>();
             foreach (var k in new[] { "$Ui_Division_BattleLine", "$Ui_ShipControls_Follow", "$Ui_ShipControls_Scout", "$Ui_ShipControls_Screen", "$Ui_ShipControls_Retreat", "$Ui_Skirmish_AI" })
             { try { var t = LocalizeManager.Localize(k); if (!string.IsNullOrEmpty(t)) gameTexts.Add(t.Trim()); } catch { } }
         }
+        static string TextOf(Component c) { try { var tm = c.TryCast<Il2CppTMPro.TMP_Text>(); if (tm != null) return tm.text; var ut = c.TryCast<UnityEngine.UI.Text>(); if (ut != null) return ut.text; } catch { } return null; }
+        static void SetText(Component c, string s) { try { var tm = c.TryCast<Il2CppTMPro.TMP_Text>(); if (tm != null) { tm.text = s; return; } var ut = c.TryCast<UnityEngine.UI.Text>(); if (ut != null) ut.text = s; } catch { } }
         internal static void Apply(UIDivision u)
         {
             try
@@ -412,24 +415,28 @@ namespace DipGgFixes
                 if (u == null || !GameManager.IsBattle) return;
                 var dv = u.CurrentDivision; if (dv == null) return;
                 var ord = BattleAi.CurrentOrder(dv);
-                Il2CppTMPro.TextMeshProUGUI lbl;
+                Component lbl;
                 if (!labels.TryGetValue(u.Pointer, out lbl) || lbl == null)
                 {
                     Keys();
-                    var all = u.GetComponentsInChildren<Il2CppTMPro.TextMeshProUGUI>(true); if (all == null) return;
+                    var all = new List<Component>();
+                    try { var a = u.GetComponentsInChildren<Il2CppTMPro.TMP_Text>(true); if (a != null) for (int i = 0; i < a.Count; i++) if (a[i] != null) all.Add(a[i]); } catch { }
+                    try { var a = u.GetComponentsInChildren<UnityEngine.UI.Text>(true); if (a != null) for (int i = 0; i < a.Count; i++) if (a[i] != null) all.Add(a[i]); } catch { }
                     string last; written.TryGetValue(u.Pointer, out last);
+                    var seen = new List<string>();
                     for (int i = 0; i < all.Count; i++)
                     {
-                        var t = all[i]; if (t == null || (u.Name != null && t.Pointer == u.Name.Pointer)) continue;
-                        string s = t.text != null ? t.text.Trim() : "";
+                        var t = all[i]; if (u.Name != null && t.Pointer == u.Name.Pointer) continue;
+                        string s = TextOf(t); s = s != null ? s.Trim() : ""; seen.Add(t.gameObject.name + "='" + s + "'");
                         if (gameTexts.Contains(s) || (last != null && s == last)) { lbl = t; break; }
                     }
+                    if (dumped++ < 2) MelonLogger.Msg("[DIP GG Fixes][Battle] division card texts: " + string.Join(", ", seen) + (lbl != null ? " - status text found" : " - status text NOT found; game texts: " + string.Join("|", gameTexts)));
                     if (lbl == null) return;
                     labels[u.Pointer] = lbl; if (labels.Count > 200) labels.Clear();
                 }
                 if (ord == BattleAi.DivOrder.None) return;
                 string want = BattleAi.OrderLabel(ord);
-                if (lbl.text != want) { lbl.text = want; written[u.Pointer] = want; }
+                if (TextOf(lbl) != want) { SetText(lbl, want); written[u.Pointer] = want; }
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][Battle] division card label: " + e.Message); }
         }
