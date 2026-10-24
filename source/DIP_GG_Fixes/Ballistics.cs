@@ -42,7 +42,7 @@ namespace DipGgFixes
             try
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = samples = probes = 0; TechYears.Reset(); nextReport = Time.time + 120f; }
+                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = samples = probes = 0; scaledMisses = 0; ratioSum = 0; TechYears.Reset(); nextReport = Time.time + 120f; }
                 else if (!battle && inBattle) { inBattle = false; Report("battle end"); }
                 else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); }
             }
@@ -183,6 +183,31 @@ namespace DipGgFixes
             grades[k] = g; return g;
         }
 
+        // 1.11.181: per-shot dispersion by the shooter's fire-control technology (EraAccuracy.ShotDispersionRatio). For a missing shell
+        // the offset of its splash point from the point the gun aimed at (target position + target velocity x the game's time of
+        // flight) is scaled; the shell then flies to the new splash point.
+        static int scaledMisses; static double ratioSum;
+        static Vector3 ScaleMiss(Shell s, Part from, Ship shooter, Vector3 start, Vector3 to, float gameT)
+        {
+            try
+            {
+                if (s == null || s.willHitTarget || shooter == null || from == null || from.data == null) return to;
+                float r = EraAccuracy.ShotDispersionRatio(shooter); if (Math.Abs(r - 1f) < 0.02f) return to;
+                Ship.Aim aim = null;
+                var d1 = shooter.enemies; if (d1 != null && d1.ContainsKey(from.data)) aim = d1[from.data];
+                if (aim == null || aim.target == null) { var d2 = shooter.enemiesLeftSide; if (d2 != null && d2.ContainsKey(from.data)) aim = d2[from.data]; }
+                var tg = aim != null ? aim.target : null; if (tg == null) return to;
+                Vector3 aimPt = tg.transform.position + tg.velocityCurrent * Math.Max(0f, gameT);
+                Vector3 off = to - aimPt; off.y = 0f;
+                if (off.magnitude > 5000f) return to;
+                Vector3 nt = aimPt + off * r; nt.y = to.y;
+                try { s.originalTo = nt; } catch { }
+                scaledMisses++; ratioSum += r;
+                return nt;
+            }
+            catch { return to; }
+        }
+
         // ---- measurement ----
         internal static void Created(Shell s, Part from)
         {
@@ -192,7 +217,9 @@ namespace DipGgFixes
                 var arc = s.arc; if (arc == null) return;
                 Vector3 a = s.shellStart, b = s.originalTo;
                 float cal = 0f; try { var d = from != null ? from.data : null; if (d != null) cal = d.caliber; } catch { }
-                Ship shooter = null; try { shooter = from != null ? from.ship : null; } catch { } Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
+                Ship shooter = null; try { shooter = from != null ? from.ship : null; } catch { }
+                b = ScaleMiss(s, from, shooter, a, b, arc.timeToTarget);
+                Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
                 if (LogOn == null || !LogOn.Value) return;
                 float t = arc.timeToTarget; if (t <= 0f) return;
                 float range = new Vector2(b.x - a.x, b.z - a.z).magnitude; if (range < 500f) return;
@@ -211,7 +238,7 @@ namespace DipGgFixes
         static void Report(string tag)
         {
             if (bins.Count == 0) return;
-            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond model range {skipped}" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
+            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond model range {skipped}, misses re-spread by fire-control technology {scaledMisses} (mean ratio {(scaledMisses > 0 ? ratioSum / scaledMisses : 1):0.00})" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
             foreach (var kv in bins)
             {
                 var b = kv.Value; double n = b.N;

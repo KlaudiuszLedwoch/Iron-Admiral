@@ -83,6 +83,16 @@ namespace DipGgFixes
             }
             catch { return 0; }
         }
+        // 1.11.181: dispersion per shot. The shared parameters follow the battle average; each missing shell's offset from the point
+        // the gun aimed at is then scaled by (factor of the shooter's own fire-control technology) / (factor of the battle average),
+        // so a ship with older fire control spreads wider and a ship with newer fire control tighter than the average.
+        internal static float ShotDispersionRatio(Ship shooter)
+        {
+            if (Dispersion == null || !Dispersion.Value || applied != 1 || appliedYear <= 0) return 1f;
+            int y = TechYears.FireControl(shooter); if (y <= 0) y = DYears[0];
+            float r = DispFactor(y) / Math.Max(0.1f, DispFactor(appliedYear));
+            return Math.Max(0.5f, Math.Min(2f, r));
+        }
         internal static void Tick()
         {
             if (UnityEngine.Time.unscaledTime < next) return; next = UnityEngine.Time.unscaledTime + 2f;
