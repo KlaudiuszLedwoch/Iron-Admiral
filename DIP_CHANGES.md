@@ -67,14 +67,23 @@ Known limitation: torpedo damage follows the year, not the torpedo technology fi
 
 DIP narrowed dispersion almost to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Recorded salvo patterns: WWI at ~11 km – 15" ~180 m, 13.5" ~270 m, 12" ~370 m; US 16"/50 at ~19 km ~820 m; Massachusetts 1942: 180–270 m in range. Next beta: the game's own (vanilla) dispersion values, scaled by era. Planned: dispersion depending on gun generation and on radar ranging, not only on the year.
 
-## 5. Small and medium guns 📋
+## 5. Medium guns by generation 🔧 (F10: HistoricalGuns, next beta)
 
-Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). Measured in a 1916 battle, generation 3: 3" 16.3 rounds/min, 7.9 km; 4" 11.4/min, 8.1 km; 5" 6.9/min, 9.4 km; 6" 5.2/min, 10.4 km; 12" 1.84/min, 15.4 km; 15" 1.58/min, 19.2 km.
+Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). I measured every calibre at all five generations with the game's own formulas (DIP values):
 
-Plan: measure every calibre and generation, then match each generation to real guns of its period. Examples: a 5" gun of the WWI generation compared with the 5"/51 (8–9 rounds/min, ~14.5 km); of the WWII generation, with the 5"/38 (12–15 rounds/min, ~17 km). Data: navweaps.com.
+| Calibre | Mk 3 (fitted in 1916) | Mk 5 (WWII) | Historical, WWI generation | Historical, WWII generation |
+|---|---|---|---|---|
+| 3" | 16.3/min, 7.9 km | 24.5/min, 10.1 km | 15–20/min, 8.5 km | 13.3 km |
+| 4" | 12.1/min, 8.1 km | 14.7/min, 10.4 km | 8.8 km | 15 km |
+| 5" | 6.9/min, 9.4 km | 13.1/min, 12.1 km | 5"/51: 8–9/min, ~14.5 km | 5"/38: 12–15/min, 16.6–17.3 km |
+| 6" | 5.2/min, 10.4 km | 8.7/min, 13.3 km | ~4/min in action, 13.4–14.5 km | 19.7–23.6 km |
+| 12" | Mk 2: 1.84/min, 15.4 km | – | ~1.5/min, 17.4 km | – |
+
+Source of the historical figures: navweaps.com gun pages.
+
+What changes: medium-gun ranges are raised to their real counterparts of the same generation, and the WWI-generation 6" and 12" fire at their real rate. Only the measured generations are set from sources. Mk 4 is interpolated between Mk 3 and Mk 5, and Mk 1–2 stay unchanged where I have no measured target yet. These values will change as more data comes in.
 
 Also planned: small guns (2"–3") in casemates, as on real ships of the 1890s–1910s.
-
 ## 6. Weights 📋
 
 Planned with a separate switch, because changing weights changes existing designs in a running campaign.
