@@ -67,11 +67,14 @@ namespace DipGgFixes
         // 1.11.159: only a command right after a click or key of the player counts (2nd auto test: the game itself gave a
         // retreating division a course order 1 s after "Free action" and the order ended at once)
         internal static float lastInput = -100f;
-        internal static void PlayerCommand(Division div, string what)
+        internal static void PlayerCommand(Division div, string what, bool needInput = true)
         {
             if (Issuing || div == null || !GameManager.IsBattle) return;
-            if (Time.realtimeSinceStartup - lastInput > 0.6f) return;
+            // 1.11.203: a destination the player sets (MoveTo) always takes command back - 24.10: a damaged cruiser could not be sent home
+            //           because the click was not seen as input and the order kept setting its own course every 1.5 s
+            if (needInput && Time.realtimeSinceStartup - lastInput > 0.6f) return;
             if (!orders.TryGetValue(div.Pointer, out var o) || o.Order == DivOrder.None) return;
+            if (!needInput && o.FromVanilla) return; // the game's own Screen/Scout logic moves the division itself
             Log($"{o.Name}: {what} by the player - order {OrderNames[(int)o.Order]} ends, manual command");
             o.Order = DivOrder.None; o.FromVanilla = false;
         }
@@ -124,6 +127,12 @@ namespace DipGgFixes
             var player = leader.player; var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
             if (player == null || battle == null) return true;
             var enemies = battle.ShipsOf(battle.OppositePlayer(player), true); if (enemies == null) return true;
+
+            // 1.11.203: enemy torpedoes are always evaded, whatever the order (24.10: a cruiser under orders ran into a torpedo)
+            if (!States.TryGetValue(div.Pointer, out var es)) { es = new DivState { name = o.Name }; States[div.Pointer] = es; }
+            if (now < es.evadeUntil) { Cmd(div, o, P(leader) + es.evadeDir * 3000f); OWhy(o, "turning away from torpedoes"); return true; }
+            bool evading = false; Issuing = true; try { evading = TorpedoEvasion.Check(leader, div, es, player, battle, enemies); } finally { Issuing = false; }
+            if (evading) { o.Issued = true; o.LastCmd = Time.time; OWhy(o, "turning away from torpedoes"); return true; }
 
             if (o.Order == DivOrder.Free) { Issuing = true; try { Think(leader, true, true); } finally { Issuing = false; } return true; }
             if (o.Order == DivOrder.Torpedo)
@@ -305,7 +314,12 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Division), "MoveTo")]
     internal static class Patch_DivisionMoveTo_Orders
     {
-        static void Prefix(Division __instance) { try { BattleAi.PlayerCommand(__instance, "move order"); } catch { } }
+        static void Prefix(Division __instance) { try { BattleAi.PlayerCommand(__instance, "move order", false); } catch { } }
+    }
+    [HarmonyPatch(typeof(Division), "Retreat")]
+    internal static class Patch_DivisionRetreat_Orders
+    {
+        static void Prefix(Division __instance, bool __0) { try { if (__0) BattleAi.PlayerCommand(__instance, "retreat order", false); } catch { } } // 1.11.203
     }
     [HarmonyPatch(typeof(Division), "MoveDir")]
     internal static class Patch_DivisionMoveDir_Orders
