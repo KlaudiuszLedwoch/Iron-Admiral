@@ -54,7 +54,7 @@ taf_genarmor_use_defaults,1,Use the genArmorDefault.csv file in the TAFData fold
 taf_shipgen_limit_calibercounts_main,999,Limit the number of main caliber guns. See Wiki for more info. (DEPRECATED),,,,,,,
 taf_shipgen_limit_calibercounts_sec,999,Limit the number of secondary caliber guns. See Wiki for more info. (DEPRECATED),,,,,,,
 taf_shipgen_limit_calibercounts_ter,999,Limit the number of tertiary caliber guns. See Wiki for more info. (DEPRECATED),,,,,,,
-taf_debug_shipgen_info,2,"Debug info for generating ships. 0 (none), 1 (basic), and 2 (full)",,,,,,,
+taf_debug_shipgen_info,2,"Debug info for generating ships. 0 (none), 1 (basic), and 2 (full) - Iron Admiral: kept at 2 permanently (author's rule 24.10), the generator log is calibration data",,,,,,,
 taf_shipgen_target_funnel_cap,150,"Once the funnel cap is greater than or equal to this value, no more funnels can be placed. Prevents funnel spam.",,,,,,,
 taf_mounts_disable_hullscale,0,Mount min/max value will no longer be scaled by hull scale.,,,,,,,
 taf_use_old_constructor_lighting,0,Disable new lighting system and use the original constructor lighting.,,,,,,,
