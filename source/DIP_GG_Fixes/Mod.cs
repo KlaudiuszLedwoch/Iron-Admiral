@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.208", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.209", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -266,7 +266,7 @@ namespace DipGgFixes
         public override void OnLateUpdate()
         {
             long t0 = Perf.Enabled ? Perf.T() : 0;
-            try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { }
+            try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } try { BarrelElevation.LateTick(); } catch { } // 1.11.209
             if (t0 != 0) Perf.Add(Perf.LATE, t0);
         }
 
@@ -599,6 +599,7 @@ namespace DipGgFixes
             ShipGenMemory.CreatePrefs(cat); // 1.11.99
             ShipGenSpeed.CreatePrefs(cat); // 1.11.196
             RangeTags.CreatePrefs(cat); // 1.11.206
+            BarrelElevation.CreatePrefs(cat); // 1.11.209
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120

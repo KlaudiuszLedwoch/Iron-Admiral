@@ -21,7 +21,7 @@ namespace DipGgFixes
     internal static partial class BattleAi
     {
         internal enum DivOrder { None, Screen, Scout, Torpedo, Free }
-        internal class OrderSt { public DivOrder Order; public bool FromVanilla; public bool Issued; public float NextThink; public string Name; public string Reason; public Vector3 LastSeen; public bool Seen; public Ship Leader; public float LastCmd; public Vector3 LastTarget; }
+        internal class OrderSt { public DivOrder Order; public bool FromVanilla; public bool Issued; public float NextThink; public string Name; public string Reason; public Vector3 LastSeen; public bool Seen; public Ship Leader; public float LastCmd; public Vector3 LastTarget; public bool ClosingUp; }
         static readonly Dictionary<IntPtr, OrderSt> orders = new Dictionary<IntPtr, OrderSt>();
         static IntPtr ordersBattle;
         internal static bool Issuing;   // our own commands - the Division.MoveTo/MoveDir patch ignores them
@@ -195,7 +195,13 @@ namespace DipGgFixes
             // the scout swung between "too far from the main body" and "opening the range" - leash 15 km, contact at 21 km)
             float wantH = 0f; if (nearHeavy != null) { float hr0 = GunRange(nearHeavy); wantH = Mathf.Clamp(hr0 > 0f ? hr0 * 1.05f : 12000f, 7000f, 25000f); }
             leash = Mathf.Max(leash, wantH + 6000f);
-            if (main != null && (me - home).magnitude > leash) { Cmd(div, o, home + toEnemy * (leash * 0.6f)); OWhy(o, "too far from the main body - closing up"); return true; }
+            // 1.11.209: hysteresis and contact - in contact with enemy heavy ships the scout may stay out to 1.5 x the leash (shadowing is its
+            //           job); once it closes up it keeps closing until it is inside 0.7 x the leash (24.10: it switched between "too far" and
+            //           "shadowing" every 15-30 s)
+            float fromHome = (me - home).magnitude; float limit = nearHeavy != null ? leash * 1.5f : leash;
+            if (main != null && (fromHome > limit || o.ClosingUp && fromHome > leash * 0.7f))
+            { o.ClosingUp = true; Cmd(div, o, home + toEnemy * (leash * 0.6f)); OWhy(o, "too far from the main body - closing up"); return true; }
+            o.ClosingUp = false;
             if (nearLight != null && (P(nearLight) - me).magnitude < 5000f && MainCaliber(nearLight) > MainCaliber(leader) * 1.2f && main != null)
             { Cmd(div, o, home + toEnemy * 1500f); OWhy(o, $"stronger light force ({nearLight.name}) - falls back to the main body"); return true; }
             if (nearHeavy != null)

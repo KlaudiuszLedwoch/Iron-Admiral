@@ -241,6 +241,7 @@ namespace DipGgFixes
                 Ship shooter = null; try { shooter = from != null ? from.ship : null; } catch { }
                 b = ScaleMiss(s, from, shooter, a, b, arc.timeToTarget);
                 Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
+                try { var iv = arc.initialVelocity; float hz0 = new Vector2(iv.x, iv.z).magnitude; if (hz0 > 1f) BarrelElevation.Record(from, Mathf.Atan2(iv.y, hz0) * Mathf.Rad2Deg); } catch { } // 1.11.209
                 if (LogOn == null || !LogOn.Value) return;
                 float t = arc.timeToTarget * WS; if (t <= 0f) return; // logged in real seconds (1.11.206)
                 float range = new Vector2(b.x - a.x, b.z - a.z).magnitude; if (range < 500f) return;

@@ -32,12 +32,61 @@ namespace DipGgFixes
         }
         static bool Active { get { return On != null && On.Value && inBattle; } }
 
+        // ---- 1.11.209: enemy torpedo launches held until the player's ships sight the torpedoes ----
+        class Held { public string Ship, Target; public Vector3 Pos; public float T; }
+        static readonly List<Held> held = new List<Held>();
+        static float nextHeld;
+        static Ship FindShip(string shortName)
+        {
+            try { var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; var ships = cb != null ? cb.Ships : null; if (ships == null) return null; for (int i = 0; i < ships.Count; i++) { var x = ships[i]; if (x != null && Ship(x.name) == shortName) return x; } } catch { }
+            return null;
+        }
+        static bool IsPlayers(Ship s) { try { return s.player != null && s.player.isMain; } catch { return false; } }
+        static void HoldLaunch(string s, string t, Ship src)
+        {
+            var p = src.transform.position; p.y = 0f;
+            held.Add(new Held { Ship = s, Target = t, Pos = p, T = Time.time });
+            if (held.Count > 12) held.RemoveAt(0);
+        }
+        static void HeldTick()
+        {
+            if (held.Count == 0 || Time.time < nextHeld) return; nextHeld = Time.time + 0.5f;
+            try
+            {
+                held.RemoveAll(h => Time.time - h.T > 240f);
+                var all = Torpedo.AllTorpedo; if (all == null || all.Count == 0) return;
+                var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb == null) return;
+                Player me = null; var ships = cb.Ships; if (ships == null) return;
+                for (int i = 0; i < ships.Count; i++) if (ships[i] != null && IsPlayers(ships[i])) { me = ships[i].player; break; }
+                if (me == null) return;
+                var mine = cb.ShipsOf(me, true); if (mine == null) return;
+                for (int k = held.Count - 1; k >= 0; k--)
+                {
+                    var h = held[k]; bool seen = false;
+                    for (int i = 0; i < all.Count && !seen; i++)
+                    {
+                        var tp = all[i]; if (tp == null) continue;
+                        var st = tp.torpedoStart; st.y = 0f; if ((st - h.Pos).magnitude > 1500f) continue;
+                        for (int j = 0; j < mine.Count; j++) { var m = mine[j]; if (m == null || m.isDead || m.isSinking) continue; bool v = false; try { v = tp.IsVisibleFor(m); } catch { } if (v) { seen = true; break; } }
+                    }
+                    if (!seen) continue;
+                    held.RemoveAt(k);
+                    int secs = Mathf.RoundToInt((Time.time - h.T) * (Ballistics.WS));
+                    Say("reload|" + h.Ship,
+                        $"{h.Ship}, torpedo officer: \"We fired at {h.Target} {secs} seconds ago... they have seen the tracks - she is turning!\"",
+                        $"{h.Ship}: \"Tubes empty, {secs} seconds on the run - and {h.Target} is swinging away. They have spotted the wakes.\"");
+                }
+            }
+            catch { }
+        }
+
         internal static void Tick()
         {
+            try { if (inBattle) HeldTick(); } catch { }
             bool b = false; try { b = GameManager.IsBattle; } catch { }
             if (b && !inBattle)
             {
-                inBattle = true; start = Time.time; once.Clear(); sightings = 0; file = null; bubbles.Clear();
+                inBattle = true; start = Time.time; once.Clear(); sightings = 0; file = null; bubbles.Clear(); held.Clear();
                 rng = new System.Random(Environment.TickCount);
                 if (On != null && On.Value) Write("The battle begins. All stations report ready; the guns are loaded and the lookouts strain their eyes at the horizon.");
             }
@@ -262,6 +311,11 @@ namespace DipGgFixes
                 if (m.Contains("): all torpedoes away"))
                 {
                     var s = Ship(Before(m, ": all torpedoes away")); var t = Ship(Before(After(m, " m from ") ?? "", " - turns"));
+                    // 1.11.209 (author, 24.10): an enemy launch is not announced to the player when it happens - the player cannot know it.
+                    //           It is held until one of the player's ships sights torpedoes from that position, and is then told from the
+                    //           enemy side: "we fired N seconds ago - they have seen the tracks".
+                    var src = FindShip(s);
+                    if (src != null && !IsPlayers(src)) { HoldLaunch(s, t, src); return; }
                     Say("reload|" + s,
                         $"{s}, torpedo officer: \"All tubes fired at {t}!\" - Captain: \"Hard a-starboard, make smoke. We reload and come back.\"",
                         $"{s} heels away from {t} behind a curtain of smoke; on deck the torpedo crews swing the reloads into the tubes.");
