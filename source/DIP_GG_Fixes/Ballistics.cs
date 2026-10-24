@@ -42,7 +42,7 @@ namespace DipGgFixes
             try
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-                if (battle && !inBattle) { inBattle = true; bins.Clear(); rebuilt = skipped = samples = probes = 0; year = 0; nextReport = Time.time + 120f; }
+                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); rebuilt = skipped = samples = probes = 0; year = 0; nextReport = Time.time + 120f; }
                 else if (!battle && inBattle) { inBattle = false; Report("battle end"); }
                 else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); }
             }
@@ -202,6 +202,27 @@ namespace DipGgFixes
                 sb.Append($"\n   {kv.Key} | {b.N,4} | {b.T / n,5:0.0} s | {b.Elev / n,5:0.0} deg | {b.Fall / n,5:0.0} deg | {b.V0 / n,5:0} / {b.Vs / n,5:0} | {100.0 * b.Hit / n,5:0.0}%");
             }
             Log(sb.ToString());
+            if (gunStats.Count > 0)
+            {
+                var sg = new System.Text.StringBuilder($"{tag} - gun data used in this battle (for the historical review of rate of fire and range): calibre | grade | rounds per minute per barrel | max range (m)");
+                foreach (var kv in gunStats) sg.Append($"\n   {kv.Key} | {(kv.Value[0] > 0 ? kv.Value[0].ToString("0.00") : "-")} | {(kv.Value[1] > 0 ? kv.Value[1].ToString("0") : "-")}");
+                Log(sg.ToString());
+            }
+        }
+
+        // 1.11.170: rate of fire and range per calibre and grade as the game computes them (measurement only)
+        static readonly SortedDictionary<string, float[]> gunStats = new SortedDictionary<string, float[]>(); static readonly HashSet<long> gunSeen = new HashSet<long>();
+        internal static void GunStat(GunData g, int grade, int idx, float v)
+        {
+            if (LogOn == null || !LogOn.Value || g == null || !inBattle || gunStats.Count > 200) return;
+            try
+            {
+                long sk = (g.Pointer.ToInt64() << 4) ^ (grade << 1) ^ idx; if (!gunSeen.Add(sk)) return;
+                string key = $"{g.caliberInch,4:0.0} in | {grade}";
+                if (!gunStats.TryGetValue(key, out var a)) { a = new float[2]; gunStats[key] = a; }
+                if (a[idx] <= 0f) a[idx] = v;
+            }
+            catch { }
         }
     }
 
@@ -244,4 +265,10 @@ namespace DipGgFixes
             Ballistics.Rebuild(__result, __2, __3, cal);
         }
     }
+
+    [HarmonyPatch(typeof(GunData), "Firerate")]
+    internal static class Patch_GunFirerate_Stat { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RofMult(__instance.caliberInch); } catch { } Ballistics.GunStat(__instance, __2, 0, __result); } }
+
+    [HarmonyPatch(typeof(GunData), "Range")]
+    internal static class Patch_GunRange_Stat { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RangeMult(__instance.caliberInch); } catch { } Ballistics.GunStat(__instance, __2, 1, __result); } }
 }
