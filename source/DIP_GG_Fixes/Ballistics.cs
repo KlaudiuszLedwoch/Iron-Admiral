@@ -20,7 +20,7 @@ namespace DipGgFixes
     internal static class Ballistics
     {
         internal static MelonPreferences_Entry<bool> LogOn, Realistic;
-        internal static MelonPreferences_Entry<float> Drag, SpeedMod;
+        internal static MelonPreferences_Entry<float> Drag, SpeedMod, Kinetic;
         class Bin { public int N; public double T, Fall, Elev, V0, Vs; }
         static readonly SortedDictionary<string, Bin> bins = new SortedDictionary<string, Bin>();
         static float nextReport; static bool inBattle; static int errors;
@@ -30,13 +30,14 @@ namespace DipGgFixes
         {
             LogOn = cat.CreateEntry("BallisticsLog", true, null, "Battle: write the shells' time of flight, elevation and angle of fall per calibre and range to the log (for checking the ballistics against real range tables)");
             Realistic = cat.CreateEntry("RealisticBallistics", false, null, "Battle: shells fly on realistic arcs - longer time of flight and steeper fall at long range (plunging fire onto decks), instead of the almost flat paths of DIP");
-            Drag = cat.CreateEntry("BallisticsDragCoef", 2.175f, null, "Battle (realistic ballistics): air_drag_coef - the smaller, the more a shell slows down and the steeper it falls (DIP: 8.65)");
-            SpeedMod = cat.CreateEntry("BallisticsSpeedMod", 1.0f, null, "Battle (realistic ballistics): speed_shell_mod - divisor of the time of flight (DIP: 1)");
+            Drag = cat.CreateEntry("BallisticsDragCoef", 8.45f, null, "Battle (realistic ballistics): air_drag_coef - the smaller, the more a shell slows down and the steeper it falls (game 8.45, DIP 8.65)");
+            Kinetic = cat.CreateEntry("BallisticsKineticMod", 29.2f, null, "Battle (realistic ballistics): shell_kinetic_energy_mod - landing speed of shells, curvature of the arc (game 29.2, DIP 5.319)");
+            SpeedMod = cat.CreateEntry("BallisticsSpeedMod", 1.0f, null, "Battle (realistic ballistics): speed_shell_mod - divisor of the time of flight (game and DIP: 1)");
         }
 
         // ---- parameters ----
         static readonly Dictionary<string, float> orig = new Dictionary<string, float>();
-        static IntPtr gdPtr; static int applied = -1; static float aDrag, aSpeed;
+        static IntPtr gdPtr; static int applied = -1; static float aDrag, aSpeed, aKin;
         static ParamData P(string name)
         {
             try { var gd = G.GameData; if (gd == null || gd.paramsRaw == null) return null; ParamData p; return gd.paramsRaw.TryGetValue(name, out p) ? p : null; } catch { return null; }
@@ -56,16 +57,16 @@ namespace DipGgFixes
                 var gd = G.GameData; if (gd == null) return;
                 if (gd.Pointer != gdPtr) { gdPtr = gd.Pointer; orig.Clear(); applied = -1; }
                 bool on = Realistic != null && Realistic.Value;
-                if (on && (applied != 1 || aDrag != Drag.Value || aSpeed != SpeedMod.Value))
+                if (on && (applied != 1 || aDrag != Drag.Value || aSpeed != SpeedMod.Value || aKin != Kinetic.Value))
                 {
-                    Set("air_drag_coef", Drag.Value); Set("speed_shell_mod", SpeedMod.Value);
-                    applied = 1; aDrag = Drag.Value; aSpeed = SpeedMod.Value;
+                    Set("air_drag_coef", Drag.Value); Set("speed_shell_mod", SpeedMod.Value); Set("shell_kinetic_energy_mod", Kinetic.Value);
+                    applied = 1; aDrag = Drag.Value; aSpeed = SpeedMod.Value; aKin = Kinetic.Value;
                     float od, os; orig.TryGetValue("air_drag_coef", out od); orig.TryGetValue("speed_shell_mod", out os);
-                    Log($"realistic ballistics on: air_drag_coef {od} -> {Drag.Value}, speed_shell_mod {os} -> {SpeedMod.Value}");
+                    float ok0; orig.TryGetValue("shell_kinetic_energy_mod", out ok0); Log($"realistic ballistics on: air_drag_coef {od} -> {Drag.Value}, speed_shell_mod {os} -> {SpeedMod.Value}, shell_kinetic_energy_mod {ok0} -> {Kinetic.Value}");
                 }
                 else if (!on && applied != 0)
                 {
-                    if (applied == 1) { Restore("air_drag_coef"); Restore("speed_shell_mod"); Log("realistic ballistics off: game values restored"); }
+                    if (applied == 1) { Restore("air_drag_coef"); Restore("speed_shell_mod"); Restore("shell_kinetic_energy_mod"); Log("realistic ballistics off: game values restored"); }
                     applied = 0;
                 }
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
@@ -101,7 +102,7 @@ namespace DipGgFixes
         static void Report(string tag)
         {
             if (bins.Count == 0) return;
-            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"realistic: drag {Drag.Value}, speed mod {SpeedMod.Value}" : "game values")}): calibre | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (game units)");
+            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"realistic: drag {Drag.Value}, speed mod {SpeedMod.Value}, kinetic {Kinetic.Value}" : "game values")}): calibre | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (game units)");
             foreach (var kv in bins)
             {
                 var b = kv.Value; double n = b.N;
