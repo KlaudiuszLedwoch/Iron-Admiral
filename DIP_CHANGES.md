@@ -81,8 +81,17 @@ Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). 
 
 Source of the historical figures: navweaps.com gun pages.
 
-What changes: medium-gun ranges are raised to their real counterparts of the same generation, and the WWI-generation 6" and 12" fire at their real rate. Only the measured generations are set from sources. Mk 4 is interpolated between Mk 3 and Mk 5, and Mk 1–2 stay unchanged where I have no measured target yet. These values will change as more data comes in.
+In test battles the game fits generation 2 to medium and heavy guns in 1906, generation 3 to medium guns in 1916, and generation 5 in WWII. I matched each generation to real guns of its period (all from navweaps.com):
 
+| Generation | Period | Reference guns (examples) |
+|---|---|---|
+| Mk 1 | c. 1890–1898 | GB 4"/40 QF, US 4"/40, GB 4.7"/40, US 5"/40, GB 6"/40 QF, German 15 cm L/40, GB 12"/35 Mk VIII |
+| Mk 2 | c. 1899–1908 | US 3"/50 Mk 2–8, German 10.5 cm L/40, US 5"/50 Mk 5–6, GB 6"/45 Mk VII, US 6"/50 Mk 6/8, GB 12"/40 Mk IX, US 12"/40 |
+| Mk 3 | WWI | US 5"/51, WWI 6" guns, GB 12"/45 |
+| Mk 4 | c. 1920–1935 | US 4"/50 Mk 9, GB 4"/45 Mk V, US 5"/51 and 5"/25, US 6"/53, GB 6"/50 Mk XXIII, German 15 cm C/25, US 12"/50 |
+| Mk 5 | WWII | US 5"/38, WWII 6" guns |
+
+What changes: for every calibre from 3" to 6" and for 12", range and rate of fire of each generation are set to these reference guns. Rate of fire is the rated figure given by navweaps. Range is taken at the elevation of the mountings of that period. Where only high-angle range tables exist (3" of the 1890s), the game value stays. Calibres not listed (2", 7"–11", 13"–18") are unchanged for now.
 Also planned: small guns (2"–3") in casemates, as on real ships of the 1890s–1910s.
 ## 6. Weights 📋
 
