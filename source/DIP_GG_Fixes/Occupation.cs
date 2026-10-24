@@ -2,9 +2,10 @@
 // every turn, not only when a rising breaks out (applies to every great power with national cores - Independence.Cores):
 // - relations: every month the dispossessed nation, its allies, the neighbours of the province and (lightly) the other great
 //   powers think worse of the occupier;
-// - one event per turn for every occupier (the player decides in a window, the AI by its treasury and unrest):
+// - one event per turn for every occupier (the AI decides by its treasury and unrest for all its occupied provinces at once;
+//   the player, since 1.11.191, decides in a window for every occupied province in turn, strongest rising first):
 //     pay for garrisons and administration (money),
-//     grant one step of autonomy to the most restless province (less burden and rising pressure, better relations with its nation),
+//     grant one step of autonomy to the province (less burden and rising pressure, better relations with its nation),
 //     or rule with a hard hand (no money, but more unrest at home, risings sooner and worse relations);
 // - after the last step of autonomy the province returns peacefully to its nation (a dissolved nation is restored).
 // Works on top of the monthly burden (1.11.150) and the rising decision (1.11.57).
@@ -158,8 +159,19 @@ namespace DipGgFixes
             {
                 // a decision left open from the last turn counts as doing nothing - the hard hand
                 for (int i = queue.Count - 1; i >= 0; i--) if (queue[i].Who.Pointer == who.Pointer) { Log("last turn's occupation decision left open - treated as the hard hand"); var old = queue[i]; queue.RemoveAt(i); Hard(old); }
-                queue.Add(d);
-                Log($"{Economy.Name(who)}: occupation decision waiting for the player - pay {d.Cost / 1e6f:0.0}M, autonomy for {d.Target.Id} (step {Level(d.Target.Id) + 1} of {MaxSteps()}), or hard hand (unrest +{d.Unrest:0.#})");
+                // 1.11.191: one decision per province, one after another (strongest rising first) - before, one window per turn
+                //           always proposed autonomy for the same province (the strongest rising) and the others never got it
+                foreach (var h in o.List.OrderByDescending(x => x.Sf).ThenBy(x => x.Id))
+                {
+                    var one = new Decision
+                    {
+                        Who = who, List = new List<Held> { h }, Target = h, Month = now,
+                        Cost = Math.Max(0f, income) * PayShare.Value / 100f * h.Sf,
+                        Unrest = HardUnrest.Value * h.Sf,
+                    };
+                    queue.Add(one);
+                }
+                Log($"{Economy.Name(who)}: {o.List.Count} occupation decision(s) waiting for the player (one window per province: pay, autonomy or hard hand)");
                 return;
             }
             float cash = 0f, unrest = 0f; try { cash = who.cash; unrest = who.unrest; } catch { }
@@ -238,29 +250,16 @@ namespace DipGgFixes
                 }
                 next.Clear();
                 var d = queue[0];
-                // 1.11.191: the province for autonomy is chosen by the player (one small button per held province, the strongest
-                //           rising preselected) - before, the window always proposed the same province (the strongest rising, e.g.
-                //           Penghu for a nation holding Chinese land) and the others could never get autonomy
-                var shown = d.List.OrderByDescending(x => x.Sf).Take(12).ToList();
-                int perRow = 4, rows = (shown.Count + perRow - 1) / perRow;
-                float w = Math.Min(640f, UiScale.W - 40f), h = 330f + rows * 30f;
+                // 1.11.191: one window per occupied province, one after another (the queue is filled strongest rising first)
+                float w = Math.Min(640f, UiScale.W - 40f), h = 330f;
                 var r = new Rect((UiScale.W - w) / 2f, (UiScale.H - h) / 2f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
                 string tgt = Nice(d.Target.Id); int lv = Level(d.Target.Id) + 1;
-                GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 28f, 24f), "<b>Administration of the occupied lands</b>", sTitle);
-                GUI.Label(new Rect(r.x + 14f, r.y + 40f, w - 28f, 40f),
-                    $"We hold the national lands of other peoples ({d.List.Count}). Their people do not accept our rule and the other powers watch us. Choose the province for autonomy (strongest rising first):", sText);
-                float pbw = (w - 28f - (perRow - 1) * 6f) / perRow, py = r.y + 84f;
-                for (int i = 0; i < shown.Count; i++)
-                {
-                    var x = shown[i]; var pr = new Rect(r.x + 14f + (i % perRow) * (pbw + 6f), py + (i / perRow) * 30f, pbw, 26f);
-                    bool sel = x.Id == d.Target.Id;
-                    string lab = (sel ? "<b>> " : "") + Nice(x.Id) + (Level(x.Id) > 0 ? $" ({Level(x.Id)}/{MaxSteps()})" : "") + (sel ? "</b>" : "");
-                    Btn(pr, lab, () => { d.Target = x; });
-                }
-                float ty = py + rows * 30f + 6f;
-                GUI.Label(new Rect(r.x + 14f, ty, w - 28f, 150f),
-                    "How shall we govern them this turn?\n\n" +
+                int left = queue.Count(q => q.Who.Pointer == d.Who.Pointer) - 1;
+                string owner = d.Target.Nation; try { if (d.Target.Orig != null) owner = Economy.Name(d.Target.Orig); } catch { }
+                GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 28f, 24f), $"<b>Administration of the occupied lands: {tgt}</b>" + (left > 0 ? $"  ({left} more to decide)" : ""), sTitle);
+                GUI.Label(new Rect(r.x + 14f, r.y + 40f, w - 28f, 190f),
+                    $"We hold {tgt}, national land of {owner}" + (Level(d.Target.Id) > 0 ? $" (autonomy {Level(d.Target.Id)}/{MaxSteps()})" : "") + ". Its people do not accept our rule and the other powers watch us. How shall we govern it this turn?\n\n" +
                     $"<b>Pay</b> for garrisons and administration: about {d.Cost / 1e6f:0.0}M.\n" +
                     $"<b>Grant autonomy</b> to {tgt}: step {lv} of {MaxSteps()}" + (lv >= MaxSteps() ? " - the province returns peacefully to its nation" : " - less unrest and fewer risings there, better relations with its nation") + ".\n" +
                     $"<b>Hard hand</b>: no money, but unrest at home +{d.Unrest:0.#}, stronger risings for three months and worse relations.", sText);
