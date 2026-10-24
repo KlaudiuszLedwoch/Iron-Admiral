@@ -4,6 +4,8 @@ Iron Admiral is built on DIP GG Extended 1.3.5. DIP brings a lot of content (hul
 
 **Rule:** where a historical source exists, I use the historical value first, even if the game gets harder somewhere. The rest of the game is then recalibrated around history, not the other way round. Every change has its own switch in the F10 menu ("Battle AI" tab) and goes to the beta first.
 
+**Technology, not the calendar:** every effect follows the technology fitted to the individual ship - its fire-control equipment (rangefinder or radar), its shell and propellant technologies, the generation of each gun and the torpedo technologies. The calendar year is never used. Where a historical table is indexed by year, the year is the historical year of the technology the ship actually carries.
+
 **Status of this page:** work in progress. Some values below are taken directly from sources; others are my estimates inside the range the sources suggest – they are marked as estimates. Calibration continues with every test battle and every played battle, so numbers will change. Know a better source or a better figure? Write on Nexus or Steam, or open an issue – I will check it and change the value.
 
 Status: ✅ in the beta · 🔧 in work / next beta · 📋 planned
@@ -24,16 +26,16 @@ The 15" guns in the test had a higher muzzle velocity (~810 m/s) than the Mk I t
 
 How: every shell's arc is rebuilt from a point-mass model with quadratic air drag (air density falling with height, drag rising through the sound barrier). Shell mass comes from the calibre. The drag coefficient depends on the era: blunt shells before ~1912, longer-nosed shells later. The model is fitted to the 15"/42 Mk I and 12"/45 Mk X range tables (navweaps.com).
 
-Known limitation, being worked on: the drag coefficient follows the year of the battle. It should follow the generation of the gun and shell (Mk), and the muzzle velocity should come from the gun's data.
+How the shell is modelled: drag follows the shell-nose technologies in the ship's design (blunt early shells; the improved nose, 1907; the shells of 1927). Shell weight and muzzle velocity come from the game for that gun and ship, so light/heavy shells and propellant technologies count.
 
-## 2. Hit rates 🔧 (F10: EraAccuracy, on; EraAccuracyScale)
+## 2. Hit rates ✅ (F10: EraAccuracy, EraAccuracyRadar, EraAccuracyScale)
 
 Measured with DIP values: in a 1916 test battle, battleships at 10–16 km hit with 40–70 % of their 15" shells; in a 1940 test battle, 70–90 %. That is ten to twenty times more than in real battles.
 
 With the change, the 1916 test gives 15" 2–4.5 % and 12" 0–1.3 % (Jutland, all heavy guns: British 2.7 %, German 3.4 %). The WWII values are not calibrated yet.
 
 Next steps (in work):
-- The factor by era is meant to represent **optical** fire control. Most of the very high WWII hit rates below come from **fire-control radar**, so radar will get its own effect that depends on the radar fitted to the ship, not on the year. A ship without radar in 1943 should shoot like an optical ship.
+- The hit-chance factor follows the **fire-control equipment fitted to the shooting ship** (the historical year of its rangefinder or radar technology), not the calendar. It represents **optical** fire control; ships with **fire-control radar** get an extra multiplier (EraAccuracyRadar, default 3). In radar A/B tests the game's own radar component changed hit rates very little.
 - The generation of the gun (Mk) will be taken into account as well.
 
 | Battle | Guns | Range | Hits | Note |
@@ -56,18 +58,18 @@ Sources: N. J. M. Campbell, *Jutland: An Analysis of the Fighting* (figures as s
 | over_penetration_threshold | 2 | 3.5 | 3.0 (estimate) | between the two; long fuze delays of Japanese AP shells (WDR 57) |
 | armor_damage (shell breaking up on armour) | 0.42 | 0.05 | 0.10 (estimate) | WDR 57: shells that broke up on South Dakota's armour did little behind it, but damaged structure nearby |
 | fire_damage | 1.6 | 0.33 | 0.30 (estimate) | Fires rarely destroyed ships by burning the structure; the danger was ammunition (Seydlitz at Dogger Bank 1915 survived a propellant fire; WDR No. 29 on the cruisers lost at Savo) |
-| section_damage_torpedo | 1750 | 5200 | 2000 in 1900 → 5200 in 1940 (estimate, scaled by year) | Warheads grew about ninefold: ~54 kg (18", 1890s) → ~145 kg (1910) → 127–234 kg (WWI) → 224–373 kg (Mk 15) → ~490 kg (Type 93) – navweaps.com torpedo pages. DIP uses the WWII value for every era. |
+| section_damage_torpedo | 1750 | 5200 | 1750 (the game's base) | The game already scales every torpedo by the torpedo technologies of the ship that fires it (size, propulsion, generation), which follows the historical growth of warheads: ~54 kg (18", 1890s), ~145 kg (1910), 127–234 kg (WWI), 224–373 kg (Mk 15), ~490 kg (Type 93) – navweaps.com torpedo pages. DIP raised the base to the WWII value on top of those technologies. |
 | torpedo_damage_ammo_detonation | 690 | 5200 | as above | as above |
 
 Kept from DIP: fire spread, torpedo-tube explosions and torpedo flooding values – they are closer to the record than vanilla.
 
-Known limitation: torpedo damage follows the year, not the torpedo technology fitted.
+Torpedo damage therefore follows the torpedo technologies of each ship. The ammunition-detonation value goes back to the game's 690.
 
-## 4. Dispersion 🔧 (F10: EraDispersion, next beta)
+## 4. Dispersion ✅ (F10: EraDispersion)
 
-DIP narrowed dispersion almost to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Recorded salvo patterns: WWI at ~11 km – 15" ~180 m, 13.5" ~270 m, 12" ~370 m; US 16"/50 at ~19 km ~820 m; Massachusetts 1942: 180–270 m in range. Next beta: the game's own (vanilla) dispersion values, scaled by era. Planned: dispersion depending on gun generation and on radar ranging, not only on the year.
+DIP narrowed dispersion almost to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Recorded salvo patterns: WWI at ~11 km – 15" ~180 m, 13.5" ~270 m, 12" ~370 m; US 16"/50 at ~19 km ~820 m; Massachusetts 1942: 180–270 m in range. Base: the game's own (vanilla) dispersion values. Now: the shared dispersion values follow the average fire-control technology of the ships in the battle, and the miss distance of every shot is then scaled by the shooting ship's own fire-control technology – older equipment spreads wider, newer equipment tighter.
 
-## 5. Medium guns by generation 🔧 (F10: HistoricalGuns, next beta)
+## 5. Medium guns by generation ✅ (F10: HistoricalGuns)
 
 Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). I measured every calibre at all five generations with the game's own formulas (DIP values):
 
