@@ -19,15 +19,20 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("HistoricalGuns", true, null, "Battle: historical rate of fire and range of medium guns by gun generation (Mk) - medium guns reach as far as their real counterparts of the same period (DIP compressed their ranges), WWI-era 6\" and 12\" fire at their real rate");
         }
-        //                                          Mk1   Mk2   Mk3   Mk4 (interp.) Mk5
-        static readonly float[] Range3 = { 1f, 1f, 1.08f, 1.20f, 1.32f };
-        static readonly float[] Range4 = { 1f, 1f, 1.09f, 1.27f, 1.44f };
-        static readonly float[] Range5 = { 1f, 1f, 1.54f, 1.47f, 1.40f };
-        static readonly float[] Range6 = { 1f, 1f, 1.35f, 1.47f, 1.60f };
-        static readonly float[] Range12 = { 1f, 1.13f, 1f, 1f, 1f };
-        static readonly float[] Rof5 = { 1f, 1f, 1.23f, 1f, 1f };
-        static readonly float[] Rof6 = { 1f, 1f, 0.77f, 0.88f, 1f };
-        static readonly float[] Rof12 = { 1f, 0.82f, 1f, 1f, 1f };
+        // 1.11.178: all five generations from navweaps.com (rate of fire = the page's rated figure; range = the page's range table at
+        // the elevation of the period's mountings). Game generations: Mk 1 ~1890s, Mk 2 ~1899-1908 (fitted in 1906 tests),
+        // Mk 3 ~WWI (fitted in 1916 tests), Mk 4 ~1920-1935, Mk 5 ~WWII. Reference guns per cell: claude/kalibracja_dzialy_radar.md.
+        //                                Mk1    Mk2    Mk3    Mk4    Mk5
+        static readonly float[] Range3 = { 1.00f, 1.26f, 1.08f, 1.30f, 1.32f };  // Mk1: only high-angle range tables found - unchanged
+        static readonly float[] Range4 = { 1.24f, 1.65f, 1.09f, 1.60f, 1.44f };
+        static readonly float[] Range5 = { 1.15f, 2.10f, 1.54f, 1.60f, 1.40f };
+        static readonly float[] Range6 = { 1.11f, 1.70f, 1.35f, 2.00f, 1.75f };
+        static readonly float[] Range12 = { 0.85f, 1.00f, 1.20f, 1.07f, 1.00f };
+        static readonly float[] Rof3 = { 1.50f, 1.15f, 1.00f, 1.00f, 1.00f };
+        static readonly float[] Rof4 = { 1.20f, 1.10f, 1.00f, 1.00f, 1.00f };
+        static readonly float[] Rof5 = { 1.40f, 1.20f, 1.23f, 1.00f, 1.00f };
+        static readonly float[] Rof6 = { 1.20f, 1.40f, 1.15f, 1.15f, 1.00f };
+        static readonly float[] Rof12 = { 1.00f, 0.82f, 1.00f, 1.00f, 1.00f };
         static float Pick(float[] t, int grade) { int i = Math.Max(1, Math.Min(5, grade)) - 1; return t[i]; }
         static float[] RangeTable(float c)
         {
@@ -40,6 +45,8 @@ namespace DipGgFixes
         }
         static float[] RofTable(float c)
         {
+            if (c >= 2.6f && c < 3.6f) return Rof3;
+            if (c >= 3.6f && c < 4.6f) return Rof4;
             if (c >= 4.6f && c < 5.6f) return Rof5;
             if (c >= 5.6f && c < 6.6f) return Rof6;
             if (c >= 11.6f && c < 12.6f) return Rof12;
