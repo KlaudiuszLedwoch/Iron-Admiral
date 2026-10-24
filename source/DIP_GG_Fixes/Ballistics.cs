@@ -246,7 +246,7 @@ namespace DipGgFixes
                 float t = arc.timeToTarget * WS; if (t <= 0f) return; // logged in real seconds (1.11.206)
                 float range = new Vector2(b.x - a.x, b.z - a.z).magnitude; if (range < 500f) return;
                 Vector3 v0 = arc.initialVelocity; float h0 = new Vector2(v0.x, v0.z).magnitude;
-                Vector3 v1 = v0; try { var tr = arc.trajectory; if (tr != null) v1 = tr.VelocityAtTime(t); } catch { }
+                Vector3 v1 = v0; try { var tr = arc.trajectory; if (tr != null) v1 = tr.VelocityAtTime(arc.timeToTarget); /* 1.11.211: the trajectory runs in game time - the real-time t gave a fall of 80+ deg */ } catch { }
                 float h1 = new Vector2(v1.x, v1.z).magnitude;
                 float elev = Mathf.Atan2(v0.y, h0) * Mathf.Rad2Deg, fall = Mathf.Atan2(-v1.y, h1) * Mathf.Rad2Deg;
                 if (cal < 100f) return; // main and heavy secondary guns only
