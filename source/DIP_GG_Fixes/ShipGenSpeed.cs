@@ -37,6 +37,8 @@ namespace DipGgFixes
             RelaxTurrets = cat.CreateEntry("ShipGenRelaxTurrets", true, null, "Campaign: when the AI generator cannot fit the main battery a hull requires, the next attempt may carry one main turret fewer instead of giving the hull up (modern hulls stay in use)"); // 1.11.223
             TolOn = cat.CreateEntry("ShipGenAsymmetryTolerance", true, null, "Ship generator: a small side or fore-aft weight asymmetry (ballast and trim took care of it on real ships) does not throw an attempt away; only while the generator runs - the designer keeps the game's strictness"); // 1.11.244
             TolValue = cat.CreateEntry("GeneratorAsymmetryTolerance", 0.002f, null, "Weight asymmetry tolerated by the ship generator as a share of displacement (0.002 = 0.2 %, about 24 t on a 12 000 t cruiser)");
+            InstMax = cat.CreateEntry("GeneratorInstabilityMax", 2f, null, "Ship generator: an attempt whose side instability stat (instability_x) is at most this value is accepted - 100 is the full handling/accuracy penalty, so 2 means under 1 %; 0 = the game's rule (any value above zero fails the attempt)"); // 1.11.245
+            Diag = cat.CreateEntry("ShipGenDiagnosis", false, null, "Author's tool: outside the campaign, every failed generator attempt is logged with its guns and tonnage, and when no main tower, secondary tower or funnel was placed, each tower/funnel part is checked with the game's own availability and placement tests"); // 1.11.245
         }
 
         // ---- 0. weight-asymmetry tolerance for the generator (1.11.244, author's test 25.10) ----
@@ -69,6 +71,95 @@ namespace DipGgFixes
         {
             if (!tolSet) return; tolSet = false;
             try { var raw = G.GameData.paramsRaw; if (raw != null) { if (tolOx >= 0f && raw.ContainsKey("stability_x_threshold")) raw["stability_x_threshold"].value = tolOx; if (tolOz >= 0f && raw.ContainsKey("stability_z_threshold")) raw["stability_z_threshold"].value = tolOz; } } catch { }
+        }
+
+        // ---- 0b. generator stability tolerance (1.11.245, author's test 25.10) ----
+        // Test Spain vs China 1922 with beta.54: the raised stability thresholds changed nothing - the generator's attempts still
+        // ended with "instability_x: 0.3-1.8 > 0" (10 of 36 failed attempts). The game's rule is "any instability_x above zero is
+        // invalid"; the stat itself scales the accuracy/handling penalties (100 = the full penalty of -40 % accuracy), so an attempt
+        // at 2 carries under 1 % of penalty. While the generator runs, Ship.IsValidWeightOffset accepts a side instability of at
+        // most GeneratorInstabilityMax (fore-aft keeps the game's 100 limit). The designer is untouched.
+        internal static MelonPreferences_Entry<float> InstMax;
+        internal static bool GenRunning;
+        static int instLogged;
+        internal static bool AcceptOffset(Ship ship)
+        {
+            try
+            {
+                if (!GenRunning || ship == null) return false;
+                float max = InstMax != null ? InstMax.Value : 2f; if (max <= 0f) return false;
+                var stats = G.GameData.stats; if (stats == null) return false;
+                float ix = 0f, iz = 0f;
+                Ship.StatValue sv;
+                if (ship.stats_.TryGetValue(stats["instability_x"], out sv) && sv != null) ix = sv.total;
+                if (ship.stats_.TryGetValue(stats["instability_z"], out sv) && sv != null) iz = sv.total;
+                if (ix <= max && iz <= 100f)
+                {
+                    if (instLogged++ < 20) Log($"attempt accepted with side instability {ix:0.##} (limit {max:0.##}; fore-aft {iz:0.##})");
+                    return true;
+                }
+            }
+            catch (Exception e) { if (instLogged++ < 20) Log("instability: " + e.Message); }
+            return false;
+        }
+
+        // ---- 0c. diagnosis of failed attempts outside the campaign (1.11.245) ----
+        // Custom-battle tests: the campaign-only early-stop log is replaced by a summary per failed attempt, and when the attempt
+        // has no main tower / secondary tower / funnel the tower and funnel parts are checked one by one with the game's own
+        // tests (Ship.IsPartAvailable - nation, technology, hull tags; Part.CanPlaceGeneric - the hull takes the part), so the log
+        // says why nothing was placed. Switch: ShipGenDiagnosis (author's tool, off by default).
+        internal static MelonPreferences_Entry<bool> Diag;
+        static readonly Dictionary<IntPtr, int> diagTry = new Dictionary<IntPtr, int>();
+        internal static void Diagnose(Ship._GenerateRandomShip_d__573 it, Ship ship, bool running)
+        {
+            if (Diag == null || !Diag.Value || it == null) return;
+            var p = it.Pointer;
+            if (!running) { diagTry.Remove(p); return; }
+            if (ship == null) return;
+            int tryN = it._tryN_5__5, total = it._triesTotal_5__4;
+            int prev; if (!diagTry.TryGetValue(p, out prev)) prev = 0;
+            if (tryN <= prev) return;
+            diagTry[p] = tryN;
+            try
+            {
+                int tm = 0, ts = 0, fn = 0;
+                var parts = ship.parts;
+                for (int i = 0; i < parts.Count; i++)
+                {
+                    var d = parts[i] != null ? parts[i].data : null; if (d == null) continue;
+                    string t = d.type ?? "";
+                    if (t == "tower_main") tm++; else if (t == "tower_sec") ts++; else if (d.isFunnel || t == "funnel") fn++;
+                }
+                string key = ""; try { key = ship.player.data.name + ": hull " + ship.hull.data.name; } catch { }
+                Log($"{key} - attempt {tryN} of {total} failed: {Summary(ship)}; placed: main towers {tm}, secondary towers {ts}, funnels {fn}");
+                if (tm == 0) Log(Avail(ship, "tower_main"));
+                if (ts == 0) Log(Avail(ship, "tower_sec"));
+                if (fn == 0) Log(Avail(ship, "funnel"));
+            }
+            catch (Exception e) { Log("diagnosis: " + e.Message); }
+        }
+        static string Avail(Ship ship, string type)
+        {
+            int all = 0, avail = 0, placeable = 0;
+            var reasons = new Dictionary<string, int>(); var names = new List<string>();
+            foreach (var kv in G.GameData.parts)
+            {
+                var pd = kv.Value; if (pd == null) continue;
+                if ((pd.type ?? "") != type) continue;
+                all++;
+                bool av = false; try { av = ship.IsPartAvailable(pd); } catch { }
+                if (!av) continue;
+                avail++;
+                string why = null; bool ok = false;
+                try { ok = Part.CanPlaceGeneric(pd, ship, false, out why); } catch (Exception e) { why = "exception: " + e.Message; }
+                if (ok) { placeable++; if (names.Count < 6) names.Add(pd.name); }
+                else { why = why ?? "(no reason)"; int c; reasons.TryGetValue(why, out c); reasons[why] = c + 1; }
+            }
+            var sb = new System.Text.StringBuilder();
+            sb.Append($"  {type}: {all} parts in the game, {avail} available to this ship (nation, technology, hull tags), {placeable} the hull takes");
+            if (names.Count > 0) sb.Append(" [" + string.Join(", ", names) + "]");
+            foreach (var r in reasons.OrderByDescending(x => x.Value).Take(5)) sb.Append($"; refused {r.Value}x: {r.Key}");
+            return sb.ToString();
         }
 
         // ---- 1. early stop ----
@@ -321,6 +412,17 @@ namespace DipGgFixes
         {
             try { ShipGenSpeed.Filter(__instance, __0, ref __result); }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] hull filter: " + e.Message); }
+        }
+    }
+
+    // 1.11.245: Ship.IsValidWeightOffset accepts a small side instability while the generator runs (GeneratorInstabilityMax)
+    [HarmonyPatch(typeof(Ship), nameof(Ship.IsValidWeightOffset))]
+    internal static class Patch_WeightOffset_ShipGen
+    {
+        private static void Postfix(Ship __instance, ref bool __result)
+        {
+            if (__result) return;
+            try { if (ShipGenSpeed.AcceptOffset(__instance)) __result = true; } catch { }
         }
     }
 }

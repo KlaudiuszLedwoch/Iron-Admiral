@@ -111,11 +111,14 @@ namespace DipGgFixes
             // 1.11.196: newest-hulls filter active while the generator runs for an AI nation
             try { var s = __instance.__4__this; var p = s != null ? s.player : null; if (p != null && p.isAi && GameManager.IsCampaign) { ShipGenSpeed.Active = true; ShipGenSpeed.ActivePlayer = p.Pointer; } } catch { }
             ShipGenSpeed.TolBegin(); // 1.11.244
+            ShipGenSpeed.GenRunning = true; // 1.11.245
         }
         private static void Postfix(Ship._GenerateRandomShip_d__573 __instance, int __state, bool __result)
         {
             ShipGenSpeed.Active = false;
             ShipGenSpeed.TolEnd(); // 1.11.244
+            ShipGenSpeed.GenRunning = false; // 1.11.245
+            try { ShipGenSpeed.Diagnose(__instance, __instance.__4__this, __result); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] diagnosis: " + e.Message); } // 1.11.245
             try { ShipGenMemory.After(__instance, __state, __result); }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] memory: " + e.Message); }
         }
