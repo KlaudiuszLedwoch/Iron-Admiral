@@ -182,14 +182,25 @@ namespace DipGgFixes
                 Log($"{Economy.Name(who)}: {o.List.Count} occupation decision(s) waiting for the player (one window per province: pay, autonomy or hard hand)");
                 return;
             }
-            float cash = 0f, unrest = 0f; try { cash = who.cash; unrest = who.unrest; } catch { }
+            // 1.11.226 (author, 24.10): the AI decides for every occupied province each month, as the player does province by province.
+            //           Before, one decision a month went to the strongest rising only, and with six Italian and Spanish provinces France
+            //           spread single autonomy steps over them for a year and a half while paying 180-200M a month for garrisons.
+            //           Provinces furthest along the autonomy road are settled first, so a province is released, not six started.
             float max = DipGgFixesMod.CoreSuppressAiMaxUnrest != null ? DipGgFixesMod.CoreSuppressAiMaxUnrest.Value : 40f;
-            string choice;
-            if (unrest >= max * 0.75f) { choice = "grants autonomy"; Autonomy(d); }
-            else if (cash >= d.Cost * 3f) { choice = "pays"; Pay(d); }
-            else if (unrest + d.Unrest < max) { choice = "rules with a hard hand"; Hard(d); }
-            else { choice = "grants autonomy"; Autonomy(d); }
-            Log($"{Economy.Name(who)} (AI) {choice} - cash {cash / 1e6f:0.0}M, unrest {unrest:0.#}, {o.List.Count} occupied core province(s)");
+            var counts = new Dictionary<string, int>();
+            foreach (var h in o.List.OrderByDescending(x => Level(x.Id)).ThenByDescending(x => x.Sf).ThenBy(x => x.Id))
+            {
+                float cash = 0f, unrest = 0f; try { cash = who.cash; unrest = who.unrest; } catch { }
+                var one = new Decision { Who = who, List = new List<Held> { h }, Target = h, Month = now, Cost = Math.Max(0f, income) * PayShare.Value / 100f * h.Sf, Unrest = HardUnrest.Value * h.Sf };
+                string choice;
+                if (unrest >= max * 0.75f) { choice = "grants autonomy"; Autonomy(one); }
+                else if (cash >= one.Cost * 3f) { choice = "pays"; Pay(one); }
+                else if (unrest + one.Unrest < max) { choice = "rules with a hard hand"; Hard(one); }
+                else { choice = "grants autonomy"; Autonomy(one); }
+                int n; counts.TryGetValue(choice, out n); counts[choice] = n + 1;
+            }
+            float cash2 = 0f, unrest2 = 0f; try { cash2 = who.cash; unrest2 = who.unrest; } catch { }
+            Log($"{Economy.Name(who)} (AI) {string.Join(", ", counts.Select(kv => $"{kv.Key} x{kv.Value}"))} - cash {cash2 / 1e6f:0.0}M, unrest {unrest2:0.#}, {o.List.Count} occupied core province(s)");
         }
 
         static void Pay(Decision d)
