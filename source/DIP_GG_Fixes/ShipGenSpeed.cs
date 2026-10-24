@@ -160,6 +160,29 @@ namespace DipGgFixes
             }
         }
 
+        // 1.11.219: for the fleet age report
+        internal static int HullYear(string hull) { LoadTables(); int y; return hull != null && unlockYear.TryGetValue(hull, out y) ? y : 0; }
+        internal static int NewestUnlocked(Player player, string type, out string hullName)
+        {
+            LoadTables(); hullName = null; int top = 0;
+            try
+            {
+                computing = true;
+                foreach (var kv in hullType)
+                {
+                    if (kv.Value != type) continue;
+                    int hy; if (!unlockYear.TryGetValue(kv.Key, out hy) || hy <= top) continue;
+                    PartData pd = null; try { pd = G.GameData.parts[kv.Key]; } catch { }
+                    if (pd == null) continue;
+                    bool ok = false; try { ok = player.IsHullUnlocked(pd); } catch { }
+                    if (ok) { top = hy; hullName = kv.Key; }
+                }
+            }
+            catch { }
+            finally { computing = false; }
+            return top;
+        }
+
         // ---- 3. kept designs ----
         internal static void Share(Ship ship, string key)
         {
