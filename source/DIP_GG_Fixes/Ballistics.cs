@@ -223,6 +223,21 @@ namespace DipGgFixes
             grades[k] = g; return g;
         }
 
+        // 1.11.242: diagnostics of the gun generation the game uses for a part (author's 24.10 question: 16 in at 682 m/s = the Mk 2 table value
+        //           on a ship whose guns count as Mk 3 for the mount elevation)
+        static int GradeDesign(Part p) { try { var sh = p.ship; if (sh != null && p.data != null) return sh.TechGunGrade(p.data, true); } catch { } return 0; }
+        static string GunDataByGrade(Part p, Ship ship)
+        {
+            try
+            {
+                var pd = p != null ? p.data : null; if (pd == null) return "?";
+                var gd = G.GameData.GunData(pd); if (gd == null) return "?";
+                var sb = new System.Text.StringBuilder();
+                for (int g = 1; g <= 5; g++) { float v = 0f, w = 0f; try { v = gd.ShellVelocity(ship, pd, g); w = gd.ShellWeight(ship, pd, g); } catch { } sb.Append($"Mk{g} {v:0} m/s {w:0} kg{(g < 5 ? ", " : "")}"); }
+                return sb.ToString();
+            }
+            catch { return "?"; }
+        }
         // 1.11.181: per-shot dispersion by the shooter's fire-control technology (EraAccuracy.ShotDispersionRatio). For a missing shell
         // the offset of its splash point from the point the gun aimed at (target position + target velocity x the game's time of
         // flight) is scaled; the shell then flies to the new splash point.
@@ -265,7 +280,7 @@ namespace DipGgFixes
                 try { if (from != null && from.data != null) { var st = new Il2CppSystem.Nullable<Ship.ShellType>(s.shellType); mvGun = Part.ShellVelocity(from.data, shooter, st); try { bonus = Part.ShellVelocityTotalBonus(from.data, shooter, st); } catch { } } } catch { }
                 float arcV0 = arc.initialVelocity.magnitude;
                 Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f), GradeOf(from), mvGun); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
-                if (cal >= 100f && mvLogged.Count < 24) { string mkey = $"{cal / 25.4f:0.0} in Mk{GradeOf(from)} {(shooter != null ? shooter.name : "?")}"; if (mvLogged.Add(mkey)) Log($"muzzle velocity source {mkey}: gun with the ship's shell and barrel choices {mvGun:0} m/s (bonus {bonus:+0.##;-0.##;0}), game arc speed {arcV0:0} m/s (range / time of flight), used {(mvGun > 100f ? mvGun : arcV0):0} m/s, mass {ShellMass(s, from, cal / 25.4f):0} kg, Cd {Cd(shooter):0.00}"); }
+                if (cal >= 100f && mvLogged.Count < 24) { string mkey = $"{cal / 25.4f:0.0} in Mk{GradeOf(from)} {(shooter != null ? shooter.name : "?")}"; if (mvLogged.Add(mkey)) Log($"muzzle velocity source {mkey}: gun with the ship's shell and barrel choices {mvGun:0} m/s (bonus {bonus:+0.##;-0.##;0}), game arc speed {arcV0:0} m/s (range / time of flight), used {(mvGun > 100f ? mvGun : arcV0):0} m/s, mass {ShellMass(s, from, cal / 25.4f):0} kg, Cd {Cd(shooter):0.00}; gun generation: ship {GradeOf(from)}, design {GradeDesign(from)}, gun data by generation {GunDataByGrade(from, shooter)}"); }
                 try { var iv = arc.initialVelocity; float hz0 = new Vector2(iv.x, iv.z).magnitude; if (hz0 > 1f) BarrelElevation.Record(from, Mathf.Atan2(iv.y, hz0) * Mathf.Rad2Deg); } catch { } // 1.11.209
                 if (LogOn == null || !LogOn.Value) return;
                 float t = arc.timeToTarget * WS; if (t <= 0f) return; // logged in real seconds (1.11.206)
