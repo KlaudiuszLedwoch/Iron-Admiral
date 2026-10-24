@@ -93,19 +93,19 @@ Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). 
 
 Reference guns include: GB 4"/40 QF, US 5"/40, GB 6"/40 QF, German 15 cm L/40, GB 12"/35 (Mk 1); US 3"/50, German 10.5 cm L/40, US 5"/50, GB 6"/45 Mk VII, GB 7.5"/45, US 8"/45, GB 9.2"/47, GB 10"/45, German 28 cm L/40, GB 12"/40 (Mk 2); US 5"/51, German 21 cm L/45, GB 9.2"/50, German 28 cm L/45 and L/50, US 12"/50, GB 13.5"/45, US 14"/45, GB 15"/42, German 38 cm L/45, GB 18"/40 (Mk 3); US 4"/50 Mk 9, US 5"/25, US 6"/53, GB 6"/50 Mk XXIII, GB 7.5"/45 Mk VI, GB 8"/50, US 8"/55, German 28 cm C/28, US 14"/50, GB 16"/45 (Mk 4); US 5"/38, German 20.3 cm C/34, German 28 cm C/34, GB 14"/45 Mk VII, German 38 cm C/34, Italian 381/50, US 16"/45 and 16"/50, Japanese 46 cm (Mk 5). Where several guns are listed, the value is their average.
 
-Also planned: small guns (2"–3") in casemates, as on real ships of the 1890s–1910s.
-## 6. Weights 📋
+## 6. Weights ✅ partly (F10: HistoricalWeights, on – also in running campaigns)
 
-Planned with a separate switch, because changing weights changes existing designs in a running campaign.
-
-| | Vanilla | DIP | History | Direction |
+| | Vanilla | DIP | History | Iron Admiral |
 |---|---|---|---|---|
-| Casemate mount per gun | – | – | roughly ⅓–¼ of a turret mount per gun (e.g. German 15 cm casemate 16–18 t vs a 15 cm twin turret 55–58 t per gun) | casemates lighter than turrets |
-| Machinery weight factor bb / bc / ca / cl | 3.5 / 2.4 / 0.95 / 0.95 | 1.6 / 1.5 / 1.4 / 1.3 | battleship machinery heavier per horsepower than cruiser machinery | battleships heavier per hp than cruisers |
-| Fuel (operational range, % of displacement) | 2–10 | 14–28 | e.g. Dreadnought ~18 %, Bismarck ~16 %, Myoko ~20 % of full load | to be set from data |
-| Armour of secondary mounts | 0.125 | 0.08 | armour is a large share of an armoured mount's weight | heavier |
-| Torpedo tubes | 8 / 16 / 36 | 3.1 / 1.5 / 3.1 | e.g. a quadruple Type 92 mount 15–18 t | to be set from data |
+| Machinery weight factor bb / bc / ca / cl | 3.5 / 2.4 / 0.95 / 0.95 | 1.6 / 1.5 / 1.4 / 1.3 | battleship machinery 1.5–2x heavier per horsepower than cruiser machinery (around 1940: 31–36 vs 15–21 kg/hp) | 1.7 / 1.45 / 1.0 / 1.0 |
+| Fuel (operational range, % of displacement) | 2–10 | 14–28 | Dreadnought ~18 %, Bismarck ~16 %, Richelieu ~16 %, Myoko ~20 % of full load | 5.5–20 |
+| Armour of secondary mounts | 0.125 | 0.08 | armour is a large share of an armoured mount's weight (US 5" mount 47.9 t at 0.75" vs 77.4 t at 2.5") | 0.20 |
+| Casemate mount per gun | – | – | roughly ⅓–¼ of a turret mount per gun (German 15 cm casemate 16–18 t vs a 15 cm twin turret 55–58 t per gun) | planned |
+| Torpedo tubes | 8 / 16 / 36 | 3.1 / 1.5 / 3.1 | e.g. a quadruple Type 92 mount 15–18 t | planned |
 
+Engine, boiler and hull technologies still change these weights on top. Existing designs are recomputed with the new values, so some ships in a running campaign get heavier or lighter.
+
+**Small guns in casemates ✅:** 2"–3" guns can now be placed in casemates. The 4–6" minimum calibre was removed from 809 casemate mounts, as on real ships of the 1890s–1910s, which carried 12-pdr and 3-pdr guns in hull casemates and ports.
 ## 7. Optional modes 📋
 
 - **Historical parts:** parts available only in their own era and for the nations that had them. The free design of DIP stays available.
