@@ -23,15 +23,14 @@ namespace DipGgFixes
             try
             {
                 var cam = Camera.main; if (cam == null) return;
-                if (sTag == null) { sTag = new GUIStyle(); sTag.fontSize = 12; sTag.alignment = TextAnchor.UpperCenter; sTag.normal.textColor = new Color(1f, 0.85f, 0.6f); }
+                if (sTag == null) { sTag = new GUIStyle(); sTag.fontSize = 9; sTag.alignment = TextAnchor.UpperCenter; sTag.normal.textColor = new Color(1f, 0.85f, 0.6f, 0.85f); } // 1.11.239 (author, 24.10): smaller than the class label, it covered the ship
                 // the reference ship and the enemy list are refreshed twice a second, the positions every frame
                 if (Time.unscaledTime > next)
                 {
                     next = Time.unscaledTime + 0.5f; from = null; enemies = null;
                     var ui = G.ui; Ship sel = ui != null ? ui.selectedShipMain : null;
                     var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return;
-                    // 1.11.238 (author's report 24.10: "6.7 km" under a cruiser 0.4 km away): the remembered reference ship must belong to
-                    //           this battle - after a new battle starts the old ship object still answers, from where it last stood
+                    // 1.11.238: the remembered reference ship must belong to this battle (a ship object of an earlier battle would still answer)
                     if (battle.Pointer != battlePtr) { battlePtr = battle.Pointer; lastOwn = null; }
                     Player me = null;
                     var players = CampaignController.Instance != null && CampaignController.Instance.CampaignData != null ? CampaignController.Instance.CampaignData.Players : null;
