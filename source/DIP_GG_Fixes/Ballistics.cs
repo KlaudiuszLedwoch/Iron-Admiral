@@ -108,23 +108,36 @@ namespace DipGgFixes
                 x = nx; y = ny;
             }
         }
-        struct Real { public bool Ok, Beyond; public float T, Fall; }
+        struct Real { public bool Ok, Beyond; public float T, Fall, Mv; }
         static readonly Dictionary<long, Real> cache = new Dictionary<long, Real>();
-        static Real RealFor(float mv, float calIn, float mass, float cd, float R)
+        // 1.11.224 (author's decision 24.10): the barrels never rise above the mounting of the gun's generation (elevMax), and the range
+        //          is never cut. A target beyond what the shell reaches at that elevation is reached with a higher muzzle velocity -
+        //          the shell leaves faster and flies the mount-elevation arc (real time of flight, real angle of fall of that arc).
+        //          Replaces the stretched 45-deg shot of 1.11.198 and the range cap of 1.11.216 (off by default since 1.11.224).
+        static Real RealFor(float mv, float calIn, float mass, float cd, float R, float elevMax)
         {
-            int mvi = Mathf.RoundToInt(mv / 10f), ci = Mathf.RoundToInt(calIn * 2f), ri = Mathf.RoundToInt(R / 200f), cdi = Mathf.RoundToInt(cd * 100f), mi = Mathf.Clamp(Mathf.RoundToInt(mass), 0, 16383);
-            long key = ((long)mvi << 52) | ((long)ci << 43) | ((long)cdi << 34) | ((long)mi << 20) | (long)ri;
+            int mvi = Mathf.RoundToInt(mv / 10f), ci = Mathf.RoundToInt(calIn * 2f), ri = Mathf.Clamp(Mathf.RoundToInt(R / 200f), 0, 16383), cdi = Mathf.RoundToInt(cd * 100f), mi = Mathf.Clamp(Mathf.RoundToInt(mass), 0, 16383), ei = Mathf.Clamp(Mathf.RoundToInt(elevMax), 1, 63);
+            long key = ((long)mvi << 52) | ((long)ci << 43) | ((long)cdi << 34) | ((long)mi << 20) | ((long)ei << 14) | (long)ri;
             Real r; if (cache.TryGetValue(key, out r)) return r;
-            double mvq = mvi * 10.0, cq = ci / 2.0, Rq = ri * 200.0, cdq = cdi / 100.0, mq = mi, rr, tt, ff;
-            Shoot(mvq, cq, mq, cdq, 45 * Math.PI / 180, out rr, out tt, out ff);
-            // 1.11.198: beyond the physical maximum (the game's range bonuses reach further than the point-mass model at 45 deg):
-            //           the shell flies like the maximum-elevation shot stretched to the range - the time grows with the range and
-            //           the shell still plunges at the 45-deg angle of fall. Before, such shells kept the game's flat arc (24.10
-            //           log: 11 in at 34-36 km - elevation 9.5 deg, fall 13.5 deg, striking speed 779 m/s).
-            if (rr < Rq) { r.Ok = false; r.Beyond = rr > 1000; if (r.Beyond) { r.T = (float)(tt * Rq / rr); r.Fall = (float)ff; } }
+            double mvq = mvi * 10.0, cq = ci / 2.0, Rq = ri * 200.0, cdq = cdi / 100.0, mq = mi, rr, tt, ff, em = ei * Math.PI / 180;
+            r.Mv = (float)mvq;
+            Shoot(mvq, cq, mq, cdq, em, out rr, out tt, out ff);
+            if (rr < Rq)
+            {
+                // more muzzle velocity at the mount elevation until the shell reaches the target (at most 3x)
+                double lo = mvq, hi = mvq * 3;
+                Shoot(hi, cq, mq, cdq, em, out rr, out tt, out ff);
+                if (rr < Rq) { r.Ok = false; r.Beyond = true; r.T = (float)tt; r.Fall = (float)ff; r.Mv = (float)hi; }
+                else
+                {
+                    for (int i = 0; i < 24; i++) { double mid = (lo + hi) / 2; Shoot(mid, cq, mq, cdq, em, out rr, out tt, out ff); if (rr < Rq) lo = mid; else hi = mid; }
+                    Shoot((lo + hi) / 2, cq, mq, cdq, em, out rr, out tt, out ff);
+                    r.Ok = true; r.Beyond = true; r.T = (float)tt; r.Fall = (float)ff; r.Mv = (float)((lo + hi) / 2);
+                }
+            }
             else
             {
-                double lo = 0, hi = 45 * Math.PI / 180;
+                double lo = 0, hi = em;
                 for (int i = 0; i < 28; i++) { double mid = (lo + hi) / 2; Shoot(mvq, cq, mq, cdq, mid, out rr, out tt, out ff); if (rr < Rq) lo = mid; else hi = mid; }
                 Shoot(mvq, cq, mq, cdq, (lo + hi) / 2, out rr, out tt, out ff);
                 r.Ok = true; r.T = (float)tt; r.Fall = (float)ff;
@@ -132,7 +145,6 @@ namespace DipGgFixes
             if (cache.Count > 20000) cache.Clear();
             cache[key] = r; return r;
         }
-
         // ---- the game's trajectory model (measured with probes, 1.11.166): with p0, v0, drag constant k and terminal velocity vInf
         //      p(t) = p0 + vInf t + (v0 - vInf) t / (1 + k t),   v(t) = vInf + (v0 - vInf) / (1 + k t)^2
         //      so a shell at rest accelerates downwards with 2 k |vInf|; the game uses about 3.1 m/s2 there (1/3 of real gravity),
@@ -146,7 +158,7 @@ namespace DipGgFixes
             fall = Math.Atan2(-vyT, vxT);
         }
 
-        internal static void Rebuild(Shell.Arc arc, Vector3 from, Vector3 to, float calIn, Ship ship = null, float mass = 0f)
+        internal static void Rebuild(Shell.Arc arc, Vector3 from, Vector3 to, float calIn, Ship ship = null, float mass = 0f, int grade = 0)
         {
             if (Realistic == null || !Realistic.Value || arc == null || calIn < 0.9f) return;
             try
@@ -154,9 +166,11 @@ namespace DipGgFixes
                 Vector3 rel = to - from; Vector2 hz = new Vector2(rel.x, rel.z); float R = hz.magnitude; if (R < 300f) return;
                 float mv = arc.initialVelocity.magnitude; if (!(mv > 1f)) return;
                 mv = Mathf.Clamp(mv, 300f, 1100f);
-                var real = RealFor(mv, calIn, mass, Cd(ship), R);
-                if (!real.Ok && real.Beyond && real.T > 0.05f) beyond++; // 1.11.198: stretched maximum-elevation shot
-                else if (!real.Ok || real.T <= 0.05f) { skipped++; return; }
+                float elevMax = grade > 0 ? MountElevation.Elev(grade) : 45f;
+                var real = RealFor(mv, calIn, mass, Cd(ship), R, elevMax);
+                if (real.T <= 0.05f) { skipped++; return; }
+                if (real.Beyond) beyond++;                  // 1.11.224: reached with a higher muzzle velocity at the mount elevation
+                if (real.Mv > mv) mv = real.Mv;
                 double T = real.T, want = real.Fall, dy = rel.y; // real seconds; compressed to game time below (1.11.207)
                 // drag constant: the shell leaves the muzzle with (about) its muzzle velocity and arrives at the real time
                 double k = Math.Max(1e-6, (mv * Math.Cos(want * 0.5) * T / R - 1) / T);
@@ -247,7 +261,7 @@ namespace DipGgFixes
                 float cal = 0f; try { var d = from != null ? from.data : null; if (d != null) cal = d.caliber; } catch { }
                 Ship shooter = null; try { shooter = from != null ? from.ship : null; } catch { }
                 b = ScaleMiss(s, from, shooter, a, b, arc.timeToTarget);
-                Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
+                Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f), GradeOf(from)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
                 try { var iv = arc.initialVelocity; float hz0 = new Vector2(iv.x, iv.z).magnitude; if (hz0 > 1f) BarrelElevation.Record(from, Mathf.Atan2(iv.y, hz0) * Mathf.Rad2Deg); } catch { } // 1.11.209
                 if (LogOn == null || !LogOn.Value) return;
                 float t = arc.timeToTarget * WS; if (t <= 0f) return; // logged in real seconds (1.11.206)
@@ -267,7 +281,7 @@ namespace DipGgFixes
         static void Report(string tag)
         {
             if (bins.Count == 0) return;
-            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond the physical maximum (stretched 45-deg shot) {beyond}, outside the model {skipped}, misses re-spread by fire-control technology {scaledMisses} (mean ratio {(scaledMisses > 0 ? ratioSum / scaledMisses : 1):0.00})" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
+            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond the reach of the mount elevation (muzzle velocity raised) {beyond}, outside the model {skipped}, misses re-spread by fire-control technology {scaledMisses} (mean ratio {(scaledMisses > 0 ? ratioSum / scaledMisses : 1):0.00})" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
             foreach (var kv in bins)
             {
                 var b = kv.Value; double n = b.N;
@@ -360,7 +374,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("RangeByMountElevation", true, null, "Battle: a gun's range is limited to what its shell reaches at the elevation of the mountings of its generation (Mk 1 13.5, Mk 2 15, Mk 3 20, Mk 4 30, Mk 5 45 degrees)");
+            On = cat.CreateEntry("RangeByMountElevation", false, null, "Battle: a gun's range is limited to what its shell reaches at the elevation of the mountings of its generation (Mk 1 13.5, Mk 2 15, Mk 3 20, Mk 4 30, Mk 5 45 degrees)");
         }
         internal static readonly float[] ElevByMk = { 13.5f, 15f, 20f, 30f, 45f };
         internal static float Elev(int grade) { return ElevByMk[Math.Max(0, Math.Min(4, grade - 1))]; }

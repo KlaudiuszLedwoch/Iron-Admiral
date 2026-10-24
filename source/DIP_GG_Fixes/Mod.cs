@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.223", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.224", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -294,7 +294,7 @@ namespace DipGgFixes
         internal static HarmonyLib.Harmony Harm; // 1.11.96
         // 1.11.99: one-time setting changes run on the first frame - MelonLoader loads the saved values after OnInitializeMelon,
         // so a change made there was overwritten (1.11.96/1.11.98 migrations had no effect on existing installs)
-        internal static MelonPreferences_Entry<bool> MigSide, MigOccCost, MigEraOff; // the armour diagnostics stay as the player set them
+        internal static MelonPreferences_Entry<bool> MigSide, MigOccCost, MigEraOff, MigRangeCap; // the armour diagnostics stay as the player set them
         static bool migDone;
         // 1.11.208: old setting names (EraAccuracy, EraAccuracyRadar, EraAccuracyScale, EraDispersion) - the values the player had are copied
         static void RenameFireControlPrefs()
@@ -327,6 +327,7 @@ namespace DipGgFixes
                     MigOccCost.Value = true; save = true; MelonLogger.Msg($"[DIP GG Fixes] settings: occupation costs raised once (1.11.195): CoreOccupationCost {CoreOccupationCost?.Value}, OccupationPayShare {Occupation.PayShare?.Value}");
                 }
                 if (MigEraOff != null && !MigEraOff.Value) { RenameFireControlPrefs(); MigEraOff.Value = true; save = true; } // 1.11.208
+                if (MigRangeCap != null && !MigRangeCap.Value) { if (MountElevation.On != null) MountElevation.On.Value = false; MigRangeCap.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: RangeByMountElevation switched off once (1.11.224: the range is never cut - the barrels stay within the mount and the shell leaves faster instead)"); }
                 if (save) MelonPreferences.Save();
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] settings migration: " + e.Message); }
@@ -497,6 +498,7 @@ namespace DipGgFixes
             TorpedoSideCheck = cat.CreateEntry("TorpedoSideCheck", false, null,
                 "Experimental (off): drop a torpedo aim of one side's launchers whose target lies on the other side of the ship; player-set torpedo targets are never touched");
             MigSide = cat.CreateEntry("MigrationTorpedoSideOff199", false, null, "Internal: 1.11.99 switched TorpedoSideCheck off once (it dropped valid torpedo aims)");
+            MigRangeCap = cat.CreateEntry("MigrationRangeCapOff224", false, null, "Internal: 1.11.224 switched the range cap of 1.11.216 off once");
             MigEraOff = cat.CreateEntry("MigrationFireControlNames208", false, null, "Internal: 1.11.208 renamed the EraAccuracy* / EraDispersion settings to FireControlTech* and copied the player's values once");
             MigOccCost = cat.CreateEntry("MigrationOccupationCost195", false, null, "Internal: 1.11.195 raised the occupation costs once (CoreOccupationCost 3 -> 20, OccupationPayShare 4 -> 30)");
             TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
