@@ -20,9 +20,9 @@ Status: ✅ in the beta · 🔧 in work · 📋 planned
 
 How: every shell's arc is rebuilt from a point-mass model with quadratic air drag (air density falling with height, drag rising through the sound barrier), shell mass from calibre, and a drag coefficient by era – blunt 2 crh shells before ~1912, 4 crh shells by 1918, longer shells later. The model is fitted to the 15"/42 Mk I and 12"/45 Mk X range tables. Long-range fire plunges onto decks again and arrives as late as it really did.
 
-## 2. Hit rates by era 🔧 (F10: EraAccuracy, on; EraAccuracyScale)
+## 2. Hit rates by era ✅ (F10: EraAccuracy, on; EraAccuracyScale)
 
-Measured with DIP values: battleships in a 1916 battle at 10–16 km hit with 30–40 % of their 15" shells – about ten times more than in real battles. The hit chance is now scaled by the year of the battle and calibrated in test battles against:
+Measured with DIP values: battleships in a 1916 test battle at 10–16 km hit with 40–70 % of their 15" shells, in a 1940 test battle 70–90 % – ten to twenty times more than in real battles. After the change the 1916 test gives 15" 2–4.5 %, 12" 0–1.3 % (Jutland: 2.7–3.4 %). WWII values are still being calibrated. The hit chance is now scaled by the year of the battle and calibrated in test battles against:
 
 | Battle | Guns | Range | Hits |
 |---|---|---|---|
@@ -61,7 +61,7 @@ Planned (weights change existing designs, so they need a careful switch for runn
 | Armour of secondary mounts | 0.125 | 0.08 | armour 25–40 % of an armoured mount (US 5": 47.9 t at 0.75" vs 77.4 t at 2.5") | 0.15–0.25 |
 | Torpedo tubes | 8 / 16 / 36 | 3.1 / 1.5 / 3.1 | ~4 t per tube (Type 92 quadruple 15–18 t) | quadruple 15–18 t |
 
-## 5. Small and medium guns 📋
+## 5. Small and medium guns ✅ partly (F10: HistoricalGuns, on)
 
 | Calibre | Rate of fire vanilla / DIP / history | Range vanilla / DIP / history |
 |---|---|---|
@@ -70,11 +70,13 @@ Planned (weights change existing designs, so they need a careful switch for runn
 | 6" | 3.6 / 4 / 4 in action | 11.2 / 7.5 / 13.4–14.5 → 19.7–23.6 km |
 | 8" | 2.5 / 2 / 3–4 | 12.95 / 9.1 / ~28 km (WWII) |
 
+Measured in a 1916 test battle (grade 3 guns): 3" 16.3/min, 7.9 km; 4" 11.4/min, 8.1 km; 5" 6.9/min, 9.4 km; 6" 5.2/min, 10.4 km; 12" 1.84/min, 15.4 km; 15" 1.58/min, 19.2 km. Changed so far: 5" rate of fire x1.2 and range x1.45, 6" rate of fire x0.8 and range x1.35, 12" rate of fire x0.85 (sources: navweaps.com gun pages). Other calibres follow after more measurements.
+
 Also planned: small guns (2"–3") in casemates, as on real ships of the 1890s–1910s.
 
-## 6. Dispersion 📋
+## 6. Dispersion ✅ (F10: EraDispersion, on)
 
-DIP narrowed dispersion to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Real salvo patterns: WWI at 11 km – 15" 180 m, 13.5" 270 m, 12" 370 m; USN 1917 14" at 16.5 km ~900 m; US 16"/50 at 19 km ~820 m; Massachusetts 1942: 180–270 m in range. Dispersion will follow era and calibre.
+DIP narrowed dispersion to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Real salvo patterns: WWI at 11 km – 15" 180 m, 13.5" 270 m, 12" 370 m; USN 1917 14" at 16.5 km ~900 m; US 16"/50 at 19 km ~820 m; Massachusetts 1942: 180–270 m in range. Now: the game's own (vanilla) dispersion values, which give WWI-like patterns, scaled by era – x1.3 in 1890, x1.2 in 1905, x1.0 in 1918, x0.8 in 1935, x0.65 in 1945.
 
 ## 7. Optional modes 📋
 
