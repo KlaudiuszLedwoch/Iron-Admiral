@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.229", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.230", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2829,7 +2829,7 @@ namespace DipGgFixes
                             target = total > 0f ? Math.Max(minCrew * 0.5f, Math.Max(0f, crew) + give / total) : minCrew;
                         }
                         ship.CrewPercents = target;
-                        if (give > 0) { try { winner.crewPool = pool - give; } catch { } }
+                        if (give > 0) { try { winner.crewPool = (int)(pool - give); } catch { } }
                         MelonLogger.Msg($"[DIP GG Fixes][Capture] prize crew for {ship.name}: {give} men from {winner.data.name}'s crew pool ({pool:0} available, {need} needed to reach {minCrew:P0}); crew now {target:P0}");
                     }
                 }
