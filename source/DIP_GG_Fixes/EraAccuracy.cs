@@ -33,6 +33,21 @@ namespace DipGgFixes
         internal static float RadarFactor(Ship s) { if (On == null || !On.Value || Radar == null) return 1f; return GunLab.HasRadar(s) ? Math.Max(1f, Radar.Value) : 1f; }
         // 1.11.180: indexed by the historical year of the fire-control technology fitted to the shooting ship (rangefinder or radar),
         // never by the calendar year; no fire-control component = earliest row.
+        // distance (m) from the ship to the target its gun of this kind is aimed at; 0 = unknown
+        internal static float TargetRange(Ship s, PartData pd)
+        {
+            try
+            {
+                if (s == null || pd == null) return 0f;
+                Ship.Aim a = null;
+                var en = s.enemies; if (en != null && en.ContainsKey(pd)) a = en[pd];
+                if (a == null || a.target == null) { var en2 = s.enemiesLeftSide; if (en2 != null && en2.ContainsKey(pd)) a = en2[pd]; }
+                var t = a != null ? a.target : null; if (t == null) return 0f;
+                var p1 = s.transform.position; var p2 = t.transform.position; p1.y = 0f; p2.y = 0f;
+                return (p1 - p2).magnitude;
+            }
+            catch { return 0f; }
+        }
         internal static float Factor(Ship s)
         {
             if (On == null || !On.Value) return 1f;
@@ -129,6 +144,25 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(GunData), "HitChanceMult")]
     internal static class Patch_HitChanceMult_Era
     {
-        static void Postfix(Ship __0, ref float __result) { try { if (GameManager.IsBattle) __result *= EraAccuracy.Factor(__0) * EraAccuracy.RadarFactor(__0); } catch { } }
+        static void Postfix(Ship __0, PartData __1, ref float __result)
+        {
+            try
+            {
+                if (!GameManager.IsBattle) return;
+                float f = EraAccuracy.Factor(__0) * EraAccuracy.RadarFactor(__0);
+                // 1.11.206: the era factor was calibrated at 10-20 km and applied in full at every range - at 2-8 km it cut the game's hit
+                //           chance to a few percent (24.10 battle: 10 in at 4-6 km 0 of 22, 5 in at 4-6 km 0-9%), while real actions at
+                //           such ranges hit far more often (Tsushima 6 km ~9%, night actions at 1-3 km 10-20%). The factor now grows
+                //           towards 1 as the range shortens: full at 12 km and beyond, a fraction of it (geometric) closer in.
+                float d = EraAccuracy.TargetRange(__0, __1);
+                if (d > 0f && d < 12000f && f < 1f)
+                {
+                    float t = UnityEngine.Mathf.Clamp((d - 2000f) / 10000f, 0.35f, 1f);
+                    f = (float)Math.Pow(f, t);
+                }
+                __result *= f;
+            }
+            catch { }
+        }
     }
 }

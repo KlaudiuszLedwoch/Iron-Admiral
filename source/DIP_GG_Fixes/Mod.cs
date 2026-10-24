@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.205", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.206", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -287,7 +287,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -579,6 +579,7 @@ namespace DipGgFixes
             ContinuousMap.CreatePrefs(cat);
             ShipGenMemory.CreatePrefs(cat); // 1.11.99
             ShipGenSpeed.CreatePrefs(cat); // 1.11.196
+            RangeTags.CreatePrefs(cat); // 1.11.206
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
@@ -2367,7 +2368,8 @@ namespace DipGgFixes
                 // 1.11.99: self-defence - a small ship closing in (a torpedo attack on us) may be met with torpedoes inside 60% of
                 // their range; only small targets that are far or not closing are not worth a torpedo
                 bool closing = UnityEngine.Vector3.Dot(V, P) < -0.5f * P.magnitude; // closing at more than 0.5 m/s
-                if (!(closing && range > 0f && d <= 0.6f * range)) { why = $"{t.name} is a small target at {d:0} m{(closing ? "" : ", not closing")}"; return true; }
+                bool pointBlank = d <= 2500f && BattleAi.Ton(t) >= 1000f; // 1.11.206: anything alongside is worth a torpedo (24.10: a cruiser held its torpedoes with an enemy light cruiser 1.5 km away)
+                if (!pointBlank && !(closing && range > 0f && d <= 0.6f * range)) { why = $"{t.name} is a small target at {d:0} m{(closing ? "" : ", not closing")}"; return true; }
             }
             // 1.11.98: the measured velocity is capped at the target's top speed (22.10: "outruns the torpedo" for a 21-knot cruiser at 1.5 km)
             float vmax = BattleAi.Speed(t) * 1.15f;

@@ -25,7 +25,8 @@ namespace DipGgFixes
 {
     internal static class Ballistics
     {
-        internal static MelonPreferences_Entry<bool> LogOn, Realistic;
+        internal static MelonPreferences_Entry<bool> LogOn, Realistic; internal static MelonPreferences_Entry<float> WorldSpeed;
+        internal static float WS { get { float w = WorldSpeed != null ? WorldSpeed.Value : 3.2f; return w < 1f ? 1f : w; } }
         class Bin { public int N, Hit; public double T, Fall, Elev, V0, Vs; }
         static readonly SortedDictionary<string, Bin> bins = new SortedDictionary<string, Bin>();
         static float nextReport; static bool inBattle; static int errors, rebuilt, skipped, beyond, samples, probes, odd;
@@ -34,6 +35,11 @@ namespace DipGgFixes
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             LogOn = cat.CreateEntry("BallisticsLog", true, null, "Battle: write the shells' time of flight, elevation and angle of fall per calibre and range to the log (for checking the ballistics against real range tables)");
+            // 1.11.206 (author, 24.10): the battle world is time-compressed - ships move about 3.2x their nominal speed per game second
+            //           (velocity checks: 52.7 m/s for a 32-knot cruiser, 32.3 m/s for a 24-knot torpedo boat) and the game's own shells fly
+            //           3.2x faster too. Real times of flight in game seconds left the shells behind the ships ("I outrun my own shells").
+            //           The physical time of flight is divided by this factor; angles, elevation and striking speed stay real.
+            WorldSpeed = cat.CreateEntry("BattleWorldSpeedFactor", 3.2f, null, "Battle: how many times faster than its nominal speed a ship moves per game second (the game's own time compression, measured 3.2); shell times of flight are compressed by the same factor so that shells and ships share one clock");
             Realistic = cat.CreateEntry("RealisticBallistics", true, null, "Battle: physical ballistics - shells fly with the real time of flight and angle of fall of their calibre, muzzle velocity and era (plunging fire at long range), instead of the almost flat paths of the game");
         }
 
@@ -144,7 +150,7 @@ namespace DipGgFixes
                 var real = RealFor(mv, calIn, mass, Cd(ship), R);
                 if (!real.Ok && real.Beyond && real.T > 0.05f) beyond++; // 1.11.198: stretched maximum-elevation shot
                 else if (!real.Ok || real.T <= 0.05f) { skipped++; return; }
-                double T = real.T, want = real.Fall, dy = rel.y;
+                double T = real.T / WS, want = real.Fall, dy = rel.y; // game seconds (1.11.206)
                 // drag constant: the shell leaves the muzzle with (about) its muzzle velocity and arrives at the real time
                 double k = Math.Max(1e-6, (mv * Math.Cos(want * 0.5) * T / R - 1) / T);
                 // gravity of the arc: 9.81 m/s2, raised where needed so that the shell also falls at the real angle
@@ -232,7 +238,7 @@ namespace DipGgFixes
                 b = ScaleMiss(s, from, shooter, a, b, arc.timeToTarget);
                 Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
                 if (LogOn == null || !LogOn.Value) return;
-                float t = arc.timeToTarget; if (t <= 0f) return;
+                float t = arc.timeToTarget * WS; if (t <= 0f) return; // logged in real seconds (1.11.206)
                 float range = new Vector2(b.x - a.x, b.z - a.z).magnitude; if (range < 500f) return;
                 Vector3 v0 = arc.initialVelocity; float h0 = new Vector2(v0.x, v0.z).magnitude;
                 Vector3 v1 = v0; try { var tr = arc.trajectory; if (tr != null) v1 = tr.VelocityAtTime(t); } catch { }
@@ -241,7 +247,7 @@ namespace DipGgFixes
                 if (cal < 100f) return; // main and heavy secondary guns only
                 bool rad = false; try { rad = from != null && GunLab.HasRadar(from.ship); } catch { } int mk = GradeOf(from); string key = $"{cal / 25.4f,5:0.0} in Mk{mk} | {(rad ? "R" : "-")} | {Mathf.Floor(range / 2000f) * 2,2:0}-{Mathf.Floor(range / 2000f) * 2 + 2,2:0} km";
                 if (!bins.TryGetValue(key, out var bin)) { bin = new Bin(); bins[key] = bin; }
-                bin.N++; try { if (s.willHitTarget) bin.Hit++; } catch { } bin.T += t; bin.Fall += fall; bin.Elev += elev; bin.V0 += v0.magnitude; bin.Vs += v1.magnitude;
+                bin.N++; try { if (s.willHitTarget) bin.Hit++; } catch { } bin.T += t; bin.Fall += fall; bin.Elev += elev; bin.V0 += v0.magnitude / WS; bin.Vs += v1.magnitude / WS; // real m/s (1.11.206)
             }
             catch (Exception e) { if (errors++ < 5) Log("measure: " + e.Message); }
         }
