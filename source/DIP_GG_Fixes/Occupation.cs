@@ -40,7 +40,7 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("OccupationEvents", true, null, "Campaign: holding another great power's core provinces in peacetime brings an event every turn (pay for garrisons, grant autonomy or rule with a hard hand) and worsens relations every month");
             RelMonthly = cat.CreateEntry("OccupationRelations", 1.0f, null, "Attitude lost every month per occupied core province with its own nation (its allies and the province's neighbours: half, other great powers: a fifth)");
-            PayShare = cat.CreateEntry("OccupationPayShare", 4f, null, "Paying for garrisons and administration costs this % of monthly income per occupied core province (x the strength of the occupied nation)");
+            PayShare = cat.CreateEntry("OccupationPayShare", 30f, null, "Paying for garrisons and administration costs this % of monthly income per occupied core province (x the strength of the occupied nation)");
             HardUnrest = cat.CreateEntry("OccupationHardUnrest", 1.5f, null, "Ruling with a hard hand adds this much unrest at home per occupied core province (x the strength of the occupied nation)");
             HardRevolt = cat.CreateEntry("OccupationHardRevolt", 0.5f, null, "Ruling with a hard hand makes risings in the occupied provinces stronger by this share for three months");
             Relief = cat.CreateEntry("OccupationAutonomyRelief", 1.0f, null, "Unrest at home lowered when autonomy is granted to an occupied province");

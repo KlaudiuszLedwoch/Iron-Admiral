@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.194", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.195", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -294,7 +294,7 @@ namespace DipGgFixes
         internal static HarmonyLib.Harmony Harm; // 1.11.96
         // 1.11.99: one-time setting changes run on the first frame - MelonLoader loads the saved values after OnInitializeMelon,
         // so a change made there was overwritten (1.11.96/1.11.98 migrations had no effect on existing installs)
-        internal static MelonPreferences_Entry<bool> MigSide; // the armour diagnostics stay as the player set them
+        internal static MelonPreferences_Entry<bool> MigSide, MigOccCost; // the armour diagnostics stay as the player set them
         static bool migDone;
         static void Migrations()
         {
@@ -302,6 +302,13 @@ namespace DipGgFixes
             {
                 bool save = false;
                 if (MigSide != null && !MigSide.Value) { TorpedoSideCheck.Value = false; MigSide.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: TorpedoSideCheck switched off once (1.11.99)"); }
+                // 1.11.195 (author, 24.10): the money side of occupation was 5-10 times too cheap - old defaults raised once (values the player changed stay)
+                if (MigOccCost != null && !MigOccCost.Value)
+                {
+                    if (CoreOccupationCost != null && Math.Abs(CoreOccupationCost.Value - 3f) < 0.01f) CoreOccupationCost.Value = 20f;
+                    if (Occupation.PayShare != null && Math.Abs(Occupation.PayShare.Value - 4f) < 0.01f) Occupation.PayShare.Value = 30f;
+                    MigOccCost.Value = true; save = true; MelonLogger.Msg($"[DIP GG Fixes] settings: occupation costs raised once (1.11.195): CoreOccupationCost {CoreOccupationCost?.Value}, OccupationPayShare {Occupation.PayShare?.Value}");
+                }
                 if (save) MelonPreferences.Save();
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] settings migration: " + e.Message); }
@@ -472,6 +479,7 @@ namespace DipGgFixes
             TorpedoSideCheck = cat.CreateEntry("TorpedoSideCheck", false, null,
                 "Experimental (off): drop a torpedo aim of one side's launchers whose target lies on the other side of the ship; player-set torpedo targets are never touched");
             MigSide = cat.CreateEntry("MigrationTorpedoSideOff199", false, null, "Internal: 1.11.99 switched TorpedoSideCheck off once (it dropped valid torpedo aims)");
+            MigOccCost = cat.CreateEntry("MigrationOccupationCost195", false, null, "Internal: 1.11.195 raised the occupation costs once (CoreOccupationCost 3 -> 20, OccupationPayShare 4 -> 30)");
             TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
                 "Apply the same torpedo check to the player's ships under automatic torpedo fire");
             TorpedoSenseClose = cat.CreateEntry("TorpedoSenseCloseRange", 1500f, null,
@@ -533,7 +541,7 @@ namespace DipGgFixes
             CoreSuppressCalmMonths = cat.CreateEntry("CoreSuppressCalmMonths", 12f, null, "Months a province stays calm after a rising was put down (game's revolt cooldown)");
             CoreSuppressEscalation = cat.CreateEntry("CoreSuppressEscalation", 0.5f, null, "Every rising already put down in a province makes the next one dearer and angrier by this share (cost and unrest x1+0.5 per earlier rising); the calm that follows gets shorter (12 months, then 6, 4, 3)");
             CoreOccupationUnrest = cat.CreateEntry("CoreOccupationUnrest", 0.5f, null, "Unrest added each month at home for every occupied foreign core province in peacetime (x the strength of the occupied nation, more after risings put down)");
-            CoreOccupationCost = cat.CreateEntry("CoreOccupationCost", 3f, null, "Garrison cost each month for every occupied foreign core province in peacetime, % of monthly income (x the strength of the occupied nation, more after risings put down)");
+            CoreOccupationCost = cat.CreateEntry("CoreOccupationCost", 20f, null, "Garrison cost each month for every occupied foreign core province in peacetime, % of monthly income (x the strength of the occupied nation, more after risings put down)");
             CoreRevoltRampMonths = cat.CreateEntry("CoreRevoltRampMonths", 12f, null,
                 "Months of peace over which the extra revolt chance builds up to its full value");
             SurrenderReturnToWinner = cat.CreateEntry("SurrenderedShipsToBattleWinner", true, null,
