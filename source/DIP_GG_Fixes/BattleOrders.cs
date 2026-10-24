@@ -28,12 +28,13 @@ namespace DipGgFixes
         static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action" };
 
         internal static MelonPreferences_Entry<bool> OrdersOn, OrdersVanilla;
-        internal static MelonPreferences_Entry<float> Leash, BreakOff;
+        internal static MelonPreferences_Entry<float> Leash, BreakOff, ScoutSearch;
         internal static void CreateOrderPrefs(MelonPreferences_Category cat)
         {
             OrdersOn = cat.CreateEntry("DivisionOrders", true, null, "Battle: orders for the player's divisions with autonomy (screen, scout, torpedo attack, free action) - the division is led by the AI within the limits of the order; panel in battle or Alt+1..Alt+5");
             OrdersVanilla = cat.CreateEntry("DivisionOrdersVanilla", true, null, "Battle: the game's own Screen and Scout orders also give the division autonomy");
             Leash = cat.CreateEntry("DivisionLeash", 6000f, null, "Battle: how far (m) a screening division may move away from the main body (scouts: 2.5 times as far)");
+            ScoutSearch = cat.CreateEntry("ScoutSearchKm", 20f, null, "Battle: how far (km) ahead of the main body a scouting division ranges while searching for the enemy (sweeping left and right of the expected bearing)"); // 1.11.201
             BreakOff = cat.CreateEntry("DivisionBreakOffDamage", 0.5f, null, "Battle: average damage (0-1) at which a screening or scouting division breaks off and falls back behind the main body");
         }
 
@@ -144,13 +145,15 @@ namespace DipGgFixes
                 bool vis = false; try { vis = e.IsVisibleFor(leader) || (main != null && e.IsVisibleFor(main)); } catch { }
                 if (!vis) continue;
                 var ep = P(e); sum += ep; n++;
+                bool unarmed = false; try { var stn = e.shipType != null ? e.shipType.name : ""; unarmed = stn == "tr" || stn == "amc" || GunRange(e) <= 0f; } catch { }
+                if (unarmed) continue; // 1.11.201: transports are reported, not shadowed (24.10: the scout sat 12 km from a convoy "at the edge of his gun range")
                 if (IsLight(e)) { float d = (ep - home).magnitude; if (d < dl) { dl = d; nearLight = e; } }
                 else { float d = (ep - me).magnitude; if (d < dh) { dh = d; nearHeavy = e; } }
             }
             if (n > 0) { o.LastSeen = sum / n; o.Seen = true; }
             Vector3 toEnemy = o.Seen ? (o.LastSeen - home) : (main != null ? main.transform.forward : leader.transform.forward);
             toEnemy.y = 0f; if (toEnemy.sqrMagnitude < 1f) toEnemy = leader.transform.forward; toEnemy.Normalize();
-            float leash = Leash.Value * (o.Order == DivOrder.Scout ? 2.5f : 1f);
+            float leash = o.Order == DivOrder.Scout ? Mathf.Max(Leash.Value * 2.5f, ScoutSearch.Value * 1000f + 3000f) : Leash.Value; // 1.11.201: the scout leash covers the search distance
             float dmg = DivDamage(div);
 
             // badly damaged - fall back behind the main body
@@ -195,9 +198,14 @@ namespace DipGgFixes
                 return true;
             }
             if (o.FromVanilla && !o.Issued && !o.Seen) { OWhy(o, "searching (game's scout position)"); return true; }
-            var ahead = home + toEnemy * Mathf.Min(leash * 0.8f, 12000f);
-            if ((me - ahead).magnitude > 1000f) Cmd(div, o, ahead);
-            OWhy(o, o.Seen ? "searching towards the last known enemy position" : "searching ahead of the main body"); return true;
+            // 1.11.201: the scout ranges out - up to the scout leash ahead of the main body (ScoutSearchKm), sweeping left and right of the
+            //           expected enemy bearing in turns of a few minutes (24.10: the scout stayed a few km from the flagship)
+            float reach = Mathf.Min(leash * 0.9f, ScoutSearch.Value * 1000f);
+            int legIdx = (int)(Time.time / 180f); float sweep = (legIdx % 3 == 1 ? 1f : legIdx % 3 == 2 ? -1f : 0f) * 35f * Mathf.Deg2Rad;
+            Vector3 dirS = new Vector3(toEnemy.x * Mathf.Cos(sweep) - toEnemy.z * Mathf.Sin(sweep), 0f, toEnemy.x * Mathf.Sin(sweep) + toEnemy.z * Mathf.Cos(sweep));
+            var ahead = home + dirS * reach;
+            if ((me - ahead).magnitude > 1500f) Cmd(div, o, ahead);
+            OWhy(o, (o.Seen ? "searching towards the last known enemy position" : "searching ahead of the main body") + (sweep != 0f ? (sweep > 0f ? " - sweeping to port" : " - sweeping to starboard") : "")); return true;
         }
 
         // ---- panel and keys ----
