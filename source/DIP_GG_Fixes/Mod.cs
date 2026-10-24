@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.195", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.196", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -578,6 +578,7 @@ namespace DipGgFixes
             Obliquity.CreatePrefs(cat);
             ContinuousMap.CreatePrefs(cat);
             ShipGenMemory.CreatePrefs(cat); // 1.11.99
+            ShipGenSpeed.CreatePrefs(cat); // 1.11.196
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
@@ -3713,8 +3714,11 @@ namespace DipGgFixes
     internal static class Patch_GenerateRandomDesigns
     {
         private static readonly Dictionary<string, string> last = new Dictionary<string, string>();
+        private static void Postfix() { ShipGenSpeed.Active = false; } // 1.11.196
         private static bool Prefix(CampaignController._GenerateRandomDesigns_d__202 __instance, ref bool __result)
         {
+            // 1.11.196: newest-hulls filter active while the AI chooses hulls and generates its designs
+            try { var pa = __instance != null ? __instance.player : null; if (pa != null && pa.isAi && !__instance.prewarming) { ShipGenSpeed.Active = true; ShipGenSpeed.ActivePlayer = pa.Pointer; } } catch { }
             try
             {
                 var on = DipGgFixesMod.AiDesignOnlyWhenBuildable; if (on == null || !on.Value || __instance == null) return true;

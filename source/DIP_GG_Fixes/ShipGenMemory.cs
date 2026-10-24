@@ -88,9 +88,11 @@ namespace DipGgFixes
                     }
                 }
             }
+            try { ShipGenSpeed.Attempt(it, ship, key, running); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] early stop: " + e.Message); } // 1.11.196
             if (running) return;
             // the coroutine has finished: same success rule as the TweaksAndFixes report (attempts used up = failure)
             bool success = it._tryN_5__5 != it._triesTotal_5__4;
+            if (success) { try { ShipGenSpeed.Share(ship, key); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] keep: " + e.Message); } } // 1.11.196
             float secs = started.TryGetValue(p, out var t0) ? UnityEngine.Time.realtimeSinceStartup - t0 : 0f;
             int m = MonthIndex();
             if (success) { succ++; if (failed.Remove(key)) SaveFile(); }
@@ -106,9 +108,12 @@ namespace DipGgFixes
         private static void Prefix(Ship._GenerateRandomShip_d__573 __instance, out int __state)
         {
             __state = -99; try { __state = __instance.__1__state; } catch { }
+            // 1.11.196: newest-hulls filter active while the generator runs for an AI nation
+            try { var s = __instance.__4__this; var p = s != null ? s.player : null; if (p != null && p.isAi && GameManager.IsCampaign) { ShipGenSpeed.Active = true; ShipGenSpeed.ActivePlayer = p.Pointer; } } catch { }
         }
         private static void Postfix(Ship._GenerateRandomShip_d__573 __instance, int __state, bool __result)
         {
+            ShipGenSpeed.Active = false;
             try { ShipGenMemory.After(__instance, __state, __result); }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] memory: " + e.Message); }
         }
