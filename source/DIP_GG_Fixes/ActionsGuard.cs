@@ -28,4 +28,25 @@ namespace DipGgFixes
             return null;
         }
     }
+
+    // 1.11.188: second turn guard. CampaignController.AreaRequiredTonnage threw a NullReferenceException inside its own lambda over
+    // the nations (24.10, the author's campaign ~1920: the turn stopped in the "move" phase - the exception ended the MoveVessels
+    // coroutine). The required tonnage of that area is taken as 0 for this call and the fleet movement goes on.
+    [HarmonyPatch]
+    internal static class Patch_AreaRequiredTonnage_Guard
+    {
+        static int logged;
+        static System.Collections.Generic.IEnumerable<MethodBase> TargetMethods()
+        {
+            foreach (var n in new[] { "AreaRequiredTonnage", "AreaRequiredTonnageForSubmarines" })
+            { var m = AccessTools.Method(typeof(CampaignController), n); if (m != null) yield return m; }
+        }
+        static Exception Finalizer(Exception __exception, ref float __result, MethodBase __originalMethod)
+        {
+            if (__exception == null) return null;
+            __result = 0f;
+            if (logged++ < 20) MelonLogger.Warning($"[DIP GG Fixes][Turn] {__originalMethod?.Name} failed ({__exception.GetType().Name}: {__exception.Message}) - required tonnage 0 for this area, the fleet movement goes on");
+            return null;
+        }
+    }
 }
