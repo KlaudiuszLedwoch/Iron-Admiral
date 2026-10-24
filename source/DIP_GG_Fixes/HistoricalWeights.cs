@@ -17,11 +17,38 @@ namespace DipGgFixes
 {
     internal static class HistoricalWeights
     {
-        internal static MelonPreferences_Entry<bool> On;
+        internal static MelonPreferences_Entry<bool> On, Casemates;
+        internal static MelonPreferences_Entry<float> MinCrew;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("HistoricalWeights", true, null, "Ship design: historical weights - battleship machinery heavier and cruiser machinery lighter, fuel for range as on real ships, heavier armoured secondary mounts (applies to existing designs too)");
+            // 1.11.200: casemate mounts by gun technology. Sources (navweaps mount weights): a casemate mount of the same period and calibre
+            //           weighs about a third to a quarter of a turret per gun (15 cm SK L/45 in a C/06 casemate 16-18 t vs 55-58 t per gun in
+            //           Bismarck's twin turrets; US 5"/51 casemate 10-12 t vs 35-39 t per gun in the 5"/38 twin); against a fully armoured
+            //           WWII dual-purpose turret the gap reaches 1:7. DIP uses one flat factor 0.5 of the turret base weight.
+            Casemates = cat.CreateEntry("HistoricalCasemates", true, null, "Ship design: casemate mounts weigh a third to a quarter of a turret per gun, the ratio following the gun technology (Mk) of the ship instead of a flat half (applies to existing designs too)");
+            MinCrew = cat.CreateEntry("MinCrewToSail", 0.35f, null, "Campaign: minimum crew (share of complement) for a ship to put to sea; a passage from port to port needs far fewer men than fighting (the game: 0.7). 0 = the game's value");
         }
+        // casemate mount factor of the turret base weight by gun generation Mk 1..5 (the turret of the period grows heavier and better armoured)
+        static readonly float[] CasemateByMk = { 0.40f, 0.35f, 0.30f, 0.25f, 0.20f };
+        static float casemateOrig = -1f; static ParamData casemateParam; static int casemateLogged;
+        internal static bool IsCasemate(PartData d) { try { return d != null && d.name != null && d.name.StartsWith("casemate"); } catch { return false; } }
+        // Ship.PartWeight(Part): the game's casemate factor is set for this part by the ship's gun technology and put back afterwards
+        internal static void CasemateBefore(Ship ship, Part part)
+        {
+            if (Casemates == null || !Casemates.Value || ship == null || part == null || !IsCasemate(part.data)) return;
+            try
+            {
+                if (casemateParam == null) { var gd = G.GameData; if (gd == null || gd.paramsRaw == null || !gd.paramsRaw.TryGetValue("w_turret_casemate_mod", out casemateParam)) return; }
+                if (casemateOrig < 0f) casemateOrig = casemateParam.value;
+                int g = 1; try { g = ship.TechGunGrade(part.data, false); } catch { }
+                g = Math.Max(1, Math.Min(5, g));
+                casemateParam.value = CasemateByMk[g - 1];
+                if (casemateLogged++ < 6) Log($"casemate {part.data.name} ({part.data.caliber:0} mm) on {ship.name}: Mk {g} - mount factor {casemateOrig:0.00} -> {CasemateByMk[g - 1]:0.00} of the turret weight");
+            }
+            catch { }
+        }
+        internal static void CasemateAfter() { try { if (casemateParam != null && casemateOrig >= 0f) casemateParam.value = casemateOrig; } catch { } }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Weights] " + m); }
         static readonly Dictionary<string, float> origP = new Dictionary<string, float>();
         static readonly Dictionary<string, float> origE = new Dictionary<string, float>();
@@ -67,6 +94,27 @@ namespace DipGgFixes
                 }
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
+            try { MinCrewTick(); } catch (Exception e) { if (errors++ < 5) Log("min crew: " + e.Message); }
         }
+        // 1.11.200: minimum crew to put to sea (min_crew_threshold)
+        static float minCrewOrig = -1f, minCrewApplied = -1f; static IntPtr minCrewGd;
+        static void MinCrewTick()
+        {
+            var gd = G.GameData; if (gd == null || gd.paramsRaw == null || MinCrew == null) return;
+            ParamData p; if (!gd.paramsRaw.TryGetValue("min_crew_threshold", out p) || p == null) return;
+            if (minCrewOrig < 0f || gd.Pointer != minCrewGd) { minCrewOrig = p.value; minCrewGd = gd.Pointer; minCrewApplied = -1f; }
+            float want = MinCrew.Value > 0f ? UnityEngine.Mathf.Clamp(MinCrew.Value, 0.1f, 0.9f) : minCrewOrig;
+            if (Math.Abs(want - minCrewApplied) < 0.001f) return;
+            p.value = want; minCrewApplied = want;
+            Log($"minimum crew to put to sea: {minCrewOrig:0.00} -> {want:0.00}");
+        }
+    }
+
+    // 1.11.200: casemate mount weight by the ship's gun technology (HistoricalWeights.CasemateBefore/After)
+    [HarmonyLib.HarmonyPatch(typeof(Ship), "PartWeight", new Type[] { typeof(Part) })]
+    internal static class Patch_PartWeight_Casemate
+    {
+        private static void Prefix(Ship __instance, Part __0) { try { HistoricalWeights.CasemateBefore(__instance, __0); } catch { } }
+        private static void Postfix() { HistoricalWeights.CasemateAfter(); }
     }
 }
