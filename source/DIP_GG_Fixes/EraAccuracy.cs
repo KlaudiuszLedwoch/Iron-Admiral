@@ -19,11 +19,18 @@ namespace DipGgFixes
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("EraAccuracy", true, null, "Battle: hit chance follows the era, calibrated to the hit rates of real battles (pre-dreadnought fights, Jutland, WWII) - much lower than DIP at long range");
+            Radar = cat.CreateEntry("EraAccuracyRadar", 3.0f, null, "Battle (hit chance by era): multiplier of the hit chance for ships with fire-control radar (historically radar gave 3-5x more hits than optical fire control)");
             Scale = cat.CreateEntry("EraAccuracyScale", 1.0f, null, "Battle (hit chance by era): multiplier of the whole table (1 = historical, higher = more hits)");
         }
         // year -> multiplier of the game's hit chance (calibrated in auto tests, see the log lines "[Ballistics] ... hits")
         static readonly int[] Years = { 1890, 1905, 1916, 1930, 1945 };
         static readonly float[] Mult = { 0.35f, 0.30f, 0.10f, 0.05f, 0.03f }; // 1.11.171: 1940 test with 0.14 still gave 16" 44-61% at 8-14 km (the game hit chance saturates), so WWII is scaled harder
+        // 1.11.175: fire-control radar. Radar A/B tests (AutoTestLab, 1916, radar fitted to every second ship): the game's own radar
+        // component changed hit rates very little (14+ km: 2.4% with radar vs 2.8% without). Historically radar fire control gave
+        // 3-5x more hits than optical (Washington, Guadalcanal 1942: 11-27%; Duke of York, North Cape 1943; optical WWII 2-5%).
+        // Ships with fire-control radar get EraAccuracyRadar x the hit chance (independent of the year).
+        internal static MelonPreferences_Entry<float> Radar;
+        internal static float RadarFactor(Ship s) { if (On == null || !On.Value || Radar == null) return 1f; return GunLab.HasRadar(s) ? Math.Max(1f, Radar.Value) : 1f; }
         internal static float Factor()
         {
             if (On == null || !On.Value) return 1f;
@@ -91,6 +98,6 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(GunData), "HitChanceMult")]
     internal static class Patch_HitChanceMult_Era
     {
-        static void Postfix(ref float __result) { try { if (GameManager.IsBattle) __result *= EraAccuracy.Factor(); } catch { } }
+        static void Postfix(Ship __0, ref float __result) { try { if (GameManager.IsBattle) __result *= EraAccuracy.Factor() * EraAccuracy.RadarFactor(__0); } catch { } }
     }
 }
