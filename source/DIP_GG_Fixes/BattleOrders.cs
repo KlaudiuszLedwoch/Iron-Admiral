@@ -135,7 +135,20 @@ namespace DipGgFixes
             bool evading = false; Issuing = true; try { evading = TorpedoEvasion.Check(leader, div, es, player, battle, enemies); } finally { Issuing = false; }
             if (evading) { o.Issued = true; o.LastCmd = Time.time; OWhy(o, "turning away from torpedoes"); return true; }
 
-            if (o.Order == DivOrder.Free) { Issuing = true; try { Think(leader, true, true); } finally { Issuing = false; } return true; }
+            if (o.Order == DivOrder.Free)
+            {
+                // 1.11.220 (author, 24.10): the mod's AI logic (torpedo charges, retreats) first; when it only "waits" (no capital target
+                //           within the charge distance - 24.10: two CLs with 178 mm guns sat still under Free action), the division fights
+                //           on its own: it engages the nearest enemy warship it can face on gun terms, else hunts what cannot hurt it
+                Issuing = true; try { Think(leader, true, true); } finally { Issuing = false; }
+                DivState ts; bool busy = States.TryGetValue(div.Pointer, out ts) && (ts.charging || ts.closing || ts.fighting);
+                string why = ts != null ? ts.reason : null;
+                if (busy || (why != null && why != "waiting" && !why.StartsWith("nearest capital") && !why.StartsWith("not a scout"))) { OWhy(o, why ?? "free action"); return true; }
+                var mainF = MainBody(player, div, battle); Vector3 meF = P(leader); Vector3 homeF = mainF != null ? P(mainF) : meF;
+                Vector3 toF = o.Seen ? (o.LastSeen - homeF) : leader.transform.forward; toF.y = 0f; if (toF.sqrMagnitude < 1f) toF = leader.transform.forward; toF.Normalize();
+                if (!Engage(div, o, leader, enemies, mainF, meF, toF)) Hunt(div, o, leader, enemies, mainF, meF, homeF, toF);
+                return true;
+            }
             if (o.Order == DivOrder.Torpedo)
             {
                 if (!leader.haveTorpedoes || !HasTorpedoAmmo(leader)) { OWhy(o, "no torpedoes - free action instead"); Issuing = true; try { Think(leader, true, true); } finally { Issuing = false; } return true; }
@@ -225,6 +238,41 @@ namespace DipGgFixes
             var ahead = home + dirS * reach;
             if ((me - ahead).magnitude > 1500f) Cmd(div, o, ahead);
             OWhy(o, (o.Seen ? "searching towards the last known enemy position" : "searching ahead of the main body") + (sweep != 0f ? (sweep > 0f ? " - sweeping to port" : " - sweeping to starboard") : "")); return true;
+        }
+
+        // ---- 1.11.220 (author, 24.10): Free action - a gun fight the division can take: the nearest visible enemy warship whose main
+        //      calibre is not above 1.25 x ours (a light division never picks a capital ship); it closes to 0.7 x its own gun range on the
+        //      side away from the enemy main body and fights there, keeping outside the torpedo reach of torpedo craft. Returns false
+        //      when there is no such target (the caller falls back to Hunt). ----
+        static bool Engage(Division div, OrderSt o, Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, Ship main, Vector3 me, Vector3 toEnemy)
+        {
+            float myCal = MainCaliber(leader), myR = GunRange(leader); if (myR <= 0f) return false;
+            bool light = IsLight(leader);
+            Ship target = null; float best = float.MaxValue; var torpCraft = new List<Ship>();
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i];
+                if (e == null || e.isSinking || e.isDead || e.IsSurrendered) continue;
+                bool vis = false; try { vis = e.IsVisibleFor(leader) || (main != null && e.IsVisibleFor(main)); } catch { }
+                if (!vis) continue;
+                bool tr = false; try { var stn = e.shipType != null ? e.shipType.name : ""; tr = stn == "tr" || stn == "amc"; } catch { }
+                if (tr || GunRange(e) <= 0f) continue;                       // unarmed: Hunt's business
+                try { if (IsLight(e) && e.haveTorpedoes && HasTorpedoAmmo(e)) torpCraft.Add(e); } catch { }
+                if (light && IsCapital(e)) continue;                           // a light division does not pick a gun fight with a capital ship
+                float ec = MainCaliber(e); if (ec > myCal * 1.25f) continue;  // outgunned
+                float d = (P(e) - me).magnitude; float dmg = 0f; try { dmg = e.DamageEstimation(); } catch { }
+                float score = d * (1f - 0.4f * Mathf.Clamp01(dmg));            // damaged ships first
+                if (score < best) { best = score; target = e; }
+            }
+            if (target == null) return false;
+            float want = myR * 0.7f;
+            Vector3 tp = P(target); Vector3 away = me - tp; away.y = 0f; if (away.sqrMagnitude < 1f) away = -toEnemy; away.Normalize();
+            Vector3 goal = tp + away * want;
+            foreach (var t in torpCraft) { if (t.Pointer == target.Pointer) continue; float tr2 = 0f; try { tr2 = TorpedoRange(t); } catch { } Vector3 tq = P(t); if ((goal - tq).magnitude < tr2 + 1500f) { Vector3 off = goal - tq; off.y = 0f; if (off.sqrMagnitude < 1f) off = away; goal = tq + off.normalized * (tr2 + 1500f); } }
+            float dt = (tp - me).magnitude;
+            if ((me - goal).magnitude > 700f) Cmd(div, o, goal);
+            OWhy(o, $"engaging {target.name} ({target.shipType.name}, {MainCaliber(target):0} mm) - {(dt > want * 1.3f ? "closing to gun range" : dt < want * 0.6f ? "opening to the fighting range" : "fighting at the chosen range")}");
+            return true;
         }
 
         // ---- 1.11.210 (author, 24.10): Hunt - the division goes for enemies that cannot hurt it (transports, ships whose guns are too
