@@ -310,8 +310,8 @@ namespace DipGgFixes
     }
 
     [HarmonyPatch(typeof(GunData), "Firerate")]
-    internal static class Patch_GunFirerate_Stat { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RofMult(__instance.caliberInch, __2); } catch { } Ballistics.GunStat(__instance, __2, 0, __result); } }
+    internal static class Patch_GunFirerate_Stat { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RofMult(__instance, __2); } catch { } Ballistics.GunStat(__instance, __2, 0, __result); } }
 
     [HarmonyPatch(typeof(GunData), "Range")]
-    internal static class Patch_GunRange_Stat { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RangeMult(__instance.caliberInch, __2); } catch { } Ballistics.GunStat(__instance, __2, 1, __result); } }
+    internal static class Patch_GunRange_Stat { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RangeMult(__instance, __2); } catch { } Ballistics.GunStat(__instance, __2, 1, __result); } }
 }

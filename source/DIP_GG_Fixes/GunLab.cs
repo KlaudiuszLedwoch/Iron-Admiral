@@ -98,6 +98,7 @@ namespace DipGgFixes
                 }
                 Log(rs.ToString());
                 Log(sb.ToString());
+                AllCalibres(ships);
             }
             catch (Exception e) { Log("run: " + e); }
         }
@@ -128,6 +129,39 @@ namespace DipGgFixes
                 catch (Exception e) { Log("design cache: " + e.Message); }
             }
             Log($"design cache: {written} test design(s) saved as shared designs [IATEST], {skipped} already there");
+        }
+        // 1.11.182: every gun calibre of the game data at all five generations, evaluated with the first battleship of the battle
+        // (raw game values: HistoricalGuns suspended during the measurement)
+        static void AllCalibres(Il2CppSystem.Collections.Generic.List<Ship> ships)
+        {
+            try
+            {
+                Ship s = null;
+                for (int i = 0; i < ships.Count; i++) { var x = ships[i]; if (x == null) continue; string ty = ""; try { ty = x.shipType.name; } catch { } if (ty == "bb") { s = x; break; } if (s == null) s = x; }
+                if (s == null) return;
+                var done = new HashSet<int>();
+                var sb = new StringBuilder($"all calibres at five generations (raw game values, ship {s.name}): calibre | Mk | rounds/min/barrel | range m | muzzle velocity | shell weight");
+                HistoricalGuns.Suspend = true;
+                foreach (var kv in G.GameData.parts)
+                {
+                    var pd = kv.Value; if (pd == null || !pd.isGun) continue;
+                    GunData gd = null; try { gd = G.GameData.GunData(pd); } catch { }
+                    if (gd == null) continue;
+                    int ci = (int)Math.Round(gd.caliberInch * 10f); if (!done.Add(ci)) continue;
+                    for (int g = 1; g <= 5; g++)
+                    {
+                        float fr = -1, rg = -1, v = -1, w = -1;
+                        try { fr = gd.Firerate(s, pd, g); } catch { }
+                        try { rg = gd.Range(s, pd, g); } catch { }
+                        try { v = gd.ShellVelocity(s, pd, g); } catch { }
+                        try { w = gd.ShellWeight(s, pd, g); } catch { }
+                        sb.Append($"\n   {gd.caliberInch,4:0.0} in | {g} | {fr,6:0.00} | {rg,6:0} | {v,5:0} | {w,7:0.0}");
+                    }
+                }
+                Log(sb.ToString());
+            }
+            catch (Exception e) { Log("all calibres: " + e.Message); }
+            finally { HistoricalGuns.Suspend = false; }
         }
         static bool HasRadarFresh(Ship s) { radarCache.Remove(s.Pointer.ToInt64()); return HasRadar(s); }
     }

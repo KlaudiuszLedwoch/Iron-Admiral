@@ -1,66 +1,69 @@
-// 1.11.174 (beta): historical rate of fire and range of medium guns BY GUN GENERATION (HistoricalGuns, F10 Battle AI, on).
-// Game values per calibre and generation measured with AutoTestLab (1916 test, DIP values, claude/kalibracja_dzialy_radar.md):
-//   Mk 3 (fitted in 1916): 3" 16.3/min 7.9 km, 4" 12.1/min 8.1 km, 5" 6.9/min 9.4 km, 6" 5.2/min 10.4 km; 12" Mk 2 1.84/min 15.4 km
-//   Mk 5 (WWII):           3" 24.5/min 10.1 km, 4" 14.7/min 10.4 km, 5" 13.1/min 12.1 km, 6" 8.7/min 13.3 km
-// Historical targets (navweaps.com): WWI generation - 3" 15-20/min 8.5 km, 4" 8.8 km, 5"/51 8-9/min ~14.5 km,
-//   6" ~4/min in action 13.4-14.5 km, 12" ~1.5/min 17.4 km; WWII generation - 3" 13.3 km, 4" 15 km, 5"/38 12-15/min 16.6-17.3 km,
-//   6" 19.7-23.6 km.
-// Multipliers = target / game value for the measured generations (Mk 3 and Mk 5; Mk 2 for 12"); Mk 4 is interpolated between them,
-// Mk 1-2 stay unchanged where no measured target exists (marked "interp." / "-" below). Values change with further measurements.
+// HistoricalGuns (F10 Battle AI, on): historical rate of fire and range of naval guns BY CALIBRE AND GUN GENERATION (Mk 1-5).
+// 1.11.183: absolute historical targets instead of fixed ratios. For each calibre and generation the target is the rated rate of fire
+// and the range at the period mounting's elevation of real guns of that period (navweaps.com; reference guns and URLs in
+// claude/kalibracja_dzialy_radar.md and DIP_CHANGES.md). The game's own value for the gun is multiplied by target / the gun's base
+// value from guns.csv (GunData.firerate_N / range_N), so the ship's own modifiers (crew, technologies, mounting) stay on top.
+// Generations (from the AutoTestLab battles): Mk 1 ~1890-1898, Mk 2 ~1899-1908, Mk 3 ~WWI, Mk 4 ~1920-1935, Mk 5 ~WWII.
+// 0 = no historical gun of that calibre in that period (or no usable figure): the game's value stays.
 using System;
+using System.Collections.Generic;
 using MelonLoader;
+using Il2Cpp;
 
 namespace DipGgFixes
 {
     internal static class HistoricalGuns
     {
         internal static MelonPreferences_Entry<bool> On;
+        internal static bool Suspend; // raw game values for AutoTestLab
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("HistoricalGuns", true, null, "Battle: historical rate of fire and range of medium guns by gun generation (Mk) - medium guns reach as far as their real counterparts of the same period (DIP compressed their ranges), WWI-era 6\" and 12\" fire at their real rate");
+            On = cat.CreateEntry("HistoricalGuns", true, null, "Battle: historical rate of fire and range of naval guns by calibre and gun generation (Mk) - each generation fires and reaches like real guns of its period (DIP compressed most ranges)");
         }
-        // 1.11.178: all five generations from navweaps.com (rate of fire = the page's rated figure; range = the page's range table at
-        // the elevation of the period's mountings). Game generations: Mk 1 ~1890s, Mk 2 ~1899-1908 (fitted in 1906 tests),
-        // Mk 3 ~WWI (fitted in 1916 tests), Mk 4 ~1920-1935, Mk 5 ~WWII. Reference guns per cell: claude/kalibracja_dzialy_radar.md.
-        //                                Mk1    Mk2    Mk3    Mk4    Mk5
-        static readonly float[] Range3 = { 1.00f, 1.26f, 1.08f, 1.30f, 1.32f };  // Mk1: only high-angle range tables found - unchanged
-        static readonly float[] Range4 = { 1.24f, 1.65f, 1.09f, 1.60f, 1.44f };
-        static readonly float[] Range5 = { 1.15f, 2.10f, 1.54f, 1.60f, 1.40f };
-        static readonly float[] Range6 = { 1.11f, 1.70f, 1.35f, 2.00f, 1.75f };
-        static readonly float[] Range12 = { 0.85f, 1.00f, 1.20f, 1.07f, 1.00f };
-        static readonly float[] Rof3 = { 1.50f, 1.15f, 1.00f, 1.00f, 1.00f };
-        static readonly float[] Rof4 = { 1.20f, 1.10f, 1.00f, 1.00f, 1.00f };
-        static readonly float[] Rof5 = { 1.40f, 1.20f, 1.23f, 1.00f, 1.00f };
-        static readonly float[] Rof6 = { 1.20f, 1.40f, 1.15f, 1.15f, 1.00f };
-        static readonly float[] Rof12 = { 1.00f, 0.82f, 1.00f, 1.00f, 1.00f };
-        static float Pick(float[] t, int grade) { int i = Math.Max(1, Math.Min(5, grade)) - 1; return t[i]; }
-        static float[] RangeTable(float c)
+        // calibre band (inches, from..to) -> rate of fire (rounds/min/gun) and range (km) for Mk 1..5
+        class Row { public float From, To; public float[] Rof, Km; }
+        static readonly Row[] Rows =
         {
-            if (c >= 2.6f && c < 3.6f) return Range3;
-            if (c >= 3.6f && c < 4.6f) return Range4;
-            if (c >= 4.6f && c < 5.6f) return Range5;
-            if (c >= 5.6f && c < 6.6f) return Range6;
-            if (c >= 11.6f && c < 12.6f) return Range12;
-            return null;
-        }
-        static float[] RofTable(float c)
+            new Row { From = 2.6f, To = 3.6f,  Rof = new[] { 15f, 15f, 17.5f, 17.5f, 17.5f }, Km = new[] { 0f, 8.8f, 8.5f, 12.5f, 13.3f } },
+            new Row { From = 3.6f, To = 4.6f,  Rof = new[] { 8.5f, 12f, 11f, 12f, 0f },        Km = new[] { 9.6f, 12.2f, 10.5f, 16f, 15f } },
+            new Row { From = 4.6f, To = 5.6f,  Rof = new[] { 8.5f, 7f, 8.5f, 10f, 13.5f },     Km = new[] { 11.8f, 17.4f, 14.5f, 16.3f, 16.9f } },
+            new Row { From = 5.6f, To = 6.6f,  Rof = new[] { 6f, 6f, 6f, 7f, 9f },             Km = new[] { 11.4f, 15f, 14f, 24.3f, 21.6f } },
+            new Row { From = 6.6f, To = 7.8f,  Rof = new[] { 2f, 3.75f, 3.3f, 5.5f, 0f },      Km = new[] { 11.5f, 13.9f, 18.1f, 19.3f, 0f } },
+            new Row { From = 7.8f, To = 8.6f,  Rof = new[] { 2.4f, 3f, 5f, 3.7f, 4f },         Km = new[] { 14.6f, 18.4f, 19.1f, 29f, 30.7f } },
+            new Row { From = 8.6f, To = 9.6f,  Rof = new[] { 2f, 2f, 3.5f, 0f, 0f },           Km = new[] { 12.4f, 15.5f, 14.1f, 0f, 0f } },
+            new Row { From = 9.6f, To = 10.6f, Rof = new[] { 1.5f, 2.5f, 1.5f, 0f, 0f },       Km = new[] { 9.2f, 15.9f, 0f, 0f, 0f } },
+            new Row { From = 10.6f, To = 11.6f, Rof = new[] { 0.5f, 2f, 3f, 2.5f, 3.5f },     Km = new[] { 15.9f, 18.8f, 18.5f, 36.5f, 40.9f } },
+            new Row { From = 11.6f, To = 12.6f, Rof = new[] { 1.3f, 1.75f, 2f, 2.5f, 0f },    Km = new[] { 11.9f, 15.8f, 19.7f, 21.9f, 0f } },
+            new Row { From = 12.6f, To = 13.6f, Rof = new[] { 0.4f, 0f, 1.75f, 0f, 0f },      Km = new[] { 11.3f, 0f, 21.8f, 0f, 0f } },
+            new Row { From = 13.6f, To = 14.6f, Rof = new[] { 0f, 0f, 1.6f, 1.75f, 2f },      Km = new[] { 0f, 0f, 19.7f, 27.3f, 35.3f } },
+            new Row { From = 14.6f, To = 15.6f, Rof = new[] { 0f, 0f, 2.25f, 0f, 2f },        Km = new[] { 0f, 0f, 22.4f, 0f, 39.2f } },
+            new Row { From = 15.6f, To = 16.6f, Rof = new[] { 0f, 0f, 0f, 1.75f, 2f },        Km = new[] { 0f, 0f, 0f, 35.7f, 36.2f } },
+            new Row { From = 17.6f, To = 18.6f, Rof = new[] { 0f, 0f, 1f, 0f, 1.75f },        Km = new[] { 0f, 0f, 26.4f, 0f, 0f } },
+        };
+        static Row Find(float c) { foreach (var r in Rows) if (c >= r.From && c < r.To) return r; return null; }
+        static float BaseRof(GunData g, int k) { try { switch (k) { case 1: return g.firerate_1; case 2: return g.firerate_2; case 3: return g.firerate_3; case 4: return g.firerate_4; default: return g.firerate_5; } } catch { return 0f; } }
+        static float BaseRange(GunData g, int k) { try { switch (k) { case 1: return g.range_1; case 2: return g.range_2; case 3: return g.range_3; case 4: return g.range_4; default: return g.range_5; } } catch { return 0f; } }
+        static readonly Dictionary<long, float> cache = new Dictionary<long, float>();
+        static int logged;
+        static float Mult(GunData g, int grade, bool range)
         {
-            if (c >= 2.6f && c < 3.6f) return Rof3;
-            if (c >= 3.6f && c < 4.6f) return Rof4;
-            if (c >= 4.6f && c < 5.6f) return Rof5;
-            if (c >= 5.6f && c < 6.6f) return Rof6;
-            if (c >= 11.6f && c < 12.6f) return Rof12;
-            return null;
+            if (Suspend || On == null || !On.Value || g == null) return 1f;
+            int k = Math.Max(1, Math.Min(5, grade));
+            long key = (g.Pointer.ToInt64() << 4) ^ (k << 1) ^ (range ? 1 : 0);
+            float m; if (cache.TryGetValue(key, out m)) return m;
+            m = 1f;
+            var r = Find(g.caliberInch);
+            if (r != null)
+            {
+                float target = range ? r.Km[k - 1] * 1000f : r.Rof[k - 1];
+                float bas = range ? BaseRange(g, k) : BaseRof(g, k);
+                if (range && bas > 0f && bas < 200f) bas *= 1000f; // guns.csv ranges may be in km
+                if (target > 0f && bas > 0f) m = Math.Max(0.3f, Math.Min(3f, target / bas));
+                if (logged++ < 60) MelonLogger.Msg($"[DIP GG Fixes][Guns] {g.caliberInch:0.0}\" Mk {k} {(range ? "range" : "rate of fire")}: base {bas:0.##}, historical {(target > 0f ? target.ToString("0.##") : "none")} -> x{m:0.00}");
+            }
+            cache[key] = m; return m;
         }
-        internal static float RofMult(float calIn, int grade)
-        {
-            if (On == null || !On.Value) return 1f;
-            var t = RofTable(calIn); return t == null ? 1f : Pick(t, grade);
-        }
-        internal static float RangeMult(float calIn, int grade)
-        {
-            if (On == null || !On.Value) return 1f;
-            var t = RangeTable(calIn); return t == null ? 1f : Pick(t, grade);
-        }
+        internal static float RofMult(GunData g, int grade) { return Mult(g, grade, false); }
+        internal static float RangeMult(GunData g, int grade) { return Mult(g, grade, true); }
     }
 }
