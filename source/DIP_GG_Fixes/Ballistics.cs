@@ -64,6 +64,8 @@ namespace DipGgFixes
         //           drag of small shells was overstated by the old 0.55 / 0.45, which made a 5-inch shell need 16-17 deg and 31 s for 11 km.
         static readonly float[] CdByNose = { 0.74f, 0.50f, 0.41f };
         static float Cd(Ship s) { return CdByNose[Math.Max(0, Math.Min(2, TechYears.ShellNose(s)))]; }
+        internal static float CdOf(Ship s) { try { return Cd(s); } catch { return CdByNose[1]; } } // 1.11.216
+        internal static void ShootOut(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall) { Shoot(mv, calIn, mass, cd, el, out range, out time, out fall); }
         static float Mass(float calIn) { float dcm = calIn * 2.54f; return 0.0145f * dcm * dcm * dcm; }
         // shell weight as the game computes it for this gun, ship and shell type (light/heavy shell technologies, AP/HE); formula as fallback
         static float ShellMass(Shell sh, Part p, float calIn)
@@ -343,5 +345,47 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(GunData), "ShellVelocity")] // 1.11.213
     internal static class Patch_GunShellVelocity_Hist { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.ShellVelocityMult(__instance, __2); } catch { } } }
     [HarmonyPatch(typeof(GunData), "Range")]
-    internal static class Patch_GunRange_Stat { static void Postfix(GunData __instance, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RangeMult(__instance, __2); } catch { } Ballistics.GunStat(__instance, __2, 1, __result); } }
+    internal static class Patch_GunRange_Stat { static void Postfix(GunData __instance, Ship __0, PartData __1, int __2, ref float __result) { try { if (__instance != null) __result *= HistoricalGuns.RangeMult(__instance, __2); } catch { } try { __result = MountElevation.CapRange(__instance, __0, __1, __2, __result); } catch { } Ballistics.GunStat(__instance, __2, 1, __result); } }
+
+    // 1.11.216 (author, 24.10): a gun cannot reach further than its mounting can elevate. The game's range bonuses pushed a 279 mm Mk 4
+    // gun to 41-44 km, which needs 45 degrees of elevation that no 1920s turret had (the barrels stood at the sky at 0.9 km in the
+    // 24.10 battle). The range is limited to the physical range of the shell (muzzle velocity, weight, nose shape of the firing ship's
+    // technologies) at the elevation of the mountings of the gun's generation: Mk 1 13.5 deg (12"/35 Mk VIII, 12"/40 Mk IX),
+    // Mk 2 15 deg (US 12"/45, 12"/50), Mk 3 20 deg (15"/42 Mk I, 14"/45), Mk 4 30 deg (US 14"/50 Mk 11, 8"/55 Mk 9: 41 deg,
+    // 16"/45 Mk I: 40 deg - the heavy mounts of the 1920s spread 30-41 deg), Mk 5 45 deg (16"/50 Mk 7, 15" C/34 30 deg, 381/50 36 deg).
+    // Longer reach comes with the technologies that raise muzzle velocity and shell shape, as in history. Switch: RangeByMountElevation.
+    internal static class MountElevation
+    {
+        internal static MelonPreferences_Entry<bool> On;
+        internal static void CreatePrefs(MelonPreferences_Category cat)
+        {
+            On = cat.CreateEntry("RangeByMountElevation", true, null, "Battle: a gun's range is limited to what its shell reaches at the elevation of the mountings of its generation (Mk 1 13.5, Mk 2 15, Mk 3 20, Mk 4 30, Mk 5 45 degrees)");
+        }
+        internal static readonly float[] ElevByMk = { 13.5f, 15f, 20f, 30f, 45f };
+        internal static float Elev(int grade) { return ElevByMk[Math.Max(0, Math.Min(4, grade - 1))]; }
+        static readonly Dictionary<long, float> cache = new Dictionary<long, float>();
+        static int logged, errors;
+        internal static float CapRange(GunData g, Ship ship, PartData pd, int grade, float range)
+        {
+            if (On == null || !On.Value || g == null || range <= 0f || HistoricalGuns.Suspend) return range;
+            try
+            {
+                float mv = 0f, mass = 0f; try { mv = g.ShellVelocity(ship, pd, grade); mass = g.ShellWeight(ship, pd, grade); } catch { }
+                if (mv < 100f || mass <= 0f) return range;
+                float calIn = g.caliberInch > 0f ? g.caliberInch : (pd != null ? pd.caliber / 25.4f : 0f); if (calIn <= 0f) return range;
+                float cd = Ballistics.CdOf(ship);
+                int k = Math.Max(1, Math.Min(5, grade));
+                long key = ((long)Mathf.RoundToInt(mv / 5f) << 40) ^ ((long)Mathf.RoundToInt(mass) << 20) ^ ((long)Mathf.RoundToInt(calIn * 4f) << 10) ^ ((long)Mathf.RoundToInt(cd * 100f) << 3) ^ k;
+                float max;
+                if (!cache.TryGetValue(key, out max))
+                {
+                    double rr, tt, ff; Ballistics.ShootOut(mv, calIn, mass, cd, Elev(k) * Math.PI / 180.0, out rr, out tt, out ff);
+                    max = (float)rr; if (cache.Count > 5000) cache.Clear(); cache[key] = max;
+                    if (logged++ < 40) MelonLogger.Msg($"[DIP GG Fixes][Guns] {calIn:0.0}\" Mk {k}: physical range at {Elev(k):0.#} deg mount elevation {max:0} m (muzzle {mv:0} m/s, {mass:0} kg, Cd {cd:0.00}); game range {range:0} m{(range > max ? " -> capped" : "")}");
+                }
+                return range > max ? max : range;
+            }
+            catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][Guns] range cap: " + e.Message); return range; }
+        }
+    }
 }

@@ -62,6 +62,7 @@ namespace DipGgFixes
             if (ord != DivOrder.None) try { Issuing = true; if (div.isRetreating || div.retreat) div.Retreat(false); } catch { } finally { Issuing = false; }
         }
         internal static DivOrder CurrentOrder(Division div) { var o = OrderOf(div, false); return o != null ? o.Order : DivOrder.None; }
+        internal static string OrderLabel(DivOrder o) { return OrderNames[(int)o]; } // 1.11.216
 
         // the player gave the division a move order himself - command goes back to him
         // 1.11.159: only a command right after a click or key of the player counts (2nd auto test: the game itself gave a
@@ -390,4 +391,51 @@ namespace DipGgFixes
     {
         static void Prefix(Division __instance) { try { BattleAi.PlayerCommand(__instance, "course order"); } catch { } }
     }
+
+    // 1.11.216 (author, 24.10): the division card at the bottom of the battle screen names the mod's order ("Screen", "Hunt", ...)
+    // instead of the game's "Battle Line" while an order is in force. The card's status text is found once by its game text.
+    internal static class DivisionCardLabel
+    {
+        static readonly Dictionary<IntPtr, Il2CppTMPro.TextMeshProUGUI> labels = new Dictionary<IntPtr, Il2CppTMPro.TextMeshProUGUI>();
+        static readonly Dictionary<IntPtr, string> written = new Dictionary<IntPtr, string>();
+        static HashSet<string> gameTexts; static int errors;
+        static void Keys()
+        {
+            if (gameTexts != null) return; gameTexts = new HashSet<string>();
+            foreach (var k in new[] { "$Ui_Division_BattleLine", "$Ui_ShipControls_Follow", "$Ui_ShipControls_Scout", "$Ui_ShipControls_Screen", "$Ui_ShipControls_Retreat", "$Ui_Skirmish_AI" })
+            { try { var t = LocalizeManager.Localize(k); if (!string.IsNullOrEmpty(t)) gameTexts.Add(t.Trim()); } catch { } }
+        }
+        internal static void Apply(UIDivision u)
+        {
+            try
+            {
+                if (u == null || !GameManager.IsBattle) return;
+                var dv = u.CurrentDivision; if (dv == null) return;
+                var ord = BattleAi.CurrentOrder(dv);
+                Il2CppTMPro.TextMeshProUGUI lbl;
+                if (!labels.TryGetValue(u.Pointer, out lbl) || lbl == null)
+                {
+                    Keys();
+                    var all = u.GetComponentsInChildren<Il2CppTMPro.TextMeshProUGUI>(true); if (all == null) return;
+                    string last; written.TryGetValue(u.Pointer, out last);
+                    for (int i = 0; i < all.Count; i++)
+                    {
+                        var t = all[i]; if (t == null || (u.Name != null && t.Pointer == u.Name.Pointer)) continue;
+                        string s = t.text != null ? t.text.Trim() : "";
+                        if (gameTexts.Contains(s) || (last != null && s == last)) { lbl = t; break; }
+                    }
+                    if (lbl == null) return;
+                    labels[u.Pointer] = lbl; if (labels.Count > 200) labels.Clear();
+                }
+                if (ord == BattleAi.DivOrder.None) return;
+                string want = BattleAi.OrderLabel(ord);
+                if (lbl.text != want) { lbl.text = want; written[u.Pointer] = want; }
+            }
+            catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][Battle] division card label: " + e.Message); }
+        }
+    }
+    [HarmonyPatch(typeof(UIDivision), "RefreshUI", new Type[] { typeof(bool) })]
+    internal static class Patch_UIDivisionRefresh_OrderLabel { static void Postfix(UIDivision __instance) { DivisionCardLabel.Apply(__instance); } }
+    [HarmonyPatch(typeof(UIDivision), "LateUpdate")]
+    internal static class Patch_UIDivisionLate_OrderLabel { static void Postfix(UIDivision __instance) { DivisionCardLabel.Apply(__instance); } }
 }
