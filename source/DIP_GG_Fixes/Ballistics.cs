@@ -28,7 +28,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> LogOn, Realistic;
         class Bin { public int N, Hit; public double T, Fall, Elev, V0, Vs; }
         static readonly SortedDictionary<string, Bin> bins = new SortedDictionary<string, Bin>();
-        static float nextReport; static bool inBattle; static int errors, rebuilt, skipped, samples, probes;
+        static float nextReport; static bool inBattle; static int errors, rebuilt, skipped, beyond, samples, probes;
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Ballistics] " + m); }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -42,7 +42,7 @@ namespace DipGgFixes
             try
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = samples = probes = 0; scaledMisses = 0; ratioSum = 0; TechYears.Reset(); nextReport = Time.time + 120f; }
+                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = beyond = samples = probes = 0; scaledMisses = 0; ratioSum = 0; TechYears.Reset(); nextReport = Time.time + 120f; }
                 else if (!battle && inBattle) { inBattle = false; Report("battle end"); }
                 else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); }
             }
@@ -95,7 +95,7 @@ namespace DipGgFixes
                 x = nx; y = ny;
             }
         }
-        struct Real { public bool Ok; public float T, Fall; }
+        struct Real { public bool Ok, Beyond; public float T, Fall; }
         static readonly Dictionary<long, Real> cache = new Dictionary<long, Real>();
         static Real RealFor(float mv, float calIn, float mass, float cd, float R)
         {
@@ -104,7 +104,11 @@ namespace DipGgFixes
             Real r; if (cache.TryGetValue(key, out r)) return r;
             double mvq = mvi * 10.0, cq = ci / 2.0, Rq = ri * 200.0, cdq = cdi / 100.0, mq = mi, rr, tt, ff;
             Shoot(mvq, cq, mq, cdq, 45 * Math.PI / 180, out rr, out tt, out ff);
-            if (rr < Rq) { r.Ok = false; }
+            // 1.11.198: beyond the physical maximum (the game's range bonuses reach further than the point-mass model at 45 deg):
+            //           the shell flies like the maximum-elevation shot stretched to the range - the time grows with the range and
+            //           the shell still plunges at the 45-deg angle of fall. Before, such shells kept the game's flat arc (24.10
+            //           log: 11 in at 34-36 km - elevation 9.5 deg, fall 13.5 deg, striking speed 779 m/s).
+            if (rr < Rq) { r.Ok = false; r.Beyond = rr > 1000; if (r.Beyond) { r.T = (float)(tt * Rq / rr); r.Fall = (float)ff; } }
             else
             {
                 double lo = 0, hi = 45 * Math.PI / 180;
@@ -138,7 +142,8 @@ namespace DipGgFixes
                 float mv = arc.initialVelocity.magnitude; if (!(mv > 1f)) return;
                 mv = Mathf.Clamp(mv, 300f, 1100f);
                 var real = RealFor(mv, calIn, mass, Cd(ship), R);
-                if (!real.Ok || real.T <= 0.05f) { skipped++; return; }
+                if (!real.Ok && real.Beyond && real.T > 0.05f) beyond++; // 1.11.198: stretched maximum-elevation shot
+                else if (!real.Ok || real.T <= 0.05f) { skipped++; return; }
                 double T = real.T, want = real.Fall, dy = rel.y;
                 // drag constant: the shell leaves the muzzle with (about) its muzzle velocity and arrives at the real time
                 double k = Math.Max(1e-6, (mv * Math.Cos(want * 0.5) * T / R - 1) / T);
@@ -238,7 +243,7 @@ namespace DipGgFixes
         static void Report(string tag)
         {
             if (bins.Count == 0) return;
-            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond model range {skipped}, misses re-spread by fire-control technology {scaledMisses} (mean ratio {(scaledMisses > 0 ? ratioSum / scaledMisses : 1):0.00})" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
+            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond the physical maximum (stretched 45-deg shot) {beyond}, outside the model {skipped}, misses re-spread by fire-control technology {scaledMisses} (mean ratio {(scaledMisses > 0 ? ratioSum / scaledMisses : 1):0.00})" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
             foreach (var kv in bins)
             {
                 var b = kv.Value; double n = b.N;
