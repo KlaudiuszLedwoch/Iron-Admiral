@@ -1,88 +1,102 @@
-# Iron Admiral – what we change compared to DIP, and why
+# Iron Admiral – what I change compared to DIP, and why
 
-Iron Admiral is built on DIP GG Extended 1.3.5. DIP brings a lot of content (hulls, parts, playable nations, the map, technologies) that we keep. Many of its combat numbers, however, were changed without sources, and some contradict physics or history. This list shows every value we change, the value in DIP and in the unmodded game (vanilla), the value we use, and where it comes from.
+Iron Admiral is built on DIP GG Extended 1.3.5. DIP brings a lot of content (hulls, parts, playable nations, the map, technologies) that I keep. Many of its combat numbers, however, were changed without a stated source, and some of them contradict physics or history. This page lists the values I change: the value in DIP, in the unmodded game (vanilla) where I know it, the value I use, and where the reasoning comes from.
 
-**Rule:** where a historical source exists, we use the historical value first – even if the game gets harder or stranger somewhere. The rest of the game is then recalibrated around history, not the other way round. Every change has a switch in the F10 menu (most of them in the "Battle AI" tab) and arrives in the beta first.
+**Rule:** where a historical source exists, I use the historical value first, even if the game gets harder somewhere. The rest of the game is then recalibrated around history, not the other way round. Every change has its own switch in the F10 menu ("Battle AI" tab) and goes to the beta first.
 
-Know a better source? Open an issue or write on Nexus/Steam – we will check it and change the value.
+**Status of this page:** work in progress. Some values below are taken directly from sources; others are my estimates inside the range the sources suggest – they are marked as estimates. Calibration continues with every test battle and every played battle, so numbers will change. Know a better source or a better figure? Write on Nexus or Steam, or open an issue – I will check it and change the value.
 
-Status: ✅ in the beta · 🔧 in work · 📋 planned
+Status: ✅ in the beta · 🔧 in work / next beta · 📋 planned
 
 ---
 
 ## 1. Ballistics ✅ (F10: RealisticBallistics, on)
 
-| | Vanilla | DIP | Iron Admiral | Source |
-|---|---|---|---|---|
-| Time of flight, 15" at ~9–11 km | ~13 s | ~13 s | ~14–17 s (by range and muzzle velocity) | NavWeaps 15"/42 Mk I range table: 9,144 m – 14.4 s |
-| Angle of fall, 15" at ~9–11 km | ~1.5° | ~1.5° | ~7–9° | NavWeaps: 9,144 m – 7.0°; 13,716 m – 13.8°; 18,288 m – 21.1° |
-| Gravity used for shell arcs | ~3.1 m/s² | ~3.1 m/s² | 9.81 m/s² (plus drag) | physics |
+What I measured in the game with DIP values (test battle, 1916):
 
-How: every shell's arc is rebuilt from a point-mass model with quadratic air drag (air density falling with height, drag rising through the sound barrier), shell mass from calibre, and a drag coefficient by era – blunt 2 crh shells before ~1912, 4 crh shells by 1918, longer shells later. The model is fitted to the 15"/42 Mk I and 12"/45 Mk X range tables. Long-range fire plunges onto decks again and arrives as late as it really did.
-
-## 2. Hit rates by era ✅ (F10: EraAccuracy, on; EraAccuracyScale)
-
-Measured with DIP values: battleships in a 1916 test battle at 10–16 km hit with 40–70 % of their 15" shells, in a 1940 test battle 70–90 % – ten to twenty times more than in real battles. After the change the 1916 test gives 15" 2–4.5 %, 12" 0–1.3 % (Jutland: 2.7–3.4 %). WWII values are still being calibrated. The hit chance is now scaled by the year of the battle and calibrated in test battles against:
-
-| Battle | Guns | Range | Hits |
+| | DIP (measured) | Iron Admiral (measured) | Range table |
 |---|---|---|---|
-| Tsushima 1905 | Japanese 12" | ≤ 6 km | ~9 % |
-| Dogger Bank 1915 | British 13.5" | ~18 km | 0.4–1.6 % |
-| Jutland 1916 | all heavy guns | 10–19 km | British 2.7 %, German 3.4 % |
-| River Plate 1939 | 11" / 8" / 6" | 10–18 km | 1.7–2.4 % / 1.6 % / 0.8 % |
-| Denmark Strait 1941 | Bismarck 15" | 16–20 km | ~5 % |
-| Guadalcanal, Nov 1942 | Washington 16", radar | 7.5 km, night | 11–27 % |
-| North Cape 1943 | Duke of York 14", radar | 11–20 km, night | 10 hits, 31 of 52 salvoes straddling |
+| 15" at 10–12 km: time of flight / angle of fall | 12.8 s / 1.5° | ~17 s / ~9° | 15"/42 Mk I: 9,144 m – 14.4 s / 7.0°; 13,716 m – 23.5 s / 13.8° (muzzle velocity 747 m/s) |
+| 15" at ~18 km: angle of fall | – | 20.8° | 18,288 m – 21.1° |
+| Effective gravity of the shell arcs | ~3.1 m/s² | 9.81 m/s² plus air drag | physics |
 
-Sources: Campbell, *Jutland: An Analysis of the Fighting* (tables summarised on Wikipedia "Damage to major ships at the Battle of Jutland"); navweaps.com; battle reports summarised on Wikipedia.
+The 15" guns in the test had a higher muzzle velocity (~810 m/s) than the Mk I table, so slightly shorter times are expected.
+
+How: every shell's arc is rebuilt from a point-mass model with quadratic air drag (air density falling with height, drag rising through the sound barrier). Shell mass comes from the calibre. The drag coefficient depends on the era: blunt shells before ~1912, longer-nosed shells later. The model is fitted to the 15"/42 Mk I and 12"/45 Mk X range tables (navweaps.com).
+
+Known limitation, being worked on: the drag coefficient follows the year of the battle. It should follow the generation of the gun and shell (Mk), and the muzzle velocity should come from the gun's data.
+
+## 2. Hit rates 🔧 (F10: EraAccuracy, on; EraAccuracyScale)
+
+Measured with DIP values: in a 1916 test battle, battleships at 10–16 km hit with 40–70 % of their 15" shells; in a 1940 test battle, 70–90 %. That is ten to twenty times more than in real battles.
+
+With the change, the 1916 test gives 15" 2–4.5 % and 12" 0–1.3 % (Jutland, all heavy guns: British 2.7 %, German 3.4 %). The WWII values are not calibrated yet.
+
+Next steps (in work):
+- The factor by era is meant to represent **optical** fire control. Most of the very high WWII hit rates below come from **fire-control radar**, so radar will get its own effect that depends on the radar fitted to the ship, not on the year. A ship without radar in 1943 should shoot like an optical ship.
+- The generation of the gun (Mk) will be taken into account as well.
+
+| Battle | Guns | Range | Hits | Note |
+|---|---|---|---|---|
+| Tsushima 1905 | Japanese 12" | ≤ 6 km | ~9 % | optical, short range |
+| Dogger Bank 1915 | British 13.5" | ~18 km | 0.4–1.6 % | optical |
+| Jutland 1916 | all heavy guns | 10–19 km | British 2.7 %, German 3.4 % | optical |
+| River Plate 1939 | 11" / 8" / 6" | 10–18 km | 1.7–2.4 % / 1.6 % / 0.8 % | optical |
+| Denmark Strait 1941 | Bismarck 15" | 16–20 km | ~5 % | optical |
+| Guadalcanal, Nov 1942 | Washington 16" | 7.5 km, night | 11–27 % | **fire-control radar** |
+| North Cape 1943 | Duke of York 14" | 11–20 km, night | 10 hits, 31 of 52 salvoes straddling | **fire-control radar** |
+
+Sources: N. J. M. Campbell, *Jutland: An Analysis of the Fighting* (figures as summarised on Wikipedia, "Damage to major ships at the Battle of Jutland"); navweaps.com; the battle articles on Wikipedia.
 
 ## 3. Damage model ✅ (F10: HistoricalDamage, on)
 
-| Parameter | Vanilla | DIP | Iron Admiral | Source |
+| Parameter | Vanilla | DIP | Iron Admiral | Basis |
 |---|---|---|---|---|
-| over_penetration (shell passes through without exploding) | 0.32 | 0.002 | 0.10 | US Navy War Damage Report No. 57 (South Dakota, Nov 1942 – most hits passed through, clean holes, but real damage); Samar 1944 (Gambier Bay's engine room flooded by a shell passing through); Bismarck 1941 (one 14" shell through the bow: 1,000–2,000 t of water, −2 knots, 9° list) |
-| over_penetration_threshold | 2 | 3.5 | 3.0 | long fuze delays of Japanese AP (WDR 57) |
-| armor_damage (shell breaking up on armour) | 0.42 | 0.05 | 0.10 | WDR 57: six shells broke up on South Dakota's armour – almost nothing behind it, but structure beside it damaged |
-| fire_damage | 1.6 | 0.33 | 0.30 | WDR 29 (Astoria, Quincy, Vincennes at Savo – fire killed through ammunition, not by burning the structure); Seydlitz at Dogger Bank 1915 burned 6.5 t of propellant and survived |
-| section_damage_torpedo | 1750 | 5200 | 2000 in 1900 → 5200 in 1940 | warheads: 18" 1894 – 54 kg; 18" Mk VII 1910 – 145 kg; 21" WWI – 127–234 kg; Mk 15 – 224–373 kg; Type 93 – ~490 kg (navweaps torpedo pages). Sinkings: destroyer – 1 hit, cruiser – 1–2, WWII battleship – 3–5 (Prince of Wales 4, Barham 3) |
+| over_penetration (shell passes through without exploding) | 0.32 | 0.002 | 0.10 (estimate) | Shells that passed through still did real damage. Examples: US Navy War Damage Report No. 57 (South Dakota, Nov 1942 – most hits passed through without exploding); Samar 1944; Bismarck 1941 (a shell through the bow let in a large amount of water and cost speed). DIP's value makes such hits almost harmless. |
+| over_penetration_threshold | 2 | 3.5 | 3.0 (estimate) | between the two; long fuze delays of Japanese AP shells (WDR 57) |
+| armor_damage (shell breaking up on armour) | 0.42 | 0.05 | 0.10 (estimate) | WDR 57: shells that broke up on South Dakota's armour did little behind it, but damaged structure nearby |
+| fire_damage | 1.6 | 0.33 | 0.30 (estimate) | Fires rarely destroyed ships by burning the structure; the danger was ammunition (Seydlitz at Dogger Bank 1915 survived a propellant fire; WDR No. 29 on the cruisers lost at Savo) |
+| section_damage_torpedo | 1750 | 5200 | 2000 in 1900 → 5200 in 1940 (estimate, scaled by year) | Warheads grew about ninefold: ~54 kg (18", 1890s) → ~145 kg (1910) → 127–234 kg (WWI) → 224–373 kg (Mk 15) → ~490 kg (Type 93) – navweaps.com torpedo pages. DIP uses the WWII value for every era. |
 | torpedo_damage_ammo_detonation | 690 | 5200 | as above | as above |
 
-Kept from DIP because it is closer to history: fire spread 20, torpedo tube explosions ×10 (rare, catastrophic – Suzuya, Mikuma, Furutaka), torpedo flooding 15.
+Kept from DIP: fire spread, torpedo-tube explosions and torpedo flooding values – they are closer to the record than vanilla.
 
-## 4. Weights 📋
+Known limitation: torpedo damage follows the year, not the torpedo technology fitted.
 
-Planned (weights change existing designs, so they need a careful switch for running campaigns):
+## 4. Dispersion 🔧 (F10: EraDispersion, next beta)
 
-| | Vanilla | DIP | History | Planned |
-|---|---|---|---|---|
-| Casemate per gun | – | – | ⅓–¼ of a turret mount per gun (15 cm C/06 16–18 t vs Bismarck 15 cm 55–58 t per gun; 5"/51 10–12 t vs 5"/38 35–39 t) | 0.3–0.4 × turret |
-| Machinery weight bb / bc / ca / cl | 3.5 / 2.4 / 0.95 / 0.95 | 1.6 / 1.5 / 1.4 / 1.3 | battleships 1.5–2× heavier per hp than cruisers (88 kg/hp 1905 → 31–36 kg/hp 1940; cruisers 15–21) | 1.6–1.8 / 1.4–1.5 / 0.9–1.1 |
-| Fuel (op. range, % of displacement) | 2–10 | 14–28 | Dreadnought 18.4 %, Bismarck 15.7 %, Richelieu 15.8 %, Myoko ~20 % | 5–20 |
-| Armour of secondary mounts | 0.125 | 0.08 | armour 25–40 % of an armoured mount (US 5": 47.9 t at 0.75" vs 77.4 t at 2.5") | 0.15–0.25 |
-| Torpedo tubes | 8 / 16 / 36 | 3.1 / 1.5 / 3.1 | ~4 t per tube (Type 92 quadruple 15–18 t) | quadruple 15–18 t |
+DIP narrowed dispersion almost to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Recorded salvo patterns: WWI at ~11 km – 15" ~180 m, 13.5" ~270 m, 12" ~370 m; US 16"/50 at ~19 km ~820 m; Massachusetts 1942: 180–270 m in range. Next beta: the game's own (vanilla) dispersion values, scaled by era. Planned: dispersion depending on gun generation and on radar ranging, not only on the year.
 
-## 5. Small and medium guns ✅ partly (F10: HistoricalGuns, on)
+## 5. Small and medium guns 📋
 
-| Calibre | Rate of fire vanilla / DIP / history | Range vanilla / DIP / history |
-|---|---|---|
-| 3" | 12.6 / 12 / 15–20 | 9.1 / 6.0 / 8.5 → 13.3 km |
-| 5" | 4.6 / 5 / 8–9 (5"/51), 12–15 (5"/38) | 10.5 / 7.0 / 16.6–17.3 km |
-| 6" | 3.6 / 4 / 4 in action | 11.2 / 7.5 / 13.4–14.5 → 19.7–23.6 km |
-| 8" | 2.5 / 2 / 3–4 | 12.95 / 9.1 / ~28 km (WWII) |
+Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). Measured in a 1916 battle, generation 3: 3" 16.3 rounds/min, 7.9 km; 4" 11.4/min, 8.1 km; 5" 6.9/min, 9.4 km; 6" 5.2/min, 10.4 km; 12" 1.84/min, 15.4 km; 15" 1.58/min, 19.2 km.
 
-Measured in a 1916 test battle (grade 3 guns): 3" 16.3/min, 7.9 km; 4" 11.4/min, 8.1 km; 5" 6.9/min, 9.4 km; 6" 5.2/min, 10.4 km; 12" 1.84/min, 15.4 km; 15" 1.58/min, 19.2 km. Changed so far: 5" rate of fire x1.2 and range x1.45, 6" rate of fire x0.8 and range x1.35, 12" rate of fire x0.85 (sources: navweaps.com gun pages). Other calibres follow after more measurements.
+Plan: measure every calibre and generation, then match each generation to real guns of its period. Examples: a 5" gun of the WWI generation compared with the 5"/51 (8–9 rounds/min, ~14.5 km); of the WWII generation, with the 5"/38 (12–15 rounds/min, ~17 km). Data: navweaps.com.
 
 Also planned: small guns (2"–3") in casemates, as on real ships of the 1890s–1910s.
 
-## 6. Dispersion ✅ (F10: EraDispersion, on)
+## 6. Weights 📋
 
-DIP narrowed dispersion to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Real salvo patterns: WWI at 11 km – 15" 180 m, 13.5" 270 m, 12" 370 m; USN 1917 14" at 16.5 km ~900 m; US 16"/50 at 19 km ~820 m; Massachusetts 1942: 180–270 m in range. Now: the game's own (vanilla) dispersion values, which give WWI-like patterns, scaled by era – x1.3 in 1890, x1.2 in 1905, x1.0 in 1918, x0.8 in 1935, x0.65 in 1945.
+Planned with a separate switch, because changing weights changes existing designs in a running campaign.
+
+| | Vanilla | DIP | History | Direction |
+|---|---|---|---|---|
+| Casemate mount per gun | – | – | roughly ⅓–¼ of a turret mount per gun (e.g. German 15 cm casemate 16–18 t vs a 15 cm twin turret 55–58 t per gun) | casemates lighter than turrets |
+| Machinery weight factor bb / bc / ca / cl | 3.5 / 2.4 / 0.95 / 0.95 | 1.6 / 1.5 / 1.4 / 1.3 | battleship machinery heavier per horsepower than cruiser machinery | battleships heavier per hp than cruisers |
+| Fuel (operational range, % of displacement) | 2–10 | 14–28 | e.g. Dreadnought ~18 %, Bismarck ~16 %, Myoko ~20 % of full load | to be set from data |
+| Armour of secondary mounts | 0.125 | 0.08 | armour is a large share of an armoured mount's weight | heavier |
+| Torpedo tubes | 8 / 16 / 36 | 3.1 / 1.5 / 3.1 | e.g. a quadruple Type 92 mount 15–18 t | to be set from data |
 
 ## 7. Optional modes 📋
 
-- **Historical parts:** parts only in their own era and for the nations that had them (the free design of DIP stays available – default or second option).
+- **Historical parts:** parts available only in their own era and for the nations that had them. The free design of DIP stays available.
 - **Historically plausible wars:** wars following the real rivalries of each era.
 
 ## Main sources
 
-navweaps.com (gun, shell and torpedo pages, range tables); US Navy War Damage Reports No. 29 and No. 57; N. J. M. Campbell, *Jutland: An Analysis of the Fighting*; kbismarck.com; navalgazing.net (spotting, fuzes, secondary armament); ship monographs summarised on the de/ru/en Wikipedia pages of the classes listed above.
+- navweaps.com (gun, shell and torpedo pages, range tables).
+- US Navy War Damage Reports No. 29 and No. 57.
+- N. J. M. Campbell, *Jutland: An Analysis of the Fighting* (via the Wikipedia summary tables).
+- kbismarck.com.
+- navalgazing.net (spotting, fuzes, secondary armament).
+- Wikipedia articles on the battles and ship classes named above.
