@@ -44,6 +44,9 @@ namespace DipGgFixes
                 h.Patch(AccessTools.Method(typeof(Shell), "ImpactForwardToAngleSideForward"), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagSideFwd), "Postfix"));
                 h.Patch(AccessTools.Method(typeof(Ship), "CalcSideHitChance"), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagSideChance), "Postfix"));
                 h.Patch(AccessTools.Method(typeof(Ship), "HitTypeText"), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagHitType), "Postfix"));
+                // 1.11.199: the gun of the hit (Ship.Penetration(target, gun, ...) runs for the impact in the same frame) - hit types per calibre
+                try { h.Patch(AccessTools.Method(typeof(Ship), "Penetration", new Type[] { typeof(Ship), typeof(PartData), typeof(int) }), postfix: new HarmonyMethod(typeof(Patch_ArmorDiagPenGun), "Postfix")); }
+                catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Armor] per-calibre hit types unavailable: " + e.Message); }
                 MelonLogger.Msg("[DIP GG Fixes][Armor] diagnostics hooks installed");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Armor] diagnostics hooks failed: " + e.Message); }
@@ -109,7 +112,13 @@ namespace DipGgFixes
             if (!Active || !inBattle || string.IsNullOrEmpty(t)) return;
             if (t.Length > 40) t = t.Substring(0, 40);
             int n; hitTypes.TryGetValue(t, out n); hitTypes[t] = n + 1;
+            // 1.11.199: per calibre band (gun of the last penetration call of this frame)
+            string band = penFrame == UnityEngine.Time.frameCount && penCal > 0f ? (penCal >= 240f ? "heavy (>=9.4 in)" : penCal >= 150f ? "medium (6-9 in)" : penCal >= 100f ? "light (4-6 in)" : "small (<4 in)") : "unknown gun";
+            string k = band + " | " + t; hitTypesCal.TryGetValue(k, out n); hitTypesCal[k] = n + 1;
         }
+        static float penCal; static int penFrame = -1;
+        static readonly Dictionary<string, int> hitTypesCal = new Dictionary<string, int>();
+        internal static void RecordPenGun(PartData gun) { try { if (gun != null) { penCal = gun.caliber; penFrame = UnityEngine.Time.frameCount; } } catch { } }
 
         static string Bands(int[] a) { var s = new List<string>(); for (int i = 0; i < 6; i++) s.Add($"{i * 15}-{i * 15 + 15}: {a[i]}"); if (a[6] > 0) s.Add($"n/a: {a[6]}"); return string.Join(", ", s); }
 
@@ -129,6 +138,7 @@ namespace DipGgFixes
                     MelonLogger.Msg("[DIP GG Fixes][Armor] battle summary - impact angle side-forward (deg bands): " + Bands(sideFwd));
                     MelonLogger.Msg("[DIP GG Fixes][Armor] battle summary - side (belt) hit chance by angle: " + (sc.Count > 0 ? string.Join(", ", sc) : "no calls"));
                     MelonLogger.Msg("[DIP GG Fixes][Armor] battle summary - hit types: " + (hitTypes.Count > 0 ? string.Join(", ", hitTypes.OrderByDescending(kv => kv.Value).Select(kv => $"{kv.Key} {kv.Value}")) : "none recorded"));
+                    MelonLogger.Msg("[DIP GG Fixes][Armor] battle summary - hit types by calibre: " + (hitTypesCal.Count > 0 ? string.Join(", ", hitTypesCal.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key} {kv.Value}")) : "none recorded")); // 1.11.199
                     try { Obliquity.Summary(); } catch { }
                 }
                 catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Armor] summary failed: " + e.Message); }
@@ -136,7 +146,7 @@ namespace DipGgFixes
         }
         static void Reset()
         {
-            probed.Clear(); hitTypes.Clear();
+            probed.Clear(); hitTypes.Clear(); hitTypesCal.Clear();
             Array.Clear(sideUp, 0, 7); Array.Clear(sideFwd, 0, 7); Array.Clear(sideChanceSum, 0, 7); Array.Clear(sideChanceN, 0, 7);
         }
     }
@@ -146,4 +156,5 @@ namespace DipGgFixes
     internal static class Patch_ArmorDiagSideFwd { internal static void Postfix(float __result) { try { ArmorDiag.RecordSideFwd(__result); } catch { } } }
     internal static class Patch_ArmorDiagSideChance { internal static void Postfix(float __0, float __result) { try { ArmorDiag.RecordSideChance(__0, __result); } catch { } } }
     internal static class Patch_ArmorDiagHitType { internal static void Postfix(string __result) { try { ArmorDiag.RecordHitType(__result); } catch { } } }
+    internal static class Patch_ArmorDiagPenGun { internal static void Postfix(PartData __1) { try { ArmorDiag.RecordPenGun(__1); } catch { } } }
 }

@@ -28,7 +28,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> LogOn, Realistic;
         class Bin { public int N, Hit; public double T, Fall, Elev, V0, Vs; }
         static readonly SortedDictionary<string, Bin> bins = new SortedDictionary<string, Bin>();
-        static float nextReport; static bool inBattle; static int errors, rebuilt, skipped, beyond, samples, probes;
+        static float nextReport; static bool inBattle; static int errors, rebuilt, skipped, beyond, samples, probes, odd;
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Ballistics] " + m); }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -169,6 +169,12 @@ namespace DipGgFixes
                 arc.initialVelocity = v0;
                 arc.targetVelocity = vT;
                 rebuilt++;
+                // 1.11.199: diagnostics of odd short-range arcs (24.10 log: 10 in at 2-4 km - elevation 18 deg, fall -15 deg)
+                if (odd < 12 && R < 10000f && (f < 0 || Math.Atan2(vy0, vx0) > 0.12))
+                {
+                    odd++;
+                    Log($"odd arc {calIn:0.0} in at {R:0} m: dy {dy:0.0} m, muzzle {mv:0} m/s (game arc v0 {arc.initialVelocity.magnitude:0}), mass {mass:0.0} kg, Cd {Cd(ship):0.00}; physical T {T:0.00} s, fall {want * 180 / Math.PI:0.0} deg; fit k {k:0.00000}, g {g:0.0}, vx0 {vx0:0}, vy0 {vy0:0}, fall at T {f * 180 / Math.PI:0.0} deg; game T {oldT:0.00} s");
+                }
                 if (samples < 6)
                 {
                     samples++;

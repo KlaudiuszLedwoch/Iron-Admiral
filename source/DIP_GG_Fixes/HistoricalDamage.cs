@@ -3,7 +3,7 @@
 // Campbell's Jutland damage tables, navweaps.com); the list with sources is public in DIP_CHANGES.md on GitHub.
 //   over_penetration 0.002 (DIP) / 0.32 (vanilla) -> 0.10: shells passing through without exploding did real damage
 //     (South Dakota 1942, Hoel and Gambier Bay at Samar, Bismarck's bow - 1000-2000 t of water from one 14" shell);
-//   over_penetration_threshold 3.5 / 2 -> 3.0;  armor_damage (shell breaking up on armour) 0.05 / 0.42 -> 0.10 (South Dakota);
+//   over_penetration_threshold 3.5 / 2 -> 3.0;  armor_damage (shell breaking up on armour) 0.05 / 0.42 -> 0.15 (South Dakota; 1.11.199: 0.10 -> 0.15, upper end of the sourced range - author 24.10, damage too low);
 //   fire_damage 0.33 / 1.6 -> 0.30 (fires rarely destroyed structure; the danger was ammunition - Seydlitz 1915, Astoria 1942);
 //   section_damage_torpedo and torpedo_damage_ammo_detonation 5200 / 1750 & 690 -> by year: 2000 in 1900 rising to 5200 by 1940
 //     (warheads 54 kg in 1894, 145 kg in 1910, 127-234 kg in WWI, 224-373 kg Mk 15, ~490 kg Type 93).
@@ -58,7 +58,7 @@ namespace DipGgFixes
                 if (on && (applied != 1 || year != appliedYear))
                 {
                     
-                    var parts = new List<string> { Set("over_penetration", 0.10f), Set("over_penetration_threshold", 3.0f), Set("armor_damage", 0.10f), Set("fire_damage", 0.30f), Set("section_damage_torpedo", TorpBase), Set("torpedo_damage_ammo_detonation", TorpAmmoBase) };
+                    var parts = new List<string> { Set("over_penetration", 0.10f), Set("over_penetration_threshold", 3.0f), Set("armor_damage", 0.15f), Set("fire_damage", 0.30f), Set("section_damage_torpedo", TorpBase), Set("torpedo_damage_ammo_detonation", TorpAmmoBase) };
                     if (applied != 1 || year != appliedYear) Log($"historical damage values on (torpedo damage from the torpedo technologies of each ship): " + string.Join(", ", parts));
                     applied = 1; appliedYear = year;
                 }
