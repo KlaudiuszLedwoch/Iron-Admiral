@@ -31,7 +31,7 @@ namespace DipGgFixes
             On = cat.CreateEntry("ArmorObliquity", true, null, "Belt armour counts thicker when a shell strikes it at a horizontal angle (line of sight through the plate); the cap stops helping above 45 degrees; uncapped shells suffer more");
             MaxFactor = cat.CreateEntry("ObliquityMaxFactor", 3f, null, "Upper limit of the obliquity thickness factor (3 = about 70 degrees; steeper hits are left to the ricochet rules)");
             UncappedExp = cat.CreateEntry("ObliquityUncappedExponent", 1.3f, null, "Exponent of 1/cos(angle) for uncapped shells (capped shells use 1 up to 45 degrees)");
-            CappedYear = cat.CreateEntry("CappedShellYear", 1905, null, "From this year on AP shells are treated as capped");
+            CappedYear = cat.CreateEntry("CappedShellYear", 1905, null, "AP shells count as capped when the historical year of the firing ship's AP shell technology (its AP shell component) is this or later - never the calendar year (1.11.229)");
         }
 
         internal static float capRes = float.NaN;
@@ -45,6 +45,26 @@ namespace DipGgFixes
             return 1920;
         }
 
+        // 1.11.229 (author's rule: mechanics by technology, never by the calendar): capped shells are decided by the firing ship's AP shell
+        //          technology - the historical year of its AP shell component (ap_* in components.csv: 1890 standard, 1895/1898, 1905 capped
+        //          types, 1915, 1925 SAPC). Cached per ship for the battle.
+        static readonly Dictionary<long, int> apYear = new Dictionary<long, int>();
+        internal static void ResetCache() { apYear.Clear(); }
+        static int ApShellYear(Ship shooter)
+        {
+            if (shooter == null) return 0;
+            long k = shooter.Pointer.ToInt64(); int y; if (apYear.TryGetValue(k, out y)) return y;
+            y = 0;
+            try { var comps = shooter.components; if (comps != null) foreach (var kv in comps) { var cd = kv.Value; if (cd == null || cd.type != "shell_ap") continue; int ty = 0; try { var tt = cd.tech; if (tt != null) ty = tt.year; } catch { } if (ty > y) y = ty; } } catch { }
+            if (apYear.Count > 2000) apYear.Clear();
+            apYear[k] = y; return y;
+        }
+        static Ship shooterNow;
+        internal static float Factor(Ship target, Ship.A zone, Ship shooter)
+        {
+            shooterNow = shooter;
+            return Factor(target, zone);
+        }
         internal static float Factor(Ship target, Ship.A zone)
         {
             if (Suspend || On == null || !On.Value || target == null || capFrame != Time.frameCount) return 1f;
@@ -61,7 +81,7 @@ namespace DipGgFixes
             if (calib++ < 5) MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity calibration: direction {capA}, side normal {capB}, angle {Mathf.Acos(Mathf.Clamp01(Mathf.Abs(Vector3.Dot(dir, nrm)))) * Mathf.Rad2Deg:0} deg, game's own result {capRes:0.0}");
             float cos = Mathf.Abs(Vector3.Dot(dir, nrm));                 // 1 = square to the belt
             float ang = Mathf.Acos(Mathf.Clamp01(cos)) * Mathf.Rad2Deg;
-            bool capped = Year() >= CappedYear.Value;
+            int ay = ApShellYear(shooterNow); bool capped = (ay > 0 ? ay : Year()) >= CappedYear.Value; // 1.11.229: by the shell technology; the year only when no AP component is found
             float f;
             if (capped)
             {
@@ -97,10 +117,10 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Ship), "GetEffectiveArmor")]
     internal static class Patch_ObliquityArmor
     {
-        private static void Postfix(Ship __instance, Ship.A __0, ref float __result)
+        private static void Postfix(Ship __instance, Ship.A __0, Ship __3, ref float __result)
         {
             long t0 = Perf.Enabled ? Perf.T() : 0;
-            try { if (__result > 0f) { float f = Obliquity.Factor(__instance, __0); if (f > 1f) __result *= f; } } catch { }
+            try { if (__result > 0f) { float f = Obliquity.Factor(__instance, __0, __3); if (f > 1f) __result *= f; } } catch { }
             if (t0 != 0) Perf.Add(Perf.ARMOR, t0);
         }
     }

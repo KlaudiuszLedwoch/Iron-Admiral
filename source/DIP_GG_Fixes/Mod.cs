@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.228", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.229", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2812,7 +2812,28 @@ namespace DipGgFixes
                 cc.TransferShipToNewOwner(winner, ship.id, ref list, null, false);
                 PrizeDesign.Ensure(ship, winner, "Capture");
                 try { ship.CrewTrainingAmount = 0f; } catch { }
-                try { if (crew < minCrew) ship.CrewPercents = minCrew; } catch { }
+                // 1.11.229 (author, 24.10; promised to hurepoix): the prize crew comes out of the winner's crew pool. The men needed to bring
+                //          the crew up to the sailing minimum are taken from the pool; when the pool is short, the prize gets what the pool
+                //          has (never below half the minimum - a skeleton crew still brings her in).
+                try
+                {
+                    if (crew < minCrew)
+                    {
+                        float total = 0f; try { total = ship.GetTotalCrew(); } catch { }
+                        float pool = 0f; try { pool = winner.crewPool; } catch { }
+                        int need = total > 0f ? (int)Math.Ceiling((minCrew - Math.Max(0f, crew)) * total) : 0;
+                        int give = need; float target = minCrew;
+                        if (need > 0 && pool < need)
+                        {
+                            give = Math.Max(0, (int)pool);
+                            target = total > 0f ? Math.Max(minCrew * 0.5f, Math.Max(0f, crew) + give / total) : minCrew;
+                        }
+                        ship.CrewPercents = target;
+                        if (give > 0) { try { winner.crewPool = pool - give; } catch { } }
+                        MelonLogger.Msg($"[DIP GG Fixes][Capture] prize crew for {ship.name}: {give} men from {winner.data.name}'s crew pool ({pool:0} available, {need} needed to reach {minCrew:P0}); crew now {target:P0}");
+                    }
+                }
+                catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] prize crew: " + e.Message); }
                 __1 = UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f);
                 Captured.Add(ship.Pointer);
                 try { Narrative.Record("prize|" + ship.Pointer, 9, $"{ship.name.Split(new[] { " (" }, StringSplitOptions.None)[0]} was taken as a prize by {winner.data.name}"); } catch { }
