@@ -6,6 +6,7 @@
 //                   projectile_shell_16 "better designed shells", 1927).
 using System;
 using System.Collections.Generic;
+using MelonLoader;
 using Il2Cpp;
 
 namespace DipGgFixes
@@ -14,7 +15,8 @@ namespace DipGgFixes
     {
         static readonly Dictionary<long, int> fc = new Dictionary<long, int>();
         static readonly Dictionary<long, int> nose = new Dictionary<long, int>();
-        internal static void Reset() { fc.Clear(); nose.Clear(); }
+        static int logged;
+        internal static void Reset() { fc.Clear(); nose.Clear(); logged = 0; }
 
         // year of the newest fire-control component (rangefinder or radar) fitted to the ship; 0 = none found
         internal static int FireControl(Ship s)
@@ -68,12 +70,28 @@ namespace DipGgFixes
                     var p = s.player;
                     if (p != null)
                     {
-                        var e = p.technologiesResearchedAll.GetEnumerator(); var ue = e.Cast<Il2CppSystem.Collections.IEnumerator>();
-                        while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                        try
+                        {
+                            var e = p.technologiesResearchedAll.GetEnumerator(); var ue = e.Cast<Il2CppSystem.Collections.IEnumerator>();
+                            while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                        }
+                        catch (Exception e1) { if (logged++ < 3) MelonLogger.Msg("[DIP GG Fixes][Tech] shell nose, researched list: " + e1.Message); }
+                        // 1.11.243 (24.10 log: the player's 1921 ships still fired blunt shells, Cd 0.74, after 1.11.241): the technology list
+                        //           of the player with the researched flag as a second path
+                        if (n < 2)
+                        {
+                            try
+                            {
+                                var tl = p.technologies;
+                                if (tl != null) for (int i = 0; i < tl.Count; i++) { var t = tl[i]; if (t == null || t.data == null) continue; bool ok = false; try { ok = t.isResearched; } catch { } if (!ok) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                            }
+                            catch (Exception e2) { if (logged++ < 3) MelonLogger.Msg("[DIP GG Fixes][Tech] shell nose, technology list: " + e2.Message); }
+                        }
                     }
                 }
                 catch { }
             }
+            if (logged < 12) { logged++; try { MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells)"); } catch { } }
             nose[k] = n; return n;
         }
     }
