@@ -201,7 +201,7 @@ namespace DipGgFixes
         }
 
         // ---- panel and keys ----
-        static GUIStyle oTitle; static int oErrors;
+        static GUIStyle oTitle; static int oErrors; static bool oFolded;
         internal static void OrdersTick()
         {
             try
@@ -238,11 +238,20 @@ namespace DipGgFixes
                 }
                 var cur = CurrentOrder(div);
                 var o = OrderOf(div, false);
-                float w = 470f, h = 58f; float x = (UiScale.W - w) / 2f, y = UiScale.H - 210f;
+                // 1.11.197 (author, 24.10): the panel sat over the sea in front of the ship cards - now a strip at the top of the
+                //          screen under the time controls, and it folds to a small tab (the Alt keys work either way)
+                float w = 470f, h = 58f; float x = (UiScale.W - w) / 2f, y = 54f;
+                if (oFolded)
+                {
+                    var tab = new Rect(x + w - 150f, y, 150f, 20f);
+                    if (GUI.Button(tab, $"Orders: {OrderNames[(int)cur]} ▾")) oFolded = false;
+                    return;
+                }
                 GUI.Box(new Rect(x, y, w, h), "");
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
-                if (why.Length > 70) why = why.Substring(0, 70) + "...";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 16f, 18f), $"<b>Division orders</b> (Alt+1..5): {OrderNames[(int)cur]}{why}", oTitle);
+                if (why.Length > 60) why = why.Substring(0, 60) + "...";
+                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..5): {OrderNames[(int)cur]}{why}", oTitle);
+                if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) oFolded = true;
                 float bw = (w - 16f - 4f * 4f) / 5f;
                 for (int i = 0; i < 5; i++)
                 {

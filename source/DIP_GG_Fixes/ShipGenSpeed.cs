@@ -46,10 +46,13 @@ namespace DipGgFixes
             int prev; if (!lastTry.TryGetValue(p, out prev)) prev = 0;
             if (tryN <= prev) return;
             lastTry[p] = tryN;
-            if (tryN >= total) return; // the last attempt has just failed - nothing left to drop
+            if (tryN + 1 >= total) return; // one attempt left anyway
             string why; if (!Structural(ship, out why)) return;
-            it._triesTotal_5__4 = tryN; ShipGenMemory.saved += total - tryN;
-            Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed on the hull itself ({why}) - the remaining {total - tryN} attempt(s) dropped");
+            // 1.11.197: the coroutine has already decided to go on with the next attempt when this runs (24.10 log: "Attempt 2 / 1"
+            //           after the total was cut to the failed attempt), so the total is cut to one more attempt - the success rule
+            //           of the report (attempts used up = failure) stays consistent
+            it._triesTotal_5__4 = tryN + 1; ShipGenMemory.saved += total - tryN - 1;
+            Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed on the hull itself ({why}) - one more attempt instead of {total - tryN}");
         }
         // the hull cannot take the required main battery: fewer main turrets than the hull minimum AND fewer barrels than its minimum
         // (the game needs only one of the two) - some main guns must be present, so a ship cleared for the next attempt never counts
@@ -79,7 +82,7 @@ namespace DipGgFixes
         static Dictionary<string, int> unlockYear;            // hull -> year of its unlocking technology
         static Dictionary<string, string> hullType;           // hull -> ship type (type(..) in parts.csv param)
         static readonly Dictionary<string, int> newest = new Dictionary<string, int>(); // player|type -> newest unlock year the player has (cached per month)
-        static int newestMonth = -1; static int logged;
+        static int newestMonth = -1; static int logged; static readonly HashSet<string> loggedKeys = new HashSet<string>();
         static void LoadTables()
         {
             if (unlockYear != null) return;
@@ -153,7 +156,7 @@ namespace DipGgFixes
             if (top > 0 && y < top - window)
             {
                 result = false;
-                if (logged++ < 40) Log($"{pk}: hull {name} ({y}) left out for the AI design - newest {type} hull technology {top}, window {window} years");
+                if (logged < 60 && loggedKeys.Add(pk + "|" + name)) { logged++; Log($"{pk}: hull {name} ({y}) left out for the AI design - newest {type} hull technology {top}, window {window} years"); }
             }
         }
 
@@ -164,6 +167,8 @@ namespace DipGgFixes
             try
             {
                 var player = ship.player; if (player == null || player.data == null || !player.isAi) return;
+                bool valid = false; try { valid = ship.IsValid(false); } catch { }
+                if (!valid) { Log($"{key.Replace("|", ": hull ")} - design not kept: the game does not accept it as valid"); return; } // 1.11.197
                 var st = ship.shipType; string type = st != null ? st.name : "ship";
                 var store = ship.ToStore(false); if (store == null) return;
                 string nation = player.data.name;
