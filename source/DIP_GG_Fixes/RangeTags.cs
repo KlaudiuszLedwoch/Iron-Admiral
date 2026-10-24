@@ -15,7 +15,7 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("EnemyRangeTags", true, null, "Battle: a small tag under every identified enemy ship with its distance (km) from the ship you have selected");
         }
-        static GUIStyle sTag; static int errors; static float next; static Ship from, lastOwn; static Il2CppSystem.Collections.Generic.List<Ship> enemies;
+        static GUIStyle sTag; static int errors; static float next; static Ship from, lastOwn; static IntPtr battlePtr; static Il2CppSystem.Collections.Generic.List<Ship> enemies;
 
         internal static void OnGUI()
         {
@@ -30,6 +30,9 @@ namespace DipGgFixes
                     next = Time.unscaledTime + 0.5f; from = null; enemies = null;
                     var ui = G.ui; Ship sel = ui != null ? ui.selectedShipMain : null;
                     var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return;
+                    // 1.11.238 (author's report 24.10: "6.7 km" under a cruiser 0.4 km away): the remembered reference ship must belong to
+                    //           this battle - after a new battle starts the old ship object still answers, from where it last stood
+                    if (battle.Pointer != battlePtr) { battlePtr = battle.Pointer; lastOwn = null; }
                     Player me = null;
                     var players = CampaignController.Instance != null && CampaignController.Instance.CampaignData != null ? CampaignController.Instance.CampaignData.Players : null;
                     // 1.11.217 (author, 24.10): measured from the division you have selected (its leader); when an enemy ship is selected the

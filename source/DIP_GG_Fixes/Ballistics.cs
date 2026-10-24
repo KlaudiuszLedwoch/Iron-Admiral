@@ -48,7 +48,7 @@ namespace DipGgFixes
             try
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = beyond = samples = probes = 0; scaledMisses = 0; ratioSum = 0; TechYears.Reset(); Obliquity.ResetCache(); nextReport = Time.time + 120f; }
+                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = beyond = samples = probes = 0; scaledMisses = 0; ratioSum = 0; mvLogged.Clear(); TechYears.Reset(); Obliquity.ResetCache(); nextReport = Time.time + 120f; }
                 else if (!battle && inBattle) { inBattle = false; Report("battle end"); }
                 else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); }
             }
@@ -152,13 +152,17 @@ namespace DipGgFixes
             fall = Math.Atan2(-vyT, vxT);
         }
 
-        internal static void Rebuild(Shell.Arc arc, Vector3 from, Vector3 to, float calIn, Ship ship = null, float mass = 0f, int grade = 0)
+        internal static void Rebuild(Shell.Arc arc, Vector3 from, Vector3 to, float calIn, Ship ship = null, float mass = 0f, int grade = 0, float mvGun = 0f)
         {
             if (Realistic == null || !Realistic.Value || arc == null || calIn < 0.9f) return;
             try
             {
                 Vector3 rel = to - from; Vector2 hz = new Vector2(rel.x, rel.z); float R = hz.magnitude; if (R < 300f) return;
-                float mv = arc.initialVelocity.magnitude; if (!(mv > 1f)) return;
+                // 1.11.238 (author's question 24.10: 406 mm "reach 17.3 km", barrels too high): the game's arc speed is not the muzzle
+                //           velocity - the game fits a flat arc to its own time of flight, so its "initial velocity" is about range / time
+                //           (16 in at 17.6 km: 674 m/s for a 780-790 m/s gun; 5 in at 10 km: 1044 m/s). The physics now starts from the
+                //           gun's own muzzle velocity (Part.ShellVelocity: gun data x historical table x the ship's shell and barrel choices).
+                float mv = mvGun > 100f ? mvGun : arc.initialVelocity.magnitude; if (!(mv > 1f)) return;
                 mv = Mathf.Clamp(mv, 300f, 1100f);
                 float elevMax = grade > 0 ? MountElevation.Elev(grade) : 45f;
                 var real = RealFor(mv, calIn, mass, Cd(ship), R, elevMax);
@@ -223,6 +227,7 @@ namespace DipGgFixes
         // the offset of its splash point from the point the gun aimed at (target position + target velocity x the game's time of
         // flight) is scaled; the shell then flies to the new splash point.
         static int scaledMisses; static double ratioSum;
+        static readonly HashSet<string> mvLogged = new HashSet<string>(); // 1.11.238
         static Vector3 ScaleMiss(Shell s, Part from, Ship shooter, Vector3 start, Vector3 to, float gameT)
         {
             try
@@ -255,7 +260,12 @@ namespace DipGgFixes
                 float cal = 0f; try { var d = from != null ? from.data : null; if (d != null) cal = d.caliber; } catch { }
                 Ship shooter = null; try { shooter = from != null ? from.ship : null; } catch { }
                 b = ScaleMiss(s, from, shooter, a, b, arc.timeToTarget);
-                Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f), GradeOf(from)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
+                // 1.11.238: the gun's muzzle velocity for this ship and shell (not the game's fitted arc speed)
+                float mvGun = 0f, bonus = 0f;
+                try { if (from != null && from.data != null) { var st = new Il2CppSystem.Nullable<Ship.ShellType>(s.shellType); mvGun = Part.ShellVelocity(from.data, shooter, st); try { bonus = Part.ShellVelocityTotalBonus(from.data, shooter, st); } catch { } } } catch { }
+                float arcV0 = arc.initialVelocity.magnitude;
+                Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f), GradeOf(from), mvGun); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
+                if (cal >= 100f && mvLogged.Count < 24) { string mkey = $"{cal / 25.4f:0.0} in Mk{GradeOf(from)} {(shooter != null ? shooter.name : "?")}"; if (mvLogged.Add(mkey)) Log($"muzzle velocity source {mkey}: gun with the ship's shell and barrel choices {mvGun:0} m/s (bonus {bonus:+0.##;-0.##;0}), game arc speed {arcV0:0} m/s (range / time of flight), used {(mvGun > 100f ? mvGun : arcV0):0} m/s, mass {ShellMass(s, from, cal / 25.4f):0} kg, Cd {Cd(shooter):0.00}"); }
                 try { var iv = arc.initialVelocity; float hz0 = new Vector2(iv.x, iv.z).magnitude; if (hz0 > 1f) BarrelElevation.Record(from, Mathf.Atan2(iv.y, hz0) * Mathf.Rad2Deg); } catch { } // 1.11.209
                 if (LogOn == null || !LogOn.Value) return;
                 float t = arc.timeToTarget * WS; if (t <= 0f) return; // logged in real seconds (1.11.206)
@@ -380,6 +390,8 @@ namespace DipGgFixes
             try
             {
                 float mv = 0f, mass = 0f; try { mv = g.ShellVelocity(ship, pd, grade); mass = g.ShellWeight(ship, pd, grade); } catch { }
+                // 1.11.238: with a ship, its own gun values (shell and barrel choices of the design) - the same the shells fly with
+                if (ship != null && pd != null) { try { float m2 = Part.ShellVelocity(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>()); if (m2 > 100f) mv = m2; float w2 = Part.ShellWeight(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>()); if (w2 > 0.1f) mass = w2; } catch { } }
                 if (mv < 100f || mass <= 0f) return range;
                 float calIn = g.caliberInch > 0f ? g.caliberInch : (pd != null ? pd.caliber / 25.4f : 0f); if (calIn <= 0f) return range;
                 // 1.11.221: without a ship (the game asks for raw gun values) the shell shape of the generation: Mk 1-2 blunt, Mk 3 1907 nose, Mk 4-5 1927 nose
