@@ -18,9 +18,9 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> Scale;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("EraAccuracy", true, null, "Battle: hit chance follows the era, calibrated to the hit rates of real battles (pre-dreadnought fights, Jutland, WWII) - much lower than DIP at long range");
-            Radar = cat.CreateEntry("EraAccuracyRadar", 3.0f, null, "Battle (hit chance by era): multiplier of the hit chance for ships with fire-control radar (historically radar gave 3-5x more hits than optical fire control)");
-            Scale = cat.CreateEntry("EraAccuracyScale", 1.0f, null, "Battle (hit chance by era): multiplier of the whole table (1 = historical, higher = more hits)");
+            On = cat.CreateEntry("FireControlTechAccuracy", true, null, "Battle: hit chance by the year of the fire-control technology fitted to each ship (its newest rangefinder or radar, never the calendar year), calibrated to the hit rates of real battles - the game raises accuracy with every fire-control technology far beyond history, this brings it back; full from 12 km, weaker at shorter range");
+            Radar = cat.CreateEntry("FireControlTechRadar", 3.0f, null, "Battle (hit chance by fire-control technology year): multiplier of the hit chance for ships with fire-control radar (historically radar gave 3-5x more hits than optical fire control)");
+            Scale = cat.CreateEntry("FireControlTechScale", 1.0f, null, "Battle (hit chance by fire-control technology year): multiplier of the whole table (1 = historical, higher = more hits)");
         }
         // year -> multiplier of the game's hit chance (calibrated in auto tests, see the log lines "[Ballistics] ... hits")
         static readonly int[] Years = { 1890, 1905, 1916, 1930, 1945 };
@@ -65,7 +65,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> Dispersion;
         internal static void CreateDispersionPrefs(MelonPreferences_Category cat)
         {
-            Dispersion = cat.CreateEntry("EraDispersion", true, null, "Battle: missing shells spread like real salvos of their era (wide patterns before 1905, Jutland-era patterns in WWI, tighter in WWII) instead of landing in one spot as in DIP");
+            Dispersion = cat.CreateEntry("FireControlTechDispersion", true, null, "Battle: missing shells spread like real salvos of the fire-control technology in the battle (its technology year: wide patterns with early rangefinders, Jutland-like patterns, tighter with late rangefinders and radar) instead of landing in one spot as in DIP");
         }
         static readonly string[] DispNames = { "splash_disp_far", "splash_disp_close", "shell_max_distance_dispersion", "max_shell_dispersion", "splash_disp_normal_worst", "splash_disp_aiming_worst", "splash_overhead_close", "splash_overhead_far" };
         static readonly float[] DispVanilla = { 555f, 4f, 1500f, 65f, 0.5f, 0.35f, 25f, 2.4f };
