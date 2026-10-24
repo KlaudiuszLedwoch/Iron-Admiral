@@ -109,7 +109,7 @@ namespace DipGgFixes
         }
 
         // ---- 2. catch-up grants, once a month after the turn ----
-        static int grantMonth = -1; static readonly Dictionary<IntPtr, int> lastGrant = new Dictionary<IntPtr, int>();
+        static int grantMonth = -1, grantLog; static readonly Dictionary<IntPtr, int> lastGrant = new Dictionary<IntPtr, int>();
         internal static void Tick()
         {
             if (CatchUp == null || !CatchUp.Value) return;
@@ -140,9 +140,18 @@ namespace DipGgFixes
                         int y = t.data.year; if (y < bestYear) { bestYear = y; pick = t; }
                     }
                     if (pick == null) continue;
-                    try { pick.progress = 1f; } catch { }
-                    bool now = false; try { now = pick.isResearched; } catch { }
-                    if (!now) { try { pick.progress = 1.0001f; now = pick.isResearched; } catch { } }
+                    // 1.11.232: "researched" is an exact comparison of the progress value with a constant of the game (beta.38: progress 1
+                    //           left the technology unmarked) - the value is copied from a technology the power has already researched
+                    float doneVal = float.NaN;
+                    try { var e = p.technologiesResearchedAll.GetEnumerator(); var ue = e.Cast<Il2CppSystem.Collections.IEnumerator>(); if (ue.MoveNext() && e.Current != null) doneVal = e.Current.progress; } catch { }
+                    bool now = false;
+                    foreach (var v in new[] { doneVal, 1f, 100f, -1f, 0f })
+                    {
+                        if (float.IsNaN(v)) continue;
+                        try { pick.progress = v; now = pick.isResearched; } catch { }
+                        if (now) break;
+                    }
+                    if (grantLog++ < 3) Log($"researched-progress value of {Economy.Name(p)}: {doneVal} (grant marked researched: {now}, progress now {pick.progress})");
                     try { p.OnTechnologiesChanged(); } catch { }
                     lastGrant[p.Pointer] = m; own.Add(pick.data.name);
                     string nice = pick.data.name; try { nice = LocalizeManager.Localize(pick.data.nameUi) ?? nice; } catch { }
