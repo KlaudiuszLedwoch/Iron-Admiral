@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.159", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.160", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3754,6 +3754,7 @@ namespace DipGgFixes
                 if (!refit) return;
                 var st = s.shipType; if (st == null || st.name != t.name) return;
                 if (p != null && s.player != null && s.player.Pointer != p.Pointer) return;
+                if (!Eligible(s, result)) return; // 1.11.160: P6 - only from 1922, battleships/battlecruisers, ships already above the limit
                 float allowed = Allowed(s, a.Value); if (allowed <= 0f) return;
                 if (allowed > result)
                 {
@@ -3771,7 +3772,23 @@ namespace DipGgFixes
             float allowed = o + allowance;
             float hullMax = 0f; try { var h = s.hull; if (h != null && h.data != null) hullMax = h.data.tonnageMax; } catch { }
             if (hullMax > 0f) allowed = Math.Min(allowed, hullMax);
+            float tm = 0f; try { tm = s.TonnageMax(); } catch { } if (tm > 0f) allowed = Math.Min(allowed, tm); // 1.11.160: never above the game's own maximum
             return allowed;
+        }
+        // 1.11.160 (P6, decision 22.10): the treaty allowance only from 1922, only for battleships and battlecruisers, and only when
+        // the ship before the refit is already above the treaty limit (23.10: Ship.TonnageMax of every refit design was raised up to
+        // the hull maximum - refitted ships changed size, deck equipment was rescaled, torpedo tubes had to be removed)
+        internal static bool Eligible(Ship s, float limit)
+        {
+            try
+            {
+                int year = 0; try { year = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
+                if (year < 1922) return false;
+                var st = s.shipType; if (st == null || (st.name != "bb" && st.name != "bc")) return false;
+                float o; if (!origin.TryGetValue(s.Pointer, out o)) { o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return false; origin[s.Pointer] = o; }
+                return limit <= 0f || o > limit;
+            }
+            catch { return false; }
         }
         internal static void Apply(Ship s, ref float result)
         {
@@ -3797,12 +3814,14 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { })]
     internal static class Patch_TonnageMax_Refit
     {
+        static bool Prepare() { return false; } // 1.11.160: Ship.TonnageMax is no longer raised (P6)
         private static void Postfix(Ship __instance, ref float __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitTreaty.Apply(__instance, ref __result); if (t0 != 0) Perf.Add(Perf.TON, t0); }
     }
 
     [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { typeof(PartData), typeof(Ship) })]
     internal static class Patch_TonnageMaxStatic_Refit
     {
+        static bool Prepare() { return false; } // 1.11.160: Ship.TonnageMax is no longer raised (P6)
         private static void Postfix(Ship __1, ref float __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitTreaty.Apply(__1, ref __result); if (t0 != 0) Perf.Add(Perf.TON, t0); }
     }
 
@@ -3826,13 +3845,14 @@ namespace DipGgFixes
                 var a = DipGgFixesMod.RefitTreatyAllowance; if (a == null || a.Value <= 0f) return;
                 bool refit = false; try { refit = s.isRefitDesign; } catch { }
                 string r = reason ?? "";
-                if (logged < 40 && (where == "save button" || logged < 10)) { logged++; MelonLogger.Msg($"[DIP GG Fixes][Refit] {where}: {s.name} refit={refit} tonnage {SafeTon(s):F0} t - cannot build: {StripTags(r)}"); }
+                if (logged < 40 && (where == "save button" || logged < 10) && !string.Equals(StripTags(reason ?? "").Trim(), "valid", StringComparison.OrdinalIgnoreCase)) { logged++; MelonLogger.Msg($"[DIP GG Fixes][Refit] {where}: {s.name} refit={refit} tonnage {SafeTon(s):F0} t - cannot build: {StripTags(r)}"); }
                 if (!refit) return;
                 string plain = StripTags(r).Trim();
                 if (plain.Contains("\n")) return;
                 string low = plain.ToLowerInvariant();
                 bool displacementOnly = low == "tonnage" || low.Contains("above displacement limit for") && plain.Split(':').Length <= 4 && low.TrimEnd('.', ' ').EndsWith("t");
                 if (!displacementOnly) return;
+                if (!RefitTreaty.Eligible(s, 0f)) return; // 1.11.160: P6
                 float allowed = RefitTreaty.AllowedFor(s, a.Value); float ton = SafeTon(s);
                 if (allowed <= 0f || ton > allowed + 0.5f) { MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: {ton:F0} t is above the refit allowance ({allowed:F0} t) - stays blocked"); return; }
                 result = true; reason = "";
