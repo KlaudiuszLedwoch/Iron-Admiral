@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.162", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.168", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -244,7 +244,7 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
-            RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
+            RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
             ArmorDiag.Tick();
             Fog.Tick();
@@ -574,7 +574,7 @@ namespace DipGgFixes
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
             ForeignPorts.CreatePrefs(cat); // 1.11.134
-            Successors.CreatePrefs(cat); Occupation.CreatePrefs(cat); BattleAi.CreateOrderPrefs(cat); ReShadeSetup.CreatePrefs(cat); Ballistics.CreatePrefs(cat); // 1.11.151, 1.11.154, 1.11.155, 1.11.161 // 1.11.149 (1.11.146: Auto armour button removed)
+            Successors.CreatePrefs(cat); Occupation.CreatePrefs(cat); BattleAi.CreateOrderPrefs(cat); ReShadeSetup.CreatePrefs(cat); Ballistics.CreatePrefs(cat); EraAccuracy.CreatePrefs(cat); HistoricalDamage.CreatePrefs(cat); // 1.11.151, 1.11.154, 1.11.155, 1.11.161 // 1.11.149 (1.11.146: Auto armour button removed)
             OtherMods.CreatePrefs(cat); OtherMods.Scan(); // 1.11.138
             LogShare.CreatePrefs(cat); // 1.11.139
             FleetOrders.CreatePrefs(cat); // 1.11.107
