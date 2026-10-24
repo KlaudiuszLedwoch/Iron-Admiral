@@ -90,7 +90,7 @@ namespace DipGgFixes
                             try { rg = gd.Range(s, pd, g); } catch { }
                             try { v = gd.ShellVelocity(s, pd, g); } catch { }
                             try { w = gd.ShellWeight(s, pd, g); } catch { }
-                            try { pen = gd.Penetration(s, pd, g, false); } catch { }
+                            try { pen = gd.Penetration(s, pd, g, true); } catch { }
                             sb.Append($"\n   {gd.caliberInch,4:0.0} in | {side} {ty} | {g}{(g == fitted ? "*" : " ")} | {fr,6:0.00} | {rg,6:0} | {v,5:0} | {w,7:0.0} | {pen,6:0}");
                         }
                     }
