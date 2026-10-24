@@ -188,6 +188,7 @@ namespace DipGgFixes
             else
                 try { Log("paused = " + TimeControl.IsPaused()); if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch (Exception e) { Log("pause: " + e.Message); }
             GiveOrders(); // 1.11.157
+            GunLab.Run(); // 1.11.173
             float end = Time.realtimeSinceStartup + Seconds.Value; float next = 0f;
             running = true;
             float firstShot = Time.realtimeSinceStartup + 3f, nextOverview = firstShot + 5f; bool f10Done = false;
