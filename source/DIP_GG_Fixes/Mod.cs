@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.203", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.204", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1438,10 +1438,12 @@ namespace DipGgFixes
                 var rep = Fog.PType(leader.player, e); if (rep == null) return false;
                 if (Fog.PCapital(rep)) return true;
                 float tl2 = Ton(leader), te2 = Fog.PTon(leader.player, e, Ton(e));
+                if (te2 >= 6000f) return true; // 1.11.204
                 return tl2 > 0f && te2 >= tl2 * DipGgFixesMod.TorpedoTargetSizeRatio.Value;
             }
             if (IsCapital(e)) return true;
             float tl = Ton(leader), te = Ton(e);
+            if (te >= 6000f) return true; // 1.11.204: anything of cruiser size is worth a torpedo (24.10: a 12,400 t light cruiser was "a small target" for a 13,000 t heavy cruiser)
             return tl > 0f && te >= tl * DipGgFixesMod.TorpedoTargetSizeRatio.Value;
         }
         // 1.11.58: enemy strength as the side sees it - ships never seen do not count, unidentified ones by their reported type
