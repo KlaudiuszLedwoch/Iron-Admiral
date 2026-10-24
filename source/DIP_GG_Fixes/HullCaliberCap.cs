@@ -20,7 +20,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("AiHullCaliberCap", true, null, "Campaign: the AI ship generator's main calibre on a battleship or battlecruiser hull is capped by the hull's tonnage as history had it (up to 20 000 t 12\", 26 000 t 13\", 30 000 t 14\", 34 000 t 15\", 42 000 t 16\", 52 000 t 17\", above: the hull's own limit) - no 16\" guns on a 25 000 t hull that then fails on weight");
+            On = cat.CreateEntry("AiHullCaliberCap", true, null, "Campaign: the AI ship generator's main calibre on a battleship or battlecruiser hull is capped by the hull's tonnage as history had it (up to 20 000 t 12\", 26 000 t 13\", 30 000 t 14\", 34 000 t 15\", 42 000 t 16\", 52 000 t 17\", above: the hull's own limit) and its secondary guns limited in number (12 up to 20 000 t, 14 up to 30 000 t, 16 up to 42 000 t, 20 above) - no 16\" guns and 8\" casemates on a 25 000 t hull that then fails on weight");
         }
         // cap by the hull's maximum tonnage (inches); 0 = no cap beyond the hull's own
         internal static int CapFor(float tonnageMax)
@@ -33,6 +33,13 @@ namespace DipGgFixes
             if (tonnageMax <= 42000f) return 16;
             if (tonnageMax <= 52000f) return 17;
             return 0;
+        }
+        internal static int SecCountFor(float tonnageMax)
+        {
+            if (tonnageMax <= 20000f) return 12;
+            if (tonnageMax <= 30000f) return 14;
+            if (tonnageMax <= 42000f) return 16;
+            return 20;
         }
         static bool applied; static int errors;
         internal static void Apply(GameData gd)
@@ -60,6 +67,10 @@ namespace DipGgFixes
                     if (own > 0 && cap >= own) continue;   // the hull's own limit is already tighter or equal
                     if (lim == null) { lim = new Il2CppSystem.Collections.Generic.List<string>(); px["shipgen_limit"] = lim; }
                     lim.Add("max_main_gun_cal:" + cap);
+                    // 1.11.237: secondary battery count as the period's ships carried (Iron Duke 12 x 6", Queen Elizabeth 14 x 6",
+                    //           Bayern 16 x 5.9", Nagato 20 x 5.5") - the 24.10 session still failed on weight with the main calibre capped
+                    bool hasSec = false; try { for (int i = 0; i < lim.Count; i++) if (lim[i] != null && lim[i].Contains("max_sec_gun_count")) hasSec = true; } catch { }
+                    if (!hasSec) lim.Add("max_sec_gun_count:" + SecCountFor(pd.tonnageMax));
                     capped++;
                     if (sample.Count < 8) sample.Add($"{pd.name} ({pd.tonnageMin:0}-{pd.tonnageMax:0} t, hull limit {own}\"): AI max {cap}\"");
                 }

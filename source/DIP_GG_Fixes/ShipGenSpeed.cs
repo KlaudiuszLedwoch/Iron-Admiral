@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using HarmonyLib;
 using MelonLoader;
 using UnityEngine;
@@ -47,6 +48,7 @@ namespace DipGgFixes
             int prev; if (!lastTry.TryGetValue(p, out prev)) prev = 0;
             if (tryN <= prev) return;
             lastTry[p] = tryN;
+            try { Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed: {Summary(ship)}"); } catch { } // 1.11.237: what the failed attempt carried
             if (tryN + 1 >= total) return; // one attempt left anyway
             string why; if (!Structural(ship, out why)) return;
             // 1.11.223 (author's decision 24.10): a modern hull that cannot take its full main battery is not given up - the next
@@ -59,6 +61,37 @@ namespace DipGgFixes
             //           of the report (attempts used up = failure) stays consistent
             it._triesTotal_5__4 = tryN + 1; ShipGenMemory.saved += total - tryN - 1;
             Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed on the hull itself ({why}) - one more attempt instead of {total - tryN}");
+        }
+        // 1.11.237: what a failed attempt carried - guns by calibre (turrets x barrels, casemates), tonnage against the hull's maximum
+        static string Summary(Ship ship)
+        {
+            try
+            {
+                var guns = new SortedDictionary<float, int[]>(); int torp = 0;
+                var parts = ship.parts;
+                for (int i = 0; i < parts.Count; i++)
+                {
+                    var d = parts[i] != null ? parts[i].data : null; if (d == null) continue;
+                    if (d.isTorpedo) { torp++; continue; }
+                    if (!d.isGun) continue;
+                    float cal = 0f; try { cal = (float)Math.Round(d.GetCaliberInch(ship), 1); } catch { }
+                    bool casemate = d.name != null && d.name.IndexOf("casemate", StringComparison.OrdinalIgnoreCase) >= 0;
+                    int[] c; if (!guns.TryGetValue(cal, out c)) { c = new int[3]; guns[cal] = c; }
+                    if (casemate) c[2]++; else { c[0]++; c[1] += Math.Max(1, d.barrels); }
+                }
+                var sb = new System.Text.StringBuilder();
+                foreach (var kv in guns.Reverse())
+                {
+                    if (sb.Length > 0) sb.Append(", ");
+                    sb.Append(kv.Key.ToString("0.#")).Append("\"");
+                    if (kv.Value[0] > 0) sb.Append($" {kv.Value[0]}x{(kv.Value[0] > 0 ? kv.Value[1] / kv.Value[0] : 0)}");
+                    if (kv.Value[2] > 0) sb.Append($" {kv.Value[2]} casemate(s)");
+                }
+                if (torp > 0) sb.Append($", {torp} torpedo mount(s)");
+                float ton = 0f, max = 0f; try { ton = ship.Tonnage(); } catch { } try { max = ship.hull != null && ship.hull.data != null ? ship.hull.data.tonnageMax : 0f; } catch { }
+                return $"{sb} - {ton:0} t of {max:0} t max";
+            }
+            catch (Exception e) { return "summary failed: " + e.Message; }
         }
         // 1.11.223: hull minimum relaxed by one turret / two barrels for the rest of this generation (floor: 2 turrets, 4 barrels)
         internal static MelonPreferences_Entry<bool> RelaxTurrets;
