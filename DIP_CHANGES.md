@@ -93,6 +93,28 @@ Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). 
 
 Reference guns include: GB 4"/40 QF, US 5"/40, GB 6"/40 QF, German 15 cm L/40, GB 12"/35 (Mk 1); US 3"/50, German 10.5 cm L/40, US 5"/50, GB 6"/45 Mk VII, GB 7.5"/45, US 8"/45, GB 9.2"/47, GB 10"/45, German 28 cm L/40, GB 12"/40 (Mk 2); US 5"/51, German 21 cm L/45, GB 9.2"/50, German 28 cm L/45 and L/50, US 12"/50, GB 13.5"/45, US 14"/45, GB 15"/42, German 38 cm L/45, GB 18"/40 (Mk 3); US 4"/50 Mk 9, US 5"/25, US 6"/53, GB 6"/50 Mk XXIII, GB 7.5"/45 Mk VI, GB 8"/50, US 8"/55, German 28 cm C/28, US 14"/50, GB 16"/45 (Mk 4); US 5"/38, German 20.3 cm C/34, German 28 cm C/34, GB 14"/45 Mk VII, German 38 cm C/34, Italian 381/50, US 16"/45 and 16"/50, Japanese 46 cm (Mk 5). Where several guns are listed, the value is their average.
 
+**Shells by generation (F10: HistoricalShells, on):** muzzle velocity and projectile weight of each calibre and generation are set to real guns of the period (navweaps.com gun pages, full charge, the main AP/APC or common shell of the gun; where several guns are listed the value is their average, and the weights are brought to the band's calibre with the cube of the calibre, e.g. a 5.5" shell counts at 5"). The game's shell weight and velocity (with the ship's shell technologies) are scaled against the base values of guns.csv. Before, DIP gave a 5" Mk 3 gun 843 m/s and 25 kg; the 5"/51 fired a 22.7 kg shell at 960 m/s. The velocity feeds the physical ballistics and the game's penetration, the weight its damage.
+
+| Calibre | Mk 1 | Mk 2 | Mk 3 | Mk 4 | Mk 5 |
+|---|---|---|---|---|---|
+| 3" | 5.0 kg, 648 m/s | 5.6 kg, 768 m/s | 5.8 kg, 722 m/s | 5.7 kg, 820 m/s | 5.2 kg, 910 m/s |
+| 4" | 13.8 kg, 698 m/s | 14.5 kg, 744 m/s | 14.5 kg, 842 m/s | 13.5 kg, 905 m/s | 16.5 kg, 852 m/s |
+| 5" | 23.5 kg, 762 m/s | 23.6 kg, 812 m/s | 26.3 kg, 888 m/s | 26.1 kg, 851 m/s | 30.4 kg, 797 m/s |
+| 6" | 44.2 kg, 728 m/s | 46.9 kg, 820 m/s | 46.4 kg, 853 m/s | 49.8 kg, 909 m/s | 53.3 kg, 798 m/s |
+| 7"-7.5" | 69.5 kg, 770 m/s | 71.9 kg, 866 m/s | 74.5 kg, 864 m/s | 83.9 kg, 882 m/s | - |
+| 8" | 101 kg, 814 m/s | 122 kg, 794 m/s | 98 kg, 900 m/s | 122 kg, 868 m/s | 137 kg, 844 m/s |
+| 9.2"-9.4" | 141 kg, 700 m/s | 161 kg, 847 m/s | 176 kg, 840 m/s | - | - |
+| 10" | 218 kg, 736 m/s | 228 kg, 854 m/s | 231 kg, 840 m/s | - | - |
+| 11" | 239 kg, 820 m/s | 239 kg, 820 m/s | 300 kg, 868 m/s | 298 kg, 910 m/s | 328 kg, 890 m/s |
+| 12" | 365 kg, 702 m/s | 396 kg, 786 m/s | 411 kg, 847 m/s | - | 485 kg, 796 m/s |
+| 13"-13.5" | 513 kg, 610 m/s | - | 504 kg, 790 m/s | - | 561 kg, 870 m/s |
+| 14" | - | - | 663 kg, 803 m/s | 680 kg, 823 m/s | 721 kg, 757 m/s |
+| 15" | - | - | 837 kg, 751 m/s | - | 861 kg, 833 m/s |
+| 16" | - | - | - | 951 kg, 789 m/s | 1161 kg, 758 m/s |
+| 18" | - | - | 1506 kg, 683 m/s | - | 1432 kg, 780 m/s |
+
+Guns used (navweaps.com pages): 3" - GB 12-pdr 12cwt, German 8.8 cm L/30 (Mk 1); US 3"/50 Mk 2-8, German 8.8 cm L/35 and L/45 (Mk 2); Japanese 3"/40 3rd Year, GB 3"/45 20cwt (Mk 3); US 3"/50 Mk 10-22, German 8.8 cm C/25 and C/32, Japanese 8 cm Type 88 (Mk 4); Japanese 8 cm/60 Type 98 (Mk 5). 4" - GB 4"/40 QF, US 4"/40 and 4"/50 Mk 7 (Mk 1); German 10.5 cm L/40 and L/45, GB 4"/40 Mk IV, US 4"/50 Mk 8 (Mk 2); GB 4"/45 Mk IX, US 4"/50 Mk 9 (Mk 3); German 10.5 cm C/33 and C/28, Japanese 10 cm Type 88 (Mk 4); GB 4"/45 Mk XVI and 4.5"/45, Japanese 10 cm/65 Type 98 (Mk 5). 5" - US 5"/40, Russian 120 mm/45 (Mk 1); US 5"/50, GB 4.7"/45 Mk V (Mk 2); US 5"/51, GB 5.5"/50, Japanese 14 cm/50 (Mk 3); Japanese 12.7 cm/50, GB 4.7"/45 Mk IX, German 12.7 cm C/34 (Mk 4); US 5"/38 and 5"/54, GB 5.25"/50 and 4.7"/50 Mk XI (Mk 5). 6" - GB 6"/40 QF, German 15 cm L/40, Japanese 6"/40 EOC (Mk 1); GB 6"/45 Mk VII, US 6"/50, German 15 cm L/45 (Mk 2); GB 6"/45 Mk XII, Japanese 15 cm/50 41st Year (Mk 3); US 6"/53, GB 6"/50 Mk XXIII, German 15 cm C/25, Japanese 15.5 cm/60 (Mk 4); US 6"/47, German 15 cm KC/36 (Mk 5). 7"-7.5" - French 194 mm/40 (Mk 1); GB 7.5"/45 Mk I, US 7"/45, French 194 mm/50, German 17 cm L/40 (Mk 2); Italian 190 mm/45 (Mk 3); GB 7.5"/45 Mk VI, Soviet 180 mm/57 (Mk 4). 8" - US 8"/40, Russian 8"/45, German 21 cm L/40 (Mk 1); US 8"/45, Japanese and Italian 8"/45 EOC, Russian 8"/50 (Mk 2); German 21 cm L/45 (Mk 3); GB 8"/50, US 8"/55 Mk 9, Japanese 20 cm/50, French 203 mm/50 (Mk 4); German 20.3 cm C/34, US 8"/55 Mk 12 super-heavy (Mk 5). 9.2" - GB 9.2"/40, German 24 cm L/40 (Mk 1); GB 9.2"/47 (Mk 2); GB 9.2"/50, French 240 mm/50 (Mk 3). 10" - Russian 10"/45, French 274 mm/40, Japanese 10"/40 EOC (Mk 1); GB 10"/45, US 10"/40, Russian 10"/50 (Mk 2); Japanese 10"/45 Vickers, Italian 10"/45 (Mk 3). 11" - German 28 cm L/40 (Mk 1-2), L/45 and L/50 (Mk 3), C/28 (Mk 4), C/34 (Mk 5). 12" - GB 12"/35, US 12"/35, Russian 12"/35, French 305 mm/40 (Mk 1); GB 12"/40, US 12"/40, Japanese 12"/40 EOC, Italian 12"/40 (Mk 2); US 12"/50 Mk 7, GB 12"/50, German 30.5 cm L/50, French 305 mm/45 (Mk 3); US 12"/50 Mk 8, Italian 320 mm/44 (Mk 5). 13"-13.5" - US 13"/35 (Mk 1); GB 13.5"/45, French 340 mm/45 (Mk 3); French 330 mm/50 (Mk 5). 14" - US 14"/45, GB 14"/45 Mk I, US 14"/50 Mk 4 (Mk 3); US 14"/50 Mk 11 (Mk 4); GB 14"/45 Mk VII (Mk 5). 15" - GB 15"/42, German 38 cm L/45, Italian 381/40 (Mk 3); German 38 cm C/34, Italian 381/50, French 380 mm/45 (Mk 5). 16" - GB 16"/45 Mk I, Japanese 41 cm/45 (Mk 4); US 16"/45 Mk 6 and 16"/50 Mk 7, German 40.6 cm C/34 (Mk 5). 18" - GB 18"/40 (Mk 3); Japanese 46 cm Type 94 (Mk 5). Cells marked "-" have no gun of that calibre in that period on navweaps.com; the game's values stay.
+
 ## 6. Weights ✅ partly (F10: HistoricalWeights, on – also in running campaigns)
 
 | | Vanilla | DIP | History | Iron Admiral |
