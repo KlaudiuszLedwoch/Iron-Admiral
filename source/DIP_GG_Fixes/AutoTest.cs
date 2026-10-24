@@ -60,9 +60,11 @@ namespace DipGgFixes
             Seconds = cat.CreateEntry("AutoTestSeconds", 900f, null, "Author's tool: real-time length of the unattended battle test (s)");
             Speed = cat.CreateEntry("AutoTestTimeScale", 4f, null, "Author's tool: Unity time scale during the unattended battle test");
             Shots = cat.CreateEntry("AutoTestScreenshots", false, null, "Author's tool: take screenshots during the unattended battle test (UserData\\IronAdmiral\\screens)");
+            LoadTimeout = cat.CreateEntry("AutoTestLoadTimeout", 2400f, null, "Author's tool: the unattended battle test quits when the battle has not loaded after this many seconds (design generation can take long)");
             Orders = cat.CreateEntry("AutoTestOrders", "", null, "Author's tool: division orders given to the player's light divisions at the start of the unattended battle test, in turn, e.g. Screen,Scout,Torpedo,Free (empty = none)");
         }
         internal static MelonPreferences_Entry<string> Orders;
+        internal static MelonPreferences_Entry<float> LoadTimeout; // 1.11.176
 
         // 1.11.157: the player's divisions get division orders (test of the autonomy) - light ships in turn, capital ships stay manual
         static void GiveOrders()
@@ -167,8 +169,8 @@ namespace DipGgFixes
             }
             catch (Exception e) { Log("setup/start: " + e); Application.Quit(); yield break; }
             t0 = Time.realtimeSinceStartup;
-            bool loaded = false; while (Time.realtimeSinceStartup < t0 + 2400f) { try { loaded = GameManager.IsBattle && !GameManager.IsLoadingAny && BattleManager.Instance.CurrentBattle != null && BattleManager.Instance.CurrentBattle.Ships != null && BattleManager.Instance.CurrentBattle.Ships.Count > 0; } catch { } if (loaded) break; yield return null; }
-            if (!loaded) { Log("battle did not load within 40 min - quitting"); Application.Quit(); yield break; }
+            bool loaded = false; float loadMax = LoadTimeout != null ? Math.Max(60f, LoadTimeout.Value) : 2400f; while (Time.realtimeSinceStartup < t0 + loadMax) { try { loaded = GameManager.IsBattle && !GameManager.IsLoadingAny && BattleManager.Instance.CurrentBattle != null && BattleManager.Instance.CurrentBattle.Ships != null && BattleManager.Instance.CurrentBattle.Ships.Count > 0; } catch { } if (loaded) break; yield return null; }
+            if (!loaded) { Log($"battle did not load within {loadMax / 60f:0} min - quitting"); Application.Quit(); yield break; }
             Log("battle loaded after " + (Time.realtimeSinceStartup - t0).ToString("0") + " s");
             // the loading screen waits for "click to continue" and the first battle may open the help window: dismiss both
             for (float w = Time.realtimeSinceStartup + 3f; Time.realtimeSinceStartup < w;) yield return null;
