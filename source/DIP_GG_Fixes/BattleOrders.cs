@@ -20,12 +20,12 @@ namespace DipGgFixes
 {
     internal static partial class BattleAi
     {
-        internal enum DivOrder { None, Screen, Scout, Torpedo, Free }
+        internal enum DivOrder { None, Screen, Scout, Torpedo, Free, Hunt }
         internal class OrderSt { public DivOrder Order; public bool FromVanilla; public bool Issued; public float NextThink; public string Name; public string Reason; public Vector3 LastSeen; public bool Seen; public Ship Leader; public float LastCmd; public Vector3 LastTarget; public bool ClosingUp; }
         static readonly Dictionary<IntPtr, OrderSt> orders = new Dictionary<IntPtr, OrderSt>();
         static IntPtr ordersBattle;
         internal static bool Issuing;   // our own commands - the Division.MoveTo/MoveDir patch ignores them
-        static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action" };
+        static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action", "Hunt" };
 
         internal static MelonPreferences_Entry<bool> OrdersOn, OrdersVanilla;
         internal static MelonPreferences_Entry<float> Leash, BreakOff, ScoutSearch;
@@ -174,6 +174,8 @@ namespace DipGgFixes
                 OWhy(o, "damaged - falls back behind the main body"); return true;
             }
 
+            if (o.Order == DivOrder.Hunt) { Hunt(div, o, leader, enemies, main, me, home, toEnemy); return true; }
+
             if (o.Order == DivOrder.Screen)
             {
                 // torpedo craft and light forces coming at the main body: intercept them within the leash
@@ -224,6 +226,62 @@ namespace DipGgFixes
             OWhy(o, (o.Seen ? "searching towards the last known enemy position" : "searching ahead of the main body") + (sweep != 0f ? (sweep > 0f ? " - sweeping to port" : " - sweeping to starboard") : "")); return true;
         }
 
+        // ---- 1.11.210 (author, 24.10): Hunt - the division goes for enemies that cannot hurt it (transports, ships whose guns are too
+        //      small for it and that carry no torpedoes), closes in for quick results, and keeps outside the reach of every enemy that can
+        //      hurt it (gun range of ships with guns that matter, torpedo range of ships with torpedoes, plus a margin) ----
+        static bool Threat(Ship e, Ship me)
+        {
+            try
+            {
+                if (e.haveTorpedoes && HasTorpedoAmmo(e)) return true;
+                float ec = MainCaliber(e), mc = MainCaliber(me);
+                if (GunRange(e) <= 0f || ec <= 0f) return false;
+                return ec >= mc * 0.6f || ec >= 150f; // guns of 6 in and more, or within 60% of our own calibre, can hurt us
+            }
+            catch { return true; }
+        }
+        static float Reach(Ship e) { float r = 0f; try { if (e.haveTorpedoes && HasTorpedoAmmo(e)) r = TorpedoRange(e); } catch { } return Math.Max(r, GunRange(e)); }
+        static void Hunt(Division div, OrderSt o, Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
+        {
+            Ship prey = null; float bestScore = float.MaxValue; var threats = new List<Ship>();
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i];
+                if (e == null || e.isSinking || e.isDead || e.IsSurrendered) continue;
+                bool vis = false; try { vis = e.IsVisibleFor(leader) || (main != null && e.IsVisibleFor(main)); } catch { }
+                if (!vis) continue;
+                if (Threat(e, leader)) { threats.Add(e); continue; }
+                bool tr = false; try { var stn = e.shipType != null ? e.shipType.name : ""; tr = stn == "tr" || stn == "amc"; } catch { }
+                float d = (P(e) - me).magnitude; float score = d * (tr ? 0.7f : 1f); // transports first, then the nearest
+                if (score < bestScore) { bestScore = score; prey = e; }
+            }
+            // safe distance from a threat: its reach plus a margin of 1.5 km (torpedo craft: 2 km)
+            Func<Vector3, Ship> danger = pos => { foreach (var t in threats) { float m = 1500f; try { if (t.haveTorpedoes) m = 2000f; } catch { } if ((P(t) - pos).magnitude < Reach(t) + m) return t; } return null; };
+            var inside = danger(me);
+            if (inside != null)
+            {
+                Vector3 away = me - P(inside); away.y = 0f; if (away.sqrMagnitude < 1f) away = -toEnemy; away.Normalize();
+                Cmd(div, o, me + away * 4000f); OWhy(o, $"inside the reach of {inside.name} - opening the range"); return;
+            }
+            if (prey == null)
+            {
+                var st = home + toEnemy * 2500f; if (danger(st) != null) st = home;
+                if ((me - st).magnitude > 800f) Cmd(div, o, st);
+                OWhy(o, threats.Count > 0 ? "no prey that cannot hurt us - waiting by the main body" : "searching for prey"); return;
+            }
+            // close in: just outside the prey's own guns (it cannot hurt us, but there is no reason to take hits), at least 2.5 km
+            float preyR = GunRange(prey); float want = Mathf.Max(2500f, preyR > 0f ? preyR + 500f : 0f);
+            Vector3 pp = P(prey), dirToMe = me - pp; dirToMe.y = 0f; if (dirToMe.sqrMagnitude < 1f) dirToMe = -toEnemy; dirToMe.Normalize();
+            Vector3 goal = pp + dirToMe * want;
+            // never into the reach of a threat: walk the goal back towards our own position until it is safe
+            var blocker = danger(goal);
+            for (int k = 0; blocker != null && k < 8; k++) { goal = Vector3.Lerp(goal, me, 0.25f); blocker = danger(goal); }
+            if (blocker != null) { OWhy(o, $"{prey.name} is covered by {blocker.name} - holding outside his reach"); return; }
+            if ((me - goal).magnitude > 600f) Cmd(div, o, goal);
+            float dp = (pp - me).magnitude;
+            OWhy(o, $"hunting {prey.name} ({prey.shipType.name}) - {(dp > want + 800f ? "closing in" : "engaging")}");
+        }
+
         // ---- panel and keys ----
         static GUIStyle oTitle; static int oErrors; static bool oFolded;
         internal static void OrdersTick()
@@ -234,7 +292,7 @@ namespace DipGgFixes
                 if (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButton(1) || Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) lastInput = Time.realtimeSinceStartup;
                 if (!(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))) return;
                 int k = -1;
-                if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4;
+                if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4; else if (Input.GetKeyDown(KeyCode.Alpha6)) k = 5;
                 if (k < 0) return;
                 var div = SelectedDivision(); if (div != null) SetOrder(div, (DivOrder)k, "Alt+" + (k + 1));
             }
@@ -265,7 +323,7 @@ namespace DipGgFixes
                 var o = OrderOf(div, false);
                 // 1.11.197 (author, 24.10): the panel sat over the sea in front of the ship cards - now a strip at the top of the
                 //          screen under the time controls, and it folds to a small tab (the Alt keys work either way)
-                float w = 600f, h = 58f; float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
+                float w = 700f, h = 58f; float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
                 if (oFolded)
                 {
                     var tab = new Rect(x + w - 150f, y, 150f, 20f);
@@ -275,10 +333,10 @@ namespace DipGgFixes
                 GUI.Box(new Rect(x, y, w, h), "");
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
                 if (why.Length > 60) why = why.Substring(0, 60) + "...";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..5): {OrderNames[(int)cur]}{why}", oTitle);
+                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..6): {OrderNames[(int)cur]}{why}", oTitle);
                 if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) oFolded = true;
-                float bw = (w - 16f - 4f * 4f) / 5f;
-                for (int i = 0; i < 5; i++)
+                float bw = (w - 16f - 4f * 5f) / 6f;
+                for (int i = 0; i < 6; i++)
                 {
                     var r = new Rect(x + 8f + i * (bw + 4f), y + 26f, bw, 26f);
                     bool active = i == (int)cur;
