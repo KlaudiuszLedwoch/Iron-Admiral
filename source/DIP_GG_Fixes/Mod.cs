@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.185", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.186", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2690,6 +2690,11 @@ namespace DipGgFixes
                 if (battle == null) { MelonLogger.Msg("[DIP GG Fixes][Capture] no CampaignBattle - skipped"); return; }
                 var owner = ship.player; if (owner == null) return;
                 var opponent = battle.OppositePlayer(owner); if (opponent == null) return;
+                // 1.11.186: only ships that really fought in this battle (a player reported ships captured in earlier years and not
+                // present in a battle without combat being "taken as a prize" again - the surrendered flag survives repair)
+                bool present = false;
+                try { var os = battle.ShipsOf(owner, true); if (os != null) for (int i = 0; i < os.Count; i++) { var o = os[i]; if (o != null && o.Pointer == ship.Pointer) { present = true; break; } } } catch { }
+                if (!present) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered flag but not in this battle - left as it is"); return; }
                 // 1.11.50: surrendered ships go to the side that won the battle; a ship whose own side won returns to its owner
                 Player victor = null; float vpA = 0f, vpD = 0f; string how = "condition";
                 try { victor = battle.ConditionWinner; } catch { }
@@ -2701,8 +2706,9 @@ namespace DipGgFixes
                     if (vpA > vpD) victor = att; else if (vpD > vpA) victor = def;
                 }
                 bool ownSideWon = victor != null && (victor.Pointer == owner.Pointer || battle.OppositePlayer(victor) != null && battle.OppositePlayer(victor).Pointer == opponent.Pointer && victor.Pointer != opponent.Pointer);
-                if (victor == null) how = "no winner (VP " + vpA.ToString("0") + "/" + vpD.ToString("0") + ") - opponent";
-                if (ownSideWon && DipGgFixesMod.SurrenderReturnToWinner.Value)
+                // 1.11.186: a battle without a winner (draw, no combat) captures nothing - the ship stays with its owner
+                if (victor == null) { ownSideWon = true; how = $"no winner (VP {vpA:0}/{vpD:0}) - not captured"; }
+                if (ownSideWon && (victor == null || DipGgFixesMod.SurrenderReturnToWinner.Value))
                 {
                     var cc0 = CampaignController.Instance; if (cc0 == null) return;
                     int rem = 0;
