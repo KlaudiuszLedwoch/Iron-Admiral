@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.189", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.190", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 
 namespace DipGgFixes
@@ -242,7 +242,7 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
-            ResolutionFix.Tick(); RevoltDecision.Tick();
+            ResolutionFix.Tick(); RevoltDecision.Tick(); try { VersionLabel.Tick(); } catch { }
             SaveCompat.Tick();
             ArmorDiag.Tick();
             Fog.Tick();
