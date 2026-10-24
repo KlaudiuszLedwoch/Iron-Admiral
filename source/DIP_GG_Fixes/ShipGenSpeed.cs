@@ -169,6 +169,7 @@ namespace DipGgFixes
                 var player = ship.player; if (player == null || player.data == null || !player.isAi) return;
                 bool valid = false; try { valid = ship.IsValid(false); } catch { }
                 if (!valid) { Log($"{key.Replace("|", ": hull ")} - design not kept: the game does not accept it as valid"); return; } // 1.11.197
+            if (!ShipPartsCheck.AllMounted(ship)) { Log($"{key.Replace("|", ": hull ")} - design not kept: a part has no mount on this hull (it would load as a bare hull in battle)"); return; } // 1.11.217
                 var st = ship.shipType; string type = st != null ? st.name : "ship";
                 var store = ship.ToStore(false); if (store == null) return;
                 string nation = player.data.name;

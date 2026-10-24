@@ -15,7 +15,7 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("EnemyRangeTags", true, null, "Battle: a small tag under every identified enemy ship with its distance (km) from the ship you have selected");
         }
-        static GUIStyle sTag; static int errors; static float next; static Ship from; static Il2CppSystem.Collections.Generic.List<Ship> enemies;
+        static GUIStyle sTag; static int errors; static float next; static Ship from, lastOwn; static Il2CppSystem.Collections.Generic.List<Ship> enemies;
 
         internal static void OnGUI()
         {
@@ -32,7 +32,14 @@ namespace DipGgFixes
                     var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return;
                     Player me = null;
                     var players = CampaignController.Instance != null && CampaignController.Instance.CampaignData != null ? CampaignController.Instance.CampaignData.Players : null;
-                    if (sel != null && sel.player != null && sel.player.isMain) { from = sel; me = sel.player; }
+                    // 1.11.217 (author, 24.10): measured from the division you have selected (its leader); when an enemy ship is selected the
+                    //           last own division stays the reference; nothing selected yet: your first division
+                    if (sel != null && sel.player != null && sel.player.isMain && !sel.isDead && !sel.isSinking)
+                    {
+                        me = sel.player; from = sel; try { var ld = sel.division != null ? sel.division.leader : null; if (ld != null && !ld.isDead && !ld.isSinking) from = ld; } catch { }
+                        lastOwn = from;
+                    }
+                    else if (lastOwn != null && !lastOwn.isDead && !lastOwn.isSinking && lastOwn.player != null) { from = lastOwn; me = lastOwn.player; }
                     else
                     {
                         if (players != null) for (int i = 0; i < players.Count; i++) if (players[i] != null && players[i].isMain) { me = players[i]; break; }
