@@ -58,6 +58,22 @@ namespace DipGgFixes
                 }
             }
             catch { }
+            // 1.11.241 (24.10 battle log: 1921 battleships of Germany and Britain fired with the blunt 1890s shell shape, Cd 0.74, while one
+            //           cruiser had the 1907 nose): shells are stores, not part of the hull - a navy fires the shells it has researched
+            //           (the Greenboy shells after Jutland went to every ship), so the navy's researched technologies count as well
+            if (n < 2)
+            {
+                try
+                {
+                    var p = s.player;
+                    if (p != null)
+                    {
+                        var e = p.technologiesResearchedAll.GetEnumerator(); var ue = e.Cast<Il2CppSystem.Collections.IEnumerator>();
+                        while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                    }
+                }
+                catch { }
+            }
             nose[k] = n; return n;
         }
     }
