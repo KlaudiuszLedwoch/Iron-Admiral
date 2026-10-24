@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.204", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.205", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1230,7 +1230,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
+        internal class DivState { public float nextThink; public float nextSightLog; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
             // 1.11.86
             public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
@@ -1740,6 +1740,17 @@ namespace DipGgFixes
                 if (owner.Count > 2000) owner.Clear();
                 owner[t.Pointer] = o; return o;
             }
+            // torpedo speed (m/s) from its own track between checks; 20 m/s (~40 kn) until measured
+            class TTrack { public UnityEngine.Vector3 pos; public float t, v; }
+            static readonly Dictionary<IntPtr, TTrack> ttracks = new Dictionary<IntPtr, TTrack>();
+            static float TorpedoSpeed(Torpedo t, UnityEngine.Vector3 p)
+            {
+                float now = UnityEngine.Time.time; p.y = 0f;
+                if (ttracks.Count > 3000) ttracks.Clear();
+                TTrack k; if (!ttracks.TryGetValue(t.Pointer, out k)) { ttracks[t.Pointer] = new TTrack { pos = p, t = now, v = 20f }; return 20f; }
+                float dt = now - k.t; if (dt >= 0.5f) { float v = (p - k.pos).magnitude / dt; if (v > 3f && v < 60f) k.v = v; k.pos = p; k.t = now; }
+                return k.v;
+            }
             internal static bool Check(Ship leader, Division div, DivState st, Player player, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies)
             {
                 try
@@ -1747,7 +1758,15 @@ namespace DipGgFixes
                     var all = Torpedo.AllTorpedo; if (all == null || all.Count == 0) return false;
                     var own = battle.ShipsOf(player, true);
                     var lp = leader.transform.position; float range = DipGgFixesMod.TorpedoTurnAwayRange.Value;
-                    int n = 0; float closest = float.MaxValue; UnityEngine.Vector3 dirSum = UnityEngine.Vector3.zero;
+                    int n = 0, sighted = 0; float closest = float.MaxValue, soonest = float.MaxValue; UnityEngine.Vector3 dirSum = UnityEngine.Vector3.zero;
+                    // 1.11.205 (author, 24.10): the turn is timed by physics - a sighted torpedo that would pass through the division is answered
+                    //           when its time to the closest point is no longer than the time the leader needs to turn out of the track
+                    //           (a quarter circle of its turning radius at its speed, plus the helm delay); earlier the division held its course.
+                    //           Nothing is evaded before the torpedo is sighted (IsVisibleFor).
+                    float shipV = ShipTick.Vel(leader, UnityEngine.Time.time).magnitude; if (shipV < 3f) shipV = UnityEngine.Mathf.Max(3f, BattleAi.Speed(leader) * 0.8f); // m/s
+                    float turnR = 0f; try { turnR = leader.turningRadius; } catch { }
+                    if (!(turnR > 50f)) turnR = UnityEngine.Mathf.Clamp(200f + BattleAi.Ton(leader) / 50f, 250f, 1000f);
+                    float turnTime = (UnityEngine.Mathf.PI * 0.5f * turnR) / shipV + 6f;
                     for (int i = 0; i < all.Count; i++)
                     {
                         var t = all[i]; if (t == null) continue;
@@ -1757,19 +1776,27 @@ namespace DipGgFixes
                         if (Owner(t, own, enemies) == player.Pointer) continue;
                         var f = t.transform.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) continue; f.Normalize();
                         // closest approach of the track to any ship of the division still ahead of the torpedo
-                        float pass = float.MaxValue;
+                        float pass = float.MaxValue, alongMin = float.MaxValue;
                         var ships = div.ships;
                         for (int k = 0; ships != null && k < ships.Count; k++)
                         {
                             var sh = ships[k]; if (sh == null || sh.isSinking || sh.isDead) continue;
                             var rel = sh.transform.position - tp; rel.y = 0f;
                             float along = UnityEngine.Vector3.Dot(rel, f); if (along <= 0f) continue;
-                            float p = (rel - f * along).magnitude; if (p < pass) pass = p;
+                            float p = (rel - f * along).magnitude; if (p < pass) { pass = p; alongMin = along; }
                         }
                         if (pass > 500f) continue;
+                        sighted++;
+                        float tv = TorpedoSpeed(t, tp); float tcpa = alongMin / UnityEngine.Mathf.Max(5f, tv);
+                        if (tcpa < soonest) soonest = tcpa;
+                        if (tcpa > turnTime * 1.3f) continue; // sighted, but there is still time - hold the course
                         n++; if (pass < closest) closest = pass; dirSum += f;
                     }
-                    if (n == 0) return false;
+                    if (n == 0)
+                    {
+                        if (sighted > 0 && UnityEngine.Time.time > st.nextSightLog) { st.nextSightLog = UnityEngine.Time.time + 20f; Log($"{st.name} ({leader.shipType.name}): {sighted} enemy torpedo track(s) sighted, closest point in {soonest:0} s - holding course, the turn needs {turnTime:0} s (turning radius {turnR:0} m at {shipV:0.0} m/s)"); }
+                        return false;
+                    }
                     var away = dirSum.normalized; // steer parallel to the tracks, running with them: fewer hits, longer torpedo run
                     div.MoveTo(lp + away * 3000f); st.evadeDir = away;
                     st.evadeUntil = UnityEngine.Time.time + DipGgFixesMod.TorpedoTurnAwaySeconds.Value;
@@ -2308,7 +2335,7 @@ namespace DipGgFixes
         class Track { public UnityEngine.Vector3 pos, vel; public float t; }
         static readonly Dictionary<IntPtr, Track> tracks = new Dictionary<IntPtr, Track>();
         // ground velocity (m/s) of a ship estimated from its position between calls
-        static UnityEngine.Vector3 Vel(Ship x, float now)
+        internal static UnityEngine.Vector3 Vel(Ship x, float now)
         {
             var tr = x.transform; if (tr == null) return UnityEngine.Vector3.zero;
             var p = tr.position; p.y = 0f;
