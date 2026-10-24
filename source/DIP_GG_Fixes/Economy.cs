@@ -1231,7 +1231,7 @@ namespace DipGgFixes
             finally { bypass = false; }
         }
 
-        static bool OnMap() { bool w = false; try { w = GameManager.IsWorldMap; } catch { } return w; }
+        static bool OnMap() { bool w = false; try { w = GameManager.IsWorldMap; } catch { } return w && !Occupation.GamePopup(); } // 1.11.227
 
         internal static void Tick()
         {

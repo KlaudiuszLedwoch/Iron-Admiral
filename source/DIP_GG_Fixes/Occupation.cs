@@ -239,8 +239,16 @@ namespace DipGgFixes
         }
 
         // ---- window for the player (same style as the rising decision) ----
-        static bool OnMap() { bool w = false; try { w = GameManager.IsWorldMap; } catch { } return w; }
+        static bool OnMap() { bool w = false; try { w = GameManager.IsWorldMap; } catch { } return w && !GamePopup(); }
         static bool Busy() { return RevoltDecision.queue.Count > 0; }
+        // 1.11.227 (author, 24.10): the window waits while the game shows its own message box or event popup - 24.10: it covered the
+        //          "Ok" of an election message, the game looked frozen (its popup blocks the map, the mod window hid its button)
+        internal static bool GamePopup()
+        {
+            try { var ui = G.ui; if (ui == null) return false; if (ui.showMessageShow) return true; } catch { }
+            try { var e = G.ui.EventPopupUI; if (e != null && e.gameObject.activeInHierarchy) return true; } catch { }
+            return false;
+        }
 
         internal static void Tick()
         {
