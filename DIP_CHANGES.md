@@ -108,7 +108,7 @@ Engine, boiler and hull technologies still change these weights on top. Existing
 **Small guns in casemates ✅:** 2"–3" guns can now be placed in casemates. The 4–6" minimum calibre was removed from 809 casemate mounts, as on real ships of the 1890s–1910s, which carried 12-pdr and 3-pdr guns in hull casemates and ports.
 ## 7. Optional modes 📋
 
-- **Historical parts:** parts available only in their own era and for the nations that had them. The free design of DIP stays available.
+- **Historical parts (F10: HistoricalParts, off by default – free design stays the default):** parts become available with the technology that brought them historically. First step: the hulls DIP made available 5–20 years early need their original technology again (Large Armored Cruiser: hull_cruiser_51 instead of hull_cruiser_46; Compact Light Cruiser: hull_cruiser_19 instead of hull_cruiser_9; Experimental Dreadnought II: hull_strength_12 instead of hull_strength_7; Flush Deck destroyer: hull_destroyer_18 instead of hull_destroyer_13; German Destroyer I: hull_destroyer_10 instead of hull_destroyer_8). Superfiring barbettes on pre-dreadnought hulls, late towers on early cruisers and cage masts are already gated for everyone. Nation restrictions: DIP shares 316 hulls and towers with the new playable nations (Portugal, the Netherlands, Scandinavia, Greece) that had no own designs – mostly the nations they historically bought from; under review.
 - **Historically plausible wars:** wars following the real rivalries of each era.
 
 ## Main sources
