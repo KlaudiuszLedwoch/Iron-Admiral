@@ -35,6 +35,40 @@ namespace DipGgFixes
             ShareAi = cat.CreateEntry("ShipGenShareDesigns", true, null, "Campaign: a design the AI generator finished successfully is saved as a shared design of its nation ([gen] files) - on later turns the AI reuses it instead of running the generator");
             ShareMax = cat.CreateEntry("ShipGenShareMax", 8, null, "Kept generator designs: at most this many per nation and ship type");
             RelaxTurrets = cat.CreateEntry("ShipGenRelaxTurrets", true, null, "Campaign: when the AI generator cannot fit the main battery a hull requires, the next attempt may carry one main turret fewer instead of giving the hull up (modern hulls stay in use)"); // 1.11.223
+            TolOn = cat.CreateEntry("ShipGenAsymmetryTolerance", true, null, "Ship generator: a small side or fore-aft weight asymmetry (ballast and trim took care of it on real ships) does not throw an attempt away; only while the generator runs - the designer keeps the game's strictness"); // 1.11.244
+            TolValue = cat.CreateEntry("GeneratorAsymmetryTolerance", 0.002f, null, "Weight asymmetry tolerated by the ship generator as a share of displacement (0.002 = 0.2 %, about 24 t on a 12 000 t cruiser)");
+        }
+
+        // ---- 0. weight-asymmetry tolerance for the generator (1.11.244, author's test 25.10) ----
+        // Custom-battle test, Scandinavia 1930, heavy cruiser on ca_5_generic_early: 9 of 20 attempts thrown away for "instability_x
+        // 0.1-0.7 > 0" - a side weight offset of a few tonnes on a 12 000 t ship (stability_x_threshold 0.000012 of the displacement).
+        // Real ships carried ballast and asymmetric loads of that order without notice. While the generator coroutine runs the
+        // thresholds are raised to GeneratorAsymmetryTolerance (share of displacement) and put back at once, so the player's designer
+        // keeps the game's strictness. Switch: ShipGenAsymmetryTolerance.
+        internal static MelonPreferences_Entry<bool> TolOn; internal static MelonPreferences_Entry<float> TolValue;
+        static float tolOx = -1f, tolOz = -1f; static bool tolSet; static int tolLogged;
+        internal static void TolBegin()
+        {
+            try
+            {
+                if (TolOn == null || !TolOn.Value || tolSet) return;
+                bool ctor = false; try { ctor = GameManager.IsConstructor; } catch { }
+                if (ctor) return;
+                var raw = G.GameData.paramsRaw; if (raw == null) return;
+                float tol = Mathf.Clamp(TolValue != null ? TolValue.Value : 0.002f, 0f, 0.05f);
+                ParamData px = raw.ContainsKey("stability_x_threshold") ? raw["stability_x_threshold"] : null, pz = raw.ContainsKey("stability_z_threshold") ? raw["stability_z_threshold"] : null;
+                if (px == null || pz == null) return;
+                tolOx = px.value; tolOz = pz.value;
+                if (tol > tolOx) px.value = tol; if (tol > tolOz) pz.value = tol;
+                tolSet = true;
+                if (tolLogged++ < 1) Log($"generator weight-asymmetry tolerance: stability thresholds {tolOx:0.######} / {tolOz:0.######} -> {px.value:0.####} / {pz.value:0.####} of the displacement while the generator runs");
+            }
+            catch (Exception e) { if (tolLogged++ < 3) Log("tolerance: " + e.Message); }
+        }
+        internal static void TolEnd()
+        {
+            if (!tolSet) return; tolSet = false;
+            try { var raw = G.GameData.paramsRaw; if (raw != null) { if (tolOx >= 0f && raw.ContainsKey("stability_x_threshold")) raw["stability_x_threshold"].value = tolOx; if (tolOz >= 0f && raw.ContainsKey("stability_z_threshold")) raw["stability_z_threshold"].value = tolOz; } } catch { }
         }
 
         // ---- 1. early stop ----

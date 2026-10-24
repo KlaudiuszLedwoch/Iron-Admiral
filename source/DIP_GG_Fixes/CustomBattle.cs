@@ -21,11 +21,12 @@ namespace DipGgFixes
 {
     internal static class CustomBattle
     {
-        internal static MelonPreferences_Entry<bool> Pregenerated;
+        internal static MelonPreferences_Entry<bool> Pregenerated, NoShared;
         static bool applied, labelDone; static int errors; static object setup; static FieldInfo usePredefs;
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
+            NoShared = cat.CreateEntry("CustomBattleNoSharedDesigns", false, null, "Author's tool: custom battles take no shared design - every ship comes from the ship generator (generator tests)");
             Pregenerated = cat.CreateEntry("CustomBattlePregenerated", false, null,
                 "Custom battles: let TweaksAndFixes use predefined designs when no shared design fits (off = straight to the ship generator; the game's built-in predefined designs do not load in Iron Admiral). The \"Pregenerated\" button in the custom battle screen still switches it for the running game");
         }
@@ -47,6 +48,8 @@ namespace DipGgFixes
             try
             {
                 if (!Il2Cpp.GameManager.IsCustomBattle) return true;
+                // 1.11.244 (author's tool): generator tests - no shared design is offered, every ship comes from the generator
+                if (NoShared != null && NoShared.Value) { __result = null; return false; }
                 var s = HistPriority.Pick(player, shipType, year, false, ignore);
                 if (s != null) { __result = s; return false; }
             }
