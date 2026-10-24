@@ -52,6 +52,7 @@ namespace DipGgFixes
             try
             {
                 var ships = BattleManager.Instance.CurrentBattle.Ships;
+                CacheDesigns(ships); // before the radar A/B changes the ships
                 var radar = BestRadar();
                 var count = new Dictionary<string, int>();
                 var done = new HashSet<string>();
@@ -99,6 +100,34 @@ namespace DipGgFixes
                 Log(sb.ToString());
             }
             catch (Exception e) { Log("run: " + e); }
+        }
+        // 1.11.177: the designs of a test battle are saved as shared designs (file names marked [IATEST]) so the next test battle
+        // of the same year and nations does not wait for the ship generator. They load on the next game start; after the tests
+        // the [IATEST] files are moved out of the Designs folder (Iron_Admiral_release\tests_designs_cleanup.ps1).
+        static void CacheDesigns(Il2CppSystem.Collections.Generic.List<Ship> ships)
+        {
+            int written = 0, skipped = 0;
+            var seen = new HashSet<string>();
+            for (int i = 0; i < ships.Count; i++)
+            {
+                var s = ships[i]; if (s == null) continue;
+                try
+                {
+                    string nation = s.player != null && s.player.data != null ? s.player.data.name : null; if (nation == null) continue;
+                    var store = s.ToStore(false); if (store == null) continue;
+                    string key = nation + "|" + store.vesselName; if (!seen.Add(key)) continue;
+                    string dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Game Labs", "Ultimate Admiral Dreadnoughts", "Designs");
+                    if (System.IO.Directory.Exists(dir) && System.IO.Directory.GetFiles(dir, $"* {nation} {store.vesselName} [IATEST*").Length > 0) { skipped++; continue; }
+                    string fileName;
+                    string path = Storage.GetSavedDesignPath($"{store.YearCreated} {nation} {store.vesselName} [IATEST]", out fileName);
+                    if (string.IsNullOrEmpty(path)) { skipped++; continue; }
+                    store.playerName = nation; store.playerOriginal = nation; store.isSharedDesign = true; store.id = Il2CppSystem.Guid.NewGuid();
+                    Storage.SaveSharedDesignShipByte(path, Util.SerializeObjectByte<Ship.Store>(store));
+                    written++;
+                }
+                catch (Exception e) { Log("design cache: " + e.Message); }
+            }
+            Log($"design cache: {written} test design(s) saved as shared designs [IATEST], {skipped} already there");
         }
         static bool HasRadarFresh(Ship s) { radarCache.Remove(s.Pointer.ToInt64()); return HasRadar(s); }
     }
