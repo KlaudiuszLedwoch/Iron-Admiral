@@ -42,7 +42,7 @@ namespace DipGgFixes
             try
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); rebuilt = skipped = samples = probes = 0; year = 0; nextReport = Time.time + 120f; }
+                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = samples = probes = 0; year = 0; nextReport = Time.time + 120f; }
                 else if (!battle && inBattle) { inBattle = false; Report("battle end"); }
                 else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); }
             }
@@ -167,6 +167,15 @@ namespace DipGgFixes
             catch (Exception e) { if (errors++ < 5) Log("rebuild: " + e.Message); }
         }
 
+        // 1.11.179: gun generation (Mk) of the firing gun, cached per part
+        static readonly Dictionary<long, int> grades = new Dictionary<long, int>();
+        static int GradeOf(Part p)
+        {
+            if (p == null) return 0; long k = p.Pointer.ToInt64(); int g; if (grades.TryGetValue(k, out g)) return g;
+            g = 0; try { var sh = p.ship; if (sh != null && p.data != null) g = sh.TechGunGrade(p.data, false); } catch { }
+            grades[k] = g; return g;
+        }
+
         // ---- measurement ----
         internal static void Created(Shell s, Part from)
         {
@@ -185,7 +194,7 @@ namespace DipGgFixes
                 float h1 = new Vector2(v1.x, v1.z).magnitude;
                 float elev = Mathf.Atan2(v0.y, h0) * Mathf.Rad2Deg, fall = Mathf.Atan2(-v1.y, h1) * Mathf.Rad2Deg;
                 if (cal < 100f) return; // main and heavy secondary guns only
-                bool rad = false; try { rad = from != null && GunLab.HasRadar(from.ship); } catch { } string key = $"{cal / 25.4f,5:0.0} in | {(rad ? "R" : "-")} | {Mathf.Floor(range / 2000f) * 2,2:0}-{Mathf.Floor(range / 2000f) * 2 + 2,2:0} km";
+                bool rad = false; try { rad = from != null && GunLab.HasRadar(from.ship); } catch { } int mk = GradeOf(from); string key = $"{cal / 25.4f,5:0.0} in Mk{mk} | {(rad ? "R" : "-")} | {Mathf.Floor(range / 2000f) * 2,2:0}-{Mathf.Floor(range / 2000f) * 2 + 2,2:0} km";
                 if (!bins.TryGetValue(key, out var bin)) { bin = new Bin(); bins[key] = bin; }
                 bin.N++; try { if (s.willHitTarget) bin.Hit++; } catch { } bin.T += t; bin.Fall += fall; bin.Elev += elev; bin.V0 += v0.magnitude; bin.Vs += v1.magnitude;
             }
@@ -195,7 +204,7 @@ namespace DipGgFixes
         static void Report(string tag)
         {
             if (bins.Count == 0) return;
-            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics, year {Year()}, drag coef {Cd(Year())}, arcs rebuilt {rebuilt}, beyond model range {skipped}" : "game ballistics")}): calibre | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
+            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics, year {Year()}, drag coef {Cd(Year())}, arcs rebuilt {rebuilt}, beyond model range {skipped}" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
             foreach (var kv in bins)
             {
                 var b = kv.Value; double n = b.N;
