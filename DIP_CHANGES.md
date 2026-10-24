@@ -69,31 +69,30 @@ Torpedo damage therefore follows the torpedo technologies of each ship. The ammu
 
 DIP narrowed dispersion almost to a point (`splash_disp_far` 555 → 100, `max_shell_dispersion` 65 → 10). Recorded salvo patterns: WWI at ~11 km – 15" ~180 m, 13.5" ~270 m, 12" ~370 m; US 16"/50 at ~19 km ~820 m; Massachusetts 1942: 180–270 m in range. Base: the game's own (vanilla) dispersion values. Now: the shared dispersion values follow the average fire-control technology of the ships in the battle, and the miss distance of every shot is then scaled by the shooting ship's own fire-control technology – older equipment spreads wider, newer equipment tighter.
 
-## 5. Medium guns by generation ✅ (F10: HistoricalGuns)
+## 5. Guns by generation ✅ (F10: HistoricalGuns)
 
-Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). I measured every calibre at all five generations with the game's own formulas (DIP values):
+Rate of fire and range in the game depend on the **gun generation** (Mk 1–5). In test battles the game fits generation 2 around 1906, generation 3 around WWI and generation 5 in WWII. Every generation of every calibre from 3" to 18" is set to real guns of its period: the rated rate of fire and the range at the elevation of the period's mountings (navweaps.com). The game's value for each gun is scaled against its base value, so crew, technology and mounting modifiers still apply on top. "–" means no gun of that calibre in that period, or no usable figure: the game's value stays.
 
-| Calibre | Mk 3 (fitted in 1916) | Mk 5 (WWII) | Historical, WWI generation | Historical, WWII generation |
-|---|---|---|---|---|
-| 3" | 16.3/min, 7.9 km | 24.5/min, 10.1 km | 15–20/min, 8.5 km | 13.3 km |
-| 4" | 12.1/min, 8.1 km | 14.7/min, 10.4 km | 8.8 km | 15 km |
-| 5" | 6.9/min, 9.4 km | 13.1/min, 12.1 km | 5"/51: 8–9/min, ~14.5 km | 5"/38: 12–15/min, 16.6–17.3 km |
-| 6" | 5.2/min, 10.4 km | 8.7/min, 13.3 km | ~4/min in action, 13.4–14.5 km | 19.7–23.6 km |
-| 12" | Mk 2: 1.84/min, 15.4 km | – | ~1.5/min, 17.4 km | – |
+| Calibre | Mk 1 (1890s) | Mk 2 (1899–1908) | Mk 3 (WWI) | Mk 4 (1920–35) | Mk 5 (WWII) |
+|---|---|---|---|---|---|
+| 3" | 15/min | 15/min, 8.8 km | 17.5/min, 8.5 km | 17.5/min, 12.5 km | 17.5/min, 13.3 km |
+| 4" | 8.5/min, 9.6 km | 12/min, 12.2 km | 11/min, 10.5 km | 12/min, 16 km | 15 km |
+| 5" | 8.5/min, 11.8 km | 7/min, 17.4 km | 8.5/min, 14.5 km | 10/min, 16.3 km | 13.5/min, 16.9 km |
+| 6" | 6/min, 11.4 km | 6/min, 15 km | 6/min, 14 km | 7/min, 24.3 km | 9/min, 21.6 km |
+| 7"–7.5" | 2/min, 11.5 km | 3.75/min, 13.9 km | 3.3/min, 18.1 km | 5.5/min, 19.3 km | – |
+| 8" | 2.4/min, 14.6 km | 3/min, 18.4 km | 5/min, 19.1 km | 3.7/min, 29 km | 4/min, 30.7 km |
+| 9.2"–9.4" | 2/min, 12.4 km | 2/min, 15.5 km | 3.5/min, 14.1 km | – | – |
+| 10" | 1.5/min, 9.2 km | 2.5/min, 15.9 km | 1.5/min | – | – |
+| 11" | 0.5/min, 15.9 km | 2/min, 18.8 km | 3/min, 18.5 km | 2.5/min, 36.5 km | 3.5/min, 40.9 km |
+| 12" | 1.3/min, 11.9 km | 1.75/min, 15.8 km | 2/min, 19.7 km | 2.5/min, 21.9 km | – |
+| 13"–13.5" | 0.4/min, 11.3 km | – | 1.75/min, 21.8 km | – | – |
+| 14" | – | – | 1.6/min, 19.7 km | 1.75/min, 27.3 km | 2/min, 35.3 km |
+| 15" | – | – | 2.25/min, 22.4 km | – | 2/min, 39.2 km |
+| 16" | – | – | – | 1.75/min, 35.7 km | 2/min, 36.2 km |
+| 18" | – | – | 1/min, 26.4 km | – | 1.75/min |
 
-Source of the historical figures: navweaps.com gun pages.
+Reference guns include: GB 4"/40 QF, US 5"/40, GB 6"/40 QF, German 15 cm L/40, GB 12"/35 (Mk 1); US 3"/50, German 10.5 cm L/40, US 5"/50, GB 6"/45 Mk VII, GB 7.5"/45, US 8"/45, GB 9.2"/47, GB 10"/45, German 28 cm L/40, GB 12"/40 (Mk 2); US 5"/51, German 21 cm L/45, GB 9.2"/50, German 28 cm L/45 and L/50, US 12"/50, GB 13.5"/45, US 14"/45, GB 15"/42, German 38 cm L/45, GB 18"/40 (Mk 3); US 4"/50 Mk 9, US 5"/25, US 6"/53, GB 6"/50 Mk XXIII, GB 7.5"/45 Mk VI, GB 8"/50, US 8"/55, German 28 cm C/28, US 14"/50, GB 16"/45 (Mk 4); US 5"/38, German 20.3 cm C/34, German 28 cm C/34, GB 14"/45 Mk VII, German 38 cm C/34, Italian 381/50, US 16"/45 and 16"/50, Japanese 46 cm (Mk 5). Where several guns are listed, the value is their average.
 
-In test battles the game fits generation 2 to medium and heavy guns in 1906, generation 3 to medium guns in 1916, and generation 5 in WWII. I matched each generation to real guns of its period (all from navweaps.com):
-
-| Generation | Period | Reference guns (examples) |
-|---|---|---|
-| Mk 1 | c. 1890–1898 | GB 4"/40 QF, US 4"/40, GB 4.7"/40, US 5"/40, GB 6"/40 QF, German 15 cm L/40, GB 12"/35 Mk VIII |
-| Mk 2 | c. 1899–1908 | US 3"/50 Mk 2–8, German 10.5 cm L/40, US 5"/50 Mk 5–6, GB 6"/45 Mk VII, US 6"/50 Mk 6/8, GB 12"/40 Mk IX, US 12"/40 |
-| Mk 3 | WWI | US 5"/51, WWI 6" guns, GB 12"/45 |
-| Mk 4 | c. 1920–1935 | US 4"/50 Mk 9, GB 4"/45 Mk V, US 5"/51 and 5"/25, US 6"/53, GB 6"/50 Mk XXIII, German 15 cm C/25, US 12"/50 |
-| Mk 5 | WWII | US 5"/38, WWII 6" guns |
-
-What changes: for every calibre from 3" to 6" and for 12", range and rate of fire of each generation are set to these reference guns. Rate of fire is the rated figure given by navweaps. Range is taken at the elevation of the mountings of that period. Where only high-angle range tables exist (3" of the 1890s), the game value stays. Calibres not listed (2", 7"–11", 13"–18") are unchanged for now.
 Also planned: small guns (2"–3") in casemates, as on real ships of the 1890s–1910s.
 ## 6. Weights 📋
 
