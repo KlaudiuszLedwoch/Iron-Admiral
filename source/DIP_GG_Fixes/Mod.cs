@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.192", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.193", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3772,6 +3772,12 @@ namespace DipGgFixes
             catch { }
         }
         internal static float AllowedFor(Ship s, float allowance) { return Allowed(s, allowance); }
+        // the displacement of the refit design when first seen (= the ship before the refit); 0 = unknown
+        internal static float Origin(Ship s)
+        {
+            float o; if (origin.TryGetValue(s.Pointer, out o)) return o;
+            o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return 0f; origin[s.Pointer] = o; return o;
+        }
         static float Allowed(Ship s, float allowance)
         {
             float o; if (!origin.TryGetValue(s.Pointer, out o)) { o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return 0f; origin[s.Pointer] = o; }
@@ -3842,7 +3848,7 @@ namespace DipGgFixes
     // When that is the only reason and the refit stays within the ship's tonnage plus the modernisation allowance, it passes.
     internal static class RefitBuildCheck
     {
-        static int logged;
+        static int logged; static readonly HashSet<IntPtr> ownLogged = new HashSet<IntPtr>();
         internal static void Fix(Ship s, ref bool result, ref string reason, string where)
         {
             try
@@ -3858,6 +3864,17 @@ namespace DipGgFixes
                 string low = plain.ToLowerInvariant();
                 bool displacementOnly = low == "tonnage" || low.Contains("above displacement limit for") && plain.Split(':').Length <= 4 && low.TrimEnd('.', ' ').EndsWith("t");
                 if (!displacementOnly) return;
+                // 1.11.193: a ship that already exists above the game's displacement maximum (built while refit designs could grow
+                //           up to the hull maximum, before 1.11.160) can always be refitted at its own displacement - no growth
+                //           (24.10: BB Hildebrand 55,690 t, 1921 - "cannot build: tonnage" on every refit)
+                float own = RefitTreaty.Origin(s); float tonNow = SafeTon(s);
+                if (own > 0f && tonNow <= own + 0.5f)
+                {
+                    float tmax = 0f, lim = 0f; try { tmax = s.TonnageMax(); } catch { } try { var pl = s.player; var st = s.shipType; if (pl != null && st != null) lim = pl.TonnageLimit(st); } catch { }
+                    result = true; reason = "";
+                    if (ownLogged.Add(s.Pointer)) MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: refit at the ship's own displacement {tonNow:F0} t allowed (game maximum {tmax:F0} t, treaty limit {lim:F0} t) - {where}");
+                    return;
+                }
                 if (!RefitTreaty.Eligible(s, 0f)) return; // 1.11.160: P6
                 float allowed = RefitTreaty.AllowedFor(s, a.Value); float ton = SafeTon(s);
                 if (allowed <= 0f || ton > allowed + 0.5f) { MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: {ton:F0} t is above the refit allowance ({allowed:F0} t) - stays blocked"); return; }
