@@ -27,7 +27,7 @@ namespace DipGgFixes
             try
             {
                 var per = gd.sharedDesignsPerNation; if (per == null) return;
-                int designs = 0, fixedDesigns = 0, techs = 0, parts = 0, comps = 0; var names = new List<string>();
+                int designs = 0, fixedDesigns = 0, techs = 0, parts = 0, comps = 0; var names = new List<string>(); var techNames = new Dictionary<string, int>();
                 foreach (var kv in per)
                 {
                     var list = kv.Value; if (list == null) continue;
@@ -37,7 +37,7 @@ namespace DipGgFixes
                         int t0 = techs, p0 = parts, c0 = comps;
                         var tl = s.techs;
                         if (tl != null && gd.technologies != null)
-                            for (int k = tl.Count - 1; k >= 0; k--) { string n = tl[k]; if (!string.IsNullOrEmpty(n) && !gd.technologies.ContainsKey(n)) { tl.RemoveAt(k); techs++; } }
+                            for (int k = tl.Count - 1; k >= 0; k--) { string n = tl[k]; if (!string.IsNullOrEmpty(n) && !gd.technologies.ContainsKey(n)) { tl.RemoveAt(k); techs++; int c; techNames.TryGetValue(n, out c); techNames[n] = c + 1; } }
                         var pl = s.parts;
                         if (pl != null && gd.parts != null)
                             for (int k = pl.Count - 1; k >= 0; k--) { string n = null; try { n = pl[k] != null ? pl[k].name : null; } catch { } if (!string.IsNullOrEmpty(n) && !gd.parts.ContainsKey(n)) { pl.RemoveAt(k); parts++; } }
@@ -48,6 +48,7 @@ namespace DipGgFixes
                     }
                 }
                 MelonLogger.Msg($"[DIP GG Fixes][Designs] shared designs checked against the game data: {designs} designs, {fixedDesigns} with unknown entries dropped ({techs} technologies, {parts} parts, {comps} components){(names.Count > 0 ? " - " + string.Join("; ", names) : "")}");
+                if (techNames.Count > 0) { var top = new List<KeyValuePair<string, int>>(techNames); top.Sort((x, y) => y.Value.CompareTo(x.Value)); MelonLogger.Msg("[DIP GG Fixes][Designs] unknown technologies dropped (" + techNames.Count + " names): " + string.Join(", ", top.ConvertAll(kv => kv.Key + " x" + kv.Value).GetRange(0, Math.Min(40, top.Count)))); }
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][Designs] unknown-entry check: " + e.Message); }
         }

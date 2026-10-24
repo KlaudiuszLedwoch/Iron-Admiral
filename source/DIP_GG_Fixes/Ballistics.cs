@@ -124,16 +124,10 @@ namespace DipGgFixes
             Shoot(mvq, cq, mq, cdq, em, out rr, out tt, out ff);
             if (rr < Rq)
             {
-                // more muzzle velocity at the mount elevation until the shell reaches the target (at most 3x)
-                double lo = mvq, hi = mvq * 3;
-                Shoot(hi, cq, mq, cdq, em, out rr, out tt, out ff);
-                if (rr < Rq) { r.Ok = false; r.Beyond = true; r.T = (float)tt; r.Fall = (float)ff; r.Mv = (float)hi; }
-                else
-                {
-                    for (int i = 0; i < 24; i++) { double mid = (lo + hi) / 2; Shoot(mid, cq, mq, cdq, em, out rr, out tt, out ff); if (rr < Rq) lo = mid; else hi = mid; }
-                    Shoot((lo + hi) / 2, cq, mq, cdq, em, out rr, out tt, out ff);
-                    r.Ok = true; r.Beyond = true; r.T = (float)tt; r.Fall = (float)ff; r.Mv = (float)((lo + hi) / 2);
-                }
+                // 1.11.225 (author's decision 24.10): the muzzle velocity comes from the technologies alone and the mount elevation from the
+                //          gun generation; a target beyond the physical reach at that elevation (the range cap of RangeByMountElevation keeps
+                //          this rare) flies the maximum-elevation shot stretched to the range, as 1.11.198 did at 45 deg
+                r.Ok = false; r.Beyond = true; r.T = (float)(tt * Rq / rr); r.Fall = (float)ff;
             }
             else
             {
@@ -281,7 +275,7 @@ namespace DipGgFixes
         static void Report(string tag)
         {
             if (bins.Count == 0) return;
-            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond the reach of the mount elevation (muzzle velocity raised) {beyond}, outside the model {skipped}, misses re-spread by fire-control technology {scaledMisses} (mean ratio {(scaledMisses > 0 ? ratioSum / scaledMisses : 1):0.00})" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
+            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond the physical reach at the mount elevation (stretched shot) {beyond}, outside the model {skipped}, misses re-spread by fire-control technology {scaledMisses} (mean ratio {(scaledMisses > 0 ? ratioSum / scaledMisses : 1):0.00})" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
             foreach (var kv in bins)
             {
                 var b = kv.Value; double n = b.N;
@@ -374,7 +368,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("RangeByMountElevation", false, null, "Battle: a gun's range is limited to what its shell reaches at the elevation of the mountings of its generation (Mk 1 13.5, Mk 2 15, Mk 3 20, Mk 4 30, Mk 5 45 degrees)");
+            On = cat.CreateEntry("RangeByMountElevation", true, null, "Battle: a gun's range is limited to what its shell reaches at the elevation of the mountings of its generation (Mk 1 13.5, Mk 2 15, Mk 3 20, Mk 4 30, Mk 5 45 degrees)");
         }
         internal static readonly float[] ElevByMk = { 13.5f, 15f, 20f, 30f, 45f };
         internal static float Elev(int grade) { return ElevByMk[Math.Max(0, Math.Min(4, grade - 1))]; }

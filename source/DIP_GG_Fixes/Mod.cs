@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.224", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.225", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -327,7 +327,7 @@ namespace DipGgFixes
                     MigOccCost.Value = true; save = true; MelonLogger.Msg($"[DIP GG Fixes] settings: occupation costs raised once (1.11.195): CoreOccupationCost {CoreOccupationCost?.Value}, OccupationPayShare {Occupation.PayShare?.Value}");
                 }
                 if (MigEraOff != null && !MigEraOff.Value) { RenameFireControlPrefs(); MigEraOff.Value = true; save = true; } // 1.11.208
-                if (MigRangeCap != null && !MigRangeCap.Value) { if (MountElevation.On != null) MountElevation.On.Value = false; MigRangeCap.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: RangeByMountElevation switched off once (1.11.224: the range is never cut - the barrels stay within the mount and the shell leaves faster instead)"); }
+                if (MigRangeCap != null && !MigRangeCap.Value) { if (MountElevation.On != null) MountElevation.On.Value = true; MigRangeCap.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: RangeByMountElevation switched on once (1.11.225: range from physics - muzzle velocity from the technologies, elevation from the gun generation)"); }
                 if (save) MelonPreferences.Save();
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] settings migration: " + e.Message); }
@@ -498,7 +498,7 @@ namespace DipGgFixes
             TorpedoSideCheck = cat.CreateEntry("TorpedoSideCheck", false, null,
                 "Experimental (off): drop a torpedo aim of one side's launchers whose target lies on the other side of the ship; player-set torpedo targets are never touched");
             MigSide = cat.CreateEntry("MigrationTorpedoSideOff199", false, null, "Internal: 1.11.99 switched TorpedoSideCheck off once (it dropped valid torpedo aims)");
-            MigRangeCap = cat.CreateEntry("MigrationRangeCapOff224", false, null, "Internal: 1.11.224 switched the range cap of 1.11.216 off once");
+            MigRangeCap = cat.CreateEntry("MigrationRangeCapOn225", false, null, "Internal: 1.11.225 switched RangeByMountElevation on once (author's decision: range from physics and technology)");
             MigEraOff = cat.CreateEntry("MigrationFireControlNames208", false, null, "Internal: 1.11.208 renamed the EraAccuracy* / EraDispersion settings to FireControlTech* and copied the player's values once");
             MigOccCost = cat.CreateEntry("MigrationOccupationCost195", false, null, "Internal: 1.11.195 raised the occupation costs once (CoreOccupationCost 3 -> 20, OccupationPayShare 4 -> 30)");
             TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
