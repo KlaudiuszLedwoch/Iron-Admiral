@@ -65,6 +65,7 @@ namespace DipGgFixes
         static readonly float[] CdByNose = { 0.74f, 0.50f, 0.41f };
         static float Cd(Ship s) { return CdByNose[Math.Max(0, Math.Min(2, TechYears.ShellNose(s)))]; }
         internal static float CdOf(Ship s) { try { return Cd(s); } catch { return CdByNose[1]; } } // 1.11.216
+        internal static float CdByMk(int mk) { return CdByNose[mk <= 2 ? 0 : mk == 3 ? 1 : 2]; } // 1.11.221
         internal static void ShootOut(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall) { Shoot(mv, calIn, mass, cd, el, out range, out time, out fall); }
         static float Mass(float calIn) { float dcm = calIn * 2.54f; return 0.0145f * dcm * dcm * dcm; }
         // shell weight as the game computes it for this gun, ship and shell type (light/heavy shell technologies, AP/HE); formula as fallback
@@ -373,7 +374,8 @@ namespace DipGgFixes
                 float mv = 0f, mass = 0f; try { mv = g.ShellVelocity(ship, pd, grade); mass = g.ShellWeight(ship, pd, grade); } catch { }
                 if (mv < 100f || mass <= 0f) return range;
                 float calIn = g.caliberInch > 0f ? g.caliberInch : (pd != null ? pd.caliber / 25.4f : 0f); if (calIn <= 0f) return range;
-                float cd = Ballistics.CdOf(ship);
+                // 1.11.221: without a ship (the game asks for raw gun values) the shell shape of the generation: Mk 1-2 blunt, Mk 3 1907 nose, Mk 4-5 1927 nose
+                float cd = ship != null ? Ballistics.CdOf(ship) : Ballistics.CdByMk(grade);
                 int k = Math.Max(1, Math.Min(5, grade));
                 long key = ((long)Mathf.RoundToInt(mv / 5f) << 40) ^ ((long)Mathf.RoundToInt(mass) << 20) ^ ((long)Mathf.RoundToInt(calIn * 4f) << 10) ^ ((long)Mathf.RoundToInt(cd * 100f) << 3) ^ k;
                 float max;

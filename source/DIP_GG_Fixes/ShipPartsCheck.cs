@@ -56,7 +56,14 @@ namespace DipGgFixes
                     bool m = false, mdl = false;
                     try { m = p.mount != null; } catch { }
                     try { mdl = p.model != null; } catch { }
-                    if (!m) noMount.Add(nm + (mdl ? "" : " (no model)")); else if (!mdl) noModel.Add(nm);
+                    if (!m)
+                    {
+                        // 1.11.221: where is the unmounted part? (24.10: shells of the bare-hull cruiser started 990 m above the target)
+                        string pos = ""; try { var w = p.transform.position; var sp = s.transform.position; pos = $" at y {w.y:0} (ship y {sp.y:0}, {(w - sp).magnitude:0} m from the ship)"; } catch { }
+                        bool re = false; try { p.TryFindMount(true); re = p.mount != null; } catch { }
+                        noMount.Add(nm + (mdl ? "" : " (no model)") + pos + (re ? " - re-mounted" : ""));
+                    }
+                    else if (!mdl) noModel.Add(nm);
                 }
                 if (noMount.Count == 0 && noModel.Count == 0) return null;
                 string hullName = "?"; try { hullName = s.hull != null && s.hull.data != null ? s.hull.data.name : "?"; } catch { }
