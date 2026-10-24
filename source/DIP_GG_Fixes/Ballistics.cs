@@ -58,7 +58,11 @@ namespace DipGgFixes
         // ---- shell construction (1.11.180: by technology, never by the calendar year) ----
         // drag coefficient (at supersonic speed) by the shell nose technology of the firing ship: blunt 2 crh shells without it,
         // the improved nose (projectile_shell_15, 1907) ~4 crh, the 1927 shells (projectile_shell_16) longer still.
-        static readonly float[] CdByNose = { 0.74f, 0.55f, 0.45f };
+        // 1.11.212 (author, 24.10): refitted to NavWeaps range tables - 15"/42 4crh APC (871 kg, 2,450 fps): Cd 0.50 reproduces range and time of flight
+        //           at 5.7-30 deg within 1-2 %; 15"/42 6crh (879 kg, 2,400 fps): 0.40; USN 5"/51 (22.7 kg, 3,150 fps, Range Tables 1935): 0.41
+        //           (10,970 m: elevation 9.1 vs 9.34 deg, 22.6 vs 22.76 s, fall 19.7 vs 19.5 deg). One Cd fits 5-inch and 15-inch alike - the
+        //           drag of small shells was overstated by the old 0.55 / 0.45, which made a 5-inch shell need 16-17 deg and 31 s for 11 km.
+        static readonly float[] CdByNose = { 0.74f, 0.50f, 0.41f };
         static float Cd(Ship s) { return CdByNose[Math.Max(0, Math.Min(2, TechYears.ShellNose(s)))]; }
         static float Mass(float calIn) { float dcm = calIn * 2.54f; return 0.0145f * dcm * dcm * dcm; }
         // shell weight as the game computes it for this gun, ship and shell type (light/heavy shell technologies, AP/HE); formula as fallback
