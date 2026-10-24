@@ -33,6 +33,7 @@ namespace DipGgFixes
             HullWindow = cat.CreateEntry("ShipGenHullWindow", 10, null, "Newest hulls: a hull counts as current when its unlocking technology is at most this many years (technology data) older than the newest hull technology the nation has for that ship type");
             ShareAi = cat.CreateEntry("ShipGenShareDesigns", true, null, "Campaign: a design the AI generator finished successfully is saved as a shared design of its nation ([gen] files) - on later turns the AI reuses it instead of running the generator");
             ShareMax = cat.CreateEntry("ShipGenShareMax", 8, null, "Kept generator designs: at most this many per nation and ship type");
+            RelaxTurrets = cat.CreateEntry("ShipGenRelaxTurrets", true, null, "Campaign: when the AI generator cannot fit the main battery a hull requires, the next attempt may carry one main turret fewer instead of giving the hull up (modern hulls stay in use)"); // 1.11.223
         }
 
         // ---- 1. early stop ----
@@ -40,7 +41,7 @@ namespace DipGgFixes
         internal static void Attempt(Ship._GenerateRandomShip_d__573 it, Ship ship, string key, bool running)
         {
             var p = it.Pointer;
-            if (!running) { lastTry.Remove(p); return; }
+            if (!running) { lastTry.Remove(p); RestoreHull(p); return; }
             if (EarlyStop == null || !EarlyStop.Value) return;
             int tryN = it._tryN_5__5, total = it._triesTotal_5__4;
             int prev; if (!lastTry.TryGetValue(p, out prev)) prev = 0;
@@ -48,11 +49,42 @@ namespace DipGgFixes
             lastTry[p] = tryN;
             if (tryN + 1 >= total) return; // one attempt left anyway
             string why; if (!Structural(ship, out why)) return;
+            // 1.11.223 (author's decision 24.10): a modern hull that cannot take its full main battery is not given up - the next
+            //           attempt may carry one main turret (two barrels) fewer; the generator then fits what the hull takes (24.10:
+            //           France failed on Dreadnought IV with 3 of 4 turrets, and the AI fell back to 1890 hulls). The hull's minimum
+            //           is lowered only for this generation and put back when it ends.
+            if (Relax(p, ship, why)) { Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed on the hull itself ({why}) - next attempt with one main turret fewer allowed"); return; }
             // 1.11.197: the coroutine has already decided to go on with the next attempt when this runs (24.10 log: "Attempt 2 / 1"
             //           after the total was cut to the failed attempt), so the total is cut to one more attempt - the success rule
             //           of the report (attempts used up = failure) stays consistent
             it._triesTotal_5__4 = tryN + 1; ShipGenMemory.saved += total - tryN - 1;
             Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed on the hull itself ({why}) - one more attempt instead of {total - tryN}");
+        }
+        // 1.11.223: hull minimum relaxed by one turret / two barrels for the rest of this generation (floor: 2 turrets, 4 barrels)
+        internal static MelonPreferences_Entry<bool> RelaxTurrets;
+        class HullMin { public PartData Hull; public int T, B; }
+        static readonly Dictionary<IntPtr, HullMin> relaxed = new Dictionary<IntPtr, HullMin>();
+        static bool Relax(IntPtr gen, Ship ship, string why)
+        {
+            try
+            {
+                if (RelaxTurrets != null && !RelaxTurrets.Value) return false;
+                if (relaxed.ContainsKey(gen)) return false;                        // once per generation
+                var hd = ship.hull != null ? ship.hull.data : null; if (hd == null) return false;
+                int t = hd.minMainTurrets, b = hd.minMainBarrels;
+                if (t <= 2 && b <= 4) return false;
+                relaxed[gen] = new HullMin { Hull = hd, T = t, B = b };
+                if (t > 2) hd.minMainTurrets = t - 1;
+                if (b > 4) hd.minMainBarrels = Math.Max(4, b - 2);
+                return true;
+            }
+            catch { return false; }
+        }
+        static void RestoreHull(IntPtr gen)
+        {
+            HullMin h; if (!relaxed.TryGetValue(gen, out h)) return;
+            relaxed.Remove(gen);
+            try { h.Hull.minMainTurrets = h.T; h.Hull.minMainBarrels = h.B; } catch { }
         }
         // the hull cannot take the required main battery: fewer main turrets than the hull minimum AND fewer barrels than its minimum
         // (the game needs only one of the two) - some main guns must be present, so a ship cleared for the next attempt never counts
