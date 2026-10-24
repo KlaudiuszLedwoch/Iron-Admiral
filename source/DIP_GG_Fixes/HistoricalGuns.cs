@@ -5,6 +5,7 @@
 //   6" ~4/min in action (3 sustained), 13.4-14.5 km (WWI); 12" ~1.5/min, 17.4 km (WWI, 13.5 deg); 15"/42 ~2/min.
 // So: 5" fires 1.2x faster and reaches 1.45x further, 6" fires 0.8x as fast and reaches 1.35x further, 12" fires 0.85x as fast.
 // Only calibres measured against sources are changed; others stay as they are.
+// 1.11.172: off by default - one multiplier per calibre for every gun generation (Mk) is wrong; to be redone per calibre and generation.
 using System;
 using MelonLoader;
 
@@ -15,7 +16,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("HistoricalGuns", true, null, "Battle: historical rate of fire and range of medium guns - 5\" guns fire faster and reach further, 6\" guns fire a little slower but reach further, 12\" guns fire a little slower (DIP compressed medium gun ranges)");
+            On = cat.CreateEntry("HistoricalGuns", false, null, "Battle: historical rate of fire and range of medium guns - 5\" guns fire faster and reach further, 6\" guns fire a little slower but reach further, 12\" guns fire a little slower (DIP compressed medium gun ranges)");
         }
         internal static float RofMult(float calIn)
         {
