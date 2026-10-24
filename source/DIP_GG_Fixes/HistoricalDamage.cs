@@ -39,7 +39,11 @@ namespace DipGgFixes
         static void Restore(string name) { var p = P(name); float v; if (p != null && orig.TryGetValue(name, out v)) p.value = v; }
         static readonly string[] Names = { "over_penetration", "over_penetration_threshold", "armor_damage", "fire_damage", "section_damage_torpedo", "torpedo_damage_ammo_detonation" };
 
-        internal static float TorpedoDamage(int year) { float t = Math.Max(0f, Math.Min(1f, (year - 1900) / 40f)); return 2000f + 3200f * t; }
+        // 1.11.180: torpedo damage by technology, never by the calendar year. The game already scales each torpedo by the torpedo
+        // technologies of the ship that fires it (torpedo_size_* up to +310%, torpedo_prop_* and torpedo_tubes marks add more), which
+        // matches the historical growth of warheads (~54 kg in 1894 -> ~490 kg Type 93). DIP raised the base to the WWII value (5200)
+        // on top of those technologies; the base goes back to the game's own early-torpedo value and the technologies do the rest.
+        const float TorpBase = 1750f, TorpAmmoBase = 690f;
 
         static float next;
         internal static void Tick()
@@ -50,12 +54,12 @@ namespace DipGgFixes
                 var gd = G.GameData; if (gd == null) return;
                 if (gd.Pointer != gdPtr) { gdPtr = gd.Pointer; orig.Clear(); applied = -1; }
                 bool on = On != null && On.Value;
-                int year = on ? Ballistics.Year() : 0;
+                int year = 0;
                 if (on && (applied != 1 || year != appliedYear))
                 {
-                    float torp = TorpedoDamage(year);
-                    var parts = new List<string> { Set("over_penetration", 0.10f), Set("over_penetration_threshold", 3.0f), Set("armor_damage", 0.10f), Set("fire_damage", 0.30f), Set("section_damage_torpedo", torp), Set("torpedo_damage_ammo_detonation", torp) };
-                    if (applied != 1 || year != appliedYear) Log($"historical damage values on (year {year}): " + string.Join(", ", parts));
+                    
+                    var parts = new List<string> { Set("over_penetration", 0.10f), Set("over_penetration_threshold", 3.0f), Set("armor_damage", 0.10f), Set("fire_damage", 0.30f), Set("section_damage_torpedo", TorpBase), Set("torpedo_damage_ammo_detonation", TorpAmmoBase) };
+                    if (applied != 1 || year != appliedYear) Log($"historical damage values on (torpedo damage from the torpedo technologies of each ship): " + string.Join(", ", parts));
                     applied = 1; appliedYear = year;
                 }
                 else if (!on && applied != 0)

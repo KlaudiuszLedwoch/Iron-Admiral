@@ -42,27 +42,34 @@ namespace DipGgFixes
             try
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = samples = probes = 0; year = 0; nextReport = Time.time + 120f; }
+                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = samples = probes = 0; TechYears.Reset(); nextReport = Time.time + 120f; }
                 else if (!battle && inBattle) { inBattle = false; Report("battle end"); }
                 else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); }
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
         }
 
-        // ---- era ----
-        static int year;
-        internal static int Year()
-        {
-            if (inBattle && year > 0) return year;
-            int y = 0;
-            try { if (CampaignController.Instance != null && GameManager.IsCampaign) y = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
-            if (y == 0) { try { var s = MelonPreferences.GetEntryValue<string>("DIP_GG_Fixes", "AutoTestBattle"); int yy; if (!string.IsNullOrEmpty(s) && int.TryParse(s.Split(';')[0].Trim(), out yy)) y = yy; } catch { } }
-            if (y == 0) y = 1920;
-            if (inBattle) year = y; return y;
-        }
-        // drag coefficient (at supersonic speed) by shell shape: 2 crh blunt shells until ~1912, 4 crh by 1918, longer later
-        static float Cd(int y) { return y < 1912 ? 0.74f : y < 1918 ? 0.55f : 0.45f; }
+        // ---- shell construction (1.11.180: by technology, never by the calendar year) ----
+        // drag coefficient (at supersonic speed) by the shell nose technology of the firing ship: blunt 2 crh shells without it,
+        // the improved nose (projectile_shell_15, 1907) ~4 crh, the 1927 shells (projectile_shell_16) longer still.
+        static readonly float[] CdByNose = { 0.74f, 0.55f, 0.45f };
+        static float Cd(Ship s) { return CdByNose[Math.Max(0, Math.Min(2, TechYears.ShellNose(s)))]; }
         static float Mass(float calIn) { float dcm = calIn * 2.54f; return 0.0145f * dcm * dcm * dcm; }
+        // shell weight as the game computes it for this gun, ship and shell type (light/heavy shell technologies, AP/HE); formula as fallback
+        static float ShellMass(Shell sh, Part p, float calIn)
+        {
+            try
+            {
+                if (p != null && p.data != null)
+                {
+                    var st = new Il2CppSystem.Nullable<Ship.ShellType>(sh.shellType);
+                    float w = Part.ShellWeight(p.data, p.ship, st);
+                    if (w > 0.1f && w < 3000f) return w;
+                }
+            }
+            catch { }
+            return Mass(calIn);
+        }
         static double MachFactor(double m)
         {
             if (m < 0.8) return 0.45;
@@ -71,9 +78,9 @@ namespace DipGgFixes
         }
 
         // ---- real trajectory (point mass, quadratic drag) ----
-        static void Shoot(double mv, double calIn, double cd, double el, out double range, out double time, out double fall)
+        static void Shoot(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall)
         {
-            double d = calIn * 0.0254, m = Mass((float)calIn), A = Math.PI * d * d / 4;
+            double d = calIn * 0.0254, m = mass > 0.1 ? mass : Mass((float)calIn), A = Math.PI * d * d / 4;
             double x = 0, y = 0, vx = mv * Math.Cos(el), vy = mv * Math.Sin(el), t = 0, dt = 0.05;
             while (true)
             {
@@ -90,19 +97,19 @@ namespace DipGgFixes
         }
         struct Real { public bool Ok; public float T, Fall; }
         static readonly Dictionary<long, Real> cache = new Dictionary<long, Real>();
-        static Real RealFor(float mv, float calIn, float cd, float R)
+        static Real RealFor(float mv, float calIn, float mass, float cd, float R)
         {
-            int mvi = Mathf.RoundToInt(mv / 10f), ci = Mathf.RoundToInt(calIn * 2f), ri = Mathf.RoundToInt(R / 200f), cdi = Mathf.RoundToInt(cd * 100f);
-            long key = ((long)mvi << 40) | ((long)ci << 28) | ((long)cdi << 18) | (long)ri;
+            int mvi = Mathf.RoundToInt(mv / 10f), ci = Mathf.RoundToInt(calIn * 2f), ri = Mathf.RoundToInt(R / 200f), cdi = Mathf.RoundToInt(cd * 100f), mi = Mathf.Clamp(Mathf.RoundToInt(mass), 0, 16383);
+            long key = ((long)mvi << 52) | ((long)ci << 43) | ((long)cdi << 34) | ((long)mi << 20) | (long)ri;
             Real r; if (cache.TryGetValue(key, out r)) return r;
-            double mvq = mvi * 10.0, cq = ci / 2.0, Rq = ri * 200.0, cdq = cdi / 100.0, rr, tt, ff;
-            Shoot(mvq, cq, cdq, 45 * Math.PI / 180, out rr, out tt, out ff);
+            double mvq = mvi * 10.0, cq = ci / 2.0, Rq = ri * 200.0, cdq = cdi / 100.0, mq = mi, rr, tt, ff;
+            Shoot(mvq, cq, mq, cdq, 45 * Math.PI / 180, out rr, out tt, out ff);
             if (rr < Rq) { r.Ok = false; }
             else
             {
                 double lo = 0, hi = 45 * Math.PI / 180;
-                for (int i = 0; i < 28; i++) { double mid = (lo + hi) / 2; Shoot(mvq, cq, cdq, mid, out rr, out tt, out ff); if (rr < Rq) lo = mid; else hi = mid; }
-                Shoot(mvq, cq, cdq, (lo + hi) / 2, out rr, out tt, out ff);
+                for (int i = 0; i < 28; i++) { double mid = (lo + hi) / 2; Shoot(mvq, cq, mq, cdq, mid, out rr, out tt, out ff); if (rr < Rq) lo = mid; else hi = mid; }
+                Shoot(mvq, cq, mq, cdq, (lo + hi) / 2, out rr, out tt, out ff);
                 r.Ok = true; r.T = (float)tt; r.Fall = (float)ff;
             }
             if (cache.Count > 20000) cache.Clear();
@@ -122,7 +129,7 @@ namespace DipGgFixes
             fall = Math.Atan2(-vyT, vxT);
         }
 
-        internal static void Rebuild(Shell.Arc arc, Vector3 from, Vector3 to, float calIn)
+        internal static void Rebuild(Shell.Arc arc, Vector3 from, Vector3 to, float calIn, Ship ship = null, float mass = 0f)
         {
             if (Realistic == null || !Realistic.Value || arc == null || calIn < 0.9f) return;
             try
@@ -130,7 +137,7 @@ namespace DipGgFixes
                 Vector3 rel = to - from; Vector2 hz = new Vector2(rel.x, rel.z); float R = hz.magnitude; if (R < 300f) return;
                 float mv = arc.initialVelocity.magnitude; if (!(mv > 1f)) return;
                 mv = Mathf.Clamp(mv, 300f, 1100f);
-                var real = RealFor(mv, calIn, Cd(Year()), R);
+                var real = RealFor(mv, calIn, mass, Cd(ship), R);
                 if (!real.Ok || real.T <= 0.05f) { skipped++; return; }
                 double T = real.T, want = real.Fall, dy = rel.y;
                 // drag constant: the shell leaves the muzzle with (about) its muzzle velocity and arrives at the real time
@@ -185,7 +192,7 @@ namespace DipGgFixes
                 var arc = s.arc; if (arc == null) return;
                 Vector3 a = s.shellStart, b = s.originalTo;
                 float cal = 0f; try { var d = from != null ? from.data : null; if (d != null) cal = d.caliber; } catch { }
-                Rebuild(arc, a, b, cal / 25.4f); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
+                Ship shooter = null; try { shooter = from != null ? from.ship : null; } catch { } Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f)); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
                 if (LogOn == null || !LogOn.Value) return;
                 float t = arc.timeToTarget; if (t <= 0f) return;
                 float range = new Vector2(b.x - a.x, b.z - a.z).magnitude; if (range < 500f) return;
@@ -204,7 +211,7 @@ namespace DipGgFixes
         static void Report(string tag)
         {
             if (bins.Count == 0) return;
-            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics, year {Year()}, drag coef {Cd(Year())}, arcs rebuilt {rebuilt}, beyond model range {skipped}" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
+            var sb = new System.Text.StringBuilder($"{tag} - shells by calibre and range ({(Realistic != null && Realistic.Value ? $"physical ballistics (shell shape by technology), arcs rebuilt {rebuilt}, beyond model range {skipped}" : "game ballistics")}): calibre and gun generation | radar (R) | range | shells | time of flight | elevation | angle of fall | muzzle / striking speed (m/s) | hits (decided by the game when the shell is fired)");
             foreach (var kv in bins)
             {
                 var b = kv.Value; double n = b.N;

@@ -31,10 +31,12 @@ namespace DipGgFixes
         // Ships with fire-control radar get EraAccuracyRadar x the hit chance (independent of the year).
         internal static MelonPreferences_Entry<float> Radar;
         internal static float RadarFactor(Ship s) { if (On == null || !On.Value || Radar == null) return 1f; return GunLab.HasRadar(s) ? Math.Max(1f, Radar.Value) : 1f; }
-        internal static float Factor()
+        // 1.11.180: indexed by the historical year of the fire-control technology fitted to the shooting ship (rangefinder or radar),
+        // never by the calendar year; no fire-control component = earliest row.
+        internal static float Factor(Ship s)
         {
             if (On == null || !On.Value) return 1f;
-            int y = Ballistics.Year();
+            int y = TechYears.FireControl(s); if (y <= 0) y = Years[0];
             float m = Mult[Mult.Length - 1];
             if (y <= Years[0]) m = Mult[0];
             else for (int i = 1; i < Years.Length; i++) if (y <= Years[i]) { float t = (y - Years[i - 1]) / (float)(Years[i] - Years[i - 1]); m = Mult[i - 1] + (Mult[i] - Mult[i - 1]) * t; break; }
@@ -63,6 +65,24 @@ namespace DipGgFixes
         static readonly System.Collections.Generic.Dictionary<string, float> orig = new System.Collections.Generic.Dictionary<string, float>();
         static IntPtr gdPtr; static int applied = -1, appliedYear; static float next; static int errors;
         static ParamData P(string name) { try { var gd = G.GameData; if (gd == null || gd.paramsRaw == null) return null; ParamData p; return gd.paramsRaw.TryGetValue(name, out p) ? p : null; } catch { return null; } }
+        // 1.11.180: the dispersion parameters are shared by the whole battle, so they follow the average fire-control technology
+        // (historical year of the rangefinder/radar fitted) of the ships in the battle; 0 = not in a battle.
+        // To do: per shot (per ship) dispersion.
+        static IntPtr battlePtr; static int battleYear;
+        static int BattleFireControlYear()
+        {
+            try
+            {
+                if (!GameManager.IsBattle) { battlePtr = IntPtr.Zero; return 0; }
+                var b = BattleManager.Instance.CurrentBattle; if (b == null || b.Ships == null || b.Ships.Count == 0) return 0;
+                if (b.Pointer == battlePtr && battleYear > 0) return battleYear;
+                int sum = 0, n = 0;
+                for (int i = 0; i < b.Ships.Count; i++) { int y = TechYears.FireControl(b.Ships[i]); if (y > 0) { sum += y; n++; } }
+                battlePtr = b.Pointer; battleYear = n > 0 ? sum / n : DYears[0];
+                return battleYear;
+            }
+            catch { return 0; }
+        }
         internal static void Tick()
         {
             if (UnityEngine.Time.unscaledTime < next) return; next = UnityEngine.Time.unscaledTime + 2f;
@@ -71,7 +91,8 @@ namespace DipGgFixes
                 var gd = G.GameData; if (gd == null) return;
                 if (gd.Pointer != gdPtr) { gdPtr = gd.Pointer; orig.Clear(); applied = -1; }
                 bool on = Dispersion != null && Dispersion.Value;
-                int year = on ? Ballistics.Year() : 0;
+                int year = on ? BattleFireControlYear() : 0;
+                if (on && year == 0) { if (applied == 1) return; year = DYears[2]; } // outside battles the last battle's values stay
                 if (on && (applied != 1 || year != appliedYear))
                 {
                     float f = DispFactor(year); var sb = new System.Text.StringBuilder();
@@ -82,7 +103,7 @@ namespace DipGgFixes
                         float v = DispVanilla[i] * (i >= 4 ? 1f : f); // range-like values scale with the era, worst-case multipliers stay vanilla
                         p.value = v; sb.Append($"{DispNames[i]} {orig[DispNames[i]]} -> {v}, ");
                     }
-                    MelonLogger.Msg($"[DIP GG Fixes][Accuracy] dispersion by era on (year {year}, x{f:0.00}): {sb}");
+                    MelonLogger.Msg($"[DIP GG Fixes][Accuracy] dispersion on (average fire-control technology of the battle {year}, x{f:0.00}): {sb}");
                     applied = 1; appliedYear = year;
                 }
                 else if (!on && applied != 0)
@@ -98,6 +119,6 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(GunData), "HitChanceMult")]
     internal static class Patch_HitChanceMult_Era
     {
-        static void Postfix(Ship __0, ref float __result) { try { if (GameManager.IsBattle) __result *= EraAccuracy.Factor() * EraAccuracy.RadarFactor(__0); } catch { } }
+        static void Postfix(Ship __0, ref float __result) { try { if (GameManager.IsBattle) __result *= EraAccuracy.Factor(__0) * EraAccuracy.RadarFactor(__0); } catch { } }
     }
 }
