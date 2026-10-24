@@ -129,7 +129,11 @@ namespace DipGgFixes
             if (player.Pointer != ActivePlayer) return;
             LoadTables();
             string name = hull.name; int y; string type;
-            if (!unlockYear.TryGetValue(name, out y) || !hullType.TryGetValue(name, out type)) return; // start hulls and unknown hulls stay
+            if (!hullType.TryGetValue(name, out type)) return; // unknown hulls stay
+            // 1.11.222 (author, 24.10): start hulls (no unlocking technology - the 1890 hulls) count as 1890 and fall under the window
+            //           like any other; before they always passed, and in 1922 the AI still laid down 3-Mast Armored Cruisers and
+            //           Dreadnought-era battleships on the 1890 French large hull while modern hulls failed in the generator
+            if (!unlockYear.TryGetValue(name, out y)) y = 1890;
             string pk = player.data != null ? player.data.name : player.Pointer.ToString();
             string key = pk + "|" + type;
             int m = MonthIndex(); if (m != newestMonth) { newest.Clear(); newestMonth = m; }
