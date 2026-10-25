@@ -138,7 +138,7 @@ namespace DipGgFixes
         }
         internal static void OnGUI()
         {
-            if (Bubbles == null || !Bubbles.Value || !inBattle || bubbles.Count == 0) return;
+            if (Bubbles == null || !Bubbles.Value || !inBattle || bubbles.Count == 0 || BattleScreen.Hidden) return;
             try
             {
                 bubbles.RemoveAll(b => Time.unscaledTime - b.T > 9f);

@@ -188,6 +188,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> RamRange;
         internal static MelonPreferences_Entry<bool> CapitalEscapeWhenHopeless;
         internal static MelonPreferences_Entry<float> HopelessEscapeDelay, HopelessFightOnRatio;
+        internal static MelonPreferences_Entry<bool> HopelessEngageLighter; // 1.11.250
         internal static MelonPreferences_Entry<bool> EscapeMissionLogic;
         internal static MelonPreferences_Entry<string> EscapeBattleTypes;
         internal static MelonPreferences_Entry<float> OutrangedFactor;
@@ -477,6 +478,8 @@ namespace DipGgFixes
                 "AI battleships/battlecruisers that cannot penetrate the enemy even at close range retreat when they can survive to the end of the battle: they are faster than every visible enemy, or no visible enemy can penetrate their belt");
             HopelessEscapeDelay = cat.CreateEntry("HopelessEscapeDelay", 120f, null,
                 "Seconds of battle time an AI capital ship keeps engaging an identified target it cannot penetrate before it breaks off (it never breaks off from a ship it has not identified)");
+            HopelessEngageLighter = cat.CreateEntry("HopelessEngageLighter", true, null,
+                "An AI capital ship that cannot pierce the enemy battle line stays in action while it can hurt other enemy ships in range (cruisers, destroyers), and does not break off when no enemy can pierce its own belt either (1.11.250)");
             HopelessFightOnRatio = cat.CreateEntry("HopelessFightOnRatio", 1.5f, null,
                 "An AI capital ship that cannot penetrate its target still fights on when its own side's combat tonnage is at least the enemy's x this");
             EscapeMissionLogic = cat.CreateEntry("EscapeMissionLogic", true, null,
@@ -597,7 +600,7 @@ namespace DipGgFixes
             HistPriority.CreatePrefs(cat);
             Trade.CreatePrefs(cat);
             Intel.CreatePrefs(cat);
-            Obliquity.CreatePrefs(cat);
+            Obliquity.CreatePrefs(cat); ArmorQuality.CreatePrefs(cat); // 1.11.250
             ContinuousMap.CreatePrefs(cat);
             ShipGenMemory.CreatePrefs(cat); // 1.11.99
             ShipGenSpeed.CreatePrefs(cat); // 1.11.196
@@ -1264,7 +1267,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public float nextSightLog; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
+        internal class DivState { public float nextThink; public float nextSightLog; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public bool hopelessSoftLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
             // 1.11.86
             public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
@@ -2014,6 +2017,39 @@ namespace DipGgFixes
                         if (!st.hopelessWaitLogged) { st.hopelessWaitLogged = true; Log($"{st.name}: no retreat yet from {best.name} - {(!known ? "target not identified" : "keeps firing first")}"); }
                         Why(st, "hopeless penetration - waiting before breaking off"); return;
                     }
+                    // 1.11.250 (film 25.10, B8: an AI battleship with a 16-inch belt left the battle after a few salvoes - 0 % hits, 97 % of
+                    //          its ammunition unused): a capital ship that cannot pierce the enemy battle line still fires at the enemy ships it
+                    //          can hurt (cruisers, destroyers), and it does not run when no enemy can pierce it either (Jutland: the battle lines
+                    //          fought on at ranges where belts held; the damage came from hits on the upper works, turrets and lighter ships)
+                    if (DipGgFixesMod.HopelessEngageLighter.Value)
+                    {
+                        Ship soft = null; float softD = float.MaxValue, sp, sb;
+                        for (int i = 0; i < enemies.Count; i++)
+                        {
+                            var e = enemies[i]; if (e == null || e.isDead || e.isSinking || e.IsSurrendered) continue;
+                            bool vis = false; try { vis = e.IsVisibleFor(leader); } catch { }
+                            if (!vis) continue;
+                            float d = Dist(leader, e); if (ownR > 0f && d > ownR) continue;
+                            if (!CannotPenetrate(leader, e, d, out sp, out sb) && d < softD) { soft = e; softD = d; }
+                        }
+                        if (soft != null)
+                        {
+                            if (!st.hopelessSoftLogged) { st.hopelessSoftLogged = true; Log($"{st.name} ({leader.shipType.name}): cannot penetrate {best.name}, but can hurt {soft.name} ({soft.shipType.name}, {softD:0} m) - stays in action"); }
+                            Why(st, "hopeless against the line - engages the lighter ships"); return;
+                        }
+                        bool threatened = false;
+                        for (int i = 0; i < enemies.Count && !threatened; i++)
+                        {
+                            var e = enemies[i]; if (e == null || e.isDead || e.isSinking || e.IsSurrendered) continue;
+                            float d = Dist(leader, e); float er = GunRange(e); if (er > 0f && d > er * 1.2f) continue;
+                            if (!CannotPenetrate(e, leader, UnityEngine.Mathf.Max(1000f, d * 0.6f), out sp, out sb)) threatened = true;
+                        }
+                        if (!threatened)
+                        {
+                            if (!st.hopelessSoftLogged) { st.hopelessSoftLogged = true; Log($"{st.name} ({leader.shipType.name}): neither side can pierce the other's belt - fights on (upper works, turrets, fires)"); }
+                            Why(st, "belts hold on both sides - fighting on"); return;
+                        }
+                    }
                     if (DipGgFixesMod.CapitalEscapeWhenHopeless.Value && IsMainShip(leader, BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null) && !st.capEscape && CanSurvive(leader, div, doc, enemies, out sw))
                     {
                         st.capEscape = true; div.Retreat(true);
@@ -2116,6 +2152,74 @@ namespace DipGgFixes
     }
 
     // =====================================================================================
+    // 1.11.250 (film of 25.10, point B5): the player's target orders. Ship.SetEnemy is what the game calls when the player orders a ship
+    // (or its main/secondary battery) to fire at an enemy. A call made while the player is clicking or pressing a key is a player
+    // order; the mod's target selection then leaves those guns alone until the target sinks, surrenders or the player gives the ship back
+    // to automatic targeting (Ship.SetAutoTargeting). Log: [Battle] player order: ...
+    internal static class PlayerTargetOrders
+    {
+        class O { public IntPtr Target; public string Name; public bool Mains, Secs; }
+        static readonly Dictionary<IntPtr, O> orders = new Dictionary<IntPtr, O>();
+        static IntPtr battle; static int logged;
+        static void Battle()
+        {
+            IntPtr b = IntPtr.Zero; try { var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb != null) b = cb.Pointer; } catch { }
+            if (b != battle) { battle = b; orders.Clear(); }
+        }
+        static bool PlayerInput()
+        {
+            try
+            {
+                if (UnityEngine.Input.GetMouseButton(0) || UnityEngine.Input.GetMouseButton(1) || UnityEngine.Input.GetMouseButtonUp(0) || UnityEngine.Input.GetMouseButtonUp(1) || UnityEngine.Input.anyKeyDown || UnityEngine.Input.anyKey) return true;
+                return UnityEngine.Time.realtimeSinceStartup - BattleAi.lastInput < 0.6f;
+            }
+            catch { return false; }
+        }
+        internal static void Record(Ship s, Ship enemy, bool all, bool mains, bool secs)
+        {
+            try
+            {
+                if (s == null || enemy == null || s.player == null || !s.player.isMain || !GameManager.IsBattle || !PlayerInput()) return;
+                Battle();
+                if (!all && !mains && !secs) return;
+                orders[s.Pointer] = new O { Target = enemy.Pointer, Name = enemy.name, Mains = all || mains, Secs = all || secs };
+                if (logged++ < 40) BattleAi.Log($"player order: {s.name} {(all ? "all guns" : (mains && secs ? "main and secondary guns" : mains ? "main guns" : "secondary guns"))} fire at {enemy.name} - the mod's target selection leaves them alone until the target is sunk or surrenders");
+            }
+            catch { }
+        }
+        internal static void Clear(Ship s)
+        {
+            try { if (s != null && orders.Remove(s.Pointer) && logged++ < 40) BattleAi.Log($"player order: {s.name} back to automatic targeting"); } catch { }
+        }
+        internal static bool Holds(Ship s, bool isMain)
+        {
+            if (orders.Count == 0 || s == null) return false;
+            O o; if (!orders.TryGetValue(s.Pointer, out o)) return false;
+            if (isMain ? !o.Mains : !o.Secs) return false;
+            Ship t = null;
+            try
+            {
+                var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
+                var all = cb != null ? cb.Ships : null;
+                if (all != null) for (int i = 0; i < all.Count; i++) { var x = all[i]; if (x != null && x.Pointer == o.Target) { t = x; break; } }
+            }
+            catch { }
+            bool gone = true; try { gone = t == null || t.isDead || t.isSinking || t.IsSurrendered; } catch { }
+            if (gone) { orders.Remove(s.Pointer); if (logged++ < 40) BattleAi.Log($"player order: {s.name} - {o.Name} is out of the fight, the mod picks targets again"); return false; }
+            return true;
+        }
+    }
+    [HarmonyPatch(typeof(Ship), "SetEnemy")]
+    internal static class Patch_ShipSetEnemy_PlayerOrder
+    {
+        static void Prefix(Ship __instance, Ship __0, bool __1, bool __2, bool __3) { PlayerTargetOrders.Record(__instance, __0, __1, __2, __3); }
+    }
+    [HarmonyPatch(typeof(Ship), "SetAutoTargeting")]
+    internal static class Patch_ShipAutoTargeting_PlayerOrder
+    {
+        static void Prefix(Ship __instance) { if (BattleAi.PlayerInputRecent()) PlayerTargetOrders.Clear(__instance); }
+    }
+
     // 1.11: per-ship battle tick (Ship.AimAndShoot runs for every ship, player and AI)
     // =====================================================================================
     internal static class ShipTick
@@ -2482,6 +2586,9 @@ namespace DipGgFixes
                 var aim = dict[pd]; if (aim == null) continue;
                 var cur = aim.target;
                 IntPtr mine; bool haveMine = st.ours.TryGetValue(pd.Pointer, out mine);
+                // 1.11.250 (film 25.10, B5 "Why are we changing targets?"): a target the player gave (Ship.SetEnemy from a click or key) holds
+                // until that ship is sunk or has surrendered - before, a player's order that matched the mod's own pick was taken for the mod's lock
+                if (PlayerTargetOrders.Holds(s, IsMainGroup(pd, main))) { if (haveMine) st.ours.Remove(pd.Pointer); continue; }
                 if (aim.manual)
                 {
                     // a manual target that is not ours = the player's order: hands off
@@ -2490,7 +2597,7 @@ namespace DipGgFixes
                 else if (haveMine) st.ours.Remove(pd.Pointer); // the game or the player cleared our lock
                 float range = 0f; if (cache != null) cache.TryGetValue(pd, out range);
                 if (range <= 0f) { Release(aim, st, pd); continue; }
-                bool isMain = main != null && pd.Pointer == main.Pointer;
+                bool isMain = IsMainGroup(pd, main);
                 var pick = isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range);
                 if (pick == null) { Release(aim, st, pd); continue; }
                 if (isMain) { try { st.playerPtr = s.player.Pointer; } catch { } st.mainTarget = pick.Pointer; st.mainAt = UnityEngine.Time.time; }
@@ -2503,6 +2610,15 @@ namespace DipGgFixes
                 aim.target = pick; aim.manual = true; aim.progress = 0f; st.ours[pd.Pointer] = pick.Pointer; targetChanges++;
                 if (tgtLogged < 40 || targetChanges % 200 == 0) { tgtLogged++; BattleAi.Log($"{s.name} {(isMain ? "main" : "secondary")} guns ({pd.caliber:0} mm): target {pick.name} ({pick.shipType.name}, dmg {Dmg(pick):0.00}) instead of {(cur != null ? cur.name : "none")} [{targetChanges} changes]"); }
             }
+        }
+        // 1.11.250: the main battery may be split over several PartData (twin and triple turrets of the same gun); all of them are the
+        //           main guns. AutoTest 25.10: Koenig's 305 mm in the other turret type were treated as secondary guns, picked the nearest
+        //           cruiser and switched between the cruiser and the battleship every few seconds.
+        static bool IsMainGroup(PartData pd, PartData main)
+        {
+            if (main == null || pd == null) return false;
+            if (pd.Pointer == main.Pointer) return true;
+            try { return main.caliber > 0f && Math.Abs(pd.caliber - main.caliber) < 1f; } catch { return false; }
         }
         // give the group back to the game's own targeting
         static void Release(Ship.Aim aim, St st, PartData pd)

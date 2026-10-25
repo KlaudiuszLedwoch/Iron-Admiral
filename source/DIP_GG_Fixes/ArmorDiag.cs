@@ -134,9 +134,12 @@ namespace DipGgFixes
         {
             bool battle = false; try { battle = GameManager.IsBattle; } catch { }
             if (battle && !inBattle) { inBattle = true; Reset(); }
-            else if (!battle && inBattle)
+            else if (!battle && inBattle) { inBattle = false; Summary(); }
+        }
+        // 1.11.250: also called by AutoTest before it quits (the summary was lost when the game closed in the same frame)
+        internal static void Summary()
+        {
             {
-                inBattle = false;
                 if (!Active) return;
                 try
                 {

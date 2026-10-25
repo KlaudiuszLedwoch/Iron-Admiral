@@ -19,7 +19,7 @@ namespace DipGgFixes
 
         internal static void OnGUI()
         {
-            if (On == null || !On.Value || !GameManager.IsBattle) return;
+            if (On == null || !On.Value || !GameManager.IsBattle || BattleScreen.Hidden) return;
             try
             {
                 var cam = Camera.main; if (cam == null) return;

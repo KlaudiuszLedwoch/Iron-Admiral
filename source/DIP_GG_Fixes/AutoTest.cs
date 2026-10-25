@@ -214,6 +214,7 @@ namespace DipGgFixes
             Summary("final");
             running = false;
             if (shots) { Shot("battle_final"); for (float w = Time.realtimeSinceStartup + 2f; Time.realtimeSinceStartup < w;) yield return null; }
+            try { ArmorDiag.Summary(); } catch { } // 1.11.250
             Log("test finished - quitting");
             Application.Quit();
         }
