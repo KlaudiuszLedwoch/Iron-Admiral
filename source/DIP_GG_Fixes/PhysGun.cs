@@ -101,8 +101,12 @@ namespace DipGgFixes
                     // game's HE/AP weight ratio of this gun on top of the historical AP shell
                     if (st == Ship.ShellType.He)
                     {
-                        float kgApWin = 0f; try { kgApWin = Part.ShellWeight(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap)); } catch { }
-                        if (kgApWin > 0.05f && kgWin > 0.05f) g.Kg *= Math.Max(0.5f, Math.Min(1.2f, kgWin / kgApWin));
+                        // 1.11.275: Part.ShellWeight returned the same weight for both types (HE 571 = AP 571 in the window, game 626 / 869);
+                        //           the gun data weights by type are tried too, the first ratio that differs from 1 is used
+                        float hr = 1f;
+                        try { float kgApWin = Part.ShellWeight(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap)); if (kgApWin > 0.05f && kgWin > 0.05f && Math.Abs(kgWin / kgApWin - 1f) > 0.01f) hr = kgWin / kgApWin; } catch { }
+                        if (Math.Abs(hr - 1f) < 0.01f) { try { if (gd != null) { float gdAp = Part.ShellWeight(gd, pd, grade, ship, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap)); if (gdAp > 0.05f && kgGd > 0.05f && Math.Abs(kgGd / gdAp - 1f) > 0.01f) hr = kgGd / gdAp; } } catch { } }
+                        g.Kg *= Math.Max(0.5f, Math.Min(1.2f, hr));
                     }
                     g.KgHist = true;
                 }

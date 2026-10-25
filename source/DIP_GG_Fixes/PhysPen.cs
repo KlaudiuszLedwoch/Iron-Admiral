@@ -39,7 +39,7 @@ namespace DipGgFixes
             On = cat.CreateEntry("PhysicalPenetration", true, null, "Battle: penetration from the physics of each shot - striking velocity and angle of fall of the shell's arc; Okun's face-hardened formula for belts and turret sides, Thompson's F-formula with Okun's standard F for decks");
             FhConst = cat.CreateEntry("PhysicalPenetrationFhConst", 0.049f, null, "Okun face-hardened formula T[mm] = C * W[kg]^0.2 * V[m/s]^1.21; C = 0.049 from the US 8\"/55 AP Mk 21 against Class A armour (navweaps.com)");
             BeltC = cat.CreateEntry("PhysicalPenetrationBeltC", 0.2468f, null, "Belt penetration T[mm] = C * W[kg]^0.719 * Vn[m/s]^1.439 * D[mm]^-1.079 (DeMarre type); C = 0.2468 from NavWeaps side-armour data of 9 AP guns 5-16 inch");
-            Replace = cat.CreateEntry("PhysicalPenetrationReplace", true, null, "Battle: the game's penetration value itself is replaced by the physical one (belt: DeMarre-type law; deck: Thompson F-formula) for the arriving shell, the AI's estimates and the gun window, and the plate is no longer scaled to it - the plate keeps only its quality (iron ... Krupp) and the obliquity. Off: the older method (plate scaled by game / physical penetration)");
+            Replace = cat.CreateEntry("PhysicalPenetrationRows", true, null, "Battle: the game's penetration value itself is replaced by the physical one (belt: DeMarre-type law; deck: Thompson F-formula) for the arriving shell, the AI's estimates and the gun window, and the plate is no longer scaled to it - the plate keeps only its quality (iron ... Krupp) and the obliquity. Off: the older method (plate scaled by game / physical penetration)");
         HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
             InfoSize = cat.CreateEntry("GunInfoTextSize", 0.78f, null, "Gun window: text size of the gun description (1 = the game's size)");
@@ -244,14 +244,19 @@ namespace DipGgFixes
                 float rV = ColV(result, 5), rH = ColH(result, 5);
                 if (!(gV > 0.01f) || !(rV > 0.01f)) { if (rowFails++ < 5) MelonLogger.Warning($"[DIP GG Fixes][Hit] penetration row of {g.CalMm:0.#} mm on {ship.name}: game reading {gV:0.#} / row {rV:0.#} at 5 km - cannot measure the modifier, row left to the game"); return; }
                 rx.Mv = gV / rV; rx.Mh = (gH > 0.01f && rH > 0.01f) ? gH / rH : rx.Mv;
-                var row = new PenetrationData(); try { row.name = result.name; row.caliberInch = result.caliberInch; } catch { }
+                // 1.11.275 (author 25.10, 17:18: NullReference in Ship.GetPenetration on the new row): the game reads the row's dictionaries
+                // verticals / horizontals (range km -> mm), which a fresh object lacks - the original row is cloned and gets its own dictionaries
+                var cloned = result.MemberwiseClone(); var row = cloned != null ? cloned.TryCast<PenetrationData>() : null;
+                if (row == null) { if (rowFails++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] penetration row: clone failed - row left to the game"); return; }
+                var dv = new Il2CppSystem.Collections.Generic.Dictionary<int, float>(); var dh = new Il2CppSystem.Collections.Generic.Dictionary<int, float>();
+                var ov = result.verticals; var oh = result.horizontals;
                 var sb = rowLogged < 10 ? new System.Text.StringBuilder() : null;
                 foreach (int km in colsV)
                 {
                     float vs, fall, t; bool beyond; float R = Math.Max(50f, km * 1000f);
                     Ballistics.Impact(g.Mv, g.CalMm / 25.4f, g.Kg, cd, R, elev, out vs, out fall, out t, out beyond);
                     float p = beyond ? 0f : BeltPen(g.Kg, vs, fall, g.Q, g.CalMm);
-                    SetV(row, km, p / rx.Mv);
+                    SetV(row, km, p / rx.Mv); dv[km] = p / rx.Mv;
                     if (sb != null) sb.Append($" {km}km {p:0}/{ColV(result, km) * rx.Mv:0}");
                 }
                 foreach (int km in colsH)
@@ -259,8 +264,11 @@ namespace DipGgFixes
                     float vs, fall, t; bool beyond; float R = km * 1000f;
                     Ballistics.Impact(g.Mv, g.CalMm / 25.4f, g.Kg, cd, R, elev, out vs, out fall, out t, out beyond);
                     float p = beyond ? 0f : DeckPen(g.Kg, g.CalMm, vs, fall);
-                    SetH(row, km, p / rx.Mh);
+                    SetH(row, km, p / rx.Mh); dh[km] = p / rx.Mh;
                 }
+                try { if (ov != null) { var e = ov.GetEnumerator(); while (e.MoveNext()) { int k = e.Current.Key; if (!dv.ContainsKey(k)) dv[k] = 0f; } } } catch { }
+                try { if (oh != null) { var e = oh.GetEnumerator(); while (e.MoveNext()) { int k = e.Current.Key; if (!dh.ContainsKey(k)) dh[k] = 0f; } } } catch { }
+                row.verticals = dv; row.horizontals = dh;
                 rx.Row = row; rx.Ok = true; result = row; replaced++;
                 if (sb != null) { rowLogged++; MelonLogger.Msg($"[DIP GG Fixes][Hit] penetration row replaced for {g.CalMm:0.#} mm Mk{g.Grade} on {ship.name} (game modifier x{rx.Mv:0.00} belt, x{rx.Mh:0.00} deck): belt physical/game by range:{sb}"); }
             }
