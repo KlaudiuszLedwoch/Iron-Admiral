@@ -42,6 +42,7 @@ namespace DipGgFixes
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
             PhysGun.CreatePrefs(cat);
             OverPen.CreatePrefs(cat); // 1.11.253
+            HitDispatch.CreatePrefs(cat); // 1.11.258
         }
 
         internal class Shot { public Ship Shooter; public PartData Pd; public PhysGun.G G; public float Range, Vs, Fall; }
@@ -160,6 +161,7 @@ namespace DipGgFixes
                 string key = $"{cal,6:0.0} mm {(sh != null ? sh.G.Type.ToString() : "?"),-2} | {hitType}";
                 float[] a; if (!summary.TryGetValue(key, out a)) { a = new float[5]; summary[key] = a; }
                 a[0]++; a[1] += Math.Max(0f, armor); a[2] += physB; a[3] += Math.Max(0f, penetration); a[4] += damage;
+                HitDispatch.Hit(victim, sh != null ? sh.Shooter : (from != null ? from.ship : null), cal, hitType, damage);
                 if (HitLog == null || !HitLog.Value || hitLines >= (HitLogMax != null ? HitLogMax.Value : 300)) return;
                 if (hitType == "none" && rawLines++ >= 5) return; // the game's "none" (no armour met, no damage): only the first few
                 hitLines++;

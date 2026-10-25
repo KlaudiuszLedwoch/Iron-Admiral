@@ -42,7 +42,7 @@ namespace DipGgFixes
         internal static int Raised { get { return raised; } }
         static readonly SortedDictionary<string, float[]> locSum = new SortedDictionary<string, float[]>();
         // last location for the hit log (PhysPen.Taken runs right after the damage)
-        internal static string LastLoc; internal static int LastFrame = -1; internal static float LastRaw, LastNew;
+        internal static string LastLoc, LastModules; internal static int LastFrame = -1; internal static float LastRaw, LastNew; internal static bool LastFire, LastFlood;
         internal static void ResetCount() { raised = 0; locSum.Clear(); locLogs = 0; }
 
         // Ship.GetArmorModForPenetrations(string hitType, bool useHe, float angle): the hit type and the game's modifiers
@@ -115,13 +115,21 @@ namespace DipGgFixes
                     float want = raw / curMod * curNormal * frac;
                     if (want > damage) { damage = want; raised++; }
                 }
-                LastLoc = loc; LastFrame = Time.frameCount; LastRaw = raw; LastNew = damage;
+                LastLoc = loc; LastFrame = Time.frameCount; LastRaw = raw; LastNew = damage; LastFire = false; LastFlood = false; LastModules = null;
                 string key = $"{loc} | {(useHe ? "He" : "Ap")} {type}";
                 float[] a; if (!locSum.TryGetValue(key, out a)) { a = new float[3]; locSum[key] = a; }
                 a[0]++; a[1] += raw; a[2] += damage;
                 if (type == "over" && locLogs++ < 40) MelonLogger.Msg($"[DIP GG Fixes][Damage] AP pass-through {ship.name}: {loc}, game damage {raw:0.#} (modifier {curMod:0.###}), as a penetration {raw / Math.Max(1e-5f, curMod) * curNormal:0} -> {damage:0.#} ({frac:0.00})");
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Damage] location: " + e.Message); }
+        }
+
+        // after the damage: fire, flooding and modules damaged by this hit (for the hit dispatches, 1.11.258)
+        internal static void After(bool fire, bool flood, Il2CppSystem.Collections.Generic.List<Ship.Module> mods)
+        {
+            if (LastFrame != Time.frameCount) return;
+            LastFire |= fire; LastFlood |= flood;
+            try { if (mods != null && mods.Count > 0) { var l = new List<string>(); for (int i = 0; i < mods.Count && l.Count < 3; i++) { var m = mods[i]; if (m == null) continue; string nm = m.nameUi; if (string.IsNullOrEmpty(nm)) nm = m.name; if (!string.IsNullOrEmpty(nm) && !l.Contains(nm.ToLowerInvariant())) l.Add(nm.ToLowerInvariant()); } if (l.Count > 0) LastModules = string.Join(", ", l); } } catch { }
         }
 
         internal static void Report()
@@ -143,5 +151,6 @@ namespace DipGgFixes
     internal static class Patch_OverPenDeal
     {
         private static void Prefix(Ship __instance, Part __0, Ship.Section __1, ref float __2, bool __11) { try { OverPen.Deal(__instance, __0, __1, ref __2, __11); } catch { } }
+        private static void Postfix(ref bool __5, ref bool __7, Il2CppSystem.Collections.Generic.List<Ship.Module> __9) { try { OverPen.After(__5, __7, __9); } catch { } }
     }
 }
