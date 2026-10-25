@@ -338,9 +338,11 @@ namespace DipGgFixes
             // fastest setting whose intercept run fits its range less the margin
             int want = -1; string why = null; float d = BattleAi.Dist(s, t);
             int[] order = { HS, LR, ER };
+            bool line = false; try { line = BattleAi.IsCapital(t); } catch { }
             foreach (var set in order)
             {
                 if (!Has(st, set)) continue;
+                if (set == ER && !line) continue;   // extreme range only into a battle line (test 10:16, 1916: Extreme Range against a destroyer)
                 float rng = lrRange * st.P.R[set];
                 float run = InterceptRun(s, t, World(ms * st.P.V[set]));
                 // hysteresis: the shorter setting than the present one must fit with a further 10 % to spare
@@ -349,9 +351,15 @@ namespace DipGgFixes
             }
             if (want < 0)
             {
-                bool line = false; try { line = BattleAi.IsCapital(t); } catch { }
                 want = Has(st, ER) && line ? ER : LR;
                 why = $"{Dispatch.Ship(t.name)} at {d:0} m beyond the shorter settings{(want == ER ? " - a battle line, extreme range" : "")}";
+            }
+            // hysteresis the other way (test 10:16, 1905: Long Range <-> Extreme Range every 90 s around the limit): a slower setting
+            // is taken only when the present one no longer reaches the intercept point with half the allowance to spare
+            if (want > st.Cur && Has(st, st.Cur))
+            {
+                float curRun = InterceptRun(s, t, World(ms * st.P.V[st.Cur]));
+                if (curRun > 0f && curRun <= lrRange * st.P.R[st.Cur] * (1f - m * 0.5f)) want = st.Cur;
             }
             if (want == st.Cur) { st.Want = -1; st.Pending = -1; return; }
             // the choice must stand for 5 s, and settings are not changed more often than every 90 s

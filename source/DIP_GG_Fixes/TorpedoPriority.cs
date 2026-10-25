@@ -16,8 +16,11 @@ namespace DipGgFixes
     internal static class TorpedoPriority
     {
         internal static MelonPreferences_Entry<bool> On;
+        internal static MelonPreferences_Entry<string> TestList;   // author's tool: a list for every player division (autotest), e.g. "bb,ca"
+        static string testRaw; static List<string> testList;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
+            TestList = cat.CreateEntry("TorpedoTargetPriorityTest", "", null, "Author's tool: torpedo target priorities for every player division when none is set (classes in order, e.g. bb,ca; empty = off)");
             On = cat.CreateEntry("TorpedoTargetPriority", true, null, "Battle: torpedo target priorities for the player's divisions - ship classes clicked in order of importance; the tubes aim at, and a division under the Torpedo attack order charges, the nearest enemy of the most important class (panel below the torpedo settings)");
         }
         static bool Enabled { get { return On != null && On.Value; } }
@@ -36,22 +39,24 @@ namespace DipGgFixes
             IntPtr bp = IntPtr.Zero; try { var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (b != null) bp = b.Pointer; } catch { }
             if (bp != battlePtr) { battlePtr = bp; divList.Clear(); shipList.Clear(); ours.Clear(); next.Clear(); logs = 0; }
         }
-        static bool IsPlayer(Ship s) { try { return s.player != null && s.player.isMain && !s.isAiControlled; } catch { return false; } }
+        static bool IsPlayer(Ship s) { try { return s.player != null && s.player.isMain && (!s.isAiControlled || (TestList != null && !string.IsNullOrWhiteSpace(TestList.Value))); } catch { return false; } }
 
         static List<string> ListFor(Ship s)
         {
             if (s == null) return null;
             if (shipList.TryGetValue(s.Pointer, out var l) && l.Count > 0) return l;
             try { var d = s.division; if (d != null && divList.TryGetValue(d.Pointer, out var dl) && dl.Count > 0) return dl; } catch { }
-            return null;
+            string raw = TestList != null ? TestList.Value : "";
+            if (raw != testRaw) { testRaw = raw; testList = null; if (!string.IsNullOrWhiteSpace(raw)) { testList = new List<string>(); foreach (var c in raw.ToLowerInvariant().Split(',', ';', ' ', '>')) if (Array.IndexOf(Classes, c.Trim()) >= 0 && !testList.Contains(c.Trim())) testList.Add(c.Trim()); if (testList.Count == 0) testList = null; else Log("test list for every player division: " + Label(testList)); } }
+            return testList;
         }
         static string Label(List<string> l) { return l == null || l.Count == 0 ? "game's choice" : string.Join(" > ", l.ConvertAll(x => x.ToUpperInvariant())); }
 
         // class as the player knows it (contact report until identified); null = not seen
         static string ClassOf(Ship obs, Ship e)
         {
-            try { var p = Fog.PType(obs.player, e); if (p != null) return p; } catch { }
-            try { return e.shipType != null ? e.shipType.name : null; } catch { return null; }
+            try { return Fog.PType(obs.player, e); }   // null = not seen in this battle (the ship is not a candidate)
+            catch { try { return e.shipType != null ? e.shipType.name : null; } catch { return null; } }
         }
         static bool Usable(Ship s, Ship e)
         {
