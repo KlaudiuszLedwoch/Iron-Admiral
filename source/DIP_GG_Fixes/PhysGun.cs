@@ -92,11 +92,18 @@ namespace DipGgFixes
                 g.KgRef = kgRef;
                 // 1.11.272 (author 25.10, 16:10-16:17, 302.6 mm shell of 617 kg): the physical shell is the historical AP shell of the
                 // generation at this bore times the ship's shell-weight choice, damped to the historical spread (pref)
-                if (HistWeight != null && HistWeight.Value && st == Ship.ShellType.Ap && g.MvHist > 50f && kgRef > 0.05f) // HE keeps the game's weight (no historical HE table)
+                if (HistWeight != null && HistWeight.Value && g.MvHist > 50f && kgRef > 0.05f)
                 {
                     float wc = ShellChoiceWeight(ship); g.ChoiceKg = wc;
                     float scale = WeightChoice != null ? WeightChoice.Value : 0.45f;
                     g.Kg = kgRef * Math.Max(0.5f, 1f + wc / 100f * scale);
+                    // 1.11.274 (author 25.10, 16:32: HE 605 kg heavier than AP 571 kg): no historical HE table - the HE shell keeps the
+                    // game's HE/AP weight ratio of this gun on top of the historical AP shell
+                    if (st == Ship.ShellType.He)
+                    {
+                        float kgApWin = 0f; try { kgApWin = Part.ShellWeight(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap)); } catch { }
+                        if (kgApWin > 0.05f && kgWin > 0.05f) g.Kg *= Math.Max(0.5f, Math.Min(1.2f, kgWin / kgApWin));
+                    }
                     g.KgHist = true;
                 }
                 float sv = ShellChoiceVelocity(ship); g.ChoiceVel = sv;
