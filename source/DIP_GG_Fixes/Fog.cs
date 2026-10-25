@@ -629,7 +629,26 @@ namespace DipGgFixes
         }
 
         // ---------------------------------------------------------------- battle: identification
-        class Tac { public bool seen, identified; public string reported, label; public float idRange; }
+        class Tac { public bool seen, identified; public string reported, label; public float idRange; public Vector3 pos; public float at; } // pos/at: 1.11.256
+        // 1.11.256 (author 25.10, 12:40): the nearest smoke reported by the lookouts of the observer's side - an enemy ship sighted
+        //           in this battle and not identified yet, seen within the last 2 minutes - for the Scout order (BattleOrders)
+        internal static bool NearestSmoke(Player observer, Vector3 from, float maxDist, out Vector3 pos, out float idRange)
+        {
+            pos = Vector3.zero; idRange = 0f;
+            try
+            {
+                if (tacBattleObj == null || observer == null || tac.Count == 0) return false;
+                bool side = SideOf(tacBattleObj, observer); float best = maxDist, now = Time.time; bool ok = false;
+                foreach (var kv in tac)
+                {
+                    if (((kv.Key & 1L) == 1L) != side) continue;
+                    var s = kv.Value; if (!s.seen || s.identified || s.at <= 0f || now - s.at > 120f) continue;
+                    float d = (s.pos - from).magnitude; if (d < best) { best = d; pos = s.pos; idRange = s.idRange; ok = true; }
+                }
+                return ok;
+            }
+            catch { return false; }
+        }
         static IntPtr tacBattle; static readonly Dictionary<long, Tac> tac = new Dictionary<long, Tac>();
         static float nextTac; static int idLogged; static bool tacInfoLogged; static Player tacMain; static CampaignBattle tacBattleObj;
         static long Key(bool sideAttacker, Ship t) { return ((long)t.Pointer << 1) | (sideAttacker ? 1L : 0L); }
@@ -706,7 +725,7 @@ namespace DipGgFixes
                             cap *= Mathf.Min(nf, 2.5f);
                         }
                         float idR = Mathf.Clamp(Mathf.Min(det * 0.6f, cap), 1200f, 20000f);
-                        st.idRange = idR;
+                        st.idRange = idR; st.pos = ps[i]; st.at = Time.time; // 1.11.256: where the smoke is now (for the Scout order)
                         if (!st.seen)
                         {
                             st.seen = true; st.label = null;

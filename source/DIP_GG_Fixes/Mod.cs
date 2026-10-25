@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.251", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.256", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -203,6 +203,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> SmartTargeting;
         internal static MelonPreferences_Entry<bool> SmartTargetingAi;
         internal static MelonPreferences_Entry<float> TorpedoThreatRangeMult;
+        internal static MelonPreferences_Entry<bool> TransportsAfterEscort; internal static MelonPreferences_Entry<float> TransportLowCaliberMax, TransportEscortRangeMult, TransportEscortMemorySeconds; // 1.11.252
         internal static MelonPreferences_Entry<bool> CrewLevelsRescale;
         internal static MelonPreferences_Entry<float> CrewPlusAmp;
         internal static MelonPreferences_Entry<float> CrewMinusAmp;
@@ -255,6 +256,7 @@ namespace DipGgFixes
             try { CustomBattle.Tick(); } catch { }
             try { Portless.Tick(); } catch { }
             try { Dispatch.Tick(); } catch { }
+            try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251
             try { HistDesigner.Tick(); } catch { }
             try { AutoTest.Tick(); } catch { }
             try { Trade.Tick(); } catch { }
@@ -288,7 +290,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -519,6 +521,14 @@ namespace DipGgFixes
                 "Apply the same target selection to AI ships (replaces FocusFire)");
             TorpedoThreatRangeMult = cat.CreateEntry("TorpedoThreatRangeMult", 1.5f, null,
                 "An enemy with torpedoes counts as a torpedo threat when closer than its torpedo range x this");
+            TransportsAfterEscort = cat.CreateEntry("TransportsAfterEscort", true, null,
+                "Escort first, transports after: while enemy warships are present, guns do not fire at transports; only guns up to TransportLowCaliberMax may fire at a transport, and only when no enemy warship is within their range x TransportEscortRangeMult");
+            TransportLowCaliberMax = cat.CreateEntry("TransportLowCaliberMax", 155f, null,
+                "Escort first: largest gun calibre (mm) that may fire at transports while the escort is still present");
+            TransportEscortRangeMult = cat.CreateEntry("TransportEscortRangeMult", 1.3f, null,
+                "Escort first: a low-calibre gun may fire at a transport only when no enemy warship is within the gun's range x this");
+            TransportEscortMemorySeconds = cat.CreateEntry("TransportEscortMemorySeconds", 30f, null,
+                "Escort first: an enemy warship that went out of sight still counts as the escort for this many seconds");
             CrewLevelsRescale = cat.CreateEntry("CrewLevelsRescale", true, null,
                 "Rescale crew training levels non-linearly (stronger effect of experience)");
             CrewPlusAmp = cat.CreateEntry("CrewLevelsPlusAmplitude", 1.0f, null,
@@ -594,7 +604,7 @@ namespace DipGgFixes
             Narrative.CreatePrefs(cat);
             CustomBattle.CreatePrefs(cat);
             Portless.CreatePrefs(cat);
-            Dispatch.CreatePrefs(cat);
+            Dispatch.CreatePrefs(cat); TorpedoSettings.CreatePrefs(cat); TorpedoPriority.CreatePrefs(cat); // 1.11.251
             HistDesigner.CreatePrefs(cat);
             AutoTest.CreatePrefs(cat);
             HistPriority.CreatePrefs(cat);
@@ -1895,7 +1905,10 @@ namespace DipGgFixes
             if (dmg > abort) { Why(st, "too damaged for a charge"); return; }
 
             float bestD;
-            var best = NearestVisibleCapital(leader, enemies, out bestD);
+            // 1.11.251: a player's division with torpedo target priorities charges the nearest enemy of the most important class
+            Ship best = null; bestD = float.MaxValue;
+            if (playerSide) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); }
+            if (best == null) best = NearestVisibleCapital(leader, enemies, out bestD);
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
             float torp = TorpedoRange(leader);
@@ -2226,6 +2239,7 @@ namespace DipGgFixes
     {
         internal class St { public float nextTarget; public float nextLane; public float nextPanic; public bool laneBlocked; public float laneHoldUntil; public Ship.ShootMode savedTorpedoMode; public bool panicked; public float startCrew; public Dictionary<IntPtr, IntPtr> ours = new Dictionary<IntPtr, IntPtr>();
             public IntPtr playerPtr; public IntPtr mainTarget; public float mainAt; // 1.11.88: fire distribution
+            public float escortSeenAt = -1000f; // 1.11.252: escort first, transports after
             public float nextSense; public bool senseHold, senseApplied; public Ship.ShootMode senseSaved; public string senseWhy; public Ship senseTarget; public float nextSide, nextSideFast, senseChanged = -100f; } // 1.11.93: hopeless torpedo shots
         internal static readonly Dictionary<IntPtr, St> States = new Dictionary<IntPtr, St>();
         internal static int Errors; static bool announced;
@@ -2570,6 +2584,7 @@ namespace DipGgFixes
                 var main = s.mainGunsGroup;
                 bool heavy = false; try { var tn = s.shipType != null ? s.shipType.name : null; heavy = tn == "bb" || tn == "bc"; } catch { }
                 MemoReset(); // 1.11.96
+                EscortState(s, st, enemies);
                 Apply(s, st, s.enemies, enemies, cache, main, heavy);
                 Apply(s, st, s.enemiesLeftSide, enemies, cache, main, heavy);
             }
@@ -2598,8 +2613,18 @@ namespace DipGgFixes
                 float range = 0f; if (cache != null) cache.TryGetValue(pd, out range);
                 if (range <= 0f) { Release(aim, st, pd); continue; }
                 bool isMain = IsMainGroup(pd, main);
-                var pick = isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range);
-                if (pick == null) { Release(aim, st, pd); continue; }
+                // 1.11.252 (author, 25.10): escort first, transports after
+                bool trOk = TransportAllowed(pd, range);
+                skipTr = !trOk;
+                Ship pick;
+                try { pick = isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range); }
+                finally { skipTr = false; }
+                if (pick == null)
+                {
+                    // the game's own targeting would turn the guns on a transport: keep them on the escort (out of range = no fire)
+                    if (!trOk && escortNear != null) pick = escortNear;
+                    else { Release(aim, st, pd); continue; }
+                }
                 if (isMain) { try { st.playerPtr = s.player.Pointer; } catch { } st.mainTarget = pick.Pointer; st.mainAt = UnityEngine.Time.time; }
                 if (cur != null && cur.Pointer == pick.Pointer)
                 {
@@ -2609,8 +2634,43 @@ namespace DipGgFixes
                 }
                 aim.target = pick; aim.manual = true; aim.progress = 0f; st.ours[pd.Pointer] = pick.Pointer; targetChanges++;
                 if (tgtLogged < 40 || targetChanges % 200 == 0) { tgtLogged++; BattleAi.Log($"{s.name} {(isMain ? "main" : "secondary")} guns ({pd.caliber:0} mm): target {pick.name} ({pick.shipType.name}, dmg {Dmg(pick):0.00}) instead of {(cur != null ? cur.name : "none")} [{targetChanges} changes]"); }
+                if (!trOk && cur != null && IsTr(cur) && trLogged++ < 40) BattleAi.Log($"{s.name} {(isMain ? "main" : "secondary")} guns ({pd.caliber:0} mm): escort first - off transport {cur.name}, on {pick.name} ({pick.shipType.name}, {D(s, pick) / 1000f:0.0} km)");
             }
         }
+        // ---- 1.11.252 (author, 25.10): escort first, transports after. While enemy warships are present (seen in the last
+        //      TransportEscortMemorySeconds), guns do not fire at transports; a gun up to TransportLowCaliberMax may take a transport
+        //      only "by the way" - when no enemy warship is within its range x TransportEscortRangeMult. With the escort sunk,
+        //      surrendered or long out of sight, every gun may fire at the transports. A player's own target order is not affected.
+        static bool skipTr, escortPresent; static Ship escortNear; static float escortNearD; static int trLogged;
+        internal static bool IsTr(Ship e) { try { var t = e != null ? e.shipType : null; return t != null && t.name == "tr"; } catch { return false; } }
+        static void EscortState(Ship s, St st, Il2CppSystem.Collections.Generic.List<Ship> enemies)
+        {
+            escortPresent = false; escortNear = null; escortNearD = float.MaxValue;
+            if (!DipGgFixesMod.TransportsAfterEscort.Value) return;
+            bool alive = false, anyTr = false;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (e == null) continue;
+                if (IsTr(e)) { anyTr = true; continue; }
+                bool up = false; try { up = !e.isDead && !e.isSinking && !e.IsSurrendered; } catch { }
+                if (!up) continue;
+                alive = true;
+                if (!U(s, e)) continue;
+                float d = D(s, e); if (d < escortNearD) { escortNearD = d; escortNear = e; }
+            }
+            if (!anyTr || !alive) return;
+            float now = UnityEngine.Time.time;
+            if (escortNear != null) st.escortSeenAt = now;
+            escortPresent = now - st.escortSeenAt <= DipGgFixesMod.TransportEscortMemorySeconds.Value;
+        }
+        static bool TransportAllowed(PartData pd, float range)
+        {
+            if (!escortPresent) return true;
+            float cal = 0f; try { cal = pd.caliber; } catch { }
+            if (cal <= 0f || cal > DipGgFixesMod.TransportLowCaliberMax.Value) return false;
+            return escortNear == null || escortNearD > range * DipGgFixesMod.TransportEscortRangeMult.Value;
+        }
+        static bool UU(Ship s, Ship e) { return U(s, e) && !(skipTr && IsTr(e)); }
         // 1.11.250: the main battery may be split over several PartData (twin and triple turrets of the same gun); all of them are the
         //           main guns. AutoTest 25.10: Koenig's 305 mm in the other turret type were treated as secondary guns, picked the nearest
         //           cruiser and switched between the cruiser and the battleship every few seconds.
@@ -2651,7 +2711,7 @@ namespace DipGgFixes
         static Ship PickMain(Ship s, Il2CppSystem.Collections.Generic.List<Ship> enemies, float range, bool heavy, Ship cur = null, bool distribute = false)
         {
             var inRange = new List<Ship>();
-            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (U(s, e) && D(s, e) <= range) inRange.Add(e); }
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (UU(s, e) && D(s, e) <= range) inRange.Add(e); }
             if (inRange.Count == 0) return null;
             float maxCal = 0f; foreach (var e in inRange) { float c = Cal(e); if (c > maxCal) maxCal = c; }
             // 1.11.88: fire distribution (War Instructions 1944): at most N own ships on one target, 1 when outnumbered; the
@@ -2694,7 +2754,7 @@ namespace DipGgFixes
             Ship threat = null; float threatD = float.MaxValue;
             for (int i = 0; i < enemies.Count; i++)
             {
-                var e = enemies[i]; if (!U(s, e) || !e.haveTorpedoes) continue;
+                var e = enemies[i]; if (!UU(s, e) || !e.haveTorpedoes) continue;
                 float d = D(s, e); if (d > range) continue;
                 float tr = Tr(e) * DipGgFixesMod.TorpedoThreatRangeMult.Value;
                 if (d <= tr && d < threatD) { threatD = d; threat = e; }
@@ -2704,10 +2764,10 @@ namespace DipGgFixes
             // at short range; player report 23.10: a close enemy was ignored for a damaged ship far away); damage only decides
             // between enemies at about the same distance (within 15% or 1 km of the nearest)
             Ship near = null; float nearD = float.MaxValue;
-            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (!U(s, e)) continue; float d = D(s, e); if (d <= range && d < nearD) { nearD = d; near = e; } }
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (!UU(s, e)) continue; float d = D(s, e); if (d <= range && d < nearD) { nearD = d; near = e; } }
             if (near == null) return null;
             float band = UnityEngine.Mathf.Max(nearD * 1.15f, nearD + 1000f); Ship best = near; float bestDm = Dm(near);
-            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (!U(s, e)) continue; float d = D(s, e); if (d > band || d > range) continue; float dm = Dm(e); if (dm > bestDm + 0.05f) { bestDm = dm; best = e; } }
+            for (int i = 0; i < enemies.Count; i++) { var e = enemies[i]; if (!UU(s, e)) continue; float d = D(s, e); if (d > band || d > range) continue; float dm = Dm(e); if (dm > bestDm + 0.05f) { bestDm = dm; best = e; } }
             return best;
         }
 

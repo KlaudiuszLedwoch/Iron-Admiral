@@ -1,0 +1,90 @@
+#nation,"from technology (torpedo propulsion; the technology year is the anchor, never the calendar)","settings available (1 = one setting, 2 = high speed + long range, 3 = + extreme range; once a navy has a setting, later technologies keep it)",high speed: range x long range,high speed: speed x long range,extreme range: range x long range,extreme range: speed x long range,historical torpedoes (NavWeaps; surface-ship torpedoes in service from this technology year to the next)
+@nation,tech,settings,hsRange,hsSpeed,erRange,erSpeed,#source
+austria,torpedo_prop_5,1,,,,,L4 (1894)
+austria,torpedo_prop_6,2,0.5,1.217,,,L6 (1897)
+austria,torpedo_prop_7,2,0.4,1.071,,,L5a (1902)
+austria,torpedo_prop_8,2,0.5,1.634,,,L5c (1905); L5d (1905); L5e (1909); L5g (1909); L6.3 (1909)
+austria,torpedo_prop_9,2,0.133,1.347,,,L5h (1912); L7.18 (1914)
+austria,torpedo_prop_10,2,0.133,1.347,,,carried from previous technology
+austria,torpedo_prop_11,2,0.133,1.347,,,carried from previous technology
+austria,torpedo_prop_12,2,0.133,1.347,,,carried from previous technology
+austria,torpedo_prop_13,2,0.133,1.347,,,carried from previous technology
+austria,torpedo_prop_14,2,0.133,1.347,,,carried from previous technology
+austria,torpedo_prop_15,2,0.133,1.347,,,carried from previous technology
+britain,torpedo_prop_5,1,,,,,Whitehead 18in (1894)
+britain,torpedo_prop_6,1,,,,,carried from previous technology
+britain,torpedo_prop_7,1,,,,,carried from previous technology
+britain,torpedo_prop_8,2,0.25,1.439,,,18in Mark VI (1905)
+britain,torpedo_prop_9,2,0.462,1.367,,,18in Mark VII (1910); 18in Mark VII* (1910); 18in Mark VIII (1914); 21in Mark I Short (1910); 21in Mark I Long (1910); 21in Mark I Modified (1910); 21in Mark II/II*/II** (WWI) (1914)
+britain,torpedo_prop_10,3,0.8,1.207,1.35,0.862,21in Mark IV/IV* (1916)
+britain,torpedo_prop_11,3,0.8,1.207,1.35,0.862,carried from previous technology
+britain,torpedo_prop_12,3,0.732,1.138,1.35,0.862,24.5in Mark I (1925); 21in Mark VIII** (1927) - fewer settings than the earlier torpedoes; the earlier settings are kept
+britain,torpedo_prop_13,3,0.778,1.2,1.35,0.862,21in Mark IX (1930); 21in Mark IX* (1930); 21in Mark IX** (1930) - fewer settings than the earlier torpedoes; the earlier settings are kept
+britain,torpedo_prop_14,3,0.559,1.098,1.35,0.862,18in Mark XIV (1938) - fewer settings than the earlier torpedoes; the earlier settings are kept
+britain,torpedo_prop_15,3,0.559,1.098,1.35,0.862,carried from previous technology
+france,torpedo_prop_5,1,,,,,carried from previous technology
+france,torpedo_prop_6,1,,,,,carried from previous technology
+france,torpedo_prop_7,1,,,,,carried from previous technology
+france,torpedo_prop_8,1,,,,,carried from previous technology
+france,torpedo_prop_9,1,,,,,M12D (1914)
+france,torpedo_prop_10,1,,,,,carried from previous technology
+france,torpedo_prop_11,2,0.464,1.314,,,19V (1921); 19D (1921)
+france,torpedo_prop_12,2,0.56,1.2,,,23D / 23DT (1925); 24V / 24M (early) (1926)
+france,torpedo_prop_13,2,0.56,1.2,,,carried from previous technology
+france,torpedo_prop_14,2,0.56,1.2,,,carried from previous technology
+france,torpedo_prop_15,2,0.56,1.2,,,carried from previous technology
+germany,torpedo_prop_5,2,0.884,1.175,,,C35/91 (1891); C35/91 GA (1891); C45/91 Br (1891); C45/91S (1892)
+germany,torpedo_prop_6,2,0.884,1.175,,,carried from previous technology
+germany,torpedo_prop_7,2,0.884,1.175,,,carried from previous technology
+germany,torpedo_prop_8,2,0.5,1.192,,,C/03 (1905); C/03 D (1905); C/06 (1907); C/06 D (1907); C/07 (1908)
+germany,torpedo_prop_9,2,0.43,1.296,,,G/6 (1911); G/6 D (1911); G7 (1913)
+germany,torpedo_prop_10,2,0.429,1.2,,,H8 (1915)
+germany,torpedo_prop_11,2,0.429,1.2,,,carried from previous technology
+germany,torpedo_prop_12,2,0.429,1.2,,,carried from previous technology
+germany,torpedo_prop_13,2,0.429,1.2,,,carried from previous technology
+germany,torpedo_prop_14,2,0.429,1.2,,,carried from previous technology
+germany,torpedo_prop_15,2,0.429,1.2,,,carried from previous technology
+japan,torpedo_prop_5,1,,,,,Ho Type 26 (1893)
+japan,torpedo_prop_6,2,0.327,1.733,,,Ho Type 32 (14in) (1899); Ho Type 32 (18in) (1899)
+japan,torpedo_prop_7,2,0.333,1.867,,,Type 37 (1904)
+japan,torpedo_prop_8,2,0.292,1.645,,,Ho Type 38 No. 1 (1905); Ho Type 38 No. 2 A (1905); Ho Type 38 No. 2 B (1905); Ho Type 42 (1909)
+japan,torpedo_prop_9,2,0.7,1.296,,,Type 44 No. 2 (18in) (1911); Type 44 No. 1 (21in) (1911); Type 44 No. 2 (21in) (1911)
+japan,torpedo_prop_10,3,0.7,1.094,1.5,0.812,Type 6 (1918)
+japan,torpedo_prop_11,3,0.667,1.188,1.333,0.844,Type 8 No. 2 (1920)
+japan,torpedo_prop_12,3,0.667,1.188,1.333,0.844,carried from previous technology
+japan,torpedo_prop_13,3,0.7,1.095,1.5,0.833,Type 90 (1933)
+japan,torpedo_prop_14,3,0.625,1.2,1.25,0.9,Type 93 Model 1 (Mod 1/2/3) (1935)
+japan,torpedo_prop_15,3,0.625,1.2,1.25,0.9,carried from previous technology
+russia,torpedo_prop_5,1,,,,,carried from previous technology
+russia,torpedo_prop_6,2,0.667,1.16,,,15in Type L (1898)
+russia,torpedo_prop_7,2,0.667,1.16,,,carried from previous technology
+russia,torpedo_prop_8,2,0.667,1.16,,,18in Model 1907/1908 (1907) - fewer settings than the earlier torpedoes; the earlier settings are kept
+russia,torpedo_prop_9,2,0.5,1.345,,,18in Model 1912 (1912)
+russia,torpedo_prop_10,2,0.5,1.345,,,carried from previous technology
+russia,torpedo_prop_11,2,0.5,1.345,,,carried from previous technology
+russia,torpedo_prop_12,2,0.5,1.345,,,53-27 (1927) - fewer settings than the earlier torpedoes; the earlier settings are kept
+russia,torpedo_prop_13,2,0.5,1.345,,,carried from previous technology
+russia,torpedo_prop_14,3,0.5,1.29,1.25,0.884,53-38 (1938); 53-38U (1939)
+russia,torpedo_prop_15,3,0.5,1.29,1.25,0.884,carried from previous technology
+usa,torpedo_prop_5,1,,,,,Whitehead 18in Mark 1 Short (1894)
+usa,torpedo_prop_6,1,,,,,Howell 14.2in (1895); Whitehead 18in Mark 1 Long (Type B) (1898); Whitehead 18in Mark 2 Short (1896); Whitehead 18in Mark 2 Long (Type C) (1898)
+usa,torpedo_prop_7,1,,,,,Whitehead 18in Mark 3 (Type A) (1900); Bliss-Leavitt 21in Mark 1 Mod 1 (1904)
+usa,torpedo_prop_8,1,,,,,Bliss-Leavitt 21in Mark 1 Mod 2 (1905); Bliss-Leavitt 21in Mark 2 (1905)
+usa,torpedo_prop_9,3,0.5,1.111,2.0,0.75,Whitehead 18in Mark 5 (1910)
+usa,torpedo_prop_10,3,0.5,1.111,2.0,0.75,Bliss-Leavitt 18in Mark 7 Type D (7D) (1917); Bliss-Leavitt 21in Mark 8 Mods 0-2B (1915); Bliss-Leavitt 21in Mark 8 Mods 3A-3C (1915); Bliss-Leavitt 21in Mark 8 Mod 8 (1915); Bliss-Leavitt 21in Mark 9 Mod 1 (1915); Bliss-Leavitt 21in Mark 9 Mod 1B (1915); 21in Mark 10 Mod 0 (1918); 21in Mark 10 Mod 3 (1918) - fewer settings than the earlier torpedoes; the earlier settings are kept
+usa,torpedo_prop_11,3,0.5,1.111,2.0,0.75,Bliss-Leavitt 18in Mark 7 Mod A (1920); Bliss-Leavitt 18in Mark 7 Mod 2A (1920); Bliss-Leavitt 18in Mark 7 Mod 5A (1920) - fewer settings than the earlier torpedoes; the earlier settings are kept
+usa,torpedo_prop_12,3,0.65,1.314,1.5,0.796,21in Mark 11 Mods 0 and 1 (1926); 21in Mark 12 (1928)
+usa,torpedo_prop_13,3,0.5,1.496,1.5,0.796,Mark 14 Mod 0 (1931); Mark 14 Mod 3 (1931) - fewer settings than the earlier torpedoes; the earlier settings are kept
+usa,torpedo_prop_14,3,0.55,1.343,1.528,0.791,Mark 15 Mod 0 (1935); Mark 15 Mod 3 (1935)
+usa,torpedo_prop_15,3,0.55,1.343,1.528,0.791,carried from previous technology
+generic,torpedo_prop_5,1,,,,,median of all navies
+generic,torpedo_prop_6,2,0.417,1.409,,,median of all navies
+generic,torpedo_prop_7,2,0.367,1.469,,,median of all navies
+generic,torpedo_prop_8,2,0.5,1.439,,,median of all navies
+generic,torpedo_prop_9,2,0.462,1.296,,,median of all navies
+generic,torpedo_prop_10,2,0.429,1.207,,,median of all navies
+generic,torpedo_prop_11,2,0.56,1.208,,,median of all navies
+generic,torpedo_prop_12,2,0.696,1.221,,,median of all navies
+generic,torpedo_prop_13,2,0.717,1.2,,,median of all navies
+generic,torpedo_prop_14,2,0.5,1.29,,,median of all navies
+generic,torpedo_prop_15,2,0.5,1.29,,,carried from previous technology

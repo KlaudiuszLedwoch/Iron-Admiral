@@ -473,6 +473,29 @@ namespace DipGgFixes
             var s = Ship(name);
             Say("surr|" + s, $"{s} strikes her colours. Her guns fall silent.", $"White flag on {s}! She has surrendered.");
         }
+        // 1.11.251: a change of the torpedo setting (one dispatch per division and minute, from TorpedoSettings)
+        static int tsetN;
+        internal static void TorpedoSetting(string name, int set, float range, float kn, int others, bool ordered)
+        {
+            if (!Active) return;
+            string s = Ship(name), km = $"{range / 1000f:0.0}", sp = $"{kn:0}";
+            string div = others > 0 ? $" - {others} more ship{(others > 1 ? "s" : "")} of her division already on this setting" : "";
+            string why = ordered ? "on the flag's order" : (set == TorpedoSettings.HS ? "the enemy is close" : set == TorpedoSettings.ER ? "the enemy line is far out" : "the enemy is out of reach of the short run");
+            string k = "tset|" + s + "|" + (++tsetN);
+            if (set == TorpedoSettings.HS)
+                Say(k,
+                    $"{s}, torpedo flat: \"Set high speed! {sp} knots, {km} km - {why}.\" The tubes are reset on {s}{div}.",
+                    $"{s}'s torpedo officer: \"Change to the short run - {sp} knots, she'll be on them before they can turn.\" Tube crews reset the settings on {s}{div}.",
+                    $"Bridge of {s}: \"High speed setting, all tubes!\" {km} km at {sp} knots for {s}{div}.");
+            else if (set == TorpedoSettings.ER)
+                Say(k,
+                    $"{s}, torpedo flat: \"Extreme range setting - {km} km at {sp} knots. Fire into their line.\" The tubes are reset on {s}{div}.",
+                    $"{s}'s torpedo officer: \"Slow and long - {km} km. We aim at the line, not at a ship.\" Tube crews reset the settings on {s}{div}.");
+            else
+                Say(k,
+                    $"{s}, torpedo flat: \"Back to the long-range setting - {km} km at {sp} knots, {why}.\" The tubes are reset on {s}{div}.",
+                    $"{s}'s torpedo officer: \"Long run, {sp} knots - {km} km.\" Tube crews reset the settings on {s}{div}.");
+        }
         internal static void Prize(string text)
         {
             if (On == null || !On.Value || file == null) return;
