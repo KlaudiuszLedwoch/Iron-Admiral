@@ -66,7 +66,9 @@ namespace DipGgFixes
             var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}); AP pass-through damage raised {OverPen.Raised}x; hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
             foreach (var kv in summary) { var v = kv.Value; float n = Math.Max(1f, v[0]); sb.Append($"\n   {kv.Key} | {v[0]:0} | {v[1] / n:0} | {v[2] / n:0} | {v[3] / n:0} | {v[4] / n:0.#}"); }
             MelonLogger.Msg(sb.ToString());
+            OverPen.Report();
         }
+        static string Where() { return OverPen.LastFrame == Time.frameCount && OverPen.LastLoc != null ? $"; struck {OverPen.LastLoc}" + (Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f ? $" (game damage {OverPen.LastRaw:0.#} -> {OverPen.LastNew:0.#})" : "") : ""; }
 
         // ---- the formulas ----
         internal static float BeltPen(float kg, float vs, float fallDeg, float q)
@@ -162,9 +164,9 @@ namespace DipGgFixes
                 if (hitType == "none" && rawLines++ >= 5) return; // the game's "none" (no armour met, no damage): only the first few
                 hitLines++;
                 if (sh != null)
-                    MelonLogger.Msg($"[DIP GG Fixes][Hit] {sh.G.CalMm:0.#} mm {sh.G.Type} {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}");
+                    MelonLogger.Msg($"[DIP GG Fixes][Hit] {sh.G.CalMm:0.#} mm {sh.G.Type} {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
                 else
-                    MelonLogger.Msg($"[DIP GG Fixes][Hit] {cal:0.#} mm (no physical shell) -> {(victim != null ? victim.name : "?")}: plate met {armor:0.#} mm, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}");
+                    MelonLogger.Msg($"[DIP GG Fixes][Hit] {cal:0.#} mm (no physical shell) -> {(victim != null ? victim.name : "?")}: plate met {armor:0.#} mm, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] damage path: " + e.Message); }
         }
@@ -206,7 +208,17 @@ namespace DipGgFixes
                 ? $"historical {g.MvHist:0} m/s x technology {g.Bonus:0.00}, {g.Kg:0.#} kg shell; game {g.MvGame:0} m/s"
                 : $"game {g.MvGame:0} m/s; same charge, {g.Kg:0.#} kg shell";
         }
-        static bool WeightDiffers(PhysGun.G g) { return g.KgWindow > 0.05f && Math.Abs(g.Kg / g.KgWindow - 1f) > 0.01f; }
+        // 1.11.257 (author's 25.10 battle 13:42: 381 mm window "Shell Weight AP: 1444 kg (+73%)" while the shells flew with 1004 kg):
+        // the number shown in the game's line is compared, not Part.ShellWeight (the line carries modifiers the call does not)
+        static float LineKg(string plain)
+        {
+            int a = plain.IndexOf(':'); if (a < 0) return 0f;
+            var sb = new System.Text.StringBuilder(); int i = a + 1;
+            while (i < plain.Length && plain[i] == ' ') i++;
+            while (i < plain.Length && (char.IsDigit(plain[i]) || plain[i] == ',' || plain[i] == '.')) { if (plain[i] != ',') sb.Append(plain[i]); i++; }
+            float v; return float.TryParse(sb.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v) ? v : 0f;
+        }
+        static bool WeightDiffers(string plain, PhysGun.G g) { float shown = LineKg(plain); return shown > 0.05f && g.Kg > 0.05f && Math.Abs(g.Kg / shown - 1f) > 0.01f; }
 
         internal static string RewriteInfo(string text, PartData pd, Ship ship)
         {
@@ -223,14 +235,10 @@ namespace DipGgFixes
                     string plain = StripTags(lines[i]).Trim();
                 // 1.11.254: the velocity line names its source (historical velocity x technology bonus, weight law); the shell weight line
                 // shows the shell of the bore as built when the game's line does not (142.2 mm on a 5" mount: game 34.6 kg, bore 48.6 kg)
-                
-if (plain.StartsWith("Muzzle Velocity AP", StringComparison.OrdinalIgnoreCase)) { lines[i] = $"Muzzle Velocity AP: {ap.Mv:0} m/s ({VelSrc(ap)})"; changed = true; continue; }
-                
-if (plain.StartsWith("Muzzle Velocity HE", StringComparison.OrdinalIgnoreCase) && he.Ok) { lines[i] = $"Muzzle Velocity HE: {he.Mv:0} m/s ({VelSrc(he)})"; changed = true; continue; }
-                
-if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0.#} kg (bore {ap.CalMm:0.#} mm; game {ap.KgWindow:0.#} kg)"; changed = true; continue; }
-                
-if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(he)) { lines[i] = $"Shell Weight HE: {he.Kg:0.#} kg (bore {he.CalMm:0.#} mm; game {he.KgWindow:0.#} kg)"; changed = true; continue; }
+                if (plain.StartsWith("Muzzle Velocity AP", StringComparison.OrdinalIgnoreCase)) { lines[i] = $"Muzzle Velocity AP: {ap.Mv:0} m/s ({VelSrc(ap)})"; changed = true; continue; }
+                if (plain.StartsWith("Muzzle Velocity HE", StringComparison.OrdinalIgnoreCase) && he.Ok) { lines[i] = $"Muzzle Velocity HE: {he.Mv:0} m/s ({VelSrc(he)})"; changed = true; continue; }
+                if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(plain, ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0.#} kg (physical, bore {ap.CalMm:0.#} mm; game {LineKg(plain):0.#} kg)"; changed = true; continue; }
+                if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(plain, he)) { lines[i] = $"Shell Weight HE: {he.Kg:0.#} kg (physical, bore {he.CalMm:0.#} mm; game {LineKg(plain):0.#} kg)"; changed = true; continue; }
                     if (plain.IndexOf("Penetration Belt/Deck", StringComparison.OrdinalIgnoreCase) >= 0) { inTable = true; lines[i] = lines[i] + " (physics: Okun)"; continue; }
                     if (!inTable) continue;
                     float R;
