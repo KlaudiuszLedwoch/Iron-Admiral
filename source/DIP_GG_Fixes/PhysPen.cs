@@ -360,6 +360,8 @@ namespace DipGgFixes
         // Ui.RegisterTakenDamage(Ship victim, Part from, string hitType, float damage, float armor, float penetration, ...)
         internal static void Taken(Ship victim, Part from, string hitType, float damage, float armor, float penetration)
         {
+            // 1.11.282: the game registers the damage it computed before the mod's damage path changed it (historical model, pass-through rule) - the value actually dealt is taken from that path when it ran for this hit
+            float gameDamage = damage; if (OverPen.LastFrame == Time.frameCount && Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f) damage = OverPen.LastNew;
             try
             {
                 // runs inside the arriving shell's Update: its own physical flight (registered at Shell.Create) is known here
@@ -387,7 +389,7 @@ namespace DipGgFixes
                     hitLines++;
                 }
                 if (sh != null)
-                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {sh.G.CalMm:0.#} mm {ty} (physics {sh.G.Type}) {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#} (gun base {GunBase(sh):0.#}){StruckText(s)}{Where()}");
+                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {sh.G.CalMm:0.#} mm {ty} (physics {sh.G.Type}) {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{(Math.Abs(gameDamage - damage) > 0.05f ? $" (game {gameDamage:0.#})" : "")} (gun base {GunBase(sh):0.#}){StruckText(s)}{Where()}");
                 else
                     MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {cal:0.#} mm {ty} (no physical shell) -> {(victim != null ? victim.name : "?")}: plate met {armor:0.#} mm, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
             }
