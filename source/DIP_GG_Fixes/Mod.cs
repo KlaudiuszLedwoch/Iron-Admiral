@@ -256,6 +256,7 @@ namespace DipGgFixes
             try { CustomBattle.Tick(); } catch { }
             try { Portless.Tick(); } catch { }
             try { Dispatch.Tick(); } catch { }
+            try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251
             try { HistDesigner.Tick(); } catch { }
             try { AutoTest.Tick(); } catch { }
             try { Trade.Tick(); } catch { }
@@ -289,7 +290,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -603,7 +604,7 @@ namespace DipGgFixes
             Narrative.CreatePrefs(cat);
             CustomBattle.CreatePrefs(cat);
             Portless.CreatePrefs(cat);
-            Dispatch.CreatePrefs(cat);
+            Dispatch.CreatePrefs(cat); TorpedoSettings.CreatePrefs(cat); TorpedoPriority.CreatePrefs(cat); // 1.11.251
             HistDesigner.CreatePrefs(cat);
             AutoTest.CreatePrefs(cat);
             HistPriority.CreatePrefs(cat);
@@ -1904,7 +1905,10 @@ namespace DipGgFixes
             if (dmg > abort) { Why(st, "too damaged for a charge"); return; }
 
             float bestD;
-            var best = NearestVisibleCapital(leader, enemies, out bestD);
+            // 1.11.251: a player's division with torpedo target priorities charges the nearest enemy of the most important class
+            Ship best = null; bestD = float.MaxValue;
+            if (playerSide) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); }
+            if (best == null) best = NearestVisibleCapital(leader, enemies, out bestD);
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
             float torp = TorpedoRange(leader);

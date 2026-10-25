@@ -41,7 +41,7 @@ namespace DipGgFixes
             {"SeriesProduction","Economy"},{"ForeignPortCapacity","Economy"},{"CheckOtherMods","Information and updates"},{"ShareLogs","Information and updates"},{"InflationEconomy","Economy"},{"FinancialCrisis","Economy"},
             {"BalanceOfPowerEvents","Diplomacy"},{"BalanceGrantOnlyWhenSolvent","Diplomacy"},{"CoalitionWar","Diplomacy"},{"PortlessPowersWait","Campaign AI"},{"BattleDispatches","Battle AI"},{"HistBuilderRun","Tools"},{"HistBuilderFilter","Tools"},{"HistBuilderLimit","Tools"},{"HistBuilderTries","Tools"},
             {"OccupationEvents","Campaign AI"},{"OccupationRelations","Campaign AI"},{"OccupationPayShare","Campaign AI"},{"OccupationHardUnrest","Campaign AI"},{"OccupationHardRevolt","Campaign AI"},{"OccupationAutonomyRelief","Campaign AI"},{"OccupationAutonomySteps","Campaign AI"}, // 1.11.151
-            {"DivisionOrders","Battle AI"},{"DivisionOrdersVanilla","Battle AI"},{"DivisionLeash","Battle AI"},{"DivisionBreakOffDamage","Battle AI"},{"ReShadeNavalLook","Other"},{"RealisticBallistics","Battle AI"},{"BallisticsLog","Battle AI"},{"FireControlTechAccuracy","Battle AI"},{"FireControlTechScale","Battle AI"},{"FireControlTechRadar","Battle AI"},{"HistoricalDamage","Battle AI"},{"FireControlTechDispersion","Battle AI"},{"HistoricalGuns","Battle AI"},{"HistoricalWeights","Battle AI"},{"HistoricalParts","Battle AI"}, // 1.11.154, 1.11.155
+            {"DivisionOrders","Battle AI"},{"TorpedoSettings","Battle AI"},{"TorpedoTargetPriority","Battle AI"},{"DivisionOrdersVanilla","Battle AI"},{"DivisionLeash","Battle AI"},{"DivisionBreakOffDamage","Battle AI"},{"ReShadeNavalLook","Other"},{"RealisticBallistics","Battle AI"},{"BallisticsLog","Battle AI"},{"FireControlTechAccuracy","Battle AI"},{"FireControlTechScale","Battle AI"},{"FireControlTechRadar","Battle AI"},{"HistoricalDamage","Battle AI"},{"FireControlTechDispersion","Battle AI"},{"HistoricalGuns","Battle AI"},{"HistoricalWeights","Battle AI"},{"HistoricalParts","Battle AI"}, // 1.11.154, 1.11.155
             {"UsageStatistics","Information and updates"},{"TreasuryPanel","Information and updates"},{"TreasuryMonthlyReport","Information and updates"},{"TreasuryWarnings","Information and updates"},
             {"TreasuryInFinancesWindow","Information and updates"},{"SaveCompatibilityFix","Information and updates"},{"CheckForUpdates","Information and updates"},{"BetaUpdates","Information and updates"},{"UpdateChannel","Information and updates"},{"UpdateDownloadButton","Information and updates"},
         };
@@ -55,6 +55,12 @@ namespace DipGgFixes
             KeyCode k; if (Enum.TryParse(Key.Value, true, out k)) key = k;
         }
 
+        // 1.11.251: a number that belongs to a switch, changed with - / + at the right of its row
+        class Num { public Func<MelonPreferences_Entry<float>> E; public float Step, Min, Max; public string Unit; }
+        static readonly Dictionary<string, Num> Nums = new Dictionary<string, Num>
+        {
+            {"TorpedoSettings", new Num { E = () => TorpedoSettings.ChangeSeconds, Step = 10f, Min = 0f, Max = 300f, Unit = "s tube reset" } },
+        };
         static List<MelonPreferences_Entry<bool>> Entries(string group)
         {
             var list = new List<MelonPreferences_Entry<bool>>();
@@ -185,9 +191,18 @@ namespace DipGgFixes
                         e.Value = !e.Value;
                         Save(e.Identifier + " = " + (e.Value ? "on" : "off") + (RestartOnly.Contains(e.Identifier) ? " (applies after a game restart)" : ""));
                     });
+                    float descW = w - 110f;
+                    if (Nums.TryGetValue(e.Identifier, out var nm) && nm.E() != null)
+                    {
+                        var fe = nm.E(); descW = w - 290f;
+                        float nx = r.x + w - 190f;
+                        Button(new Rect(nx, y + 2f, 26f, 24f), "-", sBtn, () => { fe.Value = Mathf.Max(nm.Min, fe.Value - nm.Step); Save(fe.Identifier + " = " + fe.Value.ToString("0.##")); });
+                        GUI.Label(new Rect(nx + 30f, y + 5f, 104f, 20f), "<b>" + fe.Value.ToString("0.##") + "</b> " + nm.Unit, sName);
+                        Button(new Rect(nx + 138f, y + 2f, 26f, 24f), "+", sBtn, () => { fe.Value = Mathf.Min(nm.Max, fe.Value + nm.Step); Save(fe.Identifier + " = " + fe.Value.ToString("0.##")); });
+                    }
                     string name = e.DisplayName != null && e.DisplayName != e.Identifier ? e.DisplayName : e.Identifier;
-                    GUI.Label(new Rect(r.x + 90f, y + 3f, w - 110f, 20f), "<b>" + name + "</b>" + (RestartOnly.Contains(e.Identifier) ? "  <color=#C0C0C0>(after restart)</color>" : ""), sName);
-                    GUI.Label(new Rect(r.x + 90f, y + 21f, w - 110f, rowH - 20f), e.Description ?? "", sDesc);
+                    GUI.Label(new Rect(r.x + 90f, y + 3f, descW, 20f), "<b>" + name + "</b>" + (RestartOnly.Contains(e.Identifier) ? "  <color=#C0C0C0>(after restart)</color>" : ""), sName);
+                    GUI.Label(new Rect(r.x + 90f, y + 21f, descW, rowH - 20f), e.Description ?? "", sDesc);
                     y += rowH;
                 }
 

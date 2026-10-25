@@ -15,6 +15,17 @@ ia_8,,,$IA_Help_title_ia_8,_GameTip_ShipPanorama,$IA_Help_desc_ia_8
 ia_9,,,$IA_Help_title_ia_9,_GameTip_BattleshipUnderConstruction,$IA_Help_desc_ia_9
 ia_10,,,$IA_Help_title_ia_10,_GameTip_Radar,$IA_Help_desc_ia_10
 ia_11,,,$IA_Help_title_ia_11,,$IA_Help_desc_ia_11
+ia_12,,,$IA_Help_title_ia_12,,$IA_Help_desc_ia_12
+ia_13,,,$IA_Help_title_ia_13,_GameTip_GeneralFleet,$IA_Help_desc_ia_13
+ia_14,,,$IA_Help_title_ia_14,,$IA_Help_desc_ia_14
+ia_15,,,$IA_Help_title_ia_15,,$IA_Help_desc_ia_15
+ia_16,,,$IA_Help_title_ia_16,,$IA_Help_desc_ia_16
+ia_17,,,$IA_Help_title_ia_17,,$IA_Help_desc_ia_17
+ia_18,,,$IA_Help_title_ia_18,,$IA_Help_desc_ia_18
+ia_19,,,$IA_Help_title_ia_19,,$IA_Help_desc_ia_19
+ia_20,,,$IA_Help_title_ia_20,,$IA_Help_desc_ia_20
+ia_21,,,$IA_Help_title_ia_21,,$IA_Help_desc_ia_21
+ia_22,,,$IA_Help_title_ia_22,,$IA_Help_desc_ia_22
 ship_types,,header,$Help_title_ship_types,-,
 7,,,$Help_title_7,Bayern_class_battleship,$LoadingScreens_Text_39
 8,,,$Help_title_8,HMS_Invincible,$LoadingScreens_Text_40
