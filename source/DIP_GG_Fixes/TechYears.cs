@@ -44,11 +44,34 @@ namespace DipGgFixes
         }
 
         // shell nose generation from the ship's design technologies: 0 = early blunt shells, 1 = improved nose (1907), 2 = 1927 shells
+        // 1.11.271 (author 25.10, 15:49-15:53): the shell tree of the campaign (CNF, CP, CPC, SAP, AP, APC, CPBC, SAPBC, APBC, Improved
+        // APBC, Advanced naval shells) carries the ballistic cap, i.e. the streamlined nose, while "Aerodynamic shell shape" (15) and
+        // "Improved ballistic tip" (16) are not in every navy's list: 1 = any ballistic-capped shell (CPBC 1903, SAPBC 1905, APBC 1905,
+        // Improved APBC 1915, SAPC 1925), 2 = Advanced naval shells (1930) or the 1927 tip
+        static int NoseOfTech(string nm)
+        {
+            switch (nm)
+            {
+                case "projectile_shell_16": case "projectile_shell_32": return 2;
+                case "projectile_shell_15": case "projectile_shell_25": case "projectile_shell_27": case "projectile_shell_30": case "projectile_shell_31": case "projectile_shell_ia_sapc": return 1;
+                default: return 0;
+            }
+        }
         internal static int ShellNose(Ship s)
         {
             if (s == null) return 0;
             long k = s.Pointer.ToInt64(); int n; if (nose.TryGetValue(k, out n)) return n;
             n = 0;
+            // 1.11.271 (author 25.10, 14:43 "check the ship's parts"): the AP shell fitted to the ship decides first, whatever the navy has
+            // researched - a ship fires the shell she carries (shell_ap component years: 1898 capped, 1905 ballistic cap, 1915, 1925)
+            int fitted = 0; try { fitted = PhysGun.ApShellYear(s); } catch { }
+            if (fitted > 0)
+            {
+                n = fitted >= 1927 ? 2 : fitted >= 1903 ? 1 : 0;
+                bool isPl0 = false; try { isPl0 = s.player != null && s.player.isMain; } catch { }
+                if (logged < 24 || (isPl0 && plLogged++ < 12)) { if (!isPl0) logged++; try { MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = ballistic cap, 2 = 1927+ shells){(isPl0 ? " [player]" : "")} - from the AP shell fitted ({fitted})"); } catch { } }
+                nose[k] = n; return n;
+            }
             // 1.11.257 (#31, author's 25.10 battle 13:42: both player BBs of 1921 at generation 0, every British ship at 1): count what
             // each source holds so the log shows which path misses the nose technology
             int cDesign = 0, cAll = 0, cList = 0, cRes = 0; var seen = new System.Text.StringBuilder();
@@ -59,8 +82,7 @@ namespace DipGgFixes
                     if (t == null) continue;
                     string nm = t.name; cDesign++;
                     if (nm == "projectile_shell_15" || nm == "projectile_shell_16") seen.Append(" design:" + nm);
-                    if (nm == "projectile_shell_16") n = Math.Max(n, 2);
-                    else if (nm == "projectile_shell_15") n = Math.Max(n, 1);
+                    n = Math.Max(n, NoseOfTech(nm));
                 }
             }
             catch { }
@@ -77,7 +99,7 @@ namespace DipGgFixes
                         try
                         {
                             var e = p.technologiesResearchedAll.GetEnumerator(); var ue = e.Cast<Il2CppSystem.Collections.IEnumerator>();
-                            while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; string nm = t.data.name; cAll++; if (nm == "projectile_shell_15" || nm == "projectile_shell_16") seen.Append(" researched:" + nm); if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                            while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; string nm = t.data.name; cAll++; if (nm == "projectile_shell_15" || nm == "projectile_shell_16") seen.Append(" researched:" + nm); n = Math.Max(n, NoseOfTech(nm)); }
                         }
                         catch (Exception e1) { if (logged++ < 3) MelonLogger.Msg("[DIP GG Fixes][Tech] shell nose, researched list: " + e1.Message); }
                         // 1.11.243 (24.10 log: the player's 1921 ships still fired blunt shells, Cd 0.74, after 1.11.241): the technology list
@@ -87,7 +109,7 @@ namespace DipGgFixes
                             try
                             {
                                 var tl = p.technologies;
-                                if (tl != null) for (int i = 0; i < tl.Count; i++) { var t = tl[i]; if (t == null || t.data == null) continue; bool ok = false; try { ok = t.isResearched; } catch { } cList++; if (ok) cRes++; string nm0 = t.data.name; if (nm0 == "projectile_shell_15" || nm0 == "projectile_shell_16") { float pr = -1f; try { pr = t.progress; } catch { } seen.Append($" list:{nm0}={(ok ? "researched" : "not researched")}{(pr >= 0f ? $" ({pr:0.##})" : "")}"); } if (!ok) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                                if (tl != null) for (int i = 0; i < tl.Count; i++) { var t = tl[i]; if (t == null || t.data == null) continue; bool ok = false; try { ok = t.isResearched; } catch { } cList++; if (ok) cRes++; string nm0 = t.data.name; if (nm0 == "projectile_shell_15" || nm0 == "projectile_shell_16") { float pr = -1f; try { pr = t.progress; } catch { } seen.Append($" list:{nm0}={(ok ? "researched" : "not researched")}{(pr >= 0f ? $" ({pr:0.##})" : "")}"); } if (!ok) continue; string nm = t.data.name; n = Math.Max(n, NoseOfTech(nm)); }
                             }
                             catch (Exception e2) { if (logged++ < 3) MelonLogger.Msg("[DIP GG Fixes][Tech] shell nose, technology list: " + e2.Message); }
                         }
@@ -106,7 +128,7 @@ namespace DipGgFixes
                 // 1.11.264 (author 25.10, 14:43): the ship's own parts first - the technology year of the AP shell fitted to her
                 //           (shell_ap: ap_2/ap_4 1905, ap_5 1915, ap_6 1925): a shell of 1907 or later has the improved nose
                 int ay = 0; try { ay = PhysGun.ApShellYear(s); } catch { }
-                if (ay > 0) { n = ay >= 1927 ? 2 : ay >= 1907 ? 1 : 0; noseFallback = $"; no nose technology in the navy's lists - AP shell fitted of {ay}"; }
+                if (ay > 0) { n = ay >= 1927 ? 2 : ay >= 1903 ? 1 : 0; noseFallback = $"; no nose technology in the navy's lists - AP shell fitted of {ay}"; }
                 else
                 {
                     int yr = 0; try { yr = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }

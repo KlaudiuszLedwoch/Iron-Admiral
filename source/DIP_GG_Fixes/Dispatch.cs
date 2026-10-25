@@ -224,7 +224,9 @@ namespace DipGgFixes
                     Say("charge|" + s,
                         $"{s}, bridge: \"Full ahead, both engines! Close to torpedo range - tubes stand by!\" {s} races in at {t}, {km} km off.",
                         $"Lookout aboard {t}: \"Small ship closing fast on the bow - she's making a torpedo run!\" It is {s}, {km} km out and coming hard.",
-                        $"{s}'s captain to the torpedo officer: \"We go in. Don't fire until I give the word.\" The ship swings towards {t}.");
+                        $"{s}'s captain to the torpedo officer: \"We go in. Don't fire until I give the word.\" The ship swings towards {t}.",
+                $"{s} turns in towards {t}. Her captain, quietly: \"Some of us won't see tonight. Full ahead.\"",
+                $"{s} goes in at {t} through a forest of splashes; the torpedo crews crouch by the tubes, lips moving.");
                     return;
                 }
                 if (m.Contains("massed torpedo attack - charges "))
@@ -241,7 +243,9 @@ namespace DipGgFixes
                     Say("ram|" + s,
                         $"{s}, bridge: \"The tubes are empty. Ring down for everything she's got - we ram {t}!\"",
                         $"{s} turns her bow on {t}. Her captain: \"Brace for collision!\"",
-                        $"Aboard {t}: \"She's not turning away - she means to ram us!\" {s} comes on at full speed.");
+                        $"Aboard {t}: \"She's not turning away - she means to ram us!\" {s} comes on at full speed.",
+                $"{s}, bridge: \"Say your prayers, gentlemen. Full ahead - ram her!\"",
+                $"{s} comes on through the shell splashes, her bow for {t}; men on her forecastle are shouting, cursing, some are praying.");
                     return;
                 }
                 if (m.Contains("escape mission - cannot outrun"))
@@ -299,7 +303,9 @@ namespace DipGgFixes
                     var s = Ship(Subj(m, "): ")); int n = (int)Num(Before(After(m, "): ") ?? "", " enemy torpedo"));
                     Say("torp|" + s + "|" + Clock().Substring(0, 2),
                         $"Lookout, {s}: \"Torpedo tracks - {(n > 1 ? n + " of them" : "one")} - coming straight at us!\" - \"Hard over! Comb the tracks!\"",
-                        $"{s}: \"Torpedoes in the water!\" The division swings away; the white wakes pass close alongside.");
+                        $"{s}: \"Torpedoes in the water!\" The division swings away; the white wakes pass close alongside.",
+                $"{s}: \"Torpedo - TORPEDO! Hard a-starboard!\" The wake slides past the stern; on the bridge somebody is swearing and somebody else is praying.",
+                $"Lookout, {s}: \"Tracks on the port bow - Christ, they're close!\" The ship heels over in the turn; men grip the rails and wait.");
                     return;
                 }
                 if (m.Contains(": evasive zigzag"))
@@ -337,7 +343,9 @@ namespace DipGgFixes
                 if (m.Contains("): tubes not reloaded after"))
                 {
                     var s = Ship(Before(m, ": tubes not reloaded"));
-                    Say("noreload|" + s, $"{s}, torpedo officer: \"No reloads left in the racks, sir.\" - \"Then we rejoin the line.\"");
+                    Say("noreload|" + s, $"{s}, torpedo officer: \"No reloads left in the racks, sir.\" - \"Then we rejoin the line.\"",
+                $"{s}: \"Racks empty, sir - that was our last fish.\" - \"Very well. Back to the line, and pray they don't need us again.\"",
+                $"{s}: the torpedo crews stand by empty tubes, soaked and shaking. \"Nothing left to throw at them. Rejoin.\"");
                     return;
                 }
                 if (m.Contains("battle line moves up to effective range") || m.Contains("own flotillas attacking - supports them"))
@@ -357,7 +365,9 @@ namespace DipGgFixes
                 if (m.Contains("): holding torpedoes until"))
                 {
                     var s = Ship(Before(m, ": holding torpedoes"));
-                    Say("hold|" + s, $"{s}: \"Not yet. We wait until the battleships are at it.\"");
+                    Say("hold|" + s, $"{s}: \"Not yet. We wait until the battleships are at it.\"",
+                $"{s}, bridge: \"Hold the flotilla. When the big ships are busy with each other, then we go in - not before.\"",
+                $"{s}: the men at the tubes are white-knuckled, but the order is to wait. \"Patience. Our turn comes when the lines engage.\"");
                     return;
                 }
                 if (m.Contains(" - moves to break up the attack"))
@@ -369,25 +379,33 @@ namespace DipGgFixes
                 if (m.Contains("threatens the enemy line from the opposite flank"))
                 {
                     var s = Ship(Before(m, ": own flotillas"));
-                    Say("pin|" + s, $"{s}: \"Our destroyers attack from the other side. Show ourselves on this flank - keep their line busy!\"");
+                    Say("pin|" + s, $"{s}: \"Our destroyers attack from the other side. Show ourselves on this flank - keep their line busy!\"",
+                $"{s}: \"We're the bait today, gentlemen. Draw their fire and give the flotilla its chance.\"",
+                $"{s} shows herself on the flank, every gun firing, to keep the enemy's eyes off the destroyers running in on the other side.");
                     return;
                 }
                 if (m.Contains("): supports the flotilla attack"))
                 {
                     var s = Ship(Before(m, ": supports"));
-                    Say("support|" + s, $"{s}: \"Follow the destroyers in - keep the enemy light ships off them!\"");
+                    Say("support|" + s, $"{s}: \"Follow the destroyers in - keep the enemy light ships off them!\"",
+                $"{s}: \"The flotilla goes in - we go with them. Any destroyer that tries to stop them gets everything we have.\"",
+                $"{s} works up to full speed behind the destroyers, her guns trained on the enemy screen.");
                     return;
                 }
                 if (m.Contains("): flying squadron"))
                 {
                     var s = Ship(Before(m, ": flying squadron")); var t = Ship(Before(After(m, " at ") ?? "", " ("));
-                    Say("flying|" + s, $"{s}: \"We are faster than their line. Round the flank - at {t}!\"");
+                    Say("flying|" + s, $"{s}: \"We are faster than their line. Round the flank - at {t}!\"",
+                $"{s}, bridge: \"They can't keep up with us. Round the end of their line and take {t} from the quarter!\"",
+                $"{s} swings wide round the enemy's flank, her stokers driven to the limit, to get at {t}.");
                     return;
                 }
                 if (m.Contains("opens the range to avoid its concentrated fire"))
                 {
                     var s = Ship(Before(m, ": "));
-                    Say("open|" + s, $"{s}: \"We're inside their battleships' range - open the distance before they concentrate on us!\"");
+                    Say("open|" + s, $"{s}: \"We're inside their battleships' range - open the distance before they concentrate on us!\"",
+                $"{s}: \"Heavy shells falling close - one of those and we're matchwood. Open the range!\"",
+                $"{s} turns away from the battle line, the splashes of heavy shells rising higher than her masts.");
                     return;
                 }
                 if (m.Contains("withdraws while the lighter ships cover it"))
@@ -405,20 +423,26 @@ namespace DipGgFixes
                 if (m.Contains("): night attack spotted"))
                 {
                     var s = Ship(Before(m, ": night attack spotted"));
-                    Say("nightab|" + s, $"{s}: \"Searchlights on us - they've seen us! Too strong - turn away, full speed!\"");
+                    Say("nightab|" + s, $"{s}: \"Searchlights on us - they've seen us! Too strong - turn away, full speed!\"",
+                $"{s}: a searchlight beam sweeps over the bridge and holds. \"God - they've got us. Hard over, make smoke, get out of the light!\"",
+                $"{s}, caught in the searchlights, turns away under a storm of fire. Men throw themselves flat on the deck.");
                     return;
                 }
                 if (m.Contains(" lay a smoke screen"))
                 {
                     var s = Ship(Before(m, ": "));
-                    Say("smoke|" + s, $"{s}: \"Make smoke!\" Thick black clouds roll from her funnels.");
+                    Say("smoke|" + s, $"{s}: \"Make smoke!\" Thick black clouds roll from her funnels.",
+                $"{s}: \"Smoke - lay it thick!\" The stokers choke the fires and a black wall rolls out astern.",
+                $"{s} vanishes into her own smoke; the shells that were falling round her now fall into an empty sea.");
                     return;
                 }                if (m.Contains(": charge aborted"))
                 {
                     var s = Ship(Before(m, ": charge aborted"));
                     Say("abort|" + s,
                         m.Contains("no torpedoes") ? $"{s}: \"All tubes fired - nothing left to attack with. Turn away!\"" : $"{s}: \"Too badly hit to press home - abandon the attack!\"",
-                        $"{s} breaks off her run, smoke pouring from her funnels.");
+                        $"{s} breaks off her run, smoke pouring from her funnels.",
+                $"{s}: \"We can't do it - the bridge is gone, the wheel's gone, half the deck crew is dead. Turn away, for God's sake!\"",
+                $"{s} staggers out of the attack, burning, the wounded screaming on her deck.");
                     return;
                 }
                 if (m.StartsWith("PANIC: "))
@@ -426,13 +450,18 @@ namespace DipGgFixes
                     var s = Ship(Before(m.Substring(7), " ("));
                     Say("panic|" + s,
                         $"From {s}: \"Men are leaving their stations - we can't hold them!\" The division begins to fall back.",
-                        $"{s}: the crew breaks under fire. Officers shout over the din, but the ship turns away.");
+                        $"{s}: the crew breaks under fire. Officers shout over the din, but the ship turns away.",
+                $"{s}: \"They won't go back to the guns, sir - they've seen what's left of the forward turret crew!\" The ship turns out of the line.",
+                $"Aboard {s} the dead are lying where they fell and the living have had enough. Prayers, curses, and then the helm goes over.",
+                $"{s}, the chaplain on the bridge, the captain white-faced: \"Enough. Take her out of it.\"");
                     return;
                 }
                 if (m.Contains(": friendly ship in the torpedo lane"))
                 {
                     var s = Ship(Before(m, ": friendly"));
-                    Say("lane|" + s, $"{s}, torpedo officer: \"Our own ship is in the line of fire - hold the torpedoes!\"");
+                    Say("lane|" + s, $"{s}, torpedo officer: \"Our own ship is in the line of fire - hold the torpedoes!\"",
+                $"{s}: \"HOLD! Hold the fish - that's one of ours crossing the track!\"",
+                $"{s}, torpedo officer, hand raised: \"Wait... wait... our own ship's in the way. Nobody fires until she's clear.\"");
                     return;
                 }
             }
@@ -467,7 +496,11 @@ namespace DipGgFixes
             Say("sunk|" + s,
                 $"{s} rolls over and goes down. Men are in the water.",
                 $"A tremendous explosion - when the smoke clears, {s} is gone.",
-                $"{s} settles by the stern, her guns still pointing at the sky, and slips beneath the waves.");
+                $"{s} settles by the stern, her guns still pointing at the sky, and slips beneath the waves.",
+                $"{s} goes down. Hundreds of men in the oil and the dark, and the cries carry across the water - nobody aboard says a word.",
+                $"{s} breaks in two. The bow stands up like a church spire, men clinging to it, and then it is gone. God rest them.",
+                $"{s} capsizes. For a minute her keel is in the air, men still climbing over it, and then the sea takes her.",
+                $"A magazine goes up in {s} - a pillar of flame and the ship is simply not there any more. No one is coming out of that.");
         }
         internal static void Surrendered(string name)
         {

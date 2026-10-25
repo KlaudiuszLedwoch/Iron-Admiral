@@ -23,16 +23,18 @@ namespace DipGgFixes
     internal static class PhysGun
     {
         internal static MelonPreferences_Entry<bool> On;
-        internal static MelonPreferences_Entry<float> MassExp;
+        internal static MelonPreferences_Entry<float> MassExp, WeightChoice;
         internal static bool Enabled { get { return On != null && On.Value; } }
-        internal static MelonPreferences_Entry<bool> HistBase;
-        internal struct G { public bool Ok; public int Grade; public float CalMm, CalBaseMm, Kg, KgGame, KgRef, KgData, KgWindow, Mv, MvGame, MvHist, MvData, Bonus, ChoiceVel, Q; public Ship.ShellType Type; }
+        internal static MelonPreferences_Entry<bool> HistBase, HistWeight;
+        internal struct G { public bool Ok; public int Grade; public float CalMm, CalBaseMm, Kg, KgGame, KgRef, KgData, KgWindow, Mv, MvGame, MvHist, MvData, Bonus, ChoiceVel, ChoiceKg, Q; public bool KgHist; public Ship.ShellType Type; }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             HistBase = cat.CreateEntry("PhysicalGunHistoricalBase", true, null, "Muzzle velocity = historical velocity of the generation x the game's technology bonus (gun velocity over the gun data velocity), not the game's own gun data velocity");
             On = cat.CreateEntry("PhysicalGun", true, null, "Battle: one physical gun - the bore as built, the shell weight of the gun window and a muzzle velocity that falls with a heavier shell at the same charge; used by the shells' flight, the range and the physical penetration");
-            MassExp = cat.CreateEntry("PhysicalGunMassExponent", 0.30f, null, "Muzzle velocity ~ (shell weight / reference shell)^-k at the same charge; 0.30 from the US 8\"/55 (AP Mk 19 118 kg 823 m/s vs AP Mk 21 152 kg 762 m/s, same 85 lb charge)");
+            HistWeight = cat.CreateEntry("PhysicalShellHistoricalWeight", true, null, "Shell weight = historical AP shell of the calibre and gun generation (data/historical guns_mv_weight.csv, scaled by the cube of the bore) x the shell-weight choice of the ship (light / standard / heavy / super heavy), instead of the game's own shell weight (DIP data: 12 in 617-695 kg, 15 in 1004-1444 kg against 386-517 and 871-885 kg in history)");
+        WeightChoice = cat.CreateEntry("PhysicalShellWeightChoiceScale", 0.45f, null, "Share of the game's shell-weight choice effect applied to the physical shell (game: light -30 %, heavy +30 %, super heavy +45 %; history: about -13 / +13 / +20 %, e.g. US 16 in AP 1016 kg -> super heavy Mk 8 1225 kg)");
+        MassExp = cat.CreateEntry("PhysicalGunMassExponent", 0.30f, null, "Muzzle velocity ~ (shell weight / reference shell)^-k at the same charge; 0.30 from the US 8\"/55 (AP Mk 19 118 kg 823 m/s vs AP Mk 21 152 kg 762 m/s, same 85 lb charge)");
         }
 
         static readonly Dictionary<long, G> cache = new Dictionary<long, G>();
@@ -88,9 +90,29 @@ namespace DipGgFixes
                     // the reference is the AP shell; the HE shell of the same gun is compared with it too (lighter HE leaves faster)
                 }
                 g.KgRef = kgRef;
+                // 1.11.272 (author 25.10, 16:10-16:17, 302.6 mm shell of 617 kg): the physical shell is the historical AP shell of the
+                // generation at this bore times the ship's shell-weight choice, damped to the historical spread (pref)
+                if (HistWeight != null && HistWeight.Value && g.MvHist > 50f && kgRef > 0.05f)
+                {
+                    float wc = ShellChoiceWeight(ship); g.ChoiceKg = wc;
+                    float scale = WeightChoice != null ? WeightChoice.Value : 0.45f;
+                    g.Kg = kgRef * Math.Max(0.5f, 1f + wc / 100f * scale);
+                    // 1.11.274 (author 25.10, 16:32: HE 605 kg heavier than AP 571 kg): no historical HE table - the HE shell keeps the
+                    // game's HE/AP weight ratio of this gun on top of the historical AP shell
+                    if (st == Ship.ShellType.He)
+                    {
+                        // 1.11.275: Part.ShellWeight returned the same weight for both types (HE 571 = AP 571 in the window, game 626 / 869);
+                        //           the gun data weights by type are tried too, the first ratio that differs from 1 is used
+                        float hr = 1f;
+                        try { float kgApWin = Part.ShellWeight(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap)); if (kgApWin > 0.05f && kgWin > 0.05f && Math.Abs(kgWin / kgApWin - 1f) > 0.01f) hr = kgWin / kgApWin; } catch { }
+                        if (Math.Abs(hr - 1f) < 0.01f) { try { if (gd != null) { float gdAp = Part.ShellWeight(gd, pd, grade, ship, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap)); if (gdAp > 0.05f && kgGd > 0.05f && Math.Abs(kgGd / gdAp - 1f) > 0.01f) hr = kgGd / gdAp; } } catch { } }
+                        g.Kg *= Math.Max(0.5f, Math.Min(1.2f, hr));
+                    }
+                    g.KgHist = true;
+                }
                 float sv = ShellChoiceVelocity(ship); g.ChoiceVel = sv;
                 float mvNoChoice = mv / Math.Max(0.5f, 1f + sv / 100f);
-                float ratio = Math.Max(0.4f, Math.Min(3f, kg / Math.Max(0.05f, kgRef)));
+                float ratio = Math.Max(0.4f, Math.Min(3f, g.Kg / Math.Max(0.05f, kgRef)));
                 float k = MassExp != null ? MassExp.Value : 0.30f;
                 // 1.11.253 (author's decision 25.10, 10:08): the historical muzzle velocity of the generation times the game's technology
                 // bonus. The bonus is the gun's velocity (gun window, without the shell-choice effect) over the gun data's own velocity
@@ -115,7 +137,7 @@ namespace DipGgFixes
 
         internal static string Describe(G g)
         {
-            return $"physical gun {g.CalMm:0.#} mm (base {g.CalBaseMm:0.#} mm) Mk{g.Grade} {g.Type}: shell {g.Kg:0.#} kg (gun data {g.KgData:0.#} kg at the base calibre, gun window {g.KgWindow:0.#} kg; reference {g.KgRef:0.#} kg at this bore), muzzle {g.Mv:0} m/s (historical {g.MvHist:0} m/s x technology bonus {g.Bonus:0.000} = gun {g.MvGame:0} m/s without the shell choice / gun data {g.MvData:0} m/s; shell-choice velocity effect {g.ChoiceVel:+0.#;-0.#;0}% removed, weight law ^-{(MassExp != null ? MassExp.Value : 0.30f):0.00}), energy {0.5f * g.Kg * g.Mv * g.Mv / 1e6f:0.0} MJ, AP quality x{g.Q:0.00}";
+            return $"physical gun {g.CalMm:0.#} mm (base {g.CalBaseMm:0.#} mm) Mk{g.Grade} {g.Type}: shell {g.Kg:0.#} kg ({(g.KgHist ? $"historical reference x shell choice {g.ChoiceKg:+0.#;-0.#;0}% damped" : "game")}; gun data {g.KgData:0.#} kg at the base calibre, gun window {g.KgWindow:0.#} kg; reference {g.KgRef:0.#} kg at this bore), muzzle {g.Mv:0} m/s (historical {g.MvHist:0} m/s x technology bonus {g.Bonus:0.000} = gun {g.MvGame:0} m/s without the shell choice / gun data {g.MvData:0} m/s; shell-choice velocity effect {g.ChoiceVel:+0.#;-0.#;0}% removed, weight law ^-{(MassExp != null ? MassExp.Value : 0.30f):0.00}), energy {0.5f * g.Kg * g.Mv * g.Mv / 1e6f:0.0} MJ, AP quality x{g.Q:0.00}";
         }
 
         // ---- technology effects read from Mods\technologies.csv (component -> effect value) ----
@@ -178,6 +200,8 @@ namespace DipGgFixes
         }
         // velocity effect of the light / heavy / super-heavy shell choice (replaced by the weight law)
         static float ShellChoiceVelocity(Ship ship) { var c = CompOfType(ship, "shell"); return c != null ? Fx(c, "shell_velocity") : 0f; }
+        // the game's shell_weight effect is stored with the opposite sign (light shells +30 = -30 % weight; the UI shows it inverted)
+        static float ShellChoiceWeight(Ship ship) { var c = CompOfType(ship, "shell"); return c != null ? -Fx(c, "shell_weight") : 0f; }
         // AP shell quality against face-hardened armour, relative to the 1915 AP shell
         static float ApQuality(Ship ship)
         {
