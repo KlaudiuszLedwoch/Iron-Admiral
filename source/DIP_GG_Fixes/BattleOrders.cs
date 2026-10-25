@@ -68,6 +68,7 @@ namespace DipGgFixes
         // 1.11.159: only a command right after a click or key of the player counts (2nd auto test: the game itself gave a
         // retreating division a course order 1 s after "Free action" and the order ended at once)
         internal static float lastInput = -100f;
+        internal static bool PlayerInputRecent() { try { return Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.anyKey || Time.realtimeSinceStartup - lastInput < 0.6f; } catch { return false; } } // 1.11.250
         internal static void PlayerCommand(Division div, string what, bool needInput = true)
         {
             if (Issuing || div == null || !GameManager.IsBattle) return;
@@ -337,8 +338,10 @@ namespace DipGgFixes
         {
             try
             {
-                if (OrdersOn == null || !OrdersOn.Value || !GameManager.IsBattle) return;
+                if (!GameManager.IsBattle) return;
+                ShootInfoDiag.Tick(); // 1.11.250
                 if (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButton(1) || Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) lastInput = Time.realtimeSinceStartup;
+                if (OrdersOn == null || !OrdersOn.Value || BattleScreen.Hidden) return;
                 if (!(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))) return;
                 int k = -1;
                 if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4; else if (Input.GetKeyDown(KeyCode.Alpha6)) k = 5;
@@ -359,7 +362,7 @@ namespace DipGgFixes
         }
         internal static void OrdersOnGUI()
         {
-            if (OrdersOn == null || !OrdersOn.Value || !GameManager.IsBattle) return;
+            if (OrdersOn == null || !OrdersOn.Value || !GameManager.IsBattle || BattleScreen.Hidden) return; // 1.11.250: not over the result screen / "Play again?"
             try { OrderTags(); } catch (Exception e) { if (oErrors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] order tags: " + e.Message); }
             try
             {
@@ -421,6 +424,91 @@ namespace DipGgFixes
                 GUI.Label(new Rect(r.x + 4f, r.y + 3f, r.width - 8f, r.height - 6f), txt, oTag);
             }
         }
+    }
+
+    // 1.11.250 (film of 25.10, points B1/B2): the mod's battle panels (division orders, order tags, range tags, dispatch bubbles)
+    // stayed on the screen after the battle - over the result screen and the "Battle won - Play again?" window. They are drawn only
+    // while no game window is open over the battle: the battle result / ship statistics window or a message box.
+    // The leave-battle path of the game is logged ([Battle] leaving the battle ...) so that a hang after "Play again? - No" shows
+    // where it stops.
+    internal static class BattleScreen
+    {
+        static float next; static bool hidden; static int errors;
+        internal static bool Hidden { get { Refresh(); return hidden; } }
+        static void Refresh()
+        {
+            if (Time.unscaledTime < next) return; next = Time.unscaledTime + 0.2f;
+            bool h = false; string why = null;
+            try { if (MessageBoxUI.IsAnyActive()) { h = true; why = "a message box is open"; } } catch { }
+            if (!h)
+            {
+                try
+                {
+                    var ui = G.ui; var rw = ui != null ? ui.m_BattleResultWindow : null;
+                    if (rw != null && rw.gameObject != null && rw.gameObject.activeInHierarchy &&
+                        ((rw.resultWindow != null && rw.resultWindow.activeInHierarchy) || (rw.shipStatsWindow != null && rw.shipStatsWindow.activeInHierarchy)))
+                    { h = true; why = "the battle result window is open"; }
+                }
+                catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][Battle] result window check: " + e.Message); }
+            }
+            if (h != hidden) { hidden = h; MelonLogger.Msg("[DIP GG Fixes][Battle] mod battle panels " + (h ? "hidden: " + why : "shown again")); }
+        }
+    }
+    // 1.11.250 (film 25.10, B3: "Shoot Info" empty): once per battle, when the player first points at an enemy, the state of the game's
+    // Shoot Info panel is written to the log (active, its parents, the text) - the panel is the game's own; this finds what hides it.
+    internal static class ShootInfoDiag
+    {
+        static IntPtr battle; static bool done; static float since = -1f;
+        internal static void Tick()
+        {
+            try
+            {
+                if (!GameManager.IsBattle) return;
+                IntPtr b = IntPtr.Zero; var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb != null) b = cb.Pointer;
+                if (b != battle) { battle = b; done = false; since = -1f; }
+                if (done) return;
+                var ui = G.ui; if (ui == null) return;
+                Ship t = null; try { t = ui.attackTarget; } catch { }
+                if (t == null) { since = -1f; return; }
+                if (since < 0f) { since = Time.unscaledTime; return; }
+                if (Time.unscaledTime - since < 1.5f) return;
+                done = true;
+                var p = ui.shootInfoPanel; var ig = ui.shootInfoIngame;
+                string chain = "";
+                try { var tr = p != null ? p.transform : null; int n = 0; while (tr != null && n++ < 8) { chain += tr.name + (tr.gameObject.activeSelf ? "(on)" : "(OFF)") + " < "; tr = tr.parent; } } catch { }
+                string txt = ""; try { txt = ui.shootInfoText != null ? ui.shootInfoText.text : "(no text)"; } catch { }
+                if (txt != null && txt.Length > 160) txt = txt.Substring(0, 160);
+                string vals = ""; try { vals = $"range '{ui.shootInfoRangeValue}', accuracy '{ui.shootInfoAccuracyValue}', penetration '{ui.shootInfoPenetrationValue}', reasons '{ui.shootInfoReasons}'"; } catch { }
+                MelonLogger.Msg($"[DIP GG Fixes][Battle] Shoot Info check (target {t.name}): panel {(p == null ? "missing" : (p.activeInHierarchy ? "visible" : "hidden"))}, in-game label {(ig == null ? "missing" : (ig.activeInHierarchy ? "visible" : "hidden"))}; parents {chain}; text '{txt}'; {vals}");
+            }
+            catch (Exception e) { done = true; MelonLogger.Warning("[DIP GG Fixes][Battle] Shoot Info check: " + e.Message); }
+        }
+    }
+    [HarmonyPatch(typeof(BattleManager), "LeaveBattle")]
+    internal static class Patch_LeaveBattle_Log
+    {
+        static void Prefix() { MelonLogger.Msg("[DIP GG Fixes][Battle] leaving the battle (LeaveBattle) ..."); }
+        static void Postfix() { MelonLogger.Msg("[DIP GG Fixes][Battle] ... LeaveBattle done"); }
+        static Exception Finalizer(Exception __exception) { if (__exception != null) MelonLogger.Warning("[DIP GG Fixes][Battle] LeaveBattle threw: " + __exception); return __exception; }
+    }
+    // 1.11.250 (B2): leaving a custom battle back to its setup screen, TweaksAndFixes' own postfix of Ui.SkirmishSetupInit throws
+    // (NullReferenceException in SkirmishSetupMod.ApplyToSK, seen in every AutoTest of 25.10). The exception left the game's setup
+    // screen half built - the likely cause of the hang after "Play again? - No". It is caught here and logged once.
+    [HarmonyPatch(typeof(Ui), "SkirmishSetupInit")]
+    internal static class Patch_SkirmishSetupInit_Guard
+    {
+        static int n;
+        static Exception Finalizer(Exception __exception)
+        {
+            if (__exception != null && n++ < 3) MelonLogger.Warning("[DIP GG Fixes][Battle] custom battle setup screen: an exception from another mod's hook was caught so the screen finishes building: " + __exception.GetType().Name + ": " + __exception.Message);
+            return null;
+        }
+    }
+    [HarmonyPatch(typeof(BattleManager), "RestartCustomBattle")]
+    internal static class Patch_RestartCustom_Log
+    {
+        static void Prefix() { MelonLogger.Msg("[DIP GG Fixes][Battle] custom battle restart requested"); }
+        static Exception Finalizer(Exception __exception) { if (__exception != null) MelonLogger.Warning("[DIP GG Fixes][Battle] RestartCustomBattle threw: " + __exception); return __exception; }
     }
 
     // a move order the player gives a division under an autonomous order takes command back
