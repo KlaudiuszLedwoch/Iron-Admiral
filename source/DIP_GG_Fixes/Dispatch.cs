@@ -343,7 +343,9 @@ namespace DipGgFixes
                 if (m.Contains("): tubes not reloaded after"))
                 {
                     var s = Ship(Before(m, ": tubes not reloaded"));
-                    Say("noreload|" + s, $"{s}, torpedo officer: \"No reloads left in the racks, sir.\" - \"Then we rejoin the line.\"");
+                    Say("noreload|" + s, $"{s}, torpedo officer: \"No reloads left in the racks, sir.\" - \"Then we rejoin the line.\"",
+                $"{s}: \"Racks empty, sir - that was our last fish.\" - \"Very well. Back to the line, and pray they don't need us again.\"",
+                $"{s}: the torpedo crews stand by empty tubes, soaked and shaking. \"Nothing left to throw at them. Rejoin.\"");
                     return;
                 }
                 if (m.Contains("battle line moves up to effective range") || m.Contains("own flotillas attacking - supports them"))
@@ -363,7 +365,9 @@ namespace DipGgFixes
                 if (m.Contains("): holding torpedoes until"))
                 {
                     var s = Ship(Before(m, ": holding torpedoes"));
-                    Say("hold|" + s, $"{s}: \"Not yet. We wait until the battleships are at it.\"");
+                    Say("hold|" + s, $"{s}: \"Not yet. We wait until the battleships are at it.\"",
+                $"{s}, bridge: \"Hold the flotilla. When the big ships are busy with each other, then we go in - not before.\"",
+                $"{s}: the men at the tubes are white-knuckled, but the order is to wait. \"Patience. Our turn comes when the lines engage.\"");
                     return;
                 }
                 if (m.Contains(" - moves to break up the attack"))
@@ -375,25 +379,33 @@ namespace DipGgFixes
                 if (m.Contains("threatens the enemy line from the opposite flank"))
                 {
                     var s = Ship(Before(m, ": own flotillas"));
-                    Say("pin|" + s, $"{s}: \"Our destroyers attack from the other side. Show ourselves on this flank - keep their line busy!\"");
+                    Say("pin|" + s, $"{s}: \"Our destroyers attack from the other side. Show ourselves on this flank - keep their line busy!\"",
+                $"{s}: \"We're the bait today, gentlemen. Draw their fire and give the flotilla its chance.\"",
+                $"{s} shows herself on the flank, every gun firing, to keep the enemy's eyes off the destroyers running in on the other side.");
                     return;
                 }
                 if (m.Contains("): supports the flotilla attack"))
                 {
                     var s = Ship(Before(m, ": supports"));
-                    Say("support|" + s, $"{s}: \"Follow the destroyers in - keep the enemy light ships off them!\"");
+                    Say("support|" + s, $"{s}: \"Follow the destroyers in - keep the enemy light ships off them!\"",
+                $"{s}: \"The flotilla goes in - we go with them. Any destroyer that tries to stop them gets everything we have.\"",
+                $"{s} works up to full speed behind the destroyers, her guns trained on the enemy screen.");
                     return;
                 }
                 if (m.Contains("): flying squadron"))
                 {
                     var s = Ship(Before(m, ": flying squadron")); var t = Ship(Before(After(m, " at ") ?? "", " ("));
-                    Say("flying|" + s, $"{s}: \"We are faster than their line. Round the flank - at {t}!\"");
+                    Say("flying|" + s, $"{s}: \"We are faster than their line. Round the flank - at {t}!\"",
+                $"{s}, bridge: \"They can't keep up with us. Round the end of their line and take {t} from the quarter!\"",
+                $"{s} swings wide round the enemy's flank, her stokers driven to the limit, to get at {t}.");
                     return;
                 }
                 if (m.Contains("opens the range to avoid its concentrated fire"))
                 {
                     var s = Ship(Before(m, ": "));
-                    Say("open|" + s, $"{s}: \"We're inside their battleships' range - open the distance before they concentrate on us!\"");
+                    Say("open|" + s, $"{s}: \"We're inside their battleships' range - open the distance before they concentrate on us!\"",
+                $"{s}: \"Heavy shells falling close - one of those and we're matchwood. Open the range!\"",
+                $"{s} turns away from the battle line, the splashes of heavy shells rising higher than her masts.");
                     return;
                 }
                 if (m.Contains("withdraws while the lighter ships cover it"))
@@ -411,13 +423,17 @@ namespace DipGgFixes
                 if (m.Contains("): night attack spotted"))
                 {
                     var s = Ship(Before(m, ": night attack spotted"));
-                    Say("nightab|" + s, $"{s}: \"Searchlights on us - they've seen us! Too strong - turn away, full speed!\"");
+                    Say("nightab|" + s, $"{s}: \"Searchlights on us - they've seen us! Too strong - turn away, full speed!\"",
+                $"{s}: a searchlight beam sweeps over the bridge and holds. \"God - they've got us. Hard over, make smoke, get out of the light!\"",
+                $"{s}, caught in the searchlights, turns away under a storm of fire. Men throw themselves flat on the deck.");
                     return;
                 }
                 if (m.Contains(" lay a smoke screen"))
                 {
                     var s = Ship(Before(m, ": "));
-                    Say("smoke|" + s, $"{s}: \"Make smoke!\" Thick black clouds roll from her funnels.");
+                    Say("smoke|" + s, $"{s}: \"Make smoke!\" Thick black clouds roll from her funnels.",
+                $"{s}: \"Smoke - lay it thick!\" The stokers choke the fires and a black wall rolls out astern.",
+                $"{s} vanishes into her own smoke; the shells that were falling round her now fall into an empty sea.");
                     return;
                 }                if (m.Contains(": charge aborted"))
                 {
@@ -443,7 +459,9 @@ namespace DipGgFixes
                 if (m.Contains(": friendly ship in the torpedo lane"))
                 {
                     var s = Ship(Before(m, ": friendly"));
-                    Say("lane|" + s, $"{s}, torpedo officer: \"Our own ship is in the line of fire - hold the torpedoes!\"");
+                    Say("lane|" + s, $"{s}, torpedo officer: \"Our own ship is in the line of fire - hold the torpedoes!\"",
+                $"{s}: \"HOLD! Hold the fish - that's one of ours crossing the track!\"",
+                $"{s}, torpedo officer, hand raised: \"Wait... wait... our own ship's in the way. Nobody fires until she's clear.\"");
                     return;
                 }
             }
