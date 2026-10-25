@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.269", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.270", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1846,11 +1846,21 @@ namespace DipGgFixes
                         return false;
                     }
                     var away = dirSum.normalized; // steer parallel to the tracks, running with them: fewer hits, longer torpedo run
+                    // 1.11.270 (author 25.10, 15:23: a cruiser combing tracks ran to 600 m of an enemy battleship): of the two courses
+                    // parallel to the tracks, the one that opens the range from the nearest enemy ship within 2.5 km
+                    string flip = "";
+                    try
+                    {
+                        Ship nearE = null; float nd = 2500f;
+                        for (int i = 0; enemies != null && i < enemies.Count; i++) { var e = enemies[i]; if (e == null || e.isSinking || e.isDead) continue; var r = e.transform.position - lp; r.y = 0f; float d = r.magnitude; if (d < nd) { nd = d; nearE = e; } }
+                        if (nearE != null) { var toE = nearE.transform.position - lp; toE.y = 0f; toE.Normalize(); if (UnityEngine.Vector3.Dot(away, toE) > 0.2f) { away = -away; flip = $" - against the tracks, away from {nearE.name} at {nd:0} m"; } }
+                    }
+                    catch { }
                     div.MoveTo(lp + away * 3000f); st.evadeDir = away;
                     st.evadeUntil = UnityEngine.Time.time + DipGgFixesMod.TorpedoTurnAwaySeconds.Value;
                     st.closing = false;
                     Why(st, "turning away from torpedoes");
-                    Log($"{st.name} ({leader.shipType.name}): {n} enemy torpedo track(s) sighted, closest pass {closest:0} m - division turns away and combs the tracks for {DipGgFixesMod.TorpedoTurnAwaySeconds.Value:0} s");
+                    Log($"{st.name} ({leader.shipType.name}): {n} enemy torpedo track(s) sighted, closest pass {closest:0} m - division turns away and combs the tracks for {DipGgFixesMod.TorpedoTurnAwaySeconds.Value:0} s{flip}");
                     return true;
                 }
                 catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] torpedo evasion failed: " + e.Message); return false; }
