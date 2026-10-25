@@ -1,9 +1,13 @@
 // 1.11.253 (#33, author's decision 25.10, 10:08): damage of an AP shell that passes clean through (the game's hit type "over").
 // The author's 25.10 battle: CL Enterprise took 58 hits of 201.6 mm AP from 3.6-4.4 km; 45 passed through and did 313 damage in
 // total (about 7 each, against about 790 for a hit that burst inside) - the game's damage modifier for "over" leaves almost nothing.
-// A shell passing through still holes the ship twice, throws splinters and cuts what lies on its path (see OVERPEN_SOURCES below).
+// A shell passing through still holes the ship twice, throws splinters and cuts what lies on its path (see the fraction below).
 // Here the modifier of an AP pass-through is raised to a fraction of the modifier of a normal penetration (OverPenDamageFraction).
-// The fraction comes from the historical hit-by-hit damage reports (claude/fizyka_balistyka_33.md, section "Przelot na wylot").
+// The fraction: US Navy war damage reports (Boise CL-47, South Dakota BB-57, Sterett DD-407, Salt Lake City CA-25) - of 14 hits
+// that passed through none had a serious effect (main battery, propulsion, list, magazine fire, heavy casualties), of ~24 that
+// burst inside ~40 % had; 0 of 14 gives at most ~21 % (rule of three, 95 %). The destroyer war damage report (2-19, 2-20): AP
+// shells fuzed for a long delay "normally pass all the way through"; the serious damage of shells is the loss of watertight
+// integrity by impact and fragments. 0.15 = the middle of the 0.1-0.2 range.
 // HE shells are left to the game. Switch: OverPenDamage (F10, Battle).
 using System;
 using HarmonyLib;
@@ -19,7 +23,7 @@ namespace DipGgFixes
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("OverPenDamage", true, null, "Battle: an AP shell passing clean through a ship does a fraction of the damage of a shell bursting inside (holes, splinters, cut cables and pipes), instead of almost nothing");
-            Frac = cat.CreateEntry("OverPenDamageFraction", 0.20f, null, "Battle: damage of an AP pass-through as a fraction of a normal penetration (from the US Navy war damage reports, see the changelog)");
+            Frac = cat.CreateEntry("OverPenDamageFraction", 0.15f, null, "Battle: damage of an AP pass-through as a fraction of a normal penetration (from the US Navy war damage reports, see the changelog)");
         }
         [ThreadStatic] static bool busy;
         static int raised, logged, errors;
@@ -36,10 +40,10 @@ namespace DipGgFixes
                 float normal = 1f;
                 try { normal = ship.GetArmorModForPenetrations("normal", false, angle); } catch { }
                 if (!(normal > 0f)) normal = 1f;
-                float want = normal * Math.Max(0f, Math.Min(1f, Frac != null ? Frac.Value : 0.20f));
+                float want = normal * Math.Max(0f, Math.Min(1f, Frac != null ? Frac.Value : 0.15f));
                 if (result < want)
                 {
-                    if (logged++ < 3) MelonLogger.Msg($"[DIP GG Fixes][Damage] AP pass-through: game damage modifier {result:0.###} raised to {want:0.###} ({(Frac != null ? Frac.Value : 0.20f):0.##} of a normal penetration {normal:0.###})");
+                    if (logged++ < 3) MelonLogger.Msg($"[DIP GG Fixes][Damage] AP pass-through: game damage modifier {result:0.###} raised to {want:0.###} ({(Frac != null ? Frac.Value : 0.15f):0.##} of a normal penetration {normal:0.###})");
                     result = want; raised++;
                 }
             }
