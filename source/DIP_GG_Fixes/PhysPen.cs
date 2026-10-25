@@ -200,6 +200,14 @@ namespace DipGgFixes
             if (i >= plain.Length || plain[i] != 'm' || (i + 1 < plain.Length && plain[i + 1] == 'm')) return false;
             return float.TryParse(sb.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out R) && R > 0f;
         }
+        static string VelSrc(PhysGun.G g)
+        {
+            return g.MvHist > 50f && (PhysGun.HistBase == null || PhysGun.HistBase.Value)
+                ? $"historical {g.MvHist:0} m/s x technology {g.Bonus:0.00}, {g.Kg:0.#} kg shell; game {g.MvGame:0} m/s"
+                : $"game {g.MvGame:0} m/s; same charge, {g.Kg:0.#} kg shell";
+        }
+        static bool WeightDiffers(PhysGun.G g) { return g.KgWindow > 0.05f && Math.Abs(g.Kg / g.KgWindow - 1f) > 0.01f; }
+
         internal static string RewriteInfo(string text, PartData pd, Ship ship)
         {
             if (On == null || !On.Value || string.IsNullOrEmpty(text) || pd == null || ship == null) return text;
@@ -213,8 +221,16 @@ namespace DipGgFixes
                 for (int i = 0; i < lines.Length; i++)
                 {
                     string plain = StripTags(lines[i]).Trim();
-                    if (plain.StartsWith("Muzzle Velocity AP", StringComparison.OrdinalIgnoreCase)) { lines[i] = $"Muzzle Velocity AP: {ap.Mv:0} m/s (game {ap.MvGame:0} m/s; same charge, {ap.Kg:0} kg shell)"; changed = true; continue; }
-                    if (plain.StartsWith("Muzzle Velocity HE", StringComparison.OrdinalIgnoreCase) && he.Ok) { lines[i] = $"Muzzle Velocity HE: {he.Mv:0} m/s (game {he.MvGame:0} m/s; same charge, {he.Kg:0} kg shell)"; changed = true; continue; }
+                // 1.11.254: the velocity line names its source (historical velocity x technology bonus, weight law); the shell weight line
+                // shows the shell of the bore as built when the game's line does not (142.2 mm on a 5" mount: game 34.6 kg, bore 48.6 kg)
+                
+if (plain.StartsWith("Muzzle Velocity AP", StringComparison.OrdinalIgnoreCase)) { lines[i] = $"Muzzle Velocity AP: {ap.Mv:0} m/s ({VelSrc(ap)})"; changed = true; continue; }
+                
+if (plain.StartsWith("Muzzle Velocity HE", StringComparison.OrdinalIgnoreCase) && he.Ok) { lines[i] = $"Muzzle Velocity HE: {he.Mv:0} m/s ({VelSrc(he)})"; changed = true; continue; }
+                
+if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0.#} kg (bore {ap.CalMm:0.#} mm; game {ap.KgWindow:0.#} kg)"; changed = true; continue; }
+                
+if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(he)) { lines[i] = $"Shell Weight HE: {he.Kg:0.#} kg (bore {he.CalMm:0.#} mm; game {he.KgWindow:0.#} kg)"; changed = true; continue; }
                     if (plain.IndexOf("Penetration Belt/Deck", StringComparison.OrdinalIgnoreCase) >= 0) { inTable = true; lines[i] = lines[i] + " (physics: Okun)"; continue; }
                     if (!inTable) continue;
                     float R;
