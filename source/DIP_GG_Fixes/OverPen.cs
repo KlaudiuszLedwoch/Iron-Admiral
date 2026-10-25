@@ -42,8 +42,21 @@ namespace DipGgFixes
         internal static int Raised { get { return raised; } }
         static readonly SortedDictionary<string, float[]> locSum = new SortedDictionary<string, float[]>();
         // last location for the hit log (PhysPen.Taken runs right after the damage)
-        internal static string LastLoc, LastModules; internal static int LastFrame = -1; internal static float LastRaw, LastNew; internal static bool LastFire, LastFlood;
-        internal static void ResetCount() { raised = 0; locSum.Clear(); locLogs = 0; }
+        internal static string LastLoc, LastModules; internal static int LastFrame = -1; internal static float LastRaw, LastNew, LastMod; internal static bool LastFire, LastFlood; internal static string LastType;
+        // 1.11.276 (#33 step 3b, author 25.10, 18:14): what a non-penetrating hit does today - per shell type, calibre band and location:
+        // hits | damage | fires | floodings | hits with modules damaged
+        static readonly SortedDictionary<string, float[]> nonPen = new SortedDictionary<string, float[]>();
+        internal static void NonPen(string key, float damage, bool fire, bool flood, bool modules)
+        {
+            float[] a; if (!nonPen.TryGetValue(key, out a)) { a = new float[5]; nonPen[key] = a; }
+            a[0]++; a[1] += damage; if (fire) a[2]++; if (flood) a[3]++; if (modules) a[4]++;
+        }
+        internal static string Extra()
+        {
+            if (LastFrame != Time.frameCount) return "";
+            return $"; game modifier {LastMod:0.###} ({LastType ?? "?"}){(LastFire ? "; fire" : "")}{(LastFlood ? "; flooding" : "")}{(LastModules != null ? "; modules " + LastModules : "")}";
+        }
+        internal static void ResetCount() { raised = 0; locSum.Clear(); locLogs = 0; nonPen.Clear(); }
 
         // Ship.GetArmorModForPenetrations(string hitType, bool useHe, float angle): the hit type and the game's modifiers
         internal static void ArmorMod(Ship ship, string hitType, bool useHe, float angle, ref float result)
@@ -115,7 +128,7 @@ namespace DipGgFixes
                     float want = raw / curMod * curNormal * frac;
                     if (want > damage) { damage = want; raised++; }
                 }
-                LastLoc = loc; LastFrame = Time.frameCount; LastRaw = raw; LastNew = damage; LastFire = false; LastFlood = false; LastModules = null;
+                LastLoc = loc; LastFrame = Time.frameCount; LastRaw = raw; LastNew = damage; LastFire = false; LastFlood = false; LastModules = null; LastMod = known ? curMod : 0f; LastType = type;
                 string key = $"{loc} | {(useHe ? "He" : "Ap")} {type}";
                 float[] a; if (!locSum.TryGetValue(key, out a)) { a = new float[3]; locSum[key] = a; }
                 a[0]++; a[1] += raw; a[2] += damage;
@@ -138,6 +151,12 @@ namespace DipGgFixes
             var sb = new System.Text.StringBuilder("[DIP GG Fixes][Damage] battle summary - damage by location and result (hits | mean game damage | mean damage dealt):");
             foreach (var kv in locSum) { var v = kv.Value; float n = Math.Max(1f, v[0]); sb.Append($"\n   {kv.Key} | {v[0]:0} | {v[1] / n:0.#} | {v[2] / n:0.#}"); }
             MelonLogger.Msg(sb.ToString());
+            if (nonPen.Count > 0)
+            {
+                var nb = new System.Text.StringBuilder("[DIP GG Fixes][Damage] battle summary - hits without penetration (shell type, calibre band, location, result | hits | mean damage | fires | floodings | hits damaging modules):");
+                foreach (var kv in nonPen) { var v = kv.Value; float n = Math.Max(1f, v[0]); nb.Append($"\n   {kv.Key} | {v[0]:0} | {v[1] / n:0.#} | {v[2]:0} | {v[3]:0} | {v[4]:0}"); }
+                MelonLogger.Msg(nb.ToString());
+            }
         }
     }
 

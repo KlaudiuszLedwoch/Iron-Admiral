@@ -115,7 +115,8 @@ namespace DipGgFixes
             }
             OverPen.Report();
         }
-        static string Where() { return OverPen.LastFrame == Time.frameCount && OverPen.LastLoc != null ? $"; struck {OverPen.LastLoc}" + (Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f ? $" (game damage {OverPen.LastRaw:0.#} -> {OverPen.LastNew:0.#})" : "") : ""; }
+        static string Where() { return OverPen.LastFrame == Time.frameCount && OverPen.LastLoc != null ? $"; struck {OverPen.LastLoc}" + (Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f ? $" (game damage {OverPen.LastRaw:0.#} -> {OverPen.LastNew:0.#})" : "") + OverPen.Extra() : ""; }
+        static string Band(float cal) { return cal < 100f ? "<4in" : cal < 160f ? "4-6in" : cal < 230f ? "6-9in" : cal < 320f ? "9-12.5in" : ">=12.5in"; }
 
         // ---- the formulas ----
         // 1.11.264 (#33, author 25.10, 14:38-14:48, priority): the 1.11.251 belt formula (0.049 W^0.2 V^1.21, fitted to the US 8"/55 alone)
@@ -361,6 +362,7 @@ namespace DipGgFixes
                 float[] a; if (!summary.TryGetValue(key, out a)) { a = new float[5]; summary[key] = a; }
                 a[0]++; a[1] += Math.Max(0f, armor); a[2] += physB; a[3] += Math.Max(0f, penetration); a[4] += damage;
                 HitDispatch.Hit(victim, sh != null ? sh.Shooter : (from != null ? from.ship : null), cal, hitType, damage);
+                if (hitType != "normal" && hitType != "over" && hitType != "torpedo" && OverPen.LastFrame == Time.frameCount) OverPen.NonPen($"{ty} {Band(cal)} | {OverPen.LastLoc ?? "?"} | {hitType}", damage, OverPen.LastFire, OverPen.LastFlood, OverPen.LastModules != null);
                 if (HitLog == null || !HitLog.Value) return;
                 if (onPlayer) { if (hitLinesPl >= (HitLogMax != null ? HitLogMax.Value : 300) * 2) return; hitLinesPl++; }
                 else
