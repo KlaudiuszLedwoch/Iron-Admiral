@@ -1,6 +1,6 @@
 # Iron Admiral — DIP The Great Game Extended
 
-_Description as of 22 October 2026. Latest version: Iron Admiral 1.2.69 (DIP_GG_Fixes 1.11.249)._
+_Description as of 22 October 2026. Latest version: Iron Admiral 1.2.70 (DIP_GG_Fixes 1.11.249)._
 
 **AI overhaul for Ultimate Admiral: Dreadnoughts, built on the Dreadnought Improvement Project (DIP) "The Great Game" 1.3.5, TweaksAndFixes 3.21.1 and MelonLoader 0.6.6.**
 
@@ -43,9 +43,9 @@ The in-game update check follows the line you installed. To switch, install the 
 Iron Admiral wydawany jest w dwóch liniach. **Stabilna** - główne pobranie (wydanie "Latest" na GitHubie, główne pliki na Nexusie); trafiają tu tylko funkcje sprawdzone w grze, a poprawki błędów od razu. **Beta** - nowe funkcje do testów (wydania wstępne 1.2.N-beta.K na GitHubie, osobny plik BETA na Nexusie); każda beta zawiera też wszystkie poprawki stabilnej. Funkcja przechodzi do stabilnej po pewnym czasie w becie bez zgłoszonych błędów. Sprawdzanie aktualizacji w grze podąża za zainstalowaną linią; zmiana linii: instalacja paczki drugiej linii albo UpdateChannel = stable / beta w UserData\MelonPreferences.cfg.
 ## Install
 
-Download `releases/Iron_Admiral_1.2.69_Nexus.zip`, extract anywhere, run `Install.bat` (plain PowerShell, no exe). It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing (downloaded from the official LavaGang release, SHA-256 verified) and copies the mod. `Uninstall.bat` restores the previous state. Start a new campaign.
+Download `releases/Iron_Admiral_1.2.70_Nexus.zip`, extract anywhere, run `Install.bat` (plain PowerShell, no exe). It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing (downloaded from the official LavaGang release, SHA-256 verified) and copies the mod. `Uninstall.bat` restores the previous state. Start a new campaign.
 
-Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.69_Mods_only.zip` and extract it into the game folder, so that you get `<game>/Mods/TweaksAndFixes.dll`, `DIP_GG_Fixes.dll` and the CSV files.
+Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.70_Mods_only.zip` and extract it into the game folder, so that you get `<game>/Mods/TweaksAndFixes.dll`, `DIP_GG_Fixes.dll` and the CSV files.
 
 **".NET 6.0 runtime" error at game start:** MelonLoader 0.6.6 runs on .NET 6 - install the [.NET Desktop Runtime 6.0 (x64)](https://dotnet.microsoft.com/download/dotnet/6.0). Back to the unmodded game: `Uninstall.bat` from `<game>/Iron_Admiral_backup`, or delete `version.dll`, `MelonLoader/` and `Mods/` and verify the game files in Steam.
 
