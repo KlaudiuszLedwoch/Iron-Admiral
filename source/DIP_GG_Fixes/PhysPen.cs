@@ -216,8 +216,8 @@ namespace DipGgFixes
         static string VelSrc(PhysGun.G g)
         {
             return g.MvHist > 50f && (PhysGun.HistBase == null || PhysGun.HistBase.Value)
-                ? $"historical {g.MvHist:0} m/s x technology {g.Bonus:0.00}, {g.Kg:0.#} kg shell; game {g.MvGame:0} m/s"
-                : $"game {g.MvGame:0} m/s; same charge, {g.Kg:0.#} kg shell";
+                ? $"hist. {g.MvHist:0} x {g.Bonus:0.00}; game {g.MvGame:0}"
+                : $"game {g.MvGame:0}";
         }
         // 1.11.257 (author's 25.10 battle 13:42: 381 mm window "Shell Weight AP: 1444 kg (+73%)" while the shells flew with 1004 kg):
         // the number shown in the game's line is compared, not Part.ShellWeight (the line carries modifiers the call does not)
@@ -248,8 +248,8 @@ namespace DipGgFixes
                 // shows the shell of the bore as built when the game's line does not (142.2 mm on a 5" mount: game 34.6 kg, bore 48.6 kg)
                 if (plain.StartsWith("Muzzle Velocity AP", StringComparison.OrdinalIgnoreCase)) { lines[i] = $"Muzzle Velocity AP: {ap.Mv:0} m/s ({VelSrc(ap)})"; changed = true; continue; }
                 if (plain.StartsWith("Muzzle Velocity HE", StringComparison.OrdinalIgnoreCase) && he.Ok) { lines[i] = $"Muzzle Velocity HE: {he.Mv:0} m/s ({VelSrc(he)})"; changed = true; continue; }
-                if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(plain, ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0.#} kg (physical, bore {ap.CalMm:0.#} mm; game {LineKg(plain):0.#} kg)"; changed = true; continue; }
-                if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(plain, he)) { lines[i] = $"Shell Weight HE: {he.Kg:0.#} kg (physical, bore {he.CalMm:0.#} mm; game {LineKg(plain):0.#} kg)"; changed = true; continue; }
+                if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(plain, ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0} kg (game {LineKg(plain):0})"; changed = true; continue; }
+                if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(plain, he)) { lines[i] = $"Shell Weight HE: {he.Kg:0} kg (game {LineKg(plain):0})"; changed = true; continue; }
                     if (plain.IndexOf("Penetration Belt/Deck", StringComparison.OrdinalIgnoreCase) >= 0) { inTable = true; lines[i] = lines[i] + " (physics: Okun)"; continue; }
                     if (!inTable) continue;
                     float R;
@@ -262,7 +262,7 @@ namespace DipGgFixes
                     float pB = BeltPen(ap.Kg, vs, fall, ap.Q, ap.CalMm), pD = DeckPen(ap.Kg, ap.CalMm, vs, fall);
                     float hB = apB > 0.01f ? pB * heB / apB : 0f, hD = apD > 0.01f ? pD * heD / apD : 0f;
                     int comma = plain.LastIndexOf("mm,"); string acc = comma >= 0 ? plain.Substring(comma + 3).Trim() : "";
-                    lines[i] = $"{R:#,0}m - {hB:0.#}mm - {pB:0.#}mm / {hD:0.#}mm - {pD:0.#}mm, {acc} [{vs:0} m/s, {fall:0.#} deg]";
+                    lines[i] = $"{R:#,0}m - {hB:0}mm - {pB:0}mm / {hD:0}mm - {pD:0}mm, {acc} [{vs:0}m/s {fall:0}°]"; // 1.11.265: shorter (author 25.10, 14:57)
                     changed = true;
                 }
                 string res = changed ? string.Join("\n", lines) : text;

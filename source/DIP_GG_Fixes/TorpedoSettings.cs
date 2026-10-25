@@ -485,7 +485,7 @@ namespace DipGgFixes
                 string ready = st.ReadyAt > Time.time ? $", reset {st.ReadyAt - Time.time:0} s" : "";
                 string avail = st.P.N == 1 ? ", one setting" : "";
                 GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), "<b>Torp. setting</b>", sT);
-                string[] lab = { "Auto", Names[HS], Names[LR], Names[ER] };
+                string[] lab = { "Auto", "Fast", "Long", "Extreme" }; // 1.11.265: short labels
                 const float bw = 56f; float bx = x + 98f;
                 for (int i = 0; i < 4; i++)
                 {
@@ -500,7 +500,7 @@ namespace DipGgFixes
                     GUI.enabled = oldEn; GUI.backgroundColor = oldBg;
                 }
                 float tx = bx + 4f * (bw + 2f) + 4f;
-                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"{Name(cur)} {rng / 1000f:0.0} km {kn:0} kn <color=#C0C0C0>({mode}{ready}{avail}; Shift = ship)</color>", sT);
+                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"{rng / 1000f:0.0} km {kn:0} kn <color=#C0C0C0>{mode}{ready}{avail}</color>", sT);
                 if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "▴", Small())) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][TorpSet] panel: " + e.Message); }

@@ -209,7 +209,7 @@ namespace DipGgFixes
                 float cx = bx + Classes.Length * (bw + 2f);
                 if (GUI.Button(new Rect(cx, y + 3f, 40f, 18f), "Clear", sm)) Clear(s, Event.current != null && Event.current.shift);
                 float tx = cx + 44f;
-                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"<color=#C0C0C0>{scope}; then the next class down; Shift = ship</color>", sT);
+                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"<color=#C0C0C0>{scope}</color>", sT);
                 if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "▴", sm)) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][TorpTarget] panel: " + e.Message); }

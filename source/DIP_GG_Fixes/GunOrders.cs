@@ -207,7 +207,7 @@ namespace DipGgFixes
                 GUI.backgroundColor = o3; cx += 42f;
             }
             string scope = shipOrd.ContainsKey(s.Pointer) ? "ship" : "division";
-            GUI.Label(new Rect(cx + 2f, y + 4f, x + w - 26f - cx, 18f), $"<color=#C0C0C0>{scope}; Shift = ship</color>", sT);
+            GUI.Label(new Rect(cx + 2f, y + 4f, x + w - 26f - cx, 18f), $"<color=#C0C0C0>{scope}</color>", sT);
         }
         static bool Shift() { return Event.current != null && Event.current.shift; }
         static Ord Edit(Ship s, bool shipOnly)
