@@ -29,12 +29,14 @@ namespace DipGgFixes
 
         internal static MelonPreferences_Entry<bool> OrdersOn, OrdersVanilla;
         internal static MelonPreferences_Entry<float> Leash, BreakOff, ScoutSearch;
+        internal static MelonPreferences_Entry<bool> ScoutSmoke; // 1.11.256
         internal static void CreateOrderPrefs(MelonPreferences_Category cat)
         {
             OrdersOn = cat.CreateEntry("DivisionOrders", true, null, "Battle: orders for the player's divisions with autonomy (screen, scout, torpedo attack, free action) - the division is led by the AI within the limits of the order; panel in battle or Alt+1..Alt+5");
             OrdersVanilla = cat.CreateEntry("DivisionOrdersVanilla", true, null, "Battle: the game's own Screen and Scout orders also give the division autonomy");
             Leash = cat.CreateEntry("DivisionLeash", 6000f, null, "Battle: how far (m) a screening division may move away from the main body (scouts: 2.5 times as far)");
             ScoutSearch = cat.CreateEntry("ScoutSearchKm", 20f, null, "Battle: how far (km) ahead of the main body a scouting division ranges while searching for the enemy (sweeping left and right of the expected bearing)"); // 1.11.201
+            ScoutSmoke = cat.CreateEntry("ScoutTowardsSmoke", true, null, "Battle: a scouting division heads for smoke reported by the lookouts (an enemy ship sighted but not identified yet) and closes until she can be made out"); // 1.11.256
             BreakOff = cat.CreateEntry("DivisionBreakOffDamage", 0.5f, null, "Battle: average damage (0-1) at which a screening or scouting division breaks off and falls back behind the main body");
         }
 
@@ -221,6 +223,20 @@ namespace DipGgFixes
             o.ClosingUp = false;
             if (nearLight != null && (P(nearLight) - me).magnitude < 5000f && MainCaliber(nearLight) > MainCaliber(leader) * 1.2f && main != null)
             { Cmd(div, o, home + toEnemy * 1500f); OWhy(o, $"stronger light force ({nearLight.name}) - falls back to the main body"); return true; }
+            // 1.11.256 (author 25.10, 12:40): smoke reported by the lookouts ("Smoke on the horizon", sighted, not identified) - while it
+            //           shadows no enemy heavy ship, the scout heads for the nearest smoke within its search range and closes to just
+            //           inside the identification range, so the ship can be made out (before: it kept sweeping its search legs)
+            if (nearHeavy == null && ScoutSmoke != null && ScoutSmoke.Value)
+            {
+                Vector3 sp; float idr;
+                if (Fog.NearestSmoke(player, home, Mathf.Max(leash, ScoutSearch.Value * 1000f) + 5000f, out sp, out idr))
+                {
+                    Vector3 to = sp - me; to.y = 0f; float ds = to.magnitude;
+                    float stand = Mathf.Clamp(idr * 0.85f, 2000f, 15000f);
+                    if (ds > stand + 500f) Cmd(div, o, sp - to.normalized * stand);
+                    OWhy(o, $"heading for smoke reported {ds / 1000f:0.0} km away - closing to make her out"); return true;
+                }
+            }
             if (nearHeavy != null)
             {
                 float hr = GunRange(nearHeavy); float want = Mathf.Clamp(hr > 0f ? hr * 1.05f : 12000f, 7000f, 25000f);
