@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.258", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.259", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -256,7 +256,7 @@ namespace DipGgFixes
             try { CustomBattle.Tick(); } catch { }
             try { Portless.Tick(); } catch { }
             try { Dispatch.Tick(); } catch { }
-            try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251
+            try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251, 1.11.259
             try { HistDesigner.Tick(); } catch { }
             try { AutoTest.Tick(); } catch { }
             try { Trade.Tick(); } catch { }
@@ -290,7 +290,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } try { GunOrders.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -2585,12 +2585,12 @@ namespace DipGgFixes
                 bool heavy = false; try { var tn = s.shipType != null ? s.shipType.name : null; heavy = tn == "bb" || tn == "bc"; } catch { }
                 MemoReset(); // 1.11.96
                 EscortState(s, st, enemies);
-                Apply(s, st, s.enemies, enemies, cache, main, heavy);
-                Apply(s, st, s.enemiesLeftSide, enemies, cache, main, heavy);
+                Apply(s, st, s.enemies, enemies, cache, main, heavy, +1);
+                Apply(s, st, s.enemiesLeftSide, enemies, cache, main, heavy, -1);
             }
             catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] SmartTargets: " + e.Message); }
         }
-        static void Apply(Ship s, St st, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, Il2CppSystem.Collections.Generic.List<Ship> enemies, Il2CppSystem.Collections.Generic.Dictionary<PartData, float> cache, PartData main, bool heavy)
+        static void Apply(Ship s, St st, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, Il2CppSystem.Collections.Generic.List<Ship> enemies, Il2CppSystem.Collections.Generic.Dictionary<PartData, float> cache, PartData main, bool heavy, int side = 0)
         {
             if (dict == null) return;
             var keys = new List<PartData>();
@@ -2617,7 +2617,9 @@ namespace DipGgFixes
                 bool trOk = TransportAllowed(pd, range);
                 skipTr = !trOk;
                 Ship pick;
-                try { pick = isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range); }
+                // 1.11.259 (#37): the player's gun orders (class priorities, threat, split fire) come first
+                var go = GunOrders.Choose(s, pd, isMain, side, enemies, range, cur, trOk);
+                try { pick = go ?? (isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range)); }
                 finally { skipTr = false; }
                 if (pick == null)
                 {

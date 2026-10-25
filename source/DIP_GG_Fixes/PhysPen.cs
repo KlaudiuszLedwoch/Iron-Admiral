@@ -43,6 +43,7 @@ namespace DipGgFixes
             PhysGun.CreatePrefs(cat);
             OverPen.CreatePrefs(cat); // 1.11.253
             HitDispatch.CreatePrefs(cat); // 1.11.258
+            GunOrders.CreatePrefs(cat); // 1.11.259 (#37)
         }
 
         internal class Shot { public Ship Shooter; public PartData Pd; public PhysGun.G G; public float Range, Vs, Fall; }
