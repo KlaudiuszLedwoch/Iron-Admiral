@@ -122,8 +122,11 @@ namespace DipGgFixes
                 float frac; string loc = Location(ship, part, sec, out frac);
                 bool known = pending && pendFrame == Time.frameCount; pending = false;
                 string type = known ? (curType ?? "?") : "?";
-                float raw = damage;
-                if (known && type == "over" && !useHe && !curHe && BySection != null && BySection.Value && curMod > 1e-5f)
+                float raw = damage; string mnote = null;
+                // 1.11.278 (#33 3b/3c): the historical damage model replaces the game's value for penetrations, pass-throughs and HE
+                // bursts on turrets and upper works; otherwise the pass-through rule of 1.11.257
+                if (known && DamageModel.Apply(ship, type, useHe, loc, frac, ref damage, out mnote)) { if (type == "over") raised++; }
+                else if (known && type == "over" && !useHe && !curHe && BySection != null && BySection.Value && curMod > 1e-5f)
                 {
                     float want = raw / curMod * curNormal * frac;
                     if (want > damage) { damage = want; raised++; }
@@ -132,7 +135,7 @@ namespace DipGgFixes
                 string key = $"{loc} | {(useHe ? "He" : "Ap")} {type}";
                 float[] a; if (!locSum.TryGetValue(key, out a)) { a = new float[3]; locSum[key] = a; }
                 a[0]++; a[1] += raw; a[2] += damage;
-                if (type == "over" && locLogs++ < 40) MelonLogger.Msg($"[DIP GG Fixes][Damage] AP pass-through {ship.name}: {loc}, game damage {raw:0.#} (modifier {curMod:0.###}), as a penetration {raw / Math.Max(1e-5f, curMod) * curNormal:0} -> {damage:0.#} ({frac:0.00})");
+                if (mnote == null && type == "over" && locLogs++ < 40) MelonLogger.Msg($"[DIP GG Fixes][Damage] AP pass-through {ship.name}: {loc}, game damage {raw:0.#} (modifier {curMod:0.###}), as a penetration {raw / Math.Max(1e-5f, curMod) * curNormal:0} -> {damage:0.#} ({frac:0.00})");
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Damage] location: " + e.Message); }
         }

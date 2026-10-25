@@ -34,7 +34,11 @@ namespace DipGgFixes
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][GunOrders] " + m); }
         static readonly string[] Classes = { "bb", "bc", "ca", "cl", "dd", "tb", "tr" };
 
-        class Ord { public List<string> Main = new List<string>(), Sec = new List<string>(); public bool Split; }
+        class Ord { public List<string> Main = new List<string>(), Sec = new List<string>(); public bool Split; public int Aim; }
+        internal static readonly string[] AimNames = { "Auto", "Waterline", "Upper works" };
+        // 0 = by shell type (AP waterline, HE upper works), 1 = waterline for every shell, 2 = upper works for every shell; AI ships 0
+        internal static int AimModeFor(Ship s) { try { if (!Enabled || s == null || !IsPlayer(s)) return 0; var o = OrdFor(s); return o != null ? o.Aim : 0; } catch { return 0; } }
+        static void SetAim(Ship s, int mode, bool shipOnly) { var o = Edit(s, shipOnly); o.Aim = mode; Touch(s); Log($"{s.name}: aim {AimNames[mode]} ({(shipOnly ? "ship" : "division")})"); }
         static readonly Dictionary<IntPtr, Ord> divOrd = new Dictionary<IntPtr, Ord>(), shipOrd = new Dictionary<IntPtr, Ord>();
         static readonly Dictionary<IntPtr, Dictionary<IntPtr, IntPtr>> ours = new Dictionary<IntPtr, Dictionary<IntPtr, IntPtr>>(); // ship -> aim -> target
         static readonly Dictionary<IntPtr, float> next = new Dictionary<IntPtr, float>();
@@ -176,6 +180,7 @@ namespace DipGgFixes
                 if (folded) { if (GUI.Button(new Rect(x + w - 200f, y, 200f, 18f), $"Gun orders: {Lab(o != null ? o.Main : null)} / {Lab(o != null ? o.Sec : null)} â–ľ", sm)) folded = false; return; }
                 Row(s, o, true, x, y, w, h, sm);
                 Row(s, o, false, x, y + 26f, w, h, sm);
+                AimRow(s, o, x, y + 52f, w, h, sm);
                 if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "â–´", sm)) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][GunOrders] panel: " + e.Message); }
@@ -209,13 +214,27 @@ namespace DipGgFixes
             string scope = shipOrd.ContainsKey(s.Pointer) ? "ship" : "division";
             GUI.Label(new Rect(cx + 2f, y + 4f, x + w - 26f - cx, 18f), $"<color=#C0C0C0>{scope}</color>", sT);
         }
+        static void AimRow(Ship s, Ord o, float x, float y, float w, float h, GUIStyle sm)
+        {
+            GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
+            GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), "<b>Aim</b>", sT);
+            int cur = o != null ? o.Aim : 0; float bx = x + 98f; float[] bw = { 50f, 74f, 90f };
+            for (int i = 0; i < AimNames.Length; i++)
+            {
+                var old = GUI.backgroundColor; if (i == cur) GUI.backgroundColor = new Color(0.35f, 1f, 0.45f);
+                if (GUI.Button(new Rect(bx, y + 3f, bw[i], 18f), AimNames[i], sm)) SetAim(s, i, Shift());
+                GUI.backgroundColor = old; bx += bw[i] + 2f;
+            }
+            string scope = shipOrd.ContainsKey(s.Pointer) ? "ship" : "division";
+            GUI.Label(new Rect(bx + 2f, y + 4f, x + w - 26f - bx, 18f), $"<color=#C0C0C0>{scope}; AP waterline / HE upper works when Auto</color>", sT);
+        }
         static bool Shift() { return Event.current != null && Event.current.shift; }
         static Ord Edit(Ship s, bool shipOnly)
         {
             var d = s.division;
             if (shipOnly || d == null)
             {
-                if (!shipOrd.TryGetValue(s.Pointer, out var so)) { so = new Ord(); var dv = OrdFor(s); if (dv != null) { so.Main.AddRange(dv.Main); so.Sec.AddRange(dv.Sec); so.Split = dv.Split; } shipOrd[s.Pointer] = so; }
+                if (!shipOrd.TryGetValue(s.Pointer, out var so)) { so = new Ord(); var dv = OrdFor(s); if (dv != null) { so.Main.AddRange(dv.Main); so.Sec.AddRange(dv.Sec); so.Split = dv.Split; so.Aim = dv.Aim; } shipOrd[s.Pointer] = so; }
                 return so;
             }
             if (!divOrd.TryGetValue(d.Pointer, out var x)) { x = new Ord(); divOrd[d.Pointer] = x; }
