@@ -20,7 +20,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("AiHullCaliberCap", true, null, "Campaign: the AI ship generator's main calibre on a battleship or battlecruiser hull is capped by the hull's tonnage as history had it (up to 20 000 t 12\", 26 000 t 13\", 30 000 t 14\", 34 000 t 15\", 42 000 t 16\", 52 000 t 17\", above: the hull's own limit) and its secondary guns limited in number (12 up to 20 000 t, 14 up to 30 000 t, 16 up to 42 000 t, 20 above) - no 16\" guns and 8\" casemates on a 25 000 t hull that then fails on weight");
+            On = cat.CreateEntry("AiHullCaliberCap", true, null, "Campaign: the AI ship generator's main calibre on a battleship or battlecruiser hull is capped by the hull's tonnage as history had it (up to 20 000 t 12\", 26 000 t 13\", 30 000 t 14\", 34 000 t 15\", 42 000 t 16\", 52 000 t 17\", above: the hull's own limit) its main turrets (6 up to 28 000 t, 5 up to 33 000 t, 4 above) and its secondary guns limited in number (12 up to 20 000 t, 14 up to 30 000 t, 16 up to 42 000 t, 20 above) - no 16\" guns and 8\" casemates on a 25 000 t hull that then fails on weight");
         }
         // cap by the hull's maximum tonnage (inches); 0 = no cap beyond the hull's own
         internal static int CapFor(float tonnageMax)
@@ -40,6 +40,15 @@ namespace DipGgFixes
             if (tonnageMax <= 30000f) return 14;
             if (tonnageMax <= 42000f) return 16;
             return 20;
+        }
+        // 1.11.246: main turrets by tonnage (Dreadnought 5 x 2 on 18 000 t, Iron Duke 5 x 2 on 25 000 t, Fuso 6 x 2 on 30 000 t, Queen
+        //           Elizabeth / Nagato / Colorado 4 x 2 on 32-33 000 t, Nelson 3 x 3, Iowa 3 x 3) - the 25.10 test: 6 x 2 16" on a 32 000 t
+        //           hull, 2 100 t over even with every secondary gun removed
+        internal static int MainCountFor(float tonnage)
+        {
+            if (tonnage <= 28000f) return 6;
+            if (tonnage <= 33000f) return 5;
+            return 4;
         }
         static bool applied; static int errors;
         internal static void Apply(GameData gd)
@@ -62,17 +71,25 @@ namespace DipGgFixes
                     bool has = false;
                     try { if (px.ContainsKey("shipgen_limit")) { lim = px["shipgen_limit"]; for (int i = 0; i < lim.Count; i++) if (lim[i] != null && lim[i].Contains("max_main_gun_cal")) has = true; } } catch { }
                     if (has) { kept++; if (sample.Count < 3) sample.Add($"{pd.name}: kept {lim[0]}"); continue; }
-                    int cap = CapFor(pd.tonnageMax); if (cap <= 0) continue;
+                    // 1.11.246: modern hulls carry a nominal maximum of 200 000+ t (the technology limits the real displacement), so the
+                    //           basis there is 1.35 x the hull's minimum tonnage (bb_5_china 35 000 t -> 47 000 t)
+                    float basis = pd.tonnageMax > 100000f && pd.tonnageMin > 0f ? pd.tonnageMin * 1.35f : pd.tonnageMax;
+                    int cap = CapFor(basis);
                     int own = 0; try { own = (int)pd.maxAllowedCaliber; } catch { }
-                    if (own > 0 && cap >= own) continue;   // the hull's own limit is already tighter or equal
+                    bool capMain = cap > 0 && !(own > 0 && cap >= own);   // the hull's own limit may already be tighter or equal
                     if (lim == null) { lim = new Il2CppSystem.Collections.Generic.List<string>(); px["shipgen_limit"] = lim; }
-                    lim.Add("max_main_gun_cal:" + cap);
+                    if (capMain) lim.Add("max_main_gun_cal:" + cap);
                     // 1.11.237: secondary battery count as the period's ships carried (Iron Duke 12 x 6", Queen Elizabeth 14 x 6",
                     //           Bayern 16 x 5.9", Nagato 20 x 5.5") - the 24.10 session still failed on weight with the main calibre capped
+                    // 1.11.246: set on every battleship/battlecruiser hull, also where the main calibre needs no cap (the 25.10 test:
+                    //           42 twin 3" mounts and 16 casemates on a 1922 hull, 6 000 t overweight on every attempt)
                     bool hasSec = false; try { for (int i = 0; i < lim.Count; i++) if (lim[i] != null && lim[i].Contains("max_sec_gun_count")) hasSec = true; } catch { }
-                    if (!hasSec) lim.Add("max_sec_gun_count:" + SecCountFor(pd.tonnageMax));
+                    if (!hasSec) lim.Add("max_sec_gun_count:" + SecCountFor(basis));
+                    bool hasCnt = false; try { for (int i = 0; i < lim.Count; i++) if (lim[i] != null && lim[i].Contains("max_main_gun_count")) hasCnt = true; } catch { }
+                    if (!hasCnt) lim.Add("max_main_gun_count:" + MainCountFor(basis));
+                    if (!capMain && hasSec && hasCnt) continue;
                     capped++;
-                    if (sample.Count < 8) sample.Add($"{pd.name} ({pd.tonnageMin:0}-{pd.tonnageMax:0} t, hull limit {own}\"): AI max {cap}\"");
+                    if (sample.Count < 8) sample.Add($"{pd.name} ({pd.tonnageMin:0}-{pd.tonnageMax:0} t, hull limit {own}\"): AI max {(capMain ? cap : own)}\", {MainCountFor(basis)} main turrets, secondary mounts {SecCountFor(basis)} per type");
                 }
                 applied = true;
                 MelonLogger.Msg($"[DIP GG Fixes][HullCap] AI main calibre by hull tonnage: {capped} of {hulls} battleship/battlecruiser hulls capped, {kept} had a limit already - {string.Join("; ", sample)}");

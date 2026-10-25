@@ -38,6 +38,9 @@ namespace DipGgFixes
             TolOn = cat.CreateEntry("ShipGenAsymmetryTolerance", true, null, "Ship generator: a small side or fore-aft weight asymmetry (ballast and trim took care of it on real ships) does not throw an attempt away; only while the generator runs - the designer keeps the game's strictness"); // 1.11.244
             TolValue = cat.CreateEntry("GeneratorAsymmetryTolerance", 0.002f, null, "Weight asymmetry tolerated by the ship generator as a share of displacement (0.002 = 0.2 %, about 24 t on a 12 000 t cruiser)");
             InstMax = cat.CreateEntry("GeneratorInstabilityMax", 2f, null, "Ship generator: an attempt whose side instability stat (instability_x) is at most this value is accepted - 100 is the full handling/accuracy penalty, so 2 means under 1 %; 0 = the game's rule (any value above zero fails the attempt)"); // 1.11.245
+            TrimOn = cat.CreateEntry("ShipGenTrimOverweight", true, null, "Ship generator: an attempt that comes out overweight has guns below the main calibre removed, smallest first and in pairs, until the ship makes its tonnage - instead of the whole attempt being thrown away (the 25.10 tests: 26 of 27 failed attempts were overweight)"); // 1.11.246
+            TrimMax = cat.CreateEntry("GeneratorOverweightMax", 0.12f, null, "Trimming: attempts overweight by more than this share of the tonnage are left to the game (0.12 = 12 %)");
+            TrimState = cat.CreateEntry("ShipGenTrimState", 20, null, "Author's tool: coroutine state of the generator at which trimming runs - 20 is the state that checks the attempt, after the game's own weight reductions (state log of 25.10: 8 parts, 12 armour, 13 and 15 weight reduction, 20 check)");
             Diag = cat.CreateEntry("ShipGenDiagnosis", false, null, "Author's tool: outside the campaign, every failed generator attempt is logged with its guns and tonnage, and when no main tower, secondary tower or funnel was placed, each tower/funnel part is checked with the game's own availability and placement tests"); // 1.11.245
         }
 
@@ -160,6 +163,94 @@ namespace DipGgFixes
             if (names.Count > 0) sb.Append(" [" + string.Join(", ", names) + "]");
             foreach (var r in reasons.OrderByDescending(x => x.Value).Take(5)) sb.Append($"; refused {r.Value}x: {r.Key}");
             return sb.ToString();
+        }
+
+        // ---- 0d. overweight attempts trimmed instead of thrown away (1.11.246, author's tests 25.10) ----
+        // Tests Spain vs China 1922 (beta.55, with and without historical weights): 16 of 16 attempts on bb_5_china and 10 of 11 on
+        // bb_3 ended "Ship Overweight" by 1-13 % - the generator placed 16 casemates, 42 twin 3" mounts and the like, and the
+        // weight reduction could not make it up. A real design office cuts the light battery to make weight. Before the game checks
+        // the attempt (coroutine state 20 - the state log of 25.10: state 8 places the parts, 12 the armour, 13 and 15 reduce weight,
+        // 20 checks; ShipGenTrimState), guns that are not of the main calibre are removed,
+        // smallest calibre first, pairs together (mirror mounts), until the ship makes its tonnage; attempts over
+        // GeneratorOverweightMax (share of tonnage) are left to the game. Switch: ShipGenTrimOverweight.
+        internal static MelonPreferences_Entry<bool> TrimOn; internal static MelonPreferences_Entry<float> TrimMax; internal static MelonPreferences_Entry<int> TrimState;
+        static readonly Dictionary<IntPtr, int> lastState = new Dictionary<IntPtr, int>();
+        static int trimLogged, stateLogged;
+        internal static void StateStep(Ship._GenerateRandomShip_d__573 it)
+        {
+            if (it == null) return;
+            int st = -99; try { st = it.__1__state; } catch { return; }
+            var p = it.Pointer;
+            int prev; if (!lastState.TryGetValue(p, out prev)) prev = -100;
+            if (st == prev) return;
+            lastState[p] = st;
+            Ship ship = null; try { ship = it.__4__this; } catch { }
+            if (ship == null) return;
+            if (Diag != null && Diag.Value && stateLogged < 120)
+            {
+                float w = 0f, t = 0f; int n = 0; try { w = ship.Weight(false, false); t = ship.Tonnage(); n = ship.parts.Count; } catch { }
+                stateLogged++; Log($"state {prev} -> {st}: attempt {it._tryN_5__5}, {n} parts, {w:0} t of {t:0} t");
+            }
+            int want = TrimState != null ? TrimState.Value : 20;
+            if (st == want && TrimOn != null && TrimOn.Value) { try { Trim(ship); } catch (Exception e) { if (trimLogged++ < 10) Log("trim: " + e.Message); } }
+        }
+        internal static void StateEnd(IntPtr p) { lastState.Remove(p); }
+        static void Trim(Ship ship)
+        {
+            float w = ship.Weight(true, true), t = ship.Tonnage();
+            if (t <= 0f || w <= t) return;
+            float max = TrimMax != null ? TrimMax.Value : 0.12f;
+            if (w > t * (1f + max)) { if (trimLogged++ < 20) Log($"overweight {w:0} t of {t:0} t ({(w / t - 1f) * 100f:0.0} %) - over the trimming limit {max * 100f:0} %, left to the game"); return; }
+            // candidates: guns that are not of the main calibre; smallest calibre first, deck mounts before casemates
+            var cand = new List<Part>();
+            var parts = ship.parts;
+            for (int i = 0; i < parts.Count; i++)
+            {
+                var q = parts[i]; if (q == null || q.data == null || !q.data.isGun) continue;
+                bool main = false; try { main = ship.IsMainCal(q.data); } catch { }
+                if (main) continue;
+                cand.Add(q);
+            }
+            cand.Sort((a, b) =>
+            {
+                int ca = HistoricalWeights.IsCasemate(a.data) ? 1 : 0, cb = HistoricalWeights.IsCasemate(b.data) ? 1 : 0;
+                if (ca != cb) return ca - cb;
+                return a.data.caliber.CompareTo(b.data.caliber);
+            });
+            // the secondary battery proper (4" and up, deck mounts) keeps at least 4 mounts - a battleship without secondaries is no design
+            int secLeft = 0; foreach (var q0 in cand) if (q0.data.caliber >= 100f && !HistoricalWeights.IsCasemate(q0.data)) secLeft++;
+            int removed = 0; var gone = new HashSet<IntPtr>(); var what = new SortedDictionary<string, int>();
+            for (int i = 0; i < cand.Count && w > t; i++)
+            {
+                var q = cand[i]; if (gone.Contains(q.Pointer)) continue;
+                bool sec = q.data.caliber >= 100f && !HistoricalWeights.IsCasemate(q.data);
+                if (sec && secLeft <= 4) continue;
+                // the mirror mount of a side gun goes with it (same part, opposite side, same length position)
+                Part mirror = null;
+                try
+                {
+                    var lp = q.transform.localPosition;
+                    if (Math.Abs(lp.x) > 0.5f)
+                        for (int j = i + 1; j < cand.Count; j++)
+                        {
+                            var r = cand[j]; if (gone.Contains(r.Pointer) || r.data != q.data) continue;
+                            var rp = r.transform.localPosition;
+                            if (Math.Abs(rp.x + lp.x) < 0.3f && Math.Abs(rp.z - lp.z) < 0.3f) { mirror = r; break; }
+                        }
+                }
+                catch { }
+                string key = $"{q.data.caliber / 25.4f:0}\" x{Math.Max(1, q.data.barrels)}{(HistoricalWeights.IsCasemate(q.data) ? " casemate" : "")}";
+                try { ship.RemovePart(q, true, true); gone.Add(q.Pointer); removed++; if (sec) secLeft--; int c; what.TryGetValue(key, out c); what[key] = c + 1; } catch (Exception e) { if (trimLogged++ < 10) Log("remove: " + e.Message); break; }
+                if (mirror != null) { try { ship.RemovePart(mirror, true, true); gone.Add(mirror.Pointer); removed++; if (sec) secLeft--; what[key]++; } catch { } }
+                try { w = ship.Weight(true, true); } catch { break; }
+            }
+            if (removed > 0 && trimLogged++ < 40)
+            {
+                var sb = new System.Text.StringBuilder();
+                foreach (var kv in what) { if (sb.Length > 0) sb.Append(", "); sb.Append($"{kv.Value}x {kv.Key}"); }
+                string key2 = ""; try { key2 = ship.player.data.name + ": hull " + ship.hull.data.name; } catch { }
+                Log($"{key2} - attempt overweight, {removed} light gun mount(s) removed ({sb}): now {w:0} t of {t:0} t{(w > t ? " - still over" : "")}");
+            }
         }
 
         // ---- 1. early stop ----
