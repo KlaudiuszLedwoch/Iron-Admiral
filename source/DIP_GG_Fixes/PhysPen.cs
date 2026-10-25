@@ -32,12 +32,13 @@ namespace DipGgFixes
         // decided against the physics. The limits only guard against a broken value now.
         const float FMin = 0.001f, FMax = 1000f;
         internal static MelonPreferences_Entry<bool> On, HitLog;
-        internal static MelonPreferences_Entry<float> FhConst;
+        internal static MelonPreferences_Entry<float> FhConst, BeltC;
         internal static MelonPreferences_Entry<int> HitLogMax;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("PhysicalPenetration", true, null, "Battle: penetration from the physics of each shot - striking velocity and angle of fall of the shell's arc; Okun's face-hardened formula for belts and turret sides, Thompson's F-formula with Okun's standard F for decks");
             FhConst = cat.CreateEntry("PhysicalPenetrationFhConst", 0.049f, null, "Okun face-hardened formula T[mm] = C * W[kg]^0.2 * V[m/s]^1.21; C = 0.049 from the US 8\"/55 AP Mk 21 against Class A armour (navweaps.com)");
+            BeltC = cat.CreateEntry("PhysicalPenetrationBeltC", 0.2468f, null, "Belt penetration T[mm] = C * W[kg]^0.719 * Vn[m/s]^1.439 * D[mm]^-1.079 (DeMarre type); C = 0.2468 from NavWeaps side-armour data of 9 AP guns 5-16 inch");
             HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
             PhysGun.CreatePrefs(cat);
@@ -73,12 +74,19 @@ namespace DipGgFixes
         static string Where() { return OverPen.LastFrame == Time.frameCount && OverPen.LastLoc != null ? $"; struck {OverPen.LastLoc}" + (Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f ? $" (game damage {OverPen.LastRaw:0.#} -> {OverPen.LastNew:0.#})" : "") : ""; }
 
         // ---- the formulas ----
-        internal static float BeltPen(float kg, float vs, float fallDeg, float q)
+        // 1.11.264 (#33, author 25.10, 14:38-14:48, priority): the 1.11.251 belt formula (0.049 W^0.2 V^1.21, fitted to the US 8"/55 alone)
+        // overstated 5-6 inch guns 1.4-2.6x and understated 12-16 inch guns (0.74-0.88) against NavWeaps. Now a DeMarre-type law with the
+        // calibre, T = C W^0.719 Vn^1.439 D^-1.079 (T mm, W kg, Vn m/s normal to the plate, D mm; T^0.695 D^0.75 ~ W^0.5 Vn), C = 0.2468,
+        // fitted to 30 side-armour rows of 9 AP guns 5"-16" (US 5"/51, FR 6"/55, JP 8"/50, GER 8"/60, US 8"/55, GER 28 cm Meppen trials,
+        // US 12"/50, BR 15"/42, US 16"/45; navweaps.com) with the striking velocity of the mod's own trajectory (which matches the USN
+        // tables of the 12"/50 and 16"/45 within 1-3 %): mean 1.02, spread 19 %; the AP quality Q (shell technology) on top.
+        // Propellant and barrel technologies enter through the muzzle velocity (technology bonus) for every calibre alike.
+        internal static float BeltPen(float kg, float vs, float fallDeg, float q, float calMm)
         {
-            float c = FhConst != null ? FhConst.Value : 0.049f;
             float vn = vs * Mathf.Cos(Mathf.Clamp(fallDeg, 0f, 80f) * Mathf.Deg2Rad);
-            if (vn <= 1f || kg <= 0f) return 0f;
-            return c * q * Mathf.Pow(kg, 0.2f) * Mathf.Pow(vn, 1.21f);
+            if (vn <= 1f || kg <= 0f || calMm <= 1f) return 0f;
+            float c = BeltC != null ? BeltC.Value : 0.2468f;
+            return (float)(c * q * Math.Pow(kg, 0.719) * Math.Pow(vn, 1.439) * Math.Pow(calMm, -1.079));
         }
         internal static float DeckPen(float kg, float calMm, float vs, float fallDeg)
         {
@@ -109,7 +117,7 @@ namespace DipGgFixes
                     bool hz2 = Horizontal(zone.ToString());
                     var gAp = sh.G.Type == Ship.ShellType.Ap ? sh.G : PhysGun.Get(sh.Pd, sh.Shooter, Ship.ShellType.Ap);
                     if (!gAp.Ok) return;
-                    float phys2 = hz2 ? DeckPen(gAp.Kg, gAp.CalMm, sh.Vs, sh.Fall) : BeltPen(gAp.Kg, sh.Vs, sh.Fall, gAp.Q);
+                    float phys2 = hz2 ? DeckPen(gAp.Kg, gAp.CalMm, sh.Vs, sh.Fall) : BeltPen(gAp.Kg, sh.Vs, sh.Fall, gAp.Q, gAp.CalMm);
                     float game2 = 0f;
                     try { game2 = Ship.GetPenetration(sh.Pd, sh.Shooter, sh.Range, !hz2, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap), new Il2CppSystem.Nullable<Vector3>()); } catch { }
                     if (game2 <= 0.01f) return;
@@ -136,7 +144,7 @@ namespace DipGgFixes
                     if (!g.Ok) { skipped++; return; }
                     float vs, fall, t; bool beyond;
                     Ballistics.Impact(g.Mv, g.CalMm / 25.4f, g.Kg, Ballistics.CdOf(shooter), R, MountElevation.Elev(Math.Max(1, g.Grade)), out vs, out fall, out t, out beyond);
-                    float phys = hz ? DeckPen(g.Kg, g.CalMm, vs, fall) : BeltPen(g.Kg, vs, fall, g.Q);
+                    float phys = hz ? DeckPen(g.Kg, g.CalMm, vs, fall) : BeltPen(g.Kg, vs, fall, g.Q, g.CalMm);
                     float game = 0f;
                     try { game = Ship.GetPenetration(gun, shooter, R, !hz, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap), new Il2CppSystem.Nullable<Vector3>()); } catch { }
                     fc = new Fac { Phys = phys, Game = game, Vs = vs, Fall = fall, R = R, Frame = Time.frameCount, F = game > 0.01f ? Mathf.Clamp(phys > 0.01f ? game / phys : FMax, FMin, FMax) : 1f };
@@ -158,7 +166,7 @@ namespace DipGgFixes
                 Shot sh = null; var s = Current; if (s != null) shots.TryGetValue(s.Pointer.ToInt64(), out sh);
                 float cal = sh != null ? sh.G.CalMm : (from != null && from.data != null ? from.data.caliber : 0f);
                 float physB = 0f, physD = 0f;
-                if (sh != null) { physB = BeltPen(sh.G.Kg, sh.Vs, sh.Fall, sh.G.Q); physD = DeckPen(sh.G.Kg, sh.G.CalMm, sh.Vs, sh.Fall); }
+                if (sh != null) { physB = BeltPen(sh.G.Kg, sh.Vs, sh.Fall, sh.G.Q, sh.G.CalMm); physD = DeckPen(sh.G.Kg, sh.G.CalMm, sh.Vs, sh.Fall); }
                 string key = $"{cal,6:0.0} mm {(sh != null ? sh.G.Type.ToString() : "?"),-2} | {hitType}";
                 float[] a; if (!summary.TryGetValue(key, out a)) { a = new float[5]; summary[key] = a; }
                 a[0]++; a[1] += Math.Max(0f, armor); a[2] += physB; a[3] += Math.Max(0f, penetration); a[4] += damage;
@@ -251,7 +259,7 @@ namespace DipGgFixes
                     float vs, fall, t; bool beyond;
                     Ballistics.Impact(ap.Mv, ap.CalMm / 25.4f, ap.Kg, cd, R, elev, out vs, out fall, out t, out beyond);
                     if (beyond) { lines[i] = $"{R:#,0}m - beyond the reach of the mount ({elev:0.#} deg)"; changed = true; continue; }
-                    float pB = BeltPen(ap.Kg, vs, fall, ap.Q), pD = DeckPen(ap.Kg, ap.CalMm, vs, fall);
+                    float pB = BeltPen(ap.Kg, vs, fall, ap.Q, ap.CalMm), pD = DeckPen(ap.Kg, ap.CalMm, vs, fall);
                     float hB = apB > 0.01f ? pB * heB / apB : 0f, hD = apD > 0.01f ? pD * heD / apD : 0f;
                     int comma = plain.LastIndexOf("mm,"); string acc = comma >= 0 ? plain.Substring(comma + 3).Trim() : "";
                     lines[i] = $"{R:#,0}m - {hB:0.#}mm - {pB:0.#}mm / {hD:0.#}mm - {pD:0.#}mm, {acc} [{vs:0} m/s, {fall:0.#} deg]";

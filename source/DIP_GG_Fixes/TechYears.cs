@@ -103,9 +103,16 @@ namespace DipGgFixes
             string noseFallback = null;
             if (n == 0 && seen.Length == 0 && (cAll > 0 || cList > 0))
             {
-                int yr = 0; try { yr = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
-                if (yr >= 1930) n = 2; else if (yr >= 1910) n = 1;
-                if (n > 0) noseFallback = $"; no nose technology in the navy's lists - year {yr} rule";
+                // 1.11.264 (author 25.10, 14:43): the ship's own parts first - the technology year of the AP shell fitted to her
+                //           (shell_ap: ap_2/ap_4 1905, ap_5 1915, ap_6 1925): a shell of 1907 or later has the improved nose
+                int ay = 0; try { ay = PhysGun.ApShellYear(s); } catch { }
+                if (ay > 0) { n = ay >= 1927 ? 2 : ay >= 1907 ? 1 : 0; noseFallback = $"; no nose technology in the navy's lists - AP shell fitted of {ay}"; }
+                else
+                {
+                    int yr = 0; try { yr = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
+                    if (yr >= 1930) n = 2; else if (yr >= 1910) n = 1;
+                    if (n > 0) noseFallback = $"; no nose technology in the navy's lists - year {yr} rule";
+                }
             }            bool isPl = false; try { isPl = s.player != null && s.player.isMain; } catch { }
             // 1.11.260: the player's ships are always logged (in 1.11.257 the campaign's generated designs used up the 24 lines before any battle)
             if (logged < 24 || (isPl && plLogged++ < 12)) { if (!isPl) logged++; try { bool pl = isPl; MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}{noseFallback}"); } catch { } }
