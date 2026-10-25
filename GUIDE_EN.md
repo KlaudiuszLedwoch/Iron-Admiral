@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 25 October 2026. Latest version: Iron Admiral 1.2.70. Updated with every release._
+_Guide as of 25 October 2026. Latest version: Iron Admiral 1.2.71. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -245,6 +245,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **23 October 2026, Iron Admiral 1.2.66:** the battle AI no longer breaks off before it knows its target and fights on when clearly stronger; your ships use the full torpedo range; captured ships appear in the designer.
 - **25 October 2026, Iron Admiral 1.2.69:** the beta line of 23-25 October promoted to stable - ballistics from physics and technology, hit chance by fire-control technology, HE through thin plating, division orders in battle, occupied lands decided province by province, lost territory, technology diffusion, historical weights, an AI designer that limits its guns by displacement and trims overweight attempts, refits for the buyers of your ships, eight new Help chapters.
 - **25 October 2026, Iron Admiral 1.2.70:** damage model step 1 - armour quality measured against Krupp cemented armour (heavy shells pierce what they pierced historically), your target orders hold, AI battleships that cannot pierce your line keep fighting your lighter ships, no mod panels over the battle result windows.
+- **25 October 2026, Iron Admiral 1.2.71:** damage model step 2 - penetration from the physics of each shot (striking velocity and angle of fall; Okun's formulas for belts and decks); one physical gun for the gun window, the shells' flight, the range and the penetration; the gun window shows the battle values; a log line for every hit.
 
 ---
 
