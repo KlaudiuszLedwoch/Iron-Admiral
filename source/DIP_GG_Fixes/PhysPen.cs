@@ -361,8 +361,8 @@ namespace DipGgFixes
                 // shows the shell of the bore as built when the game's line does not (142.2 mm on a 5" mount: game 34.6 kg, bore 48.6 kg)
                 if (plain.StartsWith("Muzzle Velocity AP", StringComparison.OrdinalIgnoreCase)) { lines[i] = $"Muzzle Velocity AP: {ap.Mv:0} m/s ({VelSrc(ap)})"; changed = true; continue; }
                 if (plain.StartsWith("Muzzle Velocity HE", StringComparison.OrdinalIgnoreCase) && he.Ok) { lines[i] = $"Muzzle Velocity HE: {he.Mv:0} m/s ({VelSrc(he)})"; changed = true; continue; }
-                if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(plain, ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0} kg (game {LineKg(plain):0})"; changed = true; continue; }
-                if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(plain, he)) { lines[i] = $"Shell Weight HE: {he.Kg:0} kg (game {LineKg(plain):0})"; changed = true; continue; }
+                if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(plain, ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0} kg ({(ap.KgHist ? "hist." : "bore")}; game {LineKg(plain):0})"; changed = true; continue; }
+                if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(plain, he)) { lines[i] = $"Shell Weight HE: {he.Kg:0} kg ({(he.KgHist ? "hist." : "bore")}; game {LineKg(plain):0})"; changed = true; continue; }
                     if (plain.IndexOf("Penetration Belt/Deck", StringComparison.OrdinalIgnoreCase) >= 0) { inTable = true; lines[i] = lines[i] + " (physics: Okun)"; continue; }
                     if (!inTable) continue;
                     float R;
