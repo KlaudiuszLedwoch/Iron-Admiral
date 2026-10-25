@@ -23,12 +23,15 @@ namespace DipGgFixes
         internal static void BattleStart() { logged = 0; }
         internal static MethodBase Find()
         {
-            foreach (var t in new[] { typeof(Ship), typeof(Shell), typeof(Part), typeof(Projectile), typeof(BattleManager), typeof(Ui), typeof(PartData), typeof(GameData) })
+            // 1.11.277: the owner type was not among the guessed ones (no line in the 18:24 battle) - every type of the game assembly is searched
+            System.Collections.Generic.IEnumerable<Type> types;
+            try { types = typeof(Ship).Assembly.GetTypes(); } catch (ReflectionTypeLoadException e) { types = e.Types.Where(x => x != null); }
+            foreach (var t in types)
             {
                 try
                 {
                     var m = t.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public).FirstOrDefault(x => x.Name == "GetExplosionDamage" && x.GetParameters().Length == 5);
-                    if (m != null) { Owner = t.Name; return m; }
+                    if (m != null) { Owner = t.FullName; MelonLogger.Msg("[DIP GG Fixes][Damage] GetExplosionDamage found in " + t.FullName); return m; }
                 }
                 catch { }
             }
