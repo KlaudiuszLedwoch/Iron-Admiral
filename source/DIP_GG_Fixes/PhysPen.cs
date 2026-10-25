@@ -31,7 +31,7 @@ namespace DipGgFixes
         // small guns (76 mm: game 3-13 mm against physical 37-90 mm, ratio below 0.05), so on plates of about 60-80 mm the game
         // decided against the physics. The limits only guard against a broken value now.
         const float FMin = 0.001f, FMax = 1000f;
-        internal static MelonPreferences_Entry<bool> On, HitLog;
+        internal static MelonPreferences_Entry<bool> On, HitLog, Replace;
         internal static MelonPreferences_Entry<float> FhConst, BeltC, InfoSize;
         internal static MelonPreferences_Entry<int> HitLogMax;
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -39,7 +39,8 @@ namespace DipGgFixes
             On = cat.CreateEntry("PhysicalPenetration", true, null, "Battle: penetration from the physics of each shot - striking velocity and angle of fall of the shell's arc; Okun's face-hardened formula for belts and turret sides, Thompson's F-formula with Okun's standard F for decks");
             FhConst = cat.CreateEntry("PhysicalPenetrationFhConst", 0.049f, null, "Okun face-hardened formula T[mm] = C * W[kg]^0.2 * V[m/s]^1.21; C = 0.049 from the US 8\"/55 AP Mk 21 against Class A armour (navweaps.com)");
             BeltC = cat.CreateEntry("PhysicalPenetrationBeltC", 0.2468f, null, "Belt penetration T[mm] = C * W[kg]^0.719 * Vn[m/s]^1.439 * D[mm]^-1.079 (DeMarre type); C = 0.2468 from NavWeaps side-armour data of 9 AP guns 5-16 inch");
-            HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
+            Replace = cat.CreateEntry("PhysicalPenetrationReplace", true, null, "Battle: the game's penetration value itself is replaced by the physical one (belt: DeMarre-type law; deck: Thompson F-formula) for the arriving shell, the AI's estimates and the gun window, and the plate is no longer scaled to it - the plate keeps only its quality (iron ... Krupp) and the obliquity. Off: the older method (plate scaled by game / physical penetration)");
+        HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
             InfoSize = cat.CreateEntry("GunInfoTextSize", 0.78f, null, "Gun window: text size of the gun description (1 = the game's size)");
             PhysGun.CreatePrefs(cat);
@@ -95,12 +96,12 @@ namespace DipGgFixes
             string key = $"{Nation(shooter)} {g.CalMm,6:0.0} mm"; int[] fv; if (!fired.TryGetValue(key, out fv)) { fv = new int[6]; fired[key] = fv; } fv[Ix(raw)]++;
             shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall, Raw = raw, Key = key };
         }
-        internal static void BattleStart() { shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
+        internal static void BattleStart() { bool ra = ReplaceActive; shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); replaced = 0; fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
         internal static void BattleEnd() { Report("battle end"); }
         internal static void Report(string tag)
         {
             if (summary.Count == 0 && adjusted == 0) return;
-            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}); AP pass-through damage raised {OverPen.Raised}x; hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
+            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}), penetration values replaced by physics {replaced}; AP pass-through damage raised {OverPen.Raised}x; hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
             foreach (var kv in summary) { var v = kv.Value; float n = Math.Max(1f, v[0]); sb.Append($"\n   {kv.Key} | {v[0]:0} | {v[1] / n:0} | {v[2] / n:0} | {v[3] / n:0} | {v[4] / n:0.#}"); }
             MelonLogger.Msg(sb.ToString());
             if (fired.Count > 0)
@@ -142,12 +143,74 @@ namespace DipGgFixes
             }
             return (float)(td * D * 25.4);
         }
+        // ---- 1.11.272 (#33 step 3, author 25.10, 15:39-15:55): the penetration itself is physical ----
+        // Ship.GetPenetration(gun, shooter, range, belt, shellType, pos) is what the game compares with the plate: at the hit (inside
+        // Shell.Update, with the shell's own registered flight), in the AI's estimates and in the gun window. Its result becomes the
+        // physical penetration: belt from the DeMarre-type law with the striking velocity and the angle of fall, deck from Thompson's
+        // F-formula. HE keeps the game's HE/AP ratio on top of the physical AP value (the game's HE table relative to its AP table).
+        [ThreadStatic] static bool inPen; static int replLogged, replaced;
+        // the replacement is in force only when its patch really sits on Ship.GetPenetration (a method with Il2Cpp nullable
+        // parameters may refuse the patch); otherwise the plate scaling of 1.11.251 stays, so a hit is never judged by the game's bare value
+        static int patchState; // 0 unknown, 1 active, -1 not patched
+        internal static bool ReplaceActive
+        {
+            get
+            {
+                if (Replace == null || !Replace.Value) return false;
+                if (patchState == 0)
+                {
+                    patchState = -1;
+                    try
+                    {
+                        var m = AccessTools.Method(typeof(Ship), "GetPenetration");
+                        var info = m != null ? HarmonyLib.Harmony.GetPatchInfo(m) : null;
+                        if (info != null && info.Postfixes != null) foreach (var p in info.Postfixes) if (p.PatchMethod != null && p.PatchMethod.DeclaringType == typeof(Patch_GetPenetration_PhysPen)) patchState = 1;
+                    }
+                    catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Hit] penetration patch check: " + e.Message); }
+                    MelonLogger.Msg(patchState == 1 ? "[DIP GG Fixes][Hit] physical penetration replaces the game's value (Ship.GetPenetration patched); plate scaling off" : "[DIP GG Fixes][Hit] Ship.GetPenetration is NOT patched - the plate scaling of 1.11.251 stays in force");
+                }
+                return patchState == 1;
+            }
+        }
+        internal static void ReplacePen(PartData gun, Ship shooter, float range, bool belt, Il2CppSystem.Nullable<Ship.ShellType> st, ref float result)
+        {
+            if (On == null || !On.Value || Replace == null || !Replace.Value || inPen || gun == null || shooter == null) return; patchState = 1;
+            try
+            {
+                inPen = true;
+                Ship.ShellType type = Ship.ShellType.Ap; try { if (st != null && st.HasValue) type = st.Value; } catch { }
+                if (type == Ship.ShellType.Auto) type = Ship.ShellType.Ap;
+                var g = PhysGun.Get(gun, shooter, Ship.ShellType.Ap); if (!g.Ok) return;
+                float vs, fall; bool fromShell = false;
+                Shot sh = null; var cur = Current;
+                if (cur != null && shots.TryGetValue(cur.Pointer.ToInt64(), out sh) && sh.Pd != null && sh.Pd.Pointer == gun.Pointer) { vs = sh.Vs; fall = sh.Fall; fromShell = true; }
+                else
+                {
+                    float t; bool beyond;
+                    Ballistics.Impact(g.Mv, g.CalMm / 25.4f, g.Kg, Ballistics.CdOf(shooter), Math.Max(50f, range), MountElevation.Elev(Math.Max(1, g.Grade)), out vs, out fall, out t, out beyond);
+                    if (beyond) { result = 0f; return; }
+                }
+                float phys = belt ? BeltPen(g.Kg, vs, fall, g.Q, g.CalMm) : DeckPen(g.Kg, g.CalMm, vs, fall);
+                if (type == Ship.ShellType.He)
+                {
+                    // the game's own HE relative to its AP at this range (the HE table is the same physics with a lighter, weaker shell)
+                    float gAp = 0f; try { gAp = Ship.GetPenetration(gun, shooter, range, belt, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap), new Il2CppSystem.Nullable<Vector3>()); } catch { }
+                    phys = gAp > 0.01f ? phys * Mathf.Clamp(result / gAp, 0.02f, 1f) : phys * 0.3f;
+                }
+                if (replLogged < 12 && Math.Abs(result - phys) > 1f) { replLogged++; MelonLogger.Msg($"[DIP GG Fixes][Hit] penetration replaced: {g.CalMm:0.#} mm {type} of {shooter.name}, {(fromShell ? "arriving shell" : "estimate")} at {range:0} m ({vs:0} m/s, fall {fall:0.0} deg), {(belt ? "belt" : "deck")}: game {result:0} mm -> physical {phys:0} mm"); }
+                replaced++; result = phys;
+            }
+            catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] penetration replace: " + e.Message); }
+            finally { inPen = false; }
+        }
+        internal static int Replaced { get { return replaced; } }
         static bool Horizontal(string zone) { return zone.IndexOf("Deck", StringComparison.OrdinalIgnoreCase) >= 0 || zone.IndexOf("Top", StringComparison.OrdinalIgnoreCase) >= 0; }
 
         // ---- the armour of each hit ----
         internal static void Adjust(Ship target, Ship.A zone, PartData gun, Ship shooter, ref float armor)
         {
             if (On == null || !On.Value || armor <= 0f) return;
+            if (ReplaceActive) return; // 1.11.272: the penetration is physical itself - no plate scaling (step 3)
             // the arriving shell (Shell.Update): the game asks for the plate without the gun - the shell's own physical flight is used
             if ((gun == null || shooter == null) && Current != null)
             {
@@ -330,6 +393,17 @@ namespace DipGgFixes
     {
         static void Prefix(Shell __instance) { PhysPen.Current = __instance; PhysPen.Seen(__instance); }
         static void Postfix() { PhysPen.Current = null; }
+    }
+
+    [HarmonyPatch(typeof(Ship), "GetPenetration")]
+    internal static class Patch_GetPenetration_PhysPen
+    {
+        static void Postfix(PartData __0, Ship __1, float __2, bool __3, Il2CppSystem.Nullable<Ship.ShellType> __4, ref float __result) { PhysPen.ReplacePen(__0, __1, __2, __3, __4, ref __result); }
+    }
+    [HarmonyPatch(typeof(Ship), "GetPenetrationUI")]
+    internal static class Patch_GetPenetrationUI_PhysPen
+    {
+        static void Postfix(PartData __0, Ship __1, float __2, bool __3, Il2CppSystem.Nullable<Ship.ShellType> __4, ref float __result) { PhysPen.ReplacePen(__0, __1, __2, __3, __4, ref __result); }
     }
 
     [HarmonyPatch(typeof(Ui), "RegisterTakenDamage")]
