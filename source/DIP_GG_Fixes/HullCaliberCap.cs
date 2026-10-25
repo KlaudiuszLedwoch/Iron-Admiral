@@ -89,7 +89,7 @@ namespace DipGgFixes
                     if (!hasCnt) lim.Add("max_main_gun_count:" + MainCountFor(basis));
                     if (!capMain && hasSec && hasCnt) continue;
                     capped++;
-                    if (sample.Count < 8) sample.Add($"{pd.name} ({pd.tonnageMin:0}-{pd.tonnageMax:0} t, hull limit {own}\"): AI max {(capMain ? cap : own)}\", {MainCountFor(basis)} main turrets, secondary mounts {SecCountFor(basis)} per type");
+                    if (sample.Count < 8) sample.Add($"{pd.name} ({pd.tonnageMin:0}-{pd.tonnageMax:0} t, hull limit {(own > 0 ? own + "\"" : "none")}): AI max {(capMain ? cap.ToString() : (own > 0 ? own.ToString() : "hull's"))}\", {MainCountFor(basis)} main turrets, secondary mounts {SecCountFor(basis)} per type");
                 }
                 applied = true;
                 MelonLogger.Msg($"[DIP GG Fixes][HullCap] AI main calibre by hull tonnage: {capped} of {hulls} battleship/battlecruiser hulls capped, {kept} had a limit already - {string.Join("; ", sample)}");

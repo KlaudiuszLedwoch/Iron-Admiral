@@ -118,6 +118,8 @@ namespace DipGgFixes
             if (Diag == null || !Diag.Value || it == null) return;
             var p = it.Pointer;
             if (!running) { diagTry.Remove(p); return; }
+            bool campaign = false; try { campaign = GameManager.IsCampaign; } catch { }
+            if (campaign) return;                                   // 1.11.247: the campaign has the early-stop log already
             if (ship == null) return;
             int tryN = it._tryN_5__5, total = it._triesTotal_5__4;
             int prev; if (!diagTry.TryGetValue(p, out prev)) prev = 0;
@@ -192,15 +194,22 @@ namespace DipGgFixes
                 stateLogged++; Log($"state {prev} -> {st}: attempt {it._tryN_5__5}, {n} parts, {w:0} t of {t:0} t");
             }
             int want = TrimState != null ? TrimState.Value : 20;
-            if (st == want && TrimOn != null && TrimOn.Value) { try { Trim(ship); } catch (Exception e) { if (trimLogged++ < 10) Log("trim: " + e.Message); } }
+            if (TrimOn != null && TrimOn.Value)
+            {
+                // 1.11.247: first pass as the armour has just been generated and before the game cuts it (state 13) - only the light
+                //           battery beyond what the period carried (tertiary mounts over 8, secondary mounts over 12) goes, so the
+                //           weight reduction starts from a sane battery and keeps more armour; the last pass at the check (state 20)
+                if (st == 13) { try { Trim(ship, true); } catch (Exception e) { if (trimLogged++ < 10) Log("trim: " + e.Message); } }
+                if (st == want) { try { Trim(ship, false); } catch (Exception e) { if (trimLogged++ < 10) Log("trim: " + e.Message); } }
+            }
         }
         internal static void StateEnd(IntPtr p) { lastState.Remove(p); }
-        static void Trim(Ship ship)
+        static void Trim(Ship ship, bool early)
         {
             float w = ship.Weight(true, true), t = ship.Tonnage();
             if (t <= 0f || w <= t) return;
             float max = TrimMax != null ? TrimMax.Value : 0.12f;
-            if (w > t * (1f + max)) { if (trimLogged++ < 20) Log($"overweight {w:0} t of {t:0} t ({(w / t - 1f) * 100f:0.0} %) - over the trimming limit {max * 100f:0} %, left to the game"); return; }
+            if (!early && w > t * (1f + max)) { if (trimLogged++ < 20) Log($"overweight {w:0} t of {t:0} t ({(w / t - 1f) * 100f:0.0} %) - over the trimming limit {max * 100f:0} %, left to the game"); return; }
             // candidates: guns that are not of the main calibre; smallest calibre first, deck mounts before casemates
             var cand = new List<Part>();
             var parts = ship.parts;
@@ -218,13 +227,17 @@ namespace DipGgFixes
                 return a.data.caliber.CompareTo(b.data.caliber);
             });
             // the secondary battery proper (4" and up, deck mounts) keeps at least 4 mounts - a battleship without secondaries is no design
-            int secLeft = 0; foreach (var q0 in cand) if (q0.data.caliber >= 100f && !HistoricalWeights.IsCasemate(q0.data)) secLeft++;
+            int secLeft = 0, terLeft = 0; foreach (var q0 in cand) { if (HistoricalWeights.IsCasemate(q0.data)) continue; if (q0.data.caliber >= 100f) secLeft++; else terLeft++; }
+            int secFloor = early ? 12 : 4, terFloor = early ? 8 : 0;
             int removed = 0; var gone = new HashSet<IntPtr>(); var what = new SortedDictionary<string, int>();
             for (int i = 0; i < cand.Count && w > t; i++)
             {
                 var q = cand[i]; if (gone.Contains(q.Pointer)) continue;
-                bool sec = q.data.caliber >= 100f && !HistoricalWeights.IsCasemate(q.data);
-                if (sec && secLeft <= 4) continue;
+                bool casem = HistoricalWeights.IsCasemate(q.data);
+                if (early && casem) continue;                       // casemates stay in the first pass
+                bool sec = q.data.caliber >= 100f && !casem, ter = !sec && !casem;
+                if (sec && secLeft <= secFloor) continue;
+                if (ter && terLeft <= terFloor) continue;
                 // the mirror mount of a side gun goes with it (same part, opposite side, same length position)
                 Part mirror = null;
                 try
@@ -240,8 +253,8 @@ namespace DipGgFixes
                 }
                 catch { }
                 string key = $"{q.data.caliber / 25.4f:0}\" x{Math.Max(1, q.data.barrels)}{(HistoricalWeights.IsCasemate(q.data) ? " casemate" : "")}";
-                try { ship.RemovePart(q, true, true); gone.Add(q.Pointer); removed++; if (sec) secLeft--; int c; what.TryGetValue(key, out c); what[key] = c + 1; } catch (Exception e) { if (trimLogged++ < 10) Log("remove: " + e.Message); break; }
-                if (mirror != null) { try { ship.RemovePart(mirror, true, true); gone.Add(mirror.Pointer); removed++; if (sec) secLeft--; what[key]++; } catch { } }
+                try { ship.RemovePart(q, true, true); gone.Add(q.Pointer); removed++; if (sec) secLeft--; if (ter) terLeft--; int c; what.TryGetValue(key, out c); what[key] = c + 1; } catch (Exception e) { if (trimLogged++ < 10) Log("remove: " + e.Message); break; }
+                if (mirror != null) { try { ship.RemovePart(mirror, true, true); gone.Add(mirror.Pointer); removed++; if (sec) secLeft--; if (ter) terLeft--; what[key]++; } catch { } }
                 try { w = ship.Weight(true, true); } catch { break; }
             }
             if (removed > 0 && trimLogged++ < 40)
@@ -249,7 +262,7 @@ namespace DipGgFixes
                 var sb = new System.Text.StringBuilder();
                 foreach (var kv in what) { if (sb.Length > 0) sb.Append(", "); sb.Append($"{kv.Value}x {kv.Key}"); }
                 string key2 = ""; try { key2 = ship.player.data.name + ": hull " + ship.hull.data.name; } catch { }
-                Log($"{key2} - attempt overweight, {removed} light gun mount(s) removed ({sb}): now {w:0} t of {t:0} t{(w > t ? " - still over" : "")}");
+                Log($"{key2} - attempt overweight{(early ? " before the armour is cut" : "")}, {removed} light gun mount(s) removed ({sb}): now {w:0} t of {t:0} t{(w > t ? (early ? " - the rest to the game's weight reduction" : " - still over") : "")}");
             }
         }
 

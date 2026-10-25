@@ -9,6 +9,9 @@
 //  - land offensive (AI and player): at war with the holder, its army attacks a lost province next to its own land
 //    (ProvinceBattleManager.TryStartBattle prefix, after the Portless rule for powers without ports);
 //  - peace terms: a won war returns up to LostTerritoryPeaceMax lost provinces (ports first) from the loser.
+// 1.11.247 (author's decision 25.10): a lost colony weighs half of a core province, a jewel in the crown (the most developed
+// quarter of the world's provinces - India) three quarters; the weights drive the relation loss, the war decision (weight >= 1)
+// and the order in which provinces are fought for and returned.
 // Switch: LostTerritoryReconquest (F10, Campaign AI). Works beside Portless (powers without ports) and Occupation.
 using System;
 using System.Collections.Generic;
@@ -24,8 +27,13 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static MelonPreferences_Entry<float> RelMonthly, WarPower, Attitude;
         internal static MelonPreferences_Entry<int> PeaceMax;
+        internal static MelonPreferences_Entry<float> ColonyWeight, JewelWeight, JewelShare;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
+            // 1.11.247 (author's decision 25.10): a colony weighs half of a core province, a "jewel in the crown" (India) three quarters
+            ColonyWeight = cat.CreateEntry("LostTerritoryColonyWeight", 0.5f, null, "Lost territory: weight of a lost colony (a province held at the campaign start that is not a national core) against a core province (1)");
+            JewelWeight = cat.CreateEntry("LostTerritoryJewelWeight", 0.75f, null, "Lost territory: weight of a lost colony among the most developed provinces of the world (a jewel in the crown such as India)");
+            JewelShare = cat.CreateEntry("LostTerritoryJewelShare", 0.25f, null, "Lost territory: share of the world's provinces, by development, that count as jewels (0.25 = the top quarter)");
             On = cat.CreateEntry("LostTerritoryReconquest", true, null, "Campaign: a great power tries to win back the provinces it held at the campaign start and its national cores - worse relations with the holder, war when it is strong enough or the holder is at war already, land offensives into lost provinces, lost provinces returned at peace");
             RelMonthly = cat.CreateEntry("LostTerritoryRelationMonthly", 1.5f, null, "Attitude lost every month towards a nation holding one's lost province (per province, at most 4 provinces counted; half towards an ally)");
             WarPower = cat.CreateEntry("LostTerritoryWarPower", 1.2f, null, "An AI great power declares war on the holder of its lost territory when its fleet power is at least this many times the holder's (and the attitude is below LostTerritoryWarAttitude)");
@@ -75,7 +83,38 @@ namespace DipGgFixes
             catch (Exception e) { Log("lost: " + e.Message); }
             return r;
         }
-        static float Worth(Province pr) { float v = 0f; try { v = pr.HavePort ? 1000f + pr.Port : 0f; } catch { } try { v += pr.Development; } catch { } return v; }
+        static float Worth(Province pr) { float v = 0f; try { v = pr.HavePort ? 1000f + pr.Port : 0f; } catch { } try { v += pr.Development; } catch { } return v * Weight(pr, null); }
+
+        // 1.11.247: core province 1, colony 0.5, jewel in the crown 0.75 (the most developed quarter of the world's provinces)
+        static float jewelFloor = -1f; static int jewelMonth = -1;
+        static float JewelFloor()
+        {
+            int m = Month(); if (jewelFloor >= 0f && m == jewelMonth) return jewelFloor;
+            jewelMonth = m;
+            try
+            {
+                var dev = new List<float>();
+                foreach (var kv in CampaignMap.Instance.Provinces.ProvinceById) { var pr = kv.Value; if (pr == null) continue; float d = 0f; try { d = pr.Development; } catch { } dev.Add(d); }
+                if (dev.Count == 0) { jewelFloor = float.MaxValue; return jewelFloor; }
+                dev.Sort(); float share = Math.Max(0.01f, Math.Min(1f, JewelShare != null ? JewelShare.Value : 0.25f));
+                int idx = Math.Max(0, Math.Min(dev.Count - 1, (int)Math.Floor(dev.Count * (1f - share))));
+                jewelFloor = dev[idx];
+            }
+            catch { jewelFloor = float.MaxValue; }
+            return jewelFloor;
+        }
+        internal static float Weight(Province pr, string nation)
+        {
+            try
+            {
+                string core; if (Independence.Cores.TryGetValue(pr.Id, out core) && (nation == null || core == nation)) return 1f;
+                float d = 0f; try { d = pr.Development; } catch { }
+                if (d >= JewelFloor()) return JewelWeight != null ? JewelWeight.Value : 0.75f;
+                return ColonyWeight != null ? ColonyWeight.Value : 0.5f;
+            }
+            catch { return 1f; }
+        }
+        static string Kind(Province pr, string nation) { float w = Weight(pr, nation); return w >= 1f ? "" : w >= 0.7f ? " (jewel)" : " (colony)"; }
 
         // ---- monthly: relations and war ----
         static int lastMonth = -1;
@@ -99,12 +138,14 @@ namespace DipGgFixes
                     {
                         var h = ByName(kv.Key); if (h == null) continue;
                         bool ally = Allied(w, h), war = AtWar(w, h);
-                        float d = -(RelMonthly != null ? RelMonthly.Value : 1.5f) * Math.Min(4, kv.Value.Count) * (ally ? 0.5f : 1f);
+                        string wn = Key(w); float weight = 0f; foreach (var pr in kv.Value) weight += Weight(pr, wn);   // 1.11.247: cores 1, colonies 0.5, jewels 0.75
+                        float d = -(RelMonthly != null ? RelMonthly.Value : 1.5f) * Math.Min(4f, weight) * (ally ? 0.5f : 1f);
                         var r = Rel(w, h); if (r != null && !war) { try { Occupation.Adjust(r, d, $"{N(h)} holds {kv.Value.Count} province(s) of {N(w)}"); } catch { } }
                         float att = 0f; try { att = r != null ? r.attitude : 0f; } catch { }
                         string state = war ? "at war" : ally ? "ally" : $"attitude {att:F0}";
-                        parts.Add($"{N(h)}: {string.Join(", ", kv.Value.Select(x => x.Id).Take(4))}{(kv.Value.Count > 4 ? " ..." : "")} ({state})");
+                        parts.Add($"{N(h)}: {string.Join(", ", kv.Value.Select(x => x.Id + Kind(x, wn)).Take(4))}{(kv.Value.Count > 4 ? " ..." : "")} (weight {weight:0.##}, {state})");
                         if (!w.isAi || war || ally) continue;
+                        if (weight < 1f) continue;   // 1.11.247: a single colony is no cause for war; two colonies or one core province are
                         if (Portless.IsWaiting(w)) continue;   // the Portless rule declares its own wars
                         bool hWar = false; try { hWar = h.IsAtWar(); } catch { }
                         bool wWar = false; try { wWar = w.IsAtWar(); } catch { }
