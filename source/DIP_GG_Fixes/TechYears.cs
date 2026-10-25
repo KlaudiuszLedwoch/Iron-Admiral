@@ -95,9 +95,20 @@ namespace DipGgFixes
                 }
                 catch { }
             }
-            bool isPl = false; try { isPl = s.player != null && s.player.isMain; } catch { }
+            // 1.11.263 (#31, author's battle 25.10 14:29): the player's German navy of 1921 has 409 technologies in its list and neither
+            // nose technology among them at all - not even as "not researched" (every AI navy of the same campaign lists projectile_shell_15,
+            // researched or in progress), so the player could never get past the blunt 1890s shell. When a navy's lists hold no nose
+            // technology at all, the year of the battle decides instead: the 1907 nose from 1910, the 1927 shells from 1930 (technology year
+            // + 3; own assumption from the technology years in technologies.csv).
+            string noseFallback = null;
+            if (n == 0 && seen.Length == 0 && (cAll > 0 || cList > 0))
+            {
+                int yr = 0; try { yr = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
+                if (yr >= 1930) n = 2; else if (yr >= 1910) n = 1;
+                if (n > 0) noseFallback = $"; no nose technology in the navy's lists - year {yr} rule";
+            }            bool isPl = false; try { isPl = s.player != null && s.player.isMain; } catch { }
             // 1.11.260: the player's ships are always logged (in 1.11.257 the campaign's generated designs used up the 24 lines before any battle)
-            if (logged < 24 || (isPl && plLogged++ < 12)) { if (!isPl) logged++; try { bool pl = isPl; MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}"); } catch { } }
+            if (logged < 24 || (isPl && plLogged++ < 12)) { if (!isPl) logged++; try { bool pl = isPl; MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}{noseFallback}"); } catch { } }
             nose[k] = n; return n;
         }
     }
