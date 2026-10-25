@@ -52,7 +52,21 @@ namespace DipGgFixes
         // 1.11.268 (author 25.10, 15:08-15:12: enemy BB fired yellow-tracer HE shells while every logged hit read "Ap"): shells fired by
         // nation, calibre and type - the type at creation and the type the shell carries in flight; a difference is logged
         static readonly SortedDictionary<string, int[]> fired = new SortedDictionary<string, int[]>();
-        static int typeDiff;
+        static int typeDiff, hitLinesPl;
+        static readonly HashSet<long> armourLogged = new HashSet<long>();
+        static void ArmourOnce(Ship v)
+        {
+            try
+            {
+                if (v == null || !armourLogged.Add(v.Pointer.ToInt64()) || armourLogged.Count > 80) return;
+                var sb = new System.Text.StringBuilder(); var arm = v.armor;
+                foreach (Ship.A z in Enum.GetValues(typeof(Ship.A))) { float mm; if (arm != null && arm.TryGetValue(z, out mm) && mm > 0.05f) sb.Append($" {z} {mm:0}"); }
+                bool pl = false; try { pl = v.player != null && v.player.isMain; } catch { }
+                float t = 0f; try { t = v.Tonnage(); } catch { }
+                MelonLogger.Msg($"[DIP GG Fixes][Hit] armour of {(pl ? "player" : "AI")} ship {v.name} ({t:0} t), mm:{(sb.Length > 0 ? sb.ToString() : " none")}");
+            }
+            catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] armour: " + e.Message); }
+        }
         static string Nation(Ship s) { try { var n = s != null ? s.name : null; if (n == null) return "?"; int a = n.LastIndexOf('['), b = n.LastIndexOf(']'); return a >= 0 && b > a ? n.Substring(a + 1, b - a - 1) : "?"; } catch { return "?"; } }
         static int Ix(Ship.ShellType t) { return t == Ship.ShellType.Ap ? 0 : t == Ship.ShellType.He ? 1 : 2; }
         internal static void Seen(Shell s)
@@ -81,7 +95,7 @@ namespace DipGgFixes
             string key = $"{Nation(shooter)} {g.CalMm,6:0.0} mm"; int[] fv; if (!fired.TryGetValue(key, out fv)) { fv = new int[6]; fired[key] = fv; } fv[Ix(raw)]++;
             shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall, Raw = raw, Key = key };
         }
-        internal static void BattleStart() { shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); fired.Clear(); typeDiff = 0; PhysGun.ResetCache(); OverPen.ResetCount(); }
+        internal static void BattleStart() { shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
         internal static void BattleEnd() { Report("battle end"); }
         internal static void Report(string tag)
         {
@@ -193,17 +207,27 @@ namespace DipGgFixes
                 float cal = sh != null ? sh.G.CalMm : (from != null && from.data != null ? from.data.caliber : 0f);
                 float physB = 0f, physD = 0f;
                 if (sh != null) { physB = BeltPen(sh.G.Kg, sh.Vs, sh.Fall, sh.G.Q, sh.G.CalMm); physD = DeckPen(sh.G.Kg, sh.G.CalMm, sh.Vs, sh.Fall); }
-                string key = $"{cal,6:0.0} mm {(sh != null ? sh.G.Type.ToString() : "?"),-2} | {hitType}";
+                // 1.11.269 (author 25.10, 15:14): the damage model must be the same for every side - hits split by direction, the type the shell
+                // carries in flight, every hit on the player's ships logged (own cap) with the armour of each ship at its first hit
+                bool onPlayer = false; try { onPlayer = victim != null && victim.player != null && victim.player.isMain; } catch { }
+                string ty = "?"; try { if (s != null) ty = s.shellType.ToString(); else if (sh != null) ty = sh.G.Type.ToString(); } catch { }
+                string key = $"{(onPlayer ? "AI->player" : "player->AI")} | {cal,6:0.0} mm {ty,-2} | {hitType}";
+                ArmourOnce(victim);
                 float[] a; if (!summary.TryGetValue(key, out a)) { a = new float[5]; summary[key] = a; }
                 a[0]++; a[1] += Math.Max(0f, armor); a[2] += physB; a[3] += Math.Max(0f, penetration); a[4] += damage;
                 HitDispatch.Hit(victim, sh != null ? sh.Shooter : (from != null ? from.ship : null), cal, hitType, damage);
-                if (HitLog == null || !HitLog.Value || hitLines >= (HitLogMax != null ? HitLogMax.Value : 300)) return;
-                if (hitType == "none" && rawLines++ >= 5) return; // the game's "none" (no armour met, no damage): only the first few
-                hitLines++;
-                if (sh != null)
-                    MelonLogger.Msg($"[DIP GG Fixes][Hit] {sh.G.CalMm:0.#} mm {sh.G.Type} {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
+                if (HitLog == null || !HitLog.Value) return;
+                if (onPlayer) { if (hitLinesPl >= (HitLogMax != null ? HitLogMax.Value : 300) * 2) return; hitLinesPl++; }
                 else
-                    MelonLogger.Msg($"[DIP GG Fixes][Hit] {cal:0.#} mm (no physical shell) -> {(victim != null ? victim.name : "?")}: plate met {armor:0.#} mm, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
+                {
+                    if (hitLines >= (HitLogMax != null ? HitLogMax.Value : 300)) return;
+                    if (hitType == "none" && rawLines++ >= 5) return; // the game's "none" (no armour met, no damage): only the first few
+                    hitLines++;
+                }
+                if (sh != null)
+                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {sh.G.CalMm:0.#} mm {ty} (physics {sh.G.Type}) {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
+                else
+                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {cal:0.#} mm {ty} (no physical shell) -> {(victim != null ? victim.name : "?")}: plate met {armor:0.#} mm, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] damage path: " + e.Message); }
         }
