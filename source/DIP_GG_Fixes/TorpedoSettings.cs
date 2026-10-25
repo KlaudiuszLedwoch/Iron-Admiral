@@ -447,43 +447,64 @@ namespace DipGgFixes
         }
 
         // ------------------------------------------------------------------ player panel
-        static GUIStyle sT; static bool folded; static int gErr;
+        static GUIStyle sT, sB; static bool folded; static int gErr;
+        // small button style shared by the compact battle strips (torpedo setting, torpedo targets)
+        // (the Il2Cpp GUIStyle has no copy constructor: the skin's button is used with a smaller font and padding while a strip is drawn)
+        static int smallDepth, oldFont; static int[] oldPad = new int[4];
+        internal static GUIStyle Small() { return GUI.skin.button; }
+        internal static void BeginSmall()
+        {
+            if (smallDepth++ > 0) return;
+            var b = GUI.skin.button; oldFont = b.fontSize; b.fontSize = 11;
+            var p = b.padding; oldPad[0] = p.left; oldPad[1] = p.right; oldPad[2] = p.top; oldPad[3] = p.bottom; p.left = 2; p.right = 2; p.top = 1; p.bottom = 1;
+        }
+        internal static void EndSmall()
+        {
+            if (smallDepth == 0 || --smallDepth > 0) return;
+            var b = GUI.skin.button; b.fontSize = oldFont;
+            var p = b.padding; p.left = oldPad[0]; p.right = oldPad[1]; p.top = oldPad[2]; p.bottom = oldPad[3];
+        }
         internal static void OnGUI()
         {
             if (!Enabled || !InBattle || BattleScreen.Hidden) return;
             try
             {
+                TorpedoSettings.BeginSmall();
                 Ship s = null; try { var ui = G.ui; s = ui != null ? ui.selectedShipMain : null; } catch { }
                 if (s == null || !IsPlayer(s) || s.isDead || s.isSinking || !s.haveTorpedoes) return;
                 var st = Get(s);
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
-                float w = 700f, h = 58f, x = (UiScale.W - w) / 2f, y = 54f + 62f;
+                // 1.11.255 (author 25.10, 12:36): one compact row - smaller buttons packed closer, the state in a short text after them
+                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f;
                 int cur = st.Pending >= 0 ? st.Pending : st.Cur;
-                if (folded) { if (GUI.Button(new Rect(x + w - 150f, y, 150f, 20f), $"Torpedoes: {Name(cur)} ▾")) folded = false; return; }
+                if (folded) { if (GUI.Button(new Rect(x + w - 150f, y, 150f, 18f), $"Torpedoes: {Name(cur)} ▾", Small())) folded = false; return; }
                 GUI.Box(new Rect(x, y, w, h), "");
                 float rng = 0f, kn = 0f; try { rng = BattleAi.TorpedoRange(s); kn = s.TorpedoSpeed(false) / 0.5144f; } catch { }
                 int man = Manual(s);
-                string mode = man < 0 ? "Auto" : (shipManual.ContainsKey(s.Pointer) ? "ship order: " : "division order: ") + Name(man);
-                string ready = st.ReadyAt > Time.time ? $", tubes reset {st.ReadyAt - Time.time:0} s" : "";
-                string avail = st.P.N == 1 ? " - this generation of the navy's torpedoes has one setting" : "";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Torpedo setting</b> {Dispatch.Ship(s.name)}: {Name(cur)} {rng / 1000f:0.0} km at {kn:0} kn ({mode}{ready}){avail}  <color=#C0C0C0>Shift = this ship only</color>", sT);
-                if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) folded = true;
+                string mode = man < 0 ? "auto" : (shipManual.ContainsKey(s.Pointer) ? "ship" : "division");
+                string ready = st.ReadyAt > Time.time ? $", reset {st.ReadyAt - Time.time:0} s" : "";
+                string avail = st.P.N == 1 ? ", one setting" : "";
+                GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), "<b>Torp. setting</b>", sT);
                 string[] lab = { "Auto", Names[HS], Names[LR], Names[ER] };
-                float bw = (w - 16f - 12f) / 4f;
+                const float bw = 56f; float bx = x + 98f;
                 for (int i = 0; i < 4; i++)
                 {
                     int set = i - 1;
                     bool can = set < 0 || Has(st, set);
-                    var r = new Rect(x + 8f + i * (bw + 4f), y + 26f, bw, 26f);
+                    var r = new Rect(bx + i * (bw + 2f), y + 3f, bw, 18f);
                     bool active = set == man;
                     var oldBg = GUI.backgroundColor; var oldEn = GUI.enabled;
                     if (active) GUI.backgroundColor = new Color(0.35f, 1f, 0.45f);
                     GUI.enabled = can;
-                    if (GUI.Button(r, active ? ">> " + lab[i] + " <<" : lab[i])) Order(s, set, Event.current != null && Event.current.shift);
+                    if (GUI.Button(r, lab[i], Small())) Order(s, set, Event.current != null && Event.current.shift);
                     GUI.enabled = oldEn; GUI.backgroundColor = oldBg;
                 }
+                float tx = bx + 4f * (bw + 2f) + 4f;
+                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"{Name(cur)} {rng / 1000f:0.0} km {kn:0} kn <color=#C0C0C0>({mode}{ready}{avail}; Shift = ship)</color>", sT);
+                if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "▴", Small())) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][TorpSet] panel: " + e.Message); }
+            finally { TorpedoSettings.EndSmall(); }
         }
         static void Order(Ship s, int set, bool shipOnly)
         {

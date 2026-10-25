@@ -1,7 +1,7 @@
 // 1.11.251 (beta): torpedo target priorities for the player's divisions. The player clicks ship classes in the order of importance
 // (for example BB, then BC, then CA); the torpedo tubes of the division aim at the nearest enemy of the most important class within
 // their range, and a division under the "Torpedo attack" order charges the nearest enemy of the most important class present.
-// When no enemy of the listed classes is in reach the game's own choice stands. Classes follow what the player knows: an
+// A listed class the enemy lacks falls through to the next class down (1.11.255); when nothing is in reach the game's choice stands. Classes follow what the player knows: an
 // unidentified ship counts as the class in the contact report (fog of war), which can be wrong. A target the player gives a ship
 // himself is never overridden. Panel: strip below the torpedo settings (division; Shift = this ship only). AI ships keep their
 // own rules. Switch: TorpedoTargetPriority (F10, Battle AI).
@@ -62,12 +62,26 @@ namespace DipGgFixes
         {
             try { return e != null && !e.isDead && !e.isSinking && !e.IsSurrendered && e.IsVisibleFor(s); } catch { return false; }
         }
+        // 1.11.255 (author 25.10, 12:36): a listed class the enemy does not have falls through to the next class down, so an order is
+        // never left unexecuted (CA listed, the enemy has only CL -> CL). The listed classes come first, in the player's order; then,
+        // for each of them, the smaller classes below it (BB > BC > CA > CL > DD > TB > TR).
+        internal static List<string> Expand(List<string> order)
+        {
+            var r = new List<string>(); if (order == null) return r;
+            foreach (var c in order) if (!r.Contains(c)) r.Add(c);
+            foreach (var c in order)
+            {
+                int k = Array.IndexOf(Classes, c); if (k < 0) continue;
+                for (int j = k + 1; j < Classes.Length; j++) if (!r.Contains(Classes[j])) r.Add(Classes[j]);
+            }
+            return r;
+        }
         // nearest enemy of the most important listed class (within maxRange when > 0)
         static Ship Pick(Ship s, List<string> order, Il2CppSystem.Collections.Generic.List<Ship> enemies, float maxRange, out float bestD, out string cls)
         {
             bestD = float.MaxValue; cls = null;
             if (order == null || enemies == null) return null;
-            foreach (var c in order)
+            foreach (var c in Expand(order))
             {
                 Ship best = null; float bd = float.MaxValue;
                 for (int i = 0; i < enemies.Count; i++)
@@ -171,28 +185,35 @@ namespace DipGgFixes
             if (!Enabled || !InBattle || BattleScreen.Hidden) return;
             try
             {
+                TorpedoSettings.BeginSmall();
                 var s = Selected(); if (s == null) return;
                 ResetIfNewBattle();
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
-                float w = 700f, h = 58f, x = (UiScale.W - w) / 2f, y = 54f + 62f + 62f;
+                // 1.11.255 (author 25.10, 12:36): one compact row right below the torpedo setting row
+                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f + 26f;
                 var order = ListFor(s);
-                if (folded) { if (GUI.Button(new Rect(x + w - 200f, y, 200f, 20f), $"Torpedo targets: {Label(order)} ▾")) folded = false; return; }
+                var sm = TorpedoSettings.Small();
+                if (folded) { if (GUI.Button(new Rect(x + w - 200f, y, 200f, 18f), $"Torpedo targets: {Label(order)} ▾", sm)) folded = false; return; }
                 GUI.Box(new Rect(x, y, w, h), "");
                 string scope = shipList.ContainsKey(s.Pointer) ? "ship" : "division";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Torpedo targets</b> ({scope}): {Label(order)}  <color=#C0C0C0>click classes in order of importance; Shift = this ship only</color>", sT);
-                if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) folded = true;
-                float bw = (w - 16f - 4f * 7f) / 8f;
+                GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), "<b>Torp. targets</b>", sT);
+                const float bw = 36f; float bx = x + 98f;
                 for (int i = 0; i < Classes.Length; i++)
                 {
                     string c = Classes[i]; int idx = order != null ? order.IndexOf(c) : -1;
-                    var r = new Rect(x + 8f + i * (bw + 4f), y + 26f, bw, 26f);
+                    var r = new Rect(bx + i * (bw + 2f), y + 3f, bw, 18f);
                     var old = GUI.backgroundColor; if (idx >= 0) GUI.backgroundColor = new Color(0.35f, 1f, 0.45f);
-                    if (GUI.Button(r, idx >= 0 ? $"{idx + 1}. {c.ToUpperInvariant()}" : c.ToUpperInvariant())) Toggle(s, c, Event.current != null && Event.current.shift);
+                    if (GUI.Button(r, idx >= 0 ? $"{idx + 1}.{c.ToUpperInvariant()}" : c.ToUpperInvariant(), sm)) Toggle(s, c, Event.current != null && Event.current.shift);
                     GUI.backgroundColor = old;
                 }
-                if (GUI.Button(new Rect(x + 8f + 7 * (bw + 4f), y + 26f, bw, 26f), "Clear")) Clear(s, Event.current != null && Event.current.shift);
+                float cx = bx + Classes.Length * (bw + 2f);
+                if (GUI.Button(new Rect(cx, y + 3f, 40f, 18f), "Clear", sm)) Clear(s, Event.current != null && Event.current.shift);
+                float tx = cx + 44f;
+                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"<color=#C0C0C0>{scope}; then the next class down; Shift = ship</color>", sT);
+                if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "▴", sm)) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][TorpTarget] panel: " + e.Message); }
+            finally { TorpedoSettings.EndSmall(); }
         }
         static List<string> Edit(Ship s, bool shipOnly)
         {
