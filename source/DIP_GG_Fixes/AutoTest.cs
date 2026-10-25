@@ -61,9 +61,83 @@ namespace DipGgFixes
             Speed = cat.CreateEntry("AutoTestTimeScale", 4f, null, "Author's tool: Unity time scale during the unattended battle test");
             Shots = cat.CreateEntry("AutoTestScreenshots", false, null, "Author's tool: take screenshots during the unattended battle test (UserData\\IronAdmiral\\screens)");
             LoadTimeout = cat.CreateEntry("AutoTestLoadTimeout", 2400f, null, "Author's tool: the unattended battle test quits when the battle has not loaded after this many seconds (design generation can take long)");
+            Place = cat.CreateEntry("AutoTestPlace", "", null, "Author's tool: at the start of the unattended battle test place the AI ships abeam of the player's first ship, e.g. parallel:800 (800 m, same course); empty = the game's placement");
+            StartWait = cat.CreateEntry("AutoTestStartWait", 600f, null, "Author's tool: in a screenshot run, how long (s) the test waits for the player to press Start Battle before it unpauses by itself");
+            ShotEvery = cat.CreateEntry("AutoTestShotEvery", 120f, null, "Author's tool: in a screenshot run, seconds between overview screenshots");
             Orders = cat.CreateEntry("AutoTestOrders", "", null, "Author's tool: division orders given to the player's light divisions at the start of the unattended battle test, in turn, e.g. Screen,Scout,Torpedo,Free (empty = none)");
         }
         internal static MelonPreferences_Entry<string> Orders;
+        // 1.11.283 (author 25.10, 20:24): forum report "1893, two light cruisers, parallel at under 1000 m" - the test can place the
+        // AI ships abeam of the player's ships, wait less for "Start Battle" and take screenshots more often. Tools only.
+        internal static MelonPreferences_Entry<string> Place;
+        internal static MelonPreferences_Entry<float> StartWait, ShotEvery;
+        static void PlaceShips()
+        {
+            if (Place == null || string.IsNullOrEmpty(Place.Value)) return;
+            try
+            {
+                var p = Place.Value.Split(':'); if (p[0].Trim() != "parallel") { Log("place: unknown mode " + Place.Value); return; }
+                float d = 800f; if (p.Length > 1) float.TryParse(p[1].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d);
+                var ships = BattleManager.Instance.CurrentBattle.Ships; var mine = new List<Ship>(); var ai = new List<Ship>();
+                for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (s == null) continue; if (s.player != null && s.player.isMain) mine.Add(s); else ai.Add(s); }
+                if (mine.Count == 0 || ai.Count == 0) { Log("place: no ships"); return; }
+                var lead = mine[0].transform; var fwd = lead.forward; fwd.y = 0f; fwd.Normalize(); var right = Vector3.Cross(Vector3.up, fwd);
+                for (int i = 0; i < ai.Count; i++)
+                {
+                    var s = ai[i]; var np = lead.position + right * d - fwd * (i * 600f); np.y = s.transform.position.y;
+                    s.transform.SetPositionAndRotation(np, lead.rotation);
+                    try { var rb = s.GetComponent<Rigidbody>(); if (rb != null) { rb.position = np; rb.rotation = lead.rotation; rb.velocity = Vector3.zero; } } catch { }
+                    Log($"place: {s.name} set abeam of {mine[0].name} at {d:0} m, same course");
+                }
+            }
+            catch (Exception e) { Log("place: " + e.Message); }
+        }
+        // "parallel:1000:hold" - the ships are kept side by side for the whole test: every second both divisions are sent ahead on the
+        // player's course and an AI ship that has drifted more than 150 m from its slot abeam is moved half way back (author 25.10, 20:31)
+        static float nextHold; static int holdMoves, holdErr;
+        static void Hold()
+        {
+            if (Place == null || string.IsNullOrEmpty(Place.Value) || !Place.Value.EndsWith(":hold") || Time.realtimeSinceStartup < nextHold) return;
+            nextHold = Time.realtimeSinceStartup + 1f;
+            try
+            {
+                var p = Place.Value.Split(':'); float d = 800f; if (p.Length > 1) float.TryParse(p[1].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d);
+                var ships = BattleManager.Instance.CurrentBattle.Ships; var mine = new List<Ship>(); var ai = new List<Ship>();
+                for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (s == null || s.isSinking || s.isDead) continue; if (s.player != null && s.player.isMain) mine.Add(s); else ai.Add(s); }
+                if (mine.Count == 0 || ai.Count == 0) return;
+                var lead = mine[0]; var lt = lead.transform; var fwd = lt.forward; fwd.y = 0f; fwd.Normalize(); var right = Vector3.Cross(Vector3.up, fwd);
+                try { lead.division.MoveTo(lt.position + fwd * 3000f); } catch { }
+                for (int i = 0; i < ai.Count; i++)
+                {
+                    var s = ai[i]; var st = s.transform; var slot = lt.position + right * d - fwd * (i * 600f); slot.y = st.position.y;
+                    try { s.division.MoveTo(slot + fwd * 3000f); } catch { }
+                    var off = st.position - slot; off.y = 0f;
+                    var sf = st.forward; sf.y = 0f;
+                    if (off.magnitude > 150f || Vector3.Angle(sf, fwd) > 15f)
+                    {
+                        var np = st.position - off * 0.5f; var rot = Vector3.Angle(sf, fwd) > 15f ? lt.rotation : st.rotation;
+                        st.SetPositionAndRotation(np, rot);
+                        try { var rb = s.GetComponent<Rigidbody>(); if (rb != null) { rb.position = np; rb.rotation = rot; } } catch { }
+                        holdMoves++;
+                    }
+                }
+            }
+            catch (Exception e) { if (holdErr++ < 3) Log("hold: " + e.Message); }
+        }
+        static string Geometry()
+        {
+            try
+            {
+                var ships = BattleManager.Instance.CurrentBattle.Ships; Ship a = null, b = null;
+                for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (s == null || s.isSinking || s.isDead) continue; if (s.player != null && s.player.isMain) { if (a == null) a = s; } else if (b == null) b = s; }
+                if (a == null || b == null) return "";
+                var pa = a.transform.position; var pb = b.transform.position; pa.y = pb.y = 0f;
+                var fa = a.transform.forward; fa.y = 0f; var fb = b.transform.forward; fb.y = 0f;
+                float ang = Vector3.Angle(fa, fb);
+                return $"range {(pa - pb).magnitude:0} m, courses {ang:0} deg apart, hold corrections {holdMoves}; ";
+            }
+            catch { return ""; }
+        }
         internal static MelonPreferences_Entry<float> LoadTimeout; // 1.11.176
 
         // 1.11.157: the player's divisions get division orders (test of the autonomy) - light ships in turn, capital ships stay manual
@@ -181,14 +255,14 @@ namespace DipGgFixes
             if (shots)
             {
                 // screenshot run: the battle stays paused behind the pre-battle panel until "Start Battle" is pressed (up to 10 min)
-                float wt = Time.realtimeSinceStartup + 600f; bool p = true;
+                PlaceShips(); float wt = Time.realtimeSinceStartup + (StartWait != null ? StartWait.Value : 600f); bool p = true;
                 while (Time.realtimeSinceStartup < wt) { try { p = TimeControl.IsPaused(); } catch { p = false; } if (!p) break; yield return null; }
                 Log("screenshot run: battle " + (p ? "still paused - unpausing" : "started by the player"));
                 try { if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch { }
                 try { var c = Cam.Instance; c.distanceMax *= 3f; c.distanceSelectedCamYmax *= 3f; c.distanceDesired = c.distanceDesired * 2.5f; Log($"camera distance max {c.distanceMax:0}, selected max {c.distanceSelectedCamYmax:0}"); } catch (Exception e) { Log("camera: " + e.Message); }
             }
             else
-                try { Log("paused = " + TimeControl.IsPaused()); if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch (Exception e) { Log("pause: " + e.Message); }
+                try { PlaceShips(); Log("paused = " + TimeControl.IsPaused()); if (TimeControl.IsPaused()) TimeControl.Pause(false); } catch (Exception e) { Log("pause: " + e.Message); }
             GiveOrders(); // 1.11.157
             GunLab.Run(); // 1.11.173
             float end = Time.realtimeSinceStartup + Seconds.Value; float next = 0f;
@@ -198,7 +272,8 @@ namespace DipGgFixes
             while (Time.realtimeSinceStartup < end)
             {
                 try { if (Time.timeScale < Speed.Value) Time.timeScale = Speed.Value; } catch { }
-                if (Time.realtimeSinceStartup > next) { next = Time.realtimeSinceStartup + 60f; Summary("progress"); }
+                Hold();
+                if (Time.realtimeSinceStartup > next) { next = Time.realtimeSinceStartup + (Place != null && !string.IsNullOrEmpty(Place.Value) ? 10f : 60f); Summary("progress"); }
                 if (shots && !f10Done && Time.realtimeSinceStartup > firstShot)
                 {
                     f10Done = true;
@@ -206,7 +281,7 @@ namespace DipGgFixes
                     MelonCoroutines.Start(Later(1.5f, () => Shot("f10_settings")));
                     MelonCoroutines.Start(Later(3f, () => SettingsUi.SetOpen(false)));
                 }
-                if (shots && Time.realtimeSinceStartup > nextOverview && shotN <= 40) { nextOverview = Time.realtimeSinceStartup + 120f; Shot("battle_view"); }
+                if (shots && Time.realtimeSinceStartup > nextOverview && shotN <= 60) { nextOverview = Time.realtimeSinceStartup + (ShotEvery != null ? Math.Max(5f, ShotEvery.Value) : 120f); Shot("battle_view"); }
                 bool inBattle = false; try { inBattle = GameManager.IsBattle; } catch { }
                 if (!inBattle) { Log("battle ended before the time limit"); break; }
                 yield return null;
@@ -225,7 +300,7 @@ namespace DipGgFixes
             {
                 var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (b == null) return;
                 var ships = b.Ships; if (ships == null) return;
-                var sb = new System.Text.StringBuilder($"{tag} t={Time.time:0}s timeScale={Time.timeScale:0.0} night={BattleAi.IsNight()}: ");
+                var sb = new System.Text.StringBuilder($"{tag} t={Time.time:0}s timeScale={Time.timeScale:0.0} night={BattleAi.IsNight()}: {Geometry()}");
                 for (int i = 0; i < ships.Count; i++)
                 {
                     var s = ships[i]; if (s == null) continue;
