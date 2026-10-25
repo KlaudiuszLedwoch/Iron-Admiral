@@ -12,6 +12,14 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
 [/list]
 
+[b]What is new (25 October 2026) - Iron Admiral 1.2.71, DIP_GG_Fixes 1.11.251[/b]
+[list]
+[*]Damage model, step 2: penetration from the physics of each shot - the striking velocity and angle of fall of the shell decide what it pierces (Okun's formulas for belts and decks, checked against published US 8-inch figures).
+[*]One physical gun: the gun window, the flight of the shells, the range and the penetration use the same calibre, shell weight and muzzle velocity; a heavier shell leaves slower at the same charge.
+[*]The gun window shows the penetration used in battle, with the striking velocity and angle of fall at each range.
+[*]A log line for every hit, for checking the damage model.
+[/list]
+
 [b]What is new (25 October 2026) - Iron Admiral 1.2.70, DIP_GG_Fixes 1.11.250[/b]
 [list]
 [*]Damage model, step 1: armour quality measured against Krupp cemented armour (iron 0.40 ... Krupp 1.00 ... 1.12) - the plates no longer count twice their strength, so heavy shells pierce what they pierced historically.
@@ -343,6 +351,14 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 [*]Trzy bitwy, 6 min, na końcu dwa poddane niszczyciele przejęte jako pryzy: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Dwie bitwy, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]Co nowego (25 października 2026) - Iron Admiral 1.2.71, DIP_GG_Fixes 1.11.251[/b]
+[list]
+[*]Model obrażeń, krok 2: penetracja z fizyki każdego strzału - o tym, co pocisk przebije, decydują prędkość uderzenia i kąt upadku (wzory Okuna dla pasa i pokładu, sprawdzone na opublikowanych danych amerykańskiego działa 8 cali).
+[*]Jedno działo fizyczne: okno działa, lot pocisków, zasięg i penetracja używają tego samego kalibru, masy pocisku i prędkości wylotowej; cięższy pocisk wylatuje wolniej przy tym samym ładunku.
+[*]Okno działa pokazuje penetrację używaną w bitwie, z prędkością uderzenia i kątem upadku na każdym dystansie.
+[*]Linia logu dla każdego trafienia - do sprawdzania modelu obrażeń.
 [/list]
 
 [b]Co nowego (25 października 2026) - Iron Admiral 1.2.70, DIP_GG_Fixes 1.11.250[/b]
