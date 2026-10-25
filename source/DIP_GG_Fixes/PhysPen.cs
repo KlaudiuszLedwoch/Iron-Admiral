@@ -32,7 +32,7 @@ namespace DipGgFixes
         // decided against the physics. The limits only guard against a broken value now.
         const float FMin = 0.001f, FMax = 1000f;
         internal static MelonPreferences_Entry<bool> On, HitLog;
-        internal static MelonPreferences_Entry<float> FhConst, BeltC;
+        internal static MelonPreferences_Entry<float> FhConst, BeltC, InfoSize;
         internal static MelonPreferences_Entry<int> HitLogMax;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
@@ -41,6 +41,7 @@ namespace DipGgFixes
             BeltC = cat.CreateEntry("PhysicalPenetrationBeltC", 0.2468f, null, "Belt penetration T[mm] = C * W[kg]^0.719 * Vn[m/s]^1.439 * D[mm]^-1.079 (DeMarre type); C = 0.2468 from NavWeaps side-armour data of 9 AP guns 5-16 inch");
             HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
+            InfoSize = cat.CreateEntry("GunInfoTextSize", 0.78f, null, "Gun window: text size of the gun description (1 = the game's size)");
             PhysGun.CreatePrefs(cat);
             OverPen.CreatePrefs(cat); // 1.11.253
             HitDispatch.CreatePrefs(cat); // 1.11.258
@@ -266,6 +267,8 @@ namespace DipGgFixes
                     changed = true;
                 }
                 string res = changed ? string.Join("\n", lines) : text;
+                float sz = InfoSize != null ? InfoSize.Value : 1f; // 1.11.266: smaller text in the gun window (author 25.10, 15:03)
+                if (sz > 0.3f && sz < 0.99f) res = $"<size={sz * 100f:0}%>" + res + "</size>";
                 if (changed && uiLogged++ < 2) MelonLogger.Msg("[DIP GG Fixes][Hit] gun window with the physical values (" + (ship != null ? ship.name : "?") + "):\n" + StripTags(res));
                 return res;
             }

@@ -190,7 +190,7 @@ namespace DipGgFixes
                 ResetIfNewBattle();
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
                 // 1.11.255 (author 25.10, 12:36): one compact row right below the torpedo setting row
-                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f + 26f;
+                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 48f + 26f;
                 var order = ListFor(s);
                 var sm = TorpedoSettings.Small();
                 if (folded) { if (GUI.Button(new Rect(x + w - 200f, y, 200f, 18f), $"Torpedo targets: {Label(order)} ▾", sm)) folded = false; return; }

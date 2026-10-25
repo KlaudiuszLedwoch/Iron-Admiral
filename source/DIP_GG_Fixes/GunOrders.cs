@@ -170,7 +170,7 @@ namespace DipGgFixes
                 ResetIfNewBattle();
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
                 bool torp = false; try { torp = s.haveTorpedoes; } catch { }
-                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f + (torp ? 52f : 0f);
+                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 48f + (torp ? 52f : 0f);
                 var sm = TorpedoSettings.Small();
                 var o = OrdFor(s);
                 if (folded) { if (GUI.Button(new Rect(x + w - 200f, y, 200f, 18f), $"Gun orders: {Lab(o != null ? o.Main : null)} / {Lab(o != null ? o.Sec : null)} â–ľ", sm)) folded = false; return; }

@@ -475,7 +475,7 @@ namespace DipGgFixes
                 var st = Get(s);
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
                 // 1.11.255 (author 25.10, 12:36): one compact row - smaller buttons packed closer, the state in a short text after them
-                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f;
+                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 48f;
                 int cur = st.Pending >= 0 ? st.Pending : st.Cur;
                 if (folded) { if (GUI.Button(new Rect(x + w - 150f, y, 150f, 18f), $"Torpedoes: {Name(cur)} ▾", Small())) folded = false; return; }
                 GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
