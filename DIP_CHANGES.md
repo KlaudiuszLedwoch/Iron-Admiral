@@ -56,7 +56,7 @@ Sources: N. J. M. Campbell, *Jutland: An Analysis of the Fighting* (figures as s
 |---|---|---|---|---|
 | over_penetration (shell passes through without exploding) | 0.32 | 0.002 | 0.10 (estimate) | Shells that passed through still did real damage. Examples: US Navy War Damage Report No. 57 (South Dakota, Nov 1942 – most hits passed through without exploding); Samar 1944; Bismarck 1941 (a shell through the bow let in a large amount of water and cost speed). DIP's value makes such hits almost harmless. |
 | over_penetration_threshold | 2 | 3.5 | 3.0 (estimate) | between the two; long fuze delays of Japanese AP shells (WDR 57) |
-| armor_damage (shell breaking up on armour) | 0.42 | 0.05 | 0.10 (estimate) | WDR 57: shells that broke up on South Dakota's armour did little behind it, but damaged structure nearby |
+| armor_damage (shell breaking up on armour) | 0.42 | 0.05 | 0.15 (upper end of the estimate) | WDR 57: shells that broke up on South Dakota's armour did little behind it, but damaged structure nearby |
 | fire_damage | 1.6 | 0.33 | 0.30 (estimate) | Fires rarely destroyed ships by burning the structure; the danger was ammunition (Seydlitz at Dogger Bank 1915 survived a propellant fire; WDR No. 29 on the cruisers lost at Savo) |
 | section_damage_torpedo | 1750 | 5200 | 1750 (the game's base) | The game already scales every torpedo by the torpedo technologies of the ship that fires it (size, propulsion, generation), which follows the historical growth of warheads: ~54 kg (18", 1890s), ~145 kg (1910), 127–234 kg (WWI), 224–373 kg (Mk 15), ~490 kg (Type 93) – navweaps.com torpedo pages. DIP raised the base to the WWII value on top of those technologies. |
 | torpedo_damage_ammo_detonation | 690 | 5200 | as above | as above |
@@ -64,6 +64,19 @@ Sources: N. J. M. Campbell, *Jutland: An Analysis of the Fighting* (figures as s
 Kept from DIP: fire spread, torpedo-tube explosions and torpedo flooding values – they are closer to the record than vanilla.
 
 Torpedo damage therefore follows the torpedo technologies of each ship. The ammunition-detonation value goes back to the game's 690.
+
+**Armour quality ✅ (F10: ArmorQualityHistorical, on, since 1.2.70):** the penetration table of Iron Admiral gives what a shell pierces in Krupp cemented armour (navweaps.com range tables, Okun), but the game multiplied every plate once more by the strength of its armour technology (Krupp +100 %, KC 1914 +120 %, the 1916 forging +15 %): a 200 mm belt of 1916 met a shell as 461 mm. The vanilla game had a penetration table 1.4–2× higher to go with those strengths. Shells now meet the plate times its quality relative to Krupp cemented armour:
+
+| Armour (technology) | Game strength | Relative to Krupp cemented | Basis |
+|---|---|---|---|
+| wrought iron (armor_quality_1) | ×1.00 | 0.40 | iron vs steel-faced plates of the 1880s |
+| compound (armor_quality_2) | ×1.25 | 0.50 | compound about 1.25× wrought iron |
+| nickel steel (armor_quality_3) | ×1.50 | 0.60 | |
+| Harvey (armor_quality_4) | ×1.70 | 0.80 | 10.2 in of Krupp cemented = 12 in of Harvey |
+| Krupp cemented (armor_quality_5) | ×2.00 | 1.00 | reference of the penetration table |
+| later KC types (armor_quality_6–11) | ×2.20–2.80 | 1.03–1.12 | Okun: WWII Class A / KC n/A about 1.0–1.1 of the WWI plate |
+
+Test (1916, three German dreadnoughts against two US battleships and a cruiser): before, 30 minutes of fire at 6–12 km, about 120 heavy hits, every ship below 5 % damage; after, the 14-inch-belt battleship sank within 19 minutes; a 12-inch gun at 11 km pierces 370 mm against a 386 mm effective 14-inch belt.
 
 ## 4. Dispersion ✅ (F10: EraDispersion)
 
