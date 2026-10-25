@@ -39,7 +39,7 @@ namespace DipGgFixes
             On = cat.CreateEntry("PhysicalPenetration", true, null, "Battle: penetration from the physics of each shot - striking velocity and angle of fall of the shell's arc; Okun's face-hardened formula for belts and turret sides, Thompson's F-formula with Okun's standard F for decks");
             FhConst = cat.CreateEntry("PhysicalPenetrationFhConst", 0.049f, null, "Okun face-hardened formula T[mm] = C * W[kg]^0.2 * V[m/s]^1.21; C = 0.049 from the US 8\"/55 AP Mk 21 against Class A armour (navweaps.com)");
             BeltC = cat.CreateEntry("PhysicalPenetrationBeltC", 0.2468f, null, "Belt penetration T[mm] = C * W[kg]^0.719 * Vn[m/s]^1.439 * D[mm]^-1.079 (DeMarre type); C = 0.2468 from NavWeaps side-armour data of 9 AP guns 5-16 inch");
-            Replace = cat.CreateEntry("PhysicalPenetrationReplace", true, null, "Battle: the game's penetration value itself is replaced by the physical one (belt: DeMarre-type law; deck: Thompson F-formula) for the arriving shell, the AI's estimates and the gun window, and the plate is no longer scaled to it - the plate keeps only its quality (iron ... Krupp) and the obliquity. Off: the older method (plate scaled by game / physical penetration)");
+            Replace = cat.CreateEntry("PhysicalPenetrationReplace", false, null, "Battle: the game's penetration value itself is replaced by the physical one (belt: DeMarre-type law; deck: Thompson F-formula) for the arriving shell, the AI's estimates and the gun window, and the plate is no longer scaled to it - the plate keeps only its quality (iron ... Krupp) and the obliquity. Off: the older method (plate scaled by game / physical penetration)");
         HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
             InfoSize = cat.CreateEntry("GunInfoTextSize", 0.78f, null, "Gun window: text size of the gun description (1 = the game's size)");
@@ -174,7 +174,7 @@ namespace DipGgFixes
         }
         internal static void ReplacePen(PartData gun, Ship shooter, float range, bool belt, Il2CppSystem.Nullable<Ship.ShellType> st, ref float result)
         {
-            if (On == null || !On.Value || Replace == null || !Replace.Value || inPen || gun == null || shooter == null) return; patchState = 1;
+            if (On == null || !On.Value || Replace == null || !Replace.Value || inPen || gun == null || shooter == null) return;
             try
             {
                 inPen = true;
@@ -395,12 +395,13 @@ namespace DipGgFixes
         static void Postfix() { PhysPen.Current = null; }
     }
 
-    [HarmonyPatch(typeof(Ship), "GetPenetration")]
+    // 1.11.273: the Harmony patch of Ship.GetPenetration / GetPenetrationUI crashed the game at the first AI estimate of a battle
+    // (author 25.10, 16:25 and 16:26, twice at battle start on 1.11.272) - the methods take Il2Cpp nullable arguments. The patch classes
+    // are no longer marked for Harmony; the plate scaling of 1.11.251 is back in force until the penetration can be replaced another way.
     internal static class Patch_GetPenetration_PhysPen
     {
         static void Postfix(PartData __0, Ship __1, float __2, bool __3, Il2CppSystem.Nullable<Ship.ShellType> __4, ref float __result) { PhysPen.ReplacePen(__0, __1, __2, __3, __4, ref __result); }
     }
-    [HarmonyPatch(typeof(Ship), "GetPenetrationUI")]
     internal static class Patch_GetPenetrationUI_PhysPen
     {
         static void Postfix(PartData __0, Ship __1, float __2, bool __3, Il2CppSystem.Nullable<Ship.ShellType> __4, ref float __result) { PhysPen.ReplacePen(__0, __1, __2, __3, __4, ref __result); }
