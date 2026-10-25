@@ -27,6 +27,10 @@ namespace DipGgFixes
 {
     internal static class PhysPen
     {
+        // 1.11.253: the plate is scaled by game penetration / physical penetration. The 1.11.251 limits 0.05-50 cut the scaling for
+        // small guns (76 mm: game 3-13 mm against physical 37-90 mm, ratio below 0.05), so on plates of about 60-80 mm the game
+        // decided against the physics. The limits only guard against a broken value now.
+        const float FMin = 0.001f, FMax = 1000f;
         internal static MelonPreferences_Entry<bool> On, HitLog;
         internal static MelonPreferences_Entry<float> FhConst;
         internal static MelonPreferences_Entry<int> HitLogMax;
@@ -37,6 +41,7 @@ namespace DipGgFixes
             HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
             PhysGun.CreatePrefs(cat);
+            OverPen.CreatePrefs(cat); // 1.11.253
         }
 
         internal class Shot { public Ship Shooter; public PartData Pd; public PhysGun.G G; public float Range, Vs, Fall; }
@@ -53,12 +58,12 @@ namespace DipGgFixes
             if (shots.Count > 6000) shots.Clear();
             shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall };
         }
-        internal static void BattleStart() { shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); PhysGun.ResetCache(); }
+        internal static void BattleStart() { shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
         internal static void BattleEnd() { Report("battle end"); }
         internal static void Report(string tag)
         {
             if (summary.Count == 0 && adjusted == 0) return;
-            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}); hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
+            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}); AP pass-through damage raised {OverPen.Raised}x; hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
             foreach (var kv in summary) { var v = kv.Value; float n = Math.Max(1f, v[0]); sb.Append($"\n   {kv.Key} | {v[0]:0} | {v[1] / n:0} | {v[2] / n:0} | {v[3] / n:0} | {v[4] / n:0.#}"); }
             MelonLogger.Msg(sb.ToString());
         }
@@ -104,7 +109,7 @@ namespace DipGgFixes
                     float game2 = 0f;
                     try { game2 = Ship.GetPenetration(sh.Pd, sh.Shooter, sh.Range, !hz2, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap), new Il2CppSystem.Nullable<Vector3>()); } catch { }
                     if (game2 <= 0.01f) return;
-                    armor *= Mathf.Clamp(phys2 > 0.01f ? game2 / phys2 : 50f, 0.05f, 50f); shellHits++;
+                    armor *= Mathf.Clamp(phys2 > 0.01f ? game2 / phys2 : FMax, FMin, FMax); shellHits++;
                 }
                 catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] adjust (shell): " + e.Message); }
                 return;
@@ -130,7 +135,7 @@ namespace DipGgFixes
                     float phys = hz ? DeckPen(g.Kg, g.CalMm, vs, fall) : BeltPen(g.Kg, vs, fall, g.Q);
                     float game = 0f;
                     try { game = Ship.GetPenetration(gun, shooter, R, !hz, new Il2CppSystem.Nullable<Ship.ShellType>(Ship.ShellType.Ap), new Il2CppSystem.Nullable<Vector3>()); } catch { }
-                    fc = new Fac { Phys = phys, Game = game, Vs = vs, Fall = fall, R = R, Frame = Time.frameCount, F = game > 0.01f ? Mathf.Clamp(phys > 0.01f ? game / phys : 50f, 0.05f, 50f) : 1f };
+                    fc = new Fac { Phys = phys, Game = game, Vs = vs, Fall = fall, R = R, Frame = Time.frameCount, F = game > 0.01f ? Mathf.Clamp(phys > 0.01f ? game / phys : FMax, FMin, FMax) : 1f };
                     if (facCache.Count > 20000) facCache.Clear();
                     facCache[key] = fc;
                 }
