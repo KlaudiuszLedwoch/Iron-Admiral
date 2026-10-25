@@ -32,6 +32,23 @@ namespace DipGgFixes
         static int logged, errors, moved, seen; static readonly Dictionary<long, float> said = new Dictionary<long, float>();
         internal static void BattleStart() { logged = 0; moved = 0; seen = 0; said.Clear(); }
         internal static string Owner = "?";
+        internal class Struck { public string PartType; public bool Hull, Gun, Barb; public string Section; public string Zone; public float Underwater; }
+        static readonly Dictionary<long, Struck> struckBy = new Dictionary<long, Struck>();
+        internal static Struck StruckOf(Shell s) { Struck st; return s != null && struckBy.TryGetValue(s.Pointer.ToInt64(), out st) ? st : null; }
+        static void Remember(Projectile proj, Part part, Ship.HitPrecalc hp)
+        {
+            try
+            {
+                var shell = proj != null ? proj.TryCast<Shell>() : null; if (shell == null) return;
+                if (struckBy.Count > 4000) struckBy.Clear();
+                var st = new Struck(); PartData d = null; try { d = part != null ? part.data : null; } catch { }
+                if (d != null) { st.PartType = d.type; st.Hull = d.isHull; st.Gun = d.isGun; st.Barb = d.isBarbette; } else st.PartType = part != null ? "part" : "no part";
+                Ship.Section sec = null; try { sec = hp != null ? hp.section : null; } catch { }
+                if (sec != null) { st.Section = sec.name; st.Zone = sec.armor.ToString(); st.Underwater = sec.underwater; }
+                struckBy[shell.Pointer.ToInt64()] = st;
+            }
+            catch { }
+        }
         internal static MethodBase Find()
         {
             IEnumerable<Type> types;
@@ -57,6 +74,7 @@ namespace DipGgFixes
         // the hit is resolved: part and section may be exchanged for the point of aim
         internal static void Resolve(Ship target, ref Part part, Ship.HitPrecalc hp, Projectile proj)
         {
+            Remember(proj, part, hp);
             if (On == null || !On.Value || target == null || hp == null || proj == null) return;
             try
             {
@@ -83,7 +101,7 @@ namespace DipGgFixes
                     if (cands.Count == 0) { e = secs.GetEnumerator(); while (e.MoveNext()) { var s = e.Current.Value; if (s != null && s.armor == Ship.A.Belt) cands.Add(s); } }
                     if (cands.Count == 0) return;
                     var pick = cands[rnd.Next(cands.Count)];
-                    hp.part = hull; hp.section = pick; part = hull; moved++;
+                    hp.part = hull; hp.section = pick; part = hull; moved++; Remember(proj, part, hp);
                     if (logged++ < 30) MelonLogger.Msg($"[DIP GG Fixes][Aim] {sh.Shooter.name} -> {target.name}: {sh.G.CalMm:0.#} mm AP at {sh.Range:0} m laid on the waterline (p {p:0.00}, crew {train:0.00}) - strikes belt section {pick.name} ({(cur != null ? cur.name + "/" + cur.armor : "upper works")} before)");
                 }
                 else
@@ -97,7 +115,7 @@ namespace DipGgFixes
                     if (cands.Count == 0) return;
                     var pick = cands[rnd.Next(cands.Count)];
                     string before = cpd != null ? cpd.type : "?";
-                    hp.part = pick; hp.section = null; part = pick; moved++;
+                    hp.part = pick; hp.section = null; part = pick; moved++; Remember(proj, part, hp);
                     if (logged++ < 30) MelonLogger.Msg($"[DIP GG Fixes][Aim] {sh.Shooter.name} -> {target.name}: {sh.G.CalMm:0.#} mm HE at {sh.Range:0} m laid on the upper works (p {p:0.00}, crew {train:0.00}) - strikes {pick.data.type} ({before} before)");
                 }
             }
