@@ -41,6 +41,7 @@ namespace DipGgFixes
             //           The physical time of flight is divided by this factor; angles, elevation and striking speed stay real.
             WorldSpeed = cat.CreateEntry("BattleWorldSpeedFactor", 3.2f, null, "Battle: how many times faster than its nominal speed a ship moves per game second (the game's own time compression, measured 3.2); shell times of flight are compressed by the same factor so that shells and ships share one clock");
             Realistic = cat.CreateEntry("RealisticBallistics", true, null, "Battle: physical ballistics - shells fly with the real time of flight and angle of fall of their calibre, muzzle velocity and era (plunging fire at long range), instead of the almost flat paths of the game");
+            PhysPen.CreatePrefs(cat); // 1.11.251 (#33): physical gun and penetration
         }
 
         internal static void Tick()
@@ -48,9 +49,9 @@ namespace DipGgFixes
             try
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
-                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = beyond = samples = probes = 0; scaledMisses = 0; ratioSum = 0; mvLogged.Clear(); TechYears.Reset(); Obliquity.ResetCache(); nextReport = Time.time + 120f; }
-                else if (!battle && inBattle) { inBattle = false; Report("battle end"); }
-                else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); }
+                if (battle && !inBattle) { inBattle = true; bins.Clear(); gunStats.Clear(); gunSeen.Clear(); GunLab.ResetCache(); grades.Clear(); rebuilt = skipped = beyond = samples = probes = 0; scaledMisses = 0; ratioSum = 0; mvLogged.Clear(); TechYears.Reset(); Obliquity.ResetCache(); PhysPen.BattleStart(); nextReport = Time.time + 120f; }
+                else if (!battle && inBattle) { inBattle = false; Report("battle end"); PhysPen.BattleEnd(); }
+                else if (battle && Time.time > nextReport) { nextReport = Time.time + 120f; Report("battle"); PhysPen.Report("battle"); }
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
         }
@@ -66,7 +67,14 @@ namespace DipGgFixes
         static float Cd(Ship s) { return CdByNose[Math.Max(0, Math.Min(2, TechYears.ShellNose(s)))]; }
         internal static float CdOf(Ship s) { try { return Cd(s); } catch { return CdByNose[1]; } } // 1.11.216
         internal static float CdByMk(int mk) { return CdByNose[mk <= 2 ? 0 : mk == 3 ? 1 : 2]; } // 1.11.221
-        internal static void ShootOut(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall) { Shoot(mv, calIn, mass, cd, el, out range, out time, out fall); }
+        internal static void ShootOut(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall) { double vs; Shoot(mv, calIn, mass, cd, el, out range, out time, out fall, out vs); }
+        // 1.11.251 (#33): striking velocity and angle of fall of the physical trajectory at range R (the elevation the gun needs, at most
+        //           the mount elevation of its generation) - used by the physical penetration and the gun window
+        internal static void Impact(float mv, float calIn, float mass, float cd, float R, float elevMax, out float vs, out float fallDeg, out float time, out bool beyond)
+        {
+            var r = RealFor(mv, calIn, mass, cd, R, elevMax);
+            vs = r.Vs; fallDeg = r.Fall * Mathf.Rad2Deg; time = r.T; beyond = r.Beyond;
+        }
         static float Mass(float calIn) { float dcm = calIn * 2.54f; return 0.0145f * dcm * dcm * dcm; }
         // shell weight as the game computes it for this gun, ship and shell type (light/heavy shell technologies, AP/HE); formula as fallback
         static float ShellMass(Shell sh, Part p, float calIn)
@@ -91,7 +99,8 @@ namespace DipGgFixes
         }
 
         // ---- real trajectory (point mass, quadratic drag) ----
-        static void Shoot(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall)
+        static void Shoot(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall) { double vs; Shoot(mv, calIn, mass, cd, el, out range, out time, out fall, out vs); }
+        static void Shoot(double mv, double calIn, double mass, double cd, double el, out double range, out double time, out double fall, out double vsOut)
         {
             double d = calIn * 0.0254, m = mass > 0.1 ? mass : Mass((float)calIn), A = Math.PI * d * d / 4;
             double x = 0, y = 0, vx = mv * Math.Cos(el), vy = mv * Math.Sin(el), t = 0, dt = 0.05;
@@ -103,12 +112,12 @@ namespace DipGgFixes
                 double nx = x + vx * dt, ny = y + vy * dt; vx += ax * dt; vy += ay * dt; t += dt;
                 if ((ny < 0 && t > 0.1) || t > 200)
                 {
-                    double f = ny < 0 ? y / (y - ny) : 1; range = x + (nx - x) * f; time = t - dt + dt * f; fall = Math.Atan2(-vy, vx); return;
+                    double f = ny < 0 ? y / (y - ny) : 1; range = x + (nx - x) * f; time = t - dt + dt * f; fall = Math.Atan2(-vy, vx); vsOut = Math.Sqrt(vx * vx + vy * vy); return;
                 }
                 x = nx; y = ny;
             }
         }
-        struct Real { public bool Ok, Beyond; public float T, Fall, Mv; }
+        struct Real { public bool Ok, Beyond; public float T, Fall, Mv, Vs; }
         static readonly Dictionary<long, Real> cache = new Dictionary<long, Real>();
         // 1.11.224 (author's decision 24.10): the barrels never rise above the mounting of the gun's generation (elevMax), and the range
         //          is never cut. A target beyond what the shell reaches at that elevation is reached with a higher muzzle velocity -
@@ -119,9 +128,10 @@ namespace DipGgFixes
             int mvi = Mathf.RoundToInt(mv / 10f), ci = Mathf.RoundToInt(calIn * 2f), ri = Mathf.Clamp(Mathf.RoundToInt(R / 200f), 0, 16383), cdi = Mathf.RoundToInt(cd * 100f), mi = Mathf.Clamp(Mathf.RoundToInt(mass), 0, 16383), ei = Mathf.Clamp(Mathf.RoundToInt(elevMax), 1, 63);
             long key = ((long)mvi << 52) | ((long)ci << 43) | ((long)cdi << 34) | ((long)mi << 20) | ((long)ei << 14) | (long)ri;
             Real r; if (cache.TryGetValue(key, out r)) return r;
-            double mvq = mvi * 10.0, cq = ci / 2.0, Rq = ri * 200.0, cdq = cdi / 100.0, mq = mi, rr, tt, ff, em = ei * Math.PI / 180;
+            double mvq = mvi * 10.0, cq = ci / 2.0, Rq = ri * 200.0, cdq = cdi / 100.0, mq = mi, rr, tt, ff, vv, em = ei * Math.PI / 180;
             r.Mv = (float)mvq;
-            Shoot(mvq, cq, mq, cdq, em, out rr, out tt, out ff);
+            Shoot(mvq, cq, mq, cdq, em, out rr, out tt, out ff, out vv);
+            r.Vs = (float)vv;
             if (rr < Rq)
             {
                 // 1.11.225 (author's decision 24.10): the muzzle velocity comes from the technologies alone and the mount elevation from the
@@ -133,8 +143,8 @@ namespace DipGgFixes
             {
                 double lo = 0, hi = em;
                 for (int i = 0; i < 28; i++) { double mid = (lo + hi) / 2; Shoot(mvq, cq, mq, cdq, mid, out rr, out tt, out ff); if (rr < Rq) lo = mid; else hi = mid; }
-                Shoot(mvq, cq, mq, cdq, (lo + hi) / 2, out rr, out tt, out ff);
-                r.Ok = true; r.T = (float)tt; r.Fall = (float)ff;
+                Shoot(mvq, cq, mq, cdq, (lo + hi) / 2, out rr, out tt, out ff, out vv);
+                r.Ok = true; r.T = (float)tt; r.Fall = (float)ff; r.Vs = (float)vv;
             }
             if (cache.Count > 20000) cache.Clear();
             cache[key] = r; return r;
@@ -208,7 +218,9 @@ namespace DipGgFixes
                 {
                     samples++;
                     Vector3 pT = tr.PositionAtTime((float)T), vt2 = tr.VelocityAtTime((float)T);
-                    Log($"sample {calIn:0.0} in at {R:0} m: game T {oldT:0.0} s, target velocity {oldTV.magnitude:0}; physical T {T:0.0} s, fall {want * 180 / Math.PI:0.0} deg, k {k:0.00000}, gravity {g:0.00}; trajectory at T misses the aim point by {(pT - to).magnitude:0.0} m, its fall {Mathf.Atan2(-vt2.y, new Vector2(vt2.x, vt2.z).magnitude) * Mathf.Rad2Deg:0.0} deg");
+                    // 1.11.251 (#33): the times here are on the game clock (real time / BattleWorldSpeedFactor) and k / gravity belong to the game's
+                    //           linear-drag arc fitted on that clock - not physical values (the physical ones are in the battle table)
+                    Log($"arc fit on the game clock {calIn:0.0} in at {R:0} m: game's own T {oldT:0.0} s; rebuilt arc T {T:0.0} s game clock = {T * ws:0.0} s real, fall {want * 180 / Math.PI:0.0} deg; arc constants k {k:0.00000}, g {g:0.00} (game clock); misses the aim point by {(pT - to).magnitude:0.0} m, fall at T {Mathf.Atan2(-vt2.y, new Vector2(vt2.x, vt2.z).magnitude) * Mathf.Rad2Deg:0.0} deg");
                 }
             }
             catch (Exception e) { if (errors++ < 5) Log("rebuild: " + e.Message); }
@@ -279,8 +291,15 @@ namespace DipGgFixes
                 float mvGun = 0f, bonus = 0f;
                 try { if (from != null && from.data != null) { var st = new Il2CppSystem.Nullable<Ship.ShellType>(s.shellType); mvGun = Part.ShellVelocity(from.data, shooter, st); try { bonus = Part.ShellVelocityTotalBonus(from.data, shooter, st); } catch { } } } catch { }
                 float arcV0 = arc.initialVelocity.magnitude;
-                Rebuild(arc, a, b, cal / 25.4f, shooter, ShellMass(s, from, cal / 25.4f), GradeOf(from), mvGun); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
-                if (cal >= 100f && mvLogged.Count < 24) { string mkey = $"{cal / 25.4f:0.0} in Mk{GradeOf(from)} {(shooter != null ? shooter.name : "?")}"; if (mvLogged.Add(mkey)) Log($"muzzle velocity source {mkey}: gun with the ship's shell and barrel choices {mvGun:0} m/s (bonus {bonus:+0.##;-0.##;0}), game arc speed {arcV0:0} m/s (range / time of flight), used {(mvGun > 100f ? mvGun : arcV0):0} m/s, mass {ShellMass(s, from, cal / 25.4f):0} kg, Cd {Cd(shooter):0.00}; gun generation: ship {GradeOf(from)}, design {GradeDesign(from)}, gun data by generation {GunDataByGrade(from, shooter)}"); }
+                float massUse = ShellMass(s, from, cal / 25.4f), calUse = cal;
+                // 1.11.251 (#33): one physical gun - the bore as built (calibre after the diameter change), the shell weight of the gun window
+                //           and the muzzle velocity from the charge (heavier shell = slower shell at the same charge); see PhysGun.cs
+                PhysGun.G pg = default(PhysGun.G); bool phys = false;
+                try { if (from != null && from.data != null && shooter != null && PhysGun.Enabled) { pg = PhysGun.Get(from.data, shooter, s.shellType); phys = pg.Ok; } } catch { }
+                if (phys) { mvGun = pg.Mv; massUse = pg.Kg; calUse = pg.CalMm; }
+                Rebuild(arc, a, b, calUse / 25.4f, shooter, massUse, GradeOf(from), mvGun); // 1.11.164: the arc of the created shell is rebuilt (patching CalcTrajectory crashed the game at start)
+                if (phys) { try { float vsP, fallP, ttP; bool bey; float R0 = new Vector2(b.x - a.x, b.z - a.z).magnitude; Impact(pg.Mv, pg.CalMm / 25.4f, pg.Kg, Cd(shooter), R0, MountElevation.Elev(Math.Max(1, GradeOf(from))), out vsP, out fallP, out ttP, out bey); PhysPen.Register(s, from, shooter, pg, R0, vsP, fallP); } catch { } }
+                if (cal >= 100f && mvLogged.Count < 24) { string mkey = $"{cal / 25.4f:0.0} in Mk{GradeOf(from)} {(shooter != null ? shooter.name : "?")}"; if (mvLogged.Add(mkey)) Log($"muzzle velocity source {mkey}: gun with the ship's shell and barrel choices {mvGun:0} m/s (bonus {bonus:+0.##;-0.##;0}), game arc speed {arcV0:0} m/s (range / time of flight), used {(mvGun > 100f ? mvGun : arcV0):0} m/s, mass {ShellMass(s, from, cal / 25.4f):0} kg, Cd {Cd(shooter):0.00}; gun generation: ship {GradeOf(from)}, design {GradeDesign(from)}, gun data by generation {GunDataByGrade(from, shooter)}{(phys ? "; " + PhysGun.Describe(pg) : "")}"); }
                 try { var iv = arc.initialVelocity; float hz0 = new Vector2(iv.x, iv.z).magnitude; if (hz0 > 1f) BarrelElevation.Record(from, Mathf.Atan2(iv.y, hz0) * Mathf.Rad2Deg); } catch { } // 1.11.209
                 if (LogOn == null || !LogOn.Value) return;
                 float t = arc.timeToTarget * WS; if (t <= 0f) return; // logged in real seconds (1.11.206)
@@ -407,8 +426,11 @@ namespace DipGgFixes
                 float mv = 0f, mass = 0f; try { mv = g.ShellVelocity(ship, pd, grade); mass = g.ShellWeight(ship, pd, grade); } catch { }
                 // 1.11.238: with a ship, its own gun values (shell and barrel choices of the design) - the same the shells fly with
                 if (ship != null && pd != null) { try { float m2 = Part.ShellVelocity(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>()); if (m2 > 100f) mv = m2; float w2 = Part.ShellWeight(pd, ship, new Il2CppSystem.Nullable<Ship.ShellType>()); if (w2 > 0.1f) mass = w2; } catch { } }
+                float calIn = g.caliberInch > 0f ? g.caliberInch : (pd != null ? pd.caliber / 25.4f : 0f);
+                // 1.11.251 (#33): the same physical gun as the shells and the penetration (bore as built, gun-window shell weight, velocity from the charge)
+                if (ship != null && pd != null && PhysGun.Enabled) { try { var pg = PhysGun.Get(pd, ship, Ship.ShellType.Ap); if (pg.Ok) { mv = pg.Mv; mass = pg.Kg; calIn = pg.CalMm / 25.4f; } } catch { } }
                 if (mv < 100f || mass <= 0f) return range;
-                float calIn = g.caliberInch > 0f ? g.caliberInch : (pd != null ? pd.caliber / 25.4f : 0f); if (calIn <= 0f) return range;
+                if (calIn <= 0f) return range;
                 // 1.11.221: without a ship (the game asks for raw gun values) the shell shape of the generation: Mk 1-2 blunt, Mk 3 1907 nose, Mk 4-5 1927 nose
                 float cd = ship != null ? Ballistics.CdOf(ship) : Ballistics.CdByMk(grade);
                 int k = Math.Max(1, Math.Min(5, grade));
