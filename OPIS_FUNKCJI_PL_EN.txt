@@ -1,5 +1,5 @@
-Iron Admiral 1.2.71 (DIP_GG_Fixes 1.11.251) - CO DAJE TEN MOD
-Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.71 (DIP_GG_Fixes 1.11.251).
+Iron Admiral 1.2.72 (DIP_GG_Fixes 1.11.256) - CO DAJE TEN MOD
+Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.72 (DIP_GG_Fixes 1.11.256).
 Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (103 sekcji).
 ============================================================================
 
@@ -473,14 +473,14 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
   dystansu bez szans na przebicie, zygzak w podejściu.
 
 
-Dwa pliki do pobrania: Iron_Admiral_1.2.71_Nexus.zip (instalator; MelonLoader
-pobierany z oficjalnego wydania) i Iron_Admiral_1.2.71_Mods_only.zip (sam folder
+Dwa pliki do pobrania: Iron_Admiral_1.2.72_Nexus.zip (instalator; MelonLoader
+pobierany z oficjalnego wydania) i Iron_Admiral_1.2.72_Mods_only.zip (sam folder
 Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.71 (DIP_GG_Fixes 1.11.251) - WHAT THIS MOD DOES
-Description as of 22 October 2026. Latest version: Iron Admiral 1.2.71 (DIP_GG_Fixes 1.11.251).
+Iron Admiral 1.2.72 (DIP_GG_Fixes 1.11.256) - WHAT THIS MOD DOES
+Description as of 22 October 2026. Latest version: Iron Admiral 1.2.72 (DIP_GG_Fixes 1.11.256).
 Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (103 sections).
 ============================================================================
 
@@ -953,6 +953,6 @@ when the DLL does.
   without a chance to penetrate, evasive zigzag on the approach.
 
 
-Two downloads: Iron_Admiral_1.2.71_Nexus.zip (installer; MelonLoader fetched from
-the official release) and Iron_Admiral_1.2.71_Mods_only.zip (the Mods folder only,
+Two downloads: Iron_Admiral_1.2.72_Nexus.zip (installer; MelonLoader fetched from
+the official release) and Iron_Admiral_1.2.72_Mods_only.zip (the Mods folder only,
 for those already running MelonLoader 0.6.6).
