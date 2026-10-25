@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.261", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.262", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1881,6 +1881,11 @@ namespace DipGgFixes
         }
 
         // Torpedo charge of a light (or capital) division against the nearest visible enemy capital ship.
+        // 1.11.262 (author 25.10, 14:37: "the torpedo attack does not happen"): the player's Torpedo attack order (division orders panel) ran
+        // with the AI's rules - it waited until a capital ship came within the AI's start distance (log: "[Torpedo attack]: waiting") and
+        // ignored the torpedo target priorities. An ordered charge now goes in at once at the priority target (next class down when the
+        // listed class is missing) or the nearest capital ship.
+        internal static bool OrderedCharge;
         internal static void TorpedoCharge(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, bool playerSide)
         {
             float dmg = DivDamage(div);
@@ -1908,7 +1913,8 @@ namespace DipGgFixes
             float bestD;
             // 1.11.251: a player's division with torpedo target priorities charges the nearest enemy of the most important class
             Ship best = null; bestD = float.MaxValue;
-            if (playerSide) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); }
+            bool ordered = OrderedCharge;
+            if (playerSide || ordered) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); }
             if (best == null) best = NearestVisibleCapital(leader, enemies, out bestD);
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
@@ -1916,10 +1922,11 @@ namespace DipGgFixes
             if (torp <= 0f) { Why(st, "torpedo range 0"); return; }
             float launchAt = torp * DipGgFixesMod.ChargeTorpedoMargin.Value;
             // 1.11.88: night rules (War Instructions 1944, 827; national doctrine: avoid / accept / seek night action)
-            if (!playerSide && NightFlotilla(leader, div, st, doc, enemies, bestD, launchAt)) return;
+            if (!playerSide && !ordered && NightFlotilla(leader, div, st, doc, enemies, bestD, launchAt)) return;
             if (!st.charging)
             {
                 float start = ChargeStartFor(leader, best, doc, torp);
+                if (ordered) start = float.MaxValue; // 1.11.262: the player ordered the attack - go in now
                 // 1.11.40: battle log 2026-10-18 - CL Omaha charged from 14.6 km at 4.3 vs 12.1 speed units (torpedoes 1.6 km):
                 // a division that cannot escape charges only when the target is reachable
                 if (st.returnAttack && !playerSide)
@@ -1933,7 +1940,7 @@ namespace DipGgFixes
                     if (!st.massLogged) { st.massLogged = true; Log($"{st.name} ({leader.shipType.name}): massed torpedo attack - charges {best.name} from {bestD:0} m (torpedoes {torp:0} m); alone it would not get through, part of the attack will"); }
                     start = float.MaxValue;
                 }
-                else if (!playerSide && !st.fighting && !st.covering && DipGgFixesMod.CapitalSupportScreen.Value && IsLight(leader)
+                else if (!playerSide && !ordered && !st.fighting && !st.covering && DipGgFixesMod.CapitalSupportScreen.Value && IsLight(leader)
                          && (doc == null || doc.lineFirst) && !(doc != null && doc.night > 0 && IsNight())
                          && BattleManager.Instance != null && BattleManager.Instance.CurrentBattle != null
                          && LinesEngaged(leader.player, BattleManager.Instance.CurrentBattle, enemies) == 1
@@ -1942,7 +1949,7 @@ namespace DipGgFixes
                     // 1.11.87 (War Instructions 1944, 12124): own battle line present but not yet engaged - torpedoes are held back
                     Why(st, "holding torpedoes until the battle lines are engaged"); return;
                 }
-                else if (st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
+                else if (!ordered && st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
                 {
                     if (!st.reachLogged) { st.reachLogged = true; Log($"{st.name}: charge on {best.name} not feasible ({bestD:0} m, start distance {start:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0}) - fighting with guns"); }
                     Why(st, "charge not feasible - guns"); return;
