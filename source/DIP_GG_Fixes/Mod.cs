@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.266", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.267", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1914,7 +1914,7 @@ namespace DipGgFixes
             // 1.11.251: a player's division with torpedo target priorities charges the nearest enemy of the most important class
             Ship best = null; bestD = float.MaxValue;
             bool ordered = OrderedCharge;
-            if (playerSide || ordered) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); }
+            if (playerSide || ordered) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); if (best != null && st.charging) st.target = best.Pointer; } // 1.11.267: the shift is kept (the log repeated it every tick)
             if (best == null) best = NearestVisibleCapital(leader, enemies, out bestD);
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
@@ -1973,6 +1973,23 @@ namespace DipGgFixes
             else if (!playerSide && DipGgFixesMod.TorpedoReloadCycle.Value && bestD > launchAt * 0.6f)
             {
                 var tt2 = best.transform; if (tt2 != null) div.MoveTo(tt2.position);
+            }
+            // 1.11.267 (author 25.10, 15:04/15:08: CA under a torpedo attack order closed to ramming distance): a player's division
+            // inside launch range stops closing - it holds off at the launch distance, running across the target's bearing
+            else if (playerSide || ordered)
+            {
+                var tt3 = best.transform; var lt = leader.transform;
+                if (tt3 != null && lt != null)
+                {
+                    var dir = lt.position - tt3.position; dir.y = 0f;
+                    if (dir.sqrMagnitude > 1f)
+                    {
+                        dir.Normalize(); var side = new UnityEngine.Vector3(-dir.z, 0f, dir.x);
+                        div.MoveTo(tt3.position + dir * launchAt + side * (launchAt * 0.6f));
+                        if (st.reason != "in launch range - holding off") Log($"{st.name}: inside torpedo launch range of {best.name} ({bestD:0} m, launch {launchAt:0} m) - stops closing and runs across");
+                        Why(st, "in launch range - holding off");
+                    }
+                }
             }
         }
 
