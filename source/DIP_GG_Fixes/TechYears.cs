@@ -14,9 +14,9 @@ namespace DipGgFixes
     internal static class TechYears
     {
         static readonly Dictionary<long, int> fc = new Dictionary<long, int>();
-        static readonly Dictionary<long, int> nose = new Dictionary<long, int>();
+        static readonly Dictionary<long, int> nose = new Dictionary<long, int>(); static int plLogged;
         static int logged;
-        internal static void Reset() { fc.Clear(); nose.Clear(); logged = 0; }
+        internal static void Reset() { fc.Clear(); nose.Clear(); logged = 0; plLogged = 0; }
 
         // year of the newest fire-control component (rangefinder or radar) fitted to the ship; 0 = none found
         internal static int FireControl(Ship s)
@@ -95,7 +95,9 @@ namespace DipGgFixes
                 }
                 catch { }
             }
-            if (logged < 24) { logged++; try { bool pl = false; try { pl = s.player != null && s.player.isMain; } catch { } MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}"); } catch { } }
+            bool isPl = false; try { isPl = s.player != null && s.player.isMain; } catch { }
+            // 1.11.260: the player's ships are always logged (in 1.11.257 the campaign's generated designs used up the 24 lines before any battle)
+            if (logged < 24 || (isPl && plLogged++ < 12)) { if (!isPl) logged++; try { bool pl = isPl; MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}"); } catch { } }
             nose[k] = n; return n;
         }
     }
