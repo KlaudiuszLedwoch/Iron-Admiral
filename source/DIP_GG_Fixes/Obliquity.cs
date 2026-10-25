@@ -117,10 +117,11 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Ship), "GetEffectiveArmor")]
     internal static class Patch_ObliquityArmor
     {
-        private static void Postfix(Ship __instance, Ship.A __0, Ship __3, ref float __result)
+        private static void Postfix(Ship __instance, Ship.A __0, PartData __2, Ship __3, ref float __result)
         {
             long t0 = Perf.Enabled ? Perf.T() : 0;
             try { if (__result > 0f) __result = ArmorQuality.Apply(__instance, __0, __result); } catch { } // 1.11.250
+            try { if (__result > 0f) PhysPen.Adjust(__instance, __0, __2, __3, ref __result); } catch { } // 1.11.251 (#33): physical penetration of this shot (after the armour quality, which reads plate x quality)
             try { if (__result > 0f) { float f = Obliquity.Factor(__instance, __0, __3); if (f > 1f) __result *= f; } } catch { }
             if (t0 != 0) Perf.Add(Perf.ARMOR, t0);
         }

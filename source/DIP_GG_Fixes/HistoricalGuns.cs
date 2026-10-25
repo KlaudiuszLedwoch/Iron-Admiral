@@ -47,6 +47,17 @@ namespace DipGgFixes
             new Row { From = 17.6f, To = 18.6f, Kg = new[] { 1441.6f, 1493.1f, 1506f, 1468.9f, 1431.8f }, Mv = new[] { 543f, 616f, 683f, 732f, 780f }, Rof = new[] { 0f, 0f, 1f, 0f, 1.75f },        Km = new[] { 0f, 0f, 26.4f, 0f, 0f } },
         };
         static Row Find(float c) { foreach (var r in Rows) if (c >= r.From && c < r.To) return r; return null; }
+        // 1.11.251 (#33): the historical reference shell of a calibre band and generation - weight (normalised to the band's nominal
+        //           calibre, the whole inch) and muzzle velocity; false when the band has no historical gun data
+        internal static bool Hist(float calIn, int grade, out float kg, out float mv, out float nominalIn)
+        {
+            kg = 0f; mv = 0f; nominalIn = (float)Math.Round(calIn);
+            var r = Find(calIn); if (r == null || r.Kg == null) return false;
+            int k = Math.Max(1, Math.Min(5, grade));
+            kg = r.Kg[k - 1]; mv = r.Mv[k - 1];
+            nominalIn = (float)Math.Round((r.From + r.To) / 2f);
+            return kg > 0f && mv > 0f;
+        }
         static float BaseRof(GunData g, int k) { try { switch (k) { case 1: return g.firerate_1; case 2: return g.firerate_2; case 3: return g.firerate_3; case 4: return g.firerate_4; default: return g.firerate_5; } } catch { return 0f; } }
         static float BaseRange(GunData g, int k) { try { switch (k) { case 1: return g.range_1; case 2: return g.range_2; case 3: return g.range_3; case 4: return g.range_4; default: return g.range_5; } } catch { return 0f; } }
         static float BaseKg(GunData g, int k) { try { switch (k) { case 1: return g.shellW_1; case 2: return g.shellW_2; case 3: return g.shellW_3; case 4: return g.shellW_4; default: return g.shellW_5; } } catch { return 0f; } }
