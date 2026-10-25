@@ -22,6 +22,19 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 [*]From this release on the stable line gets bug fixes and features tested in the beta; new features go to the beta first.
 [/list]
 
+[b]Behind 1.2.74 - what the game was doing when nobody was watching[/b]
+Rebuilding the damage model turned up a small collection of surprises in the game itself:
+[list]
+[*][b]One gun, three guns:[/b] the gun window, the shells in flight and the armour check each used a different gun. Now they are one physical gun.
+[*][b]Armour quality counted twice:[/b] heavy shells pierced far less than they historically did.
+[*][b]A shell passing clean through did almost nothing;[/b] now it does damage by what it went through - upper works, turret, hull ends, citadel or machinery.
+[*][b]Damage from the margin, not from the shell:[/b] the game's damage grew with how far the penetration exceeded the plate; now it follows the bursting charge and the place of the burst.
+[*][b]Shells that are neither AP nor HE:[/b] many enemy shells fly with the type "Auto".
+[*][b]A navy without a shell nose:[/b] a 1921 battle fleet fired blunt 1890s shells because its technology list had no nose at all.
+[*][b]A torpedo attack that ended in ramming,[/b] and clicks on the battle panels that fell through to the sea and dropped the selected ship.
+[/list]
+The direct route - replacing the game's penetration function - crashed every battle at the start, deep in native code. The working route writes the physical values into the game's own penetration table, gun by gun. Most fixes went the same way: find what the game really does, prove it in the battle log, then work around it without breaking anything else.
+
 [b]What is new (25 October 2026) - Iron Admiral 1.2.73, DIP_GG_Fixes 1.11.270[/b]
 [list]
 [*]Damage model: belt penetration recalibrated for every calibre against published figures of AP guns from 5 to 16 inch.
@@ -391,6 +404,19 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 [*]Meldunki z bitwy mają głosy załóg.
 [*]Od tego wydania linia stabilna dostaje poprawki błędów i funkcje sprawdzone w becie; nowe funkcje trafiają najpierw do bety.
 [/list]
+
+[b]Za kulisami 1.2.74 - co gra robiła, gdy nikt nie patrzył[/b]
+Przebudowa modelu obrażeń odsłoniła w samej grze sporo niespodzianek:
+[list]
+[*][b]Jedno działo, trzy działa:[/b] okno działa, lecące pociski i sprawdzanie pancerza używały trzech różnych dział. Teraz to jedno działo fizyczne.
+[*][b]Jakość pancerza liczona podwójnie:[/b] ciężkie pociski przebijały znacznie mniej niż historycznie.
+[*][b]Pocisk przelatujący na wylot nie robił prawie nic;[/b] teraz zadaje obrażenia zależne od tego, przez co przeleciał - nadbudówka, wieża, końce kadłuba, cytadela albo maszynownia.
+[*][b]Obrażenia z nadwyżki, a nie z pocisku:[/b] obrażenia w grze rosły z tym, o ile przebicie przewyższało płytę; teraz zależą od ładunku wybuchowego i miejsca wybuchu.
+[*][b]Pociski ani AP, ani HE:[/b] wiele pocisków wroga leci z typem „Auto”.
+[*][b]Flota bez nosa pocisku:[/b] pancerniki z 1921 roku strzelały tępymi pociskami z lat 90. XIX wieku, bo na liście technologii floty nie było żadnego nosa.
+[*][b]Atak torpedowy kończący się taranowaniem[/b] i kliknięcia w panele bitwy, które przechodziły na morze i odznaczały wybrany okręt.
+[/list]
+Najprostsza droga - podmiana funkcji penetracji gry - wysypywała każdą bitwę na starcie, głęboko w kodzie natywnym. Działająca droga wpisuje wartości fizyczne do własnej tabeli penetracji gry, działo po dziale. Większość poprawek szła tak samo: ustalić, co gra naprawdę robi, potwierdzić to w logu bitwy, a potem obejść bez psucia czegokolwiek innego.
 
 [b]Co nowego (25 października 2026) - Iron Admiral 1.2.73, DIP_GG_Fixes 1.11.270[/b]
 [list]
