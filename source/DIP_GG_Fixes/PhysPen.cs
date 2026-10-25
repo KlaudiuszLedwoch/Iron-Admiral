@@ -25,7 +25,7 @@ using Il2Cpp;
 
 namespace DipGgFixes
 {
-    internal static class PhysPen
+    internal static partial class PhysPen
     {
         // 1.11.253: the plate is scaled by game penetration / physical penetration. The 1.11.251 limits 0.05-50 cut the scaling for
         // small guns (76 mm: game 3-13 mm against physical 37-90 mm, ratio below 0.05), so on plates of about 60-80 mm the game
@@ -47,6 +47,7 @@ namespace DipGgFixes
             OverPen.CreatePrefs(cat); // 1.11.253
             HitDispatch.CreatePrefs(cat); // 1.11.258
             GunOrders.CreatePrefs(cat); // 1.11.259 (#37)
+        DamageDiag.CreatePrefs(cat); // 1.11.276 (#33 step 3c)
         }
 
         internal class Shot { public Ship Shooter; public PartData Pd; public PhysGun.G G; public float Range, Vs, Fall; public Ship.ShellType Raw; public bool Seen; public string Key; }
@@ -88,6 +89,8 @@ namespace DipGgFixes
         struct Fac { public float F, Phys, Game, Vs, Fall, R; public int Frame; }
         static readonly Dictionary<long, Fac> facCache = new Dictionary<long, Fac>();
 
+        internal static float GunBase(Shot sh) { try { return sh != null && sh.Pd != null && sh.Shooter != null ? Part.WeaponDamageCrude(sh.Pd, sh.Shooter) * Math.Max(0.01f, Part.WeaponDamageTotalBonus(sh.Pd, sh.Shooter)) : 0f; } catch { return 0f; } }
+        internal static Shot ShotOf(Shell s) { Shot sh; return s != null && shots.TryGetValue(s.Pointer.ToInt64(), out sh) ? sh : null; }
         internal static void Register(Shell s, Part from, Ship shooter, PhysGun.G g, float range, float vs, float fall)
         {
             if (s == null || !g.Ok) return;
@@ -96,7 +99,7 @@ namespace DipGgFixes
             string key = $"{Nation(shooter)} {g.CalMm,6:0.0} mm"; int[] fv; if (!fired.TryGetValue(key, out fv)) { fv = new int[6]; fired[key] = fv; } fv[Ix(raw)]++;
             shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall, Raw = raw, Key = key };
         }
-        internal static void BattleStart() { bool ra = ReplaceActive; rows.Clear(); shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); replaced = 0; fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
+        internal static void BattleStart() { bool ra = ReplaceActive; DamageDiag.BattleStart(); rows.Clear(); shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); replaced = 0; fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
         internal static void BattleEnd() { Report("battle end"); }
         internal static void Report(string tag)
         {
@@ -367,7 +370,7 @@ namespace DipGgFixes
                     hitLines++;
                 }
                 if (sh != null)
-                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {sh.G.CalMm:0.#} mm {ty} (physics {sh.G.Type}) {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
+                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {sh.G.CalMm:0.#} mm {ty} (physics {sh.G.Type}) {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm (after quality, obliquity and the physical scaling), penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#} (gun base {GunBase(sh):0.#}){Where()}");
                 else
                     MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {cal:0.#} mm {ty} (no physical shell) -> {(victim != null ? victim.name : "?")}: plate met {armor:0.#} mm, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
             }
