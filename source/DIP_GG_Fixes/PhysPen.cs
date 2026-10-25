@@ -48,7 +48,24 @@ namespace DipGgFixes
             GunOrders.CreatePrefs(cat); // 1.11.259 (#37)
         }
 
-        internal class Shot { public Ship Shooter; public PartData Pd; public PhysGun.G G; public float Range, Vs, Fall; }
+        internal class Shot { public Ship Shooter; public PartData Pd; public PhysGun.G G; public float Range, Vs, Fall; public Ship.ShellType Raw; public bool Seen; public string Key; }
+        // 1.11.268 (author 25.10, 15:08-15:12: enemy BB fired yellow-tracer HE shells while every logged hit read "Ap"): shells fired by
+        // nation, calibre and type - the type at creation and the type the shell carries in flight; a difference is logged
+        static readonly SortedDictionary<string, int[]> fired = new SortedDictionary<string, int[]>();
+        static int typeDiff;
+        static string Nation(Ship s) { try { var n = s != null ? s.name : null; if (n == null) return "?"; int a = n.LastIndexOf('['), b = n.LastIndexOf(']'); return a >= 0 && b > a ? n.Substring(a + 1, b - a - 1) : "?"; } catch { return "?"; } }
+        static int Ix(Ship.ShellType t) { return t == Ship.ShellType.Ap ? 0 : t == Ship.ShellType.He ? 1 : 2; }
+        internal static void Seen(Shell s)
+        {
+            try
+            {
+                Shot sh; if (s == null || !shots.TryGetValue(s.Pointer.ToInt64(), out sh) || sh.Seen) return;
+                sh.Seen = true; var t = s.shellType; int[] v;
+                if (sh.Key != null && fired.TryGetValue(sh.Key, out v)) v[3 + Ix(t)]++;
+                if (t != sh.Raw) { typeDiff++; if (typeDiff <= 5) MelonLogger.Msg($"[DIP GG Fixes][Hit] shell type differs: {sh.G.CalMm:0.#} mm from {(sh.Shooter != null ? sh.Shooter.name : "?")} - at creation {sh.Raw}, in flight {t} (physics used {sh.G.Type})"); }
+            }
+            catch { }
+        }
         static readonly Dictionary<long, Shot> shots = new Dictionary<long, Shot>();
         [ThreadStatic] internal static Shell Current;
         static int errors, hitLines, adjusted, skipped, rawLines, shellHits, noShot, uiLogged;
@@ -60,9 +77,11 @@ namespace DipGgFixes
         {
             if (s == null || !g.Ok) return;
             if (shots.Count > 6000) shots.Clear();
-            shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall };
+            var raw = Ship.ShellType.Ap; try { raw = s.shellType; } catch { }
+            string key = $"{Nation(shooter)} {g.CalMm,6:0.0} mm"; int[] fv; if (!fired.TryGetValue(key, out fv)) { fv = new int[6]; fired[key] = fv; } fv[Ix(raw)]++;
+            shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall, Raw = raw, Key = key };
         }
-        internal static void BattleStart() { shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
+        internal static void BattleStart() { shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); fired.Clear(); typeDiff = 0; PhysGun.ResetCache(); OverPen.ResetCount(); }
         internal static void BattleEnd() { Report("battle end"); }
         internal static void Report(string tag)
         {
@@ -70,6 +89,12 @@ namespace DipGgFixes
             var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}); AP pass-through damage raised {OverPen.Raised}x; hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
             foreach (var kv in summary) { var v = kv.Value; float n = Math.Max(1f, v[0]); sb.Append($"\n   {kv.Key} | {v[0]:0} | {v[1] / n:0} | {v[2] / n:0} | {v[3] / n:0} | {v[4] / n:0.#}"); }
             MelonLogger.Msg(sb.ToString());
+            if (fired.Count > 0)
+            {
+                var fb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} shells fired by nation, calibre and type (at creation AP / HE / other | in flight AP / HE / other); type changed after creation {typeDiff}x:");
+                foreach (var kv in fired) { var v = kv.Value; fb.Append($"\n   {kv.Key} | {v[0]} / {v[1]} / {v[2]} | {v[3]} / {v[4]} / {v[5]}"); }
+                MelonLogger.Msg(fb.ToString());
+            }
             OverPen.Report();
         }
         static string Where() { return OverPen.LastFrame == Time.frameCount && OverPen.LastLoc != null ? $"; struck {OverPen.LastLoc}" + (Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f ? $" (game damage {OverPen.LastRaw:0.#} -> {OverPen.LastNew:0.#})" : "") : ""; }
@@ -279,7 +304,7 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Shell), "Update")]
     internal static class Patch_ShellUpdate_PhysPen
     {
-        static void Prefix(Shell __instance) { PhysPen.Current = __instance; }
+        static void Prefix(Shell __instance) { PhysPen.Current = __instance; PhysPen.Seen(__instance); }
         static void Postfix() { PhysPen.Current = null; }
     }
 
