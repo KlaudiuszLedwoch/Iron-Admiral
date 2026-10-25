@@ -156,7 +156,7 @@ namespace DipGgFixes
             {
                 if (!leader.haveTorpedoes || !HasTorpedoAmmo(leader)) { OWhy(o, "no torpedoes - free action instead"); Issuing = true; try { Think(leader, true, true); } finally { Issuing = false; } return true; }
                 if (!States.TryGetValue(div.Pointer, out var ds)) { ds = new DivState { name = o.Name }; States[div.Pointer] = ds; }
-                Issuing = true; try { TorpedoCharge(leader, div, ds, Doctrines.For(player), enemies, false); } finally { Issuing = false; }
+                Issuing = true; OrderedCharge = true; try { TorpedoCharge(leader, div, ds, Doctrines.For(player), enemies, false); } finally { Issuing = false; OrderedCharge = false; }
                 OWhy(o, ds.reason ?? "torpedo attack"); return true;
             }
 
@@ -370,7 +370,7 @@ namespace DipGgFixes
         {
             try
             {
-                var ui = G.ui; if (ui == null) return null; var s = ui.selectedShipMain;
+                var s = BattleSel.Ship(); // 1.11.261: kept after a click on a strip
                 if (s == null || s.player == null || !s.player.isMain || s.isSinking || s.isDead) return null;
                 return s.division;
             }
@@ -391,27 +391,28 @@ namespace DipGgFixes
                 var o = OrderOf(div, false);
                 // 1.11.197 (author, 24.10): the panel sat over the sea in front of the ship cards - now a strip at the top of the
                 //          screen under the time controls, and it folds to a small tab (the Alt keys work either way)
-                float w = 700f, h = 58f; float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
+                float w = 700f, h = 44f; /* 1.11.266: smaller buttons (author 25.10, 15:02) */ float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
                 if (oFolded)
                 {
                     var tab = new Rect(x + w - 150f, y, 150f, 20f);
                     if (GUI.Button(tab, $"Orders: {OrderNames[(int)cur]} ▾")) oFolded = false;
                     return;
                 }
-                GUI.Box(new Rect(x, y, w, h), "");
+                GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
                 if (why.Length > 60) why = why.Substring(0, 60) + "...";
                 GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..6): {OrderNames[(int)cur]}{why}", oTitle);
                 if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) oFolded = true;
-                float bw = (w - 16f - 4f * 5f) / 6f;
+                float bw = (w - 16f - 4f * 5f) / 6f; TorpedoSettings.BeginSmall(); try {
                 for (int i = 0; i < 6; i++)
                 {
-                    var r = new Rect(x + 8f + i * (bw + 4f), y + 26f, bw, 26f);
+                    var r = new Rect(x + 8f + i * (bw + 4f), y + 22f, bw, 19f);
                     bool active = i == (int)cur;
                     var oldBg = GUI.backgroundColor; if (active) GUI.backgroundColor = new Color(0.35f, 1f, 0.45f); // 1.11.202: the active order stands out
                     if (GUI.Button(r, active ? ">> " + OrderNames[i] + " <<" : OrderNames[i])) SetOrder(div, (DivOrder)i, "panel");
                     GUI.backgroundColor = oldBg;
                 }
+                } finally { TorpedoSettings.EndSmall(); }
             }
             catch (Exception e) { if (oErrors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] orders panel: " + e.Message); }
         }

@@ -470,22 +470,22 @@ namespace DipGgFixes
             try
             {
                 TorpedoSettings.BeginSmall();
-                Ship s = null; try { var ui = G.ui; s = ui != null ? ui.selectedShipMain : null; } catch { }
+                Ship s = BattleSel.Ship(); // 1.11.261: kept after a click on a strip
                 if (s == null || !IsPlayer(s) || s.isDead || s.isSinking || !s.haveTorpedoes) return;
                 var st = Get(s);
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
                 // 1.11.255 (author 25.10, 12:36): one compact row - smaller buttons packed closer, the state in a short text after them
-                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f;
+                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 48f;
                 int cur = st.Pending >= 0 ? st.Pending : st.Cur;
                 if (folded) { if (GUI.Button(new Rect(x + w - 150f, y, 150f, 18f), $"Torpedoes: {Name(cur)} ▾", Small())) folded = false; return; }
-                GUI.Box(new Rect(x, y, w, h), "");
+                GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 float rng = 0f, kn = 0f; try { rng = BattleAi.TorpedoRange(s); kn = s.TorpedoSpeed(false) / 0.5144f; } catch { }
                 int man = Manual(s);
                 string mode = man < 0 ? "auto" : (shipManual.ContainsKey(s.Pointer) ? "ship" : "division");
                 string ready = st.ReadyAt > Time.time ? $", reset {st.ReadyAt - Time.time:0} s" : "";
                 string avail = st.P.N == 1 ? ", one setting" : "";
                 GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), "<b>Torp. setting</b>", sT);
-                string[] lab = { "Auto", Names[HS], Names[LR], Names[ER] };
+                string[] lab = { "Auto", "Fast", "Long", "Extreme" }; // 1.11.265: short labels
                 const float bw = 56f; float bx = x + 98f;
                 for (int i = 0; i < 4; i++)
                 {
@@ -500,7 +500,7 @@ namespace DipGgFixes
                     GUI.enabled = oldEn; GUI.backgroundColor = oldBg;
                 }
                 float tx = bx + 4f * (bw + 2f) + 4f;
-                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"{Name(cur)} {rng / 1000f:0.0} km {kn:0} kn <color=#C0C0C0>({mode}{ready}{avail}; Shift = ship)</color>", sT);
+                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"{rng / 1000f:0.0} km {kn:0} kn <color=#C0C0C0>{mode}{ready}{avail}</color>", sT);
                 if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "▴", Small())) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][TorpSet] panel: " + e.Message); }

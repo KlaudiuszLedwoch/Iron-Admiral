@@ -14,9 +14,9 @@ namespace DipGgFixes
     internal static class TechYears
     {
         static readonly Dictionary<long, int> fc = new Dictionary<long, int>();
-        static readonly Dictionary<long, int> nose = new Dictionary<long, int>();
+        static readonly Dictionary<long, int> nose = new Dictionary<long, int>(); static int plLogged;
         static int logged;
-        internal static void Reset() { fc.Clear(); nose.Clear(); logged = 0; }
+        internal static void Reset() { fc.Clear(); nose.Clear(); logged = 0; plLogged = 0; }
 
         // year of the newest fire-control component (rangefinder or radar) fitted to the ship; 0 = none found
         internal static int FireControl(Ship s)
@@ -49,12 +49,16 @@ namespace DipGgFixes
             if (s == null) return 0;
             long k = s.Pointer.ToInt64(); int n; if (nose.TryGetValue(k, out n)) return n;
             n = 0;
+            // 1.11.257 (#31, author's 25.10 battle 13:42: both player BBs of 1921 at generation 0, every British ship at 1): count what
+            // each source holds so the log shows which path misses the nose technology
+            int cDesign = 0, cAll = 0, cList = 0, cRes = 0; var seen = new System.Text.StringBuilder();
             try
             {
                 foreach (var t in s.techs)
                 {
                     if (t == null) continue;
-                    string nm = t.name;
+                    string nm = t.name; cDesign++;
+                    if (nm == "projectile_shell_15" || nm == "projectile_shell_16") seen.Append(" design:" + nm);
                     if (nm == "projectile_shell_16") n = Math.Max(n, 2);
                     else if (nm == "projectile_shell_15") n = Math.Max(n, 1);
                 }
@@ -73,7 +77,7 @@ namespace DipGgFixes
                         try
                         {
                             var e = p.technologiesResearchedAll.GetEnumerator(); var ue = e.Cast<Il2CppSystem.Collections.IEnumerator>();
-                            while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                            while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; string nm = t.data.name; cAll++; if (nm == "projectile_shell_15" || nm == "projectile_shell_16") seen.Append(" researched:" + nm); if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
                         }
                         catch (Exception e1) { if (logged++ < 3) MelonLogger.Msg("[DIP GG Fixes][Tech] shell nose, researched list: " + e1.Message); }
                         // 1.11.243 (24.10 log: the player's 1921 ships still fired blunt shells, Cd 0.74, after 1.11.241): the technology list
@@ -83,7 +87,7 @@ namespace DipGgFixes
                             try
                             {
                                 var tl = p.technologies;
-                                if (tl != null) for (int i = 0; i < tl.Count; i++) { var t = tl[i]; if (t == null || t.data == null) continue; bool ok = false; try { ok = t.isResearched; } catch { } if (!ok) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
+                                if (tl != null) for (int i = 0; i < tl.Count; i++) { var t = tl[i]; if (t == null || t.data == null) continue; bool ok = false; try { ok = t.isResearched; } catch { } cList++; if (ok) cRes++; string nm0 = t.data.name; if (nm0 == "projectile_shell_15" || nm0 == "projectile_shell_16") { float pr = -1f; try { pr = t.progress; } catch { } seen.Append($" list:{nm0}={(ok ? "researched" : "not researched")}{(pr >= 0f ? $" ({pr:0.##})" : "")}"); } if (!ok) continue; string nm = t.data.name; if (nm == "projectile_shell_16") n = Math.Max(n, 2); else if (nm == "projectile_shell_15") n = Math.Max(n, 1); }
                             }
                             catch (Exception e2) { if (logged++ < 3) MelonLogger.Msg("[DIP GG Fixes][Tech] shell nose, technology list: " + e2.Message); }
                         }
@@ -91,7 +95,27 @@ namespace DipGgFixes
                 }
                 catch { }
             }
-            if (logged < 12) { logged++; try { MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells)"); } catch { } }
+            // 1.11.263 (#31, author's battle 25.10 14:29): the player's German navy of 1921 has 409 technologies in its list and neither
+            // nose technology among them at all - not even as "not researched" (every AI navy of the same campaign lists projectile_shell_15,
+            // researched or in progress), so the player could never get past the blunt 1890s shell. When a navy's lists hold no nose
+            // technology at all, the year of the battle decides instead: the 1907 nose from 1910, the 1927 shells from 1930 (technology year
+            // + 3; own assumption from the technology years in technologies.csv).
+            string noseFallback = null;
+            if (n == 0 && seen.Length == 0 && (cAll > 0 || cList > 0))
+            {
+                // 1.11.264 (author 25.10, 14:43): the ship's own parts first - the technology year of the AP shell fitted to her
+                //           (shell_ap: ap_2/ap_4 1905, ap_5 1915, ap_6 1925): a shell of 1907 or later has the improved nose
+                int ay = 0; try { ay = PhysGun.ApShellYear(s); } catch { }
+                if (ay > 0) { n = ay >= 1927 ? 2 : ay >= 1907 ? 1 : 0; noseFallback = $"; no nose technology in the navy's lists - AP shell fitted of {ay}"; }
+                else
+                {
+                    int yr = 0; try { yr = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
+                    if (yr >= 1930) n = 2; else if (yr >= 1910) n = 1;
+                    if (n > 0) noseFallback = $"; no nose technology in the navy's lists - year {yr} rule";
+                }
+            }            bool isPl = false; try { isPl = s.player != null && s.player.isMain; } catch { }
+            // 1.11.260: the player's ships are always logged (in 1.11.257 the campaign's generated designs used up the 24 lines before any battle)
+            if (logged < 24 || (isPl && plLogged++ < 12)) { if (!isPl) logged++; try { bool pl = isPl; MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}{noseFallback}"); } catch { } }
             nose[k] = n; return n;
         }
     }

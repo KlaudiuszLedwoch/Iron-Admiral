@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.256", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.270", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -237,6 +237,7 @@ namespace DipGgFixes
         {
             if (!migDone) { migDone = true; Migrations(); }
             try { Perf.Frame(); } catch { }
+            try { BattleSel.Tick(); } catch { } // 1.11.261
             long t0 = Perf.Enabled ? Perf.T() : 0;
             try { Update0(); } finally { if (t0 != 0) Perf.Add(Perf.UPD, t0); }
         }
@@ -256,7 +257,7 @@ namespace DipGgFixes
             try { CustomBattle.Tick(); } catch { }
             try { Portless.Tick(); } catch { }
             try { Dispatch.Tick(); } catch { }
-            try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251
+            try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251, 1.11.259
             try { HistDesigner.Tick(); } catch { }
             try { AutoTest.Tick(); } catch { }
             try { Trade.Tick(); } catch { }
@@ -290,7 +291,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } try { GunOrders.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -1845,11 +1846,21 @@ namespace DipGgFixes
                         return false;
                     }
                     var away = dirSum.normalized; // steer parallel to the tracks, running with them: fewer hits, longer torpedo run
+                    // 1.11.270 (author 25.10, 15:23: a cruiser combing tracks ran to 600 m of an enemy battleship): of the two courses
+                    // parallel to the tracks, the one that opens the range from the nearest enemy ship within 2.5 km
+                    string flip = "";
+                    try
+                    {
+                        Ship nearE = null; float nd = 2500f;
+                        for (int i = 0; enemies != null && i < enemies.Count; i++) { var e = enemies[i]; if (e == null || e.isSinking || e.isDead) continue; var r = e.transform.position - lp; r.y = 0f; float d = r.magnitude; if (d < nd) { nd = d; nearE = e; } }
+                        if (nearE != null) { var toE = nearE.transform.position - lp; toE.y = 0f; toE.Normalize(); if (UnityEngine.Vector3.Dot(away, toE) > 0.2f) { away = -away; flip = $" - against the tracks, away from {nearE.name} at {nd:0} m"; } }
+                    }
+                    catch { }
                     div.MoveTo(lp + away * 3000f); st.evadeDir = away;
                     st.evadeUntil = UnityEngine.Time.time + DipGgFixesMod.TorpedoTurnAwaySeconds.Value;
                     st.closing = false;
                     Why(st, "turning away from torpedoes");
-                    Log($"{st.name} ({leader.shipType.name}): {n} enemy torpedo track(s) sighted, closest pass {closest:0} m - division turns away and combs the tracks for {DipGgFixesMod.TorpedoTurnAwaySeconds.Value:0} s");
+                    Log($"{st.name} ({leader.shipType.name}): {n} enemy torpedo track(s) sighted, closest pass {closest:0} m - division turns away and combs the tracks for {DipGgFixesMod.TorpedoTurnAwaySeconds.Value:0} s{flip}");
                     return true;
                 }
                 catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] torpedo evasion failed: " + e.Message); return false; }
@@ -1880,6 +1891,11 @@ namespace DipGgFixes
         }
 
         // Torpedo charge of a light (or capital) division against the nearest visible enemy capital ship.
+        // 1.11.262 (author 25.10, 14:37: "the torpedo attack does not happen"): the player's Torpedo attack order (division orders panel) ran
+        // with the AI's rules - it waited until a capital ship came within the AI's start distance (log: "[Torpedo attack]: waiting") and
+        // ignored the torpedo target priorities. An ordered charge now goes in at once at the priority target (next class down when the
+        // listed class is missing) or the nearest capital ship.
+        internal static bool OrderedCharge;
         internal static void TorpedoCharge(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, bool playerSide)
         {
             float dmg = DivDamage(div);
@@ -1907,7 +1923,8 @@ namespace DipGgFixes
             float bestD;
             // 1.11.251: a player's division with torpedo target priorities charges the nearest enemy of the most important class
             Ship best = null; bestD = float.MaxValue;
-            if (playerSide) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); }
+            bool ordered = OrderedCharge;
+            if (playerSide || ordered) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); if (best != null && st.charging) st.target = best.Pointer; } // 1.11.267: the shift is kept (the log repeated it every tick)
             if (best == null) best = NearestVisibleCapital(leader, enemies, out bestD);
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
@@ -1915,10 +1932,11 @@ namespace DipGgFixes
             if (torp <= 0f) { Why(st, "torpedo range 0"); return; }
             float launchAt = torp * DipGgFixesMod.ChargeTorpedoMargin.Value;
             // 1.11.88: night rules (War Instructions 1944, 827; national doctrine: avoid / accept / seek night action)
-            if (!playerSide && NightFlotilla(leader, div, st, doc, enemies, bestD, launchAt)) return;
+            if (!playerSide && !ordered && NightFlotilla(leader, div, st, doc, enemies, bestD, launchAt)) return;
             if (!st.charging)
             {
                 float start = ChargeStartFor(leader, best, doc, torp);
+                if (ordered) start = float.MaxValue; // 1.11.262: the player ordered the attack - go in now
                 // 1.11.40: battle log 2026-10-18 - CL Omaha charged from 14.6 km at 4.3 vs 12.1 speed units (torpedoes 1.6 km):
                 // a division that cannot escape charges only when the target is reachable
                 if (st.returnAttack && !playerSide)
@@ -1932,7 +1950,7 @@ namespace DipGgFixes
                     if (!st.massLogged) { st.massLogged = true; Log($"{st.name} ({leader.shipType.name}): massed torpedo attack - charges {best.name} from {bestD:0} m (torpedoes {torp:0} m); alone it would not get through, part of the attack will"); }
                     start = float.MaxValue;
                 }
-                else if (!playerSide && !st.fighting && !st.covering && DipGgFixesMod.CapitalSupportScreen.Value && IsLight(leader)
+                else if (!playerSide && !ordered && !st.fighting && !st.covering && DipGgFixesMod.CapitalSupportScreen.Value && IsLight(leader)
                          && (doc == null || doc.lineFirst) && !(doc != null && doc.night > 0 && IsNight())
                          && BattleManager.Instance != null && BattleManager.Instance.CurrentBattle != null
                          && LinesEngaged(leader.player, BattleManager.Instance.CurrentBattle, enemies) == 1
@@ -1941,7 +1959,7 @@ namespace DipGgFixes
                     // 1.11.87 (War Instructions 1944, 12124): own battle line present but not yet engaged - torpedoes are held back
                     Why(st, "holding torpedoes until the battle lines are engaged"); return;
                 }
-                else if (st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
+                else if (!ordered && st.fighting && bestD > start * DipGgFixesMod.ChargeReachFactor.Value && Speed(leader) <= Speed(best))
                 {
                     if (!st.reachLogged) { st.reachLogged = true; Log($"{st.name}: charge on {best.name} not feasible ({bestD:0} m, start distance {start:0} m, speed {Speed(leader):0.0} vs {Speed(best):0.0}) - fighting with guns"); }
                     Why(st, "charge not feasible - guns"); return;
@@ -1965,6 +1983,23 @@ namespace DipGgFixes
             else if (!playerSide && DipGgFixesMod.TorpedoReloadCycle.Value && bestD > launchAt * 0.6f)
             {
                 var tt2 = best.transform; if (tt2 != null) div.MoveTo(tt2.position);
+            }
+            // 1.11.267 (author 25.10, 15:04/15:08: CA under a torpedo attack order closed to ramming distance): a player's division
+            // inside launch range stops closing - it holds off at the launch distance, running across the target's bearing
+            else if (playerSide || ordered)
+            {
+                var tt3 = best.transform; var lt = leader.transform;
+                if (tt3 != null && lt != null)
+                {
+                    var dir = lt.position - tt3.position; dir.y = 0f;
+                    if (dir.sqrMagnitude > 1f)
+                    {
+                        dir.Normalize(); var side = new UnityEngine.Vector3(-dir.z, 0f, dir.x);
+                        div.MoveTo(tt3.position + dir * launchAt + side * (launchAt * 0.6f));
+                        if (st.reason != "in launch range - holding off") Log($"{st.name}: inside torpedo launch range of {best.name} ({bestD:0} m, launch {launchAt:0} m) - stops closing and runs across");
+                        Why(st, "in launch range - holding off");
+                    }
+                }
             }
         }
 
@@ -2585,12 +2620,12 @@ namespace DipGgFixes
                 bool heavy = false; try { var tn = s.shipType != null ? s.shipType.name : null; heavy = tn == "bb" || tn == "bc"; } catch { }
                 MemoReset(); // 1.11.96
                 EscortState(s, st, enemies);
-                Apply(s, st, s.enemies, enemies, cache, main, heavy);
-                Apply(s, st, s.enemiesLeftSide, enemies, cache, main, heavy);
+                Apply(s, st, s.enemies, enemies, cache, main, heavy, +1);
+                Apply(s, st, s.enemiesLeftSide, enemies, cache, main, heavy, -1);
             }
             catch (Exception e) { if (Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] SmartTargets: " + e.Message); }
         }
-        static void Apply(Ship s, St st, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, Il2CppSystem.Collections.Generic.List<Ship> enemies, Il2CppSystem.Collections.Generic.Dictionary<PartData, float> cache, PartData main, bool heavy)
+        static void Apply(Ship s, St st, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, Il2CppSystem.Collections.Generic.List<Ship> enemies, Il2CppSystem.Collections.Generic.Dictionary<PartData, float> cache, PartData main, bool heavy, int side = 0)
         {
             if (dict == null) return;
             var keys = new List<PartData>();
@@ -2617,7 +2652,9 @@ namespace DipGgFixes
                 bool trOk = TransportAllowed(pd, range);
                 skipTr = !trOk;
                 Ship pick;
-                try { pick = isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range); }
+                // 1.11.259 (#37): the player's gun orders (class priorities, threat, split fire) come first
+                var go = GunOrders.Choose(s, pd, isMain, side, enemies, range, cur, trOk);
+                try { pick = go ?? (isMain ? PickMain(s, enemies, range, heavy, cur, true) : PickSecondary(s, enemies, range)); }
                 finally { skipTr = false; }
                 if (pick == null)
                 {

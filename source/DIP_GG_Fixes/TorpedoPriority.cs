@@ -179,7 +179,7 @@ namespace DipGgFixes
 
         // ------------------------------------------------------------------ panel
         static GUIStyle sT; static bool folded; static int gErr;
-        static Ship Selected() { try { var ui = G.ui; var s = ui != null ? ui.selectedShipMain : null; return s != null && IsPlayer(s) && !s.isDead && !s.isSinking && s.haveTorpedoes ? s : null; } catch { return null; } }
+        static Ship Selected() { try { var s = BattleSel.Ship(); return s != null && IsPlayer(s) && !s.isDead && !s.isSinking && s.haveTorpedoes ? s : null; } catch { return null; } }
         internal static void OnGUI()
         {
             if (!Enabled || !InBattle || BattleScreen.Hidden) return;
@@ -190,11 +190,11 @@ namespace DipGgFixes
                 ResetIfNewBattle();
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
                 // 1.11.255 (author 25.10, 12:36): one compact row right below the torpedo setting row
-                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f + 26f;
+                float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 48f + 26f;
                 var order = ListFor(s);
                 var sm = TorpedoSettings.Small();
                 if (folded) { if (GUI.Button(new Rect(x + w - 200f, y, 200f, 18f), $"Torpedo targets: {Label(order)} ▾", sm)) folded = false; return; }
-                GUI.Box(new Rect(x, y, w, h), "");
+                GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string scope = shipList.ContainsKey(s.Pointer) ? "ship" : "division";
                 GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), "<b>Torp. targets</b>", sT);
                 const float bw = 36f; float bx = x + 98f;
@@ -209,7 +209,7 @@ namespace DipGgFixes
                 float cx = bx + Classes.Length * (bw + 2f);
                 if (GUI.Button(new Rect(cx, y + 3f, 40f, 18f), "Clear", sm)) Clear(s, Event.current != null && Event.current.shift);
                 float tx = cx + 44f;
-                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"<color=#C0C0C0>{scope}; then the next class down; Shift = ship</color>", sT);
+                GUI.Label(new Rect(tx, y + 4f, x + w - 24f - tx, 18f), $"<color=#C0C0C0>{scope}</color>", sT);
                 if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "▴", sm)) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][TorpTarget] panel: " + e.Message); }

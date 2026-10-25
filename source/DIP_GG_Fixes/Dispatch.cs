@@ -116,6 +116,7 @@ namespace DipGgFixes
             catch { }
         }
         static string Pick(params string[] v) { return v[rng.Next(v.Length)]; }
+        internal static void SayHit(string key, string text) { Say(key, text); } // 1.11.258 (HitDispatch)
         static void Say(string key, params string[] variants)
         {
             if (!Active) return; if (key != null && !once.Add(key)) return;

@@ -120,6 +120,9 @@ namespace DipGgFixes
 
         // ---- technology effects read from Mods\technologies.csv (component -> effect value) ----
         static Dictionary<string, Dictionary<string, float>> compFx;
+        static readonly Dictionary<string, int> compYear = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        // 1.11.264 (author 25.10, 14:43: "check the ship's parts"): the technology year of the AP shell fitted to the ship (component shell_ap)
+        internal static int ApShellYear(Ship ship) { LoadFx(); var c = CompOfType(ship, "shell_ap"); int y; return c != null && compYear.TryGetValue(c, out y) ? y : 0; }
         static void LoadFx()
         {
             if (compFx != null) return;
@@ -128,12 +131,12 @@ namespace DipGgFixes
             {
                 string path = Path.Combine(MelonUtils.GameDirectory, "Mods", "technologies.csv");
                 if (!File.Exists(path)) return;
-                int iEff = -1, iComp = -1;
+                int iEff = -1, iComp = -1, iYear = -1;
                 foreach (var line in File.ReadAllLines(path))
                 {
                     if (line.Length == 0) continue;
                     var cols = SplitCsv(line);
-                    if (cols.Count > 0 && cols[0] == "@name") { iEff = cols.IndexOf("effect"); iComp = cols.IndexOf("component"); continue; }
+                    if (cols.Count > 0 && cols[0] == "@name") { iEff = cols.IndexOf("effect"); iComp = cols.IndexOf("component"); iYear = cols.IndexOf("year"); continue; }
                     if (iEff < 0 || iComp < 0 || cols.Count <= Math.Max(iEff, iComp)) continue;
                     string comp = cols[iComp].Trim(); if (comp.Length == 0) continue;
                     var fx = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
@@ -146,6 +149,7 @@ namespace DipGgFixes
                         float v; if (float.TryParse(val, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v)) fx[name] = v;
                     }
                     compFx[comp] = fx;
+                    int yy; if (iYear >= 0 && iYear < cols.Count && int.TryParse(cols[iYear].Trim(), out yy)) compYear[comp] = yy;
                 }
                 MelonLogger.Msg($"[DIP GG Fixes][PhysGun] technology effects of {compFx.Count} components read; AP quality reference ap_5 ap_penetration {Fx("ap_5", "ap_penetration"):0.#}");
             }
