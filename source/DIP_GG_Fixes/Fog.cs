@@ -37,7 +37,7 @@ namespace DipGgFixes
     {
         internal static MelonPreferences_Entry<bool> On, MapOn, ReportOn, TacOn, AiOn, InterceptOn;
         internal static MelonPreferences_Entry<float> Strength;
-        internal static MelonPreferences_Entry<bool> StaleContacts, NightFactors;
+        internal static MelonPreferences_Entry<bool> StaleContacts, NightFactors, HideEnemyDetails;
         static readonly Dictionary<IntPtr, float> lastShot = new Dictionary<IntPtr, float>();
         const float HiddenQ = 0.35f, ExactQ = 0.70f;
         static int errors;
@@ -47,6 +47,7 @@ namespace DipGgFixes
             On = cat.CreateEntry("FogOfWar", true, null, "Fog of war: enemy fleets, contact reports and ships in battle are known only as well as reconnaissance allows (master switch for the options below)");
             MapOn = cat.CreateEntry("FogStrategicMap", true, null, "Strategic map: foreign task forces are hidden or shown with a position error and unknown route, depending on era, distance from own ports, own fleets and scouts nearby, technology and intelligence budget");
             ReportOn = cat.CreateEntry("FogBattleReports", true, null, "Battle decision window and enemy group window show the enemy as reported: misidentified types and unreported ships are possible, fewer with scouts and better technology");
+            HideEnemyDetails = cat.CreateEntry("FogHideEnemyDetails", false, null, "Battle: enemy ships never show their details - an identified enemy shows only its name and type, no armament, armour, crew or damage picture (1.11.119)");
             TacOn = cat.CreateEntry("FogTacticalIdentification", true, null, "Battle: detected enemy ships stay unidentified (no name, class or details) until an own ship closes to identification range - shorter at night, in bad weather and behind smoke");
             AiOn = cat.CreateEntry("FogAiPerception", true, null, "The AI judges the enemy in battle by the same uncertain picture (strength estimate for massed attacks and withdrawals, torpedo targets)");
             InterceptOn = cat.CreateEntry("FogInterceptions", true, null, "A battle at sea needs the attacker to find the enemy force: poor intelligence on that force can prevent the battle (player and AI alike)");
@@ -264,6 +265,47 @@ namespace DipGgFixes
             if (obs.isMain && qLogged < 12) { qLogged++; string own = "?"; try { own = tf.Controller.data.name; } catch { } int vc = 0; try { vc = tf.Vessels.Count; } catch { } Log($"intelligence on {own} force ({vc} ships): Q {q:0.00} -> {(q < HiddenQ ? "not seen" : q < ExactQ ? "inexact" : "located")} [{why}]"); }
             return q;
         }
+
+        // 1.11.120: intelligence on a foreign port (ships lying there) - same factors as for a force at sea, without the force size:
+        // era x technology x intelligence budget, own ports nearby, own or allied forces near the port, monthly weather.
+        // Returns 1 when the fog is off. Thresholds: below HiddenQ nothing known, below ExactQ an estimate.
+        internal static float PortQ(Player obs, Vector3 pos, string key)
+        {
+            if (obs == null || !MapActive) return 1f;
+            int m = Month(); if (m != qMonth) { qMonth = m; qCache.Clear(); qLogged = 0; }
+            string ck = "port|" + PName(obs) + "|" + key; float q;
+            if (qCache.TryGetValue(ck, out q)) return q;
+            q = 1f;
+            try
+            {
+                float kpu = KmPerUnit();
+                float baseQ = Era(Year()) * TechF(obs) * BudgetF(obs);
+                float portKm = 99999f;
+                try { float sqr = float.MaxValue; var pt = CampaignMap.PortsDb.NearestPort(pos, out sqr, obs, true); if (pt != null && sqr < float.MaxValue) portKm = Mathf.Sqrt(sqr) * kpu; } catch { }
+                float port = 0.35f * Clamp01(1f - (portKm - 200f) / 1300f);
+                float fleet = 0f;
+                try
+                {
+                    var all = CampaignController.Instance.CampaignData.TaskForces;
+                    for (int i = 0; all != null && i < all.Count; i++)
+                    {
+                        var o = all[i]; if (o == null || o.Controller == null || !Friendly(obs, o.Controller)) continue;
+                        float dKm = Vector3.Distance(o.WorldPos, pos) * kpu; if (dKm > 700f) continue;
+                        int tot; int light = Light(o, out tot);
+                        float c = 0.30f * (1f - dKm / 700f) * (0.35f + 0.65f * Mathf.Min(1f, light / 3f));
+                        if (c > fleet) fleet = c;
+                    }
+                }
+                catch { }
+                int cx = (int)Mathf.Floor(pos.x * kpu / 800f), cz = (int)Mathf.Floor(pos.z * kpu / 800f);
+                float weather = -0.15f + 0.20f * Roll($"wx|{m}|{cx}|{cz}");
+                q = Fogged(Clamp01(baseQ + port + fleet + weather));
+            }
+            catch (Exception e) { Err("PortQ", e); q = 1f; }
+            qCache[ck] = q; return q;
+        }
+        internal static float HiddenLimit => HiddenQ;
+        internal static float ExactLimit => ExactQ;
 
         // ---------------------------------------------------------------- strategic map (player view)
         enum Mode { Normal, Hidden, Blurred }
@@ -706,7 +748,7 @@ namespace DipGgFixes
         internal static void LateTick()
         {
             if (tacBattleObj == null || !TacActive) return;
-            try { var ui = G.ui; if (ui == null) return; var sel = ui.selectedShipMain; if (sel == null && !panelHidden) return; if (PlayerLabel(sel) != null || panelHidden) ShipPanel(ui); } catch { }
+            try { var ui = G.ui; if (ui == null) return; var sel = ui.selectedShipMain; if (sel == null && !panelHidden) return; if (DetailsLabel(sel) != null || panelHidden) ShipPanel(ui); } catch { }
         }
         internal static void ShipPanel(Ui ui)
         {
@@ -714,12 +756,12 @@ namespace DipGgFixes
             try
             {
                 Ship sel = null; try { sel = ui.selectedShipMain; } catch { }
-                var lbl = PlayerLabel(sel);
+                var lbl = DetailsLabel(sel);
                 if (lbl != null)
                 {
                     if (ui.shipInfoPanel != null && ui.shipInfoPanel.activeSelf) ui.shipInfoPanel.SetActive(false);
                     if (ui.shipInfoStub != null && !ui.shipInfoStub.activeSelf) ui.shipInfoStub.SetActive(true);
-                    if (ui.shipInfoStubText != null) ui.shipInfoStubText.text = lbl + "\nClass, guns and armour unknown until one of your ships identifies it.";
+                    if (ui.shipInfoStubText != null) ui.shipInfoStubText.text = lbl + (PlayerLabel(sel) != null ? "\nClass, guns and armour unknown until one of your ships identifies it." : "\nEnemy ship - armament, armour and damage are not known.");
                     panelHidden = true;
                 }
                 else if (panelHidden && sel != null)
@@ -732,6 +774,18 @@ namespace DipGgFixes
                 }
             }
             catch (Exception e) { Err("ship panel", e); }
+        }
+        // 1.11.119: label for the info panel, crew panel and tooltip picture - also for an identified enemy when FogHideEnemyDetails is on
+        internal static string DetailsLabel(Ship s)
+        {
+            var lbl = PlayerLabel(s); if (lbl != null) return lbl;
+            if (HideEnemyDetails == null || !HideEnemyDetails.Value || s == null || tacBattleObj == null || tacMain == null) return null;
+            try
+            {
+                if (s.player == null) return null; bool ps = SideOf(tacBattleObj, tacMain); if (SideOf(tacBattleObj, s.player) == ps) return null;
+                return Narrative_Short(s.name) + " (" + FullName(TypeName(s)) + ")";
+            }
+            catch { return null; }
         }
         // what the player's side sees of an enemy ship: null when identified (or not an enemy)
         internal static string PlayerLabel(Ship s)
@@ -805,8 +859,9 @@ namespace DipGgFixes
         }
         internal static bool InfoText(Ship ship, bool battle, ref string result)
         {
-            var lbl = PlayerLabel(ship); if (lbl == null) return true; // 1.11.63: also when the game asks without the battle flag
-            result = lbl + "\nType, armament and armour unconfirmed until the ship is identified."; return false;
+            var lbl = PlayerLabel(ship);
+            if (lbl == null) { var dl = DetailsLabel(ship); if (dl == null) return true; result = dl + "\nArmament, armour and damage not known."; return false; }   // 1.11.119
+            result = lbl + "\nType, armament and armour unconfirmed until the ship is identified."; return false; // 1.11.63: also when the game asks without the battle flag
         }
         internal static void Tooltip(DivisionTooltip t)
         {
@@ -816,9 +871,9 @@ namespace DipGgFixes
                 int n = Math.Min(dv.ships.Count, t.createdElements.Count);
                 for (int i = 0; i < n; i++)
                 {
-                    var lbl = PlayerLabel(dv.ships[i]); var el = t.createdElements[i]; if (el == null) continue;
-                    if (lbl == null) { if (el.ShipTex != null && !el.ShipTex.enabled) el.ShipTex.enabled = true; continue; }
-                    if (el.Description != null) el.Description.text = lbl; if (el.ShipTex != null) el.ShipTex.enabled = false;
+                    var lbl = PlayerLabel(dv.ships[i]); var dl = DetailsLabel(dv.ships[i]); var el = t.createdElements[i]; if (el == null) continue;
+                    if (dl == null) { if (el.ShipTex != null && !el.ShipTex.enabled) el.ShipTex.enabled = true; continue; }
+                    if (lbl != null && el.Description != null) el.Description.text = lbl; if (el.ShipTex != null) el.ShipTex.enabled = false;   // picture with damage hidden
                 }
             }
             catch (Exception e) { Err("tooltip", e); }
@@ -890,6 +945,6 @@ namespace DipGgFixes
         static bool Pre_InfoText(Ship ship, bool battle, ref string __result) { try { if (tacBattleObj == null) return true; return InfoText(ship, battle, ref __result); } catch { return true; } }
         static void Post_Tooltip(DivisionTooltip __instance) { if (tacBattleObj != null) Tooltip(__instance); }
         static void Post_ShipPanel(Ui __instance) { if (tacBattleObj != null || panelHidden) ShipPanel(__instance); }
-        static bool Pre_CrewPanel(Ship ship) { try { return tacBattleObj == null || PlayerLabel(ship) == null; } catch { return true; } }
+        static bool Pre_CrewPanel(Ship ship) { try { return tacBattleObj == null || DetailsLabel(ship) == null; } catch { return true; } }
     }
 }

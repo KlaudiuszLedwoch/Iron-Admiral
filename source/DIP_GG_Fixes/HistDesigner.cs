@@ -296,7 +296,8 @@ namespace DipGgFixes
                     try { G.GameData.parts.TryGetValue(s["hull"], out hull0); G.GameData.shipTypes.TryGetValue(s["type"], out st); } catch { }
                     if (hull0 == null || st == null) { notes = "hull or ship type not found"; goto report; }
                     float wantT = s.N("tonnage"), wantKn = s.N("speed_kn"), wantIn = s.N("main_in"); int wantMain = (int)s.N("main_count");
-                    var hulls = new List<PartData> { hull0 }; bool altsAdded = false; string notes0 = notes, lastFail = "";
+                    var hulls = new List<PartData> { hull0 }; bool altsAdded = false, caAdded = false; string notes0 = notes, lastFail = "";
+                    var hullSt = new Dictionary<string, ShipType>(); NoGunSeen = false;   // 1.11.116: hulls of another type (cl -> ca)
                     for (int hv = 0; hv < hulls.Count; hv++)
                     {
                         PartData hull = hulls[hv]; bool useTempl = templ && hv == 0;
@@ -306,7 +307,9 @@ namespace DipGgFixes
                             weight = 0f; tonnage = 0f; beltBuilt = 0f; scale = 1f; mainBuilt = ""; result = "failed";
                             Log($"{s["name"]}: alternative hull {hv}/{hulls.Count - 1}: {hull.name} ({hull.nameUi}, {hull.tonnageMin:0}-{hull.tonnageMax:0} t)");
                         }
-                        if (!useTempl) { try { ship.ChangeHull(hull, null, st, true); } catch (Exception e) { notes += "ChangeHull: " + e.Message + "; "; lastFail = "hull change failed"; goto nextHull; } }
+                        ShipType stH = hullSt.TryGetValue(hull.name, out var stX) ? stX : st;
+                        if (stH != st) notes += $"built as {stH.name} (main calibre above the {st.name} limit); ";
+                        if (!useTempl) { try { ship.ChangeHull(hull, null, stH, true); } catch (Exception e) { notes += "ChangeHull: " + e.Message + "; "; lastFail = "hull change failed"; goto nextHull; } }
                         yield return Wait(0.5f);
                         // 3. generator tries: match main calibre and gun count
                         int bestDiff = useTempl ? 0 : 999; int tries = useTempl ? 0 : Math.Max(1, Tries.Value); bool bestValid = false;
@@ -353,6 +356,30 @@ namespace DipGgFixes
                         CapMainMm = 0f; CapSecMm = 0f; MainPerTurret = 0; WantMain = 0; EraYear = 0;
                         // 1.11.109: surplus main mounts of the historical calibre (e.g. 10 of 8 or 12 of 9 guns) are removed before the battery check
                         { var tl = new List<string>(); int tr = 0; try { tr = TrimMainBattery(ship, wantIn, wantMain, tl); } catch (Exception e) { Log("trim: " + e.Message); } if (tr > 0) { notes += $"{tr} surplus main mount(s) removed; "; Log($"{s["name"]}: main battery trimmed - {string.Join("; ", tl)}"); yield return Wait(0.3f); } }
+                        // 1.11.112: the generator did not give the historical main battery - the builder places the main turrets itself on the
+                        // hull's mounts (guns of the historical calibre and barrels per turret, centre line first, ends first), the rest of the
+                        // generated ship (superstructure, secondaries) stays
+                        {
+                            float c1; int b1; MainBattery(ship, out c1, out b1);
+                            if (Mathf.Abs(c1 - wantIn) > 0.6f || Math.Abs(b1 - wantMain) > Math.Max(1, wantMain / 4))
+                            {
+                                var ml = new List<string>(); int placed = 0;
+                                try { placed = PlaceMainTurrets(ship, wantIn, wantMain, (int)s.N("main_per_turret"), (int)s.N("year"), ml); } catch (Exception e) { ml.Add("error " + e.GetType().Name + ": " + e.Message); }
+                                yield return Wait(0.5f);
+                                // 1.11.114: removed guns leave the scene only at the end of the frame - a second pass after a pause no longer meets them
+                                if (placed == 0 && ml.Any(x => x.Contains(": part")))
+                                {
+                                    var ml2 = new List<string>();
+                                    try { placed = PlaceMainTurrets(ship, wantIn, wantMain, (int)s.N("main_per_turret"), (int)s.N("year"), ml2); } catch (Exception e) { ml2.Add("error " + e.GetType().Name + ": " + e.Message); }
+                                    yield return Wait(0.5f);
+                                    ml.Clear(); ml.Add("second pass"); ml.AddRange(ml2);
+                                }
+                                MainBattery(ship, out c1, out b1);
+                                bool v1 = false; try { v1 = ship.IsValid(false); } catch { }
+                                Log($"{s["name"]}: builder placed {placed} main turret(s){(ml.Count > 0 ? " - " + string.Join("; ", ml.Take(14)) : "")}; main battery now {b1} x {c1:0.#} in, valid {v1}{(v1 ? "" : " - " + Why(ship))}");
+                                if (placed > 0) { notes += $"main turrets placed by the builder ({placed}); "; mainBuilt = $"{b1} x {c1:0.#} in"; bestDiff = Math.Abs(b1 - wantMain); }
+                            }
+                        }
                         // the last try is what stays on the slip; if it is not the historical battery, do not save a wrong design
                         { float c2; int b2; MainBattery(ship, out c2, out b2); if (Mathf.Abs(c2 - wantIn) > 0.6f || Math.Abs(b2 - wantMain) > Math.Max(1, wantMain / 4)) { notes += $"main battery {b2} x {c2:0.#} in, not saved; "; result = "failed"; lastFail = $"main battery {b2} x {c2:0.#} in"; goto nextHull; } }
                         if (bestDiff != 0) notes += $"main battery {mainBuilt} instead of {wantMain} x {wantIn} in; ";
@@ -412,6 +439,15 @@ namespace DipGgFixes
                             altsAdded = true;
                             List<PartData> alts = null; try { alts = AltHullsFor(ship, hull0, st, wantT, s["nation"], (int)s.N("year"), AltHulls.Value); } catch (Exception e) { Log("alternative hulls: " + e.Message); }
                             if (alts != null && alts.Count > 0) { hulls.AddRange(alts); Log($"{s["name"]}: {hull0.name} failed ({lastFail}) - alternative hulls: {string.Join(", ", alts.Select(a => a.name))}"); }
+                        }
+                        // 1.11.116: the historical main gun is not available to a light cruiser at all (large protected cruisers such as
+                        // Blake or Edgar): the class is built as a heavy cruiser on up to two heavy-cruiser hulls
+                        if (!caAdded && NoGunSeen && hv == hulls.Count - 1 && s["type"] == "cl")
+                        {
+                            caAdded = true; ShipType ca = null; try { G.GameData.shipTypes.TryGetValue("ca", out ca); } catch { }
+                            List<PartData> cas = null; if (ca != null) { try { cas = AltHullsFor(ship, hull0, ca, wantT, s["nation"], (int)s.N("year"), 2); if (cas == null || cas.Count == 0) cas = AltHullsFor(ship, hull0, ca, wantT, s["nation"], (int)s.N("year"), 2, 0.2f); } catch (Exception e) { Log("ca hulls: " + e.Message); } }
+                            if (cas != null && cas.Count > 0) { foreach (var h in cas) hullSt[h.name] = ca; hulls.AddRange(cas); Log($"{s["name"]}: main gun not available to a light cruiser - heavy-cruiser hulls: {string.Join(", ", cas.Select(a => a.name))}"); }
+                            else Log($"{s["name"]}: main gun not available to a light cruiser and no heavy-cruiser hull of the period covers {wantT:0} t");
                         }
                     }
                     yield return null;
@@ -500,6 +536,176 @@ namespace DipGgFixes
         // parts the game refuses: "floor"/"mount"/"border" (off or outside its mount) -> nearest free mount first; duplicate funnels with "amount" -> one removed per round;
         // other refusals -> part removed, except main guns and towers (the class would lose its identity or its validity);
         // the caller rejects the repair when more than a quarter of the secondary barrels had to go
+        // ------------------------------------------------------------------ 1.11.112: main turrets placed by the builder
+        internal static bool NoGunSeen;
+        static float InchOf(PartData d) { try { return d.caliber > 30f ? d.caliber / 25.4f : d.caliber; } catch { return 0f; } }
+        static bool IsCasemate(PartData d) { try { return Ship.IsCasemateGun(d); } catch { return false; } }
+        // removes guns of the historical calibre or larger, frees centre-line mounts taken by smaller turrets when needed, then
+        // places n turrets of the historical calibre (barrels per turret from the data, else twins for an even count, singles otherwise)
+        static int PlaceMainTurrets(Ship ship, float wantIn, int wantMain, int mpt, int year, List<string> log)
+        {
+            if (wantMain <= 0 || wantIn <= 0f) return 0;
+            var options = new List<int>();
+            if (mpt > 0 && wantMain % mpt == 0) options.Add(mpt);
+            else
+            {
+                if (wantMain % 2 == 0 && wantMain >= 2) options.Add(2);
+                if (wantMain % 3 == 0 && year >= 1910) options.Add(3);
+                if (wantMain % 4 == 0 && year >= 1930) options.Add(4);
+                options.Add(1);
+            }
+            // guns that the game offers this nation in this year
+            var guns = new List<PartData>();
+            foreach (var kv in G.GameData.parts)
+            {
+                var d = kv.Value; if (d == null) continue;
+                try { if (!d.isGun || IsCasemate(d)) continue; } catch { continue; }
+                float ci = InchOf(d);
+                // 1.11.115: also a smaller gun whose bore can be increased to the historical calibre (up to 0.9 in, as in the designer)
+                if (ci > wantIn + 0.6f || ci < wantIn - 0.95f) continue;
+                bool av = false; try { av = ship.IsPartAvailable(d); } catch { }
+                if (av) guns.Add(d);
+            }
+            if (guns.Count == 0)
+            {
+                NoGunSeen = true;
+                // what the game does offer near that calibre (once per class in the log line)
+                var near = new List<string>();
+                foreach (var kv in G.GameData.parts)
+                {
+                    var d = kv.Value; if (d == null) continue;
+                    try { if (!d.isGun || IsCasemate(d)) continue; } catch { continue; }
+                    float ci = InchOf(d); if (ci < wantIn - 3f || ci > wantIn + 1f) continue;
+                    bool av = false; try { av = ship.IsPartAvailable(d); } catch { }
+                    if (av && near.Count < 8) near.Add($"{d.name}");
+                }
+                log.Add($"no {wantIn:0.#} in gun available (nor one up to 0.9 in smaller); available nearby: {(near.Count > 0 ? string.Join(",", near) : "none")}");
+                return 0;
+            }
+            // old main guns of the historical calibre or larger go
+            int removed = 0;
+            foreach (var p in ship.parts.ToArray())
+            {
+                var d = p != null ? p.data : null; if (d == null) continue;
+                try { if (!d.isGun || IsCasemate(d)) continue; } catch { continue; }
+                if (InchOf(d) >= wantIn - 0.6f) { try { ship.RemovePart(p, true, false); removed++; } catch { } }
+            }
+            if (removed > 0) log.Add($"{removed} old main mount(s) removed");
+            foreach (int per in options)
+            {
+                int n = wantMain / per; if (n <= 0) continue;
+                // the historical calibre itself first, else the largest smaller gun (bore increased after placing)
+                var gd = guns.Where(g => { try { return g.barrels == per; } catch { return false; } }).OrderBy(g => Mathf.Abs(InchOf(g) - wantIn) <= 0.6f ? 0 : 1).ThenBy(g => Mathf.Abs(InchOf(g) - wantIn)).FirstOrDefault();
+                if (gd == null) { log.Add($"no {per}-gun {wantIn:0.#} in turret"); continue; }
+                var free = FreeMounts(ship, gd, per == 1);   // 1.11.113: single mounts may also go on wing (side) positions, as on early cruisers
+                if (free.Count < n)
+                {
+                    // free centre-line mounts that take the turret but hold a smaller gun turret
+                    foreach (var m in ship.mounts.ToArray())
+                    {
+                        if (free.Count >= n) break;
+                        if (m == null || free.Contains(m)) continue;
+                        bool center = false; try { center = m.center; } catch { }
+                        if (!center) continue;
+                        Part occ = null; try { occ = m.employedPart; } catch { }
+                        if (occ == null || occ.data == null) continue;
+                        bool g2 = false; try { g2 = occ.data.isGun && !IsCasemate(occ.data) && InchOf(occ.data) < wantIn - 0.6f; } catch { }
+                        if (!g2) continue;
+                        bool fits = false; try { fits = m.Fits(gd, null, null); } catch { }
+                        if (!fits) continue;
+                        try { ship.RemovePart(occ, true, false); free.Add(m); log.Add($"{occ.data.name} moved off a centre-line mount"); } catch { }
+                    }
+                }
+                if (free.Count < n) { log.Add($"{per}-gun turrets: {free.Count} free mount(s) for {n}"); continue; }
+                // ends first: alternate the furthest forward and the furthest aft mount
+                var byZ = free.OrderBy(m => { try { return m.transform.localPosition.z; } catch { return 0f; } }).ToList();
+                var order = new List<Mount>(); int lo = 0, hi = byZ.Count - 1; bool fwd = true;
+                while (lo <= hi) { order.Add(fwd ? byZ[hi--] : byZ[lo++]); fwd = !fwd; }
+                int placed = 0;
+                foreach (var m in order)
+                {
+                    if (placed >= n) break;
+                    Part part = null;
+                    try
+                    {
+                        part = Part.Create(gd, ship, ship.partsCont, new Il2CppSystem.Nullable<int>(), true);
+                        if (part == null) continue;
+                        ship.AddPart(part);
+                        try { part.LoadModel(ship, true); } catch { }
+                        // 1.11.113: colliders sized as the game's generator does - without it every new turret collided ("part")
+                        try { part.UpdateCollidersSize(ship); } catch { }
+                        part.Mount(m, true);
+                        // 1.11.114: the refusal names the parts or borders it collides with
+                        string why = null; bool ok = true; Il2CppSystem.Collections.Generic.List<Part> ovp = null; Il2CppSystem.Collections.Generic.List<Collider> ovb = null;
+                        try { ok = part.CanPlace(out why, out ovp, out ovb); } catch { try { ok = part.CanPlace(out why); } catch { } }
+                        if (!ok && why != "available")
+                        {
+                            string with = "";
+                            try
+                            {
+                                if (ovp != null && ovp.Count > 0) { var nn = new List<string>(); for (int k = 0; k < ovp.Count && k < 3; k++) { var op = ovp[k]; nn.Add(op == null ? "?" : (op.Pointer == part.Pointer ? "self" : (op.data != null ? op.data.name : "?"))); } with = " with " + string.Join("/", nn); }
+                                if (ovb != null && ovb.Count > 0) with += " border(" + ovb.Count + ")";
+                            }
+                            catch { }
+                            ship.RemovePart(part, true, false); log.Add($"{gd.name}: {why}{with}"); continue;
+                        }
+                        placed++;
+                    }
+                    catch (Exception e) { log.Add($"{gd.name}: {e.GetType().Name}"); try { if (part != null) ship.RemovePart(part, true, false); } catch { } }
+                }
+                try { ship.CheckCaliberOnShip(ship); } catch { }
+                try { ship.Init(); } catch { }
+                try { ship.CalcInstability(true); } catch { }
+                try { G.ui.Refresh(true); } catch { }
+                log.Add($"{placed} x {gd.name}");
+                if (placed >= n)
+                {
+                    float gap = wantIn - InchOf(gd);
+                    if (gap > 0.6f)
+                    {
+                        float off = Mathf.Min(0.9f, Mathf.Round(gap * 10f) / 10f);
+                        try
+                        {
+                            var l = ship.shipGunCaliber; bool set = false;
+                            for (int i = 0; l != null && i < l.Count; i++)
+                            {
+                                var tc = l[i]; if (tc == null || tc.isCasemateGun || tc.turretPartData == null) continue;
+                                if (Mathf.Abs(tc.turretPartData.caliber - gd.caliber) < 0.01f) { ship.SetCaliberDiameter(tc, off); set = true; log.Add($"bore {InchOf(gd):0.#} in +{off:0.0} in -> {InchOf(gd) + tc.diameter:0.0#} in"); }
+                            }
+                            if (!set) log.Add("bore increase: turret calibre entry not found");
+                        }
+                        catch (Exception e) { log.Add("bore increase: " + e.Message); }
+                    }
+                    return placed;
+                }
+                // incomplete: take them off and try the next layout
+                foreach (var p in ship.parts.ToArray()) { try { if (p != null && p.data != null && p.data.name == gd.name) ship.RemovePart(p, true, false); } catch { } }
+            }
+            return 0;
+        }
+        static List<Mount> FreeMounts(Ship ship, PartData gd, bool allowSide = false)
+        {
+            var l = new List<Mount>();
+            try
+            {
+                var ms = ship.mounts;
+                for (int i = 0; ms != null && i < ms.Count; i++)
+                {
+                    var m = ms[i]; if (m == null) continue;
+                    Part occ = null; try { occ = m.employedPart; } catch { }
+                    if (occ != null) continue;
+                    bool used = false; try { used = ship.mountsUsed.ContainsKey(m); } catch { }
+                    if (used) continue;
+                    bool side = false, cas = false; try { side = m.side; cas = m.casemate; } catch { }
+                    if (cas) continue;
+                    bool fits = false; try { fits = m.Fits(gd, null, null); } catch { }
+                    if (fits && (allowSide || !side)) l.Add(m);
+                }
+            }
+            catch { }
+            return l;
+        }
+
         static int RepairTemplate(Ship ship, float wantIn, List<string> log, out int secBefore, out int secRemoved)
         {
             int fixes = 0; var tried = new HashSet<IntPtr>(); secBefore = 0; secRemoved = 0;
@@ -557,7 +763,7 @@ namespace DipGgFixes
         }
         // other hulls of the same ship type the nation can use in that year, covering the historical displacement,
         // preferring hulls where the class sits in the lower-middle of the hull's tonnage range (room for guns and armour)
-        static List<PartData> AltHullsFor(Ship ship, PartData orig, ShipType st, float wantT, string nation, int year, int max)
+        static List<PartData> AltHullsFor(Ship ship, PartData orig, ShipType st, float wantT, string nation, int year, int max, float tol = 0f)
         {
             var res = new List<KeyValuePair<PartData, float>>();
             PlayerData pd = null; try { G.GameData.players.TryGetValue(nation, out pd); } catch { }
@@ -570,7 +776,7 @@ namespace DipGgFixes
                 bool avail = false; try { avail = ship.IsPartAvailable(p); } catch { }
                 if (!avail) continue;
                 float mn = p.tonnageMin, mx = p.tonnageMax;
-                if (wantT > 0f && (wantT < mn || wantT > mx)) continue;
+                if (wantT > 0f && (wantT < mn * (1f - tol) || wantT > mx * (1f + tol))) continue;   // 1.11.117: tol widens the range for the heavy-cruiser fallback
                 float score = mx > mn && wantT > 0f ? Mathf.Abs((wantT - mn) / (mx - mn) - 0.4f) : 1f;
                 res.Add(new KeyValuePair<PartData, float>(p, score));
             }
@@ -583,11 +789,26 @@ namespace DipGgFixes
             try { if (!ship.IsValidWeightOffset()) w.Add("weight offset/stability"); } catch { }
             try
             {
-                string r; Il2CppSystem.Collections.Generic.Dictionary<Part, string> d;
-                if (!ship.IsValidCostReqParts(out r, out _, out d)) { w.Add("parts: " + (r ?? "")); if (d != null) foreach (var kv in d) { try { w.Add((kv.Key != null && kv.Key.data != null ? kv.Key.data.name : "?") + "=" + kv.Value); } catch { } } }
+                string r; Il2CppSystem.Collections.Generic.Dictionary<Part, string> d; Il2CppSystem.Collections.Generic.List<ShipType.ReqInfo> rq;
+                if (!ship.IsValidCostReqParts(out r, out rq, out d))
+                {
+                    w.Add("parts: " + (r ?? ""));
+                    // 1.11.121: name the unmet stat requirements (stat = value, allowed min~max) instead of the bare "requirements"
+                    if (rq != null) foreach (var q in rq) { try { string sn = q.stat != null ? q.stat.name : "?"; float v = 0f; try { v = ship.stats[q.stat].total; } catch { } w.Add("req " + sn + "=" + v.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + " (" + q.min.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + "~" + q.max.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + ")"); } catch { } }
+                    if (d != null) foreach (var kv in d) { try { w.Add((kv.Key != null && kv.Key.data != null ? kv.Key.data.name : "?") + "=" + kv.Value); } catch { } }
+                }
             }
             catch (Exception e) { w.Add("req check: " + e.GetType().Name); }
-            try { string r; if (!ship.IsValidCostWeightBarbette(out r, out _)) w.Add("cost/weight/barbette: " + (r ?? "")); } catch { }
+            try
+            {
+                string r; Il2CppSystem.Collections.Generic.List<Part> eb;
+                if (!ship.IsValidCostWeightBarbette(out r, out eb))
+                {
+                    w.Add("cost/weight/barbette: " + (r ?? ""));
+                    if (eb != null && eb.Count > 0) { var names = new List<string>(); foreach (var p in eb) { try { names.Add(p != null && p.data != null ? p.data.name : "?"); } catch { } } w.Add("empty barbettes: " + string.Join(" ", names)); }
+                }
+            }
+            catch { }
             return string.Join(" | ", w).Replace(",", " ").Replace("\n", " ");
         }
         static float ShipSpeed(Ship s) { try { return s.speedMax * 1.94384f; } catch { return 0f; } }
@@ -600,8 +821,24 @@ namespace DipGgFixes
                 for (int i = 0; i < parts.Count; i++) { var p = parts[i]; var d = p != null ? p.data : null; if (d == null || !d.isGun) continue; float c = d.caliber; if (c > top) top = c; }
                 for (int i = 0; i < parts.Count; i++) { var p = parts[i]; var d = p != null ? p.data : null; if (d == null || !d.isGun) continue; if (Mathf.Abs(d.caliber - top) < 0.01f) barrels += Math.Max(1, d.barrels); }
                 cal = top > 30f ? top / 25.4f : top;   // PartData.caliber may be mm or inches - log shows which
+                cal += DiameterOffset(ship, top);       // 1.11.115: bore increase set in the designer (e.g. 8 in + 0.9 in)
             }
             catch { }
+        }
+        // bore increase (inches) of the turret calibre with this base calibre (non-casemate)
+        static float DiameterOffset(Ship ship, float baseCal)
+        {
+            try
+            {
+                var l = ship.shipGunCaliber;
+                for (int i = 0; l != null && i < l.Count; i++)
+                {
+                    var tc = l[i]; if (tc == null || tc.isCasemateGun || tc.turretPartData == null) continue;
+                    if (Mathf.Abs(tc.turretPartData.caliber - baseCal) < 0.01f) return tc.diameter;
+                }
+            }
+            catch { }
+            return 0f;
         }
         static float ArmourOf(Ship s, int zone) { try { float v; return s.armor.TryGetValue((Ship.A)zone, out v) ? v : 0f; } catch { return 0f; } }
         static void ApplyArmour(Ship ship, Dictionary<int, float> arm, float scale)

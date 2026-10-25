@@ -1,4 +1,4 @@
-﻿// 1.11.111 (beta): the version text in the lower right corner of the main menu and the map shows the Iron Admiral package
+// 1.11.111 (beta): the version text in the lower right corner of the main menu and the map shows the Iron Admiral package
 // version (Mods\IRON_ADMIRAL_VERSION.txt, e.g. "1.2.66-beta.1") in front of the base mod text that TweaksAndFixes puts there
 // from params_override.csv (taf_versiontext, "DIP GG 1.3.5"): "Iron Admiral 1.2.66-beta.1 | DIP GG 1.3.5".
 using System;

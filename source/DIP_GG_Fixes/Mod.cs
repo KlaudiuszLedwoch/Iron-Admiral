@@ -108,8 +108,9 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.190", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.249", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
+[assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
 namespace DipGgFixes
 {
@@ -217,6 +218,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> CaptureDamage;
         internal static MelonPreferences_Entry<bool> SurrenderReturnToWinner;
         internal static MelonPreferences_Entry<bool> CoreIndependence;
+        internal static MelonPreferences_Entry<float> CoreSuppressEscalation, CoreOccupationUnrest, CoreOccupationCost; // 1.11.150
         internal static MelonPreferences_Entry<float> CoreRevoltBonus, CoreRevoltRampMonths, CoreSuppressIncomeMonths, CoreSuppressUnrest, CoreSuppressRelations, CoreSuppressAiMaxUnrest, CoreSuppressCalmMonths;
         internal static MelonPreferences_Entry<float> TorpedoTargetSizeRatio;
         internal static MelonPreferences_Entry<float> MassAttackStrengthRatio;
@@ -242,9 +244,9 @@ namespace DipGgFixes
             FinanceCrisis.Tick();
             EconomyUi.Tick();
             SettingsUi.Tick();
-            ResolutionFix.Tick(); RevoltDecision.Tick(); try { VersionLabel.Tick(); } catch { }
+            ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); MapGhosts.Tick(); Irredenta.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
@@ -257,16 +259,18 @@ namespace DipGgFixes
             try { Trade.Tick(); } catch { }
             try { Intel.Tick(); } catch { }
             try { DesignRepair.Tick(); } catch { }
+            try { VersionLabel.Tick(); } catch { } // 1.11.111
+            try { FleetOrders.Tick(); } catch { } // 1.11.107
         }
 
         public override void OnLateUpdate()
         {
             long t0 = Perf.Enabled ? Perf.T() : 0;
-            try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { }
+            try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } try { BarrelElevation.LateTick(); } catch { } // 1.11.209
             if (t0 != 0) Perf.Add(Perf.LATE, t0);
         }
 
-        public override void OnApplicationQuit() { try { Diagnostics.OnQuit(); } catch { } }
+        public override void OnApplicationQuit() { try { Diagnostics.OnQuit(); } catch { } try { LogShare.OnQuit(); } catch { } }
 
         public override void OnGUI()
         {
@@ -278,30 +282,60 @@ namespace DipGgFixes
             EconomyUi.OnGUI();
             try { Trade.OnGUI(); } catch { }
             try { Intel.OnGUI(); } catch { }
+            try { PortForces.OnGUI(); } catch { } // 1.11.120
+            try { FleetOrders.OnGUI(); } catch { } // 1.11.107
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
         internal static HarmonyLib.Harmony Harm; // 1.11.96
         // 1.11.99: one-time setting changes run on the first frame - MelonLoader loads the saved values after OnInitializeMelon,
         // so a change made there was overwritten (1.11.96/1.11.98 migrations had no effect on existing installs)
-        internal static MelonPreferences_Entry<bool> MigSide; // the armour diagnostics stay as the player set them
+        internal static MelonPreferences_Entry<bool> MigSide, MigOccCost, MigEraOff, MigRangeCap; // the armour diagnostics stay as the player set them
         static bool migDone;
+        // 1.11.208: old setting names (EraAccuracy, EraAccuracyRadar, EraAccuracyScale, EraDispersion) - the values the player had are copied
+        static void RenameFireControlPrefs()
+        {
+            try
+            {
+                var f = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "MelonPreferences.cfg"); if (!System.IO.File.Exists(f)) return;
+                var old = new Dictionary<string, string>();
+                foreach (var l in System.IO.File.ReadAllLines(f)) { var t = l.Trim(); int q = t.IndexOf('='); if (q > 0) { var k = t.Substring(0, q).Trim(); if (k.StartsWith("EraAccuracy") || k == "EraDispersion") old[k] = t.Substring(q + 1).Trim(); } }
+                string v; float x; bool b;
+                if (old.TryGetValue("EraAccuracy", out v) && bool.TryParse(v, out b)) EraAccuracy.On.Value = b;
+                if (old.TryGetValue("EraDispersion", out v) && bool.TryParse(v, out b)) EraAccuracy.Dispersion.Value = b;
+                if (old.TryGetValue("EraAccuracyRadar", out v) && float.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out x)) EraAccuracy.Radar.Value = x;
+                if (old.TryGetValue("EraAccuracyScale", out v) && float.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out x)) EraAccuracy.Scale.Value = x;
+                MelonLogger.Msg($"[DIP GG Fixes] settings: hit chance by fire-control technology year - {old.Count} old EraAccuracy/EraDispersion value(s) copied to the FireControlTech* settings (1.11.208)");
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] settings rename: " + e.Message); }
+        }
         static void Migrations()
         {
             try
             {
                 bool save = false;
                 if (MigSide != null && !MigSide.Value) { TorpedoSideCheck.Value = false; MigSide.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: TorpedoSideCheck switched off once (1.11.99)"); }
+                // 1.11.195 (author, 24.10): the money side of occupation was 5-10 times too cheap - old defaults raised once (values the player changed stay)
+                if (MigOccCost != null && !MigOccCost.Value)
+                {
+                    if (CoreOccupationCost != null && Math.Abs(CoreOccupationCost.Value - 3f) < 0.01f) CoreOccupationCost.Value = 20f;
+                    if (Occupation.PayShare != null && Math.Abs(Occupation.PayShare.Value - 4f) < 0.01f) Occupation.PayShare.Value = 30f;
+                    MigOccCost.Value = true; save = true; MelonLogger.Msg($"[DIP GG Fixes] settings: occupation costs raised once (1.11.195): CoreOccupationCost {CoreOccupationCost?.Value}, OccupationPayShare {Occupation.PayShare?.Value}");
+                }
+                if (MigEraOff != null && !MigEraOff.Value) { RenameFireControlPrefs(); MigEraOff.Value = true; save = true; } // 1.11.208
+                if (MigRangeCap != null && !MigRangeCap.Value) { if (MountElevation.On != null) MountElevation.On.Value = true; MigRangeCap.Value = true; save = true; MelonLogger.Msg("[DIP GG Fixes] settings: RangeByMountElevation switched on once (1.11.225: range from physics - muzzle velocity from the technologies, elevation from the gun generation)"); }
                 if (save) MelonPreferences.Save();
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes] settings migration: " + e.Message); }
         }
         public override void OnInitializeMelon()
         {
+            ConsoleGuard.Apply(); // 1.11.228
+            SafePatches.ApplyAll(HarmonyInstance); // 1.11.134
             Harm = HarmonyInstance;
             var cat = MelonPreferences.CreateCategory("DIP_GG_Fixes");
             AutoShare = cat.CreateEntry("AutoShareDesigns", true, null,
@@ -465,6 +499,9 @@ namespace DipGgFixes
             TorpedoSideCheck = cat.CreateEntry("TorpedoSideCheck", false, null,
                 "Experimental (off): drop a torpedo aim of one side's launchers whose target lies on the other side of the ship; player-set torpedo targets are never touched");
             MigSide = cat.CreateEntry("MigrationTorpedoSideOff199", false, null, "Internal: 1.11.99 switched TorpedoSideCheck off once (it dropped valid torpedo aims)");
+            MigRangeCap = cat.CreateEntry("MigrationRangeCapOn225", false, null, "Internal: 1.11.225 switched RangeByMountElevation on once (author's decision: range from physics and technology)");
+            MigEraOff = cat.CreateEntry("MigrationFireControlNames208", false, null, "Internal: 1.11.208 renamed the EraAccuracy* / EraDispersion settings to FireControlTech* and copied the player's values once");
+            MigOccCost = cat.CreateEntry("MigrationOccupationCost195", false, null, "Internal: 1.11.195 raised the occupation costs once (CoreOccupationCost 3 -> 20, OccupationPayShare 4 -> 30)");
             TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
                 "Apply the same torpedo check to the player's ships under automatic torpedo fire");
             TorpedoSenseClose = cat.CreateEntry("TorpedoSenseCloseRange", 1500f, null,
@@ -524,6 +561,9 @@ namespace DipGgFixes
             CoreSuppressRelations = cat.CreateEntry("CoreSuppressRelations", 8f, null, "Attitude lost with every other great power when a rising is put down (neighbours of the province and its own nation: x1.5)");
             CoreSuppressAiMaxUnrest = cat.CreateEntry("CoreSuppressAiMaxUnrest", 40f, null, "The AI puts a rising down only if its unrest stays below this value (and it has three times the cost in cash)");
             CoreSuppressCalmMonths = cat.CreateEntry("CoreSuppressCalmMonths", 12f, null, "Months a province stays calm after a rising was put down (game's revolt cooldown)");
+            CoreSuppressEscalation = cat.CreateEntry("CoreSuppressEscalation", 0.5f, null, "Every rising already put down in a province makes the next one dearer and angrier by this share (cost and unrest x1+0.5 per earlier rising); the calm that follows gets shorter (12 months, then 6, 4, 3)");
+            CoreOccupationUnrest = cat.CreateEntry("CoreOccupationUnrest", 0.5f, null, "Unrest added each month at home for every occupied foreign core province in peacetime (x the strength of the occupied nation, more after risings put down)");
+            CoreOccupationCost = cat.CreateEntry("CoreOccupationCost", 20f, null, "Garrison cost each month for every occupied foreign core province in peacetime, % of monthly income (x the strength of the occupied nation, more after risings put down)");
             CoreRevoltRampMonths = cat.CreateEntry("CoreRevoltRampMonths", 12f, null,
                 "Months of peace over which the extra revolt chance builds up to its full value");
             SurrenderReturnToWinner = cat.CreateEntry("SurrenderedShipsToBattleWinner", true, null,
@@ -560,8 +600,26 @@ namespace DipGgFixes
             Obliquity.CreatePrefs(cat);
             ContinuousMap.CreatePrefs(cat);
             ShipGenMemory.CreatePrefs(cat); // 1.11.99
+            ShipGenSpeed.CreatePrefs(cat); // 1.11.196
+            RangeTags.CreatePrefs(cat); // 1.11.206
+            BarrelElevation.CreatePrefs(cat); // 1.11.209
+            ThinPlatingHE.CreatePrefs(cat); // 1.11.211
+            MountElevation.CreatePrefs(cat); // 1.11.216
+            DesignTechFix.CreatePrefs(cat); // 1.11.223
+            TechDiffusion.CreatePrefs(cat); // 1.11.228
+            DivisionSpacing.CreatePrefs(cat); // 1.11.231
+            HullCaliberCap.CreatePrefs(cat); // 1.11.233
+            MapGhosts.CreatePrefs(cat); // 1.11.234
+            Irredenta.CreatePrefs(cat); // 1.11.235
+            ShipPartsCheck.CreatePrefs(cat); // 1.11.243
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
+            PortForces.CreatePrefs(cat); // 1.11.120
+            ForeignPorts.CreatePrefs(cat); // 1.11.134
+            Successors.CreatePrefs(cat); Occupation.CreatePrefs(cat); BattleAi.CreateOrderPrefs(cat); ReShadeSetup.CreatePrefs(cat); Ballistics.CreatePrefs(cat); EraAccuracy.CreatePrefs(cat); HistoricalDamage.CreatePrefs(cat); EraAccuracy.CreateDispersionPrefs(cat); HistoricalGuns.CreatePrefs(cat); GunLab.CreatePrefs(cat); HistoricalWeights.CreatePrefs(cat); HistoricalParts.CreatePrefs(cat); // 1.11.151, 1.11.154, 1.11.155, 1.11.161 // 1.11.149 (1.11.146: Auto armour button removed)
+            OtherMods.CreatePrefs(cat); OtherMods.Scan(); // 1.11.138
+            LogShare.CreatePrefs(cat); // 1.11.139
+            FleetOrders.CreatePrefs(cat); // 1.11.107
             Perf.CreatePrefs(cat); // 1.11.96 (after ArmorDiag: switches the diagnostics off once)
             ArmorDiag.ApplyHooks(HarmonyInstance);
             Diagnostics.RepairPreferences();
@@ -569,6 +627,7 @@ namespace DipGgFixes
             SettingsUi.CreatePrefs(cat);
             try { Narrative.Apply(HarmonyInstance); } catch { }
             try { Portless.Apply(HarmonyInstance); } catch { }
+            try { Irredenta.Apply(HarmonyInstance); } catch { } // 1.11.235
             try { Scenarios.Apply(HarmonyInstance); } catch (Exception e) { LoggerInstance.Warning("[Scenario] hooks not applied: " + e.Message); }
             try { Fog.Apply(HarmonyInstance); Fog.ReportPatches(); } catch (Exception e) { LoggerInstance.Warning("[Fog] hooks not applied: " + e.Message); }
             Doctrines.Load();
@@ -1205,7 +1264,7 @@ namespace DipGgFixes
         internal static float AbortDamage(Doctrine d) { return d != null ? d.abortDamage : DipGgFixesMod.ChargeAbortDamage.Value; }
         internal static float EscapeMargin(Doctrine d) { return d != null ? d.escapeMargin : DipGgFixesMod.EscapeSpeedMargin.Value; }
 
-        internal class DivState { public float nextThink; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
+        internal class DivState { public float nextThink; public float nextSightLog; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
             // 1.11.86
             public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
@@ -1413,10 +1472,12 @@ namespace DipGgFixes
                 var rep = Fog.PType(leader.player, e); if (rep == null) return false;
                 if (Fog.PCapital(rep)) return true;
                 float tl2 = Ton(leader), te2 = Fog.PTon(leader.player, e, Ton(e));
+                if (te2 >= 6000f) return true; // 1.11.204
                 return tl2 > 0f && te2 >= tl2 * DipGgFixesMod.TorpedoTargetSizeRatio.Value;
             }
             if (IsCapital(e)) return true;
             float tl = Ton(leader), te = Ton(e);
+            if (te >= 6000f) return true; // 1.11.204: anything of cruiser size is worth a torpedo (24.10: a 12,400 t light cruiser was "a small target" for a 13,000 t heavy cruiser)
             return tl > 0f && te >= tl * DipGgFixesMod.TorpedoTargetSizeRatio.Value;
         }
         // 1.11.58: enemy strength as the side sees it - ships never seen do not count, unidentified ones by their reported type
@@ -1573,7 +1634,7 @@ namespace DipGgFixes
 
         // Think for AI division leaders (from Ship.AILogic) and for player division leaders (from the per-ship tick).
         internal static void Think(Ship leader) { Think(leader, false); }
-        internal static void Think(Ship leader, bool playerSide)
+        internal static void Think(Ship leader, bool playerSide, bool autonomous = false) // 1.11.154: autonomous = player division under the "Free action" order
         {
             if (!GameManager.IsBattle) return;
             if (!announced) { announced = true; Log("AILogic patch active"); }
@@ -1606,7 +1667,7 @@ namespace DipGgFixes
             if (enemies == null) { Why(st, "no enemy list"); return; }
             ArmorDiag.Probe(leader, enemies);
 
-            if (playerSide)
+            if (playerSide && !autonomous)
             {
                 // player: only the scout torpedo charge (manual orders stay in force otherwise)
                 if (!DipGgFixesMod.PlayerScoutCharge.Value || !light || !leader.haveTorpedoes) return;
@@ -1713,6 +1774,17 @@ namespace DipGgFixes
                 if (owner.Count > 2000) owner.Clear();
                 owner[t.Pointer] = o; return o;
             }
+            // torpedo speed (m/s) from its own track between checks; 20 m/s (~40 kn) until measured
+            class TTrack { public UnityEngine.Vector3 pos; public float t, v; }
+            static readonly Dictionary<IntPtr, TTrack> ttracks = new Dictionary<IntPtr, TTrack>();
+            static float TorpedoSpeed(Torpedo t, UnityEngine.Vector3 p)
+            {
+                float now = UnityEngine.Time.time; p.y = 0f;
+                if (ttracks.Count > 3000) ttracks.Clear();
+                TTrack k; if (!ttracks.TryGetValue(t.Pointer, out k)) { ttracks[t.Pointer] = new TTrack { pos = p, t = now, v = 20f }; return 20f; }
+                float dt = now - k.t; if (dt >= 0.5f) { float v = (p - k.pos).magnitude / dt; if (v > 3f && v < 60f) k.v = v; k.pos = p; k.t = now; }
+                return k.v;
+            }
             internal static bool Check(Ship leader, Division div, DivState st, Player player, CampaignBattle battle, Il2CppSystem.Collections.Generic.List<Ship> enemies)
             {
                 try
@@ -1720,7 +1792,15 @@ namespace DipGgFixes
                     var all = Torpedo.AllTorpedo; if (all == null || all.Count == 0) return false;
                     var own = battle.ShipsOf(player, true);
                     var lp = leader.transform.position; float range = DipGgFixesMod.TorpedoTurnAwayRange.Value;
-                    int n = 0; float closest = float.MaxValue; UnityEngine.Vector3 dirSum = UnityEngine.Vector3.zero;
+                    int n = 0, sighted = 0; float closest = float.MaxValue, soonest = float.MaxValue; UnityEngine.Vector3 dirSum = UnityEngine.Vector3.zero;
+                    // 1.11.205 (author, 24.10): the turn is timed by physics - a sighted torpedo that would pass through the division is answered
+                    //           when its time to the closest point is no longer than the time the leader needs to turn out of the track
+                    //           (a quarter circle of its turning radius at its speed, plus the helm delay); earlier the division held its course.
+                    //           Nothing is evaded before the torpedo is sighted (IsVisibleFor).
+                    float shipV = ShipTick.Vel(leader, UnityEngine.Time.time).magnitude; if (shipV < 3f) shipV = UnityEngine.Mathf.Max(3f, BattleAi.Speed(leader) * 0.8f); // m/s
+                    float turnR = 0f; try { turnR = leader.turningRadius; } catch { }
+                    if (!(turnR > 50f)) turnR = UnityEngine.Mathf.Clamp(200f + BattleAi.Ton(leader) / 50f, 250f, 1000f);
+                    float turnTime = (UnityEngine.Mathf.PI * 0.5f * turnR) / shipV + 6f;
                     for (int i = 0; i < all.Count; i++)
                     {
                         var t = all[i]; if (t == null) continue;
@@ -1730,19 +1810,27 @@ namespace DipGgFixes
                         if (Owner(t, own, enemies) == player.Pointer) continue;
                         var f = t.transform.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) continue; f.Normalize();
                         // closest approach of the track to any ship of the division still ahead of the torpedo
-                        float pass = float.MaxValue;
+                        float pass = float.MaxValue, alongMin = float.MaxValue;
                         var ships = div.ships;
                         for (int k = 0; ships != null && k < ships.Count; k++)
                         {
                             var sh = ships[k]; if (sh == null || sh.isSinking || sh.isDead) continue;
                             var rel = sh.transform.position - tp; rel.y = 0f;
                             float along = UnityEngine.Vector3.Dot(rel, f); if (along <= 0f) continue;
-                            float p = (rel - f * along).magnitude; if (p < pass) pass = p;
+                            float p = (rel - f * along).magnitude; if (p < pass) { pass = p; alongMin = along; }
                         }
                         if (pass > 500f) continue;
+                        sighted++;
+                        float tv = TorpedoSpeed(t, tp); float tcpa = alongMin / UnityEngine.Mathf.Max(5f, tv);
+                        if (tcpa < soonest) soonest = tcpa;
+                        if (tcpa > turnTime * 1.3f) continue; // sighted, but there is still time - hold the course
                         n++; if (pass < closest) closest = pass; dirSum += f;
                     }
-                    if (n == 0) return false;
+                    if (n == 0)
+                    {
+                        if (sighted > 0 && UnityEngine.Time.time > st.nextSightLog) { st.nextSightLog = UnityEngine.Time.time + 20f; Log($"{st.name} ({leader.shipType.name}): {sighted} enemy torpedo track(s) sighted, closest point in {soonest:0} s - holding course, the turn needs {turnTime:0} s (turning radius {turnR:0} m at {shipV:0.0} m/s)"); }
+                        return false;
+                    }
                     var away = dirSum.normalized; // steer parallel to the tracks, running with them: fewer hits, longer torpedo run
                     div.MoveTo(lp + away * 3000f); st.evadeDir = away;
                     st.evadeUntil = UnityEngine.Time.time + DipGgFixesMod.TorpedoTurnAwaySeconds.Value;
@@ -2090,7 +2178,12 @@ namespace DipGgFixes
             }
             if (DipGgFixesMod.Panic.Value && now >= st.nextPanic) { st.nextPanic = now + 3f; PanicCheck(s, st); }
             bool surrSelf = false; try { surrSelf = s.IsSurrendered; } catch { }
-            if (isPlayer && s.isDivLeader && !surrSelf && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
+            if (isPlayer && s.isDivLeader && !surrSelf)
+            {
+                bool handled = false; // 1.11.154: division orders with autonomy (screen, scout, torpedo attack, free action)
+                try { handled = BattleAi.OrdersThink(s); } catch (Exception e) { if (BattleAi.Errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] division orders: " + e.Message); }
+                if (!handled && DipGgFixesMod.PlayerScoutCharge.Value) BattleAi.Think(s, true);
+            }
         }
         // called after Ship.AimAndShoot
         internal static void Post(Ship s)
@@ -2125,7 +2218,7 @@ namespace DipGgFixes
                 BattleAi.Log($"{s.name}: friendly ship in the torpedo lane - torpedoes held");
             }
         }
-        static Ship TorpedoTarget(Ship s)
+        internal static Ship TorpedoTarget(Ship s)
         {
             try
             {
@@ -2276,7 +2369,7 @@ namespace DipGgFixes
         class Track { public UnityEngine.Vector3 pos, vel; public float t; }
         static readonly Dictionary<IntPtr, Track> tracks = new Dictionary<IntPtr, Track>();
         // ground velocity (m/s) of a ship estimated from its position between calls
-        static UnityEngine.Vector3 Vel(Ship x, float now)
+        internal static UnityEngine.Vector3 Vel(Ship x, float now)
         {
             var tr = x.transform; if (tr == null) return UnityEngine.Vector3.zero;
             var p = tr.position; p.y = 0f;
@@ -2284,7 +2377,7 @@ namespace DipGgFixes
             if (!tracks.TryGetValue(x.Pointer, out var k)) { tracks[x.Pointer] = new Track { pos = p, t = now }; return UnityEngine.Vector3.zero; }
             float dt = now - k.t;
             if (dt > 30f) { k.pos = p; k.t = now; k.vel = UnityEngine.Vector3.zero; return k.vel; }
-            if (dt >= 0.25f) { var v = (p - k.pos) / dt; k.vel = k.vel == UnityEngine.Vector3.zero ? v : UnityEngine.Vector3.Lerp(k.vel, v, 0.5f); k.pos = p; k.t = now; }
+            if (dt >= 0.25f) { var v = (p - k.pos) / dt; k.vel = k.vel == UnityEngine.Vector3.zero ? v : UnityEngine.Vector3.Lerp(k.vel, v, 0.5f); k.pos = p; k.t = now; TorpedoLog.Velocity(x, k.vel); }
             return k.vel;
         }
         static bool TorpedoHopeless(Ship s, St st, float now, out string why)
@@ -2308,7 +2401,8 @@ namespace DipGgFixes
                 // 1.11.99: self-defence - a small ship closing in (a torpedo attack on us) may be met with torpedoes inside 60% of
                 // their range; only small targets that are far or not closing are not worth a torpedo
                 bool closing = UnityEngine.Vector3.Dot(V, P) < -0.5f * P.magnitude; // closing at more than 0.5 m/s
-                if (!(closing && range > 0f && d <= 0.6f * range)) { why = $"{t.name} is a small target at {d:0} m{(closing ? "" : ", not closing")}"; return true; }
+                bool pointBlank = d <= 2500f && BattleAi.Ton(t) >= 1000f; // 1.11.206: anything alongside is worth a torpedo (24.10: a cruiser held its torpedoes with an enemy light cruiser 1.5 km away)
+                if (!pointBlank && !(closing && range > 0f && d <= 0.6f * range)) { why = $"{t.name} is a small target at {d:0} m{(closing ? "" : ", not closing")}"; return true; }
             }
             // 1.11.98: the measured velocity is capped at the target's top speed (22.10: "outruns the torpedo" for a 21-knot cruiser at 1.5 km)
             float vmax = BattleAi.Speed(t) * 1.15f;
@@ -2669,7 +2763,8 @@ namespace DipGgFixes
                 if (battle == null) { MelonLogger.Msg("[DIP GG Fixes][Capture] no CampaignBattle - skipped"); return; }
                 var owner = ship.player; if (owner == null) return;
                 var opponent = battle.OppositePlayer(owner); if (opponent == null) return;
-                // 1.11.186: only ships that really fought in this battle (the surrendered flag survives capture and repair)
+                // 1.11.186: only ships that really fought in this battle (a player reported ships captured in earlier years and not
+                // present in a battle without combat being "taken as a prize" again - the surrendered flag survives repair)
                 bool present = false;
                 try { var os = battle.ShipsOf(owner, true); if (os != null) for (int i = 0; i < os.Count; i++) { var o = os[i]; if (o != null && o.Pointer == ship.Pointer) { present = true; break; } } } catch { }
                 if (!present) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered flag but not in this battle - left as it is"); return; }
@@ -2723,7 +2818,28 @@ namespace DipGgFixes
                 cc.TransferShipToNewOwner(winner, ship.id, ref list, null, false);
                 PrizeDesign.Ensure(ship, winner, "Capture");
                 try { ship.CrewTrainingAmount = 0f; } catch { }
-                try { if (crew < minCrew) ship.CrewPercents = minCrew; } catch { }
+                // 1.11.229 (author, 24.10; promised to hurepoix): the prize crew comes out of the winner's crew pool. The men needed to bring
+                //          the crew up to the sailing minimum are taken from the pool; when the pool is short, the prize gets what the pool
+                //          has (never below half the minimum - a skeleton crew still brings her in).
+                try
+                {
+                    if (crew < minCrew)
+                    {
+                        float total = 0f; try { total = ship.GetTotalCrew(); } catch { }
+                        float pool = 0f; try { pool = winner.crewPool; } catch { }
+                        int need = total > 0f ? (int)Math.Ceiling((minCrew - Math.Max(0f, crew)) * total) : 0;
+                        int give = need; float target = minCrew;
+                        if (need > 0 && pool < need)
+                        {
+                            give = Math.Max(0, (int)pool);
+                            target = total > 0f ? Math.Max(minCrew * 0.5f, Math.Max(0f, crew) + give / total) : minCrew;
+                        }
+                        ship.CrewPercents = target;
+                        if (give > 0) { try { winner.crewPool = (int)(pool - give); } catch { } }
+                        MelonLogger.Msg($"[DIP GG Fixes][Capture] prize crew for {ship.name}: {give} men from {winner.data.name}'s crew pool ({pool:0} available, {need} needed to reach {minCrew:P0}); crew now {target:P0}");
+                    }
+                }
+                catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] prize crew: " + e.Message); }
                 __1 = UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f);
                 Captured.Add(ship.Pointer);
                 try { Narrative.Record("prize|" + ship.Pointer, 9, $"{ship.name.Split(new[] { " (" }, StringSplitOptions.None)[0]} was taken as a prize by {winner.data.name}"); } catch { }
@@ -2987,10 +3103,11 @@ namespace DipGgFixes
         // 1.11.123: switch in the F10 panel (the panel shows on/off settings only): on = the update check offers beta versions,
         // off = stable versions (also back from a beta to the latest stable). Set once to "on" when a beta package is installed.
         internal static MelonPreferences_Entry<bool> Beta, BetaInit;
+        internal static MelonPreferences_Entry<bool> BetaSwitch => Beta;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             Channel = cat.CreateEntry("UpdateChannel", "auto", null, "Release line the update check follows: auto (the Beta updates switch decides), stable or beta");
-            Beta = cat.CreateEntry("BetaUpdates", false, null, "Beta updates: the update check offers beta versions (new features under test); off = stable versions, also back from a beta to the latest stable. Takes effect at the next start");
+            Beta = cat.CreateEntry("BetaUpdates", false, null, "Beta updates (for testers - needs Share logs on): the update check offers beta versions (new features under test); off = stable versions, also back from a beta to the latest stable. Takes effect at the next start");
             BetaInit = cat.CreateEntry("BetaUpdatesInitialised", false, null, "internal: the Beta updates switch was set from the installed package once", true);
         }
         static bool LocalIsBeta => local != null && local.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) >= 0;
@@ -3000,8 +3117,10 @@ namespace DipGgFixes
             {
                 string c = "auto"; try { c = (Channel != null ? Channel.Value : "auto").Trim().ToLowerInvariant(); } catch { }
                 if (c == "beta") return true; if (c == "stable") return false;
-                try { if (Beta != null) return Beta.Value; } catch { }
-                return LocalIsBeta;
+                // 1.11.139: Beta updates are the reward for log sharing (testers)
+                bool tester = !LogShare.Available || (LogShare.On != null && LogShare.On.Value); // until the log reception runs, betas stay open to everyone
+                try { if (Beta != null) return Beta.Value && tester; } catch { }
+                return LocalIsBeta && tester;
             }
         }
         static string Url => "https://raw.githubusercontent.com/KlaudiuszLedwoch/Iron-Admiral/" + (BetaLine ? "beta" : "main") + "/VERSION";
@@ -3069,6 +3188,7 @@ namespace DipGgFixes
         internal static bool Newer(string a, string b)
         {
             if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
+            a = Num(a); b = Num(b); // 1.11.152: a version written as "Iron Admiral 1.2.67-beta.2" counted as 0 - "update available" for the installed version
             string ca = a, cb = b; int ba = int.MaxValue, bb = int.MaxValue;
             int ia = a.IndexOf("-beta", StringComparison.OrdinalIgnoreCase); if (ia >= 0) { ca = a.Substring(0, ia); var t = a.Substring(ia + 5).TrimStart('.'); if (!int.TryParse(t, out ba)) ba = 0; }
             int ib = b.IndexOf("-beta", StringComparison.OrdinalIgnoreCase); if (ib >= 0) { cb = b.Substring(0, ib); var t = b.Substring(ib + 5).TrimStart('.'); if (!int.TryParse(t, out bb)) bb = 0; }
@@ -3083,6 +3203,7 @@ namespace DipGgFixes
             return ba > bb;
         }
 
+        static string Num(string v) { int i = 0; while (i < v.Length && !char.IsDigit(v[i])) i++; return v.Substring(i).Trim(); }
         internal static Il2CppSystem.Action Act(Action a) { return Il2CppInterop.Runtime.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(a); }
 
         internal static void Tick()
@@ -3678,8 +3799,11 @@ namespace DipGgFixes
     internal static class Patch_GenerateRandomDesigns
     {
         private static readonly Dictionary<string, string> last = new Dictionary<string, string>();
+        private static void Postfix() { ShipGenSpeed.Active = false; } // 1.11.196
         private static bool Prefix(CampaignController._GenerateRandomDesigns_d__202 __instance, ref bool __result)
         {
+            // 1.11.196: newest-hulls filter active while the AI chooses hulls and generates its designs
+            try { var pa = __instance != null ? __instance.player : null; if (pa != null && pa.isAi && !__instance.prewarming) { ShipGenSpeed.Active = true; ShipGenSpeed.ActivePlayer = pa.Pointer; } } catch { }
             try
             {
                 var on = DipGgFixesMod.AiDesignOnlyWhenBuildable; if (on == null || !on.Value || __instance == null) return true;
@@ -3733,6 +3857,7 @@ namespace DipGgFixes
                 if (!refit) return;
                 var st = s.shipType; if (st == null || st.name != t.name) return;
                 if (p != null && s.player != null && s.player.Pointer != p.Pointer) return;
+                if (!Eligible(s, result)) return; // 1.11.160: P6 - only from 1922, battleships/battlecruisers, ships already above the limit
                 float allowed = Allowed(s, a.Value); if (allowed <= 0f) return;
                 if (allowed > result)
                 {
@@ -3744,13 +3869,35 @@ namespace DipGgFixes
             catch { }
         }
         internal static float AllowedFor(Ship s, float allowance) { return Allowed(s, allowance); }
+        // the displacement of the refit design when first seen (= the ship before the refit); 0 = unknown
+        internal static float Origin(Ship s)
+        {
+            float o; if (origin.TryGetValue(s.Pointer, out o)) return o;
+            o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return 0f; origin[s.Pointer] = o; return o;
+        }
         static float Allowed(Ship s, float allowance)
         {
             float o; if (!origin.TryGetValue(s.Pointer, out o)) { o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return 0f; origin[s.Pointer] = o; }
             float allowed = o + allowance;
             float hullMax = 0f; try { var h = s.hull; if (h != null && h.data != null) hullMax = h.data.tonnageMax; } catch { }
             if (hullMax > 0f) allowed = Math.Min(allowed, hullMax);
+            float tm = 0f; try { tm = s.TonnageMax(); } catch { } if (tm > 0f) allowed = Math.Min(allowed, tm); // 1.11.160: never above the game's own maximum
             return allowed;
+        }
+        // 1.11.160 (P6, decision 22.10): the treaty allowance only from 1922, only for battleships and battlecruisers, and only when
+        // the ship before the refit is already above the treaty limit (23.10: Ship.TonnageMax of every refit design was raised up to
+        // the hull maximum - refitted ships changed size, deck equipment was rescaled, torpedo tubes had to be removed)
+        internal static bool Eligible(Ship s, float limit)
+        {
+            try
+            {
+                int year = 0; try { year = CampaignController.Instance.CurrentDate.AsDate().Year; } catch { }
+                if (year < 1922) return false;
+                var st = s.shipType; if (st == null || (st.name != "bb" && st.name != "bc")) return false;
+                float o; if (!origin.TryGetValue(s.Pointer, out o)) { o = 0f; try { o = s.Tonnage(); } catch { } if (o <= 0f) return false; origin[s.Pointer] = o; }
+                return limit <= 0f || o > limit;
+            }
+            catch { return false; }
         }
         internal static void Apply(Ship s, ref float result)
         {
@@ -3776,12 +3923,14 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { })]
     internal static class Patch_TonnageMax_Refit
     {
+        static bool Prepare() { return false; } // 1.11.160: Ship.TonnageMax is no longer raised (P6)
         private static void Postfix(Ship __instance, ref float __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitTreaty.Apply(__instance, ref __result); if (t0 != 0) Perf.Add(Perf.TON, t0); }
     }
 
     [HarmonyPatch(typeof(Ship), "TonnageMax", new Type[] { typeof(PartData), typeof(Ship) })]
     internal static class Patch_TonnageMaxStatic_Refit
     {
+        static bool Prepare() { return false; } // 1.11.160: Ship.TonnageMax is no longer raised (P6)
         private static void Postfix(Ship __1, ref float __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitTreaty.Apply(__1, ref __result); if (t0 != 0) Perf.Add(Perf.TON, t0); }
     }
 
@@ -3796,7 +3945,7 @@ namespace DipGgFixes
     // When that is the only reason and the refit stays within the ship's tonnage plus the modernisation allowance, it passes.
     internal static class RefitBuildCheck
     {
-        static int logged;
+        static int logged; static readonly HashSet<IntPtr> ownLogged = new HashSet<IntPtr>();
         internal static void Fix(Ship s, ref bool result, ref string reason, string where)
         {
             try
@@ -3805,13 +3954,25 @@ namespace DipGgFixes
                 var a = DipGgFixesMod.RefitTreatyAllowance; if (a == null || a.Value <= 0f) return;
                 bool refit = false; try { refit = s.isRefitDesign; } catch { }
                 string r = reason ?? "";
-                if (logged < 40 && (where == "save button" || logged < 10)) { logged++; MelonLogger.Msg($"[DIP GG Fixes][Refit] {where}: {s.name} refit={refit} tonnage {SafeTon(s):F0} t - cannot build: {StripTags(r)}"); }
+                if (logged < 40 && (where == "save button" || logged < 10) && !string.Equals(StripTags(reason ?? "").Trim(), "valid", StringComparison.OrdinalIgnoreCase)) { logged++; MelonLogger.Msg($"[DIP GG Fixes][Refit] {where}: {s.name} refit={refit} tonnage {SafeTon(s):F0} t - cannot build: {StripTags(r)}"); }
                 if (!refit) return;
                 string plain = StripTags(r).Trim();
                 if (plain.Contains("\n")) return;
                 string low = plain.ToLowerInvariant();
                 bool displacementOnly = low == "tonnage" || low.Contains("above displacement limit for") && plain.Split(':').Length <= 4 && low.TrimEnd('.', ' ').EndsWith("t");
                 if (!displacementOnly) return;
+                // 1.11.193: a ship that already exists above the game's displacement maximum (built while refit designs could grow
+                //           up to the hull maximum, before 1.11.160) can always be refitted at its own displacement - no growth
+                //           (24.10: BB Hildebrand 55,690 t, 1921 - "cannot build: tonnage" on every refit)
+                float own = RefitTreaty.Origin(s); float tonNow = SafeTon(s);
+                if (own > 0f && tonNow <= own + 0.5f)
+                {
+                    float tmax = 0f, lim = 0f; try { tmax = s.TonnageMax(); } catch { } try { var pl = s.player; var st = s.shipType; if (pl != null && st != null) lim = pl.TonnageLimit(st); } catch { }
+                    result = true; reason = "";
+                    if (ownLogged.Add(s.Pointer)) MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: refit at the ship's own displacement {tonNow:F0} t allowed (game maximum {tmax:F0} t, treaty limit {lim:F0} t) - {where}");
+                    return;
+                }
+                if (!RefitTreaty.Eligible(s, 0f)) return; // 1.11.160: P6
                 float allowed = RefitTreaty.AllowedFor(s, a.Value); float ton = SafeTon(s);
                 if (allowed <= 0f || ton > allowed + 0.5f) { MelonLogger.Msg($"[DIP GG Fixes][Refit] {s.name}: {ton:F0} t is above the refit allowance ({allowed:F0} t) - stays blocked"); return; }
                 result = true; reason = "";

@@ -35,6 +35,19 @@ namespace DipGgFixes
         class Order { public string ShipId, Buyer, Seller, Name; public float Price, Paid; public int Start, Months, Missed; }
         static readonly Dictionary<string, Listing> listings = new Dictionary<string, Listing>();
         static readonly List<Order> orders = new List<Order>();
+        // 1.11.236 (author's decision 24.10): a navy that bought one of the player's ships comes back for a paid refit when the
+        // ship ages - a refit licence (the buyer's own yards do the work, the player sells the drawings) or the work in the
+        // player's yards at a premium, paid over the months of the refit. A request waits three months; unanswered, the buyer
+        // manages on its own and thinks a little worse of the seller.
+        class Sold { public string ShipId, Buyer; public int Month, LastRefit; }
+        class RefitReq { public string ShipId, Buyer; public int Month; public float Cost; public int Months; }
+        class YardJob { public string ShipId, Buyer, Name; public int Start, Months; public float Total, Paid; }
+        static readonly Dictionary<string, Sold> sold = new Dictionary<string, Sold>();
+        static readonly List<RefitReq> refits = new List<RefitReq>();
+        static readonly List<YardJob> yardJobs = new List<YardJob>();
+        internal static MelonPreferences_Entry<bool> Refits;
+        internal static MelonPreferences_Entry<float> RefitShare, RefitLicence, RefitPremium;
+        internal static MelonPreferences_Entry<int> RefitAfter;
         static IntPtr session = IntPtr.Zero; static bool loaded; static int lastMonth;
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -44,6 +57,11 @@ namespace DipGgFixes
             Key = cat.CreateEntry("ShipTradeKey", "F9", null, "Key that opens / closes the ship trade window (Unity KeyCode name)");
             PremiumMin = cat.CreateEntry("ForeignOrderPremiumMin", 1.25f, null, "Price of a ship ordered abroad compared with the builder's cost, with the best relations");
             PremiumMax = cat.CreateEntry("ForeignOrderPremiumMax", 1.5f, null, "Price of a ship ordered abroad compared with the builder's cost, with cool relations");
+            Refits = cat.CreateEntry("ShipTradeRefits", true, null, "Ship trade: navies that bought your ships come back for a paid refit as the ship ages - a refit licence, or the work in your yards at a premium (trade window)");
+            RefitShare = cat.CreateEntry("ShipTradeRefitShare", 0.25f, null, "Cost of a refit as a share of the ship's cost");
+            RefitLicence = cat.CreateEntry("ShipTradeRefitLicence", 0.2f, null, "Refit licence fee as a share of the refit cost (the buyer's own yards do the work)");
+            RefitPremium = cat.CreateEntry("ShipTradeRefitPremium", 1.4f, null, "Price of a refit done in your yards compared with its cost (paid over the months of the refit)");
+            RefitAfter = cat.CreateEntry("ShipTradeRefitAfterYears", 6, null, "Years after the sale (or the last refit) before the buyer asks for a refit");
             KeyCode k; if (Enum.TryParse(Key.Value, true, out k)) key = k;
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Trade] " + m); }
@@ -111,7 +129,7 @@ namespace DipGgFixes
         static void EnsureSession()
         {
             var cc = CC; if (cc == null || cc.CampaignData == null) return;
-            if (cc.CampaignData.Pointer != session) { session = cc.CampaignData.Pointer; listings.Clear(); orders.Clear(); loaded = false; lastMonth = 0; }
+            if (cc.CampaignData.Pointer != session) { session = cc.CampaignData.Pointer; listings.Clear(); orders.Clear(); sold.Clear(); refits.Clear(); yardJobs.Clear(); loaded = false; lastMonth = 0; }
             if (loaded) return;
             loaded = true;
             try
@@ -128,6 +146,12 @@ namespace DipGgFixes
                     }
                     else if (c[0] == "order" && c.Length >= 10)
                         orders.Add(new Order { ShipId = c[1], Buyer = c[2], Seller = c[3], Price = float.Parse(c[4], CultureInfo.InvariantCulture), Paid = float.Parse(c[5], CultureInfo.InvariantCulture), Start = int.Parse(c[6]), Months = int.Parse(c[7]), Missed = int.Parse(c[8]), Name = c[9] });
+                    else if (c[0] == "sold" && c.Length >= 5)
+                        sold[c[1]] = new Sold { ShipId = c[1], Buyer = c[2], Month = int.Parse(c[3]), LastRefit = int.Parse(c[4]) };
+                    else if (c[0] == "refit" && c.Length >= 6)
+                        refits.Add(new RefitReq { ShipId = c[1], Buyer = c[2], Month = int.Parse(c[3]), Cost = float.Parse(c[4], CultureInfo.InvariantCulture), Months = int.Parse(c[5]) });
+                    else if (c[0] == "yard" && c.Length >= 8)
+                        yardJobs.Add(new YardJob { ShipId = c[1], Buyer = c[2], Start = int.Parse(c[3]), Months = int.Parse(c[4]), Total = float.Parse(c[5], CultureInfo.InvariantCulture), Paid = float.Parse(c[6], CultureInfo.InvariantCulture), Name = c[7] });
                 }
                 Log($"loaded {listings.Count} listing(s) and {orders.Count} foreign order(s)");
             }
@@ -148,6 +172,9 @@ namespace DipGgFixes
                     lines.Add(sb.ToString());
                 }
                 foreach (var o in orders) lines.Add($"order|{o.ShipId}|{o.Buyer}|{o.Seller}|{o.Price.ToString(CultureInfo.InvariantCulture)}|{o.Paid.ToString(CultureInfo.InvariantCulture)}|{o.Start}|{o.Months}|{o.Missed}|{(o.Name ?? "").Replace('|', '/')}");
+                foreach (var s in sold.Values) lines.Add($"sold|{s.ShipId}|{s.Buyer}|{s.Month}|{s.LastRefit}");
+                foreach (var r in refits) lines.Add($"refit|{r.ShipId}|{r.Buyer}|{r.Month}|{r.Cost.ToString(CultureInfo.InvariantCulture)}|{r.Months}");
+                foreach (var j in yardJobs) lines.Add($"yard|{j.ShipId}|{j.Buyer}|{j.Start}|{j.Months}|{j.Total.ToString(CultureInfo.InvariantCulture)}|{j.Paid.ToString(CultureInfo.InvariantCulture)}|{(j.Name ?? "").Replace('|', '/')}");
                 var f = FilePath(); Directory.CreateDirectory(Path.GetDirectoryName(f));
                 if (lines.Count > 0 || File.Exists(f)) File.WriteAllLines(f, lines);
             }
@@ -232,6 +259,86 @@ namespace DipGgFixes
                 if (of == null) continue;
                 Sell(p, old, ByKey(of.Buyer), of.Price);
             }
+            // 4. refits for the navies that bought the player's ships
+            RefitsMonthly(main, month);
+        }
+
+        static void RefitsMonthly(Player main, int month)
+        {
+            if (Refits == null || !Refits.Value) return;
+            int after = Math.Max(1, RefitAfter != null ? RefitAfter.Value : 6) * 12;
+            // work in the player's yards: paid month by month, finished after its months
+            foreach (var j in yardJobs.ToList())
+            {
+                var buyer = ByKey(j.Buyer); var s = FindShip(j.ShipId);
+                if (buyer == null || s == null || s.player == null || s.player.Pointer != buyer.Pointer) { yardJobs.Remove(j); continue; }
+                float due = Math.Min(j.Total / Math.Max(1, j.Months), j.Total - j.Paid);
+                if (due > 0f) { if (AtWar(buyer, main)) { yardJobs.Remove(j); Log($"refit of {j.Name} for {j.Buyer} broken off - war"); continue; } buyer.cash -= due; main.cash += due; j.Paid += due; }
+                if (month - j.Start < j.Months) continue;
+                yardJobs.Remove(j);
+                Sold so; if (sold.TryGetValue(j.ShipId, out so)) so.LastRefit = month;
+                Adjust(buyer, main, 5f, "refit in your yards");
+                Notice("Refit completed", $"{j.Name} ({N(buyer)}) leaves your yards after its refit; {M(j.Paid)} earned in total.");
+                Log($"refit in the player's yards finished: {j.Name} for {j.Buyer}, {M(j.Paid)}");
+            }
+            // pending requests: three months, then the buyer manages alone
+            foreach (var r in refits.ToList())
+            {
+                var buyer = ByKey(r.Buyer); var s = FindShip(r.ShipId);
+                if (buyer == null || s == null || s.player == null || s.player.Pointer != buyer.Pointer || AtWar(buyer, main)) { refits.Remove(r); continue; }
+                if (month - r.Month < 3) continue;
+                refits.Remove(r);
+                Sold so; if (sold.TryGetValue(r.ShipId, out so)) so.LastRefit = month;
+                Adjust(buyer, main, -2f, "refit request unanswered");
+                Notice("Refit request withdrawn", $"{N(buyer)} waited three months for an answer about {s.name} and has the refit done at home.");
+                Log($"refit request for {s.name} ({r.Buyer}) expired");
+            }
+            // new requests
+            foreach (var so in sold.Values.ToList())
+            {
+                var s = FindShip(so.ShipId); var buyer = ByKey(so.Buyer);
+                if (s == null || buyer == null || s.player == null || s.player.Pointer != buyer.Pointer || !Sellable(s)) { if (s == null || buyer == null || (s.player != null && s.player.Pointer != buyer.Pointer)) sold.Remove(so.ShipId); continue; }
+                if (month - Math.Max(so.Month, so.LastRefit) < after) continue;
+                if (refits.Any(x => x.ShipId == so.ShipId) || yardJobs.Any(x => x.ShipId == so.ShipId)) continue;
+                if (AtWar(buyer, main) || Att(buyer, main) < -20f || rng.NextDouble() > 0.15) continue;
+                float cost = 0f; try { cost = s.Cost() * (RefitShare != null ? RefitShare.Value : 0.25f); } catch { }
+                if (cost <= 0f || buyer.cash < cost * 0.5f) continue;
+                int months = 6; try { months = Math.Max(3, s.BuildingTime(false) / 3); } catch { }
+                refits.Add(new RefitReq { ShipId = so.ShipId, Buyer = so.Buyer, Month = month, Cost = cost, Months = months });
+                Notice("Refit requested", $"{N(buyer)} asks for a refit of {s.name}, bought from you: a refit licence ({M(cost * (RefitLicence != null ? RefitLicence.Value : 0.2f))}) or the work in your yards ({M(cost * (RefitPremium != null ? RefitPremium.Value : 1.4f))} over {months} months). Open the trade window ({Key.Value}).");
+                Log($"refit request: {so.Buyer} for {s.name} ({TypeName(s)}, {Age(s)} years), refit cost {M(cost)}, {months} months");
+            }
+        }
+        static void RefitLicenceSale(Player main, RefitReq r)
+        {
+            var buyer = ByKey(r.Buyer); var s = FindShip(r.ShipId); if (buyer == null || s == null) { refits.Remove(r); return; }
+            float fee = r.Cost * (RefitLicence != null ? RefitLicence.Value : 0.2f);
+            buyer.cash -= fee; main.cash += fee;
+            refits.Remove(r);
+            Sold so; if (sold.TryGetValue(r.ShipId, out so)) so.LastRefit = Economy.Month();
+            Adjust(buyer, main, 3f, "refit licence");
+            Notice("Refit licence sold", $"{N(buyer)} pays {M(fee)} for the refit licence of {s.name} and refits the ship in its own yards.");
+            Log($"refit licence: {s.name} to {r.Buyer} for {M(fee)}");
+            Save();
+        }
+        static void RefitInYards(Player main, RefitReq r)
+        {
+            var buyer = ByKey(r.Buyer); var s = FindShip(r.ShipId); if (buyer == null || s == null) { refits.Remove(r); return; }
+            float total = r.Cost * (RefitPremium != null ? RefitPremium.Value : 1.4f);
+            refits.Remove(r);
+            yardJobs.Add(new YardJob { ShipId = r.ShipId, Buyer = r.Buyer, Name = s.name, Start = Economy.Month(), Months = r.Months, Total = total, Paid = 0f });
+            Adjust(buyer, main, 2f, "refit ordered in your yards");
+            Notice("Refit in your yards", $"{s.name} ({N(buyer)}) enters your yards for {r.Months} months; {M(total)} will be paid month by month.");
+            Log($"refit in the player's yards: {s.name} for {r.Buyer}, {M(total)} over {r.Months} months");
+            Save();
+        }
+        static void RefitDecline(Player main, RefitReq r)
+        {
+            var buyer = ByKey(r.Buyer); refits.Remove(r);
+            Sold so; if (sold.TryGetValue(r.ShipId, out so)) so.LastRefit = Economy.Month();
+            if (buyer != null) Adjust(buyer, main, -1f, "refit declined");
+            Log($"refit request of {r.Buyer} for {r.ShipId} declined");
+            Save();
         }
 
         static Offer MakeOffer(Player seller, Ship s, IEnumerable<string> already)
@@ -273,6 +380,7 @@ namespace DipGgFixes
                 if (AtWar(buyer, e) || Att(buyer, e) <= -50f) Adjust(seller, e, -4f * weight, "sold a ship to its enemy");
             }
             listings.Remove(s.id.ToString());
+            if (seller.isMain) sold[s.id.ToString()] = new Sold { ShipId = s.id.ToString(), Buyer = K(buyer), Month = Economy.Month(), LastRefit = Economy.Month() };
             Log($"sale: {N(seller)} sold {name} ({type}) to {N(buyer)} for {M(price)}");
             if (seller.isMain) Notice("Ship sold", $"{name} has been sold to {N(buyer)} for {M(price)}.");
             else if (buyer.isMain) Notice("Ship bought", $"Your navy has bought {name} from {N(seller)}.");
@@ -337,8 +445,9 @@ namespace DipGgFixes
                 GUI.Box(r, ""); GUI.Box(r, "");
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 120f, 24f), $"<b>Ship trade</b>   ({Key.Value} closes)", sTitle);
                 Button(new Rect(r.xMax - 40f, r.y + 8f, 30f, 26f), "X", () => visible = false);
-                string[] tabs = { "Sell ships", "Order abroad", $"My orders ({orders.Count(o => o.Buyer == K(main))})" };
-                for (int i = 0; i < 3; i++) { int ti = i; Button(new Rect(r.x + 14f + i * 170f, r.y + 40f, 160f, 26f), (tab == i ? "<color=#FFD95A><b>" : "") + tabs[i] + (tab == i ? "</b></color>" : ""), () => { tab = ti; page = 0; }); }
+                string[] tabs = { "Sell ships", "Order abroad", $"My orders ({orders.Count(o => o.Buyer == K(main))})", $"Refits ({refits.Count + yardJobs.Count})" };
+                float tw = (w - 28f) / 4f;
+                for (int i = 0; i < 4; i++) { int ti = i; Button(new Rect(r.x + 14f + i * tw, r.y + 40f, tw - 8f, 26f), (tab == i ? "<color=#FFD95A><b>" : "") + tabs[i] + (tab == i ? "</b></color>" : ""), () => { tab = ti; page = 0; }); }
                 if (Time.realtimeSinceStartup - rowsBuilt > 1f) { rows = BuildRows(main); rowsBuilt = Time.realtimeSinceStartup; }
                 float y0 = r.y + 76f, rowH = 26f; int per = Math.Max(1, (int)((h - 76f - 44f) / rowH));
                 int pages = Math.Max(1, (rows.Count + per - 1) / per); page = Mathf.Clamp(page, 0, pages - 1);
@@ -400,6 +509,27 @@ namespace DipGgFixes
                 DesignRows(l, main, sel, sel, false, prem);
                 l.Add(new Row { Head = true, Text = $"Your designs, built in {N(sel)}" });
                 DesignRows(l, main, sel, main, true, prem);
+            }
+            else if (tab == 3)
+            {
+                l.Add(new Row { Head = true, Text = "Refit requests from navies that bought your ships (a request waits three months)" });
+                foreach (var r in refits.ToList())
+                {
+                    var b = ByKey(r.Buyer); var s = FindShip(r.ShipId); if (b == null || s == null) continue; var rr = r;
+                    float lic = r.Cost * (RefitLicence != null ? RefitLicence.Value : 0.2f), yard = r.Cost * (RefitPremium != null ? RefitPremium.Value : 1.4f);
+                    l.Add(new Row { Text = $"{TypeName(s)} <b>{s.name}</b> ({N(b)}, {Age(s)} years) - refit worth {M(r.Cost)}, asked {Economy.Month() - r.Month} month(s) ago" });
+                    l.Add(new Row { Text = $"      Sell the refit licence: <b>{M(lic)}</b> at once, their yards do the work", Btn = "Sell licence", Act = () => RefitLicenceSale(main, rr) });
+                    l.Add(new Row { Text = $"      Refit in your yards: <b>{M(yard)}</b> over {r.Months} months", Btn = "Our yards", Act = () => RefitInYards(main, rr) });
+                    l.Add(new Row { Text = "      Decline", Btn = "Decline", Act = () => RefitDecline(main, rr) });
+                }
+                if (refits.Count == 0) l.Add(new Row { Text = "No refit requests now." });
+                if (yardJobs.Count > 0)
+                {
+                    l.Add(new Row { Head = true, Text = "Foreign ships in your yards" });
+                    foreach (var j in yardJobs) l.Add(new Row { Text = $"<b>{j.Name}</b> ({N(ByKey(j.Buyer))}): {Math.Max(0, j.Months - (Economy.Month() - j.Start))} month(s) left, paid {M(j.Paid)} of {M(j.Total)}" });
+                }
+                int soldN = sold.Count(kv => FindShip(kv.Key) != null);
+                l.Add(new Row { Text = $"Ships sold by you still in foreign service: {soldN}" });
             }
             else
             {
