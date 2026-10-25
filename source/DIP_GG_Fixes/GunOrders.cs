@@ -159,7 +159,7 @@ namespace DipGgFixes
 
         // ------------------------------------------------------------------ panel: two compact rows below the torpedo strips
         static GUIStyle sT; static bool folded; static int gErr;
-        static Ship Selected() { try { var ui = G.ui; var s = ui != null ? ui.selectedShipMain : null; return s != null && IsPlayer(s) && !s.isDead && !s.isSinking ? s : null; } catch { return null; } }
+        static Ship Selected() { try { var s = BattleSel.Ship(); return s != null && IsPlayer(s) && !s.isDead && !s.isSinking ? s : null; } catch { return null; } }
         internal static void OnGUI()
         {
             if (!Enabled || !InBattle || BattleScreen.Hidden) return;
@@ -184,7 +184,7 @@ namespace DipGgFixes
         static string Lab(List<string> l) { return l == null || l.Count == 0 ? "threat" : string.Join(">", l.ConvertAll(c => c.ToUpperInvariant())); }
         static void Row(Ship s, Ord o, bool main, float x, float y, float w, float h, GUIStyle sm)
         {
-            GUI.Box(new Rect(x, y, w, h), "");
+            GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
             GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), main ? "<b>Main guns</b>" : "<b>Secondary</b>", sT);
             var list = o != null ? (main ? o.Main : o.Sec) : null;
             const float bw = 36f; float bx = x + 98f;

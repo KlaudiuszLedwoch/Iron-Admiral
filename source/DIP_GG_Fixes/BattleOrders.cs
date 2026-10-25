@@ -370,7 +370,7 @@ namespace DipGgFixes
         {
             try
             {
-                var ui = G.ui; if (ui == null) return null; var s = ui.selectedShipMain;
+                var s = BattleSel.Ship(); // 1.11.261: kept after a click on a strip
                 if (s == null || s.player == null || !s.player.isMain || s.isSinking || s.isDead) return null;
                 return s.division;
             }
@@ -398,7 +398,7 @@ namespace DipGgFixes
                     if (GUI.Button(tab, $"Orders: {OrderNames[(int)cur]} ▾")) oFolded = false;
                     return;
                 }
-                GUI.Box(new Rect(x, y, w, h), "");
+                GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
                 if (why.Length > 60) why = why.Substring(0, 60) + "...";
                 GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..6): {OrderNames[(int)cur]}{why}", oTitle);

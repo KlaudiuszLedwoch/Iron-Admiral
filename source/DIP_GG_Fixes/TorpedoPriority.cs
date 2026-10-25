@@ -179,7 +179,7 @@ namespace DipGgFixes
 
         // ------------------------------------------------------------------ panel
         static GUIStyle sT; static bool folded; static int gErr;
-        static Ship Selected() { try { var ui = G.ui; var s = ui != null ? ui.selectedShipMain : null; return s != null && IsPlayer(s) && !s.isDead && !s.isSinking && s.haveTorpedoes ? s : null; } catch { return null; } }
+        static Ship Selected() { try { var s = BattleSel.Ship(); return s != null && IsPlayer(s) && !s.isDead && !s.isSinking && s.haveTorpedoes ? s : null; } catch { return null; } }
         internal static void OnGUI()
         {
             if (!Enabled || !InBattle || BattleScreen.Hidden) return;
@@ -194,7 +194,7 @@ namespace DipGgFixes
                 var order = ListFor(s);
                 var sm = TorpedoSettings.Small();
                 if (folded) { if (GUI.Button(new Rect(x + w - 200f, y, 200f, 18f), $"Torpedo targets: {Label(order)} ▾", sm)) folded = false; return; }
-                GUI.Box(new Rect(x, y, w, h), "");
+                GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string scope = shipList.ContainsKey(s.Pointer) ? "ship" : "division";
                 GUI.Label(new Rect(x + 6f, y + 4f, 92f, 18f), "<b>Torp. targets</b>", sT);
                 const float bw = 36f; float bx = x + 98f;

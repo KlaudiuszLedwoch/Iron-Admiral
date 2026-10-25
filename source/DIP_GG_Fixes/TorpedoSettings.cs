@@ -470,7 +470,7 @@ namespace DipGgFixes
             try
             {
                 TorpedoSettings.BeginSmall();
-                Ship s = null; try { var ui = G.ui; s = ui != null ? ui.selectedShipMain : null; } catch { }
+                Ship s = BattleSel.Ship(); // 1.11.261: kept after a click on a strip
                 if (s == null || !IsPlayer(s) || s.isDead || s.isSinking || !s.haveTorpedoes) return;
                 var st = Get(s);
                 if (sT == null) { sT = new GUIStyle(); sT.fontSize = 12; sT.richText = true; sT.normal.textColor = new Color(0.9f, 0.9f, 0.9f); }
@@ -478,7 +478,7 @@ namespace DipGgFixes
                 float w = 600f, h = 24f, x = (UiScale.W - w) / 2f, y = 54f + 62f;
                 int cur = st.Pending >= 0 ? st.Pending : st.Cur;
                 if (folded) { if (GUI.Button(new Rect(x + w - 150f, y, 150f, 18f), $"Torpedoes: {Name(cur)} ▾", Small())) folded = false; return; }
-                GUI.Box(new Rect(x, y, w, h), "");
+                GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 float rng = 0f, kn = 0f; try { rng = BattleAi.TorpedoRange(s); kn = s.TorpedoSpeed(false) / 0.5144f; } catch { }
                 int man = Manual(s);
                 string mode = man < 0 ? "auto" : (shipManual.ContainsKey(s.Pointer) ? "ship" : "division");
