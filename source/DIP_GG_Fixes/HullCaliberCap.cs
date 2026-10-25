@@ -32,6 +32,7 @@ namespace DipGgFixes
             if (tonnageMax <= 34000f) return 15;
             if (tonnageMax <= 42000f) return 16;
             if (tonnageMax <= 52000f) return 17;
+            if (tonnageMax <= 72000f) return 18;   // 1.11.248: Yamato 65 000 t
             return 0;
         }
         internal static int SecCountFor(float tonnageMax)
@@ -95,6 +96,61 @@ namespace DipGgFixes
                 MelonLogger.Msg($"[DIP GG Fixes][HullCap] AI main calibre by hull tonnage: {capped} of {hulls} battleship/battlecruiser hulls capped, {kept} had a limit already - {string.Join("; ", sample)}");
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][HullCap] " + e.Message); }
+        }
+    }
+
+    // 1.11.248: the limits follow the displacement the generator actually chose. Modern hulls carry a nominal maximum of 200 000 t
+    //           and the technology sets the real displacement (1936 test: 20" guns in 4 turrets on a 40 000 t Soviet hull); when the
+    //           generator has fixed the tonnage (before the parts are placed) the hull's entries are tightened to that tonnage and
+    //           put back when the generation ends.
+    internal static class DynamicCaps
+    {
+        class Caps { public int Cap, Cnt, Sec; }
+        static readonly Dictionary<string, Caps> original = new Dictionary<string, Caps>();
+        static readonly HashSet<IntPtr> active = new HashSet<IntPtr>();
+        static int logged;
+        static int Read(Il2CppSystem.Collections.Generic.List<string> lim, string key)
+        {
+            if (lim == null) return 0;
+            for (int i = 0; i < lim.Count; i++) { var e = lim[i]; if (e != null && e.StartsWith(key + ":")) { int v; if (int.TryParse(e.Substring(key.Length + 1).Trim(), out v)) return v; } }
+            return 0;
+        }
+        static void Set(Il2CppSystem.Collections.Generic.List<string> lim, string key, int v)
+        {
+            for (int i = 0; i < lim.Count; i++) { var e = lim[i]; if (e != null && e.StartsWith(key + ":")) { if (v > 0) lim[i] = key + ":" + v; else lim.RemoveAt(i); return; } }
+            if (v > 0) lim.Add(key + ":" + v);
+        }
+        static int Min(int a, int b) { if (a <= 0) return b; if (b <= 0) return a; return Math.Min(a, b); }
+        internal static void Begin(Ship ship, IntPtr gen)
+        {
+            if (HullCaliberCap.On == null || !HullCaliberCap.On.Value || ship == null) return;
+            try
+            {
+                var pd = ship.hull != null ? ship.hull.data : null; if (pd == null || pd.paramx == null) return;
+                string type = pd.shipType != null ? pd.shipType.name : null; if (type != "bb" && type != "bc") return;
+                float t = ship.Tonnage(); if (t <= 0f) return;
+                Il2CppSystem.Collections.Generic.List<string> lim = null;
+                if (pd.paramx.ContainsKey("shipgen_limit")) lim = pd.paramx["shipgen_limit"];
+                if (lim == null) { lim = new Il2CppSystem.Collections.Generic.List<string>(); pd.paramx["shipgen_limit"] = lim; }
+                Caps o; if (!original.TryGetValue(pd.name, out o)) { o = new Caps { Cap = Read(lim, "max_main_gun_cal"), Cnt = Read(lim, "max_main_gun_count"), Sec = Read(lim, "max_sec_gun_count") }; original[pd.name] = o; }
+                int cap = Min(o.Cap, HullCaliberCap.CapFor(t * 1.05f)), cnt = Min(o.Cnt, HullCaliberCap.MainCountFor(t)), sec = Min(o.Sec, HullCaliberCap.SecCountFor(t));
+                Set(lim, "max_main_gun_cal", cap); Set(lim, "max_main_gun_count", cnt); Set(lim, "max_sec_gun_count", sec);
+                active.Add(gen);
+                if (logged++ < 10) MelonLogger.Msg($"[DIP GG Fixes][HullCap] {pd.name} at {t:0} t: AI limits for this design {(cap > 0 ? cap + "\"" : "hull's calibre")}, {cnt} main turrets, {sec} secondary mounts per type (hull entries {(o.Cap > 0 ? o.Cap + "\"" : "-")}/{o.Cnt}/{o.Sec})");
+            }
+            catch (Exception e) { if (logged++ < 10) MelonLogger.Warning("[DIP GG Fixes][HullCap] dynamic: " + e.Message); }
+        }
+        internal static void End(Ship ship, IntPtr gen)
+        {
+            if (!active.Remove(gen) || ship == null) return;
+            try
+            {
+                var pd = ship.hull != null ? ship.hull.data : null; if (pd == null || pd.paramx == null || !pd.paramx.ContainsKey("shipgen_limit")) return;
+                Caps o; if (!original.TryGetValue(pd.name, out o)) return;
+                var lim = pd.paramx["shipgen_limit"];
+                Set(lim, "max_main_gun_cal", o.Cap); Set(lim, "max_main_gun_count", o.Cnt); Set(lim, "max_sec_gun_count", o.Sec);
+            }
+            catch { }
         }
     }
 

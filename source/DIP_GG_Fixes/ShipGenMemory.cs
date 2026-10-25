@@ -119,7 +119,7 @@ namespace DipGgFixes
             ShipGenSpeed.Active = false;
             ShipGenSpeed.TolEnd(); // 1.11.244
             ShipGenSpeed.GenRunning = false; // 1.11.245
-            if (!__result) ShipGenSpeed.StateEnd(__instance.Pointer); // 1.11.246
+            if (!__result) { Ship sh = null; try { sh = __instance.__4__this; } catch { } ShipGenSpeed.StateEnd(__instance.Pointer, sh); } // 1.11.246
             try { ShipGenSpeed.Diagnose(__instance, __instance.__4__this, __result); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] diagnosis: " + e.Message); } // 1.11.245
             try { ShipGenMemory.After(__instance, __state, __result); }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] memory: " + e.Message); }

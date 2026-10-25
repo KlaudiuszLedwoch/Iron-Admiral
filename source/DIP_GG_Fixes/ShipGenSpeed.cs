@@ -193,6 +193,7 @@ namespace DipGgFixes
                 float w = 0f, t = 0f; int n = 0; try { w = ship.Weight(false, false); t = ship.Tonnage(); n = ship.parts.Count; } catch { }
                 stateLogged++; Log($"state {prev} -> {st}: attempt {it._tryN_5__5}, {n} parts, {w:0} t of {t:0} t");
             }
+            if (st == 8) { try { DynamicCaps.Begin(ship, p); } catch { } }   // 1.11.248: limits for the displacement chosen
             int want = TrimState != null ? TrimState.Value : 20;
             if (TrimOn != null && TrimOn.Value)
             {
@@ -203,7 +204,7 @@ namespace DipGgFixes
                 if (st == want) { try { Trim(ship, false); } catch (Exception e) { if (trimLogged++ < 10) Log("trim: " + e.Message); } }
             }
         }
-        internal static void StateEnd(IntPtr p) { lastState.Remove(p); }
+        internal static void StateEnd(IntPtr p, Ship ship) { lastState.Remove(p); try { DynamicCaps.End(ship, p); } catch { } }
         static void Trim(Ship ship, bool early)
         {
             float w = ship.Weight(true, true), t = ship.Tonnage();
