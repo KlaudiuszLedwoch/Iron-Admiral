@@ -34,6 +34,7 @@ namespace DipGgFixes
                     var s = ships[i]; if (s == null) continue;
                     string r = Report(s);
                     if (r != null) { shipsBad++; Log(r); }
+                    if (i < 16) ShellChoice(s);   // 1.11.299
                 }
                 Log($"battle check: {ships.Count} ships, {shipsBad} with parts that have no mount or no model");
             }
@@ -100,6 +101,28 @@ namespace DipGgFixes
             catch (Exception e) { if (errors++ < 3) Log("settle: " + e.Message); return ""; }
         }
         static int settled, hitLogged;
+
+        // 1.11.299 (#33, author's battles 26.10 20:02-20:11): every ship of every nation in a 1924 campaign carried the AP shell of
+        // 1898 (ap_1) or 1895 (ap_3) - blunt nose, low shell quality, so striking velocity and penetration came out at about half the
+        // historical values. Logged per ship at the battle check: the shell fitted and, for every shell_ap component, whether the ship
+        // may use it (the game's own reason when not), so the cause can be read from one battle log.
+        static void ShellChoice(Ship s)
+        {
+            try
+            {
+                string fitted = "none"; try { var comps = s.components; if (comps != null) foreach (var kv in comps) { var cd = kv.Value; if (cd != null && cd.type == "shell_ap") { fitted = cd.name; break; } } } catch { }
+                var sb = new System.Text.StringBuilder();
+                foreach (var kv in G.GameData.components)
+                {
+                    var c = kv.Value; if (c == null || c.type != "shell_ap") continue;
+                    bool ok = false; string why = ""; try { ok = s.IsComponentAvailable(c, out why); } catch (Exception e) { why = "check failed: " + e.Message; }
+                    sb.Append($"{c.name} {(ok ? "available" : "NOT available (" + why + ")")}; ");
+                }
+                int year = 0; try { year = CampaignController.Instance != null ? CampaignController.Instance.CurrentDate.AsDate().Year : 0; } catch { }
+                Log($"AP shell of {s.name} ({(s.player != null ? s.player.data.name : "?")}, {year}): fitted {fitted}; {sb}");
+            }
+            catch (Exception e) { if (errors++ < 3) Log("shell choice: " + e.Message); }
+        }
 
         // null when every part is mounted and modelled
         internal static string Report(Ship s)
