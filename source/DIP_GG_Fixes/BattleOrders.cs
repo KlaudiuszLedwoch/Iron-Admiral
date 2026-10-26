@@ -309,6 +309,7 @@ namespace DipGgFixes
             }
             catch { return true; }
         }
+        static readonly Dictionary<IntPtr, float> huntHold = new Dictionary<IntPtr, float>();
         static float Reach(Ship e) { float r = 0f; try { if (e.haveTorpedoes && HasTorpedoAmmo(e)) r = TorpedoRange(e); } catch { } return Math.Max(r, GunRange(e)); }
         static void Hunt(Division div, OrderSt o, Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
         {
@@ -325,12 +326,18 @@ namespace DipGgFixes
                 if (score < bestScore) { bestScore = score; prey = e; }
             }
             // safe distance from a threat: its reach plus a margin of 1.5 km (torpedo craft: 2 km)
-            Func<Vector3, Ship> danger = pos => { foreach (var t in threats) { float m = 1500f; try { if (t.haveTorpedoes) m = 2000f; } catch { } if ((P(t) - pos).magnitude < Reach(t) + m) return t; } return null; };
+            // 1.11.300 (author 26.10, 20:16, "Hunt works oddly": CA Limburg switched every 2-3 s between "covered - holding outside his
+            // reach", "inside the reach - opening the range" and "closing in"): the goal must be safe with a further 1.5 km to spare,
+            // after opening the range the division waits 30 s before it tries again, and while the prey is covered it is sent to a
+            // point outside the threat's reach instead of drifting on its last course
+            Func<Vector3, float, Ship> dangerM = (pos, extra) => { foreach (var t in threats) { float m = 1500f; try { if (t.haveTorpedoes) m = 2000f; } catch { } if ((P(t) - pos).magnitude < Reach(t) + m + extra) return t; } return null; };
+            Func<Vector3, Ship> danger = pos => dangerM(pos, 0f);
+            float now = Time.time; float holdUntil; huntHold.TryGetValue(div.Pointer, out holdUntil);
             var inside = danger(me);
             if (inside != null)
             {
                 Vector3 away = me - P(inside); away.y = 0f; if (away.sqrMagnitude < 1f) away = -toEnemy; away.Normalize();
-                Cmd(div, o, me + away * 4000f); OWhy(o, $"inside the reach of {inside.name} - opening the range"); return;
+                Cmd(div, o, me + away * 4000f); OWhy(o, $"inside the reach of {inside.name} - opening the range"); huntHold[div.Pointer] = now + 30f; return;
             }
             if (prey == null)
             {
@@ -343,9 +350,16 @@ namespace DipGgFixes
             Vector3 pp = P(prey), dirToMe = me - pp; dirToMe.y = 0f; if (dirToMe.sqrMagnitude < 1f) dirToMe = -toEnemy; dirToMe.Normalize();
             Vector3 goal = pp + dirToMe * want;
             // never into the reach of a threat: walk the goal back towards our own position until it is safe
-            var blocker = danger(goal);
-            for (int k = 0; blocker != null && k < 8; k++) { goal = Vector3.Lerp(goal, me, 0.25f); blocker = danger(goal); }
-            if (blocker != null) { OWhy(o, $"{prey.name} is covered by {blocker.name} - holding outside his reach"); return; }
+            var blocker = dangerM(goal, 1500f);
+            for (int k = 0; blocker != null && k < 8; k++) { goal = Vector3.Lerp(goal, me, 0.25f); blocker = dangerM(goal, 1500f); }
+            if (blocker == null && now < holdUntil) blocker = dangerM(me, 3000f);   // still near the threat it just left
+            if (blocker != null)
+            {
+                Vector3 aw = me - P(blocker); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize();
+                Vector3 safe = P(blocker) + aw * (Reach(blocker) + 3500f);
+                if ((me - safe).magnitude > 800f) Cmd(div, o, safe);
+                OWhy(o, $"{prey.name} is covered by {blocker.name} - holding outside his reach"); return;
+            }
             if ((me - goal).magnitude > 600f) Cmd(div, o, goal);
             float dp = (pp - me).magnitude;
             OWhy(o, $"hunting {prey.name} ({prey.shipType.name}) - {(dp > want + 800f ? "closing in" : "engaging")}");

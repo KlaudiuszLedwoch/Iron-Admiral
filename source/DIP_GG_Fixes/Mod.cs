@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.299", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.300", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2011,6 +2011,12 @@ namespace DipGgFixes
             float torp = TorpedoRange(leader);
             if (torp <= 0f) { Why(st, "torpedo range 0"); return; }
             float launchAt = torp * DipGgFixesMod.ChargeTorpedoMargin.Value;
+            // 1.11.300 (author 26.10, 20:16: "the CAs went too close to the BB" - Scharnhorst held off only at 1.7 km and was at 0.9 km
+            // later, torpedoes 4.1 km): a player's ordered attack launches from 85 % of the torpedo range, starts holding off at 110 %
+            // of that distance (the target closes too), and with the tubes empty opens the range instead of staying at launch distance
+            bool pOrder = playerSide || ordered;
+            if (pOrder) launchAt = torp * Math.Max(DipGgFixesMod.ChargeTorpedoMargin.Value, 0.85f);
+            float holdAt = pOrder ? launchAt * 1.1f : launchAt;
             // 1.11.88: night rules (War Instructions 1944, 827; national doctrine: avoid / accept / seek night action)
             if (!playerSide && !ordered && NightFlotilla(leader, div, st, doc, enemies, bestD, launchAt)) return;
             if (!st.charging)
@@ -2053,7 +2059,7 @@ namespace DipGgFixes
                 Why(st, "charging");
                 Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : start >= float.MaxValue ? (ordered ? "ordered - goes in at once" : "goes in at once") : $"start distance {start:0} m")}");
             }
-            if (bestD > launchAt)
+            if (bestD > holdAt)
             {
                 var tt = best.transform;
                 if (tt != null) { if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, tt.position, "charging"); else div.MoveTo(tt.position); }
@@ -2075,6 +2081,15 @@ namespace DipGgFixes
                     if (dir.sqrMagnitude > 1f)
                     {
                         dir.Normalize(); var side = new UnityEngine.Vector3(-dir.z, 0f, dir.x);
+                        float loaded = 1f; try { loaded = LoadedTubes(div, leader); } catch { }
+                        if (loaded == 0f && IsCapital(best))
+                        {
+                            // 1.11.300: salvo away - turn away from the battleship and open the range to 1.6 x the torpedo range
+                            div.MoveTo(tt3.position + dir * (torp * 1.6f) + side * (torp * 0.3f));
+                            if (st.reason != "tubes empty - opening the range") Log($"{st.name}: torpedoes away at {best.name} ({bestD:0} m) - tubes empty, turns away and opens the range");
+                            Why(st, "tubes empty - opening the range");
+                            return;
+                        }
                         div.MoveTo(tt3.position + dir * launchAt + side * (launchAt * 0.6f));
                         if (st.reason != "in launch range - holding off") Log($"{st.name}: inside torpedo launch range of {best.name} ({bestD:0} m, launch {launchAt:0} m) - stops closing and runs across");
                         Why(st, "in launch range - holding off");
