@@ -195,6 +195,7 @@ namespace DipGgFixes
                 stateLogged++; Log($"state {prev} -> {st}: attempt {it._tryN_5__5}, {n} parts, {w:0} t of {t:0} t");
             }
             if (st == 8) { try { DynamicCaps.Begin(ship, p); } catch { } }   // 1.11.248: limits for the displacement chosen
+            if (st == 13) { try { TorpedoTubesMin.Apply(ship); } catch (Exception e) { if (trimLogged++ < 10) Log("torpedo tubes: " + e.Message); } } // 1.11.309 (#47)
             int want = TrimState != null ? TrimState.Value : 20;
             if (TrimOn != null && TrimOn.Value)
             {
