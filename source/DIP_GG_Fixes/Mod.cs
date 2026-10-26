@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.301", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.302", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2059,10 +2059,18 @@ namespace DipGgFixes
                 Why(st, "charging");
                 Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : start >= float.MaxValue ? (ordered ? "ordered - goes in at once" : "goes in at once") : $"start distance {start:0} m")}");
             }
+            UnityEngine.Vector3 xdir = UnityEngine.Vector3.zero; int xslot = 0, xof = 1;
+            bool cross = pOrder && CrossSlot(div, best, out xdir, out xslot, out xof);   // 1.11.302
             if (bestD > holdAt)
             {
                 var tt = best.transform;
-                if (tt != null) { if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, tt.position, "charging"); else div.MoveTo(tt.position); }
+                if (tt != null)
+                {
+                    var aim = cross ? tt.position + xdir * launchAt : tt.position;
+                    if (cross && st.reason != "cross attack") { Log($"{st.name}: cross torpedo attack on {best.name} - approach {(xslot % 2 == 0 ? "starboard" : "port")} bow ({xslot + 1} of {xof} divisions), tracks to cross at about 90 deg"); }
+                    if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, aim, "charging"); else div.MoveTo(aim);
+                    if (cross) Why(st, "cross attack");
+                }
             }
             // inside launch range: the game's torpedo logic fires on its own.
             // 1.11.86: the AI keeps closing while tubes are still loaded (vanilla 1.7 test: flotillas hovered just outside range after one salvo)
@@ -2082,6 +2090,26 @@ namespace DipGgFixes
                     {
                         dir.Normalize(); var side = new UnityEngine.Vector3(-dir.z, 0f, dir.x);
                         float loaded = 1f; try { loaded = LoadedTubes(div, leader); } catch { }
+                        // 1.11.302 (author 26.10, 20:23): one side fired - turn so the loaded side bears on the target, fire it, and only
+                        // then go off to reload
+                        if (loaded > 0f)
+                        {
+                            LoadedSides(leader, out bool lp, out bool ls);
+                            float tx = lt.InverseTransformPoint(tt3.position).x;   // > 0: target on the starboard side
+                            bool targetStbd = tx > 0f;
+                            if ((targetStbd && !ls && lp) || (!targetStbd && !lp && ls))
+                            {
+                                var toT = tt3.position - lt.position; toT.y = 0f; toT.Normalize();
+                                // heading with the target abeam on the loaded side: starboard abeam = (-dz, dx), port abeam = (dz, -dx)
+                                var h = lp ? new UnityEngine.Vector3(toT.z, 0f, -toT.x) : new UnityEngine.Vector3(-toT.z, 0f, toT.x);
+                                div.MoveTo(lt.position + h * 2500f);
+                                string why2 = lp ? "turning to bring the port tubes to bear" : "turning to bring the starboard tubes to bear";
+                                if (st.reason != why2) Log($"{st.name}: {(lp ? "starboard" : "port")} tubes fired at {best.name} ({bestD:0} m) - {why2}");
+                                Why(st, why2);
+                                return;
+                            }
+                        }
+                        if (cross) { dir = xdir; side = new UnityEngine.Vector3(-dir.z, 0f, dir.x); }
                         if (loaded == 0f && IsCapital(best))
                         {
                             // 1.11.300: salvo away - turn away from the battleship and open the range to 1.6 x the torpedo range
