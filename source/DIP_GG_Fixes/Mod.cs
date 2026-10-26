@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.300", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.301", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2657,6 +2657,11 @@ namespace DipGgFixes
             // nearly as fast as the torpedo and the run came out at tens or hundreds of km at 1.5-5 km ("run to the intercept point
             // 781547 m"). Now the same computation as the torpedo-setting choice: the game's velocity of the target and the torpedo's
             // own speed converted by the game (TorpedoSettings.InterceptRun / World); the fixed speed only when the ship reports none.
+            // 1.11.301 (author 26.10, 20:21: "from 3 km one could fire boldly at such a large, sluggish target"): a capital ship inside
+            // three quarters of the torpedo range is never a hopeless shot - a spread at a battleship or cruiser that size covers its
+            // possible turns, so the intercept check is not applied
+            bool bigTarget = false; try { bigTarget = BattleAi.IsCapital(t); } catch { }
+            if (bigTarget && range > 0f && d <= range * 0.75f) return false;
             float ms = 0f; try { ms = s.TorpedoSpeed(false); } catch { }
             float vt = ms > 0.5f ? TorpedoSettings.World(ms) : TorpedoSettings.World(UnityEngine.Mathf.Max(5f, DipGgFixesMod.TorpedoSenseSpeed.Value));
             float run = TorpedoSettings.InterceptRun(s, t, vt);

@@ -63,6 +63,7 @@ namespace DipGgFixes
             var o = OrderOf(div, true); o.Order = ord; o.FromVanilla = false; o.Issued = false; o.Reason = null; o.NextThink = 0f;
             try { o.Name = div.leader != null ? div.leader.name : "division"; } catch { o.Name = "division"; }
             Log($"{o.Name}: order {OrderNames[(int)ord]} ({how})");
+            if (ord != DivOrder.Hunt) HuntShells(div, false, null); // 1.11.301: shells back after Hunt
             if (ord != DivOrder.None) try { Issuing = true; if (div.isRetreating || div.retreat) div.Retreat(false); } catch { } finally { Issuing = false; }
         }
         internal static DivOrder CurrentOrder(Division div) { var o = OrderOf(div, false); return o != null ? o.Order : DivOrder.None; }
@@ -83,6 +84,7 @@ namespace DipGgFixes
             if (!needInput && o.FromVanilla) return; // the game's own Screen/Scout logic moves the division itself
             Log($"{o.Name}: {what} by the player - order {OrderNames[(int)o.Order]} ends, manual command");
             o.Order = DivOrder.None; o.FromVanilla = false;
+            HuntShells(div, false, null); // 1.11.301
         }
 
         // the main body: the division of the player's heaviest ship (largest main calibre, capital ships first) other than this one
@@ -310,6 +312,36 @@ namespace DipGgFixes
             catch { return true; }
         }
         static readonly Dictionary<IntPtr, float> huntHold = new Dictionary<IntPtr, float>();
+        // 1.11.301: shells the division used before Hunt switched it to HE against transports (ship -> main, secondary)
+        static readonly Dictionary<IntPtr, Ship.ShellType[]> huntShells = new Dictionary<IntPtr, Ship.ShellType[]>();
+        static void HuntShells(Division div, bool he, Ship prey)
+        {
+            try
+            {
+                var ships = div.ships; if (ships == null) return;
+                for (int i = 0; i < ships.Count; i++)
+                {
+                    var s = ships[i]; if (s == null || s.isDead || s.isSinking) continue;
+                    bool saved = huntShells.TryGetValue(s.Pointer, out var prev);
+                    if (he)
+                    {
+                        if (!saved) { huntShells[s.Pointer] = new[] { s.MainShellType, s.SecShellType }; }
+                        if (s.MainShellType != Ship.ShellType.He) { s.MainShellType = Ship.ShellType.He; try { s.OnChangeMainShellType(Ship.ShellType.He); } catch { } }
+                        if (s.SecShellType != Ship.ShellType.He) { s.SecShellType = Ship.ShellType.He; try { s.OnChangeSecShellType(Ship.ShellType.He); } catch { } }
+                        if (!saved) { var was = huntShells[s.Pointer]; Log($"{s.name} [Hunt]: HE in main and secondary guns against the transport {prey.name} (was {was[0]}/{was[1]})"); }
+                    }
+                    else if (saved)
+                    {
+                        s.MainShellType = prev[0]; try { s.OnChangeMainShellType(prev[0]); } catch { }
+                        s.SecShellType = prev[1]; try { s.OnChangeSecShellType(prev[1]); } catch { }
+                        huntShells.Remove(s.Pointer);
+                        Log($"{s.name} [Hunt]: prey is no longer a transport - shells back to {prev[0]}/{prev[1]}");
+                    }
+                }
+            }
+            catch (Exception e) { if (shellErr++ < 3) Log("[Hunt] shell switch: " + e.Message); }
+        }
+        static int shellErr;
         static float Reach(Ship e) { float r = 0f; try { if (e.haveTorpedoes && HasTorpedoAmmo(e)) r = TorpedoRange(e); } catch { } return Math.Max(r, GunRange(e)); }
         static void Hunt(Division div, OrderSt o, Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
         {
@@ -347,6 +379,12 @@ namespace DipGgFixes
             }
             // close in: just outside the prey's own guns (it cannot hurt us, but there is no reason to take hits), at least 2.5 km
             float preyR = GunRange(prey); float want = Mathf.Max(2500f, preyR > 0f ? preyR + 500f : 0f);
+            // 1.11.301 (author 26.10, 20:21: "close in on the transports to 2-3 km and shoot them like ducks, with HE"): transports are
+            // approached to 2.5 km whatever they carry, and the division fires HE at them; the earlier shell choice comes back when the
+            // prey is no longer a transport
+            bool preyTr = false; try { var pst = prey.shipType != null ? prey.shipType.name : ""; preyTr = pst == "tr" || pst == "amc"; } catch { }
+            if (preyTr) want = 2500f;
+            HuntShells(div, preyTr, prey);
             Vector3 pp = P(prey), dirToMe = me - pp; dirToMe.y = 0f; if (dirToMe.sqrMagnitude < 1f) dirToMe = -toEnemy; dirToMe.Normalize();
             Vector3 goal = pp + dirToMe * want;
             // never into the reach of a threat: walk the goal back towards our own position until it is safe
