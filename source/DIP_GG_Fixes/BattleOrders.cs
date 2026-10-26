@@ -160,7 +160,11 @@ namespace DipGgFixes
             {
                 if (!leader.haveTorpedoes || !HasTorpedoAmmo(leader)) { OWhy(o, "no torpedoes - free action instead"); Issuing = true; try { Think(leader, true, true); } finally { Issuing = false; } return true; }
                 if (!States.TryGetValue(div.Pointer, out var ds)) { ds = new DivState { name = o.Name }; States[div.Pointer] = ds; }
+                // 1.11.303 (author 26.10, 20:29): a division of two or more ships splits by itself for a cross attack and joins again
+                // once the detached part has fired its torpedoes
+                if (!splitDone.Contains(div.Pointer)) { splitDone.Add(div.Pointer); SplitForCross(div, leader, o); }
                 Issuing = true; OrderedCharge = true; try { TorpedoCharge(leader, div, ds, Doctrines.For(player), enemies, false); } finally { Issuing = false; OrderedCharge = false; }
+                if (splitFrom.TryGetValue(div.Pointer, out var orig) && ds.reason == "tubes empty - opening the range") Rejoin(div, orig, o);
                 OWhy(o, ds.reason ?? "torpedo attack"); return true;
             }
 
@@ -312,6 +316,46 @@ namespace DipGgFixes
             catch { return true; }
         }
         static readonly Dictionary<IntPtr, float> huntHold = new Dictionary<IntPtr, float>();
+        // 1.11.303: cross-attack split - divisions already considered, and detached division -> the division it came from
+        static readonly HashSet<IntPtr> splitDone = new HashSet<IntPtr>();
+        static readonly Dictionary<IntPtr, Division> splitFrom = new Dictionary<IntPtr, Division>();
+        static void SplitForCross(Division div, Ship leader, OrderSt o)
+        {
+            try
+            {
+                var all = new List<Ship>(); var ships = div.ships;
+                for (int i = 0; ships != null && i < ships.Count; i++) { var s = ships[i]; if (s != null && !s.isDead && !s.isSinking && !s.IsSurrendered && s.Pointer != leader.Pointer) all.Add(s); }
+                if (all.Count < 1) return;                                   // a single ship cannot split
+                int take = (all.Count + 1) / 2;                              // the leader keeps the first half, the rest go
+                var go = all.GetRange(all.Count - take, take);
+                var il = new Il2CppSystem.Collections.Generic.List<Ship>(); foreach (var s in go) il.Add(s);
+                Issuing = true;
+                try { Ship.DetachShips(il); } catch (Exception e) { Log($"{o.Name}: split - DetachShips failed ({e.Message}), detaching one by one"); foreach (var s in go) { try { if (s.CanDetach()) s.Detach(); } catch { } } }
+                finally { Issuing = false; }
+                Division nd = null; try { nd = go[0].division; } catch { }
+                if (nd == null || nd.Pointer == div.Pointer) { Log($"{o.Name}: split for a cross attack did not happen - the division attacks as one"); return; }
+                splitDone.Add(nd.Pointer); splitFrom[nd.Pointer] = div;
+                SetOrder(nd, DivOrder.Torpedo, "cross attack - detached part");
+                Log($"{o.Name}: splits for a cross torpedo attack - {string.Join(", ", go.ConvertAll(s => s.name))} detached as a second division; they join again after their salvo");
+            }
+            catch (Exception e) { if (shellErr++ < 3) Log($"{o.Name}: split: {e.Message}"); }
+        }
+        static void Rejoin(Division nd, Division orig, OrderSt o)
+        {
+            try
+            {
+                splitFrom.Remove(nd.Pointer);
+                bool origAlive = false; try { origAlive = orig != null && orig.ships != null && orig.ships.Count > 0; } catch { }
+                if (!origAlive) { Log($"{o.Name}: the division it split from is gone - stays on its own"); return; }
+                var back = new List<Ship>(); var ships = nd.ships;
+                for (int i = 0; ships != null && i < ships.Count; i++) { var s = ships[i]; if (s != null && !s.isDead && !s.isSinking) back.Add(s); }
+                Issuing = true;
+                try { foreach (var s in back) { try { orig.AddShip(s, nd); } catch (Exception e) { Log($"{o.Name}: rejoin of {s.name} failed: {e.Message}"); } } }
+                finally { Issuing = false; }
+                Log($"{o.Name}: salvo away - {back.Count} ship(s) join their division again to withdraw and reload together");
+            }
+            catch (Exception e) { if (shellErr++ < 3) Log($"{o.Name}: rejoin: {e.Message}"); }
+        }
         // 1.11.301: shells the division used before Hunt switched it to HE against transports (ship -> main, secondary)
         static readonly Dictionary<IntPtr, Ship.ShellType[]> huntShells = new Dictionary<IntPtr, Ship.ShellType[]>();
         static void HuntShells(Division div, bool he, Ship prey)
