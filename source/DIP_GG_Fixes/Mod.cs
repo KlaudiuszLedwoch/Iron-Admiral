@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.291", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.292", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1104,18 +1104,40 @@ namespace DipGgFixes
             catch { return false; }
         }
 
-        private static void Prefix(ref float attitudeDelta, bool init, bool force)
+        // 1.11.292 (#39): the game (and TweaksAndFixes' "All other allies declare war") sometimes calls AdjustAttitude for a pair
+        // of nations without a relation record; the interop wrapper then throws a NullReferenceException that ends the caller's
+        // loop (the remaining allies are skipped). A null relation is now skipped and logged; an exception thrown inside the
+        // game's AdjustAttitude is logged with the pair and swallowed, so the caller goes on with the next nation.
+        static int nullLogged, errLogged;
+        [ThreadStatic] static Relation current; [ThreadStatic] static string currentInfo; [ThreadStatic] static float currentDelta;
+        private static bool Prefix(Relation relation, ref float attitudeDelta, bool init, string info, bool force)
         {
             depth++;
-            if (depth > 1 || init || force || TafPassThrough()) return;
+            if (relation == null)
+            {
+                if (nullLogged++ < 20) MelonLogger.Msg($"[DIP GG Fixes][Diplomacy] AdjustAttitude called without a relation (delta {attitudeDelta:F1}, '{info}') - skipped");
+                return false;
+            }
+            if (depth == 1) { current = relation; currentInfo = info; currentDelta = attitudeDelta; }
+            if (depth > 1 || init || force || TafPassThrough()) return true;
             var m = attitudeDelta < 0f ? DipGgFixesMod.NegAttitudeMult : DipGgFixesMod.AttitudeMult;
-            if (m == null) return;
+            if (m == null) return true;
             attitudeDelta *= m.Value;
+            return true;
         }
 
-        private static void Finalizer()
+        private static Exception Finalizer(Exception __exception)
         {
             if (depth > 0) depth--;
+            if (__exception == null) { if (depth == 0) current = null; return null; }
+            if (errLogged++ < 20)
+            {
+                string pair = "?", state = "";
+                try { var r = current; if (r != null) { pair = r.ToString(); state = $", attitude now {r.attitude:F0}, war {r.isWar}"; } } catch { }
+                MelonLogger.Warning($"[DIP GG Fixes][Diplomacy] AdjustAttitude failed inside the game for {pair} (delta {currentDelta:F1}, '{currentInfo}'{state}) - {__exception.GetType().Name}: {__exception.Message.Split('\n')[0]}; the caller continues");
+            }
+            if (depth == 0) current = null;
+            return null;
         }
     }
 
