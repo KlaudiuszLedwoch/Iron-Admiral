@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.281", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.287", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1392,7 +1392,28 @@ namespace DipGgFixes
         }
         internal static float MainCaliber(Ship s)
         {
-            try { var g = s.mainGunsGroup; return g != null ? g.caliber : 0f; } catch { return 0f; }
+            try { var g = MainBatteryGun(s); return g != null ? g.caliber : 0f; } catch { return 0f; }
+        }
+        // 1.11.284 (#46, merged #44): the gun of the largest calibre among the ship's parts; the game's mainGunsGroup falls back to a
+        // secondary gun when the main turrets have no mount (part check, #32), so it is only the fallback
+        internal static PartData MainBatteryGun(Ship s)
+        {
+            if (s == null) return null;
+            PartData best = null;
+            try
+            {
+                var parts = s.parts;
+                if (parts != null)
+                    for (int i = 0; i < parts.Count; i++)
+                    {
+                        var d = parts[i] != null ? parts[i].data : null;
+                        if (d == null || !d.isGun) continue;
+                        if (best == null || d.caliber > best.caliber) best = d;
+                    }
+            }
+            catch { }
+            if (best == null) { try { best = s.mainGunsGroup; } catch { } }
+            return best;
         }
         internal static float BeltArmor(Ship s)
         {
@@ -1416,8 +1437,42 @@ namespace DipGgFixes
             float beltRaw = BeltArmor(target);
             try
             {
-                var g = shooter.mainGunsGroup; if (g == null) return false;
+                // 1.11.284 (#46, merged #44): the main battery is the largest-calibre gun on the ship, also when its turrets failed the mount
+                // check (mainGunsGroup then pointed at a secondary gun - Rodney 14 in rated with 203 mm, 25.10)
+                var g = MainBatteryGun(shooter); if (g == null) return false;
                 var noShell = new Il2CppSystem.Nullable<Ship.ShellType>(); var noVec = new Il2CppSystem.Nullable<UnityEngine.Vector3>();
+                // 1.11.284 (#46): the AI's "can I penetrate" uses the same physics as the hit - the arriving AP shell's striking velocity and
+                // angle of fall at this distance, the physical belt law and the shell's AP quality - not the game's reading (which held the
+                // physical row only for guns already seen in the battle, and otherwise the game table: 0 mm for 5"/6" at 11 km)
+                float physPen = -1f; bool physBeyond = false;
+                if (PhysPen.On != null && PhysPen.On.Value && PhysGun.Enabled)
+                {
+                    try
+                    {
+                        var pg = PhysGun.Get(g, shooter, Ship.ShellType.Ap);
+                        if (pg.Ok)
+                        {
+                            float vs, fall, tt;
+                            Ballistics.Impact(pg.Mv, pg.CalMm / 25.4f, pg.Kg, Ballistics.CdOf(shooter), UnityEngine.Mathf.Max(50f, dist), MountElevation.Elev(System.Math.Max(1, pg.Grade)), out vs, out fall, out tt, out physBeyond);
+                            physPen = physBeyond ? 0f : PhysPen.BeltPen(pg.Kg, vs, fall, pg.Q, pg.CalMm);
+                        }
+                    }
+                    catch (Exception e) { if (penLogged++ < 3) Log("physical penetration estimate failed: " + e.Message); physPen = -1f; }
+                }
+                if (physPen >= 0f)
+                {
+                    pen = physPen;
+                    Obliquity.Suspend = true; try { belt = target.GetEffectiveArmor(Ship.A.Belt, null, g, shooter, false); } catch { belt = 0f; } finally { Obliquity.Suspend = false; }
+                    if (penLogged < 8)
+                    {
+                        penLogged++;
+                        float gameBelt = 0f; try { gameBelt = Ship.GetPenetration(g, shooter, dist, true, noShell, noVec); } catch { }
+                        Log($"penetration check (physics): {shooter.name} ({g.caliber:0} mm main battery) vs {target.name} at {dist:0} m: belt pen {physPen:0.0} mm{(physBeyond ? " (beyond the reach of the mount)" : "")} (game reading {gameBelt:0.0}) vs effective belt {belt:0.0} mm (armour table {beltRaw:0.0})");
+                    }
+                    if (physBeyond) return false; // out of reach: the range rules decide, not the penetration
+                    if (belt <= 0f) return false;
+                    return pen < belt * DipGgFixesMod.PenetrationFactor.Value;
+                }
                 // 1.11.1 log: the bool=false variant GREW with distance (plunging/deck penetration); belt penetration is the bool=true variant.
                 // Units (1.11.8): GetPenetration returns mm. Battle log 2026-10-16: a 229 mm gun of 1901 at 19.9 km gave 95.9 (deck
                 // variant 58.5) against penetration.csv table values of 182.8 / 107.1 mm for 9" at 20 km - the same ratio (~0.53) for an
