@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 25 October 2026. Latest version: Iron Admiral 1.2.74. Updated with every release._
+_Guide as of 26 October 2026. Latest version: Iron Admiral 1.2.74.1.1. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -249,6 +249,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **25 October 2026, Iron Admiral 1.2.72:** torpedo run settings by navy and torpedo technology chosen in battle and torpedo target priorities; damage of AP shells passing clean through (war damage reports); physical gun step 2b (shell of the bore as built, historical muzzle velocity with the technology bonus); battle AI: escort first, transports after; scouts head for smoke reported by the lookouts.
 - **25 October 2026, Iron Admiral 1.2.73:** belt penetration recalibrated for all calibres; AP pass-through damage by the place the shell went through; gun orders for the player's divisions; torpedo attack order goes in at once, holds off at launch distance and turns away opening the range; dispatches tell where hits struck; hit log for both sides.
 - **25 October 2026, Iron Admiral 1.2.74:** physical penetration in battle (the game's penetration table), historical damage model (bursting charge and place of burst), historical shell weights, deliberate aiming at close range, crews' voices in the dispatches; from this release the stable and beta lines are separate again.
+- **26 October 2026, Iron Admiral 1.2.74.1:** the gun window shows the physical penetration in every game language; the battle AI judges whether it can pierce a belt with the same physics as the hit, using its largest gun.
 
 ---
 
