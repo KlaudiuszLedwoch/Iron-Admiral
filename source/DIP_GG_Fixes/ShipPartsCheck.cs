@@ -144,12 +144,15 @@ namespace DipGgFixes
                     if (!m)
                     {
                         // 1.11.221: where is the unmounted part? (24.10: shells of the bare-hull cruiser started 990 m above the target)
-                        string pos = ""; try { var w = p.transform.position; var sp = s.transform.position; pos = $" at y {w.y:0} (ship y {sp.y:0}, {(w - sp).magnitude:0} m from the ship)"; } catch { }
+                        string pos = ""; float off = 0f; try { var w = p.transform.position; var sp = s.transform.position; off = (w - sp).magnitude; pos = $" at y {w.y:0} (ship y {sp.y:0}, {(w - sp).magnitude:0} m from the ship)"; } catch { }
                         bool re = false; try { p.TryFindMount(true); re = p.mount != null; } catch { }
                         string fix = re ? " - re-mounted" : Repair(s, p);   // 1.11.243
                     if (!re && !fix.Contains("put back")) fix += Settle(s, p); // 1.11.297
                         noMount.Add(nm + (mdl ? "" : " (no model)") + pos + fix);
-                        if (!re) lastUnmounted = true; // 1.11.308 (#32)
+                        // 1.11.308 (#32): only a part that lay far from its ship (put back, or hundreds of metres away - the "Resistance" BCs had theirs
+                        // 990 m under the sea) marks the design; parts sitting at a hull mount height with no mount reference are common
+                        // after loading (26.10, 21:10: all 14 ships of a battle) and harmless
+                        if (!re && (fix.Contains("put back") || off > 200f)) lastUnmounted = true;
                     }
                     else if (!mdl) noModel.Add(nm);
                 }
