@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.307", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.308", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -628,6 +628,7 @@ namespace DipGgFixes
             MapGhosts.CreatePrefs(cat); // 1.11.234
             Irredenta.CreatePrefs(cat); // 1.11.235
             ShipPartsCheck.CreatePrefs(cat); // 1.11.243
+            BrokenDesigns.CreatePrefs(cat); // 1.11.308 (#32)
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
@@ -4370,19 +4371,19 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuild2_Refit
     {
-        private static void Postfix(Ship __0, ref string __1, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __1, "CanBuildShipsFromDesign"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
+        private static void Postfix(Ship __0, ref string __1, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __1, "CanBuildShipsFromDesign"); BrokenDesigns.Check(__0, ref __result, ref __1); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(int), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuild3_Refit
     {
-        private static void Postfix(Ship __0, ref string __2, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __2, "CanBuildShipsFromDesign(n)"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
+        private static void Postfix(Ship __0, ref string __2, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __2, "CanBuildShipsFromDesign(n)"); BrokenDesigns.Check(__0, ref __result, ref __2); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     [HarmonyPatch(typeof(PlayerController), "CanBuildFromDesignOnInit", new Type[] { typeof(Ship), typeof(int), typeof(bool), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuildInit_Refit
     {
-        private static void Postfix(Ship __0, ref string __3, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __3, "CanBuildFromDesignOnInit"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
+        private static void Postfix(Ship __0, ref string __3, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __3, "CanBuildFromDesignOnInit"); BrokenDesigns.Check(__0, ref __result, ref __3); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     // 1.11.56: the save button of the designer (Ui.RefreshConstructorInfo, closure 489_21) reads canBuild / canNotBuildText,

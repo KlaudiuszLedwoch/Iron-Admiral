@@ -506,7 +506,7 @@ namespace DipGgFixes
             var cc = CampaignController.Instance;
             if (cc == null || cc.CampaignData == null) return;
             IntPtr ptr = cc.CampaignData.Pointer;
-            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); Independence.peaceSince.Clear(); Independence.ResetBaseline(); CoalitionWar.Reset(); Occupation.Reset(); loaded = false; tries = 0; lastTry = -100f; }
+            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); Independence.peaceSince.Clear(); Independence.ResetBaseline(); CoalitionWar.Reset(); BrokenDesigns.Reset(); Occupation.Reset(); loaded = false; tries = 0; lastTry = -100f; }
             if (loaded) return;
             float t = UnityEngine.Time.realtimeSinceStartup;
             if (t - lastTry < 1f) return;
@@ -528,6 +528,7 @@ namespace DipGgFixes
                     if (Series.ParseLaid(line)) continue;
                     if (Independence.Parse(line)) continue;
                     if (CoalitionWar.Parse(line)) continue; // 1.11.291
+                    if (BrokenDesigns.Parse(line)) continue; // 1.11.308 (#32)
                     if (EconState.Parse(line, out k, out st)) { states[k] = st; n++; }
                 }
                 MelonLogger.Msg($"[DIP GG Fixes][Economy] loaded the economy state of {n} great powers ({Path.GetFileName(f)})");
@@ -551,6 +552,7 @@ namespace DipGgFixes
                 foreach (var kv in Series.laidDown) if (kv.Value.Month >= keepFrom) lines.Add(Series.SerializeLaid(kv.Key, kv.Value));
                 lines.AddRange(Independence.Serialize());
                 lines.AddRange(CoalitionWar.Serialize()); // 1.11.291
+            lines.AddRange(BrokenDesigns.Serialize()); // 1.11.308 (#32)
                 string f = Path.Combine(dir, "eco_" + Fingerprint() + ".txt");
                 File.WriteAllLines(f, lines);
                 var files = new DirectoryInfo(dir).GetFiles("eco_*.txt").OrderByDescending(x => x.LastWriteTimeUtc).ToList();

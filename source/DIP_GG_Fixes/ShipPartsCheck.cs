@@ -14,6 +14,7 @@ namespace DipGgFixes
 {
     internal static class ShipPartsCheck
     {
+        static bool lastUnmounted; // 1.11.308: the last Report found a part that stayed without a mount
         static bool inBattle, done; static float at; static int errors;
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Parts] " + m); }
 
@@ -33,7 +34,7 @@ namespace DipGgFixes
                 {
                     var s = ships[i]; if (s == null) continue;
                     string r = Report(s);
-                    if (r != null) { shipsBad++; Log(r); }
+                    if (r != null) { shipsBad++; Log(r); if (lastUnmounted) BrokenDesigns.Mark(s); } // 1.11.308 (#32)
                     if (i < 16) ShellChoice(s);   // 1.11.299
                 }
                 Log($"battle check: {ships.Count} ships, {shipsBad} with parts that have no mount or no model");
@@ -129,7 +130,7 @@ namespace DipGgFixes
         {
             try
             {
-                var parts = s.parts; if (parts == null) return null;
+                lastUnmounted = false; var parts = s.parts; if (parts == null) return null;
                 var noMount = new List<string>(); var noModel = new List<string>(); int n = 0;
                 for (int i = 0; i < parts.Count; i++)
                 {
@@ -148,6 +149,7 @@ namespace DipGgFixes
                         string fix = re ? " - re-mounted" : Repair(s, p);   // 1.11.243
                     if (!re && !fix.Contains("put back")) fix += Settle(s, p); // 1.11.297
                         noMount.Add(nm + (mdl ? "" : " (no model)") + pos + fix);
+                        if (!re) lastUnmounted = true; // 1.11.308 (#32)
                     }
                     else if (!mdl) noModel.Add(nm);
                 }
