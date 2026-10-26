@@ -40,6 +40,40 @@ namespace DipGgFixes
             catch (Exception e) { if (errors++ < 3) Log("check: " + e.Message); }
         }
 
+        // 1.11.297 (#32, author 26.10 19:52: "superstructures and turrets in the air" on AI Hibernia-class ships, hull bb_1_french_large):
+        // an unmounted part close to the ship is measured against the hull mesh under it (ray down onto the hull's own mesh
+        // collider); a part more than 1.5 m above the hull surface is lowered onto it. Only mesh colliders of the hull count, so a
+        // simplified box collider never buries a part. Visual only: the part keeps its gun data and fire arcs.
+        static string Settle(Ship s, Part p)
+        {
+            try
+            {
+                if (s.hull == null) return "";
+                var w = p.transform.position; var sp = s.transform.position;
+                if ((w - sp).magnitude > 400f) return "";
+                var hits = Physics.RaycastAll(new Ray(w + Vector3.up * 40f, Vector3.down), 120f);
+                float best = float.NaN; var ht = s.hull.transform;
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    var h = hits[i]; var c = h.collider; if (c == null) continue;
+                    if (!c.transform.IsChildOf(ht) && c.transform != ht) continue;
+                    if (c.TryCast<MeshCollider>() == null) continue;
+                    if (float.IsNaN(best) || h.point.y > best) best = h.point.y;   // the top surface of the hull under the part
+                }
+                if (float.IsNaN(best)) return " (no hull mesh under it)";
+                float gap = w.y - best;
+                if (gap > 1.5f && gap < 30f)
+                {
+                    p.transform.position = new Vector3(w.x, best, w.z);
+                    settled++;
+                    return $" ({gap:0.0} m above the hull - lowered onto it)";
+                }
+                return $" ({gap:0.0} m above the hull)";
+            }
+            catch (Exception e) { if (errors++ < 3) Log("settle: " + e.Message); return ""; }
+        }
+        static int settled;
+
         // null when every part is mounted and modelled
         internal static string Report(Ship s)
         {
@@ -62,6 +96,7 @@ namespace DipGgFixes
                         string pos = ""; try { var w = p.transform.position; var sp = s.transform.position; pos = $" at y {w.y:0} (ship y {sp.y:0}, {(w - sp).magnitude:0} m from the ship)"; } catch { }
                         bool re = false; try { p.TryFindMount(true); re = p.mount != null; } catch { }
                         string fix = re ? " - re-mounted" : Repair(s, p);   // 1.11.243
+                    if (!re && !fix.Contains("put back")) fix += Settle(s, p); // 1.11.297
                         noMount.Add(nm + (mdl ? "" : " (no model)") + pos + fix);
                     }
                     else if (!mdl) noModel.Add(nm);
