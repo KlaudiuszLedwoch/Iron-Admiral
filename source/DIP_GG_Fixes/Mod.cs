@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.294", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.295", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3423,7 +3423,7 @@ namespace DipGgFixes
         const string Page = "https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases";
         static volatile string remote, remoteDll, remoteSha, remoteZipUrl; static volatile bool done, shown;
         static volatile string resultText; static volatile bool resultShown;
-        static string local = "?", localDll = "?";
+        static string local = "?", localDll = "?", loadedDll = null;
         static float firstTry, settledAt;
         static string ModsDir => Path.Combine(MelonUtils.GameDirectory, "Mods");
 
@@ -3438,6 +3438,15 @@ namespace DipGgFixes
                 {
                     string vf = Path.Combine(ModsDir, "IRON_ADMIRAL_VERSION.txt");
                     if (File.Exists(vf)) { var l = File.ReadAllLines(vf); if (l.Length > 0) local = l[0].Trim(); if (l.Length > 1) localDll = l[1].Trim(); }
+                }
+                catch { }
+                // 1.11.295 (#55): the marker names the package, not the DLL that is running - compare with the loaded assembly
+                try
+                {
+                    var v = typeof(DipGgFixesMod).Assembly.GetName().Version;
+                    loadedDll = $"DIP_GG_Fixes {v.Major}.{v.Minor}.{v.Build}";
+                    if (!string.IsNullOrEmpty(localDll) && localDll != loadedDll)
+                        MelonLogger.Warning($"[DIP GG Fixes][Update] installed package {local} names {localDll}, but the loaded DLL is {loadedDll} - the Mods folder holds a different DLL than the package; reinstall the package");
                 }
                 catch { }
                 // a beta package switches the Beta updates option on once (later the player decides in F10)
@@ -3517,7 +3526,10 @@ namespace DipGgFixes
                 bool newer = Newer(remote, local);
                 // 1.11.123: back from a beta to the stable line - the latest stable is offered even if its number is lower
                 if (!newer && !BetaLine && LocalIsBeta && !string.IsNullOrEmpty(remote) && remote != local && remote.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) < 0) newer = true;
-                if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}), latest on GitHub ({(BetaLine ? "beta" : "stable")} line) {remote} ({remoteDll}) - {(newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
+                // 1.11.295 (#55): same package number, but the running DLL is not the one GitHub ships with it - offer the package again
+                bool dllDiffers = !newer && remote == local && !string.IsNullOrEmpty(remoteDll) && !string.IsNullOrEmpty(loadedDll) && remoteDll != loadedDll;
+                if (dllDiffers) newer = true;
+                if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}; loaded {loadedDll ?? "?"}), latest on GitHub ({(BetaLine ? "beta" : "stable")} line) {remote} ({remoteDll}) - {(dllDiffers ? "LOADED DLL DIFFERS FROM THE PACKAGE - reinstall offered" : newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
                 if (!newer) { shown = true; return; }
                 if (UnityEngine.Time.realtimeSinceStartup - firstTry < 15f) return; // let the main menu appear first
                 // 1.11.13: never during a loading screen - the 15:44 log showed the message raised while a save was loading
