@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.304", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.305", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2690,6 +2690,15 @@ namespace DipGgFixes
             // possible turns, so the intercept check is not applied
             bool bigTarget = false; try { bigTarget = BattleAi.IsCapital(t); } catch { }
             if (bigTarget && range > 0f && d <= range * 0.75f) return false;
+            // 1.11.305 (author 26.10, 20:51: "the enemy CL should attack with torpedoes" - Gladiator and Wolf held at 4.5-4.7 km against
+            // a 30-knot battleship, just past 3/4 of their range): up to 90 % of the range a large target is attacked unless it is
+            // clearly running away from the torpedoes (its course opening the range at more than half its speed)
+            if (bigTarget && range > 0f && d <= range * 0.9f)
+            {
+                float vmaxT = BattleAi.Speed(t); var Vt = V; if (vmaxT > 0f && Vt.magnitude > vmaxT * 1.15f) Vt = Vt.normalized * vmaxT * 1.15f;
+                float opening = P.sqrMagnitude > 1f ? UnityEngine.Vector3.Dot(Vt, P.normalized) : 0f;
+                if (opening < 0.5f * Math.Max(1f, vmaxT)) return false;
+            }
             float ms = 0f; try { ms = s.TorpedoSpeed(false); } catch { }
             float vt = ms > 0.5f ? TorpedoSettings.World(ms) : TorpedoSettings.World(UnityEngine.Mathf.Max(5f, DipGgFixesMod.TorpedoSenseSpeed.Value));
             float run = TorpedoSettings.InterceptRun(s, t, vt);
