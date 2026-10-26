@@ -188,7 +188,8 @@ namespace DipGgFixes
             lastState[p] = st;
             Ship ship = null; try { ship = it.__4__this; } catch { }
             if (ship == null) return;
-            if (Diag != null && Diag.Value && stateLogged < 120)
+            bool inCampaign = false; try { inCampaign = GameManager.IsCampaign; } catch { }
+            if (Diag != null && Diag.Value && !inCampaign && stateLogged < 120) // 1.11.294 (#27): the state log too only outside the campaign
             {
                 float w = 0f, t = 0f; int n = 0; try { w = ship.Weight(false, false); t = ship.Tonnage(); n = ship.parts.Count; } catch { }
                 stateLogged++; Log($"state {prev} -> {st}: attempt {it._tryN_5__5}, {n} parts, {w:0} t of {t:0} t");

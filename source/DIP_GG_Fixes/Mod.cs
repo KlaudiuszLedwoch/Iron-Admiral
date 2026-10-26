@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.293", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.294", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1629,7 +1629,7 @@ namespace DipGgFixes
             on = stronger && (enough || delay);
             bool hopeless = stronger && !enough && !delay;
             bool wasH; fleetHopeless.TryGetValue(player.Pointer, out wasH);
-            if (on != was || hopeless != wasH) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t, {attackers} torpedo craft vs {targets} targets (needed {DipGgFixesMod.MassAttackPerTarget.Value} per target){(hopeless ? " - too few to get through, ships faster than the enemy withdraw" : "")}");
+            if (on != was || hopeless != wasH) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t, {attackers} torpedo craft vs {targets} targets (needed {DipGgFixesMod.MassAttackPerTarget.Value} per target){(hopeless ? " - too few to get through, ships faster than the enemy withdraw" : on && !enough ? " - short of the full strength: delaying attack with at least one craft per target (War Instructions 1944, 12298)" : "")}");
             fleetOn[player.Pointer] = on; fleetHopeless[player.Pointer] = hopeless; fleetNext[player.Pointer] = now + 5f;
             return on;
         }
@@ -1662,7 +1662,8 @@ namespace DipGgFixes
                 if (armour) { float pen, belt; float d = UnityEngine.Mathf.Max(3000f, Dist(leader, e) * 0.5f); if (!CannotPenetrate(e, leader, d, out pen, out belt)) armour = false; }
             }
             bool faster = own > fastest * EscapeMargin(doc);
-            why = faster ? $"faster than every visible enemy ({own:0.0} vs {fastest:0.0})" : armour ? "no visible enemy can penetrate its belt" : "";
+            // 1.11.294 (#36): the text names why leaving is safe, not why the ship leaves (read as "withdraws because nobody can hurt it")
+            why = faster ? $"can get away: faster than every visible enemy ({own:0.0} vs {fastest:0.0})" : armour ? $"can get away: none of the {seen} visible enemy ship(s) can penetrate its belt" : "";
             return seen > 0 && (faster || armour);
         }
 
@@ -2049,7 +2050,7 @@ namespace DipGgFixes
                 }
                 st.charging = true; st.target = best.Pointer;
                 Why(st, "charging");
-                Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : $"start distance {start:0} m")}");
+                Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : start >= float.MaxValue ? (ordered ? "ordered - goes in at once" : "goes in at once") : $"start distance {start:0} m")}");
             }
             if (bestD > launchAt)
             {
@@ -2635,26 +2636,18 @@ namespace DipGgFixes
                 bool pointBlank = d <= 2500f && BattleAi.Ton(t) >= 1000f; // 1.11.206: anything alongside is worth a torpedo (24.10: a cruiser held its torpedoes with an enemy light cruiser 1.5 km away)
                 if (!pointBlank && !(closing && range > 0f && d <= 0.6f * range)) { why = $"{t.name} is a small target at {d:0} m{(closing ? "" : ", not closing")}"; return true; }
             }
-            // 1.11.98: the measured velocity is capped at the target's top speed (22.10: "outruns the torpedo" for a 21-knot cruiser at 1.5 km)
-            float vmax = BattleAi.Speed(t) * 1.15f;
-            if (vmax > 0f && V.magnitude > vmax) V = V.normalized * vmax;
-            float vt = DipGgFixesMod.TorpedoSenseSpeed.Value; if (vt < 5f) vt = 5f;
-            // intercept time T: |P + V T| = vt T
-            float a = V.sqrMagnitude - vt * vt, b = 2f * UnityEngine.Vector3.Dot(P, V), c = P.sqrMagnitude, T = -1f;
-            if (UnityEngine.Mathf.Abs(a) < 1e-3f) { if (b < 0f) T = -c / b; }
-            else
-            {
-                float disc = b * b - 4f * a * c;
-                if (disc >= 0f)
-                {
-                    float sq = UnityEngine.Mathf.Sqrt(disc), t1 = (-b - sq) / (2f * a), t2 = (-b + sq) / (2f * a);
-                    T = t1 > 0f && (t1 < t2 || t2 <= 0f) ? t1 : t2;
-                }
-            }
-            if (T <= 0f) { why = $"{t.name} at {d:0} m outruns the torpedo"; return true; }
+            // 1.11.294 (#36): the intercept run in the battle's own units. 1.11.93-293 took a fixed 20 m/s torpedo against the target's
+            // velocity measured in world units per second (about 3.2 x m/s, Ship.ModifySpeedTorpedo), so a target moving away looked
+            // nearly as fast as the torpedo and the run came out at tens or hundreds of km at 1.5-5 km ("run to the intercept point
+            // 781547 m"). Now the same computation as the torpedo-setting choice: the game's velocity of the target and the torpedo's
+            // own speed converted by the game (TorpedoSettings.InterceptRun / World); the fixed speed only when the ship reports none.
+            float ms = 0f; try { ms = s.TorpedoSpeed(false); } catch { }
+            float vt = ms > 0.5f ? TorpedoSettings.World(ms) : TorpedoSettings.World(UnityEngine.Mathf.Max(5f, DipGgFixesMod.TorpedoSenseSpeed.Value));
+            float run = TorpedoSettings.InterceptRun(s, t, vt);
+            if (run <= 0f) { why = $"{t.name} at {d:0} m outruns the torpedo"; return true; }
             // 1.11.135: the player's own ships may use the full torpedo range (the 85% margin held shots at 22-50 m over the limit)
             float margin = playerShip ? UnityEngine.Mathf.Max(1f, DipGgFixesMod.TorpedoSenseMargin.Value) : DipGgFixesMod.TorpedoSenseMargin.Value;
-            float run = vt * T, lim = range * margin * (st.senseHold ? 0.95f : 1f); // 1.11.99: hysteresis
+            float lim = range * margin * (st.senseHold ? 0.95f : 1f); // 1.11.99: hysteresis
             if (range > 0f && run > lim) { why = $"{t.name} at {d:0} m: run to the intercept point {run:0} m > {lim:0} m usable torpedo range"; return true; }
             return false;
         }

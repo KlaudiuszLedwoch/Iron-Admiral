@@ -351,6 +351,9 @@ namespace DipGgFixes
         internal static bool CoverRetreat(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, CampaignBattle battle, Player player)
         {
             if (!DipGgFixesMod.CoverRetreat.Value) return false;
+            // 1.11.294 (#36): transports and other non-combat ships never cover a retreat (1.2.74-beta.8: four French transports, one
+            // of them panicked, "covering the retreat - screening") - they keep the game's own behaviour
+            if (!Combat(leader)) { st.covering = false; return false; }
             if (!AttackFailed(player, battle, enemies, doc)) { st.covering = false; return false; }
             float rel = RelValue(leader);
             if (rel >= DipGgFixesMod.CoverValueRatio.Value)
