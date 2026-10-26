@@ -96,6 +96,13 @@ namespace DipGgFixes
             if (!peace.TryGetValue(Pair(a, b), out m)) return false;
             since = month - m; return since < (PeaceMonths != null ? PeaceMonths.Value : 12f);
         }
+        // 1.11.304 (author's campaign 26.10, 20:44: Austria-Hungary took Britain's side against Germany and, the same month, Spain's
+        // side against Britain): two nations at war with a common enemy fight on the same side - no war between them from the mod
+        static bool CoBelligerent(Player a, Player b, List<Player> majors)
+        {
+            foreach (var x in majors) { if (x.Pointer == a.Pointer || x.Pointer == b.Pointer) continue; if (AtWar(a, x) && AtWar(b, x)) return true; }
+            return false;
+        }
         static bool Broke(Player p, int month)
         {
             try { var st = Economy.Get(p); return p.cash < 0f || (st != null && st.BankruptUntil > month); } catch { return false; }
@@ -194,8 +201,10 @@ namespace DipGgFixes
                 if (Wars(o) >= maxWars) { if (hostileT || allyT) dec.Add($"{Nm(o)} neutral (at war elsewhere)"); continue; }
                 if (Broke(o, month)) { if (hostileT || allyT) dec.Add($"{Nm(o)} neutral (bankrupt)"); continue; }
                 if (Cooling(o, t, month, out since)) { if (hostileT || allyT) dec.Add($"{Nm(o)} neutral (peace with {Nm(t)} {since} months ago)"); continue; }
+                bool withT = CoBelligerent(o, t, majors), withL = CoBelligerent(o, leader, majors);
+                if (withT && withL) { if (hostileT || allyT) dec.Add($"{Nm(o)} neutral (fighting alongside both {Nm(t)} and {Nm(leader)})"); continue; }
                 // balance of power: take the target's side against the leader
-                if (ratio > SideRatio.Value && leader.Pointer != o.Pointer && !allyL && !AtWar(o, leader) && !hostileT
+                if (ratio > SideRatio.Value && leader.Pointer != o.Pointer && !allyL && !AtWar(o, leader) && !hostileT && !withL
                     && (allyT || attL <= attT - SideGap.Value) && !Cooling(o, leader, month, out since))
                 {
                     float ch = SideChance.Value * (allyT ? 2f : 1f);
@@ -205,6 +214,7 @@ namespace DipGgFixes
                     continue;
                 }
                 if (!coalition) continue;
+                if (withT) { if (hostileT) dec.Add($"{Nm(o)} neutral (fighting alongside {Nm(t)} elsewhere)"); continue; }
                 if (!hostileT)
                 {
                     // mixed relations: wait; a clearly losing target draws a late join from a power that dislikes it
