@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.306", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.307", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -1976,11 +1976,28 @@ namespace DipGgFixes
         // ignored the torpedo target priorities. An ordered charge now goes in at once at the priority target (next class down when the
         // listed class is missing) or the nearest capital ship.
         internal static bool OrderedCharge;
+        static readonly HashSet<IntPtr> desperateLogged = new HashSet<IntPtr>();
         internal static void TorpedoCharge(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, bool playerSide)
         {
             float dmg = DivDamage(div);
             bool ammo = HasTorpedoAmmo(leader);
             float abort = playerSide ? AbortDamage(doc) : AbortFor(leader, doc);
+            // 1.11.307 (author 26.10, 20:51: "the enemy CL should attack with torpedoes" - CL Town, too slow to escape a battleship at
+            // 3.6 km, gave up the charge as "too damaged" and fought on with guns only): a damaged division that cannot get away and
+            // has loaded tubes with a capital ship inside torpedo range goes on with the attack - turning away would not save it
+            if (!playerSide && ammo && dmg > abort && st.fighting)
+            {
+                try
+                {
+                    float tr = TorpedoRange(leader); float dd; var nc = NearestVisibleCapital(leader, enemies, out dd);
+                    if (nc != null && tr > 0f && dd <= tr && LoadedTubes(div, leader) > 0f)
+                    {
+                        if (desperateLogged.Add(div.Pointer)) Log($"{st.name} ({leader.shipType.name}): damage {dmg:0.00} over the charge limit, but it cannot get away and {nc.name} is at {dd:0} m (torpedoes {tr:0} m) - presses the attack to fire the loaded tubes");
+                        abort = dmg + 1f;
+                    }
+                }
+                catch { }
+            }
             // 1.11.86: AI attack cycle - press until every tube is empty, turn away, reload, come back
             if (!playerSide && ammo && dmg <= abort && ReloadCycle(leader, div, st, enemies)) return;
             // 1.11.87: torpedoes gone and no reloads on board - an AI flotilla that is still fit turns on the enemy light forces instead of retreating
