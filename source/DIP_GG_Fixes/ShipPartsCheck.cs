@@ -60,19 +60,46 @@ namespace DipGgFixes
                     if (c.TryCast<MeshCollider>() == null) continue;
                     if (float.IsNaN(best) || h.point.y > best) best = h.point.y;   // the top surface of the hull under the part
                 }
-                if (float.IsNaN(best)) return " (no hull mesh under it)";
+                string src = "hull mesh";
+                if (float.IsNaN(best))
+                {
+                    // 1.11.298: the hulls have no mesh collider (26.10 20:02, all 12 ships) - the deck height comes from the nearest of
+                    // the hull's own mounts (mounts whose part is the hull), within 25 m horizontally
+                    if (hitLogged++ < 3)
+                    {
+                        var sb = new System.Text.StringBuilder();
+                        for (int i = 0; i < hits.Length && i < 8; i++) { var c = hits[i].collider; if (c == null) continue; sb.Append($"{c.name} [{c.GetIl2CppType().Name}, layer {c.gameObject.layer}, y {hits[i].point.y:0.0}{(c.transform.IsChildOf(ht) ? ", hull child" : "")}]; "); }
+                        Log($"ray under {p.data.name} of {s.name}: {hits.Length} hit(s): {sb}");
+                    }
+                    float hd = float.MaxValue;
+                    try
+                    {
+                        var ms = s.mounts;
+                        for (int i = 0; ms != null && i < ms.Count; i++)
+                        {
+                            var m = ms[i]; if (m == null) continue;
+                            Part mp = null; try { mp = m.parentPart_; if (mp == null) mp = m.GetComponentInParent<Part>(); } catch { }
+                            if (mp == null || mp.Pointer != s.hull.Pointer) continue;
+                            var mpos = m.transform.position; float dx = mpos.x - w.x, dz = mpos.z - w.z; float hz = dx * dx + dz * dz;
+                            if (hz < hd && hz < 225f) { hd = hz; best = mpos.y; }   // within 15 m: a raised forecastle or quarterdeck keeps its own level
+                        }
+                    }
+                    catch { }
+                    if (float.IsNaN(best)) return " (no hull mesh or hull mount near it)";
+                    src = "nearest hull mount";
+                }
                 float gap = w.y - best;
                 if (gap > 1.5f && gap < 30f)
                 {
                     p.transform.position = new Vector3(w.x, best, w.z);
                     settled++;
-                    return $" ({gap:0.0} m above the hull - lowered onto it)";
+                    return $" ({gap:0.0} m above the {src} - lowered onto it)";
                 }
-                return $" ({gap:0.0} m above the hull)";
+                return $" ({gap:0.0} m above the {src})";
             }
             catch (Exception e) { if (errors++ < 3) Log("settle: " + e.Message); return ""; }
         }
-        static int settled;
+        static int settled, hitLogged;
 
         // null when every part is mounted and modelled
         internal static string Report(Ship s)
