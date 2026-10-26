@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.285", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.286", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -120,6 +120,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> AutoShare;
         internal static MelonPreferences_Entry<bool> AllNations;
         internal static MelonPreferences_Entry<bool> CruisersWhenPoor;
+        internal static MelonPreferences_Entry<bool> RelationRepairOn; // 1.11.286 (#6)
         internal static MelonPreferences_Entry<float> BigShipFactor;
         internal static MelonPreferences_Entry<float> CruiserFactor;
         internal static MelonPreferences_Entry<float> MinorPortCapacityMult;
@@ -259,7 +260,7 @@ namespace DipGgFixes
             try { Dispatch.Tick(); } catch { }
             try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251, 1.11.259
             try { HistDesigner.Tick(); } catch { }
-            try { AutoTest.Tick(); } catch { }
+            try { AutoTest.Tick(); } catch { } try { RelationRepair.Tick(); } catch { } // 1.11.286
             try { Trade.Tick(); } catch { }
             try { Intel.Tick(); } catch { }
             try { DesignRepair.Tick(); } catch { }
@@ -3377,6 +3378,7 @@ namespace DipGgFixes
             Channel = cat.CreateEntry("UpdateChannel", "auto", null, "Release line the update check follows: auto (the Beta updates switch decides), stable or beta");
             Beta = cat.CreateEntry("BetaUpdates", false, null, "Beta updates (for testers - needs Share logs on): the update check offers beta versions (new features under test); off = stable versions, also back from a beta to the latest stable. Takes effect at the next start");
             BetaInit = cat.CreateEntry("BetaUpdatesInitialised", false, null, "internal: the Beta updates switch was set from the installed package once", true);
+            DipGgFixesMod.RelationRepairOn = cat.CreateEntry("RelationRepair", true, null, "Restore missing relation records between great powers (a neutral relation is added for a pair with no record; existing relations are never changed)");
         }
         static bool LocalIsBeta => local != null && local.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) >= 0;
         static bool BetaLine
