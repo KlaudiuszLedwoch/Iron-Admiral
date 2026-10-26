@@ -3,8 +3,8 @@
 //  1. A technology that other great powers already have is researched faster - the more of them know it and the further behind
 //     the researcher is, the faster (bought, copied, read in the journals). A technology nobody else has, whose year lies more
 //     than TechAheadYears beyond the frontier of the other powers in that field, is researched slower (nothing to copy).
-//  2. Catch-up: a power the game rates "Very Behind" receives every turn one technology that all the other great powers already
-//     know (the earliest first - the prerequisites come in order); a power rated "Behind" one every second turn.
+//  2. Catch-up: a power the game rates "Very Behind" receives every second turn one technology that all the other great powers already
+//     know (the earliest first - the prerequisites come in order); a power rated "Behind" one every fourth turn (1.11.306; was every turn / every second turn).
 // Both apply to the AI and the player alike. Switches: TechDiffusion, TechCatchUp (F10, Campaign).
 // Hooks: CampaignController.GetResearchSpeed(Player, Technology) (speed multiplier); Player.techLevel (level per field) for the
 // standing of each power, Player.technologies / technologiesResearchedAll for what is known.
@@ -30,7 +30,7 @@ namespace DipGgFixes
             KnownBonus = cat.CreateEntry("TechKnownBonus", 2f, null, "Research speed added when every other great power knows the technology (x1 + this; halved when the researcher is not behind at all)");
             AheadYears = cat.CreateEntry("TechAheadYears", 10, null, "A technology nobody else has, whose year is more than this many years beyond the other powers' frontier in that field, counts as ahead of its time");
             AheadPenalty = cat.CreateEntry("TechAheadSpeed", 0.5f, null, "Research speed multiplier for a technology ahead of its time");
-            CatchUp = cat.CreateEntry("TechCatchUp", true, null, "Campaign: a great power far behind receives technologies that all the other great powers already know - Very Behind: one every turn, Behind: one every second turn (AI and player alike)");
+            CatchUp = cat.CreateEntry("TechCatchUp", true, null, "Campaign: a great power far behind receives technologies that all the other great powers already know - Very Behind: one every second turn, Behind: one every fourth turn (AI and player alike)");
             BehindAt = cat.CreateEntry("TechBehindAt", 0.85f, null, "A power counts as Behind when its technology level (sum of field levels) is below this share of the other great powers' average");
             VeryBehindAt = cat.CreateEntry("TechVeryBehindAt", 0.7f, null, "A power counts as Very Behind below this share of the other great powers' average");
         }
@@ -154,7 +154,8 @@ namespace DipGgFixes
                     bool very = st < (VeryBehindAt != null ? VeryBehindAt.Value : 0.7f), behind = st < (BehindAt != null ? BehindAt.Value : 0.85f);
                     if (!behind) continue;
                     int last; lastGrant.TryGetValue(p.Pointer, out last);
-                    if (!very && last > 0 && m - last < 2) continue;     // Behind: every second turn
+                    // 1.11.306 (author 26.10): Very Behind one technology every second turn, Behind every fourth (was every turn / every second)
+                    if (last > 0 && m - last < (very ? 2 : 4)) continue;
                     // candidates: known by every other major, not by this one; earliest year first (prerequisites first)
                     HashSet<string> own; s.Known.TryGetValue(p.Pointer, out own); own = own ?? new HashSet<string>();
                     Technology pick = null; int bestYear = int.MaxValue;
