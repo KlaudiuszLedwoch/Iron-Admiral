@@ -448,23 +448,37 @@ namespace DipGgFixes
         internal static string RewriteInfo(string text, PartData pd, Ship ship)
         {
             if (On == null || !On.Value || string.IsNullOrEmpty(text) || pd == null || ship == null) return text;
-            if (text.IndexOf("Penetration", StringComparison.OrdinalIgnoreCase) < 0) return text;
+            // 1.11.284 (#45, player report 26.10 on the French game): the gun window was recognised by its English labels ("Penetration",
+            // "Muzzle Velocity AP", "Penetration Belt/Deck"), so in the other nine languages of the game the window kept the game's table.
+            // The window is now read by its structure, which is the same in every language: the velocity lines carry "m/s", the weight
+            // lines "kg", and the penetration table is a run of rows "<range>m - <HE belt>mm - <AP belt>mm / <HE deck>mm - <AP deck>mm, ...";
+            // the line just above the first row is the table header. The player's own labels are kept.
             try
             {
                 var ap = PhysGun.Get(pd, ship, Ship.ShellType.Ap, false); if (!ap.Ok) return text;
                 var he = PhysGun.Get(pd, ship, Ship.ShellType.He, false);
                 int grade = Math.Max(1, ap.Grade); float cd = Ballistics.CdOf(ship), elev = MountElevation.Elev(grade);
-                var lines = text.Split('\n'); bool inTable = false; bool changed = false;
+                var lines = text.Split('\n'); bool changed = false;
+                int firstRow = -1;
+                for (int i = 0; i < lines.Length && firstRow < 0; i++) { float R0; string p0 = StripTags(lines[i]).Trim(); if (RowRange(p0, out R0) && MmNumbers(p0).Count >= 4) firstRow = i; }
+                if (firstRow < 0 && text.IndexOf("m/s", StringComparison.Ordinal) < 0 && text.IndexOf("м/с", StringComparison.Ordinal) < 0) return text;
+                int velN = 0, kgN = 0; bool inTable = false;
                 for (int i = 0; i < lines.Length; i++)
                 {
                     string plain = StripTags(lines[i]).Trim();
-                // 1.11.254: the velocity line names its source (historical velocity x technology bonus, weight law); the shell weight line
-                // shows the shell of the bore as built when the game's line does not (142.2 mm on a 5" mount: game 34.6 kg, bore 48.6 kg)
-                if (plain.StartsWith("Muzzle Velocity AP", StringComparison.OrdinalIgnoreCase)) { lines[i] = $"Muzzle Velocity AP: {ap.Mv:0} m/s ({VelSrc(ap)})"; changed = true; continue; }
-                if (plain.StartsWith("Muzzle Velocity HE", StringComparison.OrdinalIgnoreCase) && he.Ok) { lines[i] = $"Muzzle Velocity HE: {he.Mv:0} m/s ({VelSrc(he)})"; changed = true; continue; }
-                if (plain.StartsWith("Shell Weight AP", StringComparison.OrdinalIgnoreCase) && WeightDiffers(plain, ap)) { lines[i] = $"Shell Weight AP: {ap.Kg:0} kg ({(ap.KgHist ? "hist." : "bore")}; game {LineKg(plain):0})"; changed = true; continue; }
-                if (plain.StartsWith("Shell Weight HE", StringComparison.OrdinalIgnoreCase) && he.Ok && WeightDiffers(plain, he)) { lines[i] = $"Shell Weight HE: {he.Kg:0} kg ({(he.KgHist ? "hist." : "bore")}; game {LineKg(plain):0})"; changed = true; continue; }
-                    if (plain.IndexOf("Penetration Belt/Deck", StringComparison.OrdinalIgnoreCase) >= 0) { inTable = true; lines[i] = lines[i] + " (physics: Okun)"; continue; }
+                    // 1.11.254: the velocity line names its source (historical velocity x technology bonus, weight law); the shell weight line
+                    // shows the shell of the bore as built when the game's line does not (142.2 mm on a 5" mount: game 34.6 kg, bore 48.6 kg)
+                    if (firstRow < 0 || i < firstRow - 1)
+                    {
+                        int colon = plain.IndexOf(':'); string label = colon > 0 ? plain.Substring(0, colon) : "";
+                        bool vel = colon > 0 && (plain.IndexOf("m/s", colon, StringComparison.Ordinal) > 0 || plain.IndexOf("м/с", colon, StringComparison.Ordinal) > 0);
+                        bool kgl = !vel && colon > 0 && (plain.IndexOf(" kg", colon, StringComparison.Ordinal) > 0 || plain.IndexOf(" кг", colon, StringComparison.Ordinal) > 0);
+                        if (vel && velN < 2) { var gg = velN == 0 ? ap : he; velN++; if (gg.Ok) { lines[i] = $"{label}: {gg.Mv:0} m/s ({VelSrc(gg)})"; changed = true; } continue; }
+                        if (kgl && velN >= 1 && kgN < 2) { var gg = kgN == 0 ? ap : he; kgN++; if (gg.Ok && WeightDiffers(plain, gg)) { lines[i] = $"{label}: {gg.Kg:0} kg ({(gg.KgHist ? "hist." : "bore")}; game {LineKg(plain):0})"; changed = true; } continue; }
+                        continue;
+                    }
+                    if (i == firstRow - 1) { lines[i] = lines[i] + " (physics: Okun)"; inTable = true; continue; }
+                    if (i == firstRow) inTable = true;
                     if (!inTable) continue;
                     float R;
                     if (!RowRange(plain, out R)) { if (plain.Length > 0 && !char.IsDigit(plain[0])) inTable = false; continue; }
