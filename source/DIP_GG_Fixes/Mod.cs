@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.317", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.318", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -183,7 +183,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> TorpedoTurnAwaySeconds;
         internal static MelonPreferences_Entry<bool> FleetTorpedoAttack;
         internal static MelonPreferences_Entry<bool> Ramming;
-        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort;
+        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort, AiCrossTorpedo;
         internal static MelonPreferences_Entry<bool> NightRules, CruiserRoles, FireDistributionOn; internal static MelonPreferences_Entry<float> NightVisibilityKm;
         internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
@@ -456,6 +456,7 @@ namespace DipGgFixes
             TorpedoTurnAwaySeconds = cat.CreateEntry("TorpedoTurnAwaySeconds", 45f, null, "Turn-away: how long the division keeps the evasive course (s)");
             FleetTorpedoAttack = cat.CreateEntry("FleetTorpedoAttack", true, null,
                 "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
+            AiCrossTorpedo = cat.CreateEntry("AiCrossTorpedo", true, null, "Battle AI: AI divisions attacking the same target with torpedoes approach 45 degrees either side of its bow so the tracks cross, and a division whose tubes on one side are empty turns to fire the other side before going off to reload (#56)");
             TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
                 "AI torpedo craft press the attack until every tube is empty; ships with reload torpedoes on board then turn away (smoke when available), open the range, reload and return, ships without reloads turn on the enemy light forces");
             ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
@@ -2081,7 +2082,8 @@ namespace DipGgFixes
                 Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : start >= float.MaxValue ? (ordered ? "ordered - goes in at once" : "goes in at once") : $"start distance {start:0} m")}");
             }
             UnityEngine.Vector3 xdir = UnityEngine.Vector3.zero; int xslot = 0, xof = 1;
-            bool cross = pOrder && CrossSlot(div, best, out xdir, out xslot, out xof);   // 1.11.302
+            bool aiTactics = !pOrder && DipGgFixesMod.AiCrossTorpedo != null && DipGgFixesMod.AiCrossTorpedo.Value; // 1.11.318 (#56)
+            bool cross = (pOrder || aiTactics) && CrossSlot(div, best, out xdir, out xslot, out xof);   // 1.11.302; AI since 1.11.318
             if (bestD > holdAt)
             {
                 var tt = best.transform;
@@ -2097,7 +2099,9 @@ namespace DipGgFixes
             // 1.11.86: the AI keeps closing while tubes are still loaded (vanilla 1.7 test: flotillas hovered just outside range after one salvo)
             else if (!playerSide && DipGgFixesMod.TorpedoReloadCycle.Value && bestD > launchAt * 0.6f)
             {
-                var tt2 = best.transform; if (tt2 != null) div.MoveTo(tt2.position);
+                // 1.11.318 (#56): the AI fires the other side too - one side empty and the other loaded: turn to bring it to bear
+                if (aiTactics && TwoSideTurn(div, leader, st, best, bestD)) return;
+                var tt2 = best.transform; if (tt2 != null) div.MoveTo(cross ? tt2.position + xdir * (launchAt * 0.7f) : tt2.position);
             }
             // 1.11.267 (author 25.10, 15:04/15:08: CA under a torpedo attack order closed to ramming distance): a player's division
             // inside launch range stops closing - it holds off at the launch distance, running across the target's bearing
@@ -2145,6 +2149,28 @@ namespace DipGgFixes
                     }
                 }
             }
+        }
+
+        // 1.11.318 (#56): the two-side salvo of the player's order (1.11.302) for AI divisions - target on the empty side, other side loaded
+        static bool TwoSideTurn(Division div, Ship leader, DivState st, Ship best, float bestD)
+        {
+            try
+            {
+                var tt3 = best.transform; var lt = leader.transform; if (tt3 == null || lt == null) return false;
+                float loaded = 1f; try { loaded = LoadedTubes(div, leader); } catch { }
+                if (loaded <= 0f) return false;
+                LoadedSides(leader, out bool lp, out bool ls);
+                bool targetStbd = lt.InverseTransformPoint(tt3.position).x > 0f;
+                if (!((targetStbd && !ls && lp) || (!targetStbd && !lp && ls))) return false;
+                var toT = tt3.position - lt.position; toT.y = 0f; if (toT.sqrMagnitude < 1f) return false; toT.Normalize();
+                var h = lp ? new UnityEngine.Vector3(toT.z, 0f, -toT.x) : new UnityEngine.Vector3(-toT.z, 0f, toT.x);
+                div.MoveTo(lt.position + h * 2500f);
+                string why2 = lp ? "turning to bring the port tubes to bear" : "turning to bring the starboard tubes to bear";
+                if (st.reason != why2) Log($"{st.name}: {(lp ? "starboard" : "port")} tubes fired at {best.name} ({bestD:0} m) - {why2} (AI)");
+                Why(st, why2);
+                return true;
+            }
+            catch { return false; }
         }
 
         // Capital AI divisions: torpedo charge when faster and armed with torpedoes; otherwise close in
