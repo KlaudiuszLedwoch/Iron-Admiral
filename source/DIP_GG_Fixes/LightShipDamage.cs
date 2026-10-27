@@ -41,8 +41,8 @@ namespace DipGgFixes
         static readonly Dictionary<long, float> mult = new Dictionary<long, float>();
         static readonly SortedDictionary<string, float[]> byType = new SortedDictionary<string, float[]>();
         static float refHpt; static string refFrom; static int logged, errors, applied;
-        static float sumRaw, sumNew;
-        internal static void BattleStart() { SetParams(); mult.Clear(); byType.Clear(); refHpt = 0f; refFrom = null; logged = 0; applied = 0; sumRaw = 0f; sumNew = 0f; }
+        static float sumRaw, sumNew; static int skippedTorp; internal static int InTorpedo; /* >0 while a torpedo resolves its hit (Torpedo.Update/FixedUpdate) */ static readonly SortedDictionary<string, int> kinds = new SortedDictionary<string, int>();
+        internal static void BattleStart() { SetParams(); mult.Clear(); byType.Clear(); refHpt = 0f; refFrom = null; logged = 0; applied = 0; sumRaw = 0f; sumNew = 0f; skippedTorp = 0; kinds.Clear(); }
 
         // 1.11.324: the game parameters that decide when accumulated structure damage sinks a ship (tests of #67)
         static void SetParams()
@@ -121,11 +121,16 @@ namespace DipGgFixes
         }
 
         // last step of the damage path (OverPen.Deal), after the historical model and the pass-through rule
-        internal static void Apply(Ship ship, ref float damage)
+        internal static void Apply(Ship ship, ref float damage, string kind)
         {
             if (On == null || !On.Value || ship == null || !(damage > 0f)) return;
             try
             {
+                // 1.11.325 (test 27.10, 22:52): a torpedo is not multiplied - one torpedo sank a 14,786 t armoured cruiser (game damage
+                // 11,359 x1.88 = 21,375 > its whole structure 12,714). The game's torpedo damage is already the damage of a warhead of
+                // the torpedo technologies (HistoricalDamage) and it is about one battleship's whole structure.
+                string k = kind ?? "?"; int kc; kinds.TryGetValue(k, out kc); kinds[k] = kc + 1;
+                if (InTorpedo > 0) { k = "torpedo"; kinds.TryGetValue(k, out kc); kinds[k] = kc + 1; skippedTorp++; return; }
                 float m = For(ship); if (Math.Abs(m - 1f) < 0.001f) return;
                 float raw = damage; damage *= m; sumRaw += raw; sumNew += damage; applied++;
                 string t = TypeOf(ship); float[] a; if (!byType.TryGetValue(t, out a)) { a = new float[3]; byType[t] = a; }
@@ -135,10 +140,25 @@ namespace DipGgFixes
         }
         internal static void Report()
         {
-            if (applied == 0) return;
-            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Damage] battle summary - damage by tonnage: {applied} hits, damage {sumRaw:0} -> {sumNew:0}; by type (hits | damage before | after):");
+            if (applied == 0 && skippedTorp == 0) return;
+            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Damage] battle summary - damage by tonnage: {applied} hits, damage {sumRaw:0} -> {sumNew:0}; torpedo hits not multiplied {skippedTorp}; game damage types {string.Join(", ", System.Linq.Enumerable.Select(kinds, x => x.Key + " " + x.Value))}; by type (hits | damage before | after):");
             foreach (var kv in byType) sb.Append($"\n   {kv.Key} | {kv.Value[0]:0} | {kv.Value[1]:0} | {kv.Value[2]:0}");
             MelonLogger.Msg(sb.ToString());
         }
+    }
+
+    // 1.11.325: a torpedo deals its damage from inside its own Update / FixedUpdate (collision with a ship); the game's damage type
+    // has no torpedo member (none, gunDamage, ammoExplosionDamage, fireDamage, floadingDamage, rammingDamage)
+    [HarmonyLib.HarmonyPatch(typeof(Torpedo), "Update")]
+    internal static class Patch_TorpedoUpdateMark
+    {
+        private static void Prefix() { LightShipDamage.InTorpedo++; }
+        private static void Finalizer() { if (LightShipDamage.InTorpedo > 0) LightShipDamage.InTorpedo--; }
+    }
+    [HarmonyLib.HarmonyPatch(typeof(Torpedo), "FixedUpdate")]
+    internal static class Patch_TorpedoFixedUpdateMark
+    {
+        private static void Prefix() { LightShipDamage.InTorpedo++; }
+        private static void Finalizer() { if (LightShipDamage.InTorpedo > 0) LightShipDamage.InTorpedo--; }
     }
 }

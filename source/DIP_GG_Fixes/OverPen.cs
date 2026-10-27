@@ -42,6 +42,7 @@ namespace DipGgFixes
         internal static int Raised { get { return raised; } }
         static readonly SortedDictionary<string, float[]> locSum = new SortedDictionary<string, float[]>();
         // last location for the hit log (PhysPen.Taken runs right after the damage)
+        internal static string DmgKind;   // 1.11.325: the game's damage type of the hit being dealt (Ship.DamageType)
         internal static string LastLoc, LastModules; internal static int LastFrame = -1; internal static float LastRaw, LastNew, LastMod; internal static bool LastFire, LastFlood; internal static string LastType;
         // 1.11.276 (#33 step 3b, author 25.10, 18:14): what a non-penetrating hit does today - per shell type, calibre band and location:
         // hits | damage | fires | floodings | hits with modules damaged
@@ -133,7 +134,7 @@ namespace DipGgFixes
                     float want = raw / curMod * curNormal * frac;
                     if (want > damage) { damage = want; raised++; }
                 }
-                LightShipDamage.Apply(ship, ref damage);   // 1.11.322 (#67)
+                LightShipDamage.Apply(ship, ref damage, DmgKind);   // 1.11.322 (#67); 1.11.325: not torpedoes
                 LastLoc = loc; LastFrame = Time.frameCount; LastRaw = raw; LastNew = damage; LastFire = false; LastFlood = false; LastModules = null; LastMod = known ? curMod : 0f; LastType = type;
                 string key = $"{loc} | {(useHe ? "He" : "Ap")} {type}";
                 float[] a; if (!locSum.TryGetValue(key, out a)) { a = new float[3]; locSum[key] = a; }
@@ -175,7 +176,7 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Ship), "DealDamageToPartSectionAndSpread")]
     internal static class Patch_OverPenDeal
     {
-        private static void Prefix(Ship __instance, Part __0, Ship.Section __1, ref float __2, bool __11) { try { OverPen.Deal(__instance, __0, __1, ref __2, __11); } catch { } }
+        private static void Prefix(Ship __instance, Part __0, Ship.Section __1, ref float __2, bool __11, Ship.DamageType __12) { try { OverPen.DmgKind = __12.ToString(); OverPen.Deal(__instance, __0, __1, ref __2, __11); } catch { } }
         private static void Postfix(ref bool __5, ref bool __7, Il2CppSystem.Collections.Generic.List<Ship.Module> __9) { try { OverPen.After(__5, __7, __9); } catch { } }
     }
 }
