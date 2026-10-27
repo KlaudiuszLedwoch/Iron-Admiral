@@ -133,6 +133,7 @@ namespace DipGgFixes
                     float want = raw / curMod * curNormal * frac;
                     if (want > damage) { damage = want; raised++; }
                 }
+                LightShipDamage.Apply(ship, ref damage);   // 1.11.322 (#67)
                 LastLoc = loc; LastFrame = Time.frameCount; LastRaw = raw; LastNew = damage; LastFire = false; LastFlood = false; LastModules = null; LastMod = known ? curMod : 0f; LastType = type;
                 string key = $"{loc} | {(useHe ? "He" : "Ap")} {type}";
                 float[] a; if (!locSum.TryGetValue(key, out a)) { a = new float[3]; locSum[key] = a; }

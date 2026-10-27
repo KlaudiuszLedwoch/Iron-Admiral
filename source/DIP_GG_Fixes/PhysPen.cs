@@ -51,7 +51,7 @@ namespace DipGgFixes
             HitDispatch.CreatePrefs(cat); // 1.11.258
             GunOrders.CreatePrefs(cat); // 1.11.259 (#37)
         DamageDiag.CreatePrefs(cat); // 1.11.276 (#33 step 3c)
-        DamageModel.CreatePrefs(cat); // 1.11.278 (#33 steps 3b/3c)
+        DamageModel.CreatePrefs(cat); LightShipDamage.CreatePrefs(cat); // 1.11.278 (#33 steps 3b/3c)
         AimPoint.CreatePrefs(cat); // 1.11.279 (#42)
         }
 
@@ -104,7 +104,7 @@ namespace DipGgFixes
             string key = $"{Nation(shooter)} {g.CalMm,6:0.0} mm"; int[] fv; if (!fired.TryGetValue(key, out fv)) { fv = new int[6]; fired[key] = fv; } fv[Ix(raw)]++;
             shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall, Raw = raw, Key = key };
         }
-        internal static void BattleStart() { bool ra = ReplaceActive; DamageDiag.BattleStart(); DamageModel.BattleStart(); AimPoint.BattleStart(); rows.Clear(); forcedV = 0; DeckZoneFix.Mapped = 0; Obliquity.FallFixed = 0; shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); replaced = 0; noneBy.Clear(); fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
+        internal static void BattleStart() { bool ra = ReplaceActive; DamageDiag.BattleStart(); DamageModel.BattleStart(); LightShipDamage.BattleStart(); AimPoint.BattleStart(); rows.Clear(); forcedV = 0; DeckZoneFix.Mapped = 0; Obliquity.FallFixed = 0; shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); replaced = 0; noneBy.Clear(); fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
         internal static void BattleEnd() { Report("battle end"); }
         internal static void Report(string tag)
         {
@@ -124,7 +124,7 @@ namespace DipGgFixes
                 foreach (var kv in fired) { var v = kv.Value; fb.Append($"\n   {kv.Key} | {v[0]} / {v[1]} / {v[2]} | {v[3]} / {v[4]} / {v[5]}"); }
                 MelonLogger.Msg(fb.ToString());
             }
-            OverPen.Report();
+            OverPen.Report(); LightShipDamage.Report();
         }
         static string Where() { return OverPen.LastFrame == Time.frameCount && OverPen.LastLoc != null ? $"; struck {OverPen.LastLoc}" + (Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f ? $" (game damage {OverPen.LastRaw:0.#} -> {OverPen.LastNew:0.#})" : "") + OverPen.Extra() : ""; }
         // 1.11.312 (#58/#59/#60): the zone the game checked and its own slope of the plate: plate / (cos(side-forward) x cos(side-up)), the
@@ -507,7 +507,7 @@ namespace DipGgFixes
                 var lines = text.Split('\n'); bool changed = false;
                 int firstRow = -1;
                 for (int i = 0; i < lines.Length && firstRow < 0; i++) { float R0; string p0 = StripTags(lines[i]).Trim(); if (RowRange(p0, out R0) && MmNumbers(p0).Count >= 4) firstRow = i; }
-                if (firstRow < 0 && text.IndexOf("m/s", StringComparison.Ordinal) < 0 && text.IndexOf("м/с", StringComparison.Ordinal) < 0) return text;
+                if (firstRow < 0 && text.IndexOf("m/s", StringComparison.Ordinal) < 0 && text.IndexOf("Ă„ÂĂ„Ëť/ÄąÂĂ‚Â", StringComparison.Ordinal) < 0) return text;
                 int velN = 0, kgN = 0; bool inTable = false;
                 for (int i = 0; i < lines.Length; i++)
                 {
@@ -517,8 +517,8 @@ namespace DipGgFixes
                     if (firstRow < 0 || i < firstRow - 1)
                     {
                         int colon = plain.IndexOf(':'); string label = colon > 0 ? plain.Substring(0, colon) : "";
-                        bool vel = colon > 0 && (plain.IndexOf("m/s", colon, StringComparison.Ordinal) > 0 || plain.IndexOf("м/с", colon, StringComparison.Ordinal) > 0);
-                        bool kgl = !vel && colon > 0 && (plain.IndexOf(" kg", colon, StringComparison.Ordinal) > 0 || plain.IndexOf(" кг", colon, StringComparison.Ordinal) > 0);
+                        bool vel = colon > 0 && (plain.IndexOf("m/s", colon, StringComparison.Ordinal) > 0 || plain.IndexOf("Ă„ÂĂ„Ëť/ÄąÂĂ‚Â", colon, StringComparison.Ordinal) > 0);
+                        bool kgl = !vel && colon > 0 && (plain.IndexOf(" kg", colon, StringComparison.Ordinal) > 0 || plain.IndexOf(" Ă„ÂÄąĹşĂ„ÂÄąâ€š", colon, StringComparison.Ordinal) > 0);
                         if (vel && velN < 2) { var gg = velN == 0 ? ap : he; velN++; if (gg.Ok) { lines[i] = $"{label}: {gg.Mv:0} m/s ({VelSrc(gg)})"; changed = true; } continue; }
                         if (kgl && velN >= 1 && kgN < 2) { var gg = kgN == 0 ? ap : he; kgN++; if (gg.Ok && WeightDiffers(plain, gg)) { lines[i] = $"{label}: {gg.Kg:0} kg ({(gg.KgHist ? "hist." : "bore")}; game {LineKg(plain):0})"; changed = true; } continue; }
                         continue;
@@ -536,7 +536,7 @@ namespace DipGgFixes
                     float pB = BeltPen(ap.Kg, vs, fall, ap.Q, ap.CalMm), pD = DeckPen(ap.Kg, ap.CalMm, vs, fall);
                     float hB = apB > 0.01f ? pB * heB / apB : 0f, hD = apD > 0.01f ? pD * heD / apD : 0f;
                     int comma = plain.LastIndexOf("mm,"); string acc = comma >= 0 ? plain.Substring(comma + 3).Trim() : "";
-                    lines[i] = $"{R:#,0}m - {hB:0}mm - {pB:0}mm / {hD:0}mm - {pD:0}mm, {acc} [{vs:0}m/s {fall:0}°]"; // 1.11.265: shorter (author 25.10, 14:57)
+                    lines[i] = $"{R:#,0}m - {hB:0}mm - {pB:0}mm / {hD:0}mm - {pD:0}mm, {acc} [{vs:0}m/s {fall:0}Ä‚â€šĂ‚Â°]"; // 1.11.265: shorter (author 25.10, 14:57)
                     changed = true;
                 }
                 string res = changed ? string.Join("\n", lines) : text;
