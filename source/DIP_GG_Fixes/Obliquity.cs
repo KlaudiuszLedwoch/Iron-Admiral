@@ -25,6 +25,21 @@ namespace DipGgFixes
         // the randomised penetration; only EstimatePenetration ignores the angle, which 1.11.43-77 had measured). The factor below came
         // on top of the game's own slope: a 152 mm hit with 63 mm penetration was stopped by a "30 mm" plate, small shells met
         // 463-690 mm. In hits it is now off; the angles and the game's sloped plate are written on the hit line instead.
+        // 1.11.320 (#58/#59, test 27.10 16:26, AP hits only): the game's side-up angle of an arriving shell is about 90 - fall (75-89 deg
+        // for shells falling at 5-15 deg), and the game divides the plate by cos(min(side-up, 85)) - a flat shell meeting a vertical belt
+        // nearly square had its plate thickened 4-11 times (152 mm AP, 110 mm penetration, stopped by a 39 mm end belt at 14 deg
+        // side-forward); the formula plate / (cos(min(up,85)) x cos(min(fwd,85))) predicted all 77 stopped AP hits. The same angle drives
+        // the side-or-deck roll (Ship.CalcSideHitChance: 78 % side below 15 deg, 7 % above 75), so flat shells were mostly made deck hits.
+        // Now the side-up angle of an arriving shell is its angle of fall from the shell's own physical flight: a flat shell meets a side
+        // plate almost square and mostly strikes the side, a plunging one the deck. Switch: ImpactAngleFromFall (F10, Battle).
+        internal static MelonPreferences_Entry<bool> FromFall; internal static int FallFixed;
+        internal static void FixSideUp(ref float r)
+        {
+            if (FromFall == null || !FromFall.Value) return;
+            var cur = PhysPen.Current; if (cur == null) return;
+            var sh = PhysPen.ShotOf(cur); if (sh == null || !(sh.Fall >= 0f)) return;
+            r = UnityEngine.Mathf.Clamp(sh.Fall, 0f, 89f); FallFixed++;
+        }
         internal static float LastUp = float.NaN, LastFwd = float.NaN; internal static int LastUpFrame = -1, LastFwdFrame = -1; internal static float LastF = 1f; internal static int LastFFrame = -1;
         internal static MelonPreferences_Entry<float> MaxFactor, UncappedExp;
         internal static MelonPreferences_Entry<int> CappedYear;
@@ -36,6 +51,7 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("ArmorObliquity", true, null, "Belt armour counts thicker when a shell strikes it at a horizontal angle (line of sight through the plate); the cap stops helping above 45 degrees; uncapped shells suffer more");
             MaxFactor = cat.CreateEntry("ObliquityMaxFactor", 3f, null, "Upper limit of the obliquity thickness factor (3 = about 70 degrees; steeper hits are left to the ricochet rules)");
+            FromFall = cat.CreateEntry("ImpactAngleFromFall", true, null, "Battle: the side-up impact angle the game uses for the side-or-deck roll and for sloping the plate is the shell's angle of fall (the game's own value was about 90 - fall, so flat shells were made deck hits or met side plates thickened 4-11 times) (1.11.320)");
             OnTop = cat.CreateEntry("ObliquityOnTopOfGame", false, null, "Battle: apply the mod's belt obliquity factor in hits on top of the game's own sloping of the plate (off since 1.11.312 - the game already divides the plate by the cosines of the impact angles)");
             UncappedExp = cat.CreateEntry("ObliquityUncappedExponent", 1.3f, null, "Exponent of 1/cos(angle) for uncapped shells (capped shells use 1 up to 45 degrees)");
             CappedYear = cat.CreateEntry("CappedShellYear", 1905, null, "AP shells count as capped when the historical year of the firing ship's AP shell technology (its AP shell component) is this or later - never the calendar year (1.11.229)");
@@ -140,6 +156,6 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Shell), "ImpactForwardToAngleSideUp")]
     internal static class Patch_ObliquitySideUp
     {
-        private static void Postfix(float __result) { Obliquity.LastUp = __result; Obliquity.LastUpFrame = Time.frameCount; }
+        private static void Postfix(ref float __result) { try { Obliquity.FixSideUp(ref __result); } catch { } Obliquity.LastUp = __result; Obliquity.LastUpFrame = Time.frameCount; }
     }
 }
