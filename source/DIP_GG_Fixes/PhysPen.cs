@@ -31,7 +31,7 @@ namespace DipGgFixes
         // small guns (76 mm: game 3-13 mm against physical 37-90 mm, ratio below 0.05), so on plates of about 60-80 mm the game
         // decided against the physics. The limits only guard against a broken value now.
         const float FMin = 0.001f, FMax = 1000f;
-        internal static MelonPreferences_Entry<bool> On, HitLog, Replace, NormalIncidence;
+        internal static MelonPreferences_Entry<bool> On, HitLog, Replace, NormalIncidence, ZoneVertical;
         internal static MelonPreferences_Entry<float> FhConst, BeltC, InfoSize;
         internal static MelonPreferences_Entry<int> HitLogMax;
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -41,6 +41,7 @@ namespace DipGgFixes
             BeltC = cat.CreateEntry("PhysicalPenetrationBeltC", 0.2468f, null, "Belt penetration T[mm] = C * W[kg]^0.719 * Vn[m/s]^1.439 * D[mm]^-1.079 (DeMarre type); C = 0.2468 from NavWeaps side-armour data of 9 AP guns 5-16 inch");
             Replace = cat.CreateEntry("PhysicalPenetrationRows", true, null, "Battle: the game's penetration value itself is replaced by the physical one (belt: DeMarre-type law; deck: Thompson F-formula) for the arriving shell, the AI's estimates and the gun window, and the plate is no longer scaled to it - the plate keeps only its quality (iron ... Krupp) and the obliquity. Off: the older method (plate scaled by game / physical penetration)");
         NormalIncidence = cat.CreateEntry("PhysicalPenetrationNormalIncidence", true, null, "Battle: the physical belt penetration is the value at normal impact (the striking velocity itself); the game slopes the plate by the impact angles in the hit (1.11.312, #58). Off: the fall angle reduces the velocity as well (counted twice with the game's slope)");
+        ZoneVertical = cat.CreateEntry("PhysicalPenetrationByZone", true, null, "Battle: a shell that meets a vertical plate (belt, turret side, barbette, conning tower) uses the side penetration even when the game's random side-hit roll chose the deck penetration (1.11.313, #59)");
         HitLog = cat.CreateEntry("HitLog", true, null, "Battle: one log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage");
             HitLogMax = cat.CreateEntry("HitLogMax", 300, null, "Battle: at most this many hit lines per battle (a summary per calibre and result follows at the end)");
             InfoSize = cat.CreateEntry("GunInfoTextSize", 0.78f, null, "Gun window: text size of the gun description (1 = the game's size)");
@@ -102,12 +103,12 @@ namespace DipGgFixes
             string key = $"{Nation(shooter)} {g.CalMm,6:0.0} mm"; int[] fv; if (!fired.TryGetValue(key, out fv)) { fv = new int[6]; fired[key] = fv; } fv[Ix(raw)]++;
             shots[s.Pointer.ToInt64()] = new Shot { Shooter = shooter, Pd = from != null ? from.data : null, G = g, Range = range, Vs = vs, Fall = fall, Raw = raw, Key = key };
         }
-        internal static void BattleStart() { bool ra = ReplaceActive; DamageDiag.BattleStart(); DamageModel.BattleStart(); AimPoint.BattleStart(); rows.Clear(); shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); replaced = 0; noneBy.Clear(); fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
+        internal static void BattleStart() { bool ra = ReplaceActive; DamageDiag.BattleStart(); DamageModel.BattleStart(); AimPoint.BattleStart(); rows.Clear(); forcedV = 0; shots.Clear(); facCache.Clear(); hitLines = 0; adjusted = 0; skipped = 0; rawLines = 0; shellHits = 0; noShot = 0; summary.Clear(); replaced = 0; noneBy.Clear(); fired.Clear(); typeDiff = 0; hitLinesPl = 0; armourLogged.Clear(); PhysGun.ResetCache(); OverPen.ResetCount(); }
         internal static void BattleEnd() { Report("battle end"); }
         internal static void Report(string tag)
         {
             if (summary.Count == 0 && adjusted == 0) return;
-            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}), penetration values replaced by physics {replaced}; AP pass-through damage raised {OverPen.Raised}x; hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
+            var sb = new System.Text.StringBuilder($"[DIP GG Fixes][Hit] {tag} summary - armour checks with the physical penetration: at firing / AI estimates {adjusted} (left to the game {skipped}), arriving shells {shellHits} (shell not registered {noShot}), penetration values replaced by physics {replaced}; vertical plate read with the side penetration {ForcedV}; AP pass-through damage raised {OverPen.Raised}x; hits by calibre and result (count | mean plate the shell met mm | mean physical AP belt penetration mm | mean game penetration mm | mean damage):");
             foreach (var kv in summary) { var v = kv.Value; float n = Math.Max(1f, v[0]); sb.Append($"\n   {kv.Key} | {v[0]:0} | {v[1] / n:0} | {v[2] / n:0} | {v[3] / n:0} | {v[4] / n:0.#}"); }
             MelonLogger.Msg(sb.ToString());
             if (noneBy.Count > 0)
@@ -136,7 +137,7 @@ namespace DipGgFixes
             if (up || fw)
             {
                 float cu = up ? Mathf.Cos(Mathf.Clamp(Obliquity.LastUp, 0f, 89f) * Mathf.Deg2Rad) : 1f, cf = fw ? Mathf.Cos(Mathf.Clamp(Obliquity.LastFwd, 0f, 89f) * Mathf.Deg2Rad) : 1f;
-                sb.Append($" (angles side-up {(up ? Obliquity.LastUp.ToString("0") : "?")} / side-forward {(fw ? Obliquity.LastFwd.ToString("0") : "?")} deg, sloped by the game about {armor / Math.Max(0.02f, cu * cf):0} mm)");
+                sb.Append($" (impact angles side-up {(up ? Obliquity.LastUp.ToString("0") : "?")} / side-forward {(fw ? Obliquity.LastFwd.ToString("0") : "?")} deg; the game slopes the plate by them, its exact formula is not known)"); // 1.11.313: the 1.11.312 estimate plate/(cos x cos) did not match the outcomes - dropped
             }
             if (Obliquity.LastFFrame == f && Obliquity.LastF > 1.001f && (Obliquity.OnTop == null || !Obliquity.OnTop.Value)) sb.Append($" [mod obliquity x{Obliquity.LastF:0.00} not applied]");
             return sb.ToString();
@@ -250,7 +251,15 @@ namespace DipGgFixes
         // yields the physical value for AP; HE keeps the game's HE/AP ratio because its modifier differs by exactly that ratio.
         static readonly int[] colsV = { 0, 1, 5, 10, 15, 20, 25, 30, 35, 40, 50 };
         static readonly int[] colsH = { 5, 10, 15, 20, 25, 30, 35, 40, 50 };
-        class RowX { public PenetrationData Row; public int Frame; public float Mv, Mh; public bool Ok; }
+        class RowX { public PenetrationData Row, RowV; public int Frame; public float Mv, Mh; public bool Ok; }
+        // 1.11.313 (#59): the game picks the side (vertical) or deck (horizontal) penetration by a random side-hit chance of the impact
+        // angle, independent of the plate it then checks: a third of the hits on belt zones (BeltBow, BeltStern) in the 27.10 test read
+        // the deck penetration (a 381 mm shell at 7 deg fall: 84 mm against 469 mm belt) and were stopped by thin end plating. An
+        // arriving shell that meets a vertical plate (belts, turret sides, barbettes, conning tower) reads a row whose deck columns
+        // carry the belt penetration as well.
+        static bool VerticalZone(string z) { return z.IndexOf("Belt", StringComparison.OrdinalIgnoreCase) >= 0 || z == "TurretSide" || z == "Barbette" || z == "ConningTower"; }
+        static int forcedV; internal static int ForcedV { get { return forcedV; } }
+        static bool ForceV() { return ZoneVertical != null && ZoneVertical.Value && Current != null && LastZoneFrame == Time.frameCount && VerticalZone(LastZone); }
         static readonly Dictionary<long, RowX> rows = new Dictionary<long, RowX>();
         [ThreadStatic] static bool rowBusy; static int rowLogged, rowFails;
         static float ColV(PenetrationData r, int km) { switch (km) { case 0: return r.vert_0; case 1: return r.vert_1; case 5: return r.vert_5; case 10: return r.vert_10; case 15: return r.vert_15; case 20: return r.vert_20; case 25: return r.vert_25; case 30: return r.vert_30; case 35: return r.vert_35; case 40: return r.vert_40; default: return r.vert_50; } }
@@ -264,7 +273,7 @@ namespace DipGgFixes
             {
                 long key = (gun.Pointer.ToInt64() * 31) ^ (ship.Pointer.ToInt64() << 3);
                 RowX rx;
-                if (rows.TryGetValue(key, out rx) && Time.frameCount - rx.Frame < 3600) { if (rx.Ok) { result = rx.Row; replaced++; } return; }
+                if (rows.TryGetValue(key, out rx) && Time.frameCount - rx.Frame < 3600) { if (rx.Ok) { bool fv = rx.RowV != null && ForceV(); result = fv ? rx.RowV : rx.Row; if (fv) forcedV++; replaced++; } return; }
                 rx = new RowX { Frame = Time.frameCount, Ok = false }; rows[key] = rx;
                 var g = PhysGun.Get(gun, ship, Ship.ShellType.Ap); if (!g.Ok) return;
                 float cd = Ballistics.CdOf(ship), elev = MountElevation.Elev(Math.Max(1, g.Grade));
@@ -287,12 +296,13 @@ namespace DipGgFixes
                 var dv = new Il2CppSystem.Collections.Generic.Dictionary<int, float>(); var dh = new Il2CppSystem.Collections.Generic.Dictionary<int, float>();
                 var ov = result.verticals; var oh = result.horizontals;
                 var sb = rowLogged < 10 ? new System.Text.StringBuilder() : null;
+                var beltAt = new Dictionary<int, float>();
                 foreach (int km in colsV)
                 {
                     float vs, fall, t; bool beyond; float R = Math.Max(50f, km * 1000f);
                     Ballistics.Impact(g.Mv, g.CalMm / 25.4f, g.Kg, cd, R, elev, out vs, out fall, out t, out beyond);
                     float p = beyond ? 0f : BeltPen(g.Kg, vs, fall, g.Q, g.CalMm);
-                    SetV(row, km, p / rx.Mv); dv[km] = p / rx.Mv;
+                    SetV(row, km, p / rx.Mv); dv[km] = p / rx.Mv; beltAt[km] = p;
                     if (sb != null) sb.Append($" {km}km {p:0}/{ColV(result, km) * rx.Mv:0}");
                 }
                 foreach (int km in colsH)
@@ -306,6 +316,21 @@ namespace DipGgFixes
                 try { if (oh != null) { var e = oh.GetEnumerator(); while (e.MoveNext()) { int k = e.Current.Key; if (!dh.ContainsKey(k)) dh[k] = 0f; } } } catch { }
                 row.verticals = dv; row.horizontals = dh;
                 rx.Row = row; rx.Ok = true; result = row; replaced++;
+                // 1.11.313 (#59): the same row with the belt penetration in the deck columns (for shells meeting a vertical plate)
+                try
+                {
+                    var c2 = result.MemberwiseClone(); var rowV = c2 != null ? c2.TryCast<PenetrationData>() : null;
+                    if (rowV != null)
+                    {
+                        var dhv = new Il2CppSystem.Collections.Generic.Dictionary<int, float>();
+                        foreach (int km in colsH) { float bp; if (!beltAt.TryGetValue(km, out bp)) bp = 0f; SetH(rowV, km, bp / rx.Mh); dhv[km] = bp / rx.Mh; }
+                        try { var e = dh.GetEnumerator(); while (e.MoveNext()) { int k = e.Current.Key; if (!dhv.ContainsKey(k)) { float bp; dhv[k] = beltAt.TryGetValue(k, out bp) ? bp / rx.Mh : 0f; } } } catch { }
+                        foreach (int km in colsV) SetV(rowV, km, ColV(row, km));
+                        rowV.verticals = dv; rowV.horizontals = dhv; rx.RowV = rowV;
+                        if (ForceV()) { result = rowV; forcedV++; }
+                    }
+                }
+                catch (Exception e2) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] vertical row: " + e2.Message); }
                 if (sb != null) { rowLogged++; MelonLogger.Msg($"[DIP GG Fixes][Hit] penetration row replaced for {g.CalMm:0.#} mm Mk{g.Grade} on {ship.name} (game modifier x{rx.Mv:0.00} belt, x{rx.Mh:0.00} deck): belt physical/game by range:{sb}"); }
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Hit] penetration row: " + e.Message); }
