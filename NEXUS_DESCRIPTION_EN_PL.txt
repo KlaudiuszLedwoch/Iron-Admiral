@@ -3,13 +3,19 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.74.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.74.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
 [*]Three battles, 6 min, ending with two surrendered destroyers taken as prizes: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Two battles, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]What is new (27 October 2026) - Iron Admiral 1.2.74.2, DIP_GG_Fixes 1.11.313[/b]
+[list]
+[*]Ships that strike their colours are taken as prizes again. The game moves a surrendered ship to the battle's sunk list at once, and the prize check had looked only among the ships still afloat.
+[*]When the game's settings fail at start, the resolution is set to the current screen, so the interface of other mods keeps working.
 [/list]
 
 [b]What is new (26 October 2026) - Iron Admiral 1.2.74.1, DIP_GG_Fixes 1.11.287[/b]
@@ -393,13 +399,19 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.74.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.74.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
 [*]Trzy bitwy, 6 min, na końcu dwa poddane niszczyciele przejęte jako pryzy: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Dwie bitwy, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]Co nowego (27 października 2026) - Iron Admiral 1.2.74.2, DIP_GG_Fixes 1.11.313[/b]
+[list]
+[*]Okręty, które opuszczą banderę, znów są przejmowane jako pryzy. Gra od razu przenosi poddany okręt na listę zatopionych, a sprawdzanie pryzów szukało go tylko wśród okrętów pływających.
+[*]Gdy ustawienia gry nie wczytają się przy starcie, rozdzielczość jest ustawiana na bieżący ekran, więc interfejs innych modów działa dalej.
 [/list]
 
 [b]Co nowego (26 października 2026) - Iron Admiral 1.2.74.1, DIP_GG_Fixes 1.11.287[/b]
