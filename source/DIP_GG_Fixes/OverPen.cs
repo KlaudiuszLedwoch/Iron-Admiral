@@ -59,6 +59,8 @@ namespace DipGgFixes
         internal static void ResetCount() { raised = 0; locSum.Clear(); locLogs = 0; nonPen.Clear(); }
 
         // Ship.GetArmorModForPenetrations(string hitType, bool useHe, float angle): the hit type and the game's modifiers
+        // 1.11.319: the shell kind the game used for this hit (shells fly as "Auto"; AP or HE is decided in the hit), for the hit log
+        internal static string KindNow() { return pendFrame == Time.frameCount ? (curHe ? "HE" : "AP") : "?"; }
         internal static void ArmorMod(Ship ship, string hitType, bool useHe, float angle, ref float result)
         {
             if (busy || On == null || !On.Value || ship == null) return;

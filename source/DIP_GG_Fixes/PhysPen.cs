@@ -435,7 +435,7 @@ namespace DipGgFixes
                     hitLines++;
                 }
                 if (sh != null)
-                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {sh.G.CalMm:0.#} mm {ty} (physics {sh.G.Type}) {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm{Sloped(armor)}, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{(Math.Abs(gameDamage - damage) > 0.05f ? $" (game {gameDamage:0.#})" : "")} (gun base {GunBase(sh):0.#}){StruckText(s)}{Where()}");
+                    MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {sh.G.CalMm:0.#} mm {ty} (physics {sh.G.Type}) {sh.G.Kg:0.#} kg ({sh.G.Mv:0} m/s) from {(sh.Shooter != null ? sh.Shooter.name : "?")} -> {(victim != null ? victim.name : "?")}: {sh.Range:0} m, strike {sh.Vs:0} m/s, fall {sh.Fall:0.0} deg; physical AP penetration belt {physB:0.#} mm / deck {physD:0.#} mm; game: plate met {armor:0.#} mm{Sloped(armor)}, penetration {penetration:0.#} mm; result {hitType} as {OverPen.KindNow()}, damage {damage:0.#}{(Math.Abs(gameDamage - damage) > 0.05f ? $" (game {gameDamage:0.#})" : "")} (gun base {GunBase(sh):0.#}){StruckText(s)}{Where()}");
                 else
                     MelonLogger.Msg($"[DIP GG Fixes][Hit]{(onPlayer ? "[on player]" : "")} {cal:0.#} mm {ty} (no physical shell) -> {(victim != null ? victim.name : "?")}: plate met {armor:0.#} mm, penetration {penetration:0.#} mm; result {hitType}, damage {damage:0.#}{Where()}");
             }
