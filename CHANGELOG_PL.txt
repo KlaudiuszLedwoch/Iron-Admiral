@@ -4723,8 +4723,9 @@ znacznie więcej struktury na tonę niż pancernikom i nadrabiała to
 mnożeniem trafień w cienkie płyty (do x11); historyczny model obrażeń
 usunął ten mnożnik. Każde trafienie w lekki okręt jest teraz mnożone
 przez stosunek jego struktury na tonę do struktury na tonę okrętów
-liniowych w bitwie (od x1 do x12), więc pocisk zabiera tę samą część
-tonażu lekkiemu okrętowi co pancernikowi. Przełączniki LightShipDamage,
+liniowych w bitwie (od x1 do x12), więc pocisk niszczy tę samą ilość
+tonażu w każdym okręcie: trafienie, które zabiera pancernikowi 30 000 t
+5 %, niszczycielowi 1500 t zabiera cały okręt. Przełączniki LightShipDamage,
 LightShipDamageMax i LightShipTypes (F10, Bitwa). (#67)
 --------------------------------------------------------------------------
 178. IRON ADMIRAL 1.2.75-BETA.33 (DIP_GG_FIXES 1.11.323) - OBRAŻENIA PROPORCJONALNE DO TONAŻU DLA KAŻDEJ KLASY - 2026-10-27
@@ -4733,8 +4734,9 @@ Tylko linia beta. Zawiera całą 1.2.75-beta.32.
 1. Zasada z sekcji 177 obejmuje teraz każdy okręt, niezależnie od klasy:
 każde trafienie jest mnożone przez stosunek struktury okrętu na tonę do
 struktury na tonę pancerników i krążowników liniowych w bitwie (od x0,5
-do x12), więc pocisk zabiera tę samą część tonażu każdemu okrętowi -
-torpedowcowi, niszczycielowi, krążownikowi i pancernikowi. Przełączniki
+do x12), więc pocisk niszczy tę samą ilość tonażu w każdym okręcie -
+torpedowcu, niszczycielu, krążowniku i pancerniku (5 % pancernika
+30 000 t to cały niszczyciel 1500 t). Przełączniki
 mają nowe nazwy: DamageByTonnage, DamageByTonnageMin, DamageByTonnageMax
 i DamageByTonnageTypes (domyślnie wszystkie klasy; F10, Bitwa). Dziennik
 bitwy podaje mnożnik każdego okrętu i sumę obrażeń według typu. (#67)

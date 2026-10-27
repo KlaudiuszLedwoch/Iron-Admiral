@@ -4694,8 +4694,8 @@ per ton than battleships and made up for it by multiplying hits on thin
 plates (up to x11); the historical damage model had removed that
 multiplier. Every hit on a light ship is now multiplied by its structure
 per ton over that of the capital ships in the battle (x1 to x12), so a
-shell takes the same share of a light ship's tonnage as of a
-battleship's. Switches LightShipDamage, LightShipDamageMax and
+shell destroys the same amount of tonnage in any ship: a hit that costs
+a 30,000 t battleship 5 % costs a 1,500 t destroyer the whole ship. Switches LightShipDamage, LightShipDamageMax and
 LightShipTypes (F10, Battle). (#67)
 --------------------------------------------------------------------------
 178. IRON ADMIRAL 1.2.75-BETA.33 (DIP_GG_FIXES 1.11.323) - DAMAGE IN PROPORTION TO TONNAGE FOR EVERY CLASS - 2026-10-27
@@ -4704,8 +4704,9 @@ Beta line only. Contains everything of 1.2.75-beta.32.
 1. The rule of section 177 now applies to every ship, whatever its class:
 each hit is multiplied by the ship's structure per ton over that of the
 battleships and battlecruisers in the battle (from x0.5 to x12), so a
-shell takes the same share of any ship's tonnage - torpedo boat,
-destroyer, cruiser or battleship. The switches are renamed
+shell destroys the same amount of tonnage in any ship - torpedo boat,
+destroyer, cruiser or battleship (5 % of a 30,000 t battleship is the
+whole of a 1,500 t destroyer). The switches are renamed
 DamageByTonnage, DamageByTonnageMin, DamageByTonnageMax and
 DamageByTonnageTypes (all classes by default; F10, Battle). The battle
 log names each ship's multiplier and sums the damage by ship type. (#67)
