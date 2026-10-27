@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.309", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.310", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -250,7 +250,7 @@ namespace DipGgFixes
             SettingsUi.Tick();
             ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick(); ShipPartsCheck.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); MapGhosts.Tick(); Irredenta.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); MapGhosts.Tick(); Irredenta.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
@@ -630,6 +630,7 @@ namespace DipGgFixes
             Irredenta.CreatePrefs(cat); // 1.11.235
             ShipPartsCheck.CreatePrefs(cat); // 1.11.243
             BrokenDesigns.CreatePrefs(cat); // 1.11.308 (#32)
+            DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
