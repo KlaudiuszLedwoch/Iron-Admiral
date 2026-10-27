@@ -19,7 +19,13 @@ namespace DipGgFixes
 {
     internal static class Obliquity
     {
-        internal static MelonPreferences_Entry<bool> On;
+        internal static MelonPreferences_Entry<bool> On, OnTop;
+        // 1.11.312 (#58/#60): the game slopes the plate itself in the hit (Ship.TakeHitRaw: "armor mm sloped" = effective armour /
+        // (cos(side-forward angle) x cos(side-up angle)), angles from Shell.ImpactForwardToAngleSideForward / SideUp, compared with
+        // the randomised penetration; only EstimatePenetration ignores the angle, which 1.11.43-77 had measured). The factor below came
+        // on top of the game's own slope: a 152 mm hit with 63 mm penetration was stopped by a "30 mm" plate, small shells met
+        // 463-690 mm. In hits it is now off; the angles and the game's sloped plate are written on the hit line instead.
+        internal static float LastUp = float.NaN, LastFwd = float.NaN; internal static int LastUpFrame = -1, LastFwdFrame = -1; internal static float LastF = 1f; internal static int LastFFrame = -1;
         internal static MelonPreferences_Entry<float> MaxFactor, UncappedExp;
         internal static MelonPreferences_Entry<int> CappedYear;
         static Vector3 capA, capB; static int capFrame = -1;
@@ -30,6 +36,7 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("ArmorObliquity", true, null, "Belt armour counts thicker when a shell strikes it at a horizontal angle (line of sight through the plate); the cap stops helping above 45 degrees; uncapped shells suffer more");
             MaxFactor = cat.CreateEntry("ObliquityMaxFactor", 3f, null, "Upper limit of the obliquity thickness factor (3 = about 70 degrees; steeper hits are left to the ricochet rules)");
+            OnTop = cat.CreateEntry("ObliquityOnTopOfGame", false, null, "Battle: apply the mod's belt obliquity factor in hits on top of the game's own sloping of the plate (off since 1.11.312 - the game already divides the plate by the cosines of the impact angles)");
             UncappedExp = cat.CreateEntry("ObliquityUncappedExponent", 1.3f, null, "Exponent of 1/cos(angle) for uncapped shells (capped shells use 1 up to 45 degrees)");
             CappedYear = cat.CreateEntry("CappedShellYear", 1905, null, "AP shells count as capped when the historical year of the firing ship's AP shell technology (its AP shell component) is this or later - never the calendar year (1.11.229)");
         }
@@ -91,6 +98,8 @@ namespace DipGgFixes
             else f = Mathf.Pow(1f / Mathf.Max(cos, 0.05f), UncappedExp.Value);
             f = Mathf.Clamp(f, 1f, Mathf.Max(1f, MaxFactor.Value));
             int b = Math.Min(5, (int)(ang / 15f)); bands[b]++; sumFactor += f; nFactor++;
+            LastF = f; LastFFrame = Time.frameCount;
+            if (OnTop == null || !OnTop.Value) return 1f; // 1.11.312: the game slopes the plate itself
             return f;
         }
         static bool IsAxis(Vector3 v, Vector3 fwd, Vector3 right)
@@ -102,7 +111,7 @@ namespace DipGgFixes
         internal static void Summary()
         {
             if (nFactor == 0) return;
-            MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity - belt hits by horizontal angle 0-15/15-30/30-45/45-60/60-75/75-90: {bands[0]}/{bands[1]}/{bands[2]}/{bands[3]}/{bands[4]}/{bands[5]}, average belt thickness factor x{sumFactor / nFactor:0.00} ({nFactor} computations)");
+            MelonLogger.Msg($"[DIP GG Fixes][Armor] obliquity - belt hits by horizontal angle 0-15/15-30/30-45/45-60/60-75/75-90: {bands[0]}/{bands[1]}/{bands[2]}/{bands[3]}/{bands[4]}/{bands[5]}, average belt thickness factor x{sumFactor / nFactor:0.00} ({nFactor} computations){((OnTop == null || !OnTop.Value) ? " - not applied: the game slopes the plate itself (1.11.312)" : "")}");
             Array.Clear(bands, 0, bands.Length); sumFactor = 0; nFactor = 0;
         }
     }
@@ -111,7 +120,7 @@ namespace DipGgFixes
     internal static class Patch_ObliquityCapture
     {
         private static void Prefix(Vector3 __0, Vector3 __1) { try { Obliquity.Capture(__0, __1); } catch { } }
-        private static void Postfix(float __result) { Obliquity.capRes = __result; }
+        private static void Postfix(float __result) { Obliquity.capRes = __result; Obliquity.LastFwd = __result; Obliquity.LastFwdFrame = Time.frameCount; }
     }
 
     [HarmonyPatch(typeof(Ship), "GetEffectiveArmor")]
@@ -125,5 +134,12 @@ namespace DipGgFixes
             try { if (__result > 0f) { float f = Obliquity.Factor(__instance, __0, __3); if (f > 1f) __result *= f; } } catch { }
             if (t0 != 0) Perf.Add(Perf.ARMOR, t0);
         }
+    }
+
+    // 1.11.312 (#58): the side-up angle the game uses for the slope of the plate
+    [HarmonyPatch(typeof(Shell), "ImpactForwardToAngleSideUp")]
+    internal static class Patch_ObliquitySideUp
+    {
+        private static void Postfix(float __result) { Obliquity.LastUp = __result; Obliquity.LastUpFrame = Time.frameCount; }
     }
 }
