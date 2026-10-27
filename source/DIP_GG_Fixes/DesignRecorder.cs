@@ -19,7 +19,7 @@ namespace DipGgFixes
     {
         internal static MelonPreferences_Entry<bool> On;
         static IntPtr shipPtr = IntPtr.Zero; static Dictionary<string, string> committed, pending;
-        static float nextRead, pendingSince; static int step, errors, session; static bool inDesigner; static string designKey = "";
+        static float nextRead, pendingSince, nextSaveCheck; static DateTime lastDesignFile = DateTime.MinValue; static int designsCount = -1; static int step, errors, session; static bool inDesigner; static string designKey = "";
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][DesignRec] " + m); }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -37,7 +37,7 @@ namespace DipGgFixes
             {
                 bool d = false; try { d = GameManager.IsConstructor || GameManager.IsSharedDesignConstructor; } catch { }
                 if (!d) { if (inDesigner) { Flush(true); Write("left the constructor", "", "", null); } inDesigner = false; shipPtr = IntPtr.Zero; committed = null; pending = null; return; }
-                if (!inDesigner) { inDesigner = true; session++; }
+                if (!inDesigner) { inDesigner = true; session++; lastDesignFile = NewestDesignFile(); designsCount = -1; }
                 if (Time.realtimeSinceStartup < nextRead) return;
                 nextRead = Time.realtimeSinceStartup + 0.5f;
                 bool loading = false; try { loading = GameManager.IsLoadingAny; } catch { }
@@ -54,6 +54,7 @@ namespace DipGgFixes
                     Write(refit ? "refit opened" : "design opened", "", Describe(snap), s);
                     return;
                 }
+                SaveCheck(s); // 1.11.311
                 if (Same(snap, committed)) { pending = null; return; }
                 if (pending == null || !Same(snap, pending)) { pending = snap; pendingSince = Time.realtimeSinceStartup; return; }
                 if (Time.realtimeSinceStartup - pendingSince >= 1f) Commit(s);
@@ -81,7 +82,46 @@ namespace DipGgFixes
                 if (a == b || k == "weight" || k == "reserve") continue;
                 Write("change", k, a + " -> " + b, s, pending);
             }
-            committed = pending; pending = null;
+            committed = pending; pending = null; designKey = Get(committed, "design"); // 1.11.311: the current design name (a new hull or a loaded design keeps the same ship object)
+        }
+
+        // 1.11.311: "design saved" - a design file written in the game's Designs folder (designer from the main menu) or a new design
+        // in the player's list (campaign designer)
+        static DateTime NewestDesignFile()
+        {
+            try
+            {
+                var dir = Path.Combine(Application.persistentDataPath, "Designs"); if (!Directory.Exists(dir)) return DateTime.MinValue;
+                var best = DateTime.MinValue; foreach (var f in Directory.GetFiles(dir)) { var t = File.GetLastWriteTime(f); if (t > best) best = t; }
+                return best;
+            }
+            catch { return DateTime.MinValue; }
+        }
+        static string NewestDesignName()
+        {
+            try { var dir = Path.Combine(Application.persistentDataPath, "Designs"); string bn = ""; var best = DateTime.MinValue; foreach (var f in Directory.GetFiles(dir)) { var t = File.GetLastWriteTime(f); if (t > best) { best = t; bn = Path.GetFileName(f); } } return bn; } catch { return ""; }
+        }
+        static void SaveCheck(Ship s)
+        {
+            if (Time.realtimeSinceStartup < nextSaveCheck) return; nextSaveCheck = Time.realtimeSinceStartup + 2f;
+            try
+            {
+                var t = NewestDesignFile();
+                if (t > lastDesignFile && lastDesignFile != DateTime.MinValue) { Flush(true); Write("design saved", "file", NewestDesignName(), s); }
+                if (t > lastDesignFile) lastDesignFile = t;
+            }
+            catch { }
+            try
+            {
+                bool camp = false; try { camp = GameManager.IsCampaign; } catch { }
+                if (camp && s != null && s.player != null)
+                {
+                    int n = 0; var e = s.player.designsAll.GetEnumerator(); var u = e.Cast<Il2CppSystem.Collections.IEnumerator>(); while (u.MoveNext()) n++;
+                    if (designsCount >= 0 && n > designsCount) { Flush(true); Write("design saved", "campaign", Get(committed, "design"), s); }
+                    designsCount = n;
+                }
+            }
+            catch { }
         }
 
         static string Get(Dictionary<string, string> d, string k) { string v; return d != null && d.TryGetValue(k, out v) ? v : ""; }
@@ -127,6 +167,8 @@ namespace DipGgFixes
             try
             {
                 var counts = new SortedDictionary<string, int>();
+                // 1.11.311: fore / midships / aft as thirds of the ship's length (the fixed 15 m put midships casemates of a 180 m hull fore or aft)
+                float half = 1f; var zs = new List<float>();
                 var parts = s.parts;
                 if (parts != null)
                     for (int i = 0; i < parts.Count; i++)
@@ -134,11 +176,22 @@ namespace DipGgFixes
                         var p = parts[i]; if (p == null || p.data == null) continue;
                         bool hull = false; try { hull = p.data.isHull; } catch { }
                         if (hull) continue;
-                        string where = "";
-                        try { float z = s.transform.InverseTransformPoint(p.transform.position).z; where = z > 15f ? "fore" : z < -15f ? "aft" : "mid"; } catch { }
+                        float z = float.NaN; try { z = s.transform.InverseTransformPoint(p.transform.position).z; } catch { }
+                        zs.Add(z); if (!float.IsNaN(z)) half = Math.Max(half, Math.Abs(z));
+                    }
+                if (parts != null)
+                {
+                    int j = 0;
+                    for (int i = 0; i < parts.Count; i++)
+                    {
+                        var p = parts[i]; if (p == null || p.data == null) continue;
+                        bool hull = false; try { hull = p.data.isHull; } catch { }
+                        if (hull) continue;
+                        float z = zs[j++]; string where = float.IsNaN(z) ? "" : z > half / 3f ? "fore" : z < -half / 3f ? "aft" : "mid";
                         string k = "part " + p.data.name + (where.Length > 0 ? " @" + where : "");
                         int c; counts.TryGetValue(k, out c); counts[k] = c + 1;
                     }
+                }
                 foreach (var kv in counts) d[kv.Key] = kv.Value.ToString();
             }
             catch { }
