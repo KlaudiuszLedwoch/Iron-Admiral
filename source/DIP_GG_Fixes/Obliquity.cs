@@ -33,12 +33,15 @@ namespace DipGgFixes
         // Now the side-up angle of an arriving shell is its angle of fall from the shell's own physical flight: a flat shell meets a side
         // plate almost square and mostly strikes the side, a plunging one the deck. Switch: ImpactAngleFromFall (F10, Battle).
         internal static MelonPreferences_Entry<bool> FromFall; internal static int FallFixed;
-        internal static void FixSideUp(ref float r)
+        // 1.11.321: the angle is taken from the shell's own impact direction (first argument). The side-up angle is computed at the
+        // firing (precalc, before the shell exists) as well as at the impact, so the physical shell used by 1.11.320 was never at hand
+        // (test 27.10 17:32: applied 0 times).
+        internal static void FixSideUp(Vector3 fwd, ref float r)
         {
             if (FromFall == null || !FromFall.Value) return;
-            var cur = PhysPen.Current; if (cur == null) return;
-            var sh = PhysPen.ShotOf(cur); if (sh == null || !(sh.Fall >= 0f)) return;
-            r = UnityEngine.Mathf.Clamp(sh.Fall, 0f, 89f); FallFixed++;
+            float h = Mathf.Sqrt(fwd.x * fwd.x + fwd.z * fwd.z); if (h < 1e-4f && Mathf.Abs(fwd.y) < 1e-4f) return;
+            float fall = Mathf.Atan2(Mathf.Abs(fwd.y), h) * Mathf.Rad2Deg;
+            r = Mathf.Clamp(fall, 0f, 89f); FallFixed++;
         }
         internal static float LastUp = float.NaN, LastFwd = float.NaN; internal static int LastUpFrame = -1, LastFwdFrame = -1; internal static float LastF = 1f; internal static int LastFFrame = -1;
         internal static MelonPreferences_Entry<float> MaxFactor, UncappedExp;
@@ -156,6 +159,6 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(Shell), "ImpactForwardToAngleSideUp")]
     internal static class Patch_ObliquitySideUp
     {
-        private static void Postfix(ref float __result) { try { Obliquity.FixSideUp(ref __result); } catch { } Obliquity.LastUp = __result; Obliquity.LastUpFrame = Time.frameCount; }
+        private static void Postfix(Vector3 __0, ref float __result) { try { Obliquity.FixSideUp(__0, ref __result); } catch { } Obliquity.LastUp = __result; Obliquity.LastUpFrame = Time.frameCount; }
     }
 }
