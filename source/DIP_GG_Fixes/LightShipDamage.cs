@@ -8,8 +8,8 @@
 // 1.11.323 (author 27.10, 20:37: "CA, BC and BB too - proportional to tonnage everywhere, regardless of class"): every ship's
 // structure counts as proportional to its tonnage. Each hit deals damage x (the ship's structure per ton / the reference structure
 // per ton), the reference being that of the battleships and battlecruisers in the battle (tonnage-weighted; the last value seen is
-// kept for battles without them), between DamageByTonnageMin and DamageByTonnageMax. A shell then takes away the same share of any
-// ship's tonnage: a 6 in penetration that costs a 25,000 t battleship 0.5 % of its structure costs a 1,000 t destroyer about 12 %.
+// kept for battles without them), between DamageByTonnageMin and DamageByTonnageMax. A shell then destroys the same amount of tonnage in any
+// ship: a 6 in penetration that costs a 25,000 t battleship 0.5 % of its structure costs a 1,000 t destroyer about 12 %.
 // Switches: DamageByTonnage, DamageByTonnageMin, DamageByTonnageMax, DamageByTonnageTypes (F10, Battle). Log: one line per ship at
 // its first hit, the reference, and a battle summary.
 using System;
