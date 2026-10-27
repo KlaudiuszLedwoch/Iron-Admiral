@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 27 October 2026. Latest version: Iron Admiral 1.2.74.2.2. Updated with every release._
+_Guide as of 27 October 2026. Latest version: Iron Admiral 1.2.74.3.3. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -251,6 +251,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **25 October 2026, Iron Admiral 1.2.74:** physical penetration in battle (the game's penetration table), historical damage model (bursting charge and place of burst), historical shell weights, deliberate aiming at close range, crews' voices in the dispatches; from this release the stable and beta lines are separate again.
 - **26 October 2026, Iron Admiral 1.2.74.1:** the gun window shows the physical penetration in every game language; the battle AI judges whether it can pierce a belt with the same physics as the hit, using its largest gun.
 - **27 October 2026, Iron Admiral 1.2.74.2:** a ship that surrendered in battle is taken as a prize again (the game had already moved her to the sunk list); resolution guard when the game's settings fail at start.
+- **27 October 2026, Iron Admiral 1.2.74.3:** corrected package - the prize fix of 1.2.74.2 is in it (a surrendered ship is taken as a prize again).
 
 ---
 
