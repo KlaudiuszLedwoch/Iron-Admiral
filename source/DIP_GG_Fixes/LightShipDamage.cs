@@ -8,7 +8,10 @@
 // 1.11.323 (author 27.10, 20:37: "CA, BC and BB too - proportional to tonnage everywhere, regardless of class"): every ship's
 // structure counts as proportional to its tonnage. Each hit deals damage x (the ship's structure per ton / the reference structure
 // per ton), the reference being that of the battleships and battlecruisers in the battle (tonnage-weighted; the last value seen is
-// kept for battles without them), between DamageByTonnageMin and DamageByTonnageMax. A shell then destroys the same amount of tonnage in any
+// kept for battles without them), between DamageByTonnageMin and DamageByTonnageMax.
+// 1.11.324 (tests 27.10, 21:33-22:27): the game gives a 635 t torpedo boat 12,594 structure (19.8 per ton) against 11,787 for a
+// 25,796 t battleship (0.46 per ton) - x43; with the x12 cap of 1.11.323 torpedo boats ended at 1-15 % after up to 13 hits. The cap is
+// now x60: two battles of 4 torpedo boats - 3 sunk after 10, 16 and 21 hits, the others wrecks (81-96 %) after 14-20 hits. A shell then destroys the same amount of tonnage in any
 // ship: a 6 in penetration that costs a 25,000 t battleship 0.5 % of its structure costs a 1,000 t destroyer about 12 %.
 // Switches: DamageByTonnage, DamageByTonnageMin, DamageByTonnageMax, DamageByTonnageTypes (F10, Battle). Log: one line per ship at
 // its first hit, the reference, and a battle summary.
@@ -22,23 +25,41 @@ namespace DipGgFixes
     internal static class LightShipDamage
     {
         internal static MelonPreferences_Entry<bool> On;
-        internal static MelonPreferences_Entry<float> Max, Min, RefSaved;
+        internal static MelonPreferences_Entry<float> Max, Min, RefSaved, SinkPct, DestroyedPenalty;
         internal static MelonPreferences_Entry<string> Types;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("DamageByTonnage", true, null, "Battle: every ship takes damage in proportion to its tonnage, whatever its class - each hit is multiplied by the ship's structure per ton over that of the battleships in the battle (the game gives small ships far more structure per ton, and the historical damage model no longer multiplies hits on thin plates)");
             Min = cat.CreateEntry("DamageByTonnageMin", 0.5f, null, "Battle: the smallest damage multiplier (ships with less structure per ton than the battleships)");
-            Max = cat.CreateEntry("DamageByTonnageMax", 12f, null, "Battle: the largest damage multiplier (small ships)");
+            Max = cat.CreateEntry("DamageByTonnageMax", 60f, null, "Battle: the largest damage multiplier (small ships; a 635 t torpedo boat has 43x the structure per ton of a battleship in the game)");
             Types = cat.CreateEntry("DamageByTonnageTypes", "all", null, "Battle: ship types the rule applies to - all, or a comma-separated list (tb, dd, cl, ca, bc, bb, tr)");
             RefSaved = cat.CreateEntry("DamageByTonnageRefHpPerTon", 0f, null, "Battle (kept by the mod): structure per ton of the battleships last seen in a battle - used when a battle has none");
+            SinkPct = cat.CreateEntry("StructureSinkPercent", -1f, null, "Battle: structure damage (percent of the whole structure) at which a ship sinks - the game parameter structure_sink (vanilla 40, DIP GG 100); -1 = keep the game value");
+            DestroyedPenalty = cat.CreateEntry("DestroyedSectionDamagePenalty", -1f, null, "Battle: share of damage a hit still does to a section that is already destroyed - the game parameter destroyed_section_damage_penalty (DIP GG 0.15); -1 = keep the game value");
         }
 
         static readonly Dictionary<long, float> mult = new Dictionary<long, float>();
         static readonly SortedDictionary<string, float[]> byType = new SortedDictionary<string, float[]>();
         static float refHpt; static string refFrom; static int logged, errors, applied;
         static float sumRaw, sumNew;
-        internal static void BattleStart() { mult.Clear(); byType.Clear(); refHpt = 0f; refFrom = null; logged = 0; applied = 0; sumRaw = 0f; sumNew = 0f; }
+        internal static void BattleStart() { SetParams(); mult.Clear(); byType.Clear(); refHpt = 0f; refFrom = null; logged = 0; applied = 0; sumRaw = 0f; sumNew = 0f; }
 
+        // 1.11.324: the game parameters that decide when accumulated structure damage sinks a ship (tests of #67)
+        static void SetParams()
+        {
+            try
+            {
+                var p = G.GameData.parms; if (p == null) return; var sb = new System.Text.StringBuilder();
+                foreach (var kv in new[] { new KeyValuePair<string, MelonPreferences_Entry<float>>("structure_sink", SinkPct), new KeyValuePair<string, MelonPreferences_Entry<float>>("destroyed_section_damage_penalty", DestroyedPenalty) })
+                {
+                    float cur = 0f; bool has = p.ContainsKey(kv.Key); if (has) cur = p[kv.Key];
+                    if (kv.Value != null && kv.Value.Value >= 0f && (!has || Math.Abs(cur - kv.Value.Value) > 1e-4f)) { p[kv.Key] = kv.Value.Value; sb.Append($"{kv.Key} {cur:0.##} -> {kv.Value.Value:0.##}; "); }
+                    else sb.Append($"{kv.Key} {cur:0.##}; ");
+                }
+                MelonLogger.Msg("[DIP GG Fixes][Damage] sinking parameters: " + sb);
+            }
+            catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Damage] sinking parameters: " + e.Message); }
+        }
         static string TypeOf(Ship s) { try { return s.shipType.name.ToLowerInvariant(); } catch { return ""; } }
         static bool Applies(string t)
         {
@@ -92,7 +113,7 @@ namespace DipGgFixes
             {
                 float hp, tons; float hpt = HpPerTon(ship, out hp, out tons);
                 float r = Reference();
-                if (hpt > 0f && r > 0f) m = Math.Max(Min != null ? Min.Value : 0.5f, Math.Min(Max != null ? Max.Value : 12f, hpt / r));
+                if (hpt > 0f && r > 0f) m = Math.Max(Min != null ? Min.Value : 0.5f, Math.Min(Max != null ? Max.Value : 60f, hpt / r));
                 if (logged++ < 40) MelonLogger.Msg($"[DIP GG Fixes][Damage] by tonnage {ship.name} ({t}): structure {hp:0} for {tons:0} t = {hpt:0.##} per ton; reference {r:0.##} - damage x{m:0.00}");
             }
             mult[key] = m;
