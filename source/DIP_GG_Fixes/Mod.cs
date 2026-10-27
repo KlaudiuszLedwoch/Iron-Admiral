@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.313", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.314", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3033,9 +3033,14 @@ namespace DipGgFixes
                 var opponent = battle.OppositePlayer(owner); if (opponent == null) return;
                 // 1.11.186: only ships that really fought in this battle (a player reported ships captured in earlier years and not
                 // present in a battle without combat being "taken as a prize" again - the surrendered flag survives repair)
-                bool present = false;
-                try { var os = battle.ShipsOf(owner, true); if (os != null) for (int i = 0; i < os.Count; i++) { var o = os[i]; if (o != null && o.Pointer == ship.Pointer) { present = true; break; } } } catch { }
-                if (!present) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered flag but not in this battle - left as it is"); return; }
+                // 1.11.290 (#35): a ship that surrendered is counted as lost by the game and is already moved from the battle's ship
+                // list to its sunk list (CampaignBattle.SunkShips) when DamageShip runs, so all three lists are searched
+                string where = null;
+                try { if (In(battle.ShipsOf(owner, true), ship)) where = "actual"; } catch { }
+                try { if (where == null && In(battle.ShipsOf(owner, false), ship)) where = "ships"; } catch { }
+                try { if (where == null && In(battle.SunkShips, ship)) where = "sunk"; } catch { }
+                if (where == null) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered flag but not in this battle - left as it is"); return; }
+                MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered in this battle (battle list: {where})");
                 // 1.11.50: surrendered ships go to the side that won the battle; a ship whose own side won returns to its owner
                 Player victor = null; float vpA = 0f, vpD = 0f; string how = "condition";
                 try { victor = battle.ConditionWinner; } catch { }
@@ -3114,6 +3119,12 @@ namespace DipGgFixes
                 MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered to {winner.data.name} and was taken as a prize ({loser.data.name} -> {winner.data.name}); removed from {removed} sunk list(s), HP {hp:0}, crew {crew:0.00} -> {UnityEngine.Mathf.Max(crew, minCrew):0.00}, damage set to {__1:0.00}, crew training reset, status {ship.status}, new owner {(ship.player != null ? ship.player.data.name : "?")}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] DamageShip prefix: " + e.Message); }
+        }
+        static bool In(Il2CppSystem.Collections.Generic.List<Ship> l, Ship s)
+        {
+            if (l == null || s == null) return false;
+            for (int i = 0; i < l.Count; i++) { var o = l[i]; if (o != null && o.Pointer == s.Pointer) return true; }
+            return false;
         }
         internal static readonly HashSet<IntPtr> Captured = new HashSet<IntPtr>();
         private static void Postfix(Ship __0)
