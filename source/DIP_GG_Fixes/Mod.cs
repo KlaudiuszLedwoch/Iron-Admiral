@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.316", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.317", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -631,6 +631,7 @@ namespace DipGgFixes
             ShipPartsCheck.CreatePrefs(cat); // 1.11.243
             BrokenDesigns.CreatePrefs(cat); // 1.11.308 (#32)
             DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
+            DeckZoneFix.CreatePrefs(cat); // 1.11.317 (#59)
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
