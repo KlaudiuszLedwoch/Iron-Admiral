@@ -296,7 +296,7 @@ namespace DipGgFixes
 
                 if (Groups[tab] == "Tools") { DrawTools(r, top, w); clicks.Clear(); clicks.AddRange(next); return; }
                 var list = Entries(Groups[tab]);
-                float rowH = 46f;
+                float rowH = 60f;   // 1.11.330: room for three lines of description (46 let them run into the next row - seen in 1.11.329)
                 int per = Math.Max(1, (int)((r.yMax - 70f - top) / rowH));
                 int pages = Math.Max(1, (list.Count + per - 1) / per);
                 if (page >= pages) page = pages - 1;
