@@ -8,6 +8,7 @@
 // borders manager's meshes, created a while after the map), the map grid and the area/province names. A side copy is only
 // active while the view reaches that map edge.
 // 1.11.144 (beta): the side copies of the map surface take clicks (mesh collider); markers and clicks: ContinuousMapMarkers.
+// 1.11.310 (beta, #11): fleet route lines beyond the map edge: ContinuousMapRoutes.
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
@@ -48,7 +49,7 @@ namespace DipGgFixes
         {
             foreach (var g in all) { try { if (g != null) UnityEngine.Object.Destroy(g); } catch { } }
             all.Clear(); lapLeft.Clear(); lapRight.Clear(); borders.Clear();
-            try { ContinuousMapMarkers.Clear(); } catch { }
+            try { ContinuousMapMarkers.Clear(); } catch { } try { ContinuousMapRoutes.Clear(); } catch { }
             built = overlays = leftOn = rightOn = false;
         }
 
@@ -225,6 +226,7 @@ namespace DipGgFixes
                 var p = cam.transform.position; p.x = x; cam.transform.position = p;
                 try { cam.newCameraPos = new Vector3(x, cam.newCameraPos.y, p.z); } catch { }
                 Sides(cam);
+                ContinuousMapRoutes.Sync();
                 if (!logged) { logged = true; Msg("continuous map active"); }
             }
             catch (Exception e) { Warn("after: " + e.Message); }
