@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.343", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.344", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -183,7 +183,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> TorpedoTurnAwaySeconds;
         internal static MelonPreferences_Entry<bool> FleetTorpedoAttack;
         internal static MelonPreferences_Entry<bool> Ramming;
-        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort, AiCrossTorpedo;
+        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort, AiCrossTorpedo, AiApproachSmoke;
         internal static MelonPreferences_Entry<bool> NightRules, CruiserRoles, FireDistributionOn; internal static MelonPreferences_Entry<float> NightVisibilityKm;
         internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
@@ -457,6 +457,7 @@ namespace DipGgFixes
             FleetTorpedoAttack = cat.CreateEntry("FleetTorpedoAttack", true, null,
                 "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
             AiCrossTorpedo = cat.CreateEntry("AiCrossTorpedo", true, null, "Battle AI: AI divisions attacking the same target with torpedoes approach 45 degrees either side of its bow so the tracks cross, and a division whose tubes on one side are empty turns to fire the other side before going off to reload (#56)");
+            AiApproachSmoke = cat.CreateEntry("AiApproachSmoke", true, null, "Battle AI: an AI torpedo flotilla that is hit during its approach lays a smoke screen at once (every 30 s at most while it keeps being hit)"); // 1.11.344
             TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
                 "AI torpedo craft press the attack until every tube is empty; ships with reload torpedoes on board then turn away (smoke when available), open the range, reload and return, ships without reloads turn on the enemy light forces");
             ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
@@ -1315,7 +1316,7 @@ namespace DipGgFixes
 
         internal class DivState { public float nextThink; public float nextSightLog; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public bool hopelessSoftLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
             // 1.11.86
-            public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; }
+            public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; public float approachDmg = -1f; public bool approachSmokeLogged; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -2104,6 +2105,18 @@ namespace DipGgFixes
                 if (tt != null)
                 {
                     var aim = (cross || twoWay) ? tt.position + xdir * launchAt : tt.position;
+                    // 1.11.344 (author 28.10, 12:45: "during the approach, when the hits of the defensive fire begin, we lay smoke"): an AI
+                    // light division that takes damage or loses a ship during the run-in lays smoke (every 30 s at most, while hit again)
+                    if (!pOrder && IsLight(leader) && DipGgFixesMod.AiApproachSmoke != null && DipGgFixesMod.AiApproachSmoke.Value)
+                    {
+                        float dd = DivDamage(div);
+                        if (st.approachDmg >= 0f && dd > st.approachDmg + 0.005f)
+                        {
+                            if (!st.approachSmokeLogged) { st.approachSmokeLogged = true; Log($"{st.name}: hit during the approach to {best.name} at {bestD:0} m (division damage {st.approachDmg:0.00} -> {dd:0.00}) - smoke"); }
+                            TrySmoke(div, leader, st);
+                        }
+                        st.approachDmg = dd;
+                    }
                     if (cross && st.reason != "cross attack") { Log($"{st.name}: cross torpedo attack on {best.name} - approach {(xslot % 2 == 0 ? "starboard" : "port")} bow ({xslot + 1} of {xof} divisions), tracks to cross at about 90 deg"); }
                     if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, aim, "charging"); else div.MoveTo(aim);
                     if (cross) Why(st, "cross attack");
