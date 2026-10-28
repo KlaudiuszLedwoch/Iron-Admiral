@@ -2036,7 +2036,7 @@ namespace DipGgFixes
             Ship best = null; bestD = float.MaxValue;
             bool ordered = OrderedCharge;
             if (playerSide || ordered) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); if (best != null && st.charging) st.target = best.Pointer; } // 1.11.267: the shift is kept (the log repeated it every tick)
-            if (best == null) { best = NearestVisibleCapital(leader, enemies, out bestD); if (best != null && !playerSide && IsLight(leader)) best = TorpedoPincer.RearOfColumn(best, leader, enemies, out bestD); } // 1.11.343: the last ship of the line
+            if (best == null) { best = NearestVisibleCapital(leader, enemies, out bestD); if (best != null && !playerSide && IsLight(leader)) best = TorpedoPincer.Target(div, leader, best, enemies, out bestD); } // 1.11.343: the leading ship from ahead or the last one from the quarter
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
             float torp = TorpedoRange(leader);
@@ -2094,12 +2094,16 @@ namespace DipGgFixes
             UnityEngine.Vector3 xdir = UnityEngine.Vector3.zero; int xslot = 0, xof = 1;
             bool aiTactics = !pOrder && DipGgFixesMod.AiCrossTorpedo != null && DipGgFixesMod.AiCrossTorpedo.Value; // 1.11.318 (#56)
             bool cross = (pOrder || aiTactics) && CrossSlot(div, best, out xdir, out xslot, out xof);   // 1.11.302; AI since 1.11.318
+            // 1.11.343 (author 28.10, 12:39): an AI light division with a two-way role approaches fine on the bow or on the quarter
+            UnityEngine.Vector3 pdir = UnityEngine.Vector3.zero;
+            bool twoWay = !pOrder && IsLight(leader) && TorpedoPincer.Approach(div, leader, best, out pdir);
+            if (twoWay) { xdir = pdir; cross = false; }
             if (bestD > holdAt)
             {
                 var tt = best.transform;
                 if (tt != null)
                 {
-                    var aim = cross ? tt.position + xdir * launchAt : tt.position;
+                    var aim = (cross || twoWay) ? tt.position + xdir * launchAt : tt.position;
                     if (cross && st.reason != "cross attack") { Log($"{st.name}: cross torpedo attack on {best.name} - approach {(xslot % 2 == 0 ? "starboard" : "port")} bow ({xslot + 1} of {xof} divisions), tracks to cross at about 90 deg"); }
                     if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, aim, "charging"); else div.MoveTo(aim);
                     if (cross) Why(st, "cross attack");
@@ -2111,7 +2115,7 @@ namespace DipGgFixes
             {
                 // 1.11.318 (#56): the AI fires the other side too - one side empty and the other loaded: turn to bring it to bear
                 if (aiTactics && TwoSideTurn(div, leader, st, best, bestD)) return;
-                var tt2 = best.transform; if (tt2 != null) div.MoveTo(cross ? tt2.position + xdir * (launchAt * 0.7f) : tt2.position);
+                var tt2 = best.transform; if (tt2 != null) div.MoveTo((cross || twoWay) ? tt2.position + xdir * (launchAt * 0.7f) : tt2.position);
             }
             // 1.11.267 (author 25.10, 15:04/15:08: CA under a torpedo attack order closed to ramming distance): a player's division
             // inside launch range stops closing - it holds off at the launch distance, running across the target's bearing
