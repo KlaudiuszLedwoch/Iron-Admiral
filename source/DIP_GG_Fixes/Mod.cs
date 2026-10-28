@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.334", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.335", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -510,8 +510,10 @@ namespace DipGgFixes
             MigRangeCap = cat.CreateEntry("MigrationRangeCapOn225", false, null, "Internal: 1.11.225 switched RangeByMountElevation on once (author's decision: range from physics and technology)");
             MigEraOff = cat.CreateEntry("MigrationFireControlNames208", false, null, "Internal: 1.11.208 renamed the EraAccuracy* / EraDispersion settings to FireControlTech* and copied the player's values once");
             MigOccCost = cat.CreateEntry("MigrationOccupationCost195", false, null, "Internal: 1.11.195 raised the occupation costs once (CoreOccupationCost 3 -> 20, OccupationPayShare 4 -> 30)");
-            TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", false, null,
-                "Apply the same torpedo check to the player's ships under automatic torpedo fire");
+            // 1.11.335 (author 28.10, 08:36): on by default for everyone - the player's ships under automatic torpedo fire no longer
+            // waste torpedoes on hopeless shots either (manual shots are never held)
+            TorpedoSensePlayer = cat.CreateEntry("TorpedoSensePlayer", true, null,
+                "Battle: your ships under automatic torpedo fire hold hopeless shots too - target beyond torpedo range, outrunning the torpedo, or a small ship far off and not closing (manual shots are never held)");
             TorpedoSenseClose = cat.CreateEntry("TorpedoSenseCloseRange", 1500f, null,
                 "Torpedo check: inside this distance (m) the torpedoes are never held");
             TorpedoSenseSpeed = cat.CreateEntry("TorpedoSenseTorpedoSpeed", 20f, null,
