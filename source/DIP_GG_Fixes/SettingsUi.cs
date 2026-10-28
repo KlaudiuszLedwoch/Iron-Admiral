@@ -24,8 +24,51 @@ namespace DipGgFixes
         static float statusUntil;
         static int errors;
 
-        // group order and membership; anything not listed lands in "Other"
-        static readonly string[] Groups = { "Battle AI", "Fog of war", "Crews and prizes", "Campaign AI", "Economy", "Diplomacy", "Information and updates", "Tools", "Other" };
+        // 1.11.329: 13 tabs, 5 per row. Every on/off switch has its tab in TabOf (generated from the switch list together with
+        // the Help chapters "Settings: <tab>"); "-" = author's tools and one-time migration flags, not shown. Switches missing
+        // from TabOf fall back to GroupOf (old group names mapped to the new tabs), then to "Other".
+        static readonly string[] Groups = { "Battle AI", "Gunnery & damage", "Fog of war", "Crews & prizes", "Campaign AI", "Ship design", "Economy", "Diplomacy", "Display", "Logs", "Info & updates", "Tools", "Other" };
+        static readonly Dictionary<string, string> OldGroup = new Dictionary<string, string> { {"Crews and prizes","Crews & prizes"},{"Information and updates","Info & updates"},{"Battle","Gunnery & damage"},{"Interface","Display"} };
+        static readonly Dictionary<string, string> TabOf = new Dictionary<string, string>
+        {
+            {"DamageByTonnage","Gunnery & damage"},{"DeckHitsMeetDeck","Gunnery & damage"},{"DesignRecorder","Ship design"},{"ImpactAngleFromFall","Gunnery & damage"},
+            {"AiCrossTorpedo","Battle AI"},{"ArmorDiagnostics","Logs"},{"BallisticsLog","Logs"},{"BattleAiLog","Logs"},{"BattleDispatches","Display"},{"BattleReport","Display"},
+            {"CapitalCloseInWhenOutgunned","Battle AI"},{"CapitalEscapeWhenHopeless","Battle AI"},{"CapitalSupportScreen","Battle AI"},{"CapitalTorpedoCharge","Battle AI"},
+            {"CloseInOnlyIfPenetrates","Battle AI"},{"CoverRetreat","Battle AI"},{"CruiserRoles","Battle AI"},{"DetachSlowShips","Battle AI"},{"DispatchNationalLanguages","Display"},
+            {"DispatchPlayerOriginalLanguage","Display"},{"DivisionOrders","Battle AI"},{"DivisionOrdersVanilla","Battle AI"},{"EscapeMissionLogic","Battle AI"},{"EvasiveManeuvers","Battle AI"},
+            {"FightWhenCannotEscape","Battle AI"},{"FireControlTechAccuracy","Gunnery & damage"},{"FireControlTechDispersion","Gunnery & damage"},{"FireDistribution","Battle AI"},
+            {"FleetTorpedoAttack","Battle AI"},{"FocusFire","Battle AI"},{"HistoricalDamage","Gunnery & damage"},{"HistoricalGuns","Gunnery & damage"},{"HistoricalParts","Ship design"},
+            {"HistoricalWeights","Ship design"},{"LightShipTorpedoCharge","Battle AI"},{"NightRules","Battle AI"},{"PlayerScoutCharge","Battle AI"},{"Ramming","Battle AI"},
+            {"RealisticBallistics","Gunnery & damage"},{"ScoutTowardsSmoke","Battle AI"},{"SmartTargeting","Battle AI"},{"SmartTargetingAi","Battle AI"},{"TorpedoFriendlyLane","Battle AI"},
+            {"TorpedoReloadCycle","Battle AI"},{"TorpedoSettings","Battle AI"},{"TorpedoTargetPriority","Battle AI"},{"TorpedoTurnAway","Battle AI"},{"TransportsAfterEscort","Battle AI"},
+            {"ValueBasedAbort","Battle AI"},{"WithdrawWhenOutmatched","Battle AI"},{"FogAiPerception","Fog of war"},{"FogBattleReports","Fog of war"},{"FogHideEnemyDetails","Fog of war"},
+            {"FogInterceptions","Fog of war"},{"FogNightFactors","Fog of war"},{"FogOfWar","Fog of war"},{"FogStaleContacts","Fog of war"},{"FogStrategicMap","Fog of war"},
+            {"FogTacticalIdentification","Fog of war"},{"MapPortForces","Fog of war"},{"CaptureSurrenderedShips","Crews & prizes"},{"CrewLevelsRescale","Crews & prizes"},
+            {"CrewPanic","Crews & prizes"},{"MinorFleetToConqueror","Crews & prizes"},{"SurrenderByTraining","Crews & prizes"},{"SurrenderedShipsToBattleWinner","Crews & prizes"},
+            {"AiBestTorpedoDiameter","Ship design"},{"AiDesignOnlyWhenBuildable","Ship design"},{"AiMinTorpedoTubes","Ship design"},{"AiTechBudgetBalance","Campaign AI"},
+            {"AutoShareDesigns","Ship design"},{"BankruptBuildsCheapShips","Campaign AI"},{"BrokenDesignsObsolete","Ship design"},{"CoreProvincesIndependence","Campaign AI"},
+            {"CruisersWhenPoor","Campaign AI"},{"FixStalledConstruction","Campaign AI"},{"InstallModDesigns","Ship design"},{"InstallShippackDesigns","Ship design"},
+            {"NationalTechBonuses","Campaign AI"},{"OccupationEvents","Campaign AI"},{"PortlessPowersWait","Campaign AI"},{"ShareToAllNations","Ship design"},{"UngovernedToSuccessors","Campaign AI"},
+            {"FinancialCrisis","Economy"},{"InflationEconomy","Economy"},{"SeriesProduction","Economy"},{"BalanceGrantOnlyWhenSolvent","Diplomacy"},{"BalanceOfPowerEvents","Diplomacy"},
+            {"CoalitionBalanceOfPower","Diplomacy"},{"CoalitionWar","Diplomacy"},{"BetaUpdates","Info & updates"},{"CheckForUpdates","Info & updates"},{"CheckOtherMods","Info & updates"},
+            {"SaveCompatibilityFix","Info & updates"},{"ShareLogs","Info & updates"},{"TreasuryInFinancesWindow","Economy"},{"TreasuryMonthlyReport","Economy"},{"TreasuryPanel","Economy"},
+            {"TreasuryWarnings","Economy"},{"UpdateDownloadButton","Info & updates"},{"UsageStatistics","Info & updates"},{"HistBuilderRun","-"},{"AiDivisionSpacing","Battle AI"},
+            {"AiHullCaliberCap","Ship design"},{"AimPoint","Battle AI"},{"AlwaysShowSplashes","Display"},{"ArmorObliquity","Gunnery & damage"},{"ArmorQualityHistorical","Gunnery & damage"},
+            {"AutoTestLab","-"},{"AutoTestScreenshots","-"},{"BarrelElevation","Display"},{"BattleDispatchBubbles","Display"},{"BattleHitDispatches","Display"},{"BetaUpdatesInitialised","-"},
+            {"ContinuousMap","Campaign AI"},{"CustomBattleNoSharedDesigns","-"},{"CustomBattlePregenerated","Ship design"},{"DamageDiagLog","Logs"},{"DamageModelHistorical","Gunnery & damage"},
+            {"EnemyRangeTags","Display"},{"FleetOrders","Campaign AI"},{"FleetOrdersAI","Campaign AI"},{"GunOrders","Battle AI"},{"HeBlastThinPlating","Gunnery & damage"},
+            {"HistBuilderRetryFailed","-"},{"HistoricalCasemates","Ship design"},{"HistoricalDesignsFirst","Ship design"},{"HistoricalShells","Gunnery & damage"},{"HitLog","Logs"},
+            {"HopelessEngageLighter","Battle AI"},{"IntelReports","Fog of war"},{"LostTerritoryReconquest","Campaign AI"},{"MapGhostParts","Campaign AI"},{"MigrationFireControlNames208","-"},
+            {"MigrationOccupationCost195","-"},{"MigrationRangeCapOn225","-"},{"MigrationTorpedoSideOff199","-"},{"ModUiScaleAuto","Display"},{"ObliquityOnTopOfGame","Gunnery & damage"},
+            {"OverPenBySection","Gunnery & damage"},{"OverPenDamage","Gunnery & damage"},{"PerfDefaults196","-"},{"PerformanceLog","Logs"},{"PhysicalGun","Gunnery & damage"},
+            {"PhysicalGunHistoricalBase","Gunnery & damage"},{"PhysicalPenetration","Gunnery & damage"},{"PhysicalPenetrationByZoneTest","Gunnery & damage"},{"PhysicalPenetrationNormalIncidence","Gunnery & damage"},
+            {"PhysicalPenetrationRows","Gunnery & damage"},{"PhysicalShellHistoricalWeight","Gunnery & damage"},{"RangeByMountElevation","Gunnery & damage"},{"RelationRepair","Diplomacy"},
+            {"RepairMissingDesigns","Ship design"},{"RepairUnmountedParts","Gunnery & damage"},{"ReShadeNavalLook","Display"},{"SharedDesignsSkipUnknownTech","Ship design"},
+            {"ShareLogsAsked","-"},{"ShipGenAsymmetryTolerance","Ship design"},{"ShipGenDiagnosis","-"},{"ShipGenEarlyStop","Ship design"},{"ShipGenMemory","Ship design"},
+            {"ShipGenNewestHulls","Ship design"},{"ShipGenRelaxTurrets","Ship design"},{"ShipGenShareDesigns","Ship design"},{"ShipGenTrimOverweight","Ship design"},
+            {"ShipTrade","Economy"},{"ShipTradeAiSells","Economy"},{"ShipTradeRefits","Economy"},{"TechCatchUp","Campaign AI"},{"TechDiffusion","Campaign AI"},{"TorpedoSense","Battle AI"},
+            {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},
+        };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
             {"LightShipTorpedoCharge","Battle AI"},{"CapitalTorpedoCharge","Battle AI"},{"CapitalCloseInWhenOutgunned","Battle AI"},
@@ -68,7 +111,13 @@ namespace DipGgFixes
             foreach (var e in cat.Entries)
             {
                 var b = e as MelonPreferences_Entry<bool>; if (b == null) continue;
-                string g; if (!GroupOf.TryGetValue(b.Identifier, out g)) g = "Other";
+                string g;
+                if (!TabOf.TryGetValue(b.Identifier, out g))
+                {
+                    if (!GroupOf.TryGetValue(b.Identifier, out g)) g = "Other";
+                    string ng; if (OldGroup.TryGetValue(g, out ng)) g = ng;
+                    if (Array.IndexOf(Groups, g) < 0) g = "Other";
+                }
                 if (g == group) list.Add(b);
             }
             return list;
@@ -162,8 +211,8 @@ namespace DipGgFixes
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 120f, 24f), "<b>Iron Admiral - mod settings</b>   (" + Key.Value + " or Esc closes)", sTitle);
                 Button(new Rect(r.xMax - 40f, r.y + 8f, 30f, 26f), "X", sBtn, () => SetOpen(false));
 
-                // tabs (two rows when narrow)
-                float tx = r.x + 10f, ty = r.y + 42f, tw = (w - 20f) / 4f;
+                // tabs, 5 per row (three rows with all 13 tabs)
+                float tx = r.x + 10f, ty = r.y + 42f, tw = (w - 20f) / 5f;
                 for (int i = 0; i < Groups.Length; i++)
                 {
                     int gi = i;
