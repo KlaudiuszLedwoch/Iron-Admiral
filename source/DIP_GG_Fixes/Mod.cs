@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.345", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.346", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -458,7 +458,7 @@ namespace DipGgFixes
                 "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
             AiCrossTorpedo = cat.CreateEntry("AiCrossTorpedo", true, null, "Battle AI: AI divisions attacking the same target with torpedoes approach 45 degrees either side of its bow so the tracks cross, and a division whose tubes on one side are empty turns to fire the other side before going off to reload (#56)");
             AiApproachSmoke = cat.CreateEntry("AiApproachSmoke", true, null, "Battle AI: an AI torpedo flotilla that is hit during its approach lays a smoke screen at once (every 30 s at most while it keeps being hit)"); // 1.11.344
-            AiWithdrawLowAmmo = cat.CreateEntry("AiWithdrawLowAmmo", true, null, "Battle AI: an AI division whose guns are almost out of ammunition (under 15 % left on average) and that has no loaded torpedo tubes withdraws from the battle"); // 1.11.345
+            AiWithdrawLowAmmo = cat.CreateEntry("AiWithdrawLowAmmo", true, null, "Battle AI: an AI division with no main-battery shells left on any ship and no loaded torpedo tubes withdraws from the battle"); // 1.11.345, 1.11.346
             TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
                 "AI torpedo craft press the attack until every tube is empty; ships with reload torpedoes on board then turn away (smoke when available), open the range, reload and return, ships without reloads turn on the enemy light forces");
             ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
@@ -1799,14 +1799,15 @@ namespace DipGgFixes
             }
 
             // 1.11.345 (#22, player discussion 26.10: "running out of ammunition is a legitimate reason for an AI ship to withdraw"):
-            // a division whose guns are almost empty (average under 15 % of the load) and that has no loaded torpedo tubes withdraws
+            // a division whose main battery has no shells left on any ship (1.11.346; 1.11.345: under 15 % of all gun ammunition) and
+            // that has no loaded torpedo tubes withdraws
             if (DipGgFixesMod.AiWithdrawLowAmmo != null && DipGgFixesMod.AiWithdrawLowAmmo.Value && !st.capEscape && LowAmmo(div, leader, out float ammoAvg))
             {
                 float tubes = 0f; try { tubes = leader.haveTorpedoes ? LoadedTubes(div, leader) : 0f; } catch { }
                 if (tubes <= 0f)
                 {
                     st.capEscape = true; st.charging = false; st.closing = false; div.Retreat(true);
-                    Log($"{st.name} ({leader.shipType.name}): guns almost out of ammunition (average {ammoAvg:0%} left) and no loaded torpedo tubes - withdraws");
+                    Log($"{st.name} ({leader.shipType.name}): main battery out of ammunition (0 shells on every ship) and no loaded torpedo tubes - withdraws");
                     Why(st, "withdrawing - out of ammunition"); return;
                 }
             }
@@ -2341,24 +2342,44 @@ namespace DipGgFixes
         // Detach the ships that slow the division down into a new division and order it to retreat.
         // If the leader itself is the slow one, the fast ships are detached instead and the
         // leader's (old) division retreats. Returns true when a detach was performed.
-        static int ammoScaleLogged;
-        // average share of gun ammunition left over the division's live ships (Ship.GetAverageAmmoPercent; 0-100 or 0-1 accepted)
+        static int ammoLogged;
+        // shells left for the main battery (the guns of the largest calibre on board); -1 when it cannot be read
+        internal static int MainBatteryAmmo(Ship s, out float cal)
+        {
+            cal = 0f; int left = 0;
+            try
+            {
+                var ps = s.parts; if (ps == null) return -1;
+                var seen = new HashSet<IntPtr>();
+                for (int i = 0; i < ps.Count; i++) { var d = ps[i] != null ? ps[i].data : null; if (d != null && d.isGun && d.caliber > cal) cal = d.caliber; }
+                if (cal <= 0f) return -1;
+                for (int i = 0; i < ps.Count; i++)
+                {
+                    var d = ps[i] != null ? ps[i].data : null;
+                    if (d == null || !d.isGun || d.caliber < cal - 0.5f || !seen.Add(d.Pointer)) continue;
+                    left += s.GetTotalAmmo(d);
+                }
+                return left;
+            }
+            catch { return -1; }
+        }
+        // 1.11.346 (author 28.10, 13:35: "out of ammunition means no main-battery shells at all"): true when every live ship of the
+        // division has 0 shells left for its main battery
         internal static bool LowAmmo(Division div, Ship leader, out float avg)
         {
-            avg = 1f; float sum = 0f; int n = 0;
+            avg = 0f; int n = 0;
             var ships = div.ships; int cnt = ships != null ? ships.Count : 0;
             for (int k = -1; k < cnt; k++)
             {
                 var s = k < 0 ? leader : ships[k];
                 if (s == null || s.isSinking || s.isDead || (k >= 0 && s.Pointer == leader.Pointer)) continue;
-                float a; try { a = s.GetAverageAmmoPercent(); } catch { return false; }
-                if (ammoScaleLogged++ < 2) Log($"{s.name}: average ammunition {a:0.###} (game value)");
-                if (a > 1.5f) a /= 100f;
-                sum += UnityEngine.Mathf.Clamp01(a); n++;
+                int left = MainBatteryAmmo(s, out float cal);
+                if (left < 0) return false;
+                if (ammoLogged++ < 3 && left > 0) Log($"{s.name}: main battery {cal:0} mm - {left} shells left");
+                if (left > 0) return false;
+                n++;
             }
-            if (n == 0) return false;
-            avg = sum / n;
-            return avg < 0.15f;
+            return n > 0;
         }
 
         internal static bool TryDetachSlow(Division div, Ship leader, DivState st)
