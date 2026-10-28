@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 26 October 2026. Latest version: Iron Admiral 1.2.74.1.1. Updated with every release._
+_Guide as of 28 October 2026. Latest version: Iron Admiral 1.2.75. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -250,6 +250,9 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **25 October 2026, Iron Admiral 1.2.73:** belt penetration recalibrated for all calibres; AP pass-through damage by the place the shell went through; gun orders for the player's divisions; torpedo attack order goes in at once, holds off at launch distance and turns away opening the range; dispatches tell where hits struck; hit log for both sides.
 - **25 October 2026, Iron Admiral 1.2.74:** physical penetration in battle (the game's penetration table), historical damage model (bursting charge and place of burst), historical shell weights, deliberate aiming at close range, crews' voices in the dispatches; from this release the stable and beta lines are separate again.
 - **26 October 2026, Iron Admiral 1.2.74.1:** the gun window shows the physical penetration in every game language; the battle AI judges whether it can pierce a belt with the same physics as the hit, using its largest gun.
+- **27 October 2026, Iron Admiral 1.2.74.2:** a ship that surrendered in battle is taken as a prize again (the game had already moved her to the sunk list); resolution guard when the game's settings fail at start.
+- **27 October 2026, Iron Admiral 1.2.74.3:** corrected package - the prize fix of 1.2.74.2 is in it (a surrendered ship is taken as a prize again).
+- **28 October 2026, Iron Admiral 1.2.75:** ships sink by their size (damage by tonnage, sinking at 40 % structure damage - torpedo boats and destroyers no longer unkillable); impact angle from the shell's fall; AI torpedo tactics (cross attack, turning to fire the other side); division order "Finish off"; coalition wars with a balance of power; 7 in guns no longer slower than 8 in.
 
 ---
 

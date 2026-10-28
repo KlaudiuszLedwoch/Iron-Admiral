@@ -1,5 +1,5 @@
-Iron Admiral 1.2.74.3.2.1 (DIP_GG_Fixes 1.11.287) - CO DAJE TEN MOD
-Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.74.3.2.1 (DIP_GG_Fixes 1.11.287).
+Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287) - CO DAJE TEN MOD
+Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287).
 Opis funkcji w aktualnej wersji, od najważniejszych dla gracza. Pełne uzasadnienia i źródła: CHANGELOG_PL.txt (103 sekcji).
 ============================================================================
 
@@ -479,8 +479,8 @@ Mods dla osób z działającym MelonLoaderem 0.6.6).
 
 
 ============================================================================
-Iron Admiral 1.2.74.3.2.1 (DIP_GG_Fixes 1.11.287) - WHAT THIS MOD DOES
-Description as of 22 October 2026. Latest version: Iron Admiral 1.2.74.3.2.1 (DIP_GG_Fixes 1.11.287).
+Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287) - WHAT THIS MOD DOES
+Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287).
 Feature overview of the current version, most important for the player first. Full reasoning and sources: CHANGELOG_EN.txt (103 sections).
 ============================================================================
 

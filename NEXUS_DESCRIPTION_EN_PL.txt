@@ -3,13 +3,23 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.74.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
 [*]Three battles, 6 min, ending with two surrendered destroyers taken as prizes: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Two battles, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]What is new (28 October 2026) - Iron Admiral 1.2.75, DIP_GG_Fixes 1.11.328[/b]
+[list]
+[*]Ships sink by their size: a shell destroys the same amount of tonnage in any ship. Torpedo boats and destroyers are no longer "unkillable" - in test battles torpedo boats sink after 3-10 hits, destroyers after 12-45, battleships after 14-33 heavy hits, as in the historical record. A ship sinks at 40 % structure damage, as in vanilla.
+[*]Impact angle from the shell's fall: heavy AP shells that should pierce a belt now do; deck hits meet the deck plate.
+[*]AI torpedo tactics: attacks on large ships up to 90 % of the torpedo range, cross attacks from both bows, a division with one side's tubes empty turns to fire the other side; damaged light craft press the attack.
+[*]New division order "Finish off" (Alt+7): light divisions go for crippled enemies.
+[*]Campaign: coalition wars keep a balance of power, slower technology catch-up, shell research as in vanilla, broken AI designs retired.
+[*]7 in guns no longer fire slower than 8 in; battle dispatches in the navies' own languages; 33 more historical classes.
 [/list]
 
 [b]What is new (27 October 2026) - Iron Admiral 1.2.74.3, DIP_GG_Fixes 1.11.314[/b]
@@ -404,13 +414,23 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.74.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
 [*]Trzy bitwy, 6 min, na końcu dwa poddane niszczyciele przejęte jako pryzy: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Dwie bitwy, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]Co nowego (28 października 2026) - Iron Admiral 1.2.75, DIP_GG_Fixes 1.11.328[/b]
+[list]
+[*]Okręty toną według swojej wielkości: pocisk niszczy tę samą ilość tonażu w każdym okręcie. Torpedowce i niszczyciele nie są już „nie do zatopienia” - w bitwach testowych torpedowce toną po 3-10 trafieniach, niszczyciele po 12-45, pancerniki po 14-33 ciężkich, jak w historii. Okręt tonie przy 40 % zniszczonej struktury, jak w vanilli.
+[*]Kąt uderzenia z opadania pocisku: ciężkie pociski AP, które powinny przebić pas, przebijają; trafienia w pokład spotykają płytę pokładu.
+[*]Taktyka torpedowa AI: ataki na duże okręty do 90 % zasięgu torped, atak krzyżowy z obu dziobów, dywizjon z pustymi wyrzutniami jednej burty obraca się, by strzelić drugą; uszkodzone lekkie okręty kontynuują atak.
+[*]Nowy rozkaz dywizjonu „Dobij” (Alt+7): lekkie dywizjony idą na uszkodzonych.
+[*]Kampania: wojny koalicyjne z równowagą sił, wolniejsze doganianie technologii, badania pocisków jak w vanilli, wadliwe projekty AI wycofywane.
+[*]Działa 7 cali już nie strzelają wolniej od 8 cali; meldunki z bitwy w językach flot; 33 nowe klasy historyczne.
 [/list]
 
 [b]Co nowego (27 października 2026) - Iron Admiral 1.2.74.3, DIP_GG_Fixes 1.11.314[/b]
