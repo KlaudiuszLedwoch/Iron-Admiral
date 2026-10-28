@@ -34,6 +34,7 @@ namespace DipGgFixes
                 if (battle) return;
                 bool campaign = false; try { campaign = CampaignController.Instance != null && CampaignController.Instance.CampaignData != null; } catch { }
                 if (!campaign) return;
+                bool worldMap = false; try { worldMap = GameManager.IsWorldMap && !GameManager.IsConstructor && !GameManager.IsSharedDesignConstructor && !GameManager.IsLoadingAny; } catch { }
                 var objs = UnityEngine.Object.FindObjectsOfType(Il2CppType.Of<Part>()); if (objs == null) return;
                 int checkedN = 0, ghosts = 0; var now = new HashSet<IntPtr>();
                 for (int i = 0; i < objs.Length; i++)
@@ -51,6 +52,14 @@ namespace DipGgFixes
                         if (sgo == null) why = "ship object gone";
                         else if (!sgo.activeInHierarchy) why = "ship object inactive";
                         else if (!t.IsChildOf(sgo.transform)) why = "outside its ship's hierarchy";
+                        // 1.11.333 (#52, hurepoix 26.10: a large turret at map scale off West Africa, and no [MapGhosts] line in 40 logs):
+                        // the part had a live, active ship - a design or a design clone (prize copy, generator preview) left visible in
+                        // the campaign scene. On the world map, outside the designer, a design's parts are never meant to be drawn.
+                        else if (worldMap)
+                        {
+                            bool des = false; try { des = ship.isDesign && !ship.isRefit && !ship.isBuilding; } catch { }
+                            if (des) why = "part of a design object left visible on the map";
+                        }
                     }
                     if (why == null) continue;
                     now.Add(p.Pointer);
