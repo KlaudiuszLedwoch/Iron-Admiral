@@ -40,6 +40,18 @@ namespace DipGgFixes
             ScoutSmoke = cat.CreateEntry("ScoutTowardsSmoke", true, null, "Battle: a scouting division heads for smoke reported by the lookouts (an enemy ship sighted but not identified yet) and closes until she can be made out"); // 1.11.256
             FinishDamage = cat.CreateEntry("DivisionFinishDamage", 0.4f, null, "Battle: estimated damage (0-1) from which an enemy ship counts as crippled for the Finish off order (Alt+7)"); // 1.11.285
             BreakOff = cat.CreateEntry("DivisionBreakOffDamage", 0.5f, null, "Battle: average damage (0-1) at which a screening or scouting division breaks off and falls back behind the main body");
+            // 1.11.330 (#69): the panel starts folded to a small tab, a key folds / unfolds it, the state is kept between battles
+            PanelFolded = cat.CreateEntry("DivisionOrdersPanelFolded", true, null, "Battle: the division orders panel is folded to a small tab (kept between battles; written by the mod)");
+            PanelKey = cat.CreateEntry("DivisionOrdersPanelKey", "F5", null, "Battle: key that folds / unfolds the division orders panel (Unity KeyCode name)");
+            KeyCode k; if (Enum.TryParse(PanelKey.Value, true, out k)) panelKey = k;
+        }
+        internal static MelonPreferences_Entry<bool> PanelFolded;
+        internal static MelonPreferences_Entry<string> PanelKey;
+        static KeyCode panelKey = KeyCode.F5;
+        static bool oFolded
+        {
+            get { return PanelFolded == null || PanelFolded.Value; }
+            set { if (PanelFolded == null || PanelFolded.Value == value) return; PanelFolded.Value = value; try { MelonPreferences.Save(); } catch { } }
         }
 
         static void OrdersReset()
@@ -499,7 +511,7 @@ namespace DipGgFixes
         }
 
 
-        static GUIStyle oTitle; static int oErrors; static bool oFolded;
+        static GUIStyle oTitle; static int oErrors;
         internal static void OrdersTick()
         {
             try
@@ -508,6 +520,7 @@ namespace DipGgFixes
                 ShootInfoDiag.Tick(); // 1.11.250
                 if (Input.anyKeyDown || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButton(1) || Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) lastInput = Time.realtimeSinceStartup;
                 if (OrdersOn == null || !OrdersOn.Value || BattleScreen.Hidden) return;
+                if (Input.GetKeyDown(panelKey)) oFolded = !oFolded; // 1.11.330 (#69)
                 if (!(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))) return;
                 int k = -1;
                 if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4; else if (Input.GetKeyDown(KeyCode.Alpha6)) k = 5; else if (Input.GetKeyDown(KeyCode.Alpha7)) k = 6;
@@ -544,14 +557,14 @@ namespace DipGgFixes
                 float w = 800f, h = 44f; /* 1.11.285: 7 orders */ /* 1.11.266: smaller buttons (author 25.10, 15:02) */ float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
                 if (oFolded)
                 {
-                    var tab = new Rect(x + w - 150f, y, 150f, 20f);
-                    if (GUI.Button(tab, $"Orders: {OrderNames[(int)cur]} ▾")) oFolded = false;
+                    var tab = new Rect(x + w - 190f, y, 190f, 20f);
+                    if (GUI.Button(tab, $"Orders: {OrderNames[(int)cur]} ▾ ({panelKey})")) oFolded = false;
                     return;
                 }
                 GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
                 if (why.Length > 60) why = why.Substring(0, 60) + "...";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..7): {OrderNames[(int)cur]}{why}", oTitle);
+                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..7, {panelKey} folds): {OrderNames[(int)cur]}{why}", oTitle);
                 if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) oFolded = true;
                 float bw = (w - 16f - 4f * 6f) / 7f; TorpedoSettings.BeginSmall(); try {
                 for (int i = 0; i < OrderNames.Length; i++)

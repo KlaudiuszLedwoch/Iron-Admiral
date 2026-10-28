@@ -67,7 +67,7 @@ namespace DipGgFixes
             {"ShareLogsAsked","-"},{"ShipGenAsymmetryTolerance","Ship design"},{"ShipGenDiagnosis","-"},{"ShipGenEarlyStop","Ship design"},{"ShipGenMemory","Ship design"},
             {"ShipGenNewestHulls","Ship design"},{"ShipGenRelaxTurrets","Ship design"},{"ShipGenShareDesigns","Ship design"},{"ShipGenTrimOverweight","Ship design"},
             {"ShipTrade","Economy"},{"ShipTradeAiSells","Economy"},{"ShipTradeRefits","Economy"},{"TechCatchUp","Campaign AI"},{"TechDiffusion","Campaign AI"},{"TorpedoSense","Battle AI"},
-            {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},{"ResetSwitchesOnNewVersion","-"},
+            {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},{"ResetSwitchesOnNewVersion","-"},{"DivisionOrdersPanelFolded","-"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are

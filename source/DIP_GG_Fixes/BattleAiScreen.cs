@@ -338,10 +338,50 @@ namespace DipGgFixes
             }
             if (best == null) return false;
             float r = GunRange(leader); if (r <= 0f) return false;
+            // 1.11.330 (#70, player report 28.10: AI destroyers without torpedoes chased the player's battleships and were sunk by
+            // their 4 in secondaries): light targets next to an enemy capital ship are left alone, and a flotilla that has come
+            // inside the capital ships' reach first opens the range
+            float safe = SafeDistance(leader, enemies);
+            if (CapitalWithin(leader, enemies, safe * 0.6f) != null) return false;
+            float cd2; var cap2 = NearestVisibleCapital(best, enemies, out cd2);
+            if (cap2 != null && cd2 < safe * 0.6f) return false;
             if (st.reason != "torpedoes expended - engaging enemy light forces")
                 Log($"{st.name} ({leader.shipType.name}): torpedoes expended, no reloads on board - turns on the enemy light forces, {best.name} ({best.shipType.name}) at {bd:0} m");
             if (bd > r * 0.7f) { var tt = best.transform; if (tt != null) { if (div.isRetreating || div.retreat) div.Retreat(false); div.MoveTo(tt.position); } }
             Why(st, "torpedoes expended - engaging enemy light forces");
+            return true;
+        }
+
+        // 1.11.330 (#70): the nearest visible enemy capital ship closer than dist, or null
+        static Ship CapitalWithin(Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, float dist)
+        {
+            Ship best = null; float bd = dist;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i]; if (!Alive(e) || !IsCapital(e) || !e.IsVisibleFor(leader)) continue;
+                float d = Dist(leader, e); if (d < bd) { bd = d; best = e; }
+            }
+            return best;
+        }
+        // 1.11.330 (#70): an AI light division with no torpedoes left (or none it can use) and no light forces to fight has
+        // nothing to gain near the enemy battle line - it keeps out of the capital ships' reach instead of being left to the
+        // game's AI, which steered it on towards them
+        internal static bool KeepClearNoTorpedoes(Ship leader, Division div, DivState st, Il2CppSystem.Collections.Generic.List<Ship> enemies, string cause = "no torpedoes left")
+        {
+            if (!DipGgFixesMod.TorpedoReloadCycle.Value || !IsLight(leader)) return false;
+            float safe = SafeDistance(leader, enemies);
+            var cap = CapitalWithin(leader, enemies, safe);
+            string why = cause + " - keeping clear of capital ships";
+            if (cap != null)
+            {
+                if (st.reason != why)
+                    Log($"{st.name} ({leader.shipType.name}): {cause}, {cap.name} ({cap.shipType.name}) at {Dist(leader, cap):0} m - keeps clear of the capital ships (outside {safe:0} m)");
+                if (div.isRetreating || div.retreat) { } else AwayFrom(div, leader, enemies, 4000f);
+                if (Dist(leader, cap) < safe * 0.6f) TrySmoke(div, leader, st);
+                st.holding = false;
+            }
+            else return false; // outside the capital ships' reach the other rules (and the game) lead the division
+            Why(st, why);
             return true;
         }
 

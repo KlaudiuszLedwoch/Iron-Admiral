@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.329", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.330", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2018,9 +2018,9 @@ namespace DipGgFixes
             if (!playerSide) { var bt = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (bt != null) mass = MassAttack(leader.player, bt, enemies); }
             if (!ammo || dmg > abort) { st.reloading = false; st.returnAttack = false; }
             // 1.11.91: tubes empty and no reload came - fight the light forces with guns instead of charging again (test: endless empty charges)
-            if (!playerSide && ammo && st.noReloads && LoadedTubes(div, leader) == 0f) { st.charging = false; if (IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; Why(st, "torpedoes expended - no reloads"); return; }
-            if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; if (!playerSide && IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; Why(st, "no torpedo ammo"); return; }
-            if (dmg > abort) { Why(st, "too damaged for a charge"); return; }
+            if (!playerSide && ammo && st.noReloads && LoadedTubes(div, leader) == 0f) { st.charging = false; if (IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; if (KeepClearNoTorpedoes(leader, div, st, enemies)) return; Why(st, "torpedoes expended - no reloads"); return; }
+            if (!ammo) { if (!playerSide && IsLight(leader) && (st.fighting || mass) && TryRam(leader, div, st, enemies)) return; if (!playerSide && IsLight(leader) && EngageLightForces(leader, div, st, doc, enemies)) return; if (!playerSide && KeepClearNoTorpedoes(leader, div, st, enemies)) return; Why(st, "no torpedo ammo"); return; } // 1.11.330 (#70): keep clear instead of being left to the game
+            if (dmg > abort) { if (!playerSide && KeepClearNoTorpedoes(leader, div, st, enemies, "too damaged for a torpedo charge")) return; Why(st, "too damaged for a charge"); return; } // 1.11.330 (#70)
 
             float bestD;
             // 1.11.251: a player's division with torpedo target priorities charges the nearest enemy of the most important class
