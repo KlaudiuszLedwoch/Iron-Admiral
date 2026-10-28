@@ -67,7 +67,7 @@ namespace DipGgFixes
             {"ShareLogsAsked","-"},{"ShipGenAsymmetryTolerance","Ship design"},{"ShipGenDiagnosis","-"},{"ShipGenEarlyStop","Ship design"},{"ShipGenMemory","Ship design"},
             {"ShipGenNewestHulls","Ship design"},{"ShipGenRelaxTurrets","Ship design"},{"ShipGenShareDesigns","Ship design"},{"ShipGenTrimOverweight","Ship design"},
             {"ShipTrade","Economy"},{"ShipTradeAiSells","Economy"},{"ShipTradeRefits","Economy"},{"TechCatchUp","Campaign AI"},{"TechDiffusion","Campaign AI"},{"TorpedoSense","Battle AI"},
-            {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},
+            {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},{"ResetSwitchesOnNewVersion","-"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -128,6 +128,42 @@ namespace DipGgFixes
             cat = c;
             Key = c.CreateEntry("SettingsPanelKey", "F10", null, "Key that opens / closes the in-game settings panel of the mod (Unity KeyCode name)");
             KeyCode k; if (Enum.TryParse(Key.Value, true, out k)) key = k;
+            LastVersion = c.CreateEntry("SwitchesVersion", "", null, "Mod version the on/off switches were last put back to their defaults for (written by the mod)");
+            ResetOnNew = c.CreateEntry("ResetSwitchesOnNewVersion", true, null, "Each new mod version puts every on/off switch back to its default once, so new and changed mechanics are tried (update and problem-report options are kept)");
+        }
+
+        // 1.11.329 (author 28.10: "with every new version reset the settings to defaults so people test the new functions - once they
+        // block something they never use it again"): the first time a new DLL version runs, every switch of the visible tabs except
+        // Info & updates and Tools goes back to its default. Numbers, keys and the author's flags ("-") are not touched.
+        internal static MelonPreferences_Entry<string> LastVersion;
+        internal static MelonPreferences_Entry<bool> ResetOnNew;
+        static bool resetChecked;
+        static string resetNote = "";
+        static void ResetOnNewVersion()
+        {
+            resetChecked = true;
+            try
+            {
+                if (cat == null || LastVersion == null) return;
+                var v = typeof(SettingsUi).Assembly.GetName().Version; string ver = v.Major + "." + v.Minor + "." + v.Build;
+                if (LastVersion.Value == ver) return;
+                string was = LastVersion.Value;
+                LastVersion.Value = ver;
+                if (ResetOnNew == null || !ResetOnNew.Value) { MelonPreferences.Save(); return; }
+                var changed = new List<string>();
+                foreach (var e in cat.Entries)
+                {
+                    var b = e as MelonPreferences_Entry<bool>; if (b == null) continue;
+                    string g; if (!TabOf.TryGetValue(b.Identifier, out g)) continue;
+                    if (g == "-" || g == "Info & updates" || g == "Tools") continue;
+                    if (b.Value == b.DefaultValue) continue;
+                    b.Value = b.DefaultValue; changed.Add("#" + NumberOf(b.Identifier) + " " + b.Identifier + " = " + (b.Value ? "on" : "off"));
+                }
+                MelonPreferences.Save();
+                MelonLogger.Msg("[DIP GG Fixes][Settings] new version " + ver + " (was " + (was == "" ? "none" : was) + "): " + changed.Count + " switches put back to defaults" + (changed.Count > 0 ? ": " + string.Join(", ", changed) : ""));
+                if (changed.Count > 0) { resetNote = "New version " + ver + ": " + changed.Count + " switches back at defaults"; status = resetNote; statusUntil = float.MaxValue; }
+            }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Settings] reset on new version: " + e.Message); }
         }
 
         // 1.11.251: a number that belongs to a switch, changed with - / + at the right of its row
@@ -170,6 +206,7 @@ namespace DipGgFixes
         {
             try
             {
+                if (!resetChecked) ResetOnNewVersion();
                 if (Input.GetKeyDown(key)) SetOpen(!open);
                 if (!open) return;
                 if (Input.GetKeyDown(KeyCode.Escape)) { SetOpen(false); return; }
