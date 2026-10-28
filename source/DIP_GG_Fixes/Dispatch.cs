@@ -33,6 +33,7 @@ namespace DipGgFixes
             BubbleScale = cat.CreateEntry("BattleDispatchBubbleScale", 0.55f, null, "Size of the dispatch bubbles above the ships relative to the mod's panels (1 = panel size)");
             On = cat.CreateEntry("BattleDispatches", true, null, "During fought battles the log also tells the story as dramatic dispatches from the officers and lookouts involved (Latest.log '[Dispatch]' lines and one file per battle in UserData\\IronAdmiral\\Dispatches)");
             DLang.CreatePrefs(cat); // 1.11.283
+            CreatePanelPrefs(cat); // 1.11.349
         }
         static bool Active { get { return On != null && On.Value && inBattle; } }
 
@@ -90,7 +91,7 @@ namespace DipGgFixes
             bool b = false; try { b = GameManager.IsBattle; } catch { }
             if (b && !inBattle)
             {
-                inBattle = true; start = Time.time; once.Clear(); sightings = 0; file = null; bubbles.Clear(); held.Clear();
+                inBattle = true; start = Time.time; once.Clear(); sightings = 0; file = null; bubbles.Clear(); held.Clear(); log.Clear();
                 rng = new System.Random(Environment.TickCount);
                 try { DLang.BattleStart(); } catch { }
                 if (On != null && On.Value) { var t = DLang.T(DLang.Player(), "battle.begin"); if (t != null) Write(t); }
@@ -134,6 +135,7 @@ namespace DipGgFixes
         {
             if (!Active) return; if (key != null && !once.Add(key)) return;
             string text = Pick(variants); Write(text);
+            { string sh = null; if (key != null) { var kk = key.Split('|'); if (kk.Length >= 2 && kk[1].Length > 0) sh = kk[1]; } AddLog(sh, text); } // 1.11.349
             // 1.11.89: bubbles timed in real seconds (9 s), not game time - at x4 speed they vanished after 2 s
             // 1.11.85: the subject ship is the second part of the key ("charge|<ship>|..."); its dispatch is also shown above it
             if (key != null) { var k = key.Split('|'); if (k.Length >= 2 && k[1].Length > 0) AddBubble(k[1], text); }
@@ -187,6 +189,82 @@ namespace DipGgFixes
             }
             catch (Exception e) { if (bErr++ < 3) MelonLogger.Warning("[DIP GG Fixes][Dispatch] bubbles: " + e.Message); }
             finally { GUI.matrix = Matrix4x4.Scale(new Vector3(UiScale.F, UiScale.F, 1f)); }
+        }
+
+        // ------------------------------------------------------------------ 1.11.349: dispatch log panel in battle
+        // Author 28.10, 17:28 ("such hit reports must be shown to the players so they know what is happening"): the bubbles last 9 s
+        // above a ship that may be off the screen. The last dispatches now also stay in a panel on the left of the battle screen,
+        // newest at the top, with the battle clock; it folds to a tab (key F6). Fog of war as for the bubbles: nothing about an enemy
+        // ship that has not been identified. Switch: BattleDispatchPanel.
+        internal static MelonPreferences_Entry<bool> PanelOn, PanelFolded;
+        internal static MelonPreferences_Entry<string> PanelKey;
+        internal static void CreatePanelPrefs(MelonPreferences_Category cat)
+        {
+            PanelOn = cat.CreateEntry("BattleDispatchPanel", true, null, "During battle the last dispatches (hits, damage, torpedo attacks, identification, withdrawals) stay in a panel on the left of the screen, newest first; it folds to a tab (key F6)");
+            PanelFolded = cat.CreateEntry("BattleDispatchPanelFolded", false, null, "Battle: the dispatch panel is folded to a small tab (kept between battles; written by the mod)");
+            PanelKey = cat.CreateEntry("BattleDispatchPanelKey", "F6", null, "Battle: key that folds / unfolds the dispatch panel (Unity KeyCode name)");
+        }
+        class LogEntry { public string Clock, Ship, Text; }
+        static readonly List<LogEntry> log = new List<LogEntry>();
+        static GUIStyle sL, sLt; static int lErr; static KeyCode lKey = KeyCode.None; static string lKeyName;
+        static void AddLog(string ship, string text)
+        {
+            if (PanelOn == null || !PanelOn.Value) return;
+            log.Add(new LogEntry { Clock = Clock(), Ship = ship, Text = text });
+            if (log.Count > 40) log.RemoveAt(0);
+        }
+        static KeyCode LogKey()
+        {
+            string n = PanelKey != null ? PanelKey.Value : "F6";
+            if (n != lKeyName) { lKeyName = n; try { lKey = (KeyCode)Enum.Parse(typeof(KeyCode), n, true); } catch { lKey = KeyCode.F6; } }
+            return lKey;
+        }
+        static bool LogVisible(LogEntry e, Il2CppSystem.Collections.Generic.List<Ship> ships)
+        {
+            if (e.Ship == null || ships == null) return true;
+            for (int i = 0; i < ships.Count; i++)
+            {
+                var x = ships[i]; if (x == null || Ship(x.name) != e.Ship) continue;
+                try { return Fog.PlayerLabel(x) == null; } catch { return true; }
+            }
+            return true;
+        }
+        internal static void LogPanelGUI()
+        {
+            if (PanelOn == null || !PanelOn.Value || !inBattle || BattleScreen.Hidden) return;
+            try
+            {
+                if (Event.current != null && Event.current.type == EventType.KeyDown && Event.current.keyCode == LogKey()) { PanelFolded.Value = !PanelFolded.Value; try { MelonPreferences.Save(); } catch { } Event.current.Use(); }
+                if (sL == null)
+                {
+                    sL = new GUIStyle(); sL.fontSize = 12; sL.wordWrap = true; sL.richText = true; sL.normal.textColor = new Color(1f, 0.95f, 0.8f);
+                    sLt = new GUIStyle(); sLt.fontSize = 12; sLt.richText = true; sLt.normal.textColor = new Color(0.9f, 0.9f, 0.9f);
+                }
+                float x = 8f, y = 110f, w = 420f;
+                if (PanelFolded.Value)
+                {
+                    if (GUI.Button(new Rect(x, y, 170f, 20f), $"Dispatches ({log.Count}) ▾ ({lKeyName})")) { PanelFolded.Value = false; try { MelonPreferences.Save(); } catch { } }
+                    return;
+                }
+                var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; var ships = cb != null ? cb.Ships : null;
+                var shown = new List<LogEntry>();
+                for (int i = log.Count - 1; i >= 0 && shown.Count < 8; i--) if (LogVisible(log[i], ships)) shown.Add(log[i]);
+                float lineH = 16f; var heights = new List<float>(); float total = 24f;
+                foreach (var e in shown) { float h = sL.CalcHeight(new GUIContent(e.Clock + "  " + e.Text), w - 16f); h = Mathf.Min(h, lineH * 4f); heights.Add(h); total += h + 3f; }
+                if (shown.Count == 0) total += lineH;
+                GUI.Box(new Rect(x, y, w, total), ""); GUI.Box(new Rect(x, y, w, total), "");
+                GUI.Label(new Rect(x + 8f, y + 3f, w - 40f, 18f), $"<b>Dispatches</b> ({lKeyName} folds)", sLt);
+                if (GUI.Button(new Rect(x + w - 26f, y + 3f, 20f, 18f), "▴")) { PanelFolded.Value = true; try { MelonPreferences.Save(); } catch { } }
+                float yy = y + 22f;
+                if (shown.Count == 0) GUI.Label(new Rect(x + 8f, yy, w - 16f, lineH), "<color=#9A9A9A>No reports yet.</color>", sL);
+                for (int i = 0; i < shown.Count; i++)
+                {
+                    var e = shown[i]; var old = GUI.color; if (i > 0) GUI.color = new Color(1f, 1f, 1f, Mathf.Max(0.55f, 1f - i * 0.07f));
+                    GUI.Label(new Rect(x + 8f, yy, w - 16f, heights[i]), $"<color=#9A9A9A>{e.Clock}</color>  {e.Text}", sL);
+                    GUI.color = old; yy += heights[i] + 3f;
+                }
+            }
+            catch (Exception ex) { if (lErr++ < 3) MelonLogger.Warning("[DIP GG Fixes][Dispatch] panel: " + ex.Message); }
         }
 
         // "BB König Albert (Hildebrand (Mar. 1918)) [germany]" -> "König Albert"
