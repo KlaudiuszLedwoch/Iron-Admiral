@@ -229,6 +229,54 @@ namespace DipGgFixes
             }
             return true;
         }
+        // screen rectangle of a game UI element in the mod's GUI coordinates (UiScale), or an empty rect when it is not shown
+        static Rect UiRect(UnityEngine.Object o)
+        {
+            try
+            {
+                if (o == null) return Rect.zero;
+                GameObject go = o.TryCast<GameObject>(); if (go == null) { var c = o.TryCast<Component>(); if (c != null) go = c.gameObject; }
+                if (go == null || !go.activeInHierarchy) return Rect.zero;
+                var rt = go.GetComponent<RectTransform>(); if (rt == null) return Rect.zero;
+                var corners = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppStructArray<Vector3>(4);
+                rt.GetWorldCorners(corners);
+                Camera cam = null; try { var cv = go.GetComponentInParent<Canvas>(); if (cv != null && cv.renderMode != RenderMode.ScreenSpaceOverlay) cam = cv.worldCamera; } catch { }
+                float minX = float.MaxValue, minY = float.MaxValue, maxX = float.MinValue, maxY = float.MinValue;
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector3 p = corners[i]; if (cam != null) p = RectTransformUtility.WorldToScreenPoint(cam, p);
+                    minX = Mathf.Min(minX, p.x); maxX = Mathf.Max(maxX, p.x); minY = Mathf.Min(minY, p.y); maxY = Mathf.Max(maxY, p.y);
+                }
+                float f = UiScale.F > 0f ? UiScale.F : 1f;
+                return new Rect(minX / f, (Screen.height - maxY) / f, (maxX - minX) / f, (maxY - minY) / f);
+            }
+            catch { return Rect.zero; }
+        }
+        static float areaNext; static Rect areaCache; static int areaLogged;
+        static Rect FreeLeftArea()
+        {
+            if (Time.unscaledTime < areaNext && areaCache.width > 0f) return areaCache;
+            areaNext = Time.unscaledTime + 0.5f;
+            float H = UiScale.H; float x = 8f, top = 110f, bottom = H * 0.72f, w = 300f;
+            try
+            {
+                var ui = G.ui;
+                if (ui != null)
+                {
+                    Rect si = UiRect(ui.shootInfoPanel), sh = Rect.zero;
+                    try { var p = ui.shootInfoPanel != null ? ui.shootInfoPanel.transform.parent : null; if (p != null) sh = UiRect(p.gameObject); } catch { }
+                    Rect upper = si.height > 0f ? si : sh;
+                    if (sh.height > 0f && upper.height > 0f) upper = Rect.MinMaxRect(Mathf.Min(sh.xMin, upper.xMin), Mathf.Min(sh.yMin, upper.yMin), Mathf.Max(sh.xMax, upper.xMax), Mathf.Max(sh.yMax, upper.yMax));
+                    if (upper.height > 0f) { top = upper.yMax + 6f; x = Mathf.Max(4f, upper.xMin); w = Mathf.Clamp(upper.width, 260f, 420f); }
+                    Rect rep = UiRect(ui.reporterBattleFold); if (rep.height <= 0f) rep = UiRect(ui.reporterBattle);
+                    if (rep.height > 0f && rep.yMin > top) bottom = rep.yMin - 6f;
+                    if (areaLogged++ < 2) MelonLogger.Msg($"[DIP GG Fixes][Dispatch] panel area: shoot info {upper}, report {rep} -> x {x:0} y {top:0} w {w:0} h {bottom - top:0} (screen {UiScale.W:0}x{H:0})");
+                }
+            }
+            catch (Exception e) { if (lErr++ < 3) MelonLogger.Warning("[DIP GG Fixes][Dispatch] panel area: " + e.Message); }
+            areaCache = new Rect(x, top, w, Mathf.Max(0f, bottom - top));
+            return areaCache;
+        }
         internal static void LogPanelGUI()
         {
             if (PanelOn == null || !PanelOn.Value || !inBattle || BattleScreen.Hidden) return;
@@ -240,17 +288,27 @@ namespace DipGgFixes
                     sL = new GUIStyle(); sL.fontSize = 12; sL.wordWrap = true; sL.richText = true; sL.normal.textColor = new Color(1f, 0.95f, 0.8f);
                     sLt = new GUIStyle(); sLt.fontSize = 12; sLt.richText = true; sLt.normal.textColor = new Color(0.9f, 0.9f, 0.9f);
                 }
-                float x = 8f, y = 110f, w = 420f;
-                if (PanelFolded.Value)
+                // 1.11.352 (author 28.10, 17:52, screenshot: "the left side is fine, but it must not cover anything"): the panel sits in the
+                // free gap of the left column - under the game's Shoot Info panel (or its folded header) and above the game's Report panel,
+                // as wide as Shoot Info; it shows as many reports as fit there and shrinks to the tab when the gap is too small
+                Rect area = FreeLeftArea();
+                float x = area.x, y = area.y, w = area.width;
+                if (PanelFolded.Value || area.height < 60f)
                 {
-                    if (GUI.Button(new Rect(x, y, 170f, 20f), $"Dispatches ({log.Count}) ▾ ({lKeyName})")) { PanelFolded.Value = false; try { MelonPreferences.Save(); } catch { } }
+                    if (GUI.Button(new Rect(x, y, Mathf.Min(w, 190f), 20f), $"Dispatches ({log.Count}) {(PanelFolded.Value ? "▾" : "")} ({lKeyName})")) { PanelFolded.Value = false; try { MelonPreferences.Save(); } catch { } }
                     return;
                 }
                 var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; var ships = cb != null ? cb.Ships : null;
                 var shown = new List<LogEntry>();
-                for (int i = log.Count - 1; i >= 0 && shown.Count < 8; i--) if (LogVisible(log[i], ships)) shown.Add(log[i]);
                 float lineH = 16f; var heights = new List<float>(); float total = 24f;
-                foreach (var e in shown) { float h = sL.CalcHeight(new GUIContent(e.Clock + "  " + e.Text), w - 16f); h = Mathf.Min(h, lineH * 4f); heights.Add(h); total += h + 3f; }
+                for (int i = log.Count - 1; i >= 0 && shown.Count < 8; i--)
+                {
+                    if (!LogVisible(log[i], ships)) continue;
+                    var e = log[i]; float h = sL.CalcHeight(new GUIContent(e.Clock + "  " + e.Text), w - 16f); h = Mathf.Min(h, lineH * 4f);
+                    if (shown.Count > 0 && total + h + 3f > area.height) break;
+                    if (shown.Count == 0 && total + h + 3f > area.height) h = Mathf.Max(lineH, area.height - total - 3f);
+                    shown.Add(e); heights.Add(h); total += h + 3f;
+                }
                 if (shown.Count == 0) total += lineH;
                 GUI.Box(new Rect(x, y, w, total), ""); GUI.Box(new Rect(x, y, w, total), "");
                 GUI.Label(new Rect(x + 8f, y + 3f, w - 40f, 18f), $"<b>Dispatches</b> ({lKeyName} folds)", sLt);
