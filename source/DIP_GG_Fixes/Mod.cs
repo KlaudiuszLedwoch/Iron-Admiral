@@ -2647,6 +2647,34 @@ namespace DipGgFixes
             if (calStar[idx] <= 0.2f * calN[idx]) return -1;
             return 0;
         }
+        // 1.11.336 (#13): +1 / -1 for the right / left group when every torpedo launcher of the ship is off the centre line, 0 otherwise
+        static readonly Dictionary<IntPtr, int> launcherLayout = new Dictionary<IntPtr, int>(); static IntPtr layoutBattle; static int layoutLogs;
+        static int LauncherSide(Ship s, int idx)
+        {
+            var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; IntPtr bp = b != null ? b.Pointer : IntPtr.Zero;
+            if (bp != layoutBattle) { layoutBattle = bp; launcherLayout.Clear(); layoutLogs = 0; }
+            int pure;
+            if (!launcherLayout.TryGetValue(s.Pointer, out pure))
+            {
+                int star = 0, port = 0, centre = 0; pure = 0;
+                try
+                {
+                    var ps = s.parts; var st = s.transform;
+                    for (int i = 0; ps != null && i < ps.Count; i++)
+                    {
+                        var p = ps[i]; if (p == null || p.data == null || !p.data.isTorpedo) continue;
+                        float x = st.InverseTransformPoint(p.transform.position).x;
+                        if (Math.Abs(x) < 0.6f) centre++; else if (x > 0f) star++; else port++;
+                    }
+                    pure = centre == 0 && star > 0 && port > 0 ? 1 : 0;
+                    if (layoutLogs++ < 20) BattleAi.Log($"{s.name}: torpedo launchers {star} starboard, {port} port, {centre} centre line - side check {(pure == 1 ? "on" : "off (centre-line or one-sided launchers)")}");
+                }
+                catch { pure = 0; }
+                launcherLayout[s.Pointer] = pure;
+            }
+            if (pure != 1) return 0;
+            return idx == 0 ? 1 : -1;
+        }
         static void TorpedoSides(Ship s, bool calibrate)
         {
             try
@@ -2677,14 +2705,18 @@ namespace DipGgFixes
                             var tg = a.target; if (tg == null || tg.isDead) continue;
                             calN[idx]++; if (SideSign(s, tg) > 0) calStar[idx]++;
                         }
-                    int side = GroupSide(idx); if (side == 0) continue;
+                    // 1.11.336 (#13): the side of the group from the ship's own launchers instead of the gun-aim calibration (which
+                    // "confirmed" a side whenever all enemies lay on one beam): a ship whose torpedo launchers all sit off the centre
+                    // line has pure side groups - the right-side group fires to starboard, the left-side group to port; a ship with a
+                    // centre-line (trainable) launcher is left alone, as is a ship whose launchers cannot be read
+                    int side = LauncherSide(s, idx); if (side == 0) continue;
                     foreach (var kv in dict)
                     {
                         var pd = kv.Key; var a = kv.Value; if (pd == null || a == null || !pd.isTorpedo) continue;
                         var tg = a.target; if (tg == null || a.manual) continue;
                         if (SideSign(s, tg) == side) continue;
                         a.target = null; sideDrops++;
-                        if (sideLogs++ < 30) BattleAi.Log($"{s.name}: {(idx == 0 ? "right" : "left")}-side torpedo aim on {tg.name} dropped - the target is on the other side ({(side > 0 ? "port" : "starboard")}); group side confirmed from {calN[idx]} gun aims");
+                        if (sideLogs++ < 30) BattleAi.Log($"{s.name}: {(idx == 0 ? "right" : "left")}-side torpedo aim on {tg.name} dropped - the target is on the other side ({(side > 0 ? "port" : "starboard")}); side from the launcher layout");
                     }
                 }
             }
