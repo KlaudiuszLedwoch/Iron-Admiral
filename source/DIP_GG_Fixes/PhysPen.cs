@@ -124,7 +124,7 @@ namespace DipGgFixes
                 foreach (var kv in fired) { var v = kv.Value; fb.Append($"\n   {kv.Key} | {v[0]} / {v[1]} / {v[2]} | {v[3]} / {v[4]} / {v[5]}"); }
                 MelonLogger.Msg(fb.ToString());
             }
-            OverPen.Report(); LightShipDamage.Report();
+            OverPen.Report(); LightShipDamage.Report(); DamageModel.Report(); // 1.11.350
         }
         static string Where() { return OverPen.LastFrame == Time.frameCount && OverPen.LastLoc != null ? $"; struck {OverPen.LastLoc}" + (Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f ? $" (game damage {OverPen.LastRaw:0.#} -> {OverPen.LastNew:0.#})" : "") + OverPen.Extra() : ""; }
         // 1.11.312 (#58/#59/#60): the zone the game checked and its own slope of the plate: plate / (cos(side-forward) x cos(side-up)), the

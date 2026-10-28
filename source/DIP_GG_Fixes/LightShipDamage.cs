@@ -71,6 +71,7 @@ namespace DipGgFixes
             foreach (var x in v.Split(',')) if (x.Trim().ToLowerInvariant() == t) return true;
             return false;
         }
+        internal static float Structure(Ship s) { try { HpPerTon(s, out float hp, out float t); return hp; } catch { return 0f; } } // 1.11.350
         static float HpPerTon(Ship s, out float hp, out float tons)
         {
             hp = 0f; tons = 0f;

@@ -34,7 +34,37 @@ namespace DipGgFixes
             FWaterline = cat.CreateEntry("DamageFactorWaterline", 0.1f, null, "Place factor: added at or below the waterline");
         }
         static int logged, errors; static readonly Dictionary<long, float[]> baseCache = new Dictionary<long, float[]>();
-        internal static void BattleStart() { logged = 0; baseCache.Clear(); }
+        internal static void BattleStart() { logged = 0; baseCache.Clear(); tally.Clear(); }
+
+        // 1.11.350 (#73, campaign 28.10: a 31,111 t battleship surrendered after 77 hits, but only 11 of them were in the capped log):
+        // every hit the historical model sets is counted per target ship, calibre and result; the battle summary lists the ships
+        // with their structure, so the share of heavy and medium hits in the damage can be read for each ship
+        static readonly Dictionary<string, Dictionary<string, float[]>> tally = new Dictionary<string, Dictionary<string, float[]>>();
+        static readonly Dictionary<string, float> structure = new Dictionary<string, float>();
+        static void Tally(Ship ship, string key, float dmg)
+        {
+            try
+            {
+                string n = ship.name;
+                if (!tally.TryGetValue(n, out var m)) { tally[n] = m = new Dictionary<string, float[]>(); try { structure[n] = LightShipDamage.Structure(ship); } catch { } }
+                if (!m.TryGetValue(key, out var v)) m[key] = v = new float[2];
+                v[0]++; v[1] += dmg;
+            }
+            catch { }
+        }
+        internal static void Report()
+        {
+            if (tally.Count == 0) return;
+            var sb = new System.Text.StringBuilder("[DIP GG Fixes][Damage] battle summary - historical model damage by target ship (calibre and result | hits | structure):");
+            foreach (var kv in tally)
+            {
+                float tot = 0f; int hits = 0; foreach (var v in kv.Value.Values) { tot += v[1]; hits += (int)v[0]; }
+                structure.TryGetValue(kv.Key, out float hp0);
+                sb.Append($"\n   {kv.Key}: {hits} hits, {tot:0}{(hp0 > 0f ? $" (ship structure {hp0:0})" : "")}");
+                foreach (var e in kv.Value) sb.Append($"\n      {e.Key} | {e.Value[0]:0} | {e.Value[1]:0}");
+            }
+            MelonLogger.Msg(sb.ToString());
+        }
 
         static float Factor(string loc)
         {
@@ -102,6 +132,7 @@ namespace DipGgFixes
                 damage = want;
                 note = $"{type}{(useHe ? " HE" : " AP")} at {loc}: base {b:0} x {f:0.00}{(type == "over" ? $" x {overFrac:0.00}" : "")} = {want:0} (game {raw:0})";
                 if (logged++ < 40) MelonLogger.Msg($"[DIP GG Fixes][Damage] historical model {ship.name}: {sh.G.CalMm:0.#} mm {note}");
+                Tally(ship, $"{sh.G.CalMm:0} mm {type}{(useHe ? " HE" : " AP")}", want); // 1.11.350 (#73)
                 return true;
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Damage] model: " + e.Message); return false; }
