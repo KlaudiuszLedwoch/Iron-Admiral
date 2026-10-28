@@ -299,6 +299,33 @@ namespace DipGgFixes
                     try { G.GameData.parts.TryGetValue(s["hull"], out hull0); G.GameData.shipTypes.TryGetValue(s["type"], out st); } catch { }
                     if (hull0 == null || st == null) { notes = "hull or ship type not found"; goto report; }
                     float wantT = s.N("tonnage"), wantKn = s.N("speed_kn"), wantIn = s.N("main_in"); int wantMain = (int)s.N("main_count");
+                    // 1.11.337 (#14: Hoche 1891, 4 x 13.4 in - the game offers France only 12 in guns that year; with the designer's
+                    // +0.9 in bore the class can reach 12.9 in, but the builder looked only down to 0.9 in and gave up): when no gun of
+                    // the historical calibre (or up to 0.9 in smaller) exists, the largest gun up to 2 in smaller is used with its
+                    // bore increased, and the class is built with that calibre (noted in the report)
+                    {
+                        float bestCi = 0f; bool exact = false;
+                        try
+                        {
+                            foreach (var kv in G.GameData.parts)
+                            {
+                                var d = kv.Value; if (d == null) continue;
+                                bool g = false; try { g = d.isGun && !IsCasemate(d); } catch { } if (!g) continue;
+                                float ci = InchOf(d); if (ci > wantIn + 0.6f || ci < wantIn - 2.05f) continue;
+                                bool av = false; try { av = ship.IsPartAvailable(d); } catch { } if (!av) continue;
+                                if (ci >= wantIn - 0.95f) { exact = true; break; }
+                                if (ci > bestCi) bestCi = ci;
+                            }
+                        }
+                        catch { exact = true; }
+                        if (!exact && bestCi > 0f)
+                        {
+                            float reach = Mathf.Min(wantIn, bestCi + 0.9f);
+                            notes += $"main calibre approximated {wantIn:0.#} -> {reach:0.#} in (largest gun available {bestCi:0.#} in); ";
+                            Log($"{s["name"]}: no {wantIn:0.#} in gun for {s["nation"]} {s["year"]} - built with {bestCi:0.#} in guns bored to {reach:0.#} in");
+                            wantIn = reach;
+                        }
+                    }
                     var hulls = new List<PartData> { hull0 }; bool altsAdded = false, caAdded = false; string notes0 = notes, lastFail = "";
                     var hullSt = new Dictionary<string, ShipType>(); NoGunSeen = false;   // 1.11.116: hulls of another type (cl -> ca)
                     for (int hv = 0; hv < hulls.Count; hv++)
