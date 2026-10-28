@@ -18,6 +18,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static MelonPreferences_Entry<float> Reunify;
         static Dictionary<string, string> claims;
+        static readonly HashSet<string> noPortLogged = new HashSet<string>();
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Independence] " + m); }
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
@@ -109,6 +110,11 @@ namespace DipGgFixes
                     holders.Add(hn);
                 }
                 if (!ok || holders.Count == 0) continue;
+                // 1.11.336 (#7: Austria-Hungary came back with 2 provinces, no ports and no ships - its national cores are the two
+                // inland provinces Austria and Hungary): a great power is a naval power only with a coast - without a port among the
+                // cores the successor states stay as they are
+                int ports = 0; foreach (var id in kv.Value) { try { Province pr; if (byId.TryGetValue(id, out pr) && pr != null && pr.Ports != null) ports += pr.Ports.Count; } catch { } }
+                if (ports == 0) { if (noPortLogged.Add(kv.Key)) Log($"{Economy.Name(great)} (dissolved): its {kv.Value.Count} core province(s) have no port - no reunification as a naval great power"); continue; }
                 float roll = UnityEngine.Random.value * 100f;
                 bool unite = roll < Reunify.Value;
                 Log($"{Economy.Name(great)} (dissolved): all {kv.Value.Count} core provinces held by successor states at peace ({string.Join(", ", holders)}) - reunification chance {Reunify.Value:0.#}% - {(unite ? "the nation unites again" : "not this month")}");
