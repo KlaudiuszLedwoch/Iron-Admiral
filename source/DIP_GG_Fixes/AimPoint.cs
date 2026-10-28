@@ -131,19 +131,9 @@ namespace DipGgFixes
                 long k = shooter.Pointer.ToInt64(); float t; float now = Time.time;
                 if (said.TryGetValue(k, out t) && now - t < 90f) return; said[k] = now;
                 string tn = Dispatch.Ship(target.name); string sn = Dispatch.Ship(shooter.name);
-                string[] ap = {
-                    $"Gunnery officer: \"Range {range / 1000f:0.0} - lay her on the waterline! Armour-piercing, every gun!\"",
-                    $"\"{tn} is close enough to spit at. Waterline, lads - put them under her belt!\"",
-                    $"Gunnery officer: \"Down two hundred - I want them into her guts, not her funnels. Fire!\"",
-                    $"Turret captain, {sn}: \"God help them. Waterline. Fire!\""
-                };
-                string[] heS = {
-                    $"Gunnery officer: \"High explosive - into her upperworks! Blind her, burn her!\"",
-                    $"\"Bridge and directors, lads - knock out her eyes! HE, rapid fire!\"",
-                    $"Gunnery officer: \"Forget the belt, {tn} is a bonfire waiting to happen. Upperworks - fire!\"",
-                    $"\"Sweet Jesus, look at her burn already - keep it on the superstructure!\""
-                };
-                var arr = he ? heS : ap; string line = arr[rnd.Next(arr.Length)];
+                // 1.11.283: the line from the language files, in the firing navy's language
+                string line = DLang.T(DLang.For(shooter), he ? "aim.he" : "aim.ap", "range", $"{range / 1000f:0.0}", "tn", tn, "sn", sn);
+                if (line == null) return;
                 Dispatch.SayHit("aim|" + sn + "|" + (he ? "he" : "ap"), line);
             }
             catch { }

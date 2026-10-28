@@ -4252,42 +4252,528 @@ the waterline and the turrets.
 5. Dispatches carry the crews' voices; the battle log records the damage model
 (explosion damage, hits without penetration, "none" hits).
 --------------------------------------------------------------------------
-150. IRON ADMIRAL 1.2.74.1 (DIP_GG_FIXES 1.11.287) - STABLE FIX: PENETRATION ON SCREEN AND IN THE AI'S JUDGEMENT FROM THE SAME PHYSICS AS THE HIT - 2026-10-26
+143. IRON ADMIRAL 1.2.74-BETA.12 (DIP_GG_FIXES 1.11.282) - HIT LOG SHOWS THE DAMAGE ACTUALLY DEALT - 2026-10-25
 --------------------------------------------------------------------------
-Stable line, bug fix release. The same fixes as 1.2.75-beta.5 (tested in battle on 26 October).
-1. Gun window in every language: the shell velocities, shell weights and
-the belt/deck penetration table show the physical values the hits use in
-all ten languages of the game. Until now only the English game got them;
-in the other languages the window kept the game's own table, which can be
-several times lower than what the shell really does.
+Beta line only. Contains everything of 1.2.74-beta.11.
+1. Battle log: the hit lines and the battle summary now carry the damage
+actually dealt by the mod's damage model (and the pass-through rule), with
+the game's own figure in brackets when it differs. Before, the game registered
+the figure it had computed before the model changed it, so the log overstated
+the damage of small-calibre penetrations.
+--------------------------------------------------------------------------
+144. IRON ADMIRAL 1.2.75-BETA.2 (DIP_GG_FIXES 1.11.282) - HIT LOG SHOWS THE DAMAGE ACTUALLY DEALT - 2026-10-25
+--------------------------------------------------------------------------
+Beta line only. Replaces 1.2.75-beta.1, which was published with the previous
+DLL (1.11.281) by mistake; this release carries the fix described there.
+1. Battle log: the hit lines and the battle summary now carry the damage
+actually dealt by the mod's damage model (and the pass-through rule), with
+the game's own figure in brackets when it differs. Before, the game registered
+the figure it had computed before the model changed it, so the log overstated
+the damage of small-calibre penetrations.
+--------------------------------------------------------------------------
+145. IRON ADMIRAL 1.2.75-BETA.3 (DIP_GG_FIXES 1.11.283) - BATTLE DISPATCHES IN THE NAVIES' OWN LANGUAGES - 2026-10-25
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.2.
+1. Battle dispatches: every AI navy now speaks its own language - German
+(Germany, Austria-Hungary), French, Italian, Russian, Japanese, Spanish,
+Chinese, Portuguese, Dutch, Swedish (Scandinavia) and Greek (Byzantium);
+Britain and the USA speak English. Your own ships always speak English;
+switch F10 > Battle AI > DispatchPlayerOriginalLanguage to hear your navy
+in its own language. DispatchNationalLanguages turns the feature off
+(everything in English).
+2. The texts are plain files in Mods\IronAdmiralLang (one per language, the
+same lines and variants as the English master). A copy placed in
+UserData\IronAdmiral\Lang replaces the lines it contains, so the texts can be
+corrected or translated without touching the mod. A line missing in a
+language is told in English.
+3. Test tools (author's tools, off by default): AutoTestPlace sets the AI ships
+abeam of the player's ship at a given distance (parallel:1000:hold keeps them
+there), AutoTestStartWait and AutoTestShotEvery control the screenshot run.
+--------------------------------------------------------------------------
+146. IRON ADMIRAL 1.2.75-BETA.4 (DIP_GG_FIXES 1.11.283) - 33 MORE HISTORICAL CLASSES IN THE CLASS PACK - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.3; the library is unchanged.
+1. The class pack (Mods\IronAdmiralDesigns\Historical) grows from 147 to 180
+historical classes. These are classes the class builder had already saved,
+but which had not been copied into the pack. Each one carries its historical
+main battery (number of guns and calibre as built); where the hull could not
+carry the historical armour, the armour is thinner, as with the classes
+already in the pack. Classes whose main battery came out different from the
+historical one, and classes with no builder record, were left out.
+2. New classes by navy:
+- Austria-Hungary: Kaiser Franz Joseph I (1890).
+- Britain: Antrim (1905), Duke of Edinburgh (1906).
+- France: Troude (1891), Wattignies (1892), Liberte (1908), Ernest Renan
+(1909), Emile Bertin (1935).
+- Germany: Bremen (1904), Nassau (1909).
+- Russia: Knyaz Potemkin Tavricheskiy (1903), Borodino (1904), Gangut
+(1914), Imperatritsa Mariya (1915).
+- Scandinavia: Hekla (1891), Viking (1891), Frithjof (1896).
+- Spain: Emperador Carlos V (1897), Princesa de Asturias (1903), Espana
+(1913), Mendez Nunez (1924), Canarias (1936).
+- USA: Montgomery (1893), Texas (1895), Indiana (1895), Kearsarge (1900),
+Maine (1902), Pennsylvania (1905), Tennessee (1906), Mississippi (1908),
+Chester (1908), Northampton (1930), North Carolina (1941).
+3. The USA, Spain and Scandinavia get their first historical classes.
+--------------------------------------------------------------------------
+147. IRON ADMIRAL 1.2.75-BETA.5 (DIP_GG_FIXES 1.11.284) - PENETRATION ON SCREEN AND IN THE AI'S JUDGEMENT FROM THE SAME PHYSICS AS THE HIT - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.4.
+1. Gun window in every language: the window with the shell velocities, shell
+weights and the belt/deck penetration table now shows the physical values
+(the same ones the hits use) in all ten languages of the game. Until now
+only the English game got them; in French, German, Russian and the other
+languages the window kept the game's own table, which can be several times
+lower than what the shell really does. Your own labels stay as they are.
 2. AI judgement "can I penetrate": the battle AI decides whether its main
-guns can pierce the enemy belt with the same physics as the hit, not with
-the game's reading, so AI ships no longer turn away from fights they would
-win against a modest belt.
+guns can pierce the enemy belt with the same physics as the hit (striking
+velocity and angle of fall at that distance, shell weight and AP quality),
+not with the game's reading. AI ships no longer turn away from fights they
+would win against a modest belt because of a far too low estimate.
 3. Main battery: the AI judges with the largest gun on the ship, also when
-a main turret failed the mount check.
+a main turret failed the mount check - a battleship is no longer rated by
+its secondary guns.
 --------------------------------------------------------------------------
-169. IRON ADMIRAL 1.2.74.2 (DIP_GG_FIXES 1.11.313) - STABLE FIX: SURRENDERED SHIPS TAKEN AS PRIZES AGAIN, RESOLUTION GUARD - 2026-10-27
+148. IRON ADMIRAL 1.2.75-BETA.6 (DIP_GG_FIXES 1.11.285) - DIVISION ORDER "FINISH OFF" - 2026-10-26
 --------------------------------------------------------------------------
-Stable line. Two fixes from the beta line (1.2.75-beta.10 and beta.9),
-both confirmed in beta battles and campaigns.
-1. Prizes (#35): when a ship strikes her colours the game moves her to
-the battle's list of sunk ships at once, and the prize check looked only
-among the ships still afloat - she was skipped as "not in this battle"
-and the prize was lost. The check now searches every list of the battle,
-the sunk list included, so a surrendered ship is taken as a prize again.
-2. Resolution guard (#51): when the game's settings fail at start, the
-resolution index is set to the current screen, so another mod's
-per-frame interface update no longer throws an error in every frame.
+Beta line only. Contains everything of 1.2.75-beta.5.
+1. New division order "Finish off" (seventh button of the orders panel,
+Alt+7): the division goes for enemy ships that are already badly damaged
+and still afloat - the worst damaged and nearest first. Against ships its
+guns cannot sink (capital ships, a bigger calibre) a division with
+torpedoes closes to torpedo reach, otherwise it fights at a short gun
+range. It keeps clear of the reach of every undamaged enemy that can hurt
+it, and when no crippled enemy is in sight it waits by the main body.
+Transports remain the business of "Hunt".
+2. The usual limits apply: a badly damaged division breaks off and falls
+back behind the main body, torpedoes are evaded, and a move or retreat
+order given by hand takes command back.
+3. F10 / settings: DivisionFinishDamage - from which estimated damage an
+enemy ship counts as crippled for this order.
+4. In-game help: the battle orders chapter describes the new order.
 --------------------------------------------------------------------------
-170. IRON ADMIRAL 1.2.74.3 (DIP_GG_FIXES 1.11.314) - STABLE FIX: SURRENDERED SHIPS TAKEN AS PRIZES AGAIN (CORRECTED PACKAGE) - 2026-10-27
+149. IRON ADMIRAL 1.2.75-BETA.7 (DIP_GG_FIXES 1.11.286) - MISSING RELATIONS BETWEEN GREAT POWERS RESTORED - 2026-10-26
 --------------------------------------------------------------------------
-Stable line. Contains everything of 1.2.74.2.
-1. 1.2.74.2 was published without the prize fix described in section
-169 (the resolution guard was in it). This package carries it: when a
-ship strikes her colours the game moves her to the battle's list of sunk
-ships at once, and the prize check now searches that list too, so a
-surrendered ship is taken as a prize again (#35).
+Beta line only. Contains everything of 1.2.75-beta.6.
+1. Fix: in some campaigns a pair of great powers had no relation record at
+all (seen after a great power came back or after loading an older save).
+The politics window then left rows of these nations without actions, and
+diplomatic actions and the AI's diplomacy between them were impossible.
+The campaign is now checked after loading and after every turn, and a
+missing pair gets a neutral relation (no war, no alliance) - existing
+relations are never changed.
+2. F10 / settings: RelationRepair (on by default).
 --------------------------------------------------------------------------
-Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package, DIP_GG_Fixes 1.10.2: shared-design duplicate fix, save_4 migration to 1.1, new-campaign start fix: taf_force_no_predef_designs=1, Experimental Small Ironclad hull: 10" calibre limit, min. 2 barrels, battleship minimum belt in the armor generator lowered for 1890 (6", DIP_GG_Fixes 1.11.16: treasury crisis (war loan, money printing with inflation, fleet cuts, Iron Admiral 1.2.8: version history day by day, package vs DLL numbering explained, DIP_GG_Fixes 1.11.17: treasury crisis on debt depth, AI shipyard order diagnostics, DIP_GG_Fixes 1.11.18: balance-of-power grants only for solvent nations, expense breakdown in the diagnostics, DIP_GG_Fixes 1.11.19: AI research budget balanced by the deficit, no shipyard expansion in deficit, DIP_GG_Fixes 1.11.20: a further remedy on deep debt, "other" item in the diagnostics, DIP_GG_Fixes 1.11.21: treasury state field guard, softer inflation stacking), bankrupt nations build cheap ships) and 1900 (7.5"), ship generator diagnostics taf_debug_shipgen_info=2, Experimental Small Ironclad 1 turret minimum, DIP_GG_Fixes 1.11.0: charges by torpedo range and speed, AI capital ships charge or close in, player scout charge, torpedo friendly-lane hold, smart targeting, non-linear veterancy, surrender by training, panic, capture of surrendered ships, DIP_GG_Fixes 1.11.1: constant charge log reason, penetration compared with effective belt armour, DIP_GG_Fixes 1.11.2: target selection through a mod-owned target lock, DIP_GG_Fixes 1.11.3: panic from crew loss, belt penetration cm->mm, no aiming reset on the same target, prizes taken off the sunk lists with a prize crew, long-range accuracy in the radar rangefinders after Jurens (x2.6 1920-1945), DIP_GG_Fixes 1.11.4: a conquered minor's fleet passes to the conqueror instead of being scrapped, balance-of-power message fixed, DIP_GG_Fixes 1.11.5: fleet to the conqueror for the great powers too (the game itself moves ships to another port when one exists), DIP_GG_Fixes 1.11.6: a captured ship (prize, conquest) brings its design into the new owner's list, DIP_GG_Fixes 1.11.7: national research profiles for player and AI (techBonuses.csv, -10..+50%), DIP_GG_Fixes 1.11.8: penetration in mm (not cm), close-in hysteresis, Iron Admiral 1.2.0: X.Y.Z package numbering, DIP_GG_Fixes 1.11.9: in-game update check, DIP_GG_Fixes 1.11.10: balance-of-power grant log-only (ReportImportant throws for AI ships), DIP_GG_Fixes 1.11.11: in-game update after the player clicks (SHA-256, DLL swapped by rename), DIP_GG_Fixes 1.11.12: update-check timeout 30 s with a retry, DIP_GG_Fixes 1.11.13: update box only after the loading screen, DIP_GG_Fixes 1.11.14: file-by-file update install (loaded DLLs by rename), messages in English, DIP_GG_Fixes 1.11.15: prizes and hand-overs confirmed in-game, design duplicate check via designsAll, Iron Admiral 1.2.14: zip packages with standard forward-slash paths, .NET 6 check in the installer, Iron Admiral 1.2.15: one-file setup script Install-IronAdmiral.ps1, manual MelonLoader guide, Iron Admiral 1.2.16: series production (prototype, learning curve, batch, common dock, shipyard occupancy, sister maintenance), inflation relative to GDP with a 1% baseline, credit rating and loan interest = inflation + spread, debt erosion, savings at inflation minus 1.5 points, treasury panel F8, Finances window inflation, monthly treasury report, in-game Help chapter, campaign guide GUIDE_EN.md, Iron Admiral 1.2.17: inflation explained as a surcharge, not a price level, Iron Admiral 1.2.18: AI shipyard expansion only on a steady or large surplus, Iron Admiral 1.2.19: refits ordered together, no ship parts on the map, series gap by completion date, war diagnostics, Iron Admiral 1.2.20: coalition wars against a dominant power, no AI designs without a way to build, Iron Admiral 1.2.21: refits of ships above treaty limits (+3,000 t), reachable torpedo charges, no hopeless close-in, evasive zigzag, Iron Admiral 1.2.22: in-game settings panel (F10), Iron Admiral 1.2.23: massed torpedo attack, ramming, hopeless battleships retreat, escape missions (retreat or scatter), torpedo turn-away, SAPC shells, NavWeaps rates of fire, Okun ricochet model, destroyer secondaries, armour diagnostics, save check withdrawn, Iron Admiral 1.2.24: AI tactics by ship size (massed attack by combat tonnage, torpedo targets by size, main ships retreat), surrendered ships to the battle winner, series production fixes, Iron Admiral 1.2.25: massed attack only with enough torpedo craft per target, withdrawal when outmatched, Iron Admiral 1.2.26: series production right after loading a campaign, Iron Admiral 1.2.27: refit above the treaty limit can be saved, Iron Admiral 1.2.28: refit above the treaty limit - the design open in the designer, Iron Admiral 1.2.29: refit above the treaty limit saved, confirmed in game, Iron Admiral 1.2.30: risings in occupied national core provinces with a decision to put them down, historical list of national cores, Iron Admiral 1.2.31: fog of war (strategic map, contact reports, identification in battle, AI in the same fog, interceptions depending on intelligence), Iron Admiral 1.2.32: misidentifications only into types the navy has, Iron Admiral 1.2.33: problem report from the F10 panel and local usage statistics with the player's consent, Iron Admiral 1.2.34: scenarios - campaign save diagnostics, Iron Admiral 1.2.35: night and weather shorten identification (visibility in percent), Iron Admiral 1.2.36: enemy ship panel without data before identification, enemy fleet markers along their sea route instead of over land, Iron Admiral 1.2.37: marker shift also for stationary forces, checked with the land test, Iron Admiral 1.2.38: enemy ship panel hidden every frame until identification, Iron Admiral 1.2.39: battle visibility in km - daylight identification from over ten km, Iron Admiral 1.2.40: 50 shared ship designs in the mod package, Iron Admiral 1.2.41: battle report in the battle result window, Iron Admiral 1.2.42: smaller map position error, repair of a corrupted settings file, Iron Admiral 1.2.43: inexactly known fleets are not drawn on land, Iron Admiral 1.2.44: great powers without ports wait to regain them, Iron Admiral 1.2.45: battle dispatches in the log, Iron Admiral 1.2.46: ageing contact reports, night gives away the ships that fire, Iron Admiral 1.2.47: 920 designs from Ultimate Admiral's Shippack, Iron Admiral 1.2.48: armour obliquity, ship trade, historical classes, new licence, Iron Admiral 1.2.49: trade window and obliquity fixes, 48 historical classes, Iron Admiral 1.2.50: battle report as a separate panel beside the result window, Iron Admiral 1.2.51: Shippack designs freed of technologies unknown to DIP, Iron Admiral 1.2.52: custom battles - historical classes first, predefined-design step off by default, Iron Admiral 1.2.53: 147 historical classes, Iron Admiral 1.2.54: battle AI after the fleet battle instructions, doctrines by nation and period, dispatches above the ships, Iron Admiral 1.2.55: intelligence window and treasury panel fixes, screenshot mode, in-game confirmations, Iron Admiral 1.2.56: 16 towers load again, doctrines for more navies, Iron Admiral 1.2.57: main guns engage the close enemy, Iron Admiral 1.2.58: no hopeless torpedo shots, Iron Admiral 1.2.59: no torpedoes into empty sea, Iron Admiral 1.2.60: no torpedoes at surrendered ships, surrendered ships returned without loss, Iron Admiral 1.2.61: torpedo side check off, target speed cap, battle performance, Iron Admiral 1.2.62: panels follow the UI scale, ship generator failure memory, torpedoes in self-defence, Iron Admiral 1.2.63: smaller dispatch bubbles in battle, Iron Admiral 1.2.64: ship generator memory kept between game starts, missing designs of own ships restored, Iron Admiral 1.2.65: continuous map safety fix, Iron Admiral 1.2.66: battle AI break-off rules, full torpedo range for the player's ships, prize designs in the designer, own ship panel, secondary guns, Beta updates switch, Iron Admiral 1.2.67-1.2.69: ballistics from physics and technology, hit chance by fire-control technology, HE through thin plating, division orders in battle, occupied lands province by province, lost territory, technology diffusion, historical weights, AI designer limits by displacement and trimming, own randParts.csv, refits for buyers, parts out of place repaired, politics window guards, eight Help chapters, Iron Admiral 1.2.70: armour quality against Krupp cemented armour, player target orders hold, AI battleships stay in action, battle panels hidden over the result windows, Iron Admiral 1.2.71: penetration from physics (Okun), one physical gun for the window, the shells and the penetration, hit log, Iron Admiral 1.2.72-beta.1: torpedo run settings and target priorities, damage of AP shells passing through, escort first and transports after, Iron Admiral 1.2.72-beta.2: gun window shows the physical shell weight and the source of the muzzle velocity, Iron Admiral 1.2.72-beta.3 and 1.2.72: scouts head for reported smoke, torpedo target priorities fall through; stable line gets torpedo settings and targets, AP pass-through damage, physical gun step 2b, escort first, Iron Admiral 1.2.73-beta.1: AP pass-through damage by the place the shell went through, Iron Admiral 1.2.73-beta.2: gun orders for the player's divisions, dispatches tell where shells struck, Iron Admiral 1.2.73-beta.3: shell shape check for the player's ships in the battle log, Iron Admiral 1.2.73-beta.4: battle strips stay open, ordered torpedo attack goes in, shell shape for navies without the nose technology, Iron Admiral 1.2.73-beta.5: belt penetration recalibrated for all calibres, Iron Admiral 1.2.73-beta.6: smaller battle panels and gun window text, Iron Admiral 1.2.73-beta.7: torpedo attack order without ramming, shell type statistics, Iron Admiral 1.2.73-beta.8: hit log for both sides, Iron Admiral 1.2.73-beta.9: torpedo turn-away opens the range, Iron Admiral 1.2.73: stable line gets penetration for all calibres, pass-through damage by location, gun orders, torpedo attack without ramming, Iron Admiral 1.2.74-beta.2: shell nose from the shell fitted and the shell tree, Iron Admiral 1.2.74-beta.3: physical penetration replaces the game's value, historical shell weight, Iron Admiral 1.2.74-beta.4: hotfix for the crash at battle start, Iron Admiral 1.2.74-beta.5: physical penetration through the penetration table, Iron Admiral 1.2.74-beta.6: penetration rows fixed and on by default, Iron Admiral 1.2.74-beta.8: damage diagnostics, Iron Admiral 1.2.74-beta.9: damage diagnostics function found, Iron Admiral 1.2.74-beta.10: historical damage model, deliberate aiming at close range, Iron Admiral 1.2.74-beta.11: the crews' voices in the dispatches, none hits diagnosed, Iron Admiral 1.2.74: stable line gets physical penetration in battle, historical damage model and shell weights, crews' voices; stable and beta lines separate again, Iron Admiral 1.2.74.1: penetration on screen and in the AI's judgement from the hit physics, Iron Admiral 1.2.74.2: surrendered ships taken as prizes again, resolution guard, Iron Admiral 1.2.74.3: surrendered ships taken as prizes again, corrected package)
+151. IRON ADMIRAL 1.2.75-BETA.8 (DIP_GG_FIXES 1.11.288) - TECHNOLOGY SPREAD: A FAR-AHEAD POWER IS SLOWED AGAIN - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.7.
+1. Fix: the technology spread rule that slows research of a technology
+far ahead of its time compared the technology with the newest one known
+by all great powers - the researching power included. A power that had
+pulled far ahead of the others therefore never counted as ahead, its
+research was never slowed, and the gap to the other navies kept growing
+(late campaigns: AI fleets on hulls decades older than the leader's).
+The comparison now uses only the other great powers, as intended.
+2. Log: once a quarter a line "[Tech] standing" lists every great power's
+technology level against the others and its newest technology, so the
+gap can be followed over the campaign.
+--------------------------------------------------------------------------
+152. IRON ADMIRAL 1.2.75-BETA.9 (DIP_GG_FIXES 1.11.289) - SCREEN RESOLUTION GUARD FOR TWEAKSANDFIXES - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.8.
+1. When the game's own display settings fail to load at start, the chosen
+resolution pointed outside the list of resolutions. TweaksAndFixes then
+raised an error in every frame (a log of tens of megabytes in a few
+minutes) and its own interface additions stopped updating for the whole
+session. The mod now points the setting at the current screen resolution
+in that case - nothing on screen changes, and the errors stop.
+--------------------------------------------------------------------------
+153. IRON ADMIRAL 1.2.75-BETA.10 (DIP_GG_FIXES 1.11.290) - PRIZES: SHIPS THAT SURRENDERED IN THE BATTLE - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.9.
+1. A ship that struck her colours during a campaign battle was not taken
+as a prize: after the battle the mod reported her as "not in this battle"
+and left her to the game, which counts her as lost. The game moves a
+surrendered ship to the battle's list of sunk ships before the mod's
+check, and the check looked only at the list of ships still afloat. The
+sunk list is now searched too, so a ship that surrendered in this battle
+goes to the winner (or back to her own side if it won) as described in
+the prize rules. Ships captured in earlier years that only carry an old
+surrender flag are still left alone.
+--------------------------------------------------------------------------
+154. IRON ADMIRAL 1.2.75-BETA.11 (DIP_GG_FIXES 1.11.291) - COALITION WARS WITH A BALANCE OF POWER - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.10.
+1. A player whose navy had become the strongest could find himself at war
+with eight nations at once: every hostile great power kept joining the
+coalition every month, even when the coalition was already far stronger,
+and small navies joined as full members. Now every great power outside
+such a war takes one decision a month, with the reason in the log:
+- join: the hostile powers, more readily the more hostile they are and
+  the worse the target is doing in its wars, and much less readily once
+  the coalition already outweighs the target;
+- take the target's side: when the coalition is more than twice as
+  strong as the target, a power allied to the target, or one that fears
+  the coalition's leader more than the target, may declare war on the
+  leader (Britain against a continental hegemon; France and Britain for
+  the Ottomans in 1854);
+- wait: small navies (below a quarter of the target's fleet) and powers
+  with mixed relations stay out; when the target is clearly losing they
+  may join the winning side late (Italy 1915, Romania 1916);
+- stay neutral: at war elsewhere, bankrupt, or at peace with the target
+  for less than 12 months (saved with the campaign).
+The start of a coalition is unchanged. The log shows once a month every
+nation fighting two or more wars and which rule of the mod started each.
+F10, Diplomacy: "CoalitionBalanceOfPower" (off: the previous rule).
+--------------------------------------------------------------------------
+155. IRON ADMIRAL 1.2.75-BETA.12 (DIP_GG_FIXES 1.11.292) - ALLIES JOINING A WAR: NO MORE ERROR IN THE ATTITUDE CHANGE - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.11.
+1. When a war started and the allies of both sides were drawn in, the
+game's attitude change sometimes raised an error. The rest of that step
+was then skipped, so further allies could stay out of the war. A change
+for a pair of nations without relations is now skipped. An error inside
+the change is written to the log with the pair of nations, and the game
+goes on with the next ally.
+--------------------------------------------------------------------------
+156. IRON ADMIRAL 1.2.75-BETA.13 (DIP_GG_FIXES 1.11.293) - NO MORE MOUNT ERRORS IN BATTLE - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.12.
+1. On some hulls a mounting point was left without the ship part it
+belongs to. Every check of whether a gun or tower fits there raised an
+error with a full trace, hundreds to thousands of times per battle. That
+filled the log and cost time in every frame of the check. Such a point
+now simply counts as not fitting, and the game's check is not entered.
+Points that belong to a part are not affected.
+--------------------------------------------------------------------------
+157. IRON ADMIRAL 1.2.75-BETA.14 (DIP_GG_FIXES 1.11.294) - TORPEDO SHOT CHECK IN THE GAME'S UNITS, TRANSPORTS DO NOT COVER A RETREAT - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.13.
+1. Ships held their torpedoes at close range against a target moving
+away. The check compared a fixed torpedo speed with the target's speed in
+the game's own units, which are about three times larger, so the run to
+the intercept point came out at tens of kilometres at 1.5 km. The check
+now uses the torpedo's real speed with the same computation as the choice
+of the torpedo setting.
+2. Transports and other unarmed ships no longer "cover the retreat"
+between the warships and the pursuers.
+3. Clearer battle log: a massed torpedo attack that goes in short of the
+full strength is shown as a delaying attack; the reason given for a
+withdrawal says why leaving is safe; a charge that goes in at once (by
+order, massed or after reloading) no longer shows a meaningless start
+distance.
+--------------------------------------------------------------------------
+158. IRON ADMIRAL 1.2.75-BETA.15 (DIP_GG_FIXES 1.11.297) - FLOATING PARTS LOWERED, NEWEST TORPEDOES FOR AI DESIGNS, UPDATE CHECK OF THE LOADED DLL - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.14.
+1. Some ships, mostly AI designs on other nations' hulls, showed turrets
+and superstructures floating above the deck. In battle such a part is
+now measured against the hull under it and lowered onto the deck when it
+floats more than 1.5 m above it. Only the look changes: the guns fire as
+before. The log gives the gap for every such part.
+2. Designs made by the ship generator (AI and auto-design) get the
+largest torpedo diameter the nation has researched instead of a random
+older one (F10, Campaign AI: "AiBestTorpedoDiameter").
+3. The update check compares the DLL that is actually running with the
+installed package. When the two differ (for example after replacing only
+the DLL), it says so and offers the package again.
+--------------------------------------------------------------------------
+159. IRON ADMIRAL 1.2.75-BETA.16 (DIP_GG_FIXES 1.11.301) - TORPEDO ATTACK DISTANCE, HUNT AGAINST TRANSPORTS, FLOATING PARTS - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.15.
+1. Torpedo attack order: cruisers went in to 1-2 km of a battleship. They
+now fire from about 85 % of the torpedo range, start holding off a little
+earlier because the target closes too, and with the tubes empty turn away
+and open the range until the tubes are reloaded.
+2. Torpedoes are no longer held against a battleship, battlecruiser or
+heavy cruiser inside three quarters of the torpedo range: a spread at a
+target that large covers its turns.
+3. Hunt: a cruiser no longer swings between closing in and turning away
+on the edge of a covering battleship's reach. It keeps a margin, waits
+30 s after turning away and moves to a safe point while the prey is
+covered. Transports are approached to about 2.5 km and fired at with HE;
+the earlier shell choice comes back when the prey or the order changes.
+4. Floating parts: hulls have no surface the check could measure, so the
+deck height now comes from the nearest mounting point of the hull itself.
+5. The battle log lists for every ship the AP shell fitted and which AP
+shells the ship may use (with the game's reason when not), to find why
+ships carry the shells of the 1890s.
+--------------------------------------------------------------------------
+160. IRON ADMIRAL 1.2.75-BETA.17 (DIP_GG_FIXES 1.11.302) - TORPEDO ATTACK FROM BOTH SIDES AND CROSS ATTACK - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.16.
+1. Torpedo attack order: once the tubes on one side have fired, the
+division turns so that the loaded side bears on the target and fires it.
+Only with both sides empty does it turn away to reload.
+2. When two or more divisions attack the same target with torpedoes, they
+approach 45 degrees either side of its bow, so the tracks cross at about a
+right angle: turning bow-on to one spread puts the target's side to the
+other. Ships of one division manoeuvre together, so a cross attack needs
+at least two divisions.
+--------------------------------------------------------------------------
+161. IRON ADMIRAL 1.2.75-BETA.18 (DIP_GG_FIXES 1.11.303) - DIVISION SPLITS FOR THE CROSS TORPEDO ATTACK - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.17.
+1. A division of two or more ships given the torpedo attack order now
+splits by itself: the leader keeps the first half, the rest form a second
+division with the same order, and the two approach the target from either
+side of its bow so the torpedo tracks cross at about a right angle. Once
+the detached part has fired its torpedoes, its ships join their division
+again, which withdraws and reloads as one.
+--------------------------------------------------------------------------
+162. IRON ADMIRAL 1.2.75-BETA.19 (DIP_GG_FIXES 1.11.303) - DIVISION SPLITS FOR THE CROSS TORPEDO ATTACK (CORRECTED PACKAGE) - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.18.
+1. 1.2.75-beta.18 was published with the DLL of beta.17 (DIP_GG_Fixes
+1.11.302), so the change described in section 161 was not in it. This
+package carries it (DIP_GG_Fixes 1.11.303): a division of two or more
+ships under the torpedo attack order splits by itself for a cross attack
+and joins again after the detached part's salvo.
+--------------------------------------------------------------------------
+163. IRON ADMIRAL 1.2.75-BETA.20 (DIP_GG_FIXES 1.11.305) - LIGHT CRAFT TORPEDO LARGE SHIPS, COALITION FIX - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.19.
+1. Torpedo attack: against a battleship, battlecruiser or cruiser the
+torpedoes are no longer held up to 90% of the torpedo range unless the
+target is clearly running away (its course opening the range at more
+than half its speed). Before, light cruisers and torpedo boats closed to
+4.5-4.7 km of a battleship and did not fire.
+2. Coalition wars (#40): two nations fighting a common enemy no longer
+go to war with each other or take opposite sides in another war.
+--------------------------------------------------------------------------
+164. IRON ADMIRAL 1.2.75-BETA.21 (DIP_GG_FIXES 1.11.306) - SHELL RESEARCH AS IN VANILLA, SLOWER TECHNOLOGY CATCH-UP - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.20.
+1. Shell technologies (projectile_shell, the AP and HE shell marks):
+research difficulty 160 -> 44, the vanilla value (the last one, 1930:
+480 -> 132). DIP's difficulty left the navies of the 1920s firing
+blunt-nosed shells of 1898, so striking velocity and penetration at
+long range came out at about half of the historical values. The other
+technologies keep DIP's difficulty.
+2. Technology catch-up: a great power rated "Very Behind" receives one
+technology every second turn (was every turn), "Behind" every fourth
+turn (was every second).
+--------------------------------------------------------------------------
+165. IRON ADMIRAL 1.2.75-BETA.22 (DIP_GG_FIXES 1.11.308) - DAMAGED LIGHT CRAFT STILL TORPEDO, BROKEN AI DESIGNS RETIRED - 2026-10-26
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.21.
+1. Torpedo attack: a damaged AI division that cannot get away (too slow
+to escape) and still has loaded tubes no longer gives up the attack when
+a battleship or cruiser is inside torpedo range - it presses on and
+fires. Before, such a light cruiser only fought on with its guns.
+2. Broken AI designs (#32): an AI design whose ship comes into battle
+with a part lying far from the hull (turrets or superstructure put back
+by the mod) is marked broken; the AI builds no more ships from it and
+designs a new one. Ships already built stay in service, the player's
+designs are never marked, and the marks are kept in the save. Switch:
+BrokenDesignsObsolete (F10, Campaign AI).
+--------------------------------------------------------------------------
+166. IRON ADMIRAL 1.2.75-BETA.23 (DIP_GG_FIXES 1.11.309) - AI DESTROYERS CARRY A FULL TORPEDO OUTFIT - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.22.
+1. AI destroyer designs (#47, second part): a generated destroyer that
+carries fewer torpedo tubes than its technology and size allow gets
+larger launchers on the same mounts - two of the largest launchers it may
+use for a full-size destroyer, one for a small one. Side launchers are
+changed in pairs so the ship stays balanced; a mount that cannot take a
+larger launcher keeps its own. The extra weight is paid for by the
+design's usual weight reduction. Only generated designs (AI and
+auto-design); the player's own designs keep the player's choice. Logged
+as [ShipGen] ... destroyer with N torpedo tube(s), norm M. Switches:
+AiMinTorpedoTubes and AiDestroyerTubesTonnage (F10, Campaign AI).
+--------------------------------------------------------------------------
+167. IRON ADMIRAL 1.2.75-BETA.24 (DIP_GG_FIXES 1.11.310) - DESIGN RECORDER - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.23.
+1. Design recorder (#64): every step of designing or refitting a ship in
+the constructor is written to UserData\IronAdmiral\design_log.csv - hull,
+speed, tonnage, range, beam, draught, bulkheads, crew quarters, each
+component, the armour of each zone and the parts (towers, funnels, guns,
+barbettes, torpedo tubes) with their place fore / midships / aft, and the
+weight and tonnage reserve after each step. A slider drag is one step
+with its final value. The file stays on your computer. Switch:
+DesignRecorder (F10, Interface).
+--------------------------------------------------------------------------
+168. IRON ADMIRAL 1.2.75-BETA.25 (DIP_GG_FIXES 1.11.312) - IMPACT ANGLE COUNTED ONCE, DESIGN RECORDER FIXES - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.24.
+1. Penetration (#58, #60): in a hit the game itself thickens the plate by
+the impact angles (plate / cosine of the horizontal angle x cosine of the
+vertical angle). The mod's belt obliquity factor and the reduction of the
+physical belt penetration by the angle of fall came on top of it, so the
+angle was counted twice: shells were stopped by plates thinner than their
+penetration (a 152 mm shell with 63 mm penetration stopped by a "30 mm"
+plate) and small shells met plates of 460-690 mm on the hull ends. Both
+are off in hits now (the angle is counted once, by the game); the belt
+penetration shown and used is the value at normal impact. Switches:
+ObliquityOnTopOfGame (off), PhysicalPenetrationNormalIncidence (on).
+2. Hit log (#59): each hit line shows the armour zone the game checked,
+the impact angles and the plate as sloped by the game.
+3. Design recorder (#64): the current design name on every line, a
+"design saved" line when a design is saved, fore / midships / aft by
+thirds of the ship's length.
+--------------------------------------------------------------------------
+171. IRON ADMIRAL 1.2.75-BETA.26 (DIP_GG_FIXES 1.11.315) - SIDE PENETRATION FOR SIDE PLATES - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.25.
+1. Penetration (#59): the game chooses the side or the deck penetration
+of a hit by a random roll on the impact angle, independent of the plate
+it then checks. In the test of beta.25 a third of the hits on belt
+plates (bow and stern belts) read the deck penetration - a 381 mm shell
+falling at 7 degrees had 84 mm instead of 469 mm - and was stopped by
+thin end plating. A shell that meets a vertical plate (belts, turret
+sides, barbettes, conning tower) now always uses the side penetration.
+Switch: PhysicalPenetrationByZone (on).
+2. Hit log: the plate estimate added in beta.25 is removed (the game's
+own slope of the plate has further factors); the zone and the impact
+angles stay.
+--------------------------------------------------------------------------
+172. IRON ADMIRAL 1.2.75-BETA.27 (DIP_GG_FIXES 1.11.316) - SIDE-PLATE CHANGE OF BETA.26 WITHDRAWN - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.26.
+1. The change of section 171 (side penetration for side plates) made the
+results worse in the test battle: most hits on belts read far less
+penetration instead of more (normal penetrations fell from 171 to 53 in
+the same setup). It is switched off (experimental switch
+PhysicalPenetrationByZoneTest, off); penetration works as in beta.25.
+--------------------------------------------------------------------------
+173. IRON ADMIRAL 1.2.75-BETA.28 (DIP_GG_FIXES 1.11.317) - DECK HITS MEET THE DECK - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.27.
+1. Penetration (#59): the game decides by a roll on the impact angle
+whether a shell strikes the side or the deck, and uses the side or the
+deck penetration accordingly. For deck hits on the bow and stern it still
+checked the belt plate, so a shell with its small deck penetration was
+stopped by thin end belts (a 381 mm shell at 7 degrees of fall: 85 mm
+against 39 mm). A deck hit now meets the deck plate of that part of the
+ship (deck, bow deck, stern deck). Switch: DeckHitsMeetDeck (F10, Battle).
+--------------------------------------------------------------------------
+174. IRON ADMIRAL 1.2.75-BETA.29 (DIP_GG_FIXES 1.11.319) - AI CROSS TORPEDO ATTACK AND TWO-SIDE SALVO - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.28.
+1. AI torpedo tactics (#56): AI divisions attacking the same target with
+torpedoes approach 45 degrees either side of its bow, so the tracks cross
+and the target cannot comb both salvos; a division whose tubes on one
+side are empty turns to fire the loaded side before going off to reload
+- the same tactics as the player's torpedo attack order. Switch:
+AiCrossTorpedo (F10, Battle AI).
+2. Hit log: each hit line shows whether the game used AP or HE for the
+hit (the shells fly as "Auto" and the kind is decided in the hit).
+--------------------------------------------------------------------------
+175. IRON ADMIRAL 1.2.75-BETA.30 (DIP_GG_FIXES 1.11.320) - IMPACT ANGLE FROM THE SHELL'S FALL - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.29.
+1. Penetration (#58, #59): the game uses one "side-up" impact angle both
+to roll whether a shell strikes the side or the deck and to thicken the
+plate it meets (plate / cosine of the angle, up to 85 degrees). For a
+shell falling at 5-15 degrees the game's angle came out at 75-89
+degrees, so flat shells were mostly made deck hits, and when they did
+strike a side plate it counted 4-11 times thicker (a 152 mm AP shell with
+110 mm penetration stopped by a 39 mm end belt hit almost square). This
+angle is now the shell's angle of fall from its physical flight: a flat
+shell meets a side plate almost square and mostly strikes the side, a
+plunging one is more likely to strike the deck. Switch:
+ImpactAngleFromFall (F10, Battle).
+--------------------------------------------------------------------------
+176. IRON ADMIRAL 1.2.75-BETA.31 (DIP_GG_FIXES 1.11.321) - IMPACT ANGLE FROM THE SHELL'S FALL, CORRECTED - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.30.
+1. The change of section 175 did not act: the game rolls a hit when the
+gun fires, before the shell exists, so the shell's own flight was not at
+hand (applied 0 times in the test). The angle of fall is now taken from
+the impact direction the game itself passes to its angle function, at
+the firing and at the impact alike.
+--------------------------------------------------------------------------
+177. IRON ADMIRAL 1.2.75-BETA.32 (DIP_GG_FIXES 1.11.322) - LIGHT SHIPS TAKE DAMAGE AGAIN - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.31.
+1. Torpedo boats, destroyers and light cruisers took almost no damage
+(forum reports; in a test a torpedo boat took 72 hits from 2 to 12 in
+and ended at 6 % damage). The game gives small ships far more structure
+per ton than battleships and made up for it by multiplying hits on thin
+plates (up to x11); the historical damage model had removed that
+multiplier. Every hit on a light ship is now multiplied by its structure
+per ton over that of the capital ships in the battle (x1 to x12), so a
+shell destroys the same amount of tonnage in any ship: a hit that costs
+a 30,000 t battleship 5 % costs a 1,500 t destroyer the whole ship. Switches LightShipDamage, LightShipDamageMax and
+LightShipTypes (F10, Battle). (#67)
+--------------------------------------------------------------------------
+178. IRON ADMIRAL 1.2.75-BETA.33 (DIP_GG_FIXES 1.11.323) - DAMAGE IN PROPORTION TO TONNAGE FOR EVERY CLASS - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.32.
+1. The rule of section 177 now applies to every ship, whatever its class:
+each hit is multiplied by the ship's structure per ton over that of the
+battleships and battlecruisers in the battle (from x0.5 to x12), so a
+shell destroys the same amount of tonnage in any ship - torpedo boat,
+destroyer, cruiser or battleship (5 % of a 30,000 t battleship is the
+whole of a 1,500 t destroyer). The switches are renamed
+DamageByTonnage, DamageByTonnageMin, DamageByTonnageMax and
+DamageByTonnageTypes (all classes by default; F10, Battle). The battle
+log names each ship's multiplier and sums the damage by ship type. (#67)
+--------------------------------------------------------------------------
+179. IRON ADMIRAL 1.2.75-BETA.34 (DIP_GG_FIXES 1.11.324) - DAMAGE BY TONNAGE: CAP X60 - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.33.
+1. The game gives a 635 t torpedo boat more structure (12,594) than a
+25,796 t battleship (11,787) - 43 times as much per ton. The x12 cap of
+section 178 left torpedo boats at 1-15 % damage after up to 13 hits.
+The largest multiplier (DamageByTonnageMax) is now x60: in two test
+battles 3 of 8 torpedo boats sank after 10-21 hits and 4 were wrecks
+(46-96 %). (#67)
+2. New switches StructureSinkPercent and DestroyedSectionDamagePenalty
+(F10, Battle) set the game's parameters for sinking from structure
+damage (structure_sink: vanilla 40, DIP GG 100) and for hits on an
+already destroyed section (0.15). Default -1 keeps the game values;
+they are for the destroyer and cruiser tests. (#67)
+--------------------------------------------------------------------------
+180. IRON ADMIRAL 1.2.75-BETA.35 (DIP_GG_FIXES 1.11.325) - TORPEDOES NOT MULTIPLIED BY TONNAGE - 2026-10-27
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.34.
+1. The damage-by-tonnage multiplier no longer applies to torpedo hits.
+In a test one torpedo sank a 14,786 t armoured cruiser: the game's
+torpedo damage (11,359, about a battleship's whole structure) x1.88 was
+more than the cruiser's whole structure. Torpedo damage stays as the
+torpedo technologies give it. The battle summary lists the hits by the
+game's damage type. (#67)
+--------------------------------------------------------------------------
+181. IRON ADMIRAL 1.2.75-BETA.36 (DIP_GG_FIXES 1.11.326) - SHIPS SINK AT 40 % STRUCTURE DAMAGE - 2026-10-28
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.35.
+1. A ship now sinks when 40 % of its structure is destroyed (the vanilla
+value; DIP GG has 100 %). With 100 % a 2,577 t destroyer stayed afloat
+after 136 hits. Test battles with the damage-by-tonnage rule and 40 %
+(27-28.10) against the historical record:
+- torpedo boats (635 t): all sunk after 3-10 hits (history 5-10);
+- destroyers (2,000-2,600 t): sunk after 19-36 hits, one with 11 hits
+  survived (Hoel 2,100 t sank after about 40; Sterett survived 11 x 5 in);
+- light cruisers (4,285 t): sunk after 14 (5 heavy), 40 and 51 hits;
+- armoured cruisers: one 15,000 t ship sunk after 146 hits (Bluecher:
+  70-100 heavy hits and torpedoes), a 10,700 t ship a wreck at 66 % after
+  61 hits (Exeter: 7 x 11 in);
+- battleships: sunk after 23-33 heavy hits (Luetzow: 24, Seydlitz
+  survived 21 and a torpedo); about 60 medium hits leave a battleship
+  almost undamaged (South Dakota: 27); one torpedo 5-6 %.
+StructureSinkPercent (F10, Battle): -1 = 40 (default), 100 = DIP GG. (#67)
+--------------------------------------------------------------------------
+182. IRON ADMIRAL 1.2.75-BETA.37 (DIP_GG_FIXES 1.11.327) - 7 IN GUNS NO LONGER SLOWER THAN 8 IN - 2026-10-28
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.36.
+1. The historical rate of fire had the WWI 7 in guns (Mk 3) at 3.3 rounds
+a minute against 5.0 for 8 in - a 7.9 in gun (the 7 in gun enlarged)
+reloaded far slower than an 8 in gun (forum report). Below 11 in a
+calibre now fires at least as fast as every heavier calibre of the same
+generation: Mk 1 7 in 2 -> 2.4, Mk 2 9 in 2 -> 2.5, Mk 3 7 in 3.3 -> 5
+rounds a minute. Heavy guns keep their measured rates. The game's own
+reload penalty for an enlarged bore stays. (#68)
+--------------------------------------------------------------------------
+183. IRON ADMIRAL 1.2.75-BETA.38 (DIP_GG_FIXES 1.11.328) - DAMAGE BY TONNAGE ALSO WITHOUT BATTLESHIPS - 2026-10-28
+--------------------------------------------------------------------------
+Beta line only. Contains everything of 1.2.75-beta.37.
+1. In a battle without battleships or battlecruisers (cruisers and light
+forces only) and with no value saved from an earlier battle, the damage-
+by-tonnage rule had no reference and multiplied nothing. Such battles
+now use 0.40 structure per ton, the value of the battleships in the
+tests of 27-28.10. (#67)
+--------------------------------------------------------------------------
+Last file update: 2026-10-14 (research cost: x10, budget bonus: halfway to vanilla, fixed AI fleet building, research_progress_base: 1, research_late_years_to_double: 2, fixed zero-fleet start for nations with no starting fleet, raised starting cash budget for all nations, reverted gun turret weight to vanilla — fixed inability to set armor on small calibers, fixed corrupted CSV row blocking modern battleship unlocks, lowered Modern Battleship hull minimum tonnage to 35000 for all nations, fixed the same tonnage problem for the Super Battleship tier and earlier BB hulls plus 5 permanently unbuildable DD hulls, set a physically-justified maximum tonnage of 200,000-240,000 tons for the Super Battleship tier and replaced the infinite BB cap after hull_strength_end with 240,000, added a radar bonus for night combat and bad weather to aim_rangefinder_11/12/13, restored sovereign minor territories in provinces.csv and in save_0/save_4, strengthened minors, softened the post-war economic crisis, fixed Mongolia "v" controller, research sped up by 20%, national specialisations strengthened x1.5, Byzantine tech profile = sum of greece_ai and russia_ai, Byzantine profile x1.5, Byzantine profile x1.5 reverted, DIP_GG_Fixes.dll add-on catching the CheckMinorNationThreat error, CheckMinorNationThreat patch confirmed in-game, automatic shared designs in DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: cruisers instead of battleships when short of money, larger minor port capacity, DIP_GG_Fixes 1.3: balance-of-power events, TryGenerateSmallerNationsBattle error patch, DIP_GG_Fixes 1.4: diplomatic attitude changes x1.5, DIP_GG_Fixes 1.5: AI stalled ship construction watch, DIP_GG_Fixes 1.6: relation worsening x4, RODOS ship fix in save_4, more aggressive torpedoes in automatic fire, DIP_GG_Fixes 1.7: AI light-ship torpedo charge and focus fire, DIP_GG_Fixes 1.8–1.9: fight instead of fleeing, detaching slow ships, national doctrines battleDoctrines.csv, DIP_GG_Fixes 1.10.0: 24-month grace before economic-collapse dissolution, turretCalibers guard on ship loading, lose_provinces_threshold found to be a dead parameter, 15/16/18" penetration compared with Okun tables, penetration.csv rows 16–21" anchored on Okun tables, Iron Admiral 1.1: merge with DIP GG 1.3.5 and TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, "Mods only" package, DIP_GG_Fixes 1.10.2: shared-design duplicate fix, save_4 migration to 1.1, new-campaign start fix: taf_force_no_predef_designs=1, Experimental Small Ironclad hull: 10" calibre limit, min. 2 barrels, battleship minimum belt in the armor generator lowered for 1890 (6", DIP_GG_Fixes 1.11.16: treasury crisis (war loan, money printing with inflation, fleet cuts, Iron Admiral 1.2.8: version history day by day, package vs DLL numbering explained, DIP_GG_Fixes 1.11.17: treasury crisis on debt depth, AI shipyard order diagnostics, DIP_GG_Fixes 1.11.18: balance-of-power grants only for solvent nations, expense breakdown in the diagnostics, DIP_GG_Fixes 1.11.19: AI research budget balanced by the deficit, no shipyard expansion in deficit, DIP_GG_Fixes 1.11.20: a further remedy on deep debt, "other" item in the diagnostics, DIP_GG_Fixes 1.11.21: treasury state field guard, softer inflation stacking), bankrupt nations build cheap ships) and 1900 (7.5"), ship generator diagnostics taf_debug_shipgen_info=2, Experimental Small Ironclad 1 turret minimum, DIP_GG_Fixes 1.11.0: charges by torpedo range and speed, AI capital ships charge or close in, player scout charge, torpedo friendly-lane hold, smart targeting, non-linear veterancy, surrender by training, panic, capture of surrendered ships, DIP_GG_Fixes 1.11.1: constant charge log reason, penetration compared with effective belt armour, DIP_GG_Fixes 1.11.2: target selection through a mod-owned target lock, DIP_GG_Fixes 1.11.3: panic from crew loss, belt penetration cm->mm, no aiming reset on the same target, prizes taken off the sunk lists with a prize crew, long-range accuracy in the radar rangefinders after Jurens (x2.6 1920-1945), DIP_GG_Fixes 1.11.4: a conquered minor's fleet passes to the conqueror instead of being scrapped, balance-of-power message fixed, DIP_GG_Fixes 1.11.5: fleet to the conqueror for the great powers too (the game itself moves ships to another port when one exists), DIP_GG_Fixes 1.11.6: a captured ship (prize, conquest) brings its design into the new owner's list, DIP_GG_Fixes 1.11.7: national research profiles for player and AI (techBonuses.csv, -10..+50%), DIP_GG_Fixes 1.11.8: penetration in mm (not cm), close-in hysteresis, Iron Admiral 1.2.0: X.Y.Z package numbering, DIP_GG_Fixes 1.11.9: in-game update check, DIP_GG_Fixes 1.11.10: balance-of-power grant log-only (ReportImportant throws for AI ships), DIP_GG_Fixes 1.11.11: in-game update after the player clicks (SHA-256, DLL swapped by rename), DIP_GG_Fixes 1.11.12: update-check timeout 30 s with a retry, DIP_GG_Fixes 1.11.13: update box only after the loading screen, DIP_GG_Fixes 1.11.14: file-by-file update install (loaded DLLs by rename), messages in English, DIP_GG_Fixes 1.11.15: prizes and hand-overs confirmed in-game, design duplicate check via designsAll, Iron Admiral 1.2.14: zip packages with standard forward-slash paths, .NET 6 check in the installer, Iron Admiral 1.2.15: one-file setup script Install-IronAdmiral.ps1, manual MelonLoader guide, Iron Admiral 1.2.16: series production (prototype, learning curve, batch, common dock, shipyard occupancy, sister maintenance), inflation relative to GDP with a 1% baseline, credit rating and loan interest = inflation + spread, debt erosion, savings at inflation minus 1.5 points, treasury panel F8, Finances window inflation, monthly treasury report, in-game Help chapter, campaign guide GUIDE_EN.md, Iron Admiral 1.2.17: inflation explained as a surcharge, not a price level, Iron Admiral 1.2.18: AI shipyard expansion only on a steady or large surplus, Iron Admiral 1.2.19: refits ordered together, no ship parts on the map, series gap by completion date, war diagnostics, Iron Admiral 1.2.20: coalition wars against a dominant power, no AI designs without a way to build, Iron Admiral 1.2.21: refits of ships above treaty limits (+3,000 t), reachable torpedo charges, no hopeless close-in, evasive zigzag, Iron Admiral 1.2.22: in-game settings panel (F10), Iron Admiral 1.2.23: massed torpedo attack, ramming, hopeless battleships retreat, escape missions (retreat or scatter), torpedo turn-away, SAPC shells, NavWeaps rates of fire, Okun ricochet model, destroyer secondaries, armour diagnostics, save check withdrawn, Iron Admiral 1.2.24: AI tactics by ship size (massed attack by combat tonnage, torpedo targets by size, main ships retreat), surrendered ships to the battle winner, series production fixes, Iron Admiral 1.2.25: massed attack only with enough torpedo craft per target, withdrawal when outmatched, Iron Admiral 1.2.26: series production right after loading a campaign, Iron Admiral 1.2.27: refit above the treaty limit can be saved, Iron Admiral 1.2.28: refit above the treaty limit - the design open in the designer, Iron Admiral 1.2.29: refit above the treaty limit saved, confirmed in game, Iron Admiral 1.2.30: risings in occupied national core provinces with a decision to put them down, historical list of national cores, Iron Admiral 1.2.31: fog of war (strategic map, contact reports, identification in battle, AI in the same fog, interceptions depending on intelligence), Iron Admiral 1.2.32: misidentifications only into types the navy has, Iron Admiral 1.2.33: problem report from the F10 panel and local usage statistics with the player's consent, Iron Admiral 1.2.34: scenarios - campaign save diagnostics, Iron Admiral 1.2.35: night and weather shorten identification (visibility in percent), Iron Admiral 1.2.36: enemy ship panel without data before identification, enemy fleet markers along their sea route instead of over land, Iron Admiral 1.2.37: marker shift also for stationary forces, checked with the land test, Iron Admiral 1.2.38: enemy ship panel hidden every frame until identification, Iron Admiral 1.2.39: battle visibility in km - daylight identification from over ten km, Iron Admiral 1.2.40: 50 shared ship designs in the mod package, Iron Admiral 1.2.41: battle report in the battle result window, Iron Admiral 1.2.42: smaller map position error, repair of a corrupted settings file, Iron Admiral 1.2.43: inexactly known fleets are not drawn on land, Iron Admiral 1.2.44: great powers without ports wait to regain them, Iron Admiral 1.2.45: battle dispatches in the log, Iron Admiral 1.2.46: ageing contact reports, night gives away the ships that fire, Iron Admiral 1.2.47: 920 designs from Ultimate Admiral's Shippack, Iron Admiral 1.2.48: armour obliquity, ship trade, historical classes, new licence, Iron Admiral 1.2.49: trade window and obliquity fixes, 48 historical classes, Iron Admiral 1.2.50: battle report as a separate panel beside the result window, Iron Admiral 1.2.51: Shippack designs freed of technologies unknown to DIP, Iron Admiral 1.2.52: custom battles - historical classes first, predefined-design step off by default, Iron Admiral 1.2.53: 147 historical classes, Iron Admiral 1.2.54: battle AI after the fleet battle instructions, doctrines by nation and period, dispatches above the ships, Iron Admiral 1.2.55: intelligence window and treasury panel fixes, screenshot mode, in-game confirmations, Iron Admiral 1.2.56: 16 towers load again, doctrines for more navies, Iron Admiral 1.2.57: main guns engage the close enemy, Iron Admiral 1.2.58: no hopeless torpedo shots, Iron Admiral 1.2.59: no torpedoes into empty sea, Iron Admiral 1.2.60: no torpedoes at surrendered ships, surrendered ships returned without loss, Iron Admiral 1.2.61: torpedo side check off, target speed cap, battle performance, Iron Admiral 1.2.62: panels follow the UI scale, ship generator failure memory, torpedoes in self-defence, Iron Admiral 1.2.63: smaller dispatch bubbles in battle, Iron Admiral 1.2.64: ship generator memory kept between game starts, missing designs of own ships restored, Iron Admiral 1.2.65: continuous map safety fix, Iron Admiral 1.2.66: battle AI break-off rules, full torpedo range for the player's ships, prize designs in the designer, own ship panel, secondary guns, Beta updates switch, Iron Admiral 1.2.67-1.2.69: ballistics from physics and technology, hit chance by fire-control technology, HE through thin plating, division orders in battle, occupied lands province by province, lost territory, technology diffusion, historical weights, AI designer limits by displacement and trimming, own randParts.csv, refits for buyers, parts out of place repaired, politics window guards, eight Help chapters, Iron Admiral 1.2.70: armour quality against Krupp cemented armour, player target orders hold, AI battleships stay in action, battle panels hidden over the result windows, Iron Admiral 1.2.71: penetration from physics (Okun), one physical gun for the window, the shells and the penetration, hit log, Iron Admiral 1.2.72-beta.1: torpedo run settings and target priorities, damage of AP shells passing through, escort first and transports after, Iron Admiral 1.2.72-beta.2: gun window shows the physical shell weight and the source of the muzzle velocity, Iron Admiral 1.2.72-beta.3 and 1.2.72: scouts head for reported smoke, torpedo target priorities fall through; stable line gets torpedo settings and targets, AP pass-through damage, physical gun step 2b, escort first, Iron Admiral 1.2.73-beta.1: AP pass-through damage by the place the shell went through, Iron Admiral 1.2.73-beta.2: gun orders for the player's divisions, dispatches tell where shells struck, Iron Admiral 1.2.73-beta.3: shell shape check for the player's ships in the battle log, Iron Admiral 1.2.73-beta.4: battle strips stay open, ordered torpedo attack goes in, shell shape for navies without the nose technology, Iron Admiral 1.2.73-beta.5: belt penetration recalibrated for all calibres, Iron Admiral 1.2.73-beta.6: smaller battle panels and gun window text, Iron Admiral 1.2.73-beta.7: torpedo attack order without ramming, shell type statistics, Iron Admiral 1.2.73-beta.8: hit log for both sides, Iron Admiral 1.2.73-beta.9: torpedo turn-away opens the range, Iron Admiral 1.2.73: stable line gets penetration for all calibres, pass-through damage by location, gun orders, torpedo attack without ramming, Iron Admiral 1.2.74-beta.2: shell nose from the shell fitted and the shell tree, Iron Admiral 1.2.74-beta.3: physical penetration replaces the game's value, historical shell weight, Iron Admiral 1.2.74-beta.4: hotfix for the crash at battle start, Iron Admiral 1.2.74-beta.5: physical penetration through the penetration table, Iron Admiral 1.2.74-beta.6: penetration rows fixed and on by default, Iron Admiral 1.2.74-beta.8: damage diagnostics, Iron Admiral 1.2.74-beta.9: damage diagnostics function found, Iron Admiral 1.2.74-beta.10: historical damage model, deliberate aiming at close range, Iron Admiral 1.2.74-beta.11: the crews' voices in the dispatches, none hits diagnosed, Iron Admiral 1.2.74: stable line gets physical penetration in battle, historical damage model and shell weights, crews' voices; stable and beta lines separate again, Iron Admiral 1.2.74-beta.12: hit log shows the damage actually dealt, Iron Admiral 1.2.75-beta.2: hit log shows the damage actually dealt, Iron Admiral 1.2.75-beta.3: battle dispatches in the navies' own languages, Iron Admiral 1.2.75-beta.4: 33 more historical classes in the class pack, Iron Admiral 1.2.75-beta.5: penetration on screen and in the AI's judgement from the hit physics, Iron Admiral 1.2.75-beta.6: division order Finish off, Iron Admiral 1.2.75-beta.7: missing relations between great powers restored, Iron Admiral 1.2.75-beta.8: technology spread - a far-ahead power is slowed again, Iron Admiral 1.2.75-beta.9: screen resolution guard for TweaksAndFixes, Iron Admiral 1.2.75-beta.10: prizes from ships that surrendered in the battle, Iron Admiral 1.2.75-beta.11: coalition wars with a balance of power, Iron Admiral 1.2.75-beta.12: no error when allies join a war, Iron Admiral 1.2.75-beta.13: no more mount errors in battle, Iron Admiral 1.2.75-beta.14: torpedo shot check in the game's units, transports do not cover a retreat, Iron Admiral 1.2.75-beta.15: floating parts lowered, newest torpedoes for AI designs, update check of the loaded DLL, Iron Admiral 1.2.75-beta.16: torpedo attack distance, Hunt against transports, floating parts, Iron Admiral 1.2.75-beta.17: torpedo attack from both sides and cross attack, Iron Admiral 1.2.75-beta.18: division splits for the cross torpedo attack, Iron Admiral 1.2.75-beta.19: division splits for the cross torpedo attack, corrected package, Iron Admiral 1.2.75-beta.20: light craft torpedo large ships, coalition fix, Iron Admiral 1.2.75-beta.21: shell research as in vanilla, slower technology catch-up, Iron Admiral 1.2.75-beta.22: damaged light craft still torpedo, broken AI designs retired, Iron Admiral 1.2.75-beta.23: AI destroyers carry a full torpedo outfit, Iron Admiral 1.2.75-beta.24: design recorder, Iron Admiral 1.2.75-beta.25: impact angle counted once, design recorder fixes, Iron Admiral 1.2.75-beta.26: side penetration for side plates, Iron Admiral 1.2.75-beta.27: side-plate change of beta.26 withdrawn, Iron Admiral 1.2.75-beta.28: deck hits meet the deck, Iron Admiral 1.2.75-beta.29: AI cross torpedo attack and two-side salvo, Iron Admiral 1.2.75-beta.30: impact angle from the shell's fall, Iron Admiral 1.2.75-beta.31: impact angle from the shell's fall, corrected, Iron Admiral 1.2.75-beta.32: light ships take damage again, Iron Admiral 1.2.75-beta.33: damage in proportion to tonnage for every class, Iron Admiral 1.2.75-beta.34: damage by tonnage, cap x60, Iron Admiral 1.2.75-beta.35: torpedoes not multiplied by tonnage, Iron Admiral 1.2.75-beta.36: ships sink at 40 % structure damage, Iron Admiral 1.2.75-beta.37: 7 in guns no longer slower than 8 in, Iron Admiral 1.2.75-beta.38: damage by tonnage also without battleships)
 ==========================================================================

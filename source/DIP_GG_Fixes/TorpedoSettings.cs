@@ -373,7 +373,7 @@ namespace DipGgFixes
             }
             Apply(s, st, want, why, false);
         }
-        static float World(float ms) { try { float w = Ship.ModifySpeedTorpedo(ms); if (w > 0f) return w; } catch { } return ms * 3.2f; }
+        internal static float World(float ms) { try { float w = Ship.ModifySpeedTorpedo(ms); if (w > 0f) return w; } catch { } return ms * 3.2f; }
         static bool ShotPossible(Ship s, St st, Ship t, float lrRange, float ms, float m)
         {
             float run = InterceptRun(s, t, World(ms * st.P.V[st.Cur]));
@@ -398,7 +398,7 @@ namespace DipGgFixes
             return best;
         }
         // length of the torpedo run (m) to the point where it meets the target moving straight on; -1 when it cannot catch it
-        static float InterceptRun(Ship s, Ship t, float vt)
+        internal static float InterceptRun(Ship s, Ship t, float vt)
         {
             var P = t.transform.position - s.transform.position; P.y = 0f;
             Vector3 V = Vector3.zero; try { V = t.velocityCurrent; V.y = 0f; } catch { }

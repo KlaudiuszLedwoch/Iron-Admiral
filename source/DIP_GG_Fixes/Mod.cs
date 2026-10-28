@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.314", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.328", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -120,6 +120,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> AutoShare;
         internal static MelonPreferences_Entry<bool> AllNations;
         internal static MelonPreferences_Entry<bool> CruisersWhenPoor;
+        internal static MelonPreferences_Entry<bool> RelationRepairOn; // 1.11.286 (#6)
         internal static MelonPreferences_Entry<float> BigShipFactor;
         internal static MelonPreferences_Entry<float> CruiserFactor;
         internal static MelonPreferences_Entry<float> MinorPortCapacityMult;
@@ -182,7 +183,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> TorpedoTurnAwaySeconds;
         internal static MelonPreferences_Entry<bool> FleetTorpedoAttack;
         internal static MelonPreferences_Entry<bool> Ramming;
-        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort;
+        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort, AiCrossTorpedo;
         internal static MelonPreferences_Entry<bool> NightRules, CruiserRoles, FireDistributionOn; internal static MelonPreferences_Entry<float> NightVisibilityKm;
         internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
@@ -249,7 +250,7 @@ namespace DipGgFixes
             SettingsUi.Tick();
             ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick(); ShipPartsCheck.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); MapGhosts.Tick(); Irredenta.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); MapGhosts.Tick(); Irredenta.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
@@ -259,7 +260,7 @@ namespace DipGgFixes
             try { Dispatch.Tick(); } catch { }
             try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251, 1.11.259
             try { HistDesigner.Tick(); } catch { }
-            try { AutoTest.Tick(); } catch { }
+            try { AutoTest.Tick(); } catch { } try { RelationRepair.Tick(); } catch { } // 1.11.286
             try { Trade.Tick(); } catch { }
             try { Intel.Tick(); } catch { }
             try { DesignRepair.Tick(); } catch { }
@@ -455,6 +456,7 @@ namespace DipGgFixes
             TorpedoTurnAwaySeconds = cat.CreateEntry("TorpedoTurnAwaySeconds", 45f, null, "Turn-away: how long the division keeps the evasive course (s)");
             FleetTorpedoAttack = cat.CreateEntry("FleetTorpedoAttack", true, null,
                 "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
+            AiCrossTorpedo = cat.CreateEntry("AiCrossTorpedo", true, null, "Battle AI: AI divisions attacking the same target with torpedoes approach 45 degrees either side of its bow so the tracks cross, and a division whose tubes on one side are empty turns to fire the other side before going off to reload (#56)");
             TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
                 "AI torpedo craft press the attack until every tube is empty; ships with reload torpedoes on board then turn away (smoke when available), open the range, reload and return, ships without reloads turn on the enemy light forces");
             ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
@@ -610,6 +612,8 @@ namespace DipGgFixes
             AutoTest.CreatePrefs(cat);
             HistPriority.CreatePrefs(cat);
             Trade.CreatePrefs(cat);
+            TorpedoSizeBest.CreatePrefs(cat); // 1.11.296 (#47)
+            TorpedoTubesMin.CreatePrefs(cat); // 1.11.309 (#47, part 2)
             Intel.CreatePrefs(cat);
             Obliquity.CreatePrefs(cat); ArmorQuality.CreatePrefs(cat); // 1.11.250
             ContinuousMap.CreatePrefs(cat);
@@ -626,6 +630,9 @@ namespace DipGgFixes
             MapGhosts.CreatePrefs(cat); // 1.11.234
             Irredenta.CreatePrefs(cat); // 1.11.235
             ShipPartsCheck.CreatePrefs(cat); // 1.11.243
+            BrokenDesigns.CreatePrefs(cat); // 1.11.308 (#32)
+            DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
+            DeckZoneFix.CreatePrefs(cat); // 1.11.317 (#59)
             UiScale.CreatePrefs(cat); // 1.11.100
             DesignRepair.CreatePrefs(cat); // 1.11.103
             PortForces.CreatePrefs(cat); // 1.11.120
@@ -1103,18 +1110,40 @@ namespace DipGgFixes
             catch { return false; }
         }
 
-        private static void Prefix(ref float attitudeDelta, bool init, bool force)
+        // 1.11.292 (#39): the game (and TweaksAndFixes' "All other allies declare war") sometimes calls AdjustAttitude for a pair
+        // of nations without a relation record; the interop wrapper then throws a NullReferenceException that ends the caller's
+        // loop (the remaining allies are skipped). A null relation is now skipped and logged; an exception thrown inside the
+        // game's AdjustAttitude is logged with the pair and swallowed, so the caller goes on with the next nation.
+        static int nullLogged, errLogged;
+        [ThreadStatic] static Relation current; [ThreadStatic] static string currentInfo; [ThreadStatic] static float currentDelta;
+        private static bool Prefix(Relation relation, ref float attitudeDelta, bool init, string info, bool force)
         {
             depth++;
-            if (depth > 1 || init || force || TafPassThrough()) return;
+            if (relation == null)
+            {
+                if (nullLogged++ < 20) MelonLogger.Msg($"[DIP GG Fixes][Diplomacy] AdjustAttitude called without a relation (delta {attitudeDelta:F1}, '{info}') - skipped");
+                return false;
+            }
+            if (depth == 1) { current = relation; currentInfo = info; currentDelta = attitudeDelta; }
+            if (depth > 1 || init || force || TafPassThrough()) return true;
             var m = attitudeDelta < 0f ? DipGgFixesMod.NegAttitudeMult : DipGgFixesMod.AttitudeMult;
-            if (m == null) return;
+            if (m == null) return true;
             attitudeDelta *= m.Value;
+            return true;
         }
 
-        private static void Finalizer()
+        private static Exception Finalizer(Exception __exception)
         {
             if (depth > 0) depth--;
+            if (__exception == null) { if (depth == 0) current = null; return null; }
+            if (errLogged++ < 20)
+            {
+                string pair = "?", state = "";
+                try { var r = current; if (r != null) { pair = r.ToString(); state = $", attitude now {r.attitude:F0}, war {r.isWar}"; } } catch { }
+                MelonLogger.Warning($"[DIP GG Fixes][Diplomacy] AdjustAttitude failed inside the game for {pair} (delta {currentDelta:F1}, '{currentInfo}'{state}) - {__exception.GetType().Name}: {__exception.Message.Split('\n')[0]}; the caller continues");
+            }
+            if (depth == 0) current = null;
+            return null;
         }
     }
 
@@ -1606,7 +1635,7 @@ namespace DipGgFixes
             on = stronger && (enough || delay);
             bool hopeless = stronger && !enough && !delay;
             bool wasH; fleetHopeless.TryGetValue(player.Pointer, out wasH);
-            if (on != was || hopeless != wasH) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t, {attackers} torpedo craft vs {targets} targets (needed {DipGgFixesMod.MassAttackPerTarget.Value} per target){(hopeless ? " - too few to get through, ships faster than the enemy withdraw" : "")}");
+            if (on != was || hopeless != wasH) Log($"massed torpedo attack {(on ? "ON" : "off")} for {player.data.name}: enemy combat tonnage {foe:0} t vs own {own:0} t, {attackers} torpedo craft vs {targets} targets (needed {DipGgFixesMod.MassAttackPerTarget.Value} per target){(hopeless ? " - too few to get through, ships faster than the enemy withdraw" : on && !enough ? " - short of the full strength: delaying attack with at least one craft per target (War Instructions 1944, 12298)" : "")}");
             fleetOn[player.Pointer] = on; fleetHopeless[player.Pointer] = hopeless; fleetNext[player.Pointer] = now + 5f;
             return on;
         }
@@ -1639,7 +1668,8 @@ namespace DipGgFixes
                 if (armour) { float pen, belt; float d = UnityEngine.Mathf.Max(3000f, Dist(leader, e) * 0.5f); if (!CannotPenetrate(e, leader, d, out pen, out belt)) armour = false; }
             }
             bool faster = own > fastest * EscapeMargin(doc);
-            why = faster ? $"faster than every visible enemy ({own:0.0} vs {fastest:0.0})" : armour ? "no visible enemy can penetrate its belt" : "";
+            // 1.11.294 (#36): the text names why leaving is safe, not why the ship leaves (read as "withdraws because nobody can hurt it")
+            why = faster ? $"can get away: faster than every visible enemy ({own:0.0} vs {fastest:0.0})" : armour ? $"can get away: none of the {seen} visible enemy ship(s) can penetrate its belt" : "";
             return seen > 0 && (faster || armour);
         }
 
@@ -1951,11 +1981,28 @@ namespace DipGgFixes
         // ignored the torpedo target priorities. An ordered charge now goes in at once at the priority target (next class down when the
         // listed class is missing) or the nearest capital ship.
         internal static bool OrderedCharge;
+        static readonly HashSet<IntPtr> desperateLogged = new HashSet<IntPtr>();
         internal static void TorpedoCharge(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, bool playerSide)
         {
             float dmg = DivDamage(div);
             bool ammo = HasTorpedoAmmo(leader);
             float abort = playerSide ? AbortDamage(doc) : AbortFor(leader, doc);
+            // 1.11.307 (author 26.10, 20:51: "the enemy CL should attack with torpedoes" - CL Town, too slow to escape a battleship at
+            // 3.6 km, gave up the charge as "too damaged" and fought on with guns only): a damaged division that cannot get away and
+            // has loaded tubes with a capital ship inside torpedo range goes on with the attack - turning away would not save it
+            if (!playerSide && ammo && dmg > abort && st.fighting)
+            {
+                try
+                {
+                    float tr = TorpedoRange(leader); float dd; var nc = NearestVisibleCapital(leader, enemies, out dd);
+                    if (nc != null && tr > 0f && dd <= tr && LoadedTubes(div, leader) > 0f)
+                    {
+                        if (desperateLogged.Add(div.Pointer)) Log($"{st.name} ({leader.shipType.name}): damage {dmg:0.00} over the charge limit, but it cannot get away and {nc.name} is at {dd:0} m (torpedoes {tr:0} m) - presses the attack to fire the loaded tubes");
+                        abort = dmg + 1f;
+                    }
+                }
+                catch { }
+            }
             // 1.11.86: AI attack cycle - press until every tube is empty, turn away, reload, come back
             if (!playerSide && ammo && dmg <= abort && ReloadCycle(leader, div, st, enemies)) return;
             // 1.11.87: torpedoes gone and no reloads on board - an AI flotilla that is still fit turns on the enemy light forces instead of retreating
@@ -1986,6 +2033,12 @@ namespace DipGgFixes
             float torp = TorpedoRange(leader);
             if (torp <= 0f) { Why(st, "torpedo range 0"); return; }
             float launchAt = torp * DipGgFixesMod.ChargeTorpedoMargin.Value;
+            // 1.11.300 (author 26.10, 20:16: "the CAs went too close to the BB" - Scharnhorst held off only at 1.7 km and was at 0.9 km
+            // later, torpedoes 4.1 km): a player's ordered attack launches from 85 % of the torpedo range, starts holding off at 110 %
+            // of that distance (the target closes too), and with the tubes empty opens the range instead of staying at launch distance
+            bool pOrder = playerSide || ordered;
+            if (pOrder) launchAt = torp * Math.Max(DipGgFixesMod.ChargeTorpedoMargin.Value, 0.85f);
+            float holdAt = pOrder ? launchAt * 1.1f : launchAt;
             // 1.11.88: night rules (War Instructions 1944, 827; national doctrine: avoid / accept / seek night action)
             if (!playerSide && !ordered && NightFlotilla(leader, div, st, doc, enemies, bestD, launchAt)) return;
             if (!st.charging)
@@ -2026,18 +2079,29 @@ namespace DipGgFixes
                 }
                 st.charging = true; st.target = best.Pointer;
                 Why(st, "charging");
-                Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : $"start distance {start:0} m")}");
+                Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : start >= float.MaxValue ? (ordered ? "ordered - goes in at once" : "goes in at once") : $"start distance {start:0} m")}");
             }
-            if (bestD > launchAt)
+            UnityEngine.Vector3 xdir = UnityEngine.Vector3.zero; int xslot = 0, xof = 1;
+            bool aiTactics = !pOrder && DipGgFixesMod.AiCrossTorpedo != null && DipGgFixesMod.AiCrossTorpedo.Value; // 1.11.318 (#56)
+            bool cross = (pOrder || aiTactics) && CrossSlot(div, best, out xdir, out xslot, out xof);   // 1.11.302; AI since 1.11.318
+            if (bestD > holdAt)
             {
                 var tt = best.transform;
-                if (tt != null) { if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, tt.position, "charging"); else div.MoveTo(tt.position); }
+                if (tt != null)
+                {
+                    var aim = cross ? tt.position + xdir * launchAt : tt.position;
+                    if (cross && st.reason != "cross attack") { Log($"{st.name}: cross torpedo attack on {best.name} - approach {(xslot % 2 == 0 ? "starboard" : "port")} bow ({xslot + 1} of {xof} divisions), tracks to cross at about 90 deg"); }
+                    if (bestD > launchAt * 1.3f) MoveEvasive(div, leader, st, aim, "charging"); else div.MoveTo(aim);
+                    if (cross) Why(st, "cross attack");
+                }
             }
             // inside launch range: the game's torpedo logic fires on its own.
             // 1.11.86: the AI keeps closing while tubes are still loaded (vanilla 1.7 test: flotillas hovered just outside range after one salvo)
             else if (!playerSide && DipGgFixesMod.TorpedoReloadCycle.Value && bestD > launchAt * 0.6f)
             {
-                var tt2 = best.transform; if (tt2 != null) div.MoveTo(tt2.position);
+                // 1.11.318 (#56): the AI fires the other side too - one side empty and the other loaded: turn to bring it to bear
+                if (aiTactics && TwoSideTurn(div, leader, st, best, bestD)) return;
+                var tt2 = best.transform; if (tt2 != null) div.MoveTo(cross ? tt2.position + xdir * (launchAt * 0.7f) : tt2.position);
             }
             // 1.11.267 (author 25.10, 15:04/15:08: CA under a torpedo attack order closed to ramming distance): a player's division
             // inside launch range stops closing - it holds off at the launch distance, running across the target's bearing
@@ -2050,12 +2114,63 @@ namespace DipGgFixes
                     if (dir.sqrMagnitude > 1f)
                     {
                         dir.Normalize(); var side = new UnityEngine.Vector3(-dir.z, 0f, dir.x);
+                        float loaded = 1f; try { loaded = LoadedTubes(div, leader); } catch { }
+                        // 1.11.302 (author 26.10, 20:23): one side fired - turn so the loaded side bears on the target, fire it, and only
+                        // then go off to reload
+                        if (loaded > 0f)
+                        {
+                            LoadedSides(leader, out bool lp, out bool ls);
+                            float tx = lt.InverseTransformPoint(tt3.position).x;   // > 0: target on the starboard side
+                            bool targetStbd = tx > 0f;
+                            if ((targetStbd && !ls && lp) || (!targetStbd && !lp && ls))
+                            {
+                                var toT = tt3.position - lt.position; toT.y = 0f; toT.Normalize();
+                                // heading with the target abeam on the loaded side: starboard abeam = (-dz, dx), port abeam = (dz, -dx)
+                                var h = lp ? new UnityEngine.Vector3(toT.z, 0f, -toT.x) : new UnityEngine.Vector3(-toT.z, 0f, toT.x);
+                                div.MoveTo(lt.position + h * 2500f);
+                                string why2 = lp ? "turning to bring the port tubes to bear" : "turning to bring the starboard tubes to bear";
+                                if (st.reason != why2) Log($"{st.name}: {(lp ? "starboard" : "port")} tubes fired at {best.name} ({bestD:0} m) - {why2}");
+                                Why(st, why2);
+                                return;
+                            }
+                        }
+                        if (cross) { dir = xdir; side = new UnityEngine.Vector3(-dir.z, 0f, dir.x); }
+                        if (loaded == 0f && IsCapital(best))
+                        {
+                            // 1.11.300: salvo away - turn away from the battleship and open the range to 1.6 x the torpedo range
+                            div.MoveTo(tt3.position + dir * (torp * 1.6f) + side * (torp * 0.3f));
+                            if (st.reason != "tubes empty - opening the range") Log($"{st.name}: torpedoes away at {best.name} ({bestD:0} m) - tubes empty, turns away and opens the range");
+                            Why(st, "tubes empty - opening the range");
+                            return;
+                        }
                         div.MoveTo(tt3.position + dir * launchAt + side * (launchAt * 0.6f));
                         if (st.reason != "in launch range - holding off") Log($"{st.name}: inside torpedo launch range of {best.name} ({bestD:0} m, launch {launchAt:0} m) - stops closing and runs across");
                         Why(st, "in launch range - holding off");
                     }
                 }
             }
+        }
+
+        // 1.11.318 (#56): the two-side salvo of the player's order (1.11.302) for AI divisions - target on the empty side, other side loaded
+        static bool TwoSideTurn(Division div, Ship leader, DivState st, Ship best, float bestD)
+        {
+            try
+            {
+                var tt3 = best.transform; var lt = leader.transform; if (tt3 == null || lt == null) return false;
+                float loaded = 1f; try { loaded = LoadedTubes(div, leader); } catch { }
+                if (loaded <= 0f) return false;
+                LoadedSides(leader, out bool lp, out bool ls);
+                bool targetStbd = lt.InverseTransformPoint(tt3.position).x > 0f;
+                if (!((targetStbd && !ls && lp) || (!targetStbd && !lp && ls))) return false;
+                var toT = tt3.position - lt.position; toT.y = 0f; if (toT.sqrMagnitude < 1f) return false; toT.Normalize();
+                var h = lp ? new UnityEngine.Vector3(toT.z, 0f, -toT.x) : new UnityEngine.Vector3(-toT.z, 0f, toT.x);
+                div.MoveTo(lt.position + h * 2500f);
+                string why2 = lp ? "turning to bring the port tubes to bear" : "turning to bring the starboard tubes to bear";
+                if (st.reason != why2) Log($"{st.name}: {(lp ? "starboard" : "port")} tubes fired at {best.name} ({bestD:0} m) - {why2} (AI)");
+                Why(st, why2);
+                return true;
+            }
+            catch { return false; }
         }
 
         // Capital AI divisions: torpedo charge when faster and armed with torpedoes; otherwise close in
@@ -2612,26 +2727,32 @@ namespace DipGgFixes
                 bool pointBlank = d <= 2500f && BattleAi.Ton(t) >= 1000f; // 1.11.206: anything alongside is worth a torpedo (24.10: a cruiser held its torpedoes with an enemy light cruiser 1.5 km away)
                 if (!pointBlank && !(closing && range > 0f && d <= 0.6f * range)) { why = $"{t.name} is a small target at {d:0} m{(closing ? "" : ", not closing")}"; return true; }
             }
-            // 1.11.98: the measured velocity is capped at the target's top speed (22.10: "outruns the torpedo" for a 21-knot cruiser at 1.5 km)
-            float vmax = BattleAi.Speed(t) * 1.15f;
-            if (vmax > 0f && V.magnitude > vmax) V = V.normalized * vmax;
-            float vt = DipGgFixesMod.TorpedoSenseSpeed.Value; if (vt < 5f) vt = 5f;
-            // intercept time T: |P + V T| = vt T
-            float a = V.sqrMagnitude - vt * vt, b = 2f * UnityEngine.Vector3.Dot(P, V), c = P.sqrMagnitude, T = -1f;
-            if (UnityEngine.Mathf.Abs(a) < 1e-3f) { if (b < 0f) T = -c / b; }
-            else
+            // 1.11.294 (#36): the intercept run in the battle's own units. 1.11.93-293 took a fixed 20 m/s torpedo against the target's
+            // velocity measured in world units per second (about 3.2 x m/s, Ship.ModifySpeedTorpedo), so a target moving away looked
+            // nearly as fast as the torpedo and the run came out at tens or hundreds of km at 1.5-5 km ("run to the intercept point
+            // 781547 m"). Now the same computation as the torpedo-setting choice: the game's velocity of the target and the torpedo's
+            // own speed converted by the game (TorpedoSettings.InterceptRun / World); the fixed speed only when the ship reports none.
+            // 1.11.301 (author 26.10, 20:21: "from 3 km one could fire boldly at such a large, sluggish target"): a capital ship inside
+            // three quarters of the torpedo range is never a hopeless shot - a spread at a battleship or cruiser that size covers its
+            // possible turns, so the intercept check is not applied
+            bool bigTarget = false; try { bigTarget = BattleAi.IsCapital(t); } catch { }
+            if (bigTarget && range > 0f && d <= range * 0.75f) return false;
+            // 1.11.305 (author 26.10, 20:51: "the enemy CL should attack with torpedoes" - Gladiator and Wolf held at 4.5-4.7 km against
+            // a 30-knot battleship, just past 3/4 of their range): up to 90 % of the range a large target is attacked unless it is
+            // clearly running away from the torpedoes (its course opening the range at more than half its speed)
+            if (bigTarget && range > 0f && d <= range * 0.9f)
             {
-                float disc = b * b - 4f * a * c;
-                if (disc >= 0f)
-                {
-                    float sq = UnityEngine.Mathf.Sqrt(disc), t1 = (-b - sq) / (2f * a), t2 = (-b + sq) / (2f * a);
-                    T = t1 > 0f && (t1 < t2 || t2 <= 0f) ? t1 : t2;
-                }
+                float vmaxT = BattleAi.Speed(t); var Vt = V; if (vmaxT > 0f && Vt.magnitude > vmaxT * 1.15f) Vt = Vt.normalized * vmaxT * 1.15f;
+                float opening = P.sqrMagnitude > 1f ? UnityEngine.Vector3.Dot(Vt, P.normalized) : 0f;
+                if (opening < 0.5f * Math.Max(1f, vmaxT)) return false;
             }
-            if (T <= 0f) { why = $"{t.name} at {d:0} m outruns the torpedo"; return true; }
+            float ms = 0f; try { ms = s.TorpedoSpeed(false); } catch { }
+            float vt = ms > 0.5f ? TorpedoSettings.World(ms) : TorpedoSettings.World(UnityEngine.Mathf.Max(5f, DipGgFixesMod.TorpedoSenseSpeed.Value));
+            float run = TorpedoSettings.InterceptRun(s, t, vt);
+            if (run <= 0f) { why = $"{t.name} at {d:0} m outruns the torpedo"; return true; }
             // 1.11.135: the player's own ships may use the full torpedo range (the 85% margin held shots at 22-50 m over the limit)
             float margin = playerShip ? UnityEngine.Mathf.Max(1f, DipGgFixesMod.TorpedoSenseMargin.Value) : DipGgFixesMod.TorpedoSenseMargin.Value;
-            float run = vt * T, lim = range * margin * (st.senseHold ? 0.95f : 1f); // 1.11.99: hysteresis
+            float lim = range * margin * (st.senseHold ? 0.95f : 1f); // 1.11.99: hysteresis
             if (range > 0f && run > lim) { why = $"{t.name} at {d:0} m: run to the intercept point {run:0} m > {lim:0} m usable torpedo range"; return true; }
             return false;
         }
@@ -3040,7 +3161,7 @@ namespace DipGgFixes
                 try { if (where == null && In(battle.ShipsOf(owner, false), ship)) where = "ships"; } catch { }
                 try { if (where == null && In(battle.SunkShips, ship)) where = "sunk"; } catch { }
                 if (where == null) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered flag but not in this battle - left as it is"); return; }
-                MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered in this battle (battle list: {where})");
+                if (logged < 30) MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name}: surrendered in this battle (battle list: {where})");
                 // 1.11.50: surrendered ships go to the side that won the battle; a ship whose own side won returns to its owner
                 Player victor = null; float vpA = 0f, vpD = 0f; string how = "condition";
                 try { victor = battle.ConditionWinner; } catch { }
@@ -3388,6 +3509,7 @@ namespace DipGgFixes
             Channel = cat.CreateEntry("UpdateChannel", "auto", null, "Release line the update check follows: auto (the Beta updates switch decides), stable or beta");
             Beta = cat.CreateEntry("BetaUpdates", false, null, "Beta updates (for testers - needs Share logs on): the update check offers beta versions (new features under test); off = stable versions, also back from a beta to the latest stable. Takes effect at the next start");
             BetaInit = cat.CreateEntry("BetaUpdatesInitialised", false, null, "internal: the Beta updates switch was set from the installed package once", true);
+            DipGgFixesMod.RelationRepairOn = cat.CreateEntry("RelationRepair", true, null, "Restore missing relation records between great powers (a neutral relation is added for a pair with no record; existing relations are never changed)");
         }
         static bool LocalIsBeta => local != null && local.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) >= 0;
         static bool BetaLine
@@ -3406,7 +3528,7 @@ namespace DipGgFixes
         const string Page = "https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases";
         static volatile string remote, remoteDll, remoteSha, remoteZipUrl; static volatile bool done, shown;
         static volatile string resultText; static volatile bool resultShown;
-        static string local = "?", localDll = "?";
+        static string local = "?", localDll = "?", loadedDll = null;
         static float firstTry, settledAt;
         static string ModsDir => Path.Combine(MelonUtils.GameDirectory, "Mods");
 
@@ -3421,6 +3543,15 @@ namespace DipGgFixes
                 {
                     string vf = Path.Combine(ModsDir, "IRON_ADMIRAL_VERSION.txt");
                     if (File.Exists(vf)) { var l = File.ReadAllLines(vf); if (l.Length > 0) local = l[0].Trim(); if (l.Length > 1) localDll = l[1].Trim(); }
+                }
+                catch { }
+                // 1.11.295 (#55): the marker names the package, not the DLL that is running - compare with the loaded assembly
+                try
+                {
+                    var v = typeof(DipGgFixesMod).Assembly.GetName().Version;
+                    loadedDll = $"DIP_GG_Fixes {v.Major}.{v.Minor}.{v.Build}";
+                    if (!string.IsNullOrEmpty(localDll) && localDll != loadedDll)
+                        MelonLogger.Warning($"[DIP GG Fixes][Update] installed package {local} names {localDll}, but the loaded DLL is {loadedDll} - the Mods folder holds a different DLL than the package; reinstall the package");
                 }
                 catch { }
                 // a beta package switches the Beta updates option on once (later the player decides in F10)
@@ -3500,7 +3631,10 @@ namespace DipGgFixes
                 bool newer = Newer(remote, local);
                 // 1.11.123: back from a beta to the stable line - the latest stable is offered even if its number is lower
                 if (!newer && !BetaLine && LocalIsBeta && !string.IsNullOrEmpty(remote) && remote != local && remote.IndexOf("-beta", StringComparison.OrdinalIgnoreCase) < 0) newer = true;
-                if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}), latest on GitHub ({(BetaLine ? "beta" : "stable")} line) {remote} ({remoteDll}) - {(newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
+                // 1.11.295 (#55): same package number, but the running DLL is not the one GitHub ships with it - offer the package again
+                bool dllDiffers = !newer && remote == local && !string.IsNullOrEmpty(remoteDll) && !string.IsNullOrEmpty(loadedDll) && remoteDll != loadedDll;
+                if (dllDiffers) newer = true;
+                if (firstTry == 0f) { firstTry = UnityEngine.Time.realtimeSinceStartup; MelonLogger.Msg($"[DIP GG Fixes][Update] installed {local} ({localDll}; loaded {loadedDll ?? "?"}), latest on GitHub ({(BetaLine ? "beta" : "stable")} line) {remote} ({remoteDll}) - {(dllDiffers ? "LOADED DLL DIFFERS FROM THE PACKAGE - reinstall offered" : newer ? "UPDATE AVAILABLE" : "up to date")}{(remoteZipUrl != null ? ", package " + remoteZipUrl : "")}"); }
                 if (!newer) { shown = true; return; }
                 if (UnityEngine.Time.realtimeSinceStartup - firstTry < 15f) return; // let the main menu appear first
                 // 1.11.13: never during a loading screen - the 15:44 log showed the message raised while a save was loading
@@ -4266,19 +4400,19 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuild2_Refit
     {
-        private static void Postfix(Ship __0, ref string __1, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __1, "CanBuildShipsFromDesign"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
+        private static void Postfix(Ship __0, ref string __1, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __1, "CanBuildShipsFromDesign"); BrokenDesigns.Check(__0, ref __result, ref __1); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     [HarmonyPatch(typeof(PlayerController), "CanBuildShipsFromDesign", new Type[] { typeof(Ship), typeof(int), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuild3_Refit
     {
-        private static void Postfix(Ship __0, ref string __2, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __2, "CanBuildShipsFromDesign(n)"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
+        private static void Postfix(Ship __0, ref string __2, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __2, "CanBuildShipsFromDesign(n)"); BrokenDesigns.Check(__0, ref __result, ref __2); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     [HarmonyPatch(typeof(PlayerController), "CanBuildFromDesignOnInit", new Type[] { typeof(Ship), typeof(int), typeof(bool), typeof(string) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
     internal static class Patch_CanBuildInit_Refit
     {
-        private static void Postfix(Ship __0, ref string __3, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __3, "CanBuildFromDesignOnInit"); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
+        private static void Postfix(Ship __0, ref string __3, ref bool __result) { long t0 = Perf.Enabled ? Perf.T() : 0; RefitBuildCheck.Fix(__0, ref __result, ref __3, "CanBuildFromDesignOnInit"); BrokenDesigns.Check(__0, ref __result, ref __3); if (t0 != 0) Perf.Add(Perf.CANB, t0); }
     }
 
     // 1.11.56: the save button of the designer (Ui.RefreshConstructorInfo, closure 489_21) reads canBuild / canNotBuildText,

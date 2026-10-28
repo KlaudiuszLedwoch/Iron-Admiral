@@ -19,6 +19,45 @@ namespace DipGgFixes
         static int tubeErr, valueErr, smokeErr;
 
         // fraction of the division's torpedo tubes (with ammunition left) that are loaded; -1 when the state cannot be read
+        // 1.11.302 (author 26.10, 20:23): which side of the leader still has loaded tubes (centre-line mounts count for both sides)
+        internal static void LoadedSides(Ship leader, out bool port, out bool stbd)
+        {
+            port = false; stbd = false;
+            try
+            {
+                var parts = leader.torpedoesAll; var lt = leader.transform; if (parts == null || lt == null) return;
+                for (int i = 0; i < parts.Count; i++)
+                {
+                    var p = parts[i]; if (p == null) continue;
+                    var r = p.reloading; if (r != null && !r.isDone) continue;
+                    float x = lt.InverseTransformPoint(p.transform.position).x;
+                    if (x > 1f) stbd = true; else if (x < -1f) port = true; else { port = true; stbd = true; }
+                }
+            }
+            catch { port = true; stbd = true; }
+        }
+        // 1.11.302 (author 26.10, 20:24: torpedoes from two sides, the tracks crossing at 90 degrees, so the target cannot comb both):
+        // divisions under a torpedo attack on the same target take approach bearings 45 degrees either side of its bow
+        static readonly Dictionary<IntPtr, Dictionary<IntPtr, float>> attackers = new Dictionary<IntPtr, Dictionary<IntPtr, float>>();
+        internal static bool CrossSlot(Division div, Ship target, out UnityEngine.Vector3 dir, out int slot, out int of)
+        {
+            dir = UnityEngine.Vector3.zero; slot = 0; of = 1;
+            try
+            {
+                float now = UnityEngine.Time.time;
+                if (!attackers.TryGetValue(target.Pointer, out var m)) attackers[target.Pointer] = m = new Dictionary<IntPtr, float>();
+                m[div.Pointer] = now;
+                var live = new List<IntPtr>(); foreach (var kv in m) if (now - kv.Value < 10f) live.Add(kv.Key);
+                if (live.Count < 2) return false;
+                live.Sort((a, b) => a.ToInt64().CompareTo(b.ToInt64()));
+                slot = live.IndexOf(div.Pointer); of = live.Count;
+                var f = target.transform.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) return false; f.Normalize();
+                float ang = (slot % 2 == 0 ? 45f : -45f) + (slot / 2) * (slot % 2 == 0 ? 20f : -20f);
+                dir = UnityEngine.Quaternion.Euler(0f, ang, 0f) * f;
+                return true;
+            }
+            catch { return false; }
+        }
         internal static float LoadedTubes(Division div, Ship leader)
         {
             int n = 0, loaded = 0;
@@ -351,6 +390,9 @@ namespace DipGgFixes
         internal static bool CoverRetreat(Ship leader, Division div, DivState st, Doctrine doc, Il2CppSystem.Collections.Generic.List<Ship> enemies, CampaignBattle battle, Player player)
         {
             if (!DipGgFixesMod.CoverRetreat.Value) return false;
+            // 1.11.294 (#36): transports and other non-combat ships never cover a retreat (1.2.74-beta.8: four French transports, one
+            // of them panicked, "covering the retreat - screening") - they keep the game's own behaviour
+            if (!Combat(leader)) { st.covering = false; return false; }
             if (!AttackFailed(player, battle, enemies, doc)) { st.covering = false; return false; }
             float rel = RelValue(leader);
             if (rel >= DipGgFixesMod.CoverValueRatio.Value)

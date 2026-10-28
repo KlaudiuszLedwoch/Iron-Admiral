@@ -110,6 +110,7 @@ namespace DipGgFixes
             CoalJoin = cat.CreateEntry("CoalitionJoinChance", 0.5f, null, "Chance per turn for each other member to join once a member is at war with the target");
             CoalAttitude = cat.CreateEntry("CoalitionAttitude", -90f, null, "Attitude at or below which an AI great power counts as hostile");
             CoalMaxWars = cat.CreateEntry("CoalitionMaxWars", 3f, null, "An AI great power already fighting this many wars does not join a coalition");
+            CoalitionWar.Create(cat); // 1.11.291 (#40)
             ResearchR0 = cat.CreateEntry("ResearchGdpScale", 0.002f, null, "Research effect = ln(1 + research spending / GDP / this)");
             ResearchGrowth = cat.CreateEntry("ResearchGrowthPerLog", 0.15f, null, "Annual GDP growth points per unit of the research effect");
             ResearchDisinflation = cat.CreateEntry("ResearchDisinflationPerLog", 0.05f, null, "Inflation points removed per month per unit of the research effect");
@@ -505,7 +506,7 @@ namespace DipGgFixes
             var cc = CampaignController.Instance;
             if (cc == null || cc.CampaignData == null) return;
             IntPtr ptr = cc.CampaignData.Pointer;
-            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); Independence.peaceSince.Clear(); Independence.ResetBaseline(); Occupation.Reset(); loaded = false; tries = 0; lastTry = -100f; }
+            if (ptr != session) { session = ptr; states.Clear(); Series.laidDown.Clear(); Independence.peaceSince.Clear(); Independence.ResetBaseline(); CoalitionWar.Reset(); BrokenDesigns.Reset(); Occupation.Reset(); loaded = false; tries = 0; lastTry = -100f; }
             if (loaded) return;
             float t = UnityEngine.Time.realtimeSinceStartup;
             if (t - lastTry < 1f) return;
@@ -526,6 +527,8 @@ namespace DipGgFixes
                     string k; EconState st;
                     if (Series.ParseLaid(line)) continue;
                     if (Independence.Parse(line)) continue;
+                    if (CoalitionWar.Parse(line)) continue; // 1.11.291
+                    if (BrokenDesigns.Parse(line)) continue; // 1.11.308 (#32)
                     if (EconState.Parse(line, out k, out st)) { states[k] = st; n++; }
                 }
                 MelonLogger.Msg($"[DIP GG Fixes][Economy] loaded the economy state of {n} great powers ({Path.GetFileName(f)})");
@@ -548,6 +551,8 @@ namespace DipGgFixes
                 int keepFrom = Month() - 120;
                 foreach (var kv in Series.laidDown) if (kv.Value.Month >= keepFrom) lines.Add(Series.SerializeLaid(kv.Key, kv.Value));
                 lines.AddRange(Independence.Serialize());
+                lines.AddRange(CoalitionWar.Serialize()); // 1.11.291
+            lines.AddRange(BrokenDesigns.Serialize()); // 1.11.308 (#32)
                 string f = Path.Combine(dir, "eco_" + Fingerprint() + ".txt");
                 File.WriteAllLines(f, lines);
                 var files = new DirectoryInfo(dir).GetFiles("eco_*.txt").OrderByDescending(x => x.LastWriteTimeUtc).ToList();
@@ -824,6 +829,7 @@ namespace DipGgFixes
         internal static void Coalitions()
         {
             if (EcoPrefs.CoalOn == null || !EcoPrefs.CoalOn.Value) return;
+            if (CoalitionWar.Run()) return; // 1.11.291 (#40): balance of power; the rule below only with CoalitionBalanceOfPower off
             try
             {
                 var majors = Majors().Where(x => { try { return !x.isDisabled; } catch { return false; } }).ToList();

@@ -3,8 +3,8 @@
 //  1. A technology that other great powers already have is researched faster - the more of them know it and the further behind
 //     the researcher is, the faster (bought, copied, read in the journals). A technology nobody else has, whose year lies more
 //     than TechAheadYears beyond the frontier of the other powers in that field, is researched slower (nothing to copy).
-//  2. Catch-up: a power the game rates "Very Behind" receives every turn one technology that all the other great powers already
-//     know (the earliest first - the prerequisites come in order); a power rated "Behind" one every second turn.
+//  2. Catch-up: a power the game rates "Very Behind" receives every second turn one technology that all the other great powers already
+//     know (the earliest first - the prerequisites come in order); a power rated "Behind" one every fourth turn (1.11.306; was every turn / every second turn).
 // Both apply to the AI and the player alike. Switches: TechDiffusion, TechCatchUp (F10, Campaign).
 // Hooks: CampaignController.GetResearchSpeed(Player, Technology) (speed multiplier); Player.techLevel (level per field) for the
 // standing of each power, Player.technologies / technologiesResearchedAll for what is known.
@@ -30,7 +30,7 @@ namespace DipGgFixes
             KnownBonus = cat.CreateEntry("TechKnownBonus", 2f, null, "Research speed added when every other great power knows the technology (x1 + this; halved when the researcher is not behind at all)");
             AheadYears = cat.CreateEntry("TechAheadYears", 10, null, "A technology nobody else has, whose year is more than this many years beyond the other powers' frontier in that field, counts as ahead of its time");
             AheadPenalty = cat.CreateEntry("TechAheadSpeed", 0.5f, null, "Research speed multiplier for a technology ahead of its time");
-            CatchUp = cat.CreateEntry("TechCatchUp", true, null, "Campaign: a great power far behind receives technologies that all the other great powers already know - Very Behind: one every turn, Behind: one every second turn (AI and player alike)");
+            CatchUp = cat.CreateEntry("TechCatchUp", true, null, "Campaign: a great power far behind receives technologies that all the other great powers already know - Very Behind: one every second turn, Behind: one every fourth turn (AI and player alike)");
             BehindAt = cat.CreateEntry("TechBehindAt", 0.85f, null, "A power counts as Behind when its technology level (sum of field levels) is below this share of the other great powers' average");
             VeryBehindAt = cat.CreateEntry("TechVeryBehindAt", 0.7f, null, "A power counts as Very Behind below this share of the other great powers' average");
         }
@@ -43,6 +43,17 @@ namespace DipGgFixes
             public Dictionary<IntPtr, float> Score = new Dictionary<IntPtr, float>();                       // player -> sum of field levels
             public Dictionary<string, int> Frontier = new Dictionary<string, int>();                        // field -> newest year known by anyone
             public Dictionary<string, int> KnownBy = new Dictionary<string, int>();                         // tech -> how many majors know it
+            // 1.11.288 (#8): newest year per field for each power, so the "ahead of its time" rule compares with the OTHER powers
+            //                (the shared frontier included the researcher, so a leading power was never slowed)
+            public Dictionary<IntPtr, Dictionary<string, int>> OwnFrontier = new Dictionary<IntPtr, Dictionary<string, int>>();
+            public Dictionary<IntPtr, int> Newest = new Dictionary<IntPtr, int>();                           // player -> newest tech year
+        }
+        // newest year in a field known by any great power other than p (-1 when none)
+        static int OthersFrontier(Snap s, Player p, string field)
+        {
+            int best = -1;
+            foreach (var kv in s.OwnFrontier) { if (kv.Key == p.Pointer) continue; int y; if (kv.Value.TryGetValue(field, out y) && y > best) best = y; }
+            return best;
         }
         static Snap snap; static int errors;
         static int MonthIndex() { try { var d = CampaignController.Instance.CurrentDate.AsDate(); return d.Year * 12 + d.Month; } catch { return -1; } }
@@ -59,14 +70,20 @@ namespace DipGgFixes
                     bool ok = false; try { ok = p.isMajor && !p.isDisabled; } catch { }
                     if (!ok) continue;
                     s.Majors.Add(p);
-                    var known = new HashSet<string>();
+                    var known = new HashSet<string>(); var ownF = new Dictionary<string, int>(); int newest = 0;
                     try
                     {
                         var e = p.technologiesResearchedAll.GetEnumerator(); var ue = e.Cast<Il2CppSystem.Collections.IEnumerator>();
-                        while (ue.MoveNext()) { var t = e.Current; if (t == null || t.data == null) continue; known.Add(t.data.name); int y = t.data.year; string f = t.data.type ?? ""; int fy; if (!s.Frontier.TryGetValue(f, out fy) || y > fy) s.Frontier[f] = y; }
+                        while (ue.MoveNext())
+                        {
+                            var t = e.Current; if (t == null || t.data == null) continue; known.Add(t.data.name); int y = t.data.year; string f = t.data.type ?? ""; int fy;
+                            if (!s.Frontier.TryGetValue(f, out fy) || y > fy) s.Frontier[f] = y;
+                            if (!ownF.TryGetValue(f, out fy) || y > fy) ownF[f] = y;
+                            if (y > newest) newest = y;
+                        }
                     }
                     catch { }
-                    s.Known[p.Pointer] = known;
+                    s.Known[p.Pointer] = known; s.OwnFrontier[p.Pointer] = ownF; s.Newest[p.Pointer] = newest;
                     foreach (var n in known) { int c; s.KnownBy.TryGetValue(n, out c); s.KnownBy[n] = c + 1; }
                     float score = 0f; try { var tl = p.techLevel; if (tl != null) foreach (var kv in tl) score += kv.Value; } catch { }
                     if (score <= 0f) score = known.Count;
@@ -100,8 +117,8 @@ namespace DipGgFixes
                 if (share > 0f) mult *= 1f + (KnownBonus != null ? KnownBonus.Value : 2f) * share * (0.5f + 0.5f * behind);
                 else
                 {
-                    int fy; string f = t.data.type ?? "";
-                    if (s.Frontier.TryGetValue(f, out fy) && t.data.year > fy + (AheadYears != null ? AheadYears.Value : 10)) mult *= Math.Max(0.1f, AheadPenalty != null ? AheadPenalty.Value : 0.5f);
+                    string f = t.data.type ?? ""; int fy = OthersFrontier(s, p, f);
+                    if (fy > 0 && t.data.year > fy + (AheadYears != null ? AheadYears.Value : 10)) mult *= Math.Max(0.1f, AheadPenalty != null ? AheadPenalty.Value : 0.5f);
                 }
                 return mult;
             }
@@ -109,7 +126,7 @@ namespace DipGgFixes
         }
 
         // ---- 2. catch-up grants, once a month after the turn ----
-        static int grantMonth = -1, grantLog; static readonly Dictionary<IntPtr, int> lastGrant = new Dictionary<IntPtr, int>();
+        static int grantMonth = -1, grantLog, standMonth = -1; static readonly Dictionary<IntPtr, int> lastGrant = new Dictionary<IntPtr, int>();
         internal static void Tick()
         {
             if (CatchUp == null || !CatchUp.Value) return;
@@ -119,13 +136,26 @@ namespace DipGgFixes
                 if (battle) return;
                 int m = MonthIndex(); if (m < 0 || m == grantMonth) return; grantMonth = m;
                 var s = Current(); if (s.Majors.Count < 3) return;
+                // 1.11.288 (#8): standing of every great power once a quarter (and at the first month seen), to follow the gap
+                if (standMonth < 0 || m - standMonth >= 3)
+                {
+                    standMonth = m;
+                    var parts = new List<string>();
+                    foreach (var q in s.Majors)
+                    {
+                        int ny; s.Newest.TryGetValue(q.Pointer, out ny); bool qm = false; try { qm = q.isMain; } catch { }
+                        parts.Add($"{Economy.Name(q)}{(qm ? " (player)" : "")} {Standing(s, q):P0}, newest {ny}");
+                    }
+                    Log("standing (level against the other great powers, newest technology year): " + string.Join("; ", parts));
+                }
                 foreach (var p in s.Majors)
                 {
                     float st = Standing(s, p);
                     bool very = st < (VeryBehindAt != null ? VeryBehindAt.Value : 0.7f), behind = st < (BehindAt != null ? BehindAt.Value : 0.85f);
                     if (!behind) continue;
                     int last; lastGrant.TryGetValue(p.Pointer, out last);
-                    if (!very && last > 0 && m - last < 2) continue;     // Behind: every second turn
+                    // 1.11.306 (author 26.10): Very Behind one technology every second turn, Behind every fourth (was every turn / every second)
+                    if (last > 0 && m - last < (very ? 2 : 4)) continue;
                     // candidates: known by every other major, not by this one; earliest year first (prerequisites first)
                     HashSet<string> own; s.Known.TryGetValue(p.Pointer, out own); own = own ?? new HashSet<string>();
                     Technology pick = null; int bestYear = int.MaxValue;

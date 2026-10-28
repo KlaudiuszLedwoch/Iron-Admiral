@@ -20,16 +20,17 @@ namespace DipGgFixes
 {
     internal static partial class BattleAi
     {
-        internal enum DivOrder { None, Screen, Scout, Torpedo, Free, Hunt }
+        internal enum DivOrder { None, Screen, Scout, Torpedo, Free, Hunt, Finish }
         internal class OrderSt { public DivOrder Order; public bool FromVanilla; public bool Issued; public float NextThink; public string Name; public string Reason; public Vector3 LastSeen; public bool Seen; public Ship Leader; public float LastCmd; public Vector3 LastTarget; public bool ClosingUp; }
         static readonly Dictionary<IntPtr, OrderSt> orders = new Dictionary<IntPtr, OrderSt>();
         static IntPtr ordersBattle;
         internal static bool Issuing;   // our own commands - the Division.MoveTo/MoveDir patch ignores them
-        static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action", "Hunt" };
+        static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action", "Hunt", "Finish off" };
 
         internal static MelonPreferences_Entry<bool> OrdersOn, OrdersVanilla;
         internal static MelonPreferences_Entry<float> Leash, BreakOff, ScoutSearch;
         internal static MelonPreferences_Entry<bool> ScoutSmoke; // 1.11.256
+        internal static MelonPreferences_Entry<float> FinishDamage; // 1.11.285 (#1)
         internal static void CreateOrderPrefs(MelonPreferences_Category cat)
         {
             OrdersOn = cat.CreateEntry("DivisionOrders", true, null, "Battle: orders for the player's divisions with autonomy (screen, scout, torpedo attack, free action) - the division is led by the AI within the limits of the order; panel in battle or Alt+1..Alt+5");
@@ -37,6 +38,7 @@ namespace DipGgFixes
             Leash = cat.CreateEntry("DivisionLeash", 6000f, null, "Battle: how far (m) a screening division may move away from the main body (scouts: 2.5 times as far)");
             ScoutSearch = cat.CreateEntry("ScoutSearchKm", 20f, null, "Battle: how far (km) ahead of the main body a scouting division ranges while searching for the enemy (sweeping left and right of the expected bearing)"); // 1.11.201
             ScoutSmoke = cat.CreateEntry("ScoutTowardsSmoke", true, null, "Battle: a scouting division heads for smoke reported by the lookouts (an enemy ship sighted but not identified yet) and closes until she can be made out"); // 1.11.256
+            FinishDamage = cat.CreateEntry("DivisionFinishDamage", 0.4f, null, "Battle: estimated damage (0-1) from which an enemy ship counts as crippled for the Finish off order (Alt+7)"); // 1.11.285
             BreakOff = cat.CreateEntry("DivisionBreakOffDamage", 0.5f, null, "Battle: average damage (0-1) at which a screening or scouting division breaks off and falls back behind the main body");
         }
 
@@ -61,6 +63,7 @@ namespace DipGgFixes
             var o = OrderOf(div, true); o.Order = ord; o.FromVanilla = false; o.Issued = false; o.Reason = null; o.NextThink = 0f;
             try { o.Name = div.leader != null ? div.leader.name : "division"; } catch { o.Name = "division"; }
             Log($"{o.Name}: order {OrderNames[(int)ord]} ({how})");
+            if (ord != DivOrder.Hunt) HuntShells(div, false, null); // 1.11.301: shells back after Hunt
             if (ord != DivOrder.None) try { Issuing = true; if (div.isRetreating || div.retreat) div.Retreat(false); } catch { } finally { Issuing = false; }
         }
         internal static DivOrder CurrentOrder(Division div) { var o = OrderOf(div, false); return o != null ? o.Order : DivOrder.None; }
@@ -81,6 +84,7 @@ namespace DipGgFixes
             if (!needInput && o.FromVanilla) return; // the game's own Screen/Scout logic moves the division itself
             Log($"{o.Name}: {what} by the player - order {OrderNames[(int)o.Order]} ends, manual command");
             o.Order = DivOrder.None; o.FromVanilla = false;
+            HuntShells(div, false, null); // 1.11.301
         }
 
         // the main body: the division of the player's heaviest ship (largest main calibre, capital ships first) other than this one
@@ -156,7 +160,11 @@ namespace DipGgFixes
             {
                 if (!leader.haveTorpedoes || !HasTorpedoAmmo(leader)) { OWhy(o, "no torpedoes - free action instead"); Issuing = true; try { Think(leader, true, true); } finally { Issuing = false; } return true; }
                 if (!States.TryGetValue(div.Pointer, out var ds)) { ds = new DivState { name = o.Name }; States[div.Pointer] = ds; }
+                // 1.11.303 (author 26.10, 20:29): a division of two or more ships splits by itself for a cross attack and joins again
+                // once the detached part has fired its torpedoes
+                if (!splitDone.Contains(div.Pointer)) { splitDone.Add(div.Pointer); SplitForCross(div, leader, o); }
                 Issuing = true; OrderedCharge = true; try { TorpedoCharge(leader, div, ds, Doctrines.For(player), enemies, false); } finally { Issuing = false; OrderedCharge = false; }
+                if (splitFrom.TryGetValue(div.Pointer, out var orig) && ds.reason == "tubes empty - opening the range") Rejoin(div, orig, o);
                 OWhy(o, ds.reason ?? "torpedo attack"); return true;
             }
 
@@ -192,6 +200,7 @@ namespace DipGgFixes
             }
 
             if (o.Order == DivOrder.Hunt) { Hunt(div, o, leader, enemies, main, me, home, toEnemy); return true; }
+            if (o.Order == DivOrder.Finish) { FinishOff(div, o, leader, enemies, main, me, home, toEnemy); return true; } // 1.11.285 (#1)
 
             if (o.Order == DivOrder.Screen)
             {
@@ -306,6 +315,77 @@ namespace DipGgFixes
             }
             catch { return true; }
         }
+        static readonly Dictionary<IntPtr, float> huntHold = new Dictionary<IntPtr, float>();
+        // 1.11.303: cross-attack split - divisions already considered, and detached division -> the division it came from
+        static readonly HashSet<IntPtr> splitDone = new HashSet<IntPtr>();
+        static readonly Dictionary<IntPtr, Division> splitFrom = new Dictionary<IntPtr, Division>();
+        static void SplitForCross(Division div, Ship leader, OrderSt o)
+        {
+            try
+            {
+                var all = new List<Ship>(); var ships = div.ships;
+                for (int i = 0; ships != null && i < ships.Count; i++) { var s = ships[i]; if (s != null && !s.isDead && !s.isSinking && !s.IsSurrendered && s.Pointer != leader.Pointer) all.Add(s); }
+                if (all.Count < 1) return;                                   // a single ship cannot split
+                int take = (all.Count + 1) / 2;                              // the leader keeps the first half, the rest go
+                var go = all.GetRange(all.Count - take, take);
+                var il = new Il2CppSystem.Collections.Generic.List<Ship>(); foreach (var s in go) il.Add(s);
+                Issuing = true;
+                try { Ship.DetachShips(il); } catch (Exception e) { Log($"{o.Name}: split - DetachShips failed ({e.Message}), detaching one by one"); foreach (var s in go) { try { if (s.CanDetach()) s.Detach(); } catch { } } }
+                finally { Issuing = false; }
+                Division nd = null; try { nd = go[0].division; } catch { }
+                if (nd == null || nd.Pointer == div.Pointer) { Log($"{o.Name}: split for a cross attack did not happen - the division attacks as one"); return; }
+                splitDone.Add(nd.Pointer); splitFrom[nd.Pointer] = div;
+                SetOrder(nd, DivOrder.Torpedo, "cross attack - detached part");
+                Log($"{o.Name}: splits for a cross torpedo attack - {string.Join(", ", go.ConvertAll(s => s.name))} detached as a second division; they join again after their salvo");
+            }
+            catch (Exception e) { if (shellErr++ < 3) Log($"{o.Name}: split: {e.Message}"); }
+        }
+        static void Rejoin(Division nd, Division orig, OrderSt o)
+        {
+            try
+            {
+                splitFrom.Remove(nd.Pointer);
+                bool origAlive = false; try { origAlive = orig != null && orig.ships != null && orig.ships.Count > 0; } catch { }
+                if (!origAlive) { Log($"{o.Name}: the division it split from is gone - stays on its own"); return; }
+                var back = new List<Ship>(); var ships = nd.ships;
+                for (int i = 0; ships != null && i < ships.Count; i++) { var s = ships[i]; if (s != null && !s.isDead && !s.isSinking) back.Add(s); }
+                Issuing = true;
+                try { foreach (var s in back) { try { orig.AddShip(s, nd); } catch (Exception e) { Log($"{o.Name}: rejoin of {s.name} failed: {e.Message}"); } } }
+                finally { Issuing = false; }
+                Log($"{o.Name}: salvo away - {back.Count} ship(s) join their division again to withdraw and reload together");
+            }
+            catch (Exception e) { if (shellErr++ < 3) Log($"{o.Name}: rejoin: {e.Message}"); }
+        }
+        // 1.11.301: shells the division used before Hunt switched it to HE against transports (ship -> main, secondary)
+        static readonly Dictionary<IntPtr, Ship.ShellType[]> huntShells = new Dictionary<IntPtr, Ship.ShellType[]>();
+        static void HuntShells(Division div, bool he, Ship prey)
+        {
+            try
+            {
+                var ships = div.ships; if (ships == null) return;
+                for (int i = 0; i < ships.Count; i++)
+                {
+                    var s = ships[i]; if (s == null || s.isDead || s.isSinking) continue;
+                    bool saved = huntShells.TryGetValue(s.Pointer, out var prev);
+                    if (he)
+                    {
+                        if (!saved) { huntShells[s.Pointer] = new[] { s.MainShellType, s.SecShellType }; }
+                        if (s.MainShellType != Ship.ShellType.He) { s.MainShellType = Ship.ShellType.He; try { s.OnChangeMainShellType(Ship.ShellType.He); } catch { } }
+                        if (s.SecShellType != Ship.ShellType.He) { s.SecShellType = Ship.ShellType.He; try { s.OnChangeSecShellType(Ship.ShellType.He); } catch { } }
+                        if (!saved) { var was = huntShells[s.Pointer]; Log($"{s.name} [Hunt]: HE in main and secondary guns against the transport {prey.name} (was {was[0]}/{was[1]})"); }
+                    }
+                    else if (saved)
+                    {
+                        s.MainShellType = prev[0]; try { s.OnChangeMainShellType(prev[0]); } catch { }
+                        s.SecShellType = prev[1]; try { s.OnChangeSecShellType(prev[1]); } catch { }
+                        huntShells.Remove(s.Pointer);
+                        Log($"{s.name} [Hunt]: prey is no longer a transport - shells back to {prev[0]}/{prev[1]}");
+                    }
+                }
+            }
+            catch (Exception e) { if (shellErr++ < 3) Log("[Hunt] shell switch: " + e.Message); }
+        }
+        static int shellErr;
         static float Reach(Ship e) { float r = 0f; try { if (e.haveTorpedoes && HasTorpedoAmmo(e)) r = TorpedoRange(e); } catch { } return Math.Max(r, GunRange(e)); }
         static void Hunt(Division div, OrderSt o, Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
         {
@@ -322,12 +402,18 @@ namespace DipGgFixes
                 if (score < bestScore) { bestScore = score; prey = e; }
             }
             // safe distance from a threat: its reach plus a margin of 1.5 km (torpedo craft: 2 km)
-            Func<Vector3, Ship> danger = pos => { foreach (var t in threats) { float m = 1500f; try { if (t.haveTorpedoes) m = 2000f; } catch { } if ((P(t) - pos).magnitude < Reach(t) + m) return t; } return null; };
+            // 1.11.300 (author 26.10, 20:16, "Hunt works oddly": CA Limburg switched every 2-3 s between "covered - holding outside his
+            // reach", "inside the reach - opening the range" and "closing in"): the goal must be safe with a further 1.5 km to spare,
+            // after opening the range the division waits 30 s before it tries again, and while the prey is covered it is sent to a
+            // point outside the threat's reach instead of drifting on its last course
+            Func<Vector3, float, Ship> dangerM = (pos, extra) => { foreach (var t in threats) { float m = 1500f; try { if (t.haveTorpedoes) m = 2000f; } catch { } if ((P(t) - pos).magnitude < Reach(t) + m + extra) return t; } return null; };
+            Func<Vector3, Ship> danger = pos => dangerM(pos, 0f);
+            float now = Time.time; float holdUntil; huntHold.TryGetValue(div.Pointer, out holdUntil);
             var inside = danger(me);
             if (inside != null)
             {
                 Vector3 away = me - P(inside); away.y = 0f; if (away.sqrMagnitude < 1f) away = -toEnemy; away.Normalize();
-                Cmd(div, o, me + away * 4000f); OWhy(o, $"inside the reach of {inside.name} - opening the range"); return;
+                Cmd(div, o, me + away * 4000f); OWhy(o, $"inside the reach of {inside.name} - opening the range"); huntHold[div.Pointer] = now + 30f; return;
             }
             if (prey == null)
             {
@@ -337,18 +423,82 @@ namespace DipGgFixes
             }
             // close in: just outside the prey's own guns (it cannot hurt us, but there is no reason to take hits), at least 2.5 km
             float preyR = GunRange(prey); float want = Mathf.Max(2500f, preyR > 0f ? preyR + 500f : 0f);
+            // 1.11.301 (author 26.10, 20:21: "close in on the transports to 2-3 km and shoot them like ducks, with HE"): transports are
+            // approached to 2.5 km whatever they carry, and the division fires HE at them; the earlier shell choice comes back when the
+            // prey is no longer a transport
+            bool preyTr = false; try { var pst = prey.shipType != null ? prey.shipType.name : ""; preyTr = pst == "tr" || pst == "amc"; } catch { }
+            if (preyTr) want = 2500f;
+            HuntShells(div, preyTr, prey);
             Vector3 pp = P(prey), dirToMe = me - pp; dirToMe.y = 0f; if (dirToMe.sqrMagnitude < 1f) dirToMe = -toEnemy; dirToMe.Normalize();
             Vector3 goal = pp + dirToMe * want;
             // never into the reach of a threat: walk the goal back towards our own position until it is safe
-            var blocker = danger(goal);
-            for (int k = 0; blocker != null && k < 8; k++) { goal = Vector3.Lerp(goal, me, 0.25f); blocker = danger(goal); }
-            if (blocker != null) { OWhy(o, $"{prey.name} is covered by {blocker.name} - holding outside his reach"); return; }
+            var blocker = dangerM(goal, 1500f);
+            for (int k = 0; blocker != null && k < 8; k++) { goal = Vector3.Lerp(goal, me, 0.25f); blocker = dangerM(goal, 1500f); }
+            if (blocker == null && now < holdUntil) blocker = dangerM(me, 3000f);   // still near the threat it just left
+            if (blocker != null)
+            {
+                Vector3 aw = me - P(blocker); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize();
+                Vector3 safe = P(blocker) + aw * (Reach(blocker) + 3500f);
+                if ((me - safe).magnitude > 800f) Cmd(div, o, safe);
+                OWhy(o, $"{prey.name} is covered by {blocker.name} - holding outside his reach"); return;
+            }
             if ((me - goal).magnitude > 600f) Cmd(div, o, goal);
             float dp = (pp - me).magnitude;
             OWhy(o, $"hunting {prey.name} ({prey.shipType.name}) - {(dp > want + 800f ? "closing in" : "engaging")}");
         }
 
-        // ---- panel and keys ----
+        // ---- 1.11.285 (#1): Finish off - the division goes for enemy ships that are already badly damaged (estimated damage at or above
+        //      DivisionFinishDamage) and still afloat: the nearest crippled ship, worse damage first. With torpedoes it closes to torpedo
+        //      reach against ships it cannot sink with its guns (capital ships, bigger calibre), otherwise to half its gun range. It keeps
+        //      outside the reach of every undamaged enemy that can hurt it (as Hunt does); with no crippled enemy in sight it waits by
+        //      the main body. Transports are left to Hunt. ----
+        static void FinishOff(Division div, OrderSt o, Ship leader, Il2CppSystem.Collections.Generic.List<Ship> enemies, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
+        {
+            float myCal = MainCaliber(leader), myR = GunRange(leader);
+            bool torp = false; float tR = 0f; try { torp = leader.haveTorpedoes && HasTorpedoAmmo(leader); if (torp) tR = TorpedoRange(leader); } catch { }
+            bool light = IsLight(leader); float lim = FinishDamage != null ? FinishDamage.Value : 0.4f;
+            Ship target = null; float best = float.MaxValue; var threats = new List<Ship>();
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var e = enemies[i];
+                if (e == null || e.isSinking || e.isDead || e.IsSurrendered) continue;
+                bool vis = false; try { vis = e.IsVisibleFor(leader) || (main != null && e.IsVisibleFor(main)); } catch { }
+                if (!vis) continue;
+                bool tr = false; try { var stn = e.shipType != null ? e.shipType.name : ""; tr = stn == "tr" || stn == "amc"; } catch { }
+                float dmg = 0f; try { dmg = e.DamageEstimation(); } catch { }
+                bool crippled = !tr && dmg >= lim;
+                // a light division without torpedoes does not go for a crippled capital ship unless she is nearly done for
+                if (crippled && light && IsCapital(e) && !torp && dmg < 0.75f) crippled = false;
+                if (!crippled) { if (!tr && Threat(e, leader)) threats.Add(e); continue; }
+                float d = (P(e) - me).magnitude; float score = d * (1.3f - Mathf.Clamp01(dmg));   // worse damage first, then the nearest
+                if (score < best) { best = score; target = e; }
+            }
+            Func<Vector3, Ship> danger = pos => { foreach (var t in threats) { float m = 1500f; try { if (t.haveTorpedoes) m = 2000f; } catch { } if ((P(t) - pos).magnitude < Reach(t) + m) return t; } return null; };
+            if (target == null)
+            {
+                var inside0 = danger(me);
+                if (inside0 != null) { Vector3 aw = me - P(inside0); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize(); Cmd(div, o, me + aw * 4000f); OWhy(o, $"no crippled enemy - inside the reach of {inside0.name}, opening the range"); return; }
+                var st = home + toEnemy * 2500f; if (danger(st) != null) st = home;
+                if ((me - st).magnitude > 800f) Cmd(div, o, st);
+                OWhy(o, "no crippled enemy in sight - waiting by the main body"); return;
+            }
+            bool useTorp = torp && tR > 0f && (IsCapital(target) || MainCaliber(target) > myCal * 1.25f || myR <= 0f);
+            float want = useTorp ? Mathf.Max(2000f, tR * 0.7f) : Mathf.Max(2000f, myR > 0f ? myR * 0.5f : 3000f);
+            Vector3 tp = P(target), dirToMe = me - tp; dirToMe.y = 0f; if (dirToMe.sqrMagnitude < 1f) dirToMe = -toEnemy; dirToMe.Normalize();
+            Vector3 goal = tp + dirToMe * want;
+            var blocker = danger(goal);
+            for (int k = 0; blocker != null && k < 8; k++) { goal = Vector3.Lerp(goal, me, 0.25f); blocker = danger(goal); }
+            if (blocker != null)
+            {
+                if (danger(me) != null) { Vector3 aw = me - P(blocker); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize(); Cmd(div, o, me + aw * 4000f); OWhy(o, $"{target.name} is covered by {blocker.name} - opening the range"); return; }
+                OWhy(o, $"{target.name} is covered by {blocker.name} - holding outside his reach"); return;
+            }
+            if ((me - goal).magnitude > 600f) Cmd(div, o, goal);
+            float dt = (tp - me).magnitude;
+            OWhy(o, $"finishing off {target.name} ({target.shipType.name}, badly damaged) - {(dt > want + 800f ? "closing in" : useTorp ? "in torpedo reach" : "engaging")}{(useTorp ? " with torpedoes" : "")}");
+        }
+
+
         static GUIStyle oTitle; static int oErrors; static bool oFolded;
         internal static void OrdersTick()
         {
@@ -360,7 +510,7 @@ namespace DipGgFixes
                 if (OrdersOn == null || !OrdersOn.Value || BattleScreen.Hidden) return;
                 if (!(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))) return;
                 int k = -1;
-                if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4; else if (Input.GetKeyDown(KeyCode.Alpha6)) k = 5;
+                if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4; else if (Input.GetKeyDown(KeyCode.Alpha6)) k = 5; else if (Input.GetKeyDown(KeyCode.Alpha7)) k = 6;
                 if (k < 0) return;
                 var div = SelectedDivision(); if (div != null) SetOrder(div, (DivOrder)k, "Alt+" + (k + 1));
             }
@@ -391,7 +541,7 @@ namespace DipGgFixes
                 var o = OrderOf(div, false);
                 // 1.11.197 (author, 24.10): the panel sat over the sea in front of the ship cards - now a strip at the top of the
                 //          screen under the time controls, and it folds to a small tab (the Alt keys work either way)
-                float w = 700f, h = 44f; /* 1.11.266: smaller buttons (author 25.10, 15:02) */ float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
+                float w = 800f, h = 44f; /* 1.11.285: 7 orders */ /* 1.11.266: smaller buttons (author 25.10, 15:02) */ float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
                 if (oFolded)
                 {
                     var tab = new Rect(x + w - 150f, y, 150f, 20f);
@@ -401,10 +551,10 @@ namespace DipGgFixes
                 GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
                 if (why.Length > 60) why = why.Substring(0, 60) + "...";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..6): {OrderNames[(int)cur]}{why}", oTitle);
+                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..7): {OrderNames[(int)cur]}{why}", oTitle);
                 if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) oFolded = true;
-                float bw = (w - 16f - 4f * 5f) / 6f; TorpedoSettings.BeginSmall(); try {
-                for (int i = 0; i < 6; i++)
+                float bw = (w - 16f - 4f * 6f) / 7f; TorpedoSettings.BeginSmall(); try {
+                for (int i = 0; i < OrderNames.Length; i++)
                 {
                     var r = new Rect(x + 8f + i * (bw + 4f), y + 22f, bw, 19f);
                     bool active = i == (int)cur;
