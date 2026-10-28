@@ -124,8 +124,9 @@ namespace DipGgFixes
             {
                 var s = k < 0 ? leader : ships[k];
                 if (s == null || s.isSinking || s.isDead || (k >= 0 && s.Pointer == leader.Pointer)) continue;
-                try { if (s.CanLaunchSmokeScreen()) { s.LaunchSmokeScreen(); laid++; } }
+                try { if (s.CanLaunchSmokeScreen()) { SmokeGate.ModCall = true; s.LaunchSmokeScreen(); laid++; } }
                 catch (Exception e) { if (smokeErr++ < 3) Log("smoke screen failed: " + e.Message); return; }
+                finally { SmokeGate.ModCall = false; }
             }
             if (laid > 0) Log($"{st.name}: {laid} ship(s) lay a smoke screen");
         }
