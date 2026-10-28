@@ -1795,7 +1795,10 @@ namespace DipGgFixes
             }
 
             // --- rule for every AI division: ships that slow the division down leave it and retreat alone
-            if (DipGgFixesMod.DetachSlowShips.Value && now >= st.nextDetach && TryDetachSlow(div, leader, st)) { st.nextDetach = now + DipGgFixesMod.DetachCooldownSeconds.Value; return; }
+            // 1.11.339 (#71, player report and test 28.10 10:05: "CL Dresden: leader is slow: fast ships detached" - a lightly damaged
+            // leader split the division in the middle of its torpedo run and the new division started over): a division in a torpedo
+            // attack or turning away to reload keeps together; slow ships are separated before or after the attack
+            if (DipGgFixesMod.DetachSlowShips.Value && now >= st.nextDetach && !st.charging && !st.reloading && !st.returnAttack && TryDetachSlow(div, leader, st)) { st.nextDetach = now + DipGgFixesMod.DetachCooldownSeconds.Value; return; }
 
             // 1.11.86: the attack has failed and the enemy is stronger - the most valuable ships withdraw, the cheaper ones cover them
             if (CoverRetreat(leader, div, st, doc, enemies, battle, player)) return;
