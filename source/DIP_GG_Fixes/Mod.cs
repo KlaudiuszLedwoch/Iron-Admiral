@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.353", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.354", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2083,8 +2083,14 @@ namespace DipGgFixes
                 }
                 else if (mass)
                 {
-                    if (!st.massLogged) { st.massLogged = true; Log($"{st.name} ({leader.shipType.name}): massed torpedo attack - charges {best.name} from {bestD:0} m (torpedoes {torp:0} m); alone it would not get through, part of the attack will"); }
-                    start = float.MaxValue;
+                    // 1.11.354 (campaign 28.10: Japanese flotillas went in from 32-39 km in daylight - 15 torpedoes, 0 hits; next battle 51
+                    // torpedoes, 1 hit; historical data (claude/dane_historyczne/battles.csv): daylight torpedo hit rate about 3 %, launches
+                    // beyond 8 km about 3 %): by day a massed attack waits until the target is within twice its own start distance (at
+                    // least twice the torpedo range), so the run under the enemy's guns is short; at night it still goes in at once
+                    bool night = false; try { night = IsNight(); } catch { }
+                    float massStart = night ? float.MaxValue : UnityEngine.Mathf.Max(ChargeStartFor(leader, best, doc, torp) * 2f, torp * 2f);
+                    if (!st.massLogged && bestD <= massStart) { st.massLogged = true; Log($"{st.name} ({leader.shipType.name}): massed torpedo attack - charges {best.name} from {bestD:0} m (torpedoes {torp:0} m{(night ? ", night" : $", by day from {massStart:0} m")}); alone it would not get through, part of the attack will"); }
+                    start = massStart;
                 }
                 else if (!playerSide && !ordered && !st.fighting && !st.covering && DipGgFixesMod.CapitalSupportScreen.Value && IsLight(leader)
                          && (doc == null || doc.lineFirst) && !(doc != null && doc.night > 0 && IsNight())

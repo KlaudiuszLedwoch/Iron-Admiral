@@ -74,10 +74,15 @@ namespace DipGgFixes
                 var col = Column(nearest, leader, enemies, out var f);
                 if (!roles.TryGetValue(div.Pointer, out var role) || role == Role.None)
                 {
+                    // 1.11.354 (campaign 28.10: Japanese destroyers 13.1 vs 12.1 speed units - 8 % faster - all got the stern role and a
+                    // long chase under fire): the bow role needs only a 5 % speed edge, and a division already ahead of the leading
+                    // ship's beam takes it when it is not more than 10 % slower - the target comes to it
                     float vs = BattleAi.DivSpeed(div, leader), vt = ColumnSpeed(col);
-                    role = vs >= vt * 1.15f ? Role.Bow : Role.Stern;
+                    bool ahead = false;
+                    try { var lt = col[0].transform; var d = leader.transform.position - lt.position; d.y = 0f; ahead = f.sqrMagnitude > 0.01f && UnityEngine.Vector3.Dot(d, f) > 0f; } catch { }
+                    role = (vs >= vt * 1.05f || (ahead && vs >= vt * 0.9f)) ? Role.Bow : Role.Stern;
                     roles[div.Pointer] = role;
-                    Log($"{leader.name}: torpedo attack {(role == Role.Bow ? "from ahead on the leading ship" : "from the quarter on the last ship")} of a column of {col.Count} (speed {vs:0.0} vs {vt:0.0})");
+                    Log($"{leader.name}: torpedo attack {(role == Role.Bow ? "from ahead on the leading ship" : "from the quarter on the last ship")} of a column of {col.Count} (speed {vs:0.0} vs {vt:0.0}{(ahead ? ", already ahead of her beam" : "")})");
                 }
                 var t = role == Role.Bow ? col[0] : col[col.Count - 1];
                 dist = BattleAi.Dist(leader, t);

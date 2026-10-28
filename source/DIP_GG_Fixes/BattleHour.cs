@@ -42,7 +42,15 @@ namespace DipGgFixes
         static readonly Dictionary<string, Decision> decisions = new Dictionary<string, Decision>();
         static BattlePopup popup; static Decision current; static int errors;
 
-        static float Kn(Ship s) { return BattleAi.Speed(s) * 1.94384f; }
+        // 1.11.354 (campaign 28.10: "Japan 0.0 kn ... Germany 0.0 kn - neither side can choose the hour" in every battle): on the
+        // pre-battle screen the ships are not in a battle yet and Ship.SpeedMax (battle speed) returns 0 - the design top speed
+        // (Ship.speedMax, as the fleet screen shows it) is used, the battle value only when it is set
+        static float Kn(Ship s)
+        {
+            float v = 0f; try { v = s.speedMax; } catch { }
+            if (!(v > 0.1f)) v = BattleAi.Speed(s);
+            return v * 1.94384f;
+        }
         static float Sustained(Il2CppSystem.Collections.Generic.List<Ship> l)
         {
             float min = float.MaxValue;
