@@ -67,7 +67,7 @@ namespace DipGgFixes
             {"ShareLogsAsked","-"},{"ShipGenAsymmetryTolerance","Ship design"},{"ShipGenDiagnosis","-"},{"ShipGenEarlyStop","Ship design"},{"ShipGenMemory","Ship design"},
             {"ShipGenNewestHulls","Ship design"},{"ShipGenRelaxTurrets","Ship design"},{"ShipGenShareDesigns","Ship design"},{"ShipGenTrimOverweight","Ship design"},
             {"ShipTrade","Economy"},{"ShipTradeAiSells","Economy"},{"ShipTradeRefits","Economy"},{"TechCatchUp","Campaign AI"},{"TechDiffusion","Campaign AI"},{"TorpedoSense","Battle AI"},
-            {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},{"ResetSwitchesOnNewVersion","-"},{"DivisionOrdersPanelFolded","-"},
+            {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},{"ResetSwitchesOnNewVersion","-"},{"DivisionOrdersPanelFolded","-"},{"AiTorpedoCapitalsFirst","Battle AI"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -99,7 +99,7 @@ namespace DipGgFixes
             {"DispatchPlayerOriginalLanguage",140},{"AlwaysShowSplashes",141},{"BarrelElevation",142},{"BattleDispatchBubbles",143},{"BattleHitDispatches",144},{"EnemyRangeTags",145},
             {"ModUiScaleAuto",146},{"ReShadeNavalLook",147},{"ArmorDiagnostics",148},{"BallisticsLog",149},{"BattleAiLog",150},{"DamageDiagLog",151},{"HitLog",152},
             {"PerformanceLog",153},{"BetaUpdates",154},{"CheckForUpdates",155},{"CheckOtherMods",156},{"SaveCompatibilityFix",157},{"ShareLogs",158},{"UpdateDownloadButton",159},
-            {"UsageStatistics",160},
+            {"UsageStatistics",160},{"AiTorpedoCapitalsFirst",161},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {

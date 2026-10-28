@@ -22,7 +22,15 @@ namespace DipGgFixes
         {
             TestList = cat.CreateEntry("TorpedoTargetPriorityTest", "", null, "Author's tool: torpedo target priorities for every player division when none is set (classes in order, e.g. bb,ca; empty = off)");
             On = cat.CreateEntry("TorpedoTargetPriority", true, null, "Battle: torpedo target priorities for the player's divisions - ship classes clicked in order of importance; the tubes aim at, and a division under the Torpedo attack order charges, the nearest enemy of the most important class (panel below the torpedo settings)");
+            AiOn = cat.CreateEntry("AiTorpedoCapitalsFirst", true, null, "Battle AI: AI torpedo boats, destroyers and light cruisers aim their tubes at the nearest enemy battleship, battlecruiser or heavy cruiser in torpedo reach instead of the game's choice (often a destroyer, for which the torpedoes were then held as a small target)");
         }
+        // 1.11.330 (#71, player report 28.10: AI destroyers in a good firing position sometimes did not launch): the game aims the
+        // tubes of an AI ship at its own choice of target, often the nearest destroyer; the hopeless-shot rule then holds them as a
+        // small target while a battleship is in reach. AI light ships now aim at the nearest capital ship in reach first.
+        internal static MelonPreferences_Entry<bool> AiOn;
+        static readonly List<string> AiOrder = new List<string> { "bb", "bc", "ca" };
+        static bool AiEnabled { get { return AiOn != null && AiOn.Value; } }
+        static bool IsAiLight(Ship s) { try { return s.player != null && !s.player.isMain && BattleAi.IsLight(s); } catch { return false; } }
         static bool Enabled { get { return On != null && On.Value; } }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][TorpTarget] " + m); }
 
@@ -77,11 +85,11 @@ namespace DipGgFixes
             return r;
         }
         // nearest enemy of the most important listed class (within maxRange when > 0)
-        static Ship Pick(Ship s, List<string> order, Il2CppSystem.Collections.Generic.List<Ship> enemies, float maxRange, out float bestD, out string cls)
+        static Ship Pick(Ship s, List<string> order, Il2CppSystem.Collections.Generic.List<Ship> enemies, float maxRange, out float bestD, out string cls, bool expand = true)
         {
             bestD = float.MaxValue; cls = null;
             if (order == null || enemies == null) return null;
-            foreach (var c in Expand(order))
+            foreach (var c in expand ? Expand(order) : order)
             {
                 Ship best = null; float bd = float.MaxValue;
                 for (int i = 0; i < enemies.Count; i++)
@@ -119,7 +127,7 @@ namespace DipGgFixes
         // torpedo aims of the player's ships with a priority list
         internal static void Tick()
         {
-            if (!Enabled || !InBattle) return;
+            if ((!Enabled && !AiEnabled) || !InBattle) return;
             try
             {
                 ResetIfNewBattle();
@@ -129,19 +137,20 @@ namespace DipGgFixes
                 for (int i = 0; i < ships.Count; i++)
                 {
                     var s = ships[i]; if (s == null) continue;
-                    bool ok = false; try { ok = s.haveTorpedoes && !s.isDead && !s.isSinking && IsPlayer(s); } catch { }
-                    if (!ok) continue;
-                    var order = ListFor(s);
+                    bool alive = false, player = false, ai = false;
+                    try { alive = s.haveTorpedoes && !s.isDead && !s.isSinking; if (alive) { player = Enabled && IsPlayer(s); ai = !player && AiEnabled && IsAiLight(s); } } catch { }
+                    if (!alive || (!player && !ai)) continue;
+                    var order = player ? ListFor(s) : AiOrder;
                     if (order == null) { ReleaseAll(s); continue; }
                     if (next.TryGetValue(s.Pointer, out var nt) && now < nt) continue;
                     next[s.Pointer] = now + 1f + 0.05f * (i % 10);
                     var en = Enemies(s); if (en == null) continue;
-                    Aim(s, s.enemies, order, en); Aim(s, s.enemiesLeftSide, order, en);
+                    Aim(s, s.enemies, order, en, player); Aim(s, s.enemiesLeftSide, order, en, player);
                 }
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
         }
-        static void Aim(Ship s, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, List<string> order, Il2CppSystem.Collections.Generic.List<Ship> en)
+        static void Aim(Ship s, Il2CppSystem.Collections.Generic.Dictionary<PartData, Ship.Aim> dict, List<string> order, Il2CppSystem.Collections.Generic.List<Ship> en, bool player = true)
         {
             if (dict == null) return;
             if (!ours.TryGetValue(s.Pointer, out var mine)) { mine = new Dictionary<IntPtr, IntPtr>(); ours[s.Pointer] = mine; }
@@ -155,11 +164,12 @@ namespace DipGgFixes
                 bool haveMine = mine.TryGetValue(pd.Pointer, out var mt);
                 if (aim.manual && (!haveMine || cur == null || cur.Pointer != mt)) { if (haveMine) mine.Remove(pd.Pointer); continue; }   // the player's own target
                 float range = 0f; if (cache != null) cache.TryGetValue(pd, out range);
-                var pick = Pick(s, order, en, range, out float d, out string cls);
+                var pick = Pick(s, order, en, range, out float d, out string cls, player);
                 if (pick == null) { if (haveMine) { mine.Remove(pd.Pointer); aim.manual = false; } continue; }   // nothing listed in reach: the game's choice
                 if (cur != null && cur.Pointer == pick.Pointer) { if (!aim.manual) aim.manual = true; mine[pd.Pointer] = pick.Pointer; continue; }
+                string was = cur != null ? cur.name : "none";
                 aim.target = pick; aim.manual = true; aim.progress = 0f; mine[pd.Pointer] = pick.Pointer;
-                if (logs++ < 60) Log($"{s.name}: torpedo tubes on {pick.name} ({cls}, {d:0} m, range {range:0} m) - priority {Label(order)}");
+                if (logs++ < 60) Log(player ? $"{s.name}: torpedo tubes on {pick.name} ({cls}, {d:0} m, range {range:0} m) - priority {Label(order)}" : $"AI {s.name}: torpedo tubes on capital ship {pick.name} ({cls}, {d:0} m, range {range:0} m) instead of {was}");
             }
         }
         static void ReleaseAll(Ship s)
