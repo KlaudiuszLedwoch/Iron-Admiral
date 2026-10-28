@@ -257,20 +257,26 @@ namespace DipGgFixes
         {
             if (Time.unscaledTime < areaNext && areaCache.width > 0f) return areaCache;
             areaNext = Time.unscaledTime + 0.5f;
-            float H = UiScale.H; float x = 8f, top = 110f, bottom = H * 0.72f, w = 300f;
+            // 1.11.356 (author's campaign 28.10, 18:53, beta.17: "shoot info (0,0,1529x860), report (0,0,0x0) -> y 866 h -247" - the
+            // Shoot Info object spans the whole screen and the Report object has no rect, so the panel ended below the screen): rects
+            // wider than half or taller than 70 % of the screen are not used; without usable rects the gap measured on the author's
+            // screenshot is used - Shoot Info ends at 53 % of the height, Report starts at 76 %, the column is 14.5 % of the width
+            float W = UiScale.W, H = UiScale.H;
+            float x = 8f, top = H * 0.53f, bottom = H * 0.755f, w = Mathf.Clamp(W * 0.145f, 260f, 420f);
+            string src = "default";
             try
             {
                 var ui = G.ui;
                 if (ui != null)
                 {
+                    System.Func<Rect, bool> ok = r => r.height > 8f && r.width > 40f && r.width < W * 0.5f && r.height < H * 0.7f;
                     Rect si = UiRect(ui.shootInfoPanel), sh = Rect.zero;
                     try { var p = ui.shootInfoPanel != null ? ui.shootInfoPanel.transform.parent : null; if (p != null) sh = UiRect(p.gameObject); } catch { }
-                    Rect upper = si.height > 0f ? si : sh;
-                    if (sh.height > 0f && upper.height > 0f) upper = Rect.MinMaxRect(Mathf.Min(sh.xMin, upper.xMin), Mathf.Min(sh.yMin, upper.yMin), Mathf.Max(sh.xMax, upper.xMax), Mathf.Max(sh.yMax, upper.yMax));
-                    if (upper.height > 0f) { top = upper.yMax + 6f; x = Mathf.Max(4f, upper.xMin); w = Mathf.Clamp(upper.width, 260f, 420f); }
-                    Rect rep = UiRect(ui.reporterBattleFold); if (rep.height <= 0f) rep = UiRect(ui.reporterBattle);
-                    if (rep.height > 0f && rep.yMin > top) bottom = rep.yMin - 6f;
-                    if (areaLogged++ < 2) MelonLogger.Msg($"[DIP GG Fixes][Dispatch] panel area: shoot info {upper}, report {rep} -> x {x:0} y {top:0} w {w:0} h {bottom - top:0} (screen {UiScale.W:0}x{H:0})");
+                    Rect upper = ok(si) ? si : (ok(sh) ? sh : Rect.zero);
+                    if (upper.height > 0f) { top = upper.yMax + 6f; x = Mathf.Max(4f, upper.xMin); w = Mathf.Clamp(upper.width, 260f, 420f); src = "shoot info"; }
+                    Rect rep = UiRect(ui.reporterBattleFold); if (!ok(rep)) rep = UiRect(ui.reporterBattle); if (!ok(rep)) rep = Rect.zero;
+                    if (rep.height > 0f && rep.yMin > top + 40f) { bottom = rep.yMin - 6f; src += ", report"; }
+                    if (areaLogged++ < 2) MelonLogger.Msg($"[DIP GG Fixes][Dispatch] panel area ({src}): shoot info {si} / {sh}, report {rep} -> x {x:0} y {top:0} w {w:0} h {bottom - top:0} (screen {W:0}x{H:0})");
                 }
             }
             catch (Exception e) { if (lErr++ < 3) MelonLogger.Warning("[DIP GG Fixes][Dispatch] panel area: " + e.Message); }
