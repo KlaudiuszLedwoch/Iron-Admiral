@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.341", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.342", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2792,6 +2792,15 @@ namespace DipGgFixes
             if (run <= 0f) { why = $"{t.name} at {d:0} m outruns the torpedo"; return true; }
             // 1.11.135: the player's own ships may use the full torpedo range (the 85% margin held shots at 22-50 m over the limit)
             float margin = playerShip ? UnityEngine.Mathf.Max(1f, DipGgFixesMod.TorpedoSenseMargin.Value) : DipGgFixesMod.TorpedoSenseMargin.Value;
+            // 1.11.342 (#71, test 28.10 11:05: AI flotillas charging a battle line from 9 km lost 5 of 6 ships in about 4 minutes while
+            // holding for a better solution - 0 and 1 torpedo hits): an AI ship that is hit or whose division is losing ships fires at a
+            // large target with the full torpedo range instead of waiting under fire for a shorter run
+            if (!playerShip && bigTarget)
+            {
+                float own = 0f; try { own = s.DamageEstimation(); } catch { }
+                float div = 0f; try { if (s.division != null) div = BattleAi.DivDamage(s.division); } catch { }
+                if (own >= 0.1f || div >= 0.15f) margin = UnityEngine.Mathf.Max(1f, margin);
+            }
             float lim = range * margin * (st.senseHold ? 0.95f : 1f); // 1.11.99: hysteresis
             if (range > 0f && run > lim) { why = $"{t.name} at {d:0} m: run to the intercept point {run:0} m > {lim:0} m usable torpedo range"; return true; }
             return false;
