@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.331", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.332", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3236,6 +3236,7 @@ namespace DipGgFixes
                 catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] prize crew: " + e.Message); }
                 __1 = UnityEngine.Mathf.Clamp(DipGgFixesMod.CaptureDamage.Value, 0.05f, 0.95f);
                 Captured.Add(ship.Pointer);
+                try { PrizeCrew[ship.Pointer] = UnityEngine.Mathf.Max(crew, ship.CrewPercents); } catch { PrizeCrew[ship.Pointer] = minCrew; }
                 try { Narrative.Record("prize|" + ship.Pointer, 9, $"{ship.name.Split(new[] { " (" }, StringSplitOptions.None)[0]} was taken as a prize by {winner.data.name}"); } catch { }
                 MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} ({ship.shipType.name}) surrendered to {winner.data.name} and was taken as a prize ({loser.data.name} -> {winner.data.name}); removed from {removed} sunk list(s), HP {hp:0}, crew {crew:0.00} -> {UnityEngine.Mathf.Max(crew, minCrew):0.00}, damage set to {__1:0.00}, crew training reset, status {ship.status}, new owner {(ship.player != null ? ship.player.data.name : "?")}");
             }
@@ -3248,11 +3249,27 @@ namespace DipGgFixes
             return false;
         }
         internal static readonly HashSet<IntPtr> Captured = new HashSet<IntPtr>();
+        static readonly Dictionary<IntPtr, float> PrizeCrew = new Dictionary<IntPtr, float>();
         private static void Postfix(Ship __0)
         {
             try
             {
                 if (__0 == null || !Captured.Contains(__0.Pointer)) return;
+                // 1.11.332 (#61, 1922: BB Caesar taken as a prize with crew 0.70 came out of DamageShip with crew 0.00 and status LowCrew;
+                // the torpedo boats lost 0.70 -> 0.52-0.56): DamageShip removes crew in proportion to the damage after the prize crew was
+                // put aboard. The prize keeps the crew it was given; a ship left LowCrew goes to Repairing like the other prizes.
+                if (PrizeCrew.TryGetValue(__0.Pointer, out var keep))
+                {
+                    PrizeCrew.Remove(__0.Pointer);
+                    float now = 0f; try { now = __0.CrewPercents; } catch { }
+                    if (now < keep - 0.005f)
+                    {
+                        try { __0.CrewPercents = keep; } catch { }
+                        bool low = false; try { low = __0.status == VesselEntity.Status.LowCrew; } catch { }
+                        if (low) { try { __0.status = VesselEntity.Status.Repairing; } catch { } }
+                        MelonLogger.Msg($"[DIP GG Fixes][Capture] {__0.name}: prize crew put back after DamageShip ({now:0.00} -> {keep:0.00}){(low ? ", status LowCrew -> Repairing" : "")}");
+                    }
+                }
                 MelonLogger.Msg($"[DIP GG Fixes][Capture] after DamageShip: {__0.name} status {__0.status}, isSunk {__0.isSunk}, HP {__0.HP:0}, crew {__0.CrewPercents:0.00}, owner {(__0.player != null ? __0.player.data.name : "?")}, port {(__0.PortLocation != null ? __0.PortLocation.name : "none")}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Capture] DamageShip postfix: " + e.Message); }

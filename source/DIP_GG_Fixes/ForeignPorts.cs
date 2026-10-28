@@ -77,6 +77,21 @@ namespace DipGgFixes
     {
         static MethodBase TargetMethod() { return SafePatches.Find(typeof(Player), "ShipbuildingCapacityLimit", Type.EmptyTypes); }
         static bool Prepare() { return TargetMethod() != null; }
-        static void Postfix(Player __instance, ref float __result) { ForeignPorts.Post(__instance, ref __result); }
+        // 1.11.332 (#62): outside a campaign (designer, historical builder, custom battle) the game's method fails in
+        // Player.get_homeProvinces (no province data) and, wrapped by Harmony, the native KeyNotFoundException reached the log
+        // about 180 times per builder run. Without a campaign there is no capacity limit: 0 (the game treats <= 0 as no data).
+        static bool Prefix(ref float __result)
+        {
+            bool camp = true;
+            try { camp = GameManager.IsCampaign && CampaignController.Instance != null && CampaignController.Instance.CampaignData != null; } catch { camp = false; }
+            if (camp) return true;
+            __result = 0f; return false;
+        }
+        static void Postfix(Player __instance, ref float __result)
+        {
+            bool camp = false; try { camp = GameManager.IsCampaign; } catch { }
+            if (camp) ForeignPorts.Post(__instance, ref __result);
+        }
+        static Exception Finalizer(Exception __exception, ref float __result) { if (__exception != null) __result = 0f; return null; }
     }
 }
