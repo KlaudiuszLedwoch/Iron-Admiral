@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.342", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.343", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -635,6 +635,7 @@ namespace DipGgFixes
             BrokenDesigns.CreatePrefs(cat); // 1.11.308 (#32)
             PrizeTech.CreatePrefs(cat); // 1.11.333 (#50)
             SmokeGate.CreatePrefs(cat); // 1.11.341 (#22)
+            TorpedoPincer.CreatePrefs(cat); // 1.11.343 (#71)
             BattleHour.CreatePrefs(cat); // 1.11.334 (#57)
             DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
             DeckZoneFix.CreatePrefs(cat); // 1.11.317 (#59)
@@ -2035,7 +2036,7 @@ namespace DipGgFixes
             Ship best = null; bestD = float.MaxValue;
             bool ordered = OrderedCharge;
             if (playerSide || ordered) { best = TorpedoPriority.ChargeTarget(leader, enemies, out bestD); if (best != null && st.target != best.Pointer && st.charging) Log($"{st.name}: torpedo target priority - charge shifts to {best.name}"); if (best != null && st.charging) st.target = best.Pointer; } // 1.11.267: the shift is kept (the log repeated it every tick)
-            if (best == null) best = NearestVisibleCapital(leader, enemies, out bestD);
+            if (best == null) { best = NearestVisibleCapital(leader, enemies, out bestD); if (best != null && !playerSide && IsLight(leader)) best = TorpedoPincer.RearOfColumn(best, leader, enemies, out bestD); } // 1.11.343: the last ship of the line
             if (best == null) { st.charging = false; Why(st, "no visible capital target"); return; }
 
             float torp = TorpedoRange(leader);
@@ -2088,6 +2089,7 @@ namespace DipGgFixes
                 st.charging = true; st.target = best.Pointer;
                 Why(st, "charging");
                 Log($"{(playerSide ? "[player scout] " : "")}{st.name} ({leader.shipType.name}) charges {best.name} ({best.shipType.name}) at {bestD:0} m, torpedo range {torp:0} m, {(mass ? "massed attack" : start >= float.MaxValue ? (ordered ? "ordered - goes in at once" : "goes in at once") : $"start distance {start:0} m")}");
+                if (!playerSide && !ordered && IsLight(leader) && DipGgFixesMod.AiCrossTorpedo != null && DipGgFixesMod.AiCrossTorpedo.Value) TorpedoPincer.Split(div, leader, st.name, best); // 1.11.343
             }
             UnityEngine.Vector3 xdir = UnityEngine.Vector3.zero; int xslot = 0, xof = 1;
             bool aiTactics = !pOrder && DipGgFixesMod.AiCrossTorpedo != null && DipGgFixesMod.AiCrossTorpedo.Value; // 1.11.318 (#56)
