@@ -35,6 +35,9 @@ namespace DipGgFixes
         class Order { public string ShipId, Buyer, Seller, Name; public float Price, Paid; public int Start, Months, Missed; }
         static readonly Dictionary<string, Listing> listings = new Dictionary<string, Listing>();
         static readonly List<Order> orders = new List<Order>();
+        // 1.11.338 (#16): a ship sold while at sea is handed over when she is back in port (the price is paid then)
+        class Pending { public string ShipId, Seller, Buyer; public float Price; public int Month; }
+        static readonly List<Pending> pending = new List<Pending>();
         // 1.11.236 (author's decision 24.10): a navy that bought one of the player's ships comes back for a paid refit when the
         // ship ages - a refit licence (the buyer's own yards do the work, the player sells the drawings) or the work in the
         // player's yards at a premium, paid over the months of the refit. A request waits three months; unanswered, the buyer
@@ -129,7 +132,7 @@ namespace DipGgFixes
         static void EnsureSession()
         {
             var cc = CC; if (cc == null || cc.CampaignData == null) return;
-            if (cc.CampaignData.Pointer != session) { session = cc.CampaignData.Pointer; listings.Clear(); orders.Clear(); sold.Clear(); refits.Clear(); yardJobs.Clear(); loaded = false; lastMonth = 0; }
+            if (cc.CampaignData.Pointer != session) { session = cc.CampaignData.Pointer; listings.Clear(); orders.Clear(); pending.Clear(); sold.Clear(); refits.Clear(); yardJobs.Clear(); loaded = false; lastMonth = 0; }
             if (loaded) return;
             loaded = true;
             try
@@ -146,6 +149,8 @@ namespace DipGgFixes
                     }
                     else if (c[0] == "order" && c.Length >= 10)
                         orders.Add(new Order { ShipId = c[1], Buyer = c[2], Seller = c[3], Price = float.Parse(c[4], CultureInfo.InvariantCulture), Paid = float.Parse(c[5], CultureInfo.InvariantCulture), Start = int.Parse(c[6]), Months = int.Parse(c[7]), Missed = int.Parse(c[8]), Name = c[9] });
+                    else if (c[0] == "pending" && c.Length >= 6)
+                        pending.Add(new Pending { ShipId = c[1], Seller = c[2], Buyer = c[3], Price = float.Parse(c[4], CultureInfo.InvariantCulture), Month = int.Parse(c[5]) });
                     else if (c[0] == "sold" && c.Length >= 5)
                         sold[c[1]] = new Sold { ShipId = c[1], Buyer = c[2], Month = int.Parse(c[3]), LastRefit = int.Parse(c[4]) };
                     else if (c[0] == "refit" && c.Length >= 6)
@@ -172,6 +177,7 @@ namespace DipGgFixes
                     lines.Add(sb.ToString());
                 }
                 foreach (var o in orders) lines.Add($"order|{o.ShipId}|{o.Buyer}|{o.Seller}|{o.Price.ToString(CultureInfo.InvariantCulture)}|{o.Paid.ToString(CultureInfo.InvariantCulture)}|{o.Start}|{o.Months}|{o.Missed}|{(o.Name ?? "").Replace('|', '/')}");
+                foreach (var pn in pending) lines.Add($"pending|{pn.ShipId}|{pn.Seller}|{pn.Buyer}|{pn.Price.ToString(CultureInfo.InvariantCulture)}|{pn.Month}");
                 foreach (var s in sold.Values) lines.Add($"sold|{s.ShipId}|{s.Buyer}|{s.Month}|{s.LastRefit}");
                 foreach (var r in refits) lines.Add($"refit|{r.ShipId}|{r.Buyer}|{r.Month}|{r.Cost.ToString(CultureInfo.InvariantCulture)}|{r.Months}");
                 foreach (var j in yardJobs) lines.Add($"yard|{j.ShipId}|{j.Buyer}|{j.Start}|{j.Months}|{j.Total.ToString(CultureInfo.InvariantCulture)}|{j.Paid.ToString(CultureInfo.InvariantCulture)}|{(j.Name ?? "").Replace('|', '/')}");
@@ -201,9 +207,22 @@ namespace DipGgFixes
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Trade] tick: " + e.Message); }
         }
 
+        static bool handingOver;
         static void Monthly(int month)
         {
             var main = Main(); if (main == null) return;
+            // 1.11.338 (#16): ships sold at sea are handed over once in port; the sale lapses if she was lost, or after a year,
+            // or when buyer and seller are at war
+            foreach (var pn in pending.ToList())
+            {
+                var sh = FindShip(pn.ShipId); var se = ByKey(pn.Seller); var bu = ByKey(pn.Buyer);
+                bool gone = sh == null || se == null || bu == null; try { gone = gone || sh.isSunk || sh.player == null || sh.player.Pointer != se.Pointer; } catch { gone = true; }
+                if (gone || month - pn.Month > 12 || AtWar(se, bu)) { pending.Remove(pn); Log($"sale of {(sh != null ? sh.name : pn.ShipId)} to {pn.Buyer} lapsed ({(gone ? "ship lost or no longer the seller's" : AtWar(se, bu) ? "war between them" : "not back in port within a year")})"); if (se != null && se.isMain && sh != null) Notice("Sale cancelled", $"The sale of {sh.name} to {N(bu)} has lapsed."); continue; }
+                bool sea = true; try { sea = sh.IsInSea; } catch { }
+                if (sea) continue;
+                pending.Remove(pn);
+                handingOver = true; try { Sell(se, sh, bu, pn.Price); } finally { handingOver = false; }
+            }
             // 1. offers for the player's listed ships
             foreach (var l in listings.Values.ToList())
             {
@@ -368,6 +387,16 @@ namespace DipGgFixes
         {
             if (seller == null || buyer == null || s == null) return;
             string name = s.name, type = TypeName(s);
+            bool atSea = false; try { atSea = s.IsInSea; } catch { }
+            if (atSea && !handingOver)
+            {
+                string sid = s.id.ToString();
+                if (!pending.Exists(x => x.ShipId == sid)) pending.Add(new Pending { ShipId = sid, Seller = K(seller), Buyer = K(buyer), Price = price, Month = Economy.Month() });
+                listings.Remove(sid);
+                Log($"sale agreed: {N(seller)} sells {name} ({type}) to {N(buyer)} for {M(price)} - she is at sea and will be handed over in port");
+                if (seller.isMain) Notice("Ship sold", $"{name} is sold to {N(buyer)} for {M(price)}. She is at sea and will be handed over when she is back in port; the price is paid then.");
+                return;
+            }
             var list = new Il2CppSystem.Collections.Generic.List<Ship>();
             try { CC.TransferShipToNewOwner(buyer, s.id, ref list, null, false); PrizeDesign.Ensure(s, buyer, "Trade"); }
             catch (Exception e) { Log("sale failed: " + e.Message); return; }
