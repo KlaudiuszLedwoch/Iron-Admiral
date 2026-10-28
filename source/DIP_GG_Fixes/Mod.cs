@@ -631,6 +631,7 @@ namespace DipGgFixes
             Irredenta.CreatePrefs(cat); // 1.11.235
             ShipPartsCheck.CreatePrefs(cat); // 1.11.243
             BrokenDesigns.CreatePrefs(cat); // 1.11.308 (#32)
+            PrizeTech.CreatePrefs(cat); // 1.11.333 (#50)
             DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
             DeckZoneFix.CreatePrefs(cat); // 1.11.317 (#59)
             UiScale.CreatePrefs(cat); // 1.11.100
@@ -3399,6 +3400,7 @@ namespace DipGgFixes
                 if (ship == null || recipient == null) return;
                 Ship d = null; try { d = ship.design; } catch { }
                 if (d == null) d = ship;
+                PrizeTech.Note(d, recipient); // 1.11.333 (#50)
                 var hull = d.hull; string hullName = hull != null ? hull.name : null;
                 float ton = 0f; try { ton = d.Tonnage(); } catch { }
                 int count = 0; Ship found = null;
