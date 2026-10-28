@@ -167,8 +167,12 @@ namespace DipGgFixes
                 var pick = Pick(s, order, en, range, out float d, out string cls, player);
                 if (pick == null) { if (haveMine) { mine.Remove(pd.Pointer); aim.manual = false; } continue; }   // nothing listed in reach: the game's choice
                 if (cur != null && cur.Pointer == pick.Pointer) { if (!aim.manual) aim.manual = true; mine[pd.Pointer] = pick.Pointer; continue; }
+                // 1.11.337 (test 28.10 09:05: the AI aims were set "instead of none" every second - the game clears an AI ship's
+                // torpedo aim while it has no target of its own, and every new aim restarted the aiming at 0, so the tubes never
+                // came to bear): an AI ship is retargeted only away from a target the game chose itself, and keeps its aiming progress
+                if (!player && (cur == null || BattleAi.IsCapital(cur))) { if (haveMine && cur == null) mine.Remove(pd.Pointer); continue; }
                 string was = cur != null ? cur.name : "none";
-                aim.target = pick; aim.manual = true; aim.progress = 0f; mine[pd.Pointer] = pick.Pointer;
+                aim.target = pick; aim.manual = true; if (player) aim.progress = 0f; mine[pd.Pointer] = pick.Pointer;
                 if (logs++ < 60) Log(player ? $"{s.name}: torpedo tubes on {pick.name} ({cls}, {d:0} m, range {range:0} m) - priority {Label(order)}" : $"AI {s.name}: torpedo tubes on capital ship {pick.name} ({cls}, {d:0} m, range {range:0} m) instead of {was}");
             }
         }
