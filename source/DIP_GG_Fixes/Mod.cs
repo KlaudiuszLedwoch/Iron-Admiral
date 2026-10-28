@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.354", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.355", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3543,10 +3543,13 @@ namespace DipGgFixes
             try
             {
                 string kn = ClassName(keep.name);
+                // 1.11.355 (campaign 28.10, 18:29: "design merge: Collection was modified") - setting a ship's design changes the owner's
+                // fleet collection, so the ships are listed first and changed after the enumeration
+                var fleet = new List<Ship>();
                 var ef = owner.fleet.GetEnumerator(); var uf = ef.Cast<Il2CppSystem.Collections.IEnumerator>();
-                while (uf.MoveNext())
+                while (uf.MoveNext()) { var s0 = ef.Current; if (s0 != null) fleet.Add(s0); }
+                foreach (var s in fleet)
                 {
-                    var s = ef.Current; if (s == null) continue;
                     Ship d = null; try { d = s.design; } catch { }
                     if (d == null || d.Pointer == keep.Pointer) continue;
                     var dh = d.hull; if (dh == null || dh.name != hullName || ClassName(d.name) != kn) continue;
@@ -3559,13 +3562,20 @@ namespace DipGgFixes
             return moved;
         }
         // once per campaign session: merge the identical copies of captured classes the player already has (saves from before 1.11.353)
-        static bool merged;
+        static bool merged; static int mergeTries; static float mergeAt = -1f;
         internal static void SessionMerge()
         {
             if (merged) return;
             try
             {
-                if (!GameManager.IsCampaign || CampaignController.Instance == null) return;
+                if (!GameManager.IsCampaign || CampaignController.Instance == null) { mergeAt = -1f; return; }
+                // 1.11.355 (campaign 28.10, 18:29: "design merge: Collection was modified" - it ran while the campaign was still loading,
+                // the game logged an error from Player.designsAll): the merge waits until loading is over and 20 s more, and is tried
+                // again up to three times when it fails
+                bool loading = false; try { loading = GameManager.IsLoadingAny; } catch { }
+                if (loading) { mergeAt = -1f; return; }
+                if (mergeAt < 0f) { mergeAt = UnityEngine.Time.unscaledTime + 20f; return; }
+                if (UnityEngine.Time.unscaledTime < mergeAt) return;
                 Player me = null; try { var ps = CampaignController.Instance.CampaignData.Players; for (int i = 0; i < ps.Count; i++) { var p = ps[i]; if (p != null && p.isMain) { me = p; break; } } } catch { }
                 if (me == null) return;
                 merged = true;
@@ -3583,7 +3593,7 @@ namespace DipGgFixes
                 }
                 MelonLogger.Msg($"[DIP GG Fixes][Capture] design copies merged for {me.data.name}: {moved} ship(s) moved to one design per class, {removed} copy(ies) removed");
             }
-            catch (Exception e) { merged = true; MelonLogger.Warning("[DIP GG Fixes][Capture] design merge: " + e.Message); }
+            catch (Exception e) { merged = ++mergeTries >= 3; mergeAt = UnityEngine.Time.unscaledTime + 30f; MelonLogger.Warning($"[DIP GG Fixes][Capture] design merge (try {mergeTries}{(merged ? ", giving up" : ", again in 30 s")}): " + e.Message); }
         }
         // 1.11.339: removes designs of the captor that are copies of `keep` (same hull, tonnage within 1 %, same design name) and that
         // no ship of the captor uses; returns how many were removed
