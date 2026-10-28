@@ -4280,42 +4280,530 @@ wieże.
 5. Meldunki z bitwy mają głosy załóg; log bitwy zapisuje model obrażeń (obrażenia
 wybuchu, trafienia bez przebicia, trafienia typu „none”).
 --------------------------------------------------------------------------
-150. IRON ADMIRAL 1.2.74.1 (DIP_GG_FIXES 1.11.287) - POPRAWKA STABILNEJ: PRZEBICIE NA EKRANIE I W OCENIE AI Z TEJ SAMEJ FIZYKI CO TRAFIENIE - 2026-10-26
+143. IRON ADMIRAL 1.2.74-BETA.12 (DIP_GG_FIXES 1.11.282) - LOG TRAFIEŃ POKAZUJE FAKTYCZNIE ZADANE OBRAŻENIA - 2026-10-25
 --------------------------------------------------------------------------
-Linia stabilna, wydanie z poprawkami błędów. Te same poprawki co w 1.2.75-beta.5 (sprawdzone w bitwach 26 października).
-1. Okno działa w każdym języku: prędkości i masy pocisków oraz tabela
-przebicia pasa i pokładu pokazują wartości fizyczne, których używają
-trafienia, we wszystkich dziesięciu językach gry. Dotąd dostawała je tylko
-gra po angielsku; w innych językach okno pokazywało własną tabelę gry,
-nieraz kilka razy niższą od tego, co pocisk naprawdę robi.
+Tylko linia beta. Zawiera całą 1.2.74-beta.11.
+1. Log bitwy: wiersze trafień i podsumowanie bitwy podają teraz obrażenia
+faktycznie zadane przez model obrażeń moda (i regułę przelotów), z liczbą gry
+w nawiasie, gdy się różni. Wcześniej gra rejestrowała liczbę policzoną przed
+zmianą przez model, więc log zawyżał obrażenia przebić małych kalibrów.
+--------------------------------------------------------------------------
+144. IRON ADMIRAL 1.2.75-BETA.2 (DIP_GG_FIXES 1.11.282) - LOG TRAFIEŃ POKAZUJE FAKTYCZNIE ZADANE OBRAŻENIA - 2026-10-25
+--------------------------------------------------------------------------
+Tylko linia beta. Zastępuje 1.2.75-beta.1, która przez pomyłkę wyszła z poprzednią
+biblioteką (1.11.281); to wydanie zawiera opisaną tam poprawkę.
+1. Log bitwy: wiersze trafień i podsumowanie bitwy podają teraz obrażenia
+faktycznie zadane przez model obrażeń moda (i regułę przelotów), z liczbą gry
+w nawiasie, gdy się różni. Wcześniej gra rejestrowała liczbę policzoną przed
+zmianą przez model, więc log zawyżał obrażenia przebić małych kalibrów.
+--------------------------------------------------------------------------
+145. IRON ADMIRAL 1.2.75-BETA.3 (DIP_GG_FIXES 1.11.283) - MELDUNKI BOJOWE W JĘZYKACH FLOT - 2026-10-25
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.2.
+1. Meldunki bojowe: każda flota AI mówi teraz swoim językiem - niemieckim
+(Niemcy, Austro-Węgry), francuskim, włoskim, rosyjskim, japońskim,
+hiszpańskim, chińskim, portugalskim, niderlandzkim, szwedzkim (Skandynawia)
+i greckim (Bizancjum); Wielka Brytania i USA po angielsku. Twoje okręty
+zawsze mówią po angielsku; przełącznik F10 > Battle AI >
+DispatchPlayerOriginalLanguage daje Twojej flocie jej własny język.
+DispatchNationalLanguages wyłącza całą funkcję (wszystko po angielsku).
+2. Teksty są zwykłymi plikami w Mods\IronAdmiralLang (jeden na język, te same
+wiersze i warianty co angielski wzorzec). Kopia w UserData\IronAdmiral\Lang
+zastępuje zawarte w niej wiersze, więc teksty można poprawiać lub tłumaczyć
+bez ruszania moda. Wiersz, którego brak w danym języku, pada po angielsku.
+3. Narzędzia testowe (narzędzia autora, domyślnie wyłączone): AutoTestPlace
+stawia okręty AI na trawersie okrętu gracza w zadanej odległości
+(parallel:1000:hold trzyma je tam), AutoTestStartWait i AutoTestShotEvery
+sterują przebiegiem ze zrzutami ekranu.
+--------------------------------------------------------------------------
+146. IRON ADMIRAL 1.2.75-BETA.4 (DIP_GG_FIXES 1.11.283) - 33 NOWE KLASY HISTORYCZNE W PACZCE KLAS - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.3; biblioteka bez zmian.
+1. Paczka klas (Mods\IronAdmiralDesigns\Historical) rośnie ze 147 do 180
+klas historycznych. To klasy, które kreator już zapisał, ale które nie
+trafiły do paczki. Każda ma historyczną artylerię główną (liczba dział
+i kaliber jak w rzeczywistości); tam, gdzie kadłub nie uniósł historycznego
+pancerza, pancerz jest cieńszy - tak jak w klasach już obecnych w paczce.
+Pominięte zostały klasy, w których artyleria główna wyszła inna niż
+historyczna, oraz klasy bez zapisu w raporcie kreatora.
+2. Nowe klasy według flot:
+- Austro-Węgry: Kaiser Franz Joseph I (1890).
+- Wielka Brytania: Antrim (1905), Duke of Edinburgh (1906).
+- Francja: Troude (1891), Wattignies (1892), Liberté (1908), Ernest Renan
+(1909), Émile Bertin (1935).
+- Niemcy: Bremen (1904), Nassau (1909).
+- Rosja: Kniaź Potiomkin Tawriczeskij (1903), Borodino (1904), Gangut
+(1914), Impieratrica Marija (1915).
+- Skandynawia: Hekla (1891), Viking (1891), Frithjof (1896).
+- Hiszpania: Emperador Carlos V (1897), Princesa de Asturias (1903), España
+(1913), Méndez Núñez (1924), Canarias (1936).
+- USA: Montgomery (1893), Texas (1895), Indiana (1895), Kearsarge (1900),
+Maine (1902), Pennsylvania (1905), Tennessee (1906), Mississippi (1908),
+Chester (1908), Northampton (1930), North Carolina (1941).
+3. USA, Hiszpania i Skandynawia dostają pierwsze klasy historyczne.
+--------------------------------------------------------------------------
+147. IRON ADMIRAL 1.2.75-BETA.5 (DIP_GG_FIXES 1.11.284) - PRZEBICIE NA EKRANIE I W OCENIE AI Z TEJ SAMEJ FIZYKI CO TRAFIENIE - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.4.
+1. Okno działa w każdym języku: okno z prędkościami i masami pocisków oraz
+tabelą przebicia pasa i pokładu pokazuje teraz wartości fizyczne (te same,
+których używają trafienia) we wszystkich dziesięciu językach gry. Dotąd
+dostawała je tylko gra po angielsku; po francusku, niemiecku, rosyjsku
+i w innych językach okno pokazywało własną tabelę gry, nieraz kilka razy
+niższą od tego, co pocisk naprawdę robi. Etykiety w Twoim języku zostają.
 2. Ocena AI „czy przebiję”: AI w bitwie ocenia, czy jego działa główne
-przebiją pas przeciwnika, tą samą fizyką co trafienie, a nie odczytem gry,
-więc okręty AI nie odwracają się od walk, które wygrałyby ze skromnym pasem.
+przebiją pas przeciwnika, tą samą fizyką co trafienie (prędkość i kąt
+upadku pocisku na tej odległości, masa pocisku i jakość AP), a nie odczytem
+gry. Okręty AI nie odwracają się już od walk, które wygrałyby ze skromnym
+pasem, z powodu zaniżonego oszacowania.
 3. Artyleria główna: AI ocenia największym działem okrętu, także gdy wieża
-główna nie przeszła kontroli osadzenia.
+główna nie przeszła kontroli osadzenia - pancernik nie jest już oceniany
+działami pomocniczymi.
 --------------------------------------------------------------------------
-169. IRON ADMIRAL 1.2.74.2 (DIP_GG_FIXES 1.11.313) - POPRAWKA STABILNEJ: PODDANE OKRĘTY ZNÓW PRZEJMOWANE JAKO PRYZY, ZABEZPIECZENIE ROZDZIELCZOŚCI - 2026-10-27
+148. IRON ADMIRAL 1.2.75-BETA.6 (DIP_GG_FIXES 1.11.285) - ROZKAZ DYWIZJONU „DOBIJ” (FINISH OFF) - 2026-10-26
 --------------------------------------------------------------------------
-Linia stabilna. Dwie poprawki z linii beta (1.2.75-beta.10 i beta.9),
-obie potwierdzone w bitwach i kampaniach na becie.
-1. Pryzy (#35): kiedy okręt opuszcza banderę, gra od razu przenosi go na
-listę okrętów zatopionych w bitwie, a sprawdzanie pryzów szukało tylko
-wśród okrętów pływających - okręt był pomijany jako "not in this battle"
-i pryz przepadał. Sprawdzanie przeszukuje teraz wszystkie listy bitwy,
-także listę zatopionych, więc poddany okręt znów jest przejmowany.
-2. Zabezpieczenie rozdzielczości (#51): gdy ustawienia gry nie wczytają
-się przy starcie, indeks rozdzielczości jest ustawiany na bieżący ekran,
-więc aktualizacja interfejsu innego moda nie zgłasza już błędu w każdej
-klatce.
+Tylko linia beta. Zawiera całą 1.2.75-beta.5.
+1. Nowy rozkaz dywizjonu „Finish off” (siódmy przycisk panelu rozkazów,
+Alt+7): dywizjon idzie na okręty wroga już ciężko uszkodzone, które
+jeszcze pływają - najpierw najbardziej uszkodzone i najbliższe. Przeciw
+okrętom, których jego działa nie zatopią (okręty liniowe, większy kaliber),
+dywizjon z torpedami podchodzi na zasięg torped, w innym wypadku walczy
+na krótkim dystansie artyleryjskim. Trzyma się poza zasięgiem każdego
+nieuszkodzonego wroga, który może mu zaszkodzić, a gdy nie widać
+uszkodzonego wroga, czeka przy siłach głównych. Transportowce zostają
+sprawą rozkazu „Hunt”.
+2. Obowiązują zwykłe ograniczenia: ciężko uszkodzony dywizjon przerywa
+i cofa się za siły główne, torpedy są omijane, a rozkaz ruchu lub odwrotu
+wydany ręcznie przywraca dowodzenie graczowi.
+3. F10 / ustawienia: DivisionFinishDamage - od jakiego szacowanego
+uszkodzenia okręt wroga liczy się jako ciężko uszkodzony dla tego rozkazu.
+4. Pomoc w grze: rozdział o rozkazach w bitwie opisuje nowy rozkaz.
 --------------------------------------------------------------------------
-170. IRON ADMIRAL 1.2.74.3 (DIP_GG_FIXES 1.11.314) - POPRAWKA STABILNEJ: PODDANE OKRĘTY ZNÓW PRZEJMOWANE JAKO PRYZY (POPRAWIONA PACZKA) - 2026-10-27
+149. IRON ADMIRAL 1.2.75-BETA.7 (DIP_GG_FIXES 1.11.286) - PRZYWRÓCONE BRAKUJĄCE STOSUNKI MIĘDZY MOCARSTWAMI - 2026-10-26
 --------------------------------------------------------------------------
-Linia stabilna. Zawiera całą 1.2.74.2.
-1. 1.2.74.2 została wydana bez poprawki pryzów opisanej w sekcji 169
-(zabezpieczenie rozdzielczości w niej było). Ta paczka ją zawiera: kiedy
-okręt opuszcza banderę, gra od razu przenosi go na listę okrętów
-zatopionych w bitwie, a sprawdzanie pryzów przeszukuje teraz także tę
-listę, więc poddany okręt znów jest przejmowany jako pryz (#35).
+Tylko linia beta. Zawiera całą 1.2.75-beta.6.
+1. Poprawka: w niektórych kampaniach para mocarstw nie miała w ogóle
+zapisu stosunków (widziane po powrocie mocarstwa albo po wczytaniu
+starszego zapisu). Okno polityki zostawiało wtedy wiersze tych państw
+bez akcji, a akcje dyplomatyczne i dyplomacja AI między nimi były
+niemożliwe. Kampania jest teraz sprawdzana po wczytaniu i po każdej
+turze, a brakująca para dostaje neutralne stosunki (bez wojny, bez
+sojuszu) - istniejące stosunki nigdy nie są zmieniane.
+2. F10 / ustawienia: RelationRepair (domyślnie włączone).
 --------------------------------------------------------------------------
-Ostatnia aktualizacja pliku: 2026-10-14 (koszt badań: x10, premia budżetowa: w połowie do vanilla, naprawiono budowę floty przez AI, research_progress_base: 1, research_late_years_to_double: 2, naprawiono brak floty u nacji startujących bez okrętów, podniesiono startowy budżet gotówkowy dla wszystkich, cofnięto wagę wieży dział do vanilla — naprawiono brak możliwości ustawienia pancerza na małych kalibrach, naprawiono uszkodzony wiersz CSV blokujący odblokowanie nowoczesnych pancerników, obniżono minimalny tonaż kadłubów Modern Battleship do 35000 ton dla wszystkich nacji, naprawiono ten sam problem tonażu dla warstwy Super Battleship i wcześniejszych kadłubów BB oraz dla 5 permanentnie niebudowalnych kadłubów DD, ustawiono fizycznie uzasadniony maksymalny tonaż 200000-240000 ton dla warstwy Super Battleship i zastąpiono nieskończony limit BB po hull_strength_end wartością 240000, dodano bonus radarowy do walki nocnej i złej pogody dla technologii aim_rangefinder_11/12/13, przywrócono terytoria suwerennych państw minor w provinces.csv i w save_0/save_4, wzmocniono minory, złagodzono kryzys ekonomiczny po przegranej wojnie, naprawiono kontroler "v" Mongolii, przyspieszono badania o 20%, wzmocniono specjalizacje nacji x1,5, profil technologiczny Bizancjum = suma greece_ai i russia_ai, profil Bizancjum x1,5, cofnięto profil Bizancjum x1,5, dodatek DIP_GG_Fixes.dll łapiący błąd CheckMinorNationThreat, łatka CheckMinorNationThreat potwierdzona w grze, automatyczne projekty współdzielone w DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: krążowniki zamiast pancerników przy braku pieniędzy, większa pojemność portów minorów, DIP_GG_Fixes 1.3: wydarzenia równowagi sił, łatka na błąd TryGenerateSmallerNationsBattle, DIP_GG_Fixes 1.4: zmiany stosunków dyplomatycznych x1,5, DIP_GG_Fixes 1.5: strażnik zablokowanej budowy okrętów AI, DIP_GG_Fixes 1.6: pogorszenie stosunków x4, naprawa okrętu RODOS w save_4, agresywniejsze torpedy w automatycznym ogniu, DIP_GG_Fixes 1.7: szarża torpedowa lekkich okrętów AI i skupianie ognia, DIP_GG_Fixes 1.8–1.9: walka zamiast ucieczki, odłączanie wolnych okrętów, doktryny narodowe battleDoctrines.csv, DIP_GG_Fixes 1.10.0: karencja 24 mies. przed rozpadem gospodarczym, osłona turretCalibers przy ładowaniu okrętów, lose_provinces_threshold uznany za martwy parametr, porównanie przebijalności 15/16/18" z tabelami Okuna, wiersze 16–21" penetration.csv oparte na tabelach Okuna, Iron Admiral 1.1: scalenie z DIP GG 1.3.5 i TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, paczka „tylko Mods”, DIP_GG_Fixes 1.10.2: naprawa duplikatów projektów współdzielonych, migracja save_4 do 1.1, poprawka startu nowej kampanii: taf_force_no_predef_designs=1, kadłub Experimental Small Ironclad: limit kalibru 10", min. 2 lufy, obniżony minimalny pas pancerników w generatorze pancerza dla 1890 (6", DIP_GG_Fixes 1.11.16: kryzys skarbu (pożyczka wojenna, dodruk z inflacją, cięcia floty, Iron Admiral 1.2.8: historia wersji dzień po dniu, objaśnienie numeracji paczki i biblioteki, DIP_GG_Fixes 1.11.17: kryzys skarbu wg głębokości długu, diagnostyka zamówień stoczniowych AI, DIP_GG_Fixes 1.11.18: granty balance of power tylko dla wypłacalnych, rozbicie wydatków w diagnostyce, DIP_GG_Fixes 1.11.19: budżet badań AI równoważony deficytem, bez rozbudowy stoczni przy deficycie, DIP_GG_Fixes 1.11.20: kolejny środek zaradczy przy głębokim długu, pozycja "other" w diagnostyce, DIP_GG_Fixes 1.11.21: ochrona pola stanu kryzysu skarbu, łagodniejsze sumowanie inflacji), bankrut buduje tanie okręty) i 1900 (7.5"), diagnostyka generatora projektów taf_debug_shipgen_info=2, Experimental Small Ironclad minimum 1 wieża, DIP_GG_Fixes 1.11.0: szarże wg zasięgu torped i prędkości, szarże i skracanie dystansu ciężkich okrętów AI, szarża zwiadu gracza, blokada torped przed własnymi okrętami, inteligentny wybór celów, weterańskość nieliniowa, kapitulacja wg wyszkolenia, panika, przejmowanie poddanych okrętów, DIP_GG_Fixes 1.11.1: stały powód w logu szarży, przebicie porównywane z efektywnym pancerzem pasa, DIP_GG_Fixes 1.11.2: wybór celów przez blokadę celu należącą do moda (gra nadpisywała wybór co kilkaset ms), DIP_GG_Fixes 1.11.3: panika z ubytku załogi, przebicie pasa w cm→mm, bez zerowania celowania przy tym samym celu, pryzy zdejmowane z list zatopionych z załogą pryzową, celność na dużym dystansie w dalmierzach radarowych wg Jurensa (x2,6 1920-1945), DIP_GG_Fixes 1.11.4: flota podbitego minora przechodzi do zdobywcy zamiast na złom, naprawa komunikatu balance of power, DIP_GG_Fixes 1.11.5: flota do zdobywcy także dla mocarstw (gra sama przenosi okręty do innego portu, gdy jest), DIP_GG_Fixes 1.11.6: przejęty okręt (pryz, podbój) przynosi projekt do listy nowego właściciela, DIP_GG_Fixes 1.11.7: narodowe profile badań dla gracza i AI (techBonuses.csv, -10..+50%), DIP_GG_Fixes 1.11.8: przebicie w mm (nie cm), histereza skracania dystansu, Iron Admiral 1.2.0: numeracja paczek X.Y.Z, DIP_GG_Fixes 1.11.9: sprawdzanie aktualizacji w grze, DIP_GG_Fixes 1.11.10: grant balance of power tylko w logu (ReportImportant rzuca wyjątek dla okrętów AI), DIP_GG_Fixes 1.11.11: aktualizacja z gry po kliknięciu gracza (SHA-256, podmiana DLL przez rename), DIP_GG_Fixes 1.11.12: limit sprawdzania aktualizacji 30 s z powtórką, DIP_GG_Fixes 1.11.13: okno aktualizacji dopiero po ekranie ładowania, DIP_GG_Fixes 1.11.14: instalacja aktualizacji plik po pliku (załadowane DLL przez rename), komunikaty po angielsku, DIP_GG_Fixes 1.11.15: pryzy i przejęcia potwierdzone w grze, kontrola duplikatów projektów przez designsAll, Iron Admiral 1.2.14: paczki zip ze standardowymi ścieżkami (ukośnik /), sprawdzanie .NET 6 w instalatorze, Iron Admiral 1.2.15: skrypt instalacyjny Install-IronAdmiral.ps1, instrukcja ręcznej instalacji MelonLoadera, Iron Admiral 1.2.16: produkcja seryjna (prototyp, krzywa uczenia, partia, wspólny dok, obłożenie stoczni, utrzymanie sióstr), inflacja względem PKB z poziomem bazowym 1%, rating kredytowy i oprocentowanie = inflacja + marża, zmniejszanie długu przez inflację, oszczędności = inflacja minus 1,5 pkt, panel skarbu F8, inflacja w oknie Finanse, miesięczny raport skarbu, rozdział w pomocy gry, poradnik kampanii GUIDE_EN.md, Iron Admiral 1.2.17: wyjaśnienie inflacji jako dopłaty, nie poziomu cen, Iron Admiral 1.2.18: rozbudowa stoczni AI tylko przy stałej lub dużej nadwyżce, Iron Admiral 1.2.19: refity zlecone razem, bez części okrętów na mapie, przerwa w serii od daty ukończenia, diagnostyka wojen, Iron Admiral 1.2.20: wojny koalicyjne przeciw dominującemu mocarstwu, bez projektów AI bez możliwości budowy, Iron Admiral 1.2.21: refity okrętów ponad limitami traktatowymi (+3000 t), osiągalne szarże torpedowe, bez beznadziejnego skracania dystansu, zygzak, Iron Admiral 1.2.22: panel ustawień w grze (F10), Iron Admiral 1.2.23: zmasowany atak torpedowy, taranowanie, odwrót bezradnych pancerników, misje ucieczki (odwrót albo rozproszenie), zwrot od torped, pociski SAPC, szybkostrzelność wg NavWeaps, model rykoszetów Okuna, działa pomocnicze niszczycieli, diagnostyka pancerza, wycofane sprawdzanie save'ów, Iron Admiral 1.2.24: taktyka AI wg wielkości okrętów (zmasowany atak wg tonażu bojowego, cele torpedowe wg wielkości, odwrót głównych okrętów), poddane okręty dla zwycięzcy bitwy, poprawki produkcji seryjnej, Iron Admiral 1.2.25: zmasowany atak tylko przy dostatecznej liczbie okrętów torpedowych na cel, odwrót przy przewadze wroga, Iron Admiral 1.2.26: produkcja seryjna zaraz po wczytaniu kampanii, Iron Admiral 1.2.27: refit ponad limitem traktatowym da się zapisać, Iron Admiral 1.2.28: refit ponad limitem traktatowym - projekt otwarty w edytorze, Iron Admiral 1.2.29: refit ponad limitem traktatowym zapisany, potwierdzone w grze, Iron Admiral 1.2.30: powstania w zajętych prowincjach rdzennych z decyzją o stłumieniu, historyczna lista rdzeni narodowych, Iron Admiral 1.2.31: mgła wojny (mapa strategiczna, meldunki o kontakcie, identyfikacja w bitwie, AI w tej samej mgle, przechwycenia zależne od wywiadu), Iron Admiral 1.2.32: pomyłki w meldunkach tylko na typy posiadane przez flotę, Iron Admiral 1.2.33: raport problemu z panelu F10 i lokalna statystyka użycia za zgodą gracza, Iron Admiral 1.2.34: scenariusze - diagnostyka zapisów kampanii, Iron Admiral 1.2.35: noc i pogoda skracają identyfikację (widoczność w procentach), Iron Admiral 1.2.36: panel okrętu wroga bez danych przed identyfikacją, znaczniki wrogich flot wzdłuż ich trasy morskiej zamiast na lądzie, Iron Admiral 1.2.37: przesunięcie znaczników także dla stojących zespołów, sprawdzane testem lądu, Iron Admiral 1.2.38: panel okrętu wroga ukryty w każdej klatce do identyfikacji, Iron Admiral 1.2.39: widoczność bitwy w km - identyfikacja w dzień z kilkunastu km, Iron Admiral 1.2.40: 50 współdzielonych projektów okrętów w paczce moda, Iron Admiral 1.2.41: raport z bitwy w oknie wyniku bitwy, Iron Admiral 1.2.42: mniejszy błąd pozycji na mapie, naprawa uszkodzonego pliku ustawień, Iron Admiral 1.2.43: niedokładnie znane floty nie są rysowane na lądzie, Iron Admiral 1.2.44: mocarstwa bez portów czekają na ich odzyskanie, Iron Admiral 1.2.45: meldunki z bitwy w logu, Iron Admiral 1.2.46: starzejące się meldunki o kontaktach, noc zdradza strzelających, Iron Admiral 1.2.47: 920 projektów z Ultimate Admiral's Shippack, Iron Admiral 1.2.48: kąt trafienia w pancerz, handel okrętami, klasy historyczne, nowa licencja, Iron Admiral 1.2.49: poprawki okna handlu i kąta trafienia, 48 klas historycznych, Iron Admiral 1.2.50: raport z bitwy w osobnym panelu obok okna wyniku, Iron Admiral 1.2.51: projekty Shippack oczyszczone z technologii nieznanych DIP, Iron Admiral 1.2.52: bitwy własne - najpierw klasy historyczne, krok projektów predefiniowanych domyślnie wyłączony, Iron Admiral 1.2.53: 147 klas historycznych, Iron Admiral 1.2.54: AI bitewne według regulaminów walki flot, doktryny według państw i okresów, meldunki nad okrętami, Iron Admiral 1.2.55: poprawki okna wywiadu i panelu skarbu, tryb zrzutów ekranu, potwierdzenia w grze, Iron Admiral 1.2.56: 16 wież znów się wczytuje, doktryny kolejnych flot, Iron Admiral 1.2.57: artyleria główna bije w bliskiego wroga, Iron Admiral 1.2.58: koniec beznadziejnych strzałów torpedami, Iron Admiral 1.2.59: koniec torped w puste morze, Iron Admiral 1.2.60: bez torped do okrętów poddanych, okręty poddane wracają bez straty, Iron Admiral 1.2.61: kontrola burty torped wyłączona, limit prędkości celu, wydajność bitew, Iron Admiral 1.2.62: panele według skali UI, pamięć nieudanych projektów, torpedy w obronie własnej, Iron Admiral 1.2.63: mniejsze dymki meldunków w bitwie, Iron Admiral 1.2.64: pamięć generatora zachowana między uruchomieniami, przywracanie brakujących projektów własnych okrętów, Iron Admiral 1.2.65: poprawka bezpieczeństwa ciągłej mapy, Iron Admiral 1.2.66: zasady odwrotu AI w bitwie, pełny zasięg torped okrętów gracza, projekty pryzów w konstruktorze, panel własnego okrętu, artyleria pomocnicza, przełącznik Beta updates, Iron Admiral 1.2.67-1.2.69: balistyka z fizyki i technologii, celność wg technologii kierowania ogniem, HE przez cienkie poszycie, rozkazy dla dywizjonów w bitwie, ziemie okupowane prowincja po prowincji, utracone terytorium, dyfuzja technologii, wagi historyczne, limity projektanta AI wg wyporności i przycinanie, własny randParts.csv, refity dla nabywców, naprawa części nie na miejscu, strażniki okna polityki, osiem rozdziałów pomocy, Iron Admiral 1.2.70: jakość pancerza względem pancerza Kruppa, rozkazy celu gracza obowiązują, pancerniki AI zostają w walce, panele bitwy ukryte nad oknami wyniku, Iron Admiral 1.2.71: penetracja z fizyki (Okun), jedno działo fizyczne dla okna, pocisków i penetracji, log trafień, Iron Admiral 1.2.72-beta.1: nastawy torped i priorytety celów, obrażenia przy przelocie pocisku AP, najpierw eskorta, potem transportowce, Iron Admiral 1.2.72-beta.2: okno działa pokazuje fizyczną masę pocisku i źródło prędkości wylotowej, Iron Admiral 1.2.72-beta.3 i 1.2.72: zwiad w stronę zgłoszonego dymu, priorytety celów torpedowych przechodzą dalej; linia stabilna dostaje nastawy i cele torped, obrażenia pocisku AP na wylot, działo fizyczne krok 2b, najpierw eskorta, Iron Admiral 1.2.73-beta.1: obrażenia przy przelocie pocisku AP według miejsca przelotu, Iron Admiral 1.2.73-beta.2: rozkazy dla dział dywizjonów gracza, meldunki mówią, gdzie trafił pocisk, Iron Admiral 1.2.73-beta.3: sprawdzenie kształtu pocisku okrętów gracza w logu bitwy, Iron Admiral 1.2.73-beta.4: paski bitwy nie znikają, rozkazany atak torpedowy rusza, kształt pocisku dla flot bez technologii nosa, Iron Admiral 1.2.73-beta.5: penetracja pasa przeliczona dla wszystkich kalibrów, Iron Admiral 1.2.73-beta.6: mniejsze panele bitwy i tekst okna działa, Iron Admiral 1.2.73-beta.7: rozkaz ataku torpedowego bez taranowania, statystyka typów pocisków, Iron Admiral 1.2.73-beta.8: log trafień dla obu stron, Iron Admiral 1.2.73-beta.9: unik przed torpedami oddala od wroga, Iron Admiral 1.2.73: linia stabilna dostaje penetrację dla wszystkich kalibrów, obrażenia przy przelocie według miejsca, rozkazy dla dział, atak torpedowy bez taranowania, Iron Admiral 1.2.74-beta.2: nos pocisku z zamontowanego pocisku i drzewa pocisków, Iron Admiral 1.2.74-beta.3: przebicie fizyczne zamiast wartości gry, historyczna masa pocisku, Iron Admiral 1.2.74-beta.4: hotfix wysypki na starcie bitwy, Iron Admiral 1.2.74-beta.5: przebicie fizyczne przez tabelę przebić, Iron Admiral 1.2.74-beta.6: wiersze przebić naprawione i domyślnie włączone, Iron Admiral 1.2.74-beta.8: diagnostyka obrażeń, Iron Admiral 1.2.74-beta.9: diagnostyka obrażeń - funkcja odnaleziona, Iron Admiral 1.2.74-beta.10: historyczny model obrażeń, świadome celowanie z bliska, Iron Admiral 1.2.74-beta.11: głosy załóg w meldunkach, diagnostyka trafień none, Iron Admiral 1.2.74: linia stabilna dostaje fizyczną penetrację w bitwie, historyczny model obrażeń i masy pocisków, głosy załóg; linie stabilna i beta znów osobno, Iron Admiral 1.2.74.1: przebicie na ekranie i w ocenie AI z fizyki trafienia, Iron Admiral 1.2.74.2: poddane okręty znów przejmowane jako pryzy, zabezpieczenie rozdzielczości, Iron Admiral 1.2.74.3: poddane okręty znów przejmowane jako pryzy, poprawiona paczka)
+151. IRON ADMIRAL 1.2.75-BETA.8 (DIP_GG_FIXES 1.11.288) - DYFUZJA TECHNOLOGII: MOCARSTWO DALEKO Z PRZODU ZNÓW ZWALNIA - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.7.
+1. Poprawka: zasada dyfuzji technologii, która spowalnia badanie
+technologii wyprzedzającej swój czas, porównywała ją z najnowszą
+technologią znaną wszystkim mocarstwom - łącznie z mocarstwem, które
+ją bada. Mocarstwo, które daleko wyprzedziło resztę, nigdy więc nie
+liczyło się jako wyprzedzające, jego badania nie zwalniały, a przepaść
+wobec innych flot rosła (późne kampanie: floty AI na kadłubach o dekady
+starszych niż u lidera). Porównanie obejmuje teraz tylko pozostałe
+mocarstwa, zgodnie z założeniem.
+2. Log: raz na kwartał linia "[Tech] standing" podaje poziom technologii
+każdego mocarstwa względem pozostałych i jego najnowszą technologię, żeby
+śledzić przepaść w trakcie kampanii.
+--------------------------------------------------------------------------
+152. IRON ADMIRAL 1.2.75-BETA.9 (DIP_GG_FIXES 1.11.289) - ZABEZPIECZENIE ROZDZIELCZOŚCI DLA TWEAKSANDFIXES - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.8.
+1. Gdy własne ustawienia ekranu gry nie wczytają się przy starcie, wybrana
+rozdzielczość wskazywała poza listę rozdzielczości. TweaksAndFixes zgłaszał
+wtedy błąd w każdej klatce (log rzędu dziesiątek megabajtów w kilka minut),
+a jego dodatki do interfejsu przestawały się odświeżać do końca sesji. Mod
+ustawia w takim wypadku bieżącą rozdzielczość ekranu - na ekranie nic się
+nie zmienia, a błędy znikają.
+--------------------------------------------------------------------------
+153. IRON ADMIRAL 1.2.75-BETA.10 (DIP_GG_FIXES 1.11.290) - PRYZY: OKRĘTY, KTÓRE PODDAŁY SIĘ W BITWIE - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.9.
+1. Okręt, który opuścił banderę w bitwie kampanii, nie był brany jako pryz:
+po bitwie mod uznawał go za „nieobecny w tej bitwie” i zostawiał grze,
+która liczy go jako stracony. Gra przenosi poddany okręt na listę okrętów
+zatopionych w bitwie, zanim mod go sprawdzi, a sprawdzenie patrzyło tylko
+na listę okrętów na wodzie. Teraz przeszukuje też listę zatopionych, więc
+okręt poddany w tej bitwie trafia do zwycięzcy (albo wraca do swoich, gdy
+to oni wygrali), zgodnie z zasadami pryzów. Okręty zdobyte w poprzednich
+latach, które mają tylko stary znacznik poddania, nadal nie są ruszane.
+--------------------------------------------------------------------------
+154. IRON ADMIRAL 1.2.75-BETA.11 (DIP_GG_FIXES 1.11.291) - WOJNY KOALICYJNE Z RÓWNOWAGĄ SIŁ - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.10.
+1. Gracz, którego flota stała się najsilniejsza, mógł mieć wojnę z ośmioma
+państwami naraz: każde wrogie mocarstwo co miesiąc dołączało do koalicji,
+nawet gdy koalicja była już dużo silniejsza, a małe floty dołączały jako
+pełni członkowie. Teraz każde mocarstwo spoza takiej wojny podejmuje raz
+w miesiącu jedną decyzję, z powodem w logu:
+- dołącza: mocarstwa wrogie, tym chętniej, im bardziej wrogie i im gorzej
+  cel radzi sobie w swoich wojnach, a dużo rzadziej, gdy koalicja już
+  przeważa nad celem;
+- staje po stronie celu: gdy koalicja jest ponad dwa razy silniejsza od
+  celu, sojusznik celu albo mocarstwo, które bardziej boi się przywódcy
+  koalicji niż celu, może wypowiedzieć wojnę przywódcy (Wielka Brytania
+  przeciw hegemonowi na kontynencie; Francja i Wielka Brytania po stronie
+  Turcji w 1854 r.);
+- czeka: małe floty (poniżej jednej czwartej floty celu) i mocarstwa
+  o mieszanych stosunkach zostają z boku; gdy cel wyraźnie przegrywa, mogą
+  późno dołączyć do zwycięzców (Włochy 1915, Rumunia 1916);
+- zostaje neutralne: walczy gdzie indziej, jest bankrutem albo zawarło
+  z celem pokój mniej niż 12 miesięcy temu (zapisywane z kampanią).
+Początek koalicji bez zmian. Raz w miesiącu log pokazuje każde państwo,
+które prowadzi dwie wojny lub więcej, i którą zasadą moda każda się zaczęła.
+F10, Dyplomacja: „CoalitionBalanceOfPower” (wyłączone: poprzednia zasada).
+--------------------------------------------------------------------------
+155. IRON ADMIRAL 1.2.75-BETA.12 (DIP_GG_FIXES 1.11.292) - SOJUSZNICY DOŁĄCZAJĄCY DO WOJNY: KONIEC BŁĘDU PRZY ZMIANIE STOSUNKÓW - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.11.
+1. Gdy wybuchała wojna i wciągani byli do niej sojusznicy obu stron, zmiana
+stosunków w grze czasem kończyła się błędem. Reszta tego kroku była wtedy
+pomijana, więc kolejni sojusznicy mogli zostać poza wojną. Zmiana dla pary
+państw bez zapisanych stosunków jest teraz pomijana. Błąd w trakcie
+zmiany trafia do logu z parą państw, a gra przechodzi do następnego
+sojusznika.
+--------------------------------------------------------------------------
+156. IRON ADMIRAL 1.2.75-BETA.13 (DIP_GG_FIXES 1.11.293) - KONIEC BŁĘDÓW MIEJSC MONTAŻU W BITWIE - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.12.
+1. Na niektórych kadłubach miejsce montażu zostawało bez części okrętu, do
+której należy. Każde sprawdzenie, czy działo albo wieża się tam mieści,
+kończyło się błędem z pełnym śladem – od setek do tysięcy razy w bitwie.
+Zapychało to log i kosztowało czas w każdej klatce sprawdzania. Takie
+miejsce po prostu się teraz nie nadaje, a sprawdzenie gry nie jest
+uruchamiane. Miejsc należących do części zmiana nie dotyczy.
+--------------------------------------------------------------------------
+157. IRON ADMIRAL 1.2.75-BETA.14 (DIP_GG_FIXES 1.11.294) - SPRAWDZENIE STRZAŁU TORPEDOWEGO W JEDNOSTKACH GRY, TRANSPORTOWCE NIE OSŁANIAJĄ ODWROTU - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.13.
+1. Okręty wstrzymywały torpedy z bliska, gdy cel się oddalał. Sprawdzenie
+porównywało stałą prędkość torpedy z prędkością celu w jednostkach gry,
+które są około trzy razy większe, więc droga do punktu spotkania wychodziła
+na dziesiątki kilometrów przy 1,5 km. Teraz sprawdzenie bierze prawdziwą
+prędkość torpedy i to samo obliczenie co wybór nastawy torped.
+2. Transportowce i inne nieuzbrojone jednostki nie „osłaniają już odwrotu”
+między okrętami bojowymi a pościgiem.
+3. Czytelniejszy log bitwy: masowy atak torpedowy poniżej pełnej siły jest
+opisany jako atak opóźniający; powód odwrotu mówi, dlaczego odejście jest
+bezpieczne; szarża ruszająca od razu (na rozkaz, masowa albo po
+przeładowaniu) nie pokazuje już bezsensownej odległości startu.
+--------------------------------------------------------------------------
+158. IRON ADMIRAL 1.2.75-BETA.15 (DIP_GG_FIXES 1.11.297) - OPUSZCZANIE WISZĄCYCH CZĘŚCI, NAJNOWSZE TORPEDY W PROJEKTACH AI, SPRAWDZANIE ZAŁADOWANEJ BIBLIOTEKI - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.14.
+1. Niektóre okręty, głównie projekty AI na kadłubach innych państw, miały
+wieże i nadbudówki wiszące nad pokładem. W bitwie taka część jest teraz
+mierzona względem kadłuba pod nią i opuszczana na pokład, gdy wisi wyżej
+niż 1,5 m. Zmienia się tylko wygląd – działa strzelają jak dotąd. Log
+podaje odstęp dla każdej takiej części.
+2. Projekty z generatora okrętów (AI i automatyczne projektowanie) dostają
+największą zbadaną przez państwo średnicę torped zamiast losowej starszej
+(F10, Campaign AI: „AiBestTorpedoDiameter”).
+3. Sprawdzanie aktualizacji porównuje bibliotekę, która faktycznie działa,
+z zainstalowaną paczką. Gdy się różnią (np. po podmianie samej
+biblioteki), mówi o tym i proponuje paczkę ponownie.
+--------------------------------------------------------------------------
+159. IRON ADMIRAL 1.2.75-BETA.16 (DIP_GG_FIXES 1.11.301) - ODLEGŁOŚĆ ATAKU TORPEDOWEGO, POLOWANIE NA TRANSPORTOWCE, WISZĄCE CZĘŚCI - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.15.
+1. Rozkaz ataku torpedowego: krążowniki podchodziły na 1–2 km do pancernika.
+Teraz odpalają z około 85% zasięgu torped, zaczynają wstrzymywać zbliżanie
+nieco wcześniej, bo cel też się zbliża, a z pustymi wyrzutniami odwracają
+się i odchodzą, aż torpedy zostaną przeładowane.
+2. Torpedy nie są już wstrzymywane wobec pancernika, krążownika liniowego
+ani ciężkiego krążownika bliżej niż trzy czwarte zasięgu torped: wachlarz
+na tak duży cel pokrywa jego zwroty.
+3. Polowanie (Hunt): krążownik nie miota się już między zbliżaniem
+a odwrotem na granicy zasięgu osłaniającego pancernika. Trzyma zapas,
+po odwrocie czeka 30 s, a gdy cel jest osłonięty, płynie do bezpiecznego
+punktu. Do transportowców podchodzi na około 2,5 km i strzela do nich HE;
+poprzedni wybór amunicji wraca, gdy zmienia się cel albo rozkaz.
+4. Wiszące części: kadłuby nie mają powierzchni, którą dałoby się zmierzyć,
+więc wysokość pokładu bierze się teraz z najbliższego miejsca montażu
+samego kadłuba.
+5. Log bitwy podaje dla każdego okrętu założony pocisk AP i to, które
+pociski AP okręt może mieć (z powodem gry, gdy nie może) – żeby ustalić,
+dlaczego okręty noszą pociski z lat 90. XIX wieku.
+--------------------------------------------------------------------------
+160. IRON ADMIRAL 1.2.75-BETA.17 (DIP_GG_FIXES 1.11.302) - ATAK TORPEDOWY Z OBU BURT I ATAK KRZYŻOWY - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.16.
+1. Rozkaz ataku torpedowego: po salwie z wyrzutni jednej burty dywizja robi
+zwrot, wystawia na cel załadowaną burtę i odpala. Dopiero z obiema burtami
+pustymi odwraca się na przeładowanie.
+2. Gdy dwie lub więcej dywizji atakuje torpedami ten sam cel, podchodzą
+pod kątem 45 stopni z obu stron jego dziobu, więc ślady torped przecinają
+się mniej więcej pod kątem prostym: zwrot dziobem do jednej salwy wystawia
+burtę na drugą. Okręty jednej dywizji manewrują razem, więc atak krzyżowy
+wymaga co najmniej dwóch dywizji.
+--------------------------------------------------------------------------
+161. IRON ADMIRAL 1.2.75-BETA.18 (DIP_GG_FIXES 1.11.303) - DYWIZJA DZIELI SIĘ DO KRZYŻOWEGO ATAKU TORPEDOWEGO - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.17.
+1. Dywizja z dwoma lub więcej okrętami, która dostaje rozkaz ataku
+torpedowego, sama się dzieli: prowadzący zatrzymuje pierwszą połowę,
+reszta tworzy drugą dywizję z tym samym rozkazem, a obie podchodzą do celu
+z dwóch stron jego dziobu, tak że ślady torped przecinają się mniej więcej
+pod kątem prostym. Gdy odłączona część odpali torpedy, jej okręty wracają
+do swojej dywizji, która odchodzi i przeładowuje razem.
+--------------------------------------------------------------------------
+162. IRON ADMIRAL 1.2.75-BETA.19 (DIP_GG_FIXES 1.11.303) - DYWIZJA DZIELI SIĘ DO KRZYŻOWEGO ATAKU TORPEDOWEGO (POPRAWIONA PACZKA) - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.18.
+1. 1.2.75-beta.18 została wydana z biblioteką bety.17 (DIP_GG_Fixes
+1.11.302), więc zmiany opisanej w sekcji 161 w niej nie było. Ta paczka ją
+zawiera (DIP_GG_Fixes 1.11.303): dywizja z dwoma lub więcej okrętami
+z rozkazem ataku torpedowego sama dzieli się do ataku krzyżowego i łączy
+ponownie po salwie odłączonej części.
+--------------------------------------------------------------------------
+163. IRON ADMIRAL 1.2.75-BETA.20 (DIP_GG_FIXES 1.11.305) - LEKKIE OKRĘTY TORPEDUJĄ DUŻE CELE, POPRAWKA KOALICJI - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.19.
+1. Atak torpedowy: do pancernika, krążownika liniowego lub krążownika
+torpedy nie są już wstrzymywane do 90% zasięgu torped, chyba że cel
+wyraźnie ucieka (jego kurs zwiększa odległość z prędkością większą niż
+połowa jego prędkości). Wcześniej lekkie krążowniki i torpedowce
+podchodziły na 4,5-4,7 km do pancernika i nie strzelały.
+2. Wojny koalicyjne (#40): dwa państwa walczące ze wspólnym wrogiem nie
+wypowiadają już sobie wojny ani nie stają po przeciwnych stronach
+w innej wojnie.
+--------------------------------------------------------------------------
+164. IRON ADMIRAL 1.2.75-BETA.21 (DIP_GG_FIXES 1.11.306) - BADANIA POCISKÓW JAK W WERSJI PODSTAWOWEJ, WOLNIEJSZE DOGANIANIE TECHNOLOGII - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.20.
+1. Technologie pocisków (projectile_shell, kolejne wzory pocisków AP i HE):
+trudność badań 160 -> 44, wartość z wersji podstawowej (ostatnia, 1930:
+480 -> 132). Przy trudności DIP floty lat 20. strzelały tępymi pociskami
+z 1898 roku, więc prędkość w chwili trafienia i przebijalność na dużym
+dystansie wychodziły około połowy wartości historycznych. Pozostałe
+technologie zachowują trudność DIP.
+2. Doganianie technologii: mocarstwo oceniane jako "Very Behind"
+otrzymuje jedną technologię co drugą turę (było co turę), "Behind" co
+czwartą turę (było co drugą).
+--------------------------------------------------------------------------
+165. IRON ADMIRAL 1.2.75-BETA.22 (DIP_GG_FIXES 1.11.308) - USZKODZONE LEKKIE OKRĘTY NADAL TORPEDUJĄ, ZEPSUTE PROJEKTY AI WYCOFANE - 2026-10-26
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.21.
+1. Atak torpedowy: uszkodzony dywizjon AI, który nie może uciec (jest za
+wolny) i ma załadowane wyrzutnie, nie rezygnuje już z ataku, gdy
+pancernik lub krążownik jest w zasięgu torped - kontynuuje go i strzela.
+Wcześniej taki lekki krążownik walczył dalej tylko artylerią.
+2. Zepsute projekty AI (#32): projekt AI, którego okręt wchodzi do bitwy
+z częścią leżącą daleko od kadłuba (wieże lub nadbudówki przestawiane
+z powrotem przez mod), zostaje oznaczony jako zepsuty; AI nie buduje już
+według niego okrętów i projektuje nowy. Zbudowane okręty zostają
+w służbie, projekty gracza nie są oznaczane, oznaczenia zapisują się
+w zapisie gry. Przełącznik: BrokenDesignsObsolete (F10, Campaign AI).
+--------------------------------------------------------------------------
+166. IRON ADMIRAL 1.2.75-BETA.23 (DIP_GG_FIXES 1.11.309) - NISZCZYCIELE AI Z PEŁNYM UZBROJENIEM TORPEDOWYM - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.22.
+1. Projekty niszczycieli AI (#47, część druga): generowany niszczyciel,
+który ma mniej wyrzutni torped, niż pozwalają jego technologia i
+wielkość, dostaje większe wyrzutnie na tych samych stanowiskach - dwie
+największe dostępne dla pełnowymiarowego niszczyciela, jedną dla małego.
+Wyrzutnie burtowe zmieniane są parami, żeby okręt zachował równowagę;
+stanowisko, które nie przyjmuje większej wyrzutni, zostaje przy swojej.
+Dodatkową masę pokrywa zwykła redukcja masy projektu. Tylko projekty
+generowane (AI i automatyczne); własne projekty gracza bez zmian. W logu:
+[ShipGen] ... destroyer with N torpedo tube(s), norm M. Przełączniki:
+AiMinTorpedoTubes i AiDestroyerTubesTonnage (F10, Campaign AI).
+--------------------------------------------------------------------------
+167. IRON ADMIRAL 1.2.75-BETA.24 (DIP_GG_FIXES 1.11.310) - REJESTRATOR PROJEKTOWANIA - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.23.
+1. Rejestrator projektowania (#64): każdy krok projektowania lub refitu
+okrętu w konstruktorze trafia do UserData\IronAdmiral\design_log.csv -
+kadłub, prędkość, wyporność, zasięg, szerokość, zanurzenie, grodzie,
+kwatery, każdy komponent, pancerz każdej strefy i części (wieże, kominy,
+działa, barbety, wyrzutnie torped) z położeniem dziób / śródokręcie /
+rufa oraz waga i rezerwa tonażu po każdym kroku. Przeciągnięcie suwaka
+to jeden krok z wartością końcową. Plik zostaje na komputerze.
+Przełącznik: DesignRecorder (F10, Interface).
+--------------------------------------------------------------------------
+168. IRON ADMIRAL 1.2.75-BETA.25 (DIP_GG_FIXES 1.11.312) - KĄT TRAFIENIA LICZONY RAZ, POPRAWKI REJESTRATORA PROJEKTOWANIA - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.24.
+1. Przebijalność (#58, #60): w trafieniu gra sama pogrubia płytę według
+kątów uderzenia (płyta / cosinus kąta poziomego x cosinus kąta
+pionowego). Współczynnik ukośności pasa z moda i obniżenie fizycznej
+przebijalności pasa o kąt opadania dochodziły do tego, więc kąt był
+liczony podwójnie: pociski zatrzymywały się na płytach cieńszych niż ich
+przebijalność (pocisk 152 mm z przebijalnością 63 mm zatrzymany przez
+płytę "30 mm"), a małe pociski trafiały na płyty 460-690 mm na końcach
+kadłuba. W trafieniach oba są teraz wyłączone (kąt liczy raz gra);
+przebijalność pasa pokazywana i używana to wartość przy uderzeniu
+prostopadłym. Przełączniki: ObliquityOnTopOfGame (wył.),
+PhysicalPenetrationNormalIncidence (wł.).
+2. Log trafień (#59): każda linia trafienia podaje strefę pancerza
+sprawdzoną przez grę, kąty uderzenia i płytę pogrubioną przez grę.
+3. Rejestrator projektowania (#64): aktualna nazwa projektu w każdej
+linii, linia "design saved" przy zapisie projektu, dziób / śródokręcie /
+rufa według tercji długości okrętu.
+--------------------------------------------------------------------------
+171. IRON ADMIRAL 1.2.75-BETA.26 (DIP_GG_FIXES 1.11.315) - PRZEBIJALNOŚĆ BURTOWA DLA PŁYT BURTOWYCH - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.25.
+1. Przebijalność (#59): gra wybiera przebijalność burtową albo pokładową
+trafienia losowo według kąta uderzenia, niezależnie od płyty, którą
+potem sprawdza. W teście bety.25 jedna trzecia trafień w pas (na dziobie
+i rufie) dostała przebijalność pokładową - pocisk 381 mm spadający pod
+kątem 7 stopni miał 84 mm zamiast 469 mm - i zatrzymywała się na cienkim
+pancerzu końców. Pocisk, który trafia w płytę pionową (pasy, boki wież,
+barbety, wieża dowodzenia), używa teraz zawsze przebijalności burtowej.
+Przełącznik: PhysicalPenetrationByZone (wł.).
+2. Log trafień: szacunek płyty dodany w becie.25 usunięty (pogrubienie
+płyty przez grę ma dodatkowe czynniki); strefa i kąty uderzenia zostają.
+--------------------------------------------------------------------------
+172. IRON ADMIRAL 1.2.75-BETA.27 (DIP_GG_FIXES 1.11.316) - ZMIANA PŁYT BURTOWYCH Z BETY.26 WYCOFANA - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.26.
+1. Zmiana z sekcji 171 (przebijalność burtowa dla płyt burtowych)
+pogorszyła wyniki w bitwie testowej: większość trafień w pas dostawała
+dużo mniejszą przebijalność zamiast większej (pełne przebicia spadły ze
+171 do 53 w tym samym układzie). Jest wyłączona (przełącznik
+eksperymentalny PhysicalPenetrationByZoneTest, wył.); przebijalność
+działa jak w becie.25.
+--------------------------------------------------------------------------
+173. IRON ADMIRAL 1.2.75-BETA.28 (DIP_GG_FIXES 1.11.317) - TRAFIENIA W POKŁAD SPRAWDZANE PANCERZEM POKŁADU - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.27.
+1. Przebijalność (#59): gra losuje według kąta uderzenia, czy pocisk
+trafia w burtę, czy w pokład, i według tego używa przebijalności
+burtowej albo pokładowej. Przy trafieniach w pokład na dziobie i rufie
+sprawdzała jednak płytę pasa, więc pocisk z małą przebijalnością
+pokładową zatrzymywał się na cienkim pasie końców (pocisk 381 mm przy
+7 stopniach opadu: 85 mm na 39 mm). Trafienie w pokład sprawdza teraz
+płytę pokładu tej części okrętu (pokład, pokład dziobowy, pokład
+rufowy). Przełącznik: DeckHitsMeetDeck (F10, Battle).
+--------------------------------------------------------------------------
+174. IRON ADMIRAL 1.2.75-BETA.29 (DIP_GG_FIXES 1.11.319) - KRZYŻOWY ATAK TORPEDOWY I SALWA Z OBU BURT DLA AI - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.28.
+1. Taktyka torpedowa AI (#56): dywizjony AI atakujące torpedami ten sam
+cel podchodzą 45 stopni po obu stronach jego dziobu, więc tory się
+krzyżują i cel nie może ustawić się do obu salw; dywizjon, który ma puste
+wyrzutnie po jednej stronie, robi zwrot i strzela drugą burtą, dopiero
+potem odchodzi na przeładowanie - ta sama taktyka co w rozkazie ataku
+torpedowego gracza. Przełącznik: AiCrossTorpedo (F10, Battle AI).
+2. Log trafień: każda linia trafienia podaje, czy gra użyła pocisku AP
+czy HE (pociski lecą jako "Auto", rodzaj rozstrzyga się w trafieniu).
+--------------------------------------------------------------------------
+175. IRON ADMIRAL 1.2.75-BETA.30 (DIP_GG_FIXES 1.11.320) - KĄT UDERZENIA Z KĄTA OPADANIA POCISKU - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.29.
+1. Przebijalność (#58, #59): gra używa jednego kąta uderzenia
+"side-up" zarówno do losowania, czy pocisk trafia w burtę czy w pokład,
+jak i do pogrubienia płyty (płyta / cosinus kąta, do 85 stopni). Dla
+pocisku opadającego pod kątem 5-15 stopni kąt gry wychodził 75-89
+stopni, więc płaskie pociski były w większości trafieniami w pokład,
+a gdy trafiały w płytę burtową, liczyła się ona 4-11 razy grubsza
+(pocisk AP 152 mm z przebijalnością 110 mm zatrzymany przez pas końców
+39 mm trafiony prawie prostopadle). Ten kąt to teraz kąt opadania
+pocisku z jego fizycznego lotu: płaski pocisk trafia płytę burtową
+prawie prostopadle i częściej w burtę, stromy częściej w pokład.
+Przełącznik: ImpactAngleFromFall (F10, Battle).
+--------------------------------------------------------------------------
+176. IRON ADMIRAL 1.2.75-BETA.31 (DIP_GG_FIXES 1.11.321) - KĄT UDERZENIA Z KĄTA OPADANIA POCISKU, POPRAWIONY - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.30.
+1. Zmiana z sekcji 175 nie działała: gra rozstrzyga trafienie w chwili
+wystrzału, zanim pocisk powstanie, więc lot pocisku nie był dostępny
+(w teście zastosowana 0 razy). Kąt opadania jest teraz liczony
+z kierunku uderzenia, który gra sama przekazuje do swojej funkcji kąta,
+przy wystrzale i przy trafieniu.
+--------------------------------------------------------------------------
+177. IRON ADMIRAL 1.2.75-BETA.32 (DIP_GG_FIXES 1.11.322) - LEKKIE OKRĘTY ZNÓW PRZYJMUJĄ OBRAŻENIA - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.31.
+1. Torpedowce, niszczyciele i lekkie krążowniki prawie nie przyjmowały
+obrażeń (zgłoszenia z forum; w teście torpedowiec przyjął 72 trafienia
+od 2 do 12 cali i skończył z 6 % uszkodzeń). Gra daje małym okrętom
+znacznie więcej struktury na tonę niż pancernikom i nadrabiała to
+mnożeniem trafień w cienkie płyty (do x11); historyczny model obrażeń
+usunął ten mnożnik. Każde trafienie w lekki okręt jest teraz mnożone
+przez stosunek jego struktury na tonę do struktury na tonę okrętów
+liniowych w bitwie (od x1 do x12), więc pocisk niszczy tę samą ilość
+tonażu w każdym okręcie: trafienie, które zabiera pancernikowi 30 000 t
+5 %, niszczycielowi 1500 t zabiera cały okręt. Przełączniki LightShipDamage,
+LightShipDamageMax i LightShipTypes (F10, Bitwa). (#67)
+--------------------------------------------------------------------------
+178. IRON ADMIRAL 1.2.75-BETA.33 (DIP_GG_FIXES 1.11.323) - OBRAŻENIA PROPORCJONALNE DO TONAŻU DLA KAŻDEJ KLASY - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.32.
+1. Zasada z sekcji 177 obejmuje teraz każdy okręt, niezależnie od klasy:
+każde trafienie jest mnożone przez stosunek struktury okrętu na tonę do
+struktury na tonę pancerników i krążowników liniowych w bitwie (od x0,5
+do x12), więc pocisk niszczy tę samą ilość tonażu w każdym okręcie -
+torpedowcu, niszczycielu, krążowniku i pancerniku (5 % pancernika
+30 000 t to cały niszczyciel 1500 t). Przełączniki
+mają nowe nazwy: DamageByTonnage, DamageByTonnageMin, DamageByTonnageMax
+i DamageByTonnageTypes (domyślnie wszystkie klasy; F10, Bitwa). Dziennik
+bitwy podaje mnożnik każdego okrętu i sumę obrażeń według typu. (#67)
+--------------------------------------------------------------------------
+179. IRON ADMIRAL 1.2.75-BETA.34 (DIP_GG_FIXES 1.11.324) - OBRAŻENIA WG TONAŻU: LIMIT X60 - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.33.
+1. Gra daje torpedowcowi 635 t więcej struktury (12 594) niż pancernikowi
+25 796 t (11 787) - 43 razy więcej na tonę. Limit x12 z sekcji 178
+zostawiał torpedowce z 1-15 % uszkodzeń po nawet 13 trafieniach.
+Największy mnożnik (DamageByTonnageMax) wynosi teraz x60: w dwóch
+bitwach testowych 3 z 8 torpedowców zatonęły po 10-21 trafieniach,
+a 4 były wrakami (46-96 %). (#67)
+2. Nowe przełączniki StructureSinkPercent i DestroyedSectionDamagePenalty
+(F10, Bitwa) ustawiają parametry gry dla zatonięcia od uszkodzeń
+struktury (structure_sink: vanilla 40, DIP GG 100) i dla trafień w już
+zniszczoną sekcję (0,15). Domyślnie -1, czyli wartości gry; służą do
+testów niszczycieli i krążowników. (#67)
+--------------------------------------------------------------------------
+180. IRON ADMIRAL 1.2.75-BETA.35 (DIP_GG_FIXES 1.11.325) - TORPEDY BEZ MNOŻNIKA TONAŻU - 2026-10-27
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.34.
+1. Mnożnik obrażeń według tonażu nie dotyczy już trafień torpedami.
+W teście jedna torpeda zatopiła krążownik pancerny 14 786 t: obrażenia
+torpedy w grze (11 359, mniej więcej cała struktura pancernika) x1,88
+przekroczyły całą strukturę krążownika. Obrażenia torped zostają takie,
+jakie dają technologie torpedowe. Podsumowanie bitwy podaje trafienia
+według rodzaju obrażeń gry. (#67)
+--------------------------------------------------------------------------
+181. IRON ADMIRAL 1.2.75-BETA.36 (DIP_GG_FIXES 1.11.326) - OKRĘTY TONĄ PRZY 40 % ZNISZCZONEJ STRUKTURY - 2026-10-28
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.35.
+1. Okręt tonie teraz, gdy zniszczone jest 40 % jego struktury (wartość
+z vanilli; DIP GG ma 100 %). Przy 100 % niszczyciel 2577 t pływał po 136
+trafieniach. Bitwy testowe z zasadą obrażeń według tonażu i 40 %
+(27-28.10) w porównaniu z historią:
+- torpedowce (635 t): wszystkie zatopione po 3-10 trafieniach (historia 5-10);
+- niszczyciele (2000-2600 t): zatopione po 19-36 trafieniach, jeden z 11
+  przetrwał (Hoel 2100 t zatonął po ok. 40; Sterett przetrwał 11 x 5 cali);
+- lekkie krążowniki (4285 t): zatopione po 14 (5 ciężkich), 40 i 51;
+- krążowniki pancerne: 15 000 t zatopiony po 146 trafieniach (Blücher:
+  70-100 ciężkich i torpedy), 10 700 t wrak (66 %) po 61 (Exeter: 7 x 11 cali);
+- pancerniki: zatopione po 23-33 ciężkich trafieniach (Lützow: 24,
+  Seydlitz przetrwał 21 i torpedę); ok. 60 trafień średnich kalibrów
+  prawie nie uszkadza pancernika (South Dakota: 27); jedna torpeda 5-6 %.
+StructureSinkPercent (F10, Bitwa): -1 = 40 (domyślnie), 100 = DIP GG. (#67)
+--------------------------------------------------------------------------
+182. IRON ADMIRAL 1.2.75-BETA.37 (DIP_GG_FIXES 1.11.327) - DZIAŁA 7 CALI JUŻ NIE WOLNIEJSZE OD 8 CALI - 2026-10-28
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.36.
+1. Historyczna szybkostrzelność dawała działom 7 cali z okresu I wojny
+(Mk 3) 3,3 strzału na minutę, a działom 8 cali 5,0 - działo 7,9 cala
+(powiększone 7 cali) ładowało się dużo wolniej niż 8 cali (zgłoszenie
+z forum). Poniżej 11 cali kaliber strzela teraz co najmniej tak szybko
+jak każdy cięższy kaliber tej samej generacji: Mk 1 7 cali 2 -> 2,4,
+Mk 2 9 cali 2 -> 2,5, Mk 3 7 cali 3,3 -> 5 strzałów na minutę. Ciężkie
+działa zachowują zmierzone wartości. Kara gry za powiększony kaliber
+zostaje. (#68)
+--------------------------------------------------------------------------
+183. IRON ADMIRAL 1.2.75-BETA.38 (DIP_GG_FIXES 1.11.328) - OBRAŻENIA WG TONAŻU TAKŻE BEZ PANCERNIKÓW - 2026-10-28
+--------------------------------------------------------------------------
+Tylko linia beta. Zawiera całą 1.2.75-beta.37.
+1. W bitwie bez pancerników i krążowników liniowych (same krążowniki
+i lekkie siły), gdy nie było wartości zapisanej z wcześniejszej bitwy,
+zasada obrażeń według tonażu nie miała punktu odniesienia i niczego nie
+mnożyła. Takie bitwy używają teraz 0,40 struktury na tonę - wartości
+pancerników z testów 27-28.10. (#67)
+--------------------------------------------------------------------------
+Ostatnia aktualizacja pliku: 2026-10-14 (koszt badań: x10, premia budżetowa: w połowie do vanilla, naprawiono budowę floty przez AI, research_progress_base: 1, research_late_years_to_double: 2, naprawiono brak floty u nacji startujących bez okrętów, podniesiono startowy budżet gotówkowy dla wszystkich, cofnięto wagę wieży dział do vanilla — naprawiono brak możliwości ustawienia pancerza na małych kalibrach, naprawiono uszkodzony wiersz CSV blokujący odblokowanie nowoczesnych pancerników, obniżono minimalny tonaż kadłubów Modern Battleship do 35000 ton dla wszystkich nacji, naprawiono ten sam problem tonażu dla warstwy Super Battleship i wcześniejszych kadłubów BB oraz dla 5 permanentnie niebudowalnych kadłubów DD, ustawiono fizycznie uzasadniony maksymalny tonaż 200000-240000 ton dla warstwy Super Battleship i zastąpiono nieskończony limit BB po hull_strength_end wartością 240000, dodano bonus radarowy do walki nocnej i złej pogody dla technologii aim_rangefinder_11/12/13, przywrócono terytoria suwerennych państw minor w provinces.csv i w save_0/save_4, wzmocniono minory, złagodzono kryzys ekonomiczny po przegranej wojnie, naprawiono kontroler "v" Mongolii, przyspieszono badania o 20%, wzmocniono specjalizacje nacji x1,5, profil technologiczny Bizancjum = suma greece_ai i russia_ai, profil Bizancjum x1,5, cofnięto profil Bizancjum x1,5, dodatek DIP_GG_Fixes.dll łapiący błąd CheckMinorNationThreat, łatka CheckMinorNationThreat potwierdzona w grze, automatyczne projekty współdzielone w DIP_GG_Fixes 1.1, DIP_GG_Fixes 1.2: krążowniki zamiast pancerników przy braku pieniędzy, większa pojemność portów minorów, DIP_GG_Fixes 1.3: wydarzenia równowagi sił, łatka na błąd TryGenerateSmallerNationsBattle, DIP_GG_Fixes 1.4: zmiany stosunków dyplomatycznych x1,5, DIP_GG_Fixes 1.5: strażnik zablokowanej budowy okrętów AI, DIP_GG_Fixes 1.6: pogorszenie stosunków x4, naprawa okrętu RODOS w save_4, agresywniejsze torpedy w automatycznym ogniu, DIP_GG_Fixes 1.7: szarża torpedowa lekkich okrętów AI i skupianie ognia, DIP_GG_Fixes 1.8–1.9: walka zamiast ucieczki, odłączanie wolnych okrętów, doktryny narodowe battleDoctrines.csv, DIP_GG_Fixes 1.10.0: karencja 24 mies. przed rozpadem gospodarczym, osłona turretCalibers przy ładowaniu okrętów, lose_provinces_threshold uznany za martwy parametr, porównanie przebijalności 15/16/18" z tabelami Okuna, wiersze 16–21" penetration.csv oparte na tabelach Okuna, Iron Admiral 1.1: scalenie z DIP GG 1.3.5 i TweaksAndFixes 3.21.1, DIP_GG_Fixes 1.10.1, paczka „tylko Mods”, DIP_GG_Fixes 1.10.2: naprawa duplikatów projektów współdzielonych, migracja save_4 do 1.1, poprawka startu nowej kampanii: taf_force_no_predef_designs=1, kadłub Experimental Small Ironclad: limit kalibru 10", min. 2 lufy, obniżony minimalny pas pancerników w generatorze pancerza dla 1890 (6", DIP_GG_Fixes 1.11.16: kryzys skarbu (pożyczka wojenna, dodruk z inflacją, cięcia floty, Iron Admiral 1.2.8: historia wersji dzień po dniu, objaśnienie numeracji paczki i biblioteki, DIP_GG_Fixes 1.11.17: kryzys skarbu wg głębokości długu, diagnostyka zamówień stoczniowych AI, DIP_GG_Fixes 1.11.18: granty balance of power tylko dla wypłacalnych, rozbicie wydatków w diagnostyce, DIP_GG_Fixes 1.11.19: budżet badań AI równoważony deficytem, bez rozbudowy stoczni przy deficycie, DIP_GG_Fixes 1.11.20: kolejny środek zaradczy przy głębokim długu, pozycja "other" w diagnostyce, DIP_GG_Fixes 1.11.21: ochrona pola stanu kryzysu skarbu, łagodniejsze sumowanie inflacji), bankrut buduje tanie okręty) i 1900 (7.5"), diagnostyka generatora projektów taf_debug_shipgen_info=2, Experimental Small Ironclad minimum 1 wieża, DIP_GG_Fixes 1.11.0: szarże wg zasięgu torped i prędkości, szarże i skracanie dystansu ciężkich okrętów AI, szarża zwiadu gracza, blokada torped przed własnymi okrętami, inteligentny wybór celów, weterańskość nieliniowa, kapitulacja wg wyszkolenia, panika, przejmowanie poddanych okrętów, DIP_GG_Fixes 1.11.1: stały powód w logu szarży, przebicie porównywane z efektywnym pancerzem pasa, DIP_GG_Fixes 1.11.2: wybór celów przez blokadę celu należącą do moda (gra nadpisywała wybór co kilkaset ms), DIP_GG_Fixes 1.11.3: panika z ubytku załogi, przebicie pasa w cm→mm, bez zerowania celowania przy tym samym celu, pryzy zdejmowane z list zatopionych z załogą pryzową, celność na dużym dystansie w dalmierzach radarowych wg Jurensa (x2,6 1920-1945), DIP_GG_Fixes 1.11.4: flota podbitego minora przechodzi do zdobywcy zamiast na złom, naprawa komunikatu balance of power, DIP_GG_Fixes 1.11.5: flota do zdobywcy także dla mocarstw (gra sama przenosi okręty do innego portu, gdy jest), DIP_GG_Fixes 1.11.6: przejęty okręt (pryz, podbój) przynosi projekt do listy nowego właściciela, DIP_GG_Fixes 1.11.7: narodowe profile badań dla gracza i AI (techBonuses.csv, -10..+50%), DIP_GG_Fixes 1.11.8: przebicie w mm (nie cm), histereza skracania dystansu, Iron Admiral 1.2.0: numeracja paczek X.Y.Z, DIP_GG_Fixes 1.11.9: sprawdzanie aktualizacji w grze, DIP_GG_Fixes 1.11.10: grant balance of power tylko w logu (ReportImportant rzuca wyjątek dla okrętów AI), DIP_GG_Fixes 1.11.11: aktualizacja z gry po kliknięciu gracza (SHA-256, podmiana DLL przez rename), DIP_GG_Fixes 1.11.12: limit sprawdzania aktualizacji 30 s z powtórką, DIP_GG_Fixes 1.11.13: okno aktualizacji dopiero po ekranie ładowania, DIP_GG_Fixes 1.11.14: instalacja aktualizacji plik po pliku (załadowane DLL przez rename), komunikaty po angielsku, DIP_GG_Fixes 1.11.15: pryzy i przejęcia potwierdzone w grze, kontrola duplikatów projektów przez designsAll, Iron Admiral 1.2.14: paczki zip ze standardowymi ścieżkami (ukośnik /), sprawdzanie .NET 6 w instalatorze, Iron Admiral 1.2.15: skrypt instalacyjny Install-IronAdmiral.ps1, instrukcja ręcznej instalacji MelonLoadera, Iron Admiral 1.2.16: produkcja seryjna (prototyp, krzywa uczenia, partia, wspólny dok, obłożenie stoczni, utrzymanie sióstr), inflacja względem PKB z poziomem bazowym 1%, rating kredytowy i oprocentowanie = inflacja + marża, zmniejszanie długu przez inflację, oszczędności = inflacja minus 1,5 pkt, panel skarbu F8, inflacja w oknie Finanse, miesięczny raport skarbu, rozdział w pomocy gry, poradnik kampanii GUIDE_EN.md, Iron Admiral 1.2.17: wyjaśnienie inflacji jako dopłaty, nie poziomu cen, Iron Admiral 1.2.18: rozbudowa stoczni AI tylko przy stałej lub dużej nadwyżce, Iron Admiral 1.2.19: refity zlecone razem, bez części okrętów na mapie, przerwa w serii od daty ukończenia, diagnostyka wojen, Iron Admiral 1.2.20: wojny koalicyjne przeciw dominującemu mocarstwu, bez projektów AI bez możliwości budowy, Iron Admiral 1.2.21: refity okrętów ponad limitami traktatowymi (+3000 t), osiągalne szarże torpedowe, bez beznadziejnego skracania dystansu, zygzak, Iron Admiral 1.2.22: panel ustawień w grze (F10), Iron Admiral 1.2.23: zmasowany atak torpedowy, taranowanie, odwrót bezradnych pancerników, misje ucieczki (odwrót albo rozproszenie), zwrot od torped, pociski SAPC, szybkostrzelność wg NavWeaps, model rykoszetów Okuna, działa pomocnicze niszczycieli, diagnostyka pancerza, wycofane sprawdzanie save'ów, Iron Admiral 1.2.24: taktyka AI wg wielkości okrętów (zmasowany atak wg tonażu bojowego, cele torpedowe wg wielkości, odwrót głównych okrętów), poddane okręty dla zwycięzcy bitwy, poprawki produkcji seryjnej, Iron Admiral 1.2.25: zmasowany atak tylko przy dostatecznej liczbie okrętów torpedowych na cel, odwrót przy przewadze wroga, Iron Admiral 1.2.26: produkcja seryjna zaraz po wczytaniu kampanii, Iron Admiral 1.2.27: refit ponad limitem traktatowym da się zapisać, Iron Admiral 1.2.28: refit ponad limitem traktatowym - projekt otwarty w edytorze, Iron Admiral 1.2.29: refit ponad limitem traktatowym zapisany, potwierdzone w grze, Iron Admiral 1.2.30: powstania w zajętych prowincjach rdzennych z decyzją o stłumieniu, historyczna lista rdzeni narodowych, Iron Admiral 1.2.31: mgła wojny (mapa strategiczna, meldunki o kontakcie, identyfikacja w bitwie, AI w tej samej mgle, przechwycenia zależne od wywiadu), Iron Admiral 1.2.32: pomyłki w meldunkach tylko na typy posiadane przez flotę, Iron Admiral 1.2.33: raport problemu z panelu F10 i lokalna statystyka użycia za zgodą gracza, Iron Admiral 1.2.34: scenariusze - diagnostyka zapisów kampanii, Iron Admiral 1.2.35: noc i pogoda skracają identyfikację (widoczność w procentach), Iron Admiral 1.2.36: panel okrętu wroga bez danych przed identyfikacją, znaczniki wrogich flot wzdłuż ich trasy morskiej zamiast na lądzie, Iron Admiral 1.2.37: przesunięcie znaczników także dla stojących zespołów, sprawdzane testem lądu, Iron Admiral 1.2.38: panel okrętu wroga ukryty w każdej klatce do identyfikacji, Iron Admiral 1.2.39: widoczność bitwy w km - identyfikacja w dzień z kilkunastu km, Iron Admiral 1.2.40: 50 współdzielonych projektów okrętów w paczce moda, Iron Admiral 1.2.41: raport z bitwy w oknie wyniku bitwy, Iron Admiral 1.2.42: mniejszy błąd pozycji na mapie, naprawa uszkodzonego pliku ustawień, Iron Admiral 1.2.43: niedokładnie znane floty nie są rysowane na lądzie, Iron Admiral 1.2.44: mocarstwa bez portów czekają na ich odzyskanie, Iron Admiral 1.2.45: meldunki z bitwy w logu, Iron Admiral 1.2.46: starzejące się meldunki o kontaktach, noc zdradza strzelających, Iron Admiral 1.2.47: 920 projektów z Ultimate Admiral's Shippack, Iron Admiral 1.2.48: kąt trafienia w pancerz, handel okrętami, klasy historyczne, nowa licencja, Iron Admiral 1.2.49: poprawki okna handlu i kąta trafienia, 48 klas historycznych, Iron Admiral 1.2.50: raport z bitwy w osobnym panelu obok okna wyniku, Iron Admiral 1.2.51: projekty Shippack oczyszczone z technologii nieznanych DIP, Iron Admiral 1.2.52: bitwy własne - najpierw klasy historyczne, krok projektów predefiniowanych domyślnie wyłączony, Iron Admiral 1.2.53: 147 klas historycznych, Iron Admiral 1.2.54: AI bitewne według regulaminów walki flot, doktryny według państw i okresów, meldunki nad okrętami, Iron Admiral 1.2.55: poprawki okna wywiadu i panelu skarbu, tryb zrzutów ekranu, potwierdzenia w grze, Iron Admiral 1.2.56: 16 wież znów się wczytuje, doktryny kolejnych flot, Iron Admiral 1.2.57: artyleria główna bije w bliskiego wroga, Iron Admiral 1.2.58: koniec beznadziejnych strzałów torpedami, Iron Admiral 1.2.59: koniec torped w puste morze, Iron Admiral 1.2.60: bez torped do okrętów poddanych, okręty poddane wracają bez straty, Iron Admiral 1.2.61: kontrola burty torped wyłączona, limit prędkości celu, wydajność bitew, Iron Admiral 1.2.62: panele według skali UI, pamięć nieudanych projektów, torpedy w obronie własnej, Iron Admiral 1.2.63: mniejsze dymki meldunków w bitwie, Iron Admiral 1.2.64: pamięć generatora zachowana między uruchomieniami, przywracanie brakujących projektów własnych okrętów, Iron Admiral 1.2.65: poprawka bezpieczeństwa ciągłej mapy, Iron Admiral 1.2.66: zasady odwrotu AI w bitwie, pełny zasięg torped okrętów gracza, projekty pryzów w konstruktorze, panel własnego okrętu, artyleria pomocnicza, przełącznik Beta updates, Iron Admiral 1.2.67-1.2.69: balistyka z fizyki i technologii, celność wg technologii kierowania ogniem, HE przez cienkie poszycie, rozkazy dla dywizjonów w bitwie, ziemie okupowane prowincja po prowincji, utracone terytorium, dyfuzja technologii, wagi historyczne, limity projektanta AI wg wyporności i przycinanie, własny randParts.csv, refity dla nabywców, naprawa części nie na miejscu, strażniki okna polityki, osiem rozdziałów pomocy, Iron Admiral 1.2.70: jakość pancerza względem pancerza Kruppa, rozkazy celu gracza obowiązują, pancerniki AI zostają w walce, panele bitwy ukryte nad oknami wyniku, Iron Admiral 1.2.71: penetracja z fizyki (Okun), jedno działo fizyczne dla okna, pocisków i penetracji, log trafień, Iron Admiral 1.2.72-beta.1: nastawy torped i priorytety celów, obrażenia przy przelocie pocisku AP, najpierw eskorta, potem transportowce, Iron Admiral 1.2.72-beta.2: okno działa pokazuje fizyczną masę pocisku i źródło prędkości wylotowej, Iron Admiral 1.2.72-beta.3 i 1.2.72: zwiad w stronę zgłoszonego dymu, priorytety celów torpedowych przechodzą dalej; linia stabilna dostaje nastawy i cele torped, obrażenia pocisku AP na wylot, działo fizyczne krok 2b, najpierw eskorta, Iron Admiral 1.2.73-beta.1: obrażenia przy przelocie pocisku AP według miejsca przelotu, Iron Admiral 1.2.73-beta.2: rozkazy dla dział dywizjonów gracza, meldunki mówią, gdzie trafił pocisk, Iron Admiral 1.2.73-beta.3: sprawdzenie kształtu pocisku okrętów gracza w logu bitwy, Iron Admiral 1.2.73-beta.4: paski bitwy nie znikają, rozkazany atak torpedowy rusza, kształt pocisku dla flot bez technologii nosa, Iron Admiral 1.2.73-beta.5: penetracja pasa przeliczona dla wszystkich kalibrów, Iron Admiral 1.2.73-beta.6: mniejsze panele bitwy i tekst okna działa, Iron Admiral 1.2.73-beta.7: rozkaz ataku torpedowego bez taranowania, statystyka typów pocisków, Iron Admiral 1.2.73-beta.8: log trafień dla obu stron, Iron Admiral 1.2.73-beta.9: unik przed torpedami oddala od wroga, Iron Admiral 1.2.73: linia stabilna dostaje penetrację dla wszystkich kalibrów, obrażenia przy przelocie według miejsca, rozkazy dla dział, atak torpedowy bez taranowania, Iron Admiral 1.2.74-beta.2: nos pocisku z zamontowanego pocisku i drzewa pocisków, Iron Admiral 1.2.74-beta.3: przebicie fizyczne zamiast wartości gry, historyczna masa pocisku, Iron Admiral 1.2.74-beta.4: hotfix wysypki na starcie bitwy, Iron Admiral 1.2.74-beta.5: przebicie fizyczne przez tabelę przebić, Iron Admiral 1.2.74-beta.6: wiersze przebić naprawione i domyślnie włączone, Iron Admiral 1.2.74-beta.8: diagnostyka obrażeń, Iron Admiral 1.2.74-beta.9: diagnostyka obrażeń - funkcja odnaleziona, Iron Admiral 1.2.74-beta.10: historyczny model obrażeń, świadome celowanie z bliska, Iron Admiral 1.2.74-beta.11: głosy załóg w meldunkach, diagnostyka trafień none, Iron Admiral 1.2.74: linia stabilna dostaje fizyczną penetrację w bitwie, historyczny model obrażeń i masy pocisków, głosy załóg; linie stabilna i beta znów osobno, Iron Admiral 1.2.74-beta.12: log trafień pokazuje faktycznie zadane obrażenia, Iron Admiral 1.2.75-beta.2: log trafień pokazuje faktycznie zadane obrażenia, Iron Admiral 1.2.75-beta.3: meldunki bojowe w językach flot, Iron Admiral 1.2.75-beta.4: 33 nowe klasy historyczne w paczce klas, Iron Admiral 1.2.75-beta.5: przebicie na ekranie i w ocenie AI z fizyki trafienia, Iron Admiral 1.2.75-beta.6: rozkaz dywizjonu Finish off - dobijanie uszkodzonych, Iron Admiral 1.2.75-beta.7: przywrócone brakujące stosunki między mocarstwami, Iron Admiral 1.2.75-beta.8: dyfuzja technologii - mocarstwo daleko z przodu znów zwalnia, Iron Admiral 1.2.75-beta.9: zabezpieczenie rozdzielczości dla TweaksAndFixes, Iron Admiral 1.2.75-beta.10: pryzy z okrętów poddanych w bitwie, Iron Admiral 1.2.75-beta.11: wojny koalicyjne z równowagą sił, Iron Admiral 1.2.75-beta.12: bez błędu, gdy sojusznicy dołączają do wojny, Iron Admiral 1.2.75-beta.13: koniec błędów miejsc montażu w bitwie, Iron Admiral 1.2.75-beta.14: sprawdzenie strzału torpedowego w jednostkach gry, transportowce nie osłaniają odwrotu, Iron Admiral 1.2.75-beta.15: opuszczanie wiszących części, najnowsze torpedy w projektach AI, sprawdzanie załadowanej biblioteki, Iron Admiral 1.2.75-beta.16: odległość ataku torpedowego, polowanie na transportowce, wiszące części, Iron Admiral 1.2.75-beta.17: atak torpedowy z obu burt i atak krzyżowy, Iron Admiral 1.2.75-beta.18: dywizja dzieli się do krzyżowego ataku torpedowego, Iron Admiral 1.2.75-beta.19: dywizja dzieli się do krzyżowego ataku torpedowego, poprawiona paczka, Iron Admiral 1.2.75-beta.20: lekkie okręty torpedują duże cele, poprawka koalicji, Iron Admiral 1.2.75-beta.21: badania pocisków jak w wersji podstawowej, wolniejsze doganianie technologii, Iron Admiral 1.2.75-beta.22: uszkodzone lekkie okręty nadal torpedują, zepsute projekty AI wycofane, Iron Admiral 1.2.75-beta.23: niszczyciele AI z pełnym uzbrojeniem torpedowym, Iron Admiral 1.2.75-beta.24: rejestrator projektowania, Iron Admiral 1.2.75-beta.25: kąt trafienia liczony raz, poprawki rejestratora projektowania, Iron Admiral 1.2.75-beta.26: przebijalność burtowa dla płyt burtowych, Iron Admiral 1.2.75-beta.27: zmiana płyt burtowych z bety.26 wycofana, Iron Admiral 1.2.75-beta.28: trafienia w pokład sprawdzane pancerzem pokładu, Iron Admiral 1.2.75-beta.29: krzyżowy atak torpedowy i salwa z obu burt dla AI, Iron Admiral 1.2.75-beta.30: kąt uderzenia z kąta opadania pocisku, Iron Admiral 1.2.75-beta.31: kąt uderzenia z kąta opadania pocisku, poprawiony, Iron Admiral 1.2.75-beta.32: lekkie okręty znów przyjmują obrażenia, Iron Admiral 1.2.75-beta.33: obrażenia proporcjonalne do tonażu dla każdej klasy, Iron Admiral 1.2.75-beta.34: obrażenia wg tonażu, limit x60, Iron Admiral 1.2.75-beta.35: torpedy bez mnożnika tonażu, Iron Admiral 1.2.75-beta.36: okręty toną przy 40 % zniszczonej struktury, Iron Admiral 1.2.75-beta.37: działa 7 cali już nie wolniejsze od 8 cali, Iron Admiral 1.2.75-beta.38: obrażenia wg tonażu także bez pancerników)
 ==========================================================================
