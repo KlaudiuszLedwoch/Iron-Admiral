@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.338", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.339", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -3428,6 +3428,34 @@ namespace DipGgFixes
     // =====================================================================================
     internal static class PrizeDesign
     {
+        // 1.11.339: removes designs of the captor that are copies of `keep` (same hull, tonnage within 1 %, same design name) and that
+        // no ship of the captor uses; returns how many were removed
+        static int DedupePrizeDesigns(Player owner, Ship keep, string hullName, float ton, string tag)
+        {
+            int removed = 0;
+            try
+            {
+                if (owner == null || keep == null || hullName == null) return 0;
+                string keepName = keep.name;
+                var used = new HashSet<IntPtr>();
+                try { var ef = owner.fleet.GetEnumerator(); var uf = ef.Cast<Il2CppSystem.Collections.IEnumerator>(); while (uf.MoveNext()) { var s = ef.Current; try { if (s != null && s.design != null) used.Add(s.design.Pointer); } catch { } } } catch { }
+                var dups = new List<Ship>();
+                var en = owner.designsAll.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
+                while (un.MoveNext())
+                {
+                    var x = en.Current; if (x == null || x.Pointer == keep.Pointer) continue;
+                    var xh = x.hull; if (xh == null || xh.name != hullName) continue;
+                    if (x.name != keepName) continue;
+                    float xt = 0f; try { xt = x.Tonnage(); } catch { }
+                    if (Math.Abs(xt - ton) > Math.Max(50f, ton * 0.01f)) continue;
+                    if (used.Contains(x.Pointer)) continue;
+                    dups.Add(x);
+                }
+                foreach (var x in dups) { try { VesselEntity.TryToEraseVessel(x); removed++; } catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][{tag}] removing a copy of {keepName}: " + e.Message); } }
+            }
+            catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][{tag}] design dedupe: " + e.Message); }
+            return removed;
+        }
         internal static void Ensure(Ship ship, Player recipient, string tag)
         {
             try
@@ -3438,23 +3466,33 @@ namespace DipGgFixes
                 PrizeTech.Note(d, recipient); // 1.11.333 (#50)
                 var hull = d.hull; string hullName = hull != null ? hull.name : null;
                 float ton = 0f; try { ton = d.Tonnage(); } catch { }
-                int count = 0; Ship found = null;
+                int count = 0; Ship found = null, self = null;
                 try
                 {
                     var en = recipient.designsAll.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>();
                     while (un.MoveNext())
                     {
                         var x = en.Current; if (x == null) continue; count++;
-                        if (x.Pointer == d.Pointer) { found = x; break; }
+                        if (x.Pointer == d.Pointer) { self = x; continue; }   // 1.11.339: an earlier copy of the class is preferred
+                        if (found != null) continue;
                         var xh = x.hull; if (xh == null || hullName == null || xh.name != hullName) continue;
+                        if (x.name != d.name) continue;   // 1.11.339: the same class (design name), not another design on the same hull
                         float xt = 0f; try { xt = x.Tonnage(); } catch { }
-                        if (Math.Abs(xt - ton) <= Math.Max(50f, ton * 0.01f)) { found = x; break; }
+                        if (Math.Abs(xt - ton) <= Math.Max(50f, ton * 0.01f)) found = x;
                     }
                 }
                 catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][{tag}] design scan: " + e.Message); }
+                if (found == null) found = self;
                 if (found != null)
                 {
-                    MelonLogger.Msg($"[DIP GG Fixes][{tag}] {recipient.data.name} already has a design for {ship.name} ({found.name}, hull {hullName}); {count} design(s) in list");
+                    // 1.11.339 (player report 28.10: 3 captured CL Boleslaw came with 3 identical designs, each linked to one ship, so
+                    // every refit had to be designed 3 times; 10 TB Orel came as 1/1/8): the prize is linked to the design the captor
+                    // already has for her class, and the identical copy the transfer left in the design list is removed when no ship
+                    // uses it any more
+                    Ship before = null; try { before = ship.design; } catch { }
+                    if (before == null || before.Pointer != found.Pointer) { try { ship.design = found; } catch { } }
+                    int removed = DedupePrizeDesigns(recipient, found, hullName, ton, tag);
+                    MelonLogger.Msg($"[DIP GG Fixes][{tag}] {recipient.data.name} already has a design for {ship.name} ({found.name}, hull {hullName}) - the ship is linked to it{(removed > 0 ? $", {removed} identical copy(ies) removed" : "")}; {count} design(s) in list");
                     return;
                 }
                 var pc = PlayerController.Instance; if (pc == null) { MelonLogger.Msg($"[DIP GG Fixes][{tag}] no PlayerController - design not cloned"); return; }
