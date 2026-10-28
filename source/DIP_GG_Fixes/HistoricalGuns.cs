@@ -96,6 +96,12 @@ namespace DipGgFixes
             if (r != null)
             {
                 float target = range ? r.Km[k - 1] * 1000f : r.Rof[k - 1];
+                // 1.11.327 (forum 27.10, hurepoix: a 7.9 in gun reloads far slower than an 8 in gun): the navweaps reference guns gave
+                // Mk 3 7 in 3.3 rounds/min against 8 in 5.0 - a lighter gun slower than a heavier one of the same generation. The rate of
+                // fire of a calibre band is now at least that of every heavier band of the same generation (shell and breech get
+                // heavier with the calibre, never lighter). Only below 11 in: the heavy guns' rates depend on the mounting and stay as measured.
+                // Changes: Mk 1 7 in 2 -> 2.4, Mk 2 9 in 2 -> 2.5, Mk 3 7 in 3.3 -> 5 rounds/min.
+                if (!range && target > 0f && r.From < 10.6f) foreach (var r2 in Rows) if (r2.From > r.From && r2.From < 10.6f && r2.Rof[k - 1] > target) target = r2.Rof[k - 1];
                 float bas = range ? BaseRange(g, k) : BaseRof(g, k);
                 if (range && bas > 0f && bas < 200f) bas *= 1000f; // guns.csv ranges may be in km
                 if (target > 0f && bas > 0f) m = Math.Max(0.3f, Math.Min(3f, target / bas));
