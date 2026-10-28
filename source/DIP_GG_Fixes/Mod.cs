@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.344", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.345", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -183,7 +183,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> TorpedoTurnAwaySeconds;
         internal static MelonPreferences_Entry<bool> FleetTorpedoAttack;
         internal static MelonPreferences_Entry<bool> Ramming;
-        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort, AiCrossTorpedo, AiApproachSmoke;
+        internal static MelonPreferences_Entry<bool> TorpedoReloadCycle, CapitalSupportScreen, CoverRetreat, ValueBasedAbort, AiCrossTorpedo, AiApproachSmoke, AiWithdrawLowAmmo;
         internal static MelonPreferences_Entry<bool> NightRules, CruiserRoles, FireDistributionOn; internal static MelonPreferences_Entry<float> NightVisibilityKm;
         internal static MelonPreferences_Entry<float> ReloadReturnFraction, ReloadMaxSeconds, SupportRangeFraction, CoverRetreatStrengthRatio, CoverValueRatio;
         internal static MelonPreferences_Entry<float> RamRange;
@@ -458,6 +458,7 @@ namespace DipGgFixes
                 "When the enemy has more battleships/battlecruisers than the AI side, all AI torpedo craft attack the enemy capital ships at once, whatever the distance: a single ship would not get through, but part of a massed attack reaches torpedo or ramming range");
             AiCrossTorpedo = cat.CreateEntry("AiCrossTorpedo", true, null, "Battle AI: AI divisions attacking the same target with torpedoes approach 45 degrees either side of its bow so the tracks cross, and a division whose tubes on one side are empty turns to fire the other side before going off to reload (#56)");
             AiApproachSmoke = cat.CreateEntry("AiApproachSmoke", true, null, "Battle AI: an AI torpedo flotilla that is hit during its approach lays a smoke screen at once (every 30 s at most while it keeps being hit)"); // 1.11.344
+            AiWithdrawLowAmmo = cat.CreateEntry("AiWithdrawLowAmmo", true, null, "Battle AI: an AI division whose guns are almost out of ammunition (under 15 % left on average) and that has no loaded torpedo tubes withdraws from the battle"); // 1.11.345
             TorpedoReloadCycle = cat.CreateEntry("TorpedoReloadCycle", true, null,
                 "AI torpedo craft press the attack until every tube is empty; ships with reload torpedoes on board then turn away (smoke when available), open the range, reload and return, ships without reloads turn on the enemy light forces");
             ReloadReturnFraction = cat.CreateEntry("ReloadReturnFraction", 0.75f, null, "Attack cycle: share of loaded tubes needed before a flotilla returns to the attack");
@@ -1797,6 +1798,19 @@ namespace DipGgFixes
                 }
             }
 
+            // 1.11.345 (#22, player discussion 26.10: "running out of ammunition is a legitimate reason for an AI ship to withdraw"):
+            // a division whose guns are almost empty (average under 15 % of the load) and that has no loaded torpedo tubes withdraws
+            if (DipGgFixesMod.AiWithdrawLowAmmo != null && DipGgFixesMod.AiWithdrawLowAmmo.Value && !st.capEscape && LowAmmo(div, leader, out float ammoAvg))
+            {
+                float tubes = 0f; try { tubes = leader.haveTorpedoes ? LoadedTubes(div, leader) : 0f; } catch { }
+                if (tubes <= 0f)
+                {
+                    st.capEscape = true; st.charging = false; st.closing = false; div.Retreat(true);
+                    Log($"{st.name} ({leader.shipType.name}): guns almost out of ammunition (average {ammoAvg:0%} left) and no loaded torpedo tubes - withdraws");
+                    Why(st, "withdrawing - out of ammunition"); return;
+                }
+            }
+
             // --- rule for every AI division: ships that slow the division down leave it and retreat alone
             // 1.11.339 (#71, player report and test 28.10 10:05: "CL Dresden: leader is slow: fast ships detached" - a lightly damaged
             // leader split the division in the middle of its torpedo run and the new division started over): a division in a torpedo
@@ -2327,6 +2341,26 @@ namespace DipGgFixes
         // Detach the ships that slow the division down into a new division and order it to retreat.
         // If the leader itself is the slow one, the fast ships are detached instead and the
         // leader's (old) division retreats. Returns true when a detach was performed.
+        static int ammoScaleLogged;
+        // average share of gun ammunition left over the division's live ships (Ship.GetAverageAmmoPercent; 0-100 or 0-1 accepted)
+        internal static bool LowAmmo(Division div, Ship leader, out float avg)
+        {
+            avg = 1f; float sum = 0f; int n = 0;
+            var ships = div.ships; int cnt = ships != null ? ships.Count : 0;
+            for (int k = -1; k < cnt; k++)
+            {
+                var s = k < 0 ? leader : ships[k];
+                if (s == null || s.isSinking || s.isDead || (k >= 0 && s.Pointer == leader.Pointer)) continue;
+                float a; try { a = s.GetAverageAmmoPercent(); } catch { return false; }
+                if (ammoScaleLogged++ < 2) Log($"{s.name}: average ammunition {a:0.###} (game value)");
+                if (a > 1.5f) a /= 100f;
+                sum += UnityEngine.Mathf.Clamp01(a); n++;
+            }
+            if (n == 0) return false;
+            avg = sum / n;
+            return avg < 0.15f;
+        }
+
         internal static bool TryDetachSlow(Division div, Ship leader, DivState st)
         {
             var ships = div.ships; if (ships == null || ships.Count < 2) return false;
