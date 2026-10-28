@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.350", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.351", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -639,6 +639,7 @@ namespace DipGgFixes
             PrizeTech.CreatePrefs(cat); // 1.11.333 (#50)
             SmokeGate.CreatePrefs(cat); // 1.11.341 (#22)
             TorpedoPincer.CreatePrefs(cat); // 1.11.343 (#71)
+            PrizeScuttle.CreatePrefs(cat); // 1.11.351
             BattleHour.CreatePrefs(cat); // 1.11.334 (#57)
             DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
             DeckZoneFix.CreatePrefs(cat); // 1.11.317 (#59)
@@ -3328,6 +3329,8 @@ namespace DipGgFixes
                 var ws = battle.ShipsOf(winner, true); int alive = 0;
                 if (ws != null) for (int i = 0; i < ws.Count; i++) { var w = ws[i]; if (w != null && !w.isDead && !w.isSinking && !w.isSunk && !w.IsSurrendered) alive++; }
                 if (alive == 0) { MelonLogger.Msg($"[DIP GG Fixes][Capture] {ship.name} surrendered but {winner.data.name} has no ships left in the battle - not captured"); return; }
+                // 1.11.351 (author 28.10, 17:44): a wreck, or a ship whose trained crew will not hand her over, is not taken
+                if (PrizeScuttle.Lost(ship, __1, winner.data.name)) return;
                 var cc = CampaignController.Instance; if (cc == null) return;
                 // 1.11.3: in the first test (6 TBs, 2026-10-15) the transfer went through but the ships were gone
                 // from the save: they stayed on the battle's "sunk" lists (loss accounting erases them) and had a
