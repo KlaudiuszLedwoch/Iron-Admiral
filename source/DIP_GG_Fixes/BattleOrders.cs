@@ -529,13 +529,21 @@ namespace DipGgFixes
             }
             catch (Exception e) { if (oErrors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] orders keys: " + e.Message); }
         }
+        // 1.11.348 (author 28.10, 17:26, campaign battle: "there are no orders" - an enemy battleship was selected, so the panel had
+        // no division and disappeared): with an enemy ship or nothing selected the panel shows the last own division selected, or
+        // the first own division of the battle
+        static Ship lastOwn;
+        static bool OwnAlive(Ship s) { try { return s != null && s.player != null && s.player.isMain && !s.isSinking && !s.isDead && s.division != null; } catch { return false; } }
         static Division SelectedDivision()
         {
             try
             {
                 var s = BattleSel.Ship(); // 1.11.261: kept after a click on a strip
-                if (s == null || s.player == null || !s.player.isMain || s.isSinking || s.isDead) return null;
-                return s.division;
+                if (OwnAlive(s)) { lastOwn = s; return s.division; }
+                if (OwnAlive(lastOwn)) return lastOwn.division;
+                var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; var ships = b != null ? b.Ships : null;
+                if (ships != null) for (int i = 0; i < ships.Count; i++) { var x = ships[i]; if (OwnAlive(x)) { lastOwn = x; return x.division; } }
+                return null;
             }
             catch { return null; }
         }
