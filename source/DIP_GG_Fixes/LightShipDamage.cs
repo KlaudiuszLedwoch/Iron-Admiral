@@ -101,6 +101,9 @@ namespace DipGgFixes
                 try { if (RefSaved != null && Math.Abs(RefSaved.Value - refHpt) > 1e-4f) RefSaved.Value = refHpt; } catch { }
             }
             else if (RefSaved != null && RefSaved.Value > 0f) { refHpt = RefSaved.Value; refFrom = "saved from an earlier battle"; }
+            // 1.11.328 (test 28.10, 03:30: a cruiser battle with no battleship and nothing saved had reference 0 - every ship x1, the
+            // fix did nothing): the structure per ton of the battleships in the tests (Konig 0.46, Revenge 0.36; four battleships 0.40)
+            else { refHpt = 0.40f; refFrom = "fixed value (battleships in the tests 27-28.10)"; }
             if (refHpt > 0f) MelonLogger.Msg($"[DIP GG Fixes][Damage] by tonnage: reference structure {refHpt:0.##} per ton ({refFrom})");
             return refHpt;
         }
