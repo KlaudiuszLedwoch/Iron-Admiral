@@ -943,7 +943,7 @@ namespace DipGgFixes
         static void Pre_GroupPopup(ShipGroupPopupUI __instance) { try { if (popupFog) { popupFog = false; if (__instance.DesignShipInfoRoot != null) __instance.DesignShipInfoRoot.SetActive(true); } } catch { } }
         static void Post_GroupPopup(ShipGroupPopupUI __instance, CampaignController.TaskForce group) { try { GroupPopup(__instance, group); } catch { } }
         static bool Pre_GroupShipInfo(ShipGroupPopupUI __instance) { try { return GroupPopupShipInfo(__instance); } catch { return true; } }
-        static void Post_BattlePopup(BattlePopup __instance, CampaignBattle battle) { try { Narrative.SetPopup(__instance); } catch { } BattleWindow(__instance, battle); }
+        static void Post_BattlePopup(BattlePopup __instance, CampaignBattle battle) { try { Narrative.SetPopup(__instance); } catch { } BattleWindow(__instance, battle); try { BattleHour.Popup(__instance, battle); } catch { } }
         static void Post_Recon(Il2CppSystem.Collections.Generic.List<Ship> attackerShips, Il2CppSystem.Collections.Generic.List<Ship> defenderShips, ref bool __result) { Intercept(attackerShips, defenderShips, ref __result); }
         static void Post_ReconV(Il2CppSystem.Collections.Generic.List<VesselEntity> attackerShips, Il2CppSystem.Collections.Generic.List<VesselEntity> defenderShips, ref bool __result)
         {

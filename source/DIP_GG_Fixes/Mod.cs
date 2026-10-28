@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.333", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.334", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -250,7 +250,7 @@ namespace DipGgFixes
             SettingsUi.Tick();
             ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); MapGhosts.Tick(); Irredenta.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
@@ -292,7 +292,7 @@ namespace DipGgFixes
             try { Dispatch.OnGUI(); } catch { }
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
-            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } try { GunOrders.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
+            RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { BattleHour.OnGUI(); } catch { } try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } try { GunOrders.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
             Diagnostics.OnGUI();
         }
 
@@ -632,6 +632,7 @@ namespace DipGgFixes
             ShipPartsCheck.CreatePrefs(cat); // 1.11.243
             BrokenDesigns.CreatePrefs(cat); // 1.11.308 (#32)
             PrizeTech.CreatePrefs(cat); // 1.11.333 (#50)
+            BattleHour.CreatePrefs(cat); // 1.11.334 (#57)
             DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
             DeckZoneFix.CreatePrefs(cat); // 1.11.317 (#59)
             UiScale.CreatePrefs(cat); // 1.11.100
