@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.346", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.347", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2113,7 +2113,13 @@ namespace DipGgFixes
             // 1.11.343 (author 28.10, 12:39): an AI light division with a two-way role approaches fine on the bow or on the quarter
             UnityEngine.Vector3 pdir = UnityEngine.Vector3.zero;
             bool twoWay = !pOrder && IsLight(leader) && TorpedoPincer.Approach(div, leader, best, out pdir);
-            if (twoWay) { xdir = pdir; cross = false; }
+            if (twoWay)
+            {
+                xdir = pdir; cross = false;
+                // 1.11.347: the tubes go on the ship the division attacks, not on the one the game picked
+                var dsh = div.ships; int dn = dsh != null ? dsh.Count : 0;
+                for (int k = -1; k < dn; k++) { var s2 = k < 0 ? leader : dsh[k]; if (s2 == null || s2.isSinking || s2.isDead || (k >= 0 && s2.Pointer == leader.Pointer)) continue; TorpedoPriority.AimAt(s2, best); }
+            }
             if (bestD > holdAt)
             {
                 var tt = best.transform;

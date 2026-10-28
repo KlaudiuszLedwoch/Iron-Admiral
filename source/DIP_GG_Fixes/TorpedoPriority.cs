@@ -176,6 +176,38 @@ namespace DipGgFixes
                 if (logs++ < 60) Log(player ? $"{s.name}: torpedo tubes on {pick.name} ({cls}, {d:0} m, range {range:0} m) - priority {Label(order)}" : $"AI {s.name}: torpedo tubes on capital ship {pick.name} ({cls}, {d:0} m, range {range:0} m) instead of {was}");
             }
         }
+        // 1.11.347 (#71, test 28.10 13:05: a flotilla charging the leading ship from ahead held its torpedoes 7 times because the
+        // game kept its tubes on the LAST ship, which was running away - "run to the intercept point 9321 m > 8306 m"): the tubes of
+        // an AI ship in a two-way attack are laid on the ship the division is attacking (at most every 5 s, aiming progress kept)
+        static readonly Dictionary<IntPtr, float> aimAtNext = new Dictionary<IntPtr, float>();
+        internal static void AimAt(Ship s, Ship target)
+        {
+            if (s == null || target == null) return;
+            float now = Time.time;
+            if (aimAtNext.TryGetValue(s.Pointer, out var t) && now < t) return;
+            aimAtNext[s.Pointer] = now + 5f;
+            if (aimAtNext.Count > 500) aimAtNext.Clear();
+            try
+            {
+                int n = 0; string was = null;
+                foreach (var dict in new[] { s.enemies, s.enemiesLeftSide })
+                {
+                    if (dict == null) continue;
+                    var keys = new List<PartData>();
+                    foreach (var kv in dict) if (kv.Key != null && kv.Value != null && kv.Key.isTorpedo) keys.Add(kv.Key);
+                    foreach (var pd in keys)
+                    {
+                        var aim = dict[pd]; if (aim == null) continue;
+                        var cur = aim.target; if (cur != null && cur.Pointer == target.Pointer) continue;
+                        if (was == null) was = cur != null ? cur.name : "none";
+                        aim.target = target; aim.manual = true; n++;
+                    }
+                }
+                if (n > 0 && logs++ < 60) Log($"AI {s.name}: torpedo tubes on the attacked ship {target.name} instead of {was} (two-way attack)");
+            }
+            catch (Exception e) { if (errors++ < 5) Log("aim at: " + e.Message); }
+        }
+
         static void ReleaseAll(Ship s)
         {
             if (!ours.TryGetValue(s.Pointer, out var mine) || mine.Count == 0) return;
