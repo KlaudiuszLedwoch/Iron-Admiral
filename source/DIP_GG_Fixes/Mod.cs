@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.352", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.353", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -258,6 +258,7 @@ namespace DipGgFixes
             try { CustomBattle.Tick(); } catch { }
             try { Portless.Tick(); } catch { }
             try { Dispatch.Tick(); } catch { }
+            try { PrizeDesign.SessionMerge(); } catch { } // 1.11.353 (#72)
             try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251, 1.11.259
             try { HistDesigner.Tick(); } catch { }
             try { AutoTest.Tick(); } catch { } try { RelationRepair.Tick(); } catch { } // 1.11.286
@@ -3525,6 +3526,59 @@ namespace DipGgFixes
     // =====================================================================================
     internal static class PrizeDesign
     {
+        // 1.11.353 (#72, author 28.10, 17:56: "I have the Hibernia design twice" - Caesar and Rodney, both captured Hibernias, each on
+        // her own copy): a design copied to a new owner is renamed with the owner's tag ("BB Hibernia [britain]" -> "BB Hibernia
+        // [germany]"), so the search for an earlier copy of the class compared different names and cloned again. Names are compared
+        // without the nation tag, and the ships on identical copies are moved to one design before the unused copies are removed.
+        static string ClassName(string n) { if (n == null) return null; int i = n.LastIndexOf(" ["); return (i > 0 && n.EndsWith("]") ? n.Substring(0, i) : n).Trim(); }
+        static int Relink(Player owner, Ship keep, string hullName, float ton)
+        {
+            int moved = 0;
+            try
+            {
+                string kn = ClassName(keep.name);
+                var ef = owner.fleet.GetEnumerator(); var uf = ef.Cast<Il2CppSystem.Collections.IEnumerator>();
+                while (uf.MoveNext())
+                {
+                    var s = ef.Current; if (s == null) continue;
+                    Ship d = null; try { d = s.design; } catch { }
+                    if (d == null || d.Pointer == keep.Pointer) continue;
+                    var dh = d.hull; if (dh == null || dh.name != hullName || ClassName(d.name) != kn) continue;
+                    float dt = 0f; try { dt = d.Tonnage(); } catch { }
+                    if (Math.Abs(dt - ton) > Math.Max(50f, ton * 0.01f)) continue;
+                    try { s.design = keep; moved++; } catch { }
+                }
+            }
+            catch { }
+            return moved;
+        }
+        // once per campaign session: merge the identical copies of captured classes the player already has (saves from before 1.11.353)
+        static bool merged;
+        internal static void SessionMerge()
+        {
+            if (merged) return;
+            try
+            {
+                if (!GameManager.IsCampaign || CampaignController.Instance == null) return;
+                Player me = null; try { var ps = CampaignController.Instance.CampaignData.Players; for (int i = 0; i < ps.Count; i++) { var p = ps[i]; if (p != null && p.isMain) { me = p; break; } } } catch { }
+                if (me == null) return;
+                merged = true;
+                var seen = new Dictionary<string, Ship>(); int moved = 0, removed = 0;
+                var all = new List<Ship>();
+                var en = me.designsAll.GetEnumerator(); var un = en.Cast<Il2CppSystem.Collections.IEnumerator>(); while (un.MoveNext()) { var x = en.Current; if (x != null) all.Add(x); }
+                foreach (var x in all)
+                {
+                    var h = x.hull; if (h == null) continue;
+                    float t = 0f; try { t = x.Tonnage(); } catch { }
+                    string key = h.name + "|" + ClassName(x.name) + "|" + Math.Round(t / Math.Max(50f, t * 0.01f));
+                    if (!seen.TryGetValue(key, out var keep)) { seen[key] = x; continue; }
+                    int m = Relink(me, keep, h.name, t); moved += m;
+                    if (m > 0) removed += DedupePrizeDesigns(me, keep, h.name, t, "Capture");
+                }
+                MelonLogger.Msg($"[DIP GG Fixes][Capture] design copies merged for {me.data.name}: {moved} ship(s) moved to one design per class, {removed} copy(ies) removed");
+            }
+            catch (Exception e) { merged = true; MelonLogger.Warning("[DIP GG Fixes][Capture] design merge: " + e.Message); }
+        }
         // 1.11.339: removes designs of the captor that are copies of `keep` (same hull, tonnage within 1 %, same design name) and that
         // no ship of the captor uses; returns how many were removed
         static int DedupePrizeDesigns(Player owner, Ship keep, string hullName, float ton, string tag)
@@ -3533,7 +3587,7 @@ namespace DipGgFixes
             try
             {
                 if (owner == null || keep == null || hullName == null) return 0;
-                string keepName = keep.name;
+                string keepName = ClassName(keep.name);
                 var used = new HashSet<IntPtr>();
                 try { var ef = owner.fleet.GetEnumerator(); var uf = ef.Cast<Il2CppSystem.Collections.IEnumerator>(); while (uf.MoveNext()) { var s = ef.Current; try { if (s != null && s.design != null) used.Add(s.design.Pointer); } catch { } } } catch { }
                 var dups = new List<Ship>();
@@ -3542,7 +3596,7 @@ namespace DipGgFixes
                 {
                     var x = en.Current; if (x == null || x.Pointer == keep.Pointer) continue;
                     var xh = x.hull; if (xh == null || xh.name != hullName) continue;
-                    if (x.name != keepName) continue;
+                    if (ClassName(x.name) != keepName) continue;
                     float xt = 0f; try { xt = x.Tonnage(); } catch { }
                     if (Math.Abs(xt - ton) > Math.Max(50f, ton * 0.01f)) continue;
                     if (used.Contains(x.Pointer)) continue;
@@ -3573,7 +3627,7 @@ namespace DipGgFixes
                         if (x.Pointer == d.Pointer) { self = x; continue; }   // 1.11.339: an earlier copy of the class is preferred
                         if (found != null) continue;
                         var xh = x.hull; if (xh == null || hullName == null || xh.name != hullName) continue;
-                        if (x.name != d.name) continue;   // 1.11.339: the same class (design name), not another design on the same hull
+                        if (ClassName(x.name) != ClassName(d.name)) continue;   // 1.11.339: the same class (design name), not another design on the same hull; 1.11.353: without the nation tag
                         float xt = 0f; try { xt = x.Tonnage(); } catch { }
                         if (Math.Abs(xt - ton) <= Math.Max(50f, ton * 0.01f)) found = x;
                     }
@@ -3588,6 +3642,7 @@ namespace DipGgFixes
                     // uses it any more
                     Ship before = null; try { before = ship.design; } catch { }
                     if (before == null || before.Pointer != found.Pointer) { try { ship.design = found; } catch { } }
+                    Relink(recipient, found, hullName, ton); // 1.11.353
                     int removed = DedupePrizeDesigns(recipient, found, hullName, ton, tag);
                     MelonLogger.Msg($"[DIP GG Fixes][{tag}] {recipient.data.name} already has a design for {ship.name} ({found.name}, hull {hullName}) - the ship is linked to it{(removed > 0 ? $", {removed} identical copy(ies) removed" : "")}; {count} design(s) in list");
                     return;
