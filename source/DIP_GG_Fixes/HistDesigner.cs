@@ -202,6 +202,9 @@ namespace DipGgFixes
             foreach (var s in specs)
             {
                 string result = "failed", notes = "", mainBuilt = ""; float weight = 0f, tonnage = 0f, beltBuilt = 0f, scale = 1f;
+                // 1.11.332 (#65): a class that takes more than 15 minutes or meets a flood of broken mounts is given up (Hoche took 24
+                // minutes, then Gauloise flooded the log until the game exited)
+                float classStart = Time.realtimeSinceStartup; int nre0 = Patch_MountFits_Orphan.Nre; bool giveUp = false;
                 // 1. open the shared design constructor for nation/year
                 Ship prevShip = null; try { prevShip = PlayerController.Instance != null ? PlayerController.Instance.Ship : null; } catch { }
                 PlayerData pd = null; try { G.GameData.players.TryGetValue(s["nation"], out pd); } catch { }
@@ -300,6 +303,7 @@ namespace DipGgFixes
                     var hullSt = new Dictionary<string, ShipType>(); NoGunSeen = false;   // 1.11.116: hulls of another type (cl -> ca)
                     for (int hv = 0; hv < hulls.Count; hv++)
                     {
+                        if (hv > 0 && (giveUp || Time.realtimeSinceStartup - classStart > 900f || Patch_MountFits_Orphan.Nre - nre0 > 2000)) { if (!giveUp) { giveUp = true; notes += $"given up after {(Time.realtimeSinceStartup - classStart) / 60f:0} min ({Patch_MountFits_Orphan.Nre - nre0} broken mount checks); "; Log($"{s["name"]}: class given up - no more alternative hulls"); } break; }
                         PartData hull = hulls[hv]; bool useTempl = templ && hv == 0;
                         if (hv > 0)
                         {
@@ -347,6 +351,7 @@ namespace DipGgFixes
                             Log($"{s["name"]} ({s["nation"]} {s["year"]}{(hv > 0 ? ", " + hull.name : "")}): try {t + 1}: main battery {mainBuilt}, wanted {wantMain} x {wantIn} in, speedMax {ShipSpeed(ship):0.0}, valid {tv}{(tv ? "" : " - " + Why(ship))}");
                             if (diff < bestDiff) { bestDiff = diff; bestValid = tv; }
                             if (diff == 0) break;
+                            if (Time.realtimeSinceStartup - classStart > 900f || Patch_MountFits_Orphan.Nre - nre0 > 2000) { giveUp = true; notes += $"given up after {(Time.realtimeSinceStartup - classStart) / 60f:0} min ({Patch_MountFits_Orphan.Nre - nre0} broken mount checks); "; Log($"{s["name"]}: class given up after try {t + 1} (time or broken mounts)"); break; }
                             // the slip keeps only the last try: stop at the first valid try that is close enough to the historical battery,
                             // otherwise a later, worse try would replace it (e.g. 11 of 13 guns valid, then 10 of 13 invalid)
                             if (tv && Mathf.Abs(cal - wantIn) <= 0.6f && Math.Abs(barrels - wantMain) <= Math.Max(1, wantMain / 4)) { Log($"{s["name"]}: try {t + 1} kept (valid, close to the historical battery)"); break; }

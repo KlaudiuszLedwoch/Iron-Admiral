@@ -15,12 +15,29 @@ namespace DipGgFixes
     internal static class Patch_MountFits_Orphan
     {
         static int skipped; static int fails;
+        // 1.11.332 (#65): the historical builder (French pre-dreadnought hulls) met a destroyed mount or part here about 85 000 times
+        // in 15 minutes - every NullReferenceException wrote a full stack trace, the log grew to 94 MB and the game exited. A fit check
+        // that throws now answers "does not fit"; the count lets the builder give up such a class.
+        internal static int Nre;
+        static Exception Finalizer(Exception __exception, ref bool __result)
+        {
+            if (__exception == null) return null;
+            string m = __exception.Message ?? "";
+            if (__exception is NullReferenceException || m.Contains("NullReference"))
+            {
+                __result = false;
+                if (Nre++ == 0 || Nre % 1000 == 0) MelonLogger.Msg($"[DIP GG Fixes][Parts] Mount.Fits on a destroyed mount or part - treated as not fitting ({Nre} time(s) so far)");
+                return null;
+            }
+            return __exception;
+        }
         [HarmonyPriority(Priority.First)]
-        static bool Prefix(Mount __instance, ref bool __result)
+        static bool Prefix(Mount __instance, PartData __0, ref bool __result)
         {
             try
             {
-                if (__instance == null) return true;
+                if (__instance == null || __0 == null) { __result = false; return false; } // 1.11.332 (#65): destroyed mount / no part data
+
                 if (__instance.parentPart_ != null) return true;
                 if (__instance.GetComponentInParent<Part>() != null) return true;
                 __result = false;
