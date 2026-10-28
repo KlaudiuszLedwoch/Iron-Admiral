@@ -22,6 +22,7 @@ namespace DipGgFixes
             On = cat.CreateEntry("MapGhostParts", true, null, "Campaign map: ship parts left in the scene without their ship (green turrets and hulls drawn at map scale) are logged and hidden");
         }
         static float next; static int errors, logged, hidden; static readonly HashSet<IntPtr> seen = new HashSet<IntPtr>();
+        static readonly HashSet<IntPtr> designLogged = new HashSet<IntPtr>();
         static HashSet<IntPtr> pending = new HashSet<IntPtr>();   // seen as a ghost once; hidden only when still a ghost on the next check (a part being placed in the designer is not touched)
 
         internal static void Tick()
@@ -58,7 +59,14 @@ namespace DipGgFixes
                         else if (worldMap)
                         {
                             bool des = false; try { des = ship.isDesign && !ship.isRefit && !ship.isBuilding; } catch { }
-                            if (des) why = "part of a design object left visible on the map";
+                            // first step: logged only (design previews in the map's windows might use the same objects) - hidden
+                            // once a player log confirms these are the ghosts
+                            bool vis = false; try { var vr0 = p.visualRenderers; vis = vr0 != null && vr0.Count > 0 && vr0[0] != null && vr0[0].enabled; } catch { }
+                            if (des && vis && designLogged.Add(p.Pointer) && designLogged.Count <= 15)
+                            {
+                                string dn0 = "?"; try { dn0 = p.data != null ? p.data.name : "?"; } catch { }
+                                MelonLogger.Msg($"[DIP GG Fixes][MapGhosts] check: {dn0} of design {ship.name} is drawn on the world map at {t.position}, scale {t.lossyScale} (not hidden - report this line with a screenshot if a part floats on the map)");
+                            }
                         }
                     }
                     if (why == null) continue;
