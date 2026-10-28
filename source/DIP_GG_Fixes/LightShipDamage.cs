@@ -34,7 +34,7 @@ namespace DipGgFixes
             Max = cat.CreateEntry("DamageByTonnageMax", 60f, null, "Battle: the largest damage multiplier (small ships; a 635 t torpedo boat has 43x the structure per ton of a battleship in the game)");
             Types = cat.CreateEntry("DamageByTonnageTypes", "all", null, "Battle: ship types the rule applies to - all, or a comma-separated list (tb, dd, cl, ca, bc, bb, tr)");
             RefSaved = cat.CreateEntry("DamageByTonnageRefHpPerTon", 0f, null, "Battle (kept by the mod): structure per ton of the battleships last seen in a battle - used when a battle has none");
-            SinkPct = cat.CreateEntry("StructureSinkPercent", -1f, null, "Battle: structure damage (percent of the whole structure) at which a ship sinks - the game parameter structure_sink (vanilla 40, DIP GG 100); -1 = keep the game value");
+            SinkPct = cat.CreateEntry("StructureSinkPercent", -1f, null, "Battle: structure damage (percent of the whole structure) at which a ship sinks - the game parameter structure_sink (vanilla 40, DIP GG 100); -1 = the mod's default 40 (tests 27-28.10: with 100 destroyers survived 136 hits, with 40 torpedo boats, destroyers, cruisers and battleships sink after as many hits as in history); 100 = DIP GG");
             DestroyedPenalty = cat.CreateEntry("DestroyedSectionDamagePenalty", -1f, null, "Battle: share of damage a hit still does to a section that is already destroyed - the game parameter destroyed_section_damage_penalty (DIP GG 0.15); -1 = keep the game value");
         }
 
@@ -53,7 +53,9 @@ namespace DipGgFixes
                 foreach (var kv in new[] { new KeyValuePair<string, MelonPreferences_Entry<float>>("structure_sink", SinkPct), new KeyValuePair<string, MelonPreferences_Entry<float>>("destroyed_section_damage_penalty", DestroyedPenalty) })
                 {
                     float cur = 0f; bool has = p.ContainsKey(kv.Key); if (has) cur = p[kv.Key];
-                    if (kv.Value != null && kv.Value.Value >= 0f && (!has || Math.Abs(cur - kv.Value.Value) > 1e-4f)) { p[kv.Key] = kv.Value.Value; sb.Append($"{kv.Key} {cur:0.##} -> {kv.Value.Value:0.##}; "); }
+                    // 1.11.326: structure_sink -1 = the mod's default 40 (vanilla value; DIP GG 100 kept destroyers afloat after 136 hits)
+                    float want = kv.Value != null ? kv.Value.Value : -1f; if (want < 0f && kv.Key == "structure_sink") want = 40f;
+                    if (want >= 0f && (!has || Math.Abs(cur - want) > 1e-4f)) { p[kv.Key] = want; sb.Append($"{kv.Key} {cur:0.##} -> {want:0.##}; "); }
                     else sb.Append($"{kv.Key} {cur:0.##}; ");
                 }
                 MelonLogger.Msg("[DIP GG Fixes][Damage] sinking parameters: " + sb);
