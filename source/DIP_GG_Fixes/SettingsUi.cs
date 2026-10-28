@@ -69,6 +69,38 @@ namespace DipGgFixes
             {"ShipTrade","Economy"},{"ShipTradeAiSells","Economy"},{"ShipTradeRefits","Economy"},{"TechCatchUp","Campaign AI"},{"TechDiffusion","Campaign AI"},{"TorpedoSense","Battle AI"},
             {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},
         };
+        // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
+        // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
+        // listed in this order. Generated together with TabOf and the Help texts.
+        static readonly Dictionary<string, int> NumOf = new Dictionary<string, int>
+        {
+            {"AiCrossTorpedo",1},{"CapitalCloseInWhenOutgunned",2},{"CapitalEscapeWhenHopeless",3},{"CapitalSupportScreen",4},{"CapitalTorpedoCharge",5},{"CloseInOnlyIfPenetrates",6},
+            {"CoverRetreat",7},{"CruiserRoles",8},{"DetachSlowShips",9},{"DivisionOrders",10},{"DivisionOrdersVanilla",11},{"EscapeMissionLogic",12},{"EvasiveManeuvers",13},
+            {"FightWhenCannotEscape",14},{"FireDistribution",15},{"FleetTorpedoAttack",16},{"FocusFire",17},{"LightShipTorpedoCharge",18},{"NightRules",19},{"PlayerScoutCharge",20},
+            {"Ramming",21},{"ScoutTowardsSmoke",22},{"SmartTargeting",23},{"SmartTargetingAi",24},{"TorpedoFriendlyLane",25},{"TorpedoReloadCycle",26},{"TorpedoSettings",27},
+            {"TorpedoTargetPriority",28},{"TorpedoTurnAway",29},{"TransportsAfterEscort",30},{"ValueBasedAbort",31},{"WithdrawWhenOutmatched",32},{"AiDivisionSpacing",33},
+            {"AimPoint",34},{"GunOrders",35},{"HopelessEngageLighter",36},{"TorpedoSense",37},{"TorpedoSensePlayer",38},{"TorpedoSideCheck",39},{"DamageByTonnage",40},
+            {"DeckHitsMeetDeck",41},{"ImpactAngleFromFall",42},{"FireControlTechAccuracy",43},{"FireControlTechDispersion",44},{"HistoricalDamage",45},{"HistoricalGuns",46},
+            {"RealisticBallistics",47},{"ArmorObliquity",48},{"ArmorQualityHistorical",49},{"DamageModelHistorical",50},{"HeBlastThinPlating",51},{"HistoricalShells",52},
+            {"ObliquityOnTopOfGame",53},{"OverPenBySection",54},{"OverPenDamage",55},{"PhysicalGun",56},{"PhysicalGunHistoricalBase",57},{"PhysicalPenetration",58},
+            {"PhysicalPenetrationByZoneTest",59},{"PhysicalPenetrationNormalIncidence",60},{"PhysicalPenetrationRows",61},{"PhysicalShellHistoricalWeight",62},{"RangeByMountElevation",63},
+            {"RepairUnmountedParts",64},{"FogAiPerception",65},{"FogBattleReports",66},{"FogHideEnemyDetails",67},{"FogInterceptions",68},{"FogNightFactors",69},{"FogOfWar",70},
+            {"FogStaleContacts",71},{"FogStrategicMap",72},{"FogTacticalIdentification",73},{"MapPortForces",74},{"IntelReports",75},{"CaptureSurrenderedShips",76},
+            {"CrewLevelsRescale",77},{"CrewPanic",78},{"MinorFleetToConqueror",79},{"SurrenderByTraining",80},{"SurrenderedShipsToBattleWinner",81},{"AiTechBudgetBalance",82},
+            {"BankruptBuildsCheapShips",83},{"CoreProvincesIndependence",84},{"CruisersWhenPoor",85},{"FixStalledConstruction",86},{"NationalTechBonuses",87},{"OccupationEvents",88},
+            {"PortlessPowersWait",89},{"UngovernedToSuccessors",90},{"ContinuousMap",91},{"FleetOrders",92},{"FleetOrdersAI",93},{"LostTerritoryReconquest",94},{"MapGhostParts",95},
+            {"TechCatchUp",96},{"TechDiffusion",97},{"DesignRecorder",98},{"HistoricalParts",99},{"HistoricalWeights",100},{"AiBestTorpedoDiameter",101},{"AiDesignOnlyWhenBuildable",102},
+            {"AiMinTorpedoTubes",103},{"AutoShareDesigns",104},{"BrokenDesignsObsolete",105},{"InstallModDesigns",106},{"InstallShippackDesigns",107},{"ShareToAllNations",108},
+            {"AiHullCaliberCap",109},{"CustomBattlePregenerated",110},{"HistoricalCasemates",111},{"HistoricalDesignsFirst",112},{"RepairMissingDesigns",113},{"SharedDesignsSkipUnknownTech",114},
+            {"ShipGenAsymmetryTolerance",115},{"ShipGenEarlyStop",116},{"ShipGenMemory",117},{"ShipGenNewestHulls",118},{"ShipGenRelaxTurrets",119},{"ShipGenShareDesigns",120},
+            {"ShipGenTrimOverweight",121},{"FinancialCrisis",122},{"InflationEconomy",123},{"SeriesProduction",124},{"TreasuryInFinancesWindow",125},{"TreasuryMonthlyReport",126},
+            {"TreasuryPanel",127},{"TreasuryWarnings",128},{"ShipTrade",129},{"ShipTradeAiSells",130},{"ShipTradeRefits",131},{"BalanceGrantOnlyWhenSolvent",132},{"BalanceOfPowerEvents",133},
+            {"CoalitionBalanceOfPower",134},{"CoalitionWar",135},{"RelationRepair",136},{"BattleDispatches",137},{"BattleReport",138},{"DispatchNationalLanguages",139},
+            {"DispatchPlayerOriginalLanguage",140},{"AlwaysShowSplashes",141},{"BarrelElevation",142},{"BattleDispatchBubbles",143},{"BattleHitDispatches",144},{"EnemyRangeTags",145},
+            {"ModUiScaleAuto",146},{"ReShadeNavalLook",147},{"ArmorDiagnostics",148},{"BallisticsLog",149},{"BattleAiLog",150},{"DamageDiagLog",151},{"HitLog",152},
+            {"PerformanceLog",153},{"BetaUpdates",154},{"CheckForUpdates",155},{"CheckOtherMods",156},{"SaveCompatibilityFix",157},{"ShareLogs",158},{"UpdateDownloadButton",159},
+            {"UsageStatistics",160},
+        };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
             {"LightShipTorpedoCharge","Battle AI"},{"CapitalTorpedoCharge","Battle AI"},{"CapitalCloseInWhenOutgunned","Battle AI"},
@@ -104,6 +136,7 @@ namespace DipGgFixes
         {
             {"TorpedoSettings", new Num { E = () => TorpedoSettings.ChangeSeconds, Step = 10f, Min = 0f, Max = 300f, Unit = "s tube reset" } },
         };
+        static int NumberOf(string id) { int n; return NumOf.TryGetValue(id, out n) ? n : 10000; }
         static List<MelonPreferences_Entry<bool>> Entries(string group)
         {
             var list = new List<MelonPreferences_Entry<bool>>();
@@ -120,6 +153,7 @@ namespace DipGgFixes
                 }
                 if (g == group) list.Add(b);
             }
+            list.Sort((a, c) => NumberOf(a.Identifier).CompareTo(NumberOf(c.Identifier)));
             return list;
         }
 
@@ -250,7 +284,8 @@ namespace DipGgFixes
                         Button(new Rect(nx + 138f, y + 2f, 26f, 24f), "+", sBtn, () => { fe.Value = Mathf.Min(nm.Max, fe.Value + nm.Step); Save(fe.Identifier + " = " + fe.Value.ToString("0.##")); });
                     }
                     string name = e.DisplayName != null && e.DisplayName != e.Identifier ? e.DisplayName : e.Identifier;
-                    GUI.Label(new Rect(r.x + 90f, y + 3f, descW, 20f), "<b>" + name + "</b>" + (RestartOnly.Contains(e.Identifier) ? "  <color=#C0C0C0>(after restart)</color>" : ""), sName);
+                    int no = NumberOf(e.Identifier);
+                    GUI.Label(new Rect(r.x + 90f, y + 3f, descW, 20f), (no < 10000 ? "<size=10><color=#9A9A9A>#" + no + "</color></size>  " : "") + "<b>" + name + "</b>" + (RestartOnly.Contains(e.Identifier) ? "  <color=#C0C0C0>(after restart)</color>" : ""), sName);
                     GUI.Label(new Rect(r.x + 90f, y + 21f, descW, rowH - 20f), e.Description ?? "", sDesc);
                     y += rowH;
                 }
