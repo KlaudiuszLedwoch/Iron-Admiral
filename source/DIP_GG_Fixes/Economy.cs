@@ -737,6 +737,7 @@ namespace DipGgFixes
                         float rd = Math.Min(EcoPrefs.ResearchDisinflation.Value * lr, Math.Max(0f, st.Inflation - EcoPrefs.InflBaseline.Value)); st.Inflation -= rd;
                         if (rd >= 0.01f) st.Notes.Add($"research -{rd:F2}");
                         float sy = 0f; try { sy = p.shipyardBuildMonthLeft > 0 ? p.ExpensesShipyardBudget() : 0f; } catch { }
+                        try { YardDiag(p, sy); } catch { } // 1.11.333 (#48, #49)
                         if (sy > 0f) { st.ExpandPp = EcoPrefs.ShipyardGrowth.Value * (12f * sy / y * 100f); st.ExpandMonths = (int)EcoPrefs.ShipyardAfterMonths.Value; }
                         else if (st.ExpandMonths > 0) { st.ExpandMonths--; if (st.ExpandMonths == 0) st.ExpandPp = 0f; }
                         else st.ExpandPp = 0f;
@@ -897,6 +898,31 @@ namespace DipGgFixes
         static float SafeAtt(Relation r) { try { return r.attitude; } catch { return 0f; } }
 
         internal static List<Player> MajorsPublic() { return Majors(); }
+
+        // 1.11.333 (#48, #49, player reports 26.10: the 24-month plan showed about +24k t but the capacity went 120k -> 240k t; the
+        // player could afford expansion in only 6 of 20 years and asked whether the AI follows the same rule): one line when a major
+        // starts or finishes a shipyard expansion - capacity (incl. the mod's foreign-port share), largest ship, monthly cost and its
+        // share of the naval budget, for the player and the AI alike, so campaign logs answer both questions.
+        class Yard { public int Left; public float Cap, Dock, ForeignCap; public int StartMonth; }
+        static readonly Dictionary<IntPtr, Yard> yards = new Dictionary<IntPtr, Yard>();
+        static void YardDiag(Player p, float monthlyCost)
+        {
+            int left = 0; float cap = 0f, dock = 0f, budget = 0f;
+            try { left = p.shipyardBuildMonthLeft; } catch { }
+            try { cap = p.ShipbuildingCapacityLimit(); } catch { }
+            try { dock = p.shipyard; } catch { }
+            try { budget = p.Budget(); } catch { }
+            bool isPlayer = false; try { isPlayer = p.isMain; } catch { }
+            string who = $"{NameUi(p)} ({(isPlayer ? "player" : "AI")})";
+            Yard y; bool had = yards.TryGetValue(p.Pointer, out y);
+            if (!had) { y = new Yard { Left = left, Cap = cap, Dock = dock, StartMonth = Month() }; yards[p.Pointer] = y; if (left > 0) MelonLogger.Msg($"[DIP GG Fixes][Shipyard] {who}: expansion in progress at load, {left} month(s) left, capacity {cap:0} t, largest ship {dock:0} t, cost {monthlyCost / 1e6f:0.0}M/month"); return; }
+            if (y.Left <= 0 && left > 0)
+                MelonLogger.Msg($"[DIP GG Fixes][Shipyard] {who}: expansion started - {left} month(s), cost {monthlyCost / 1e6f:0.0}M/month ({(budget > 0f ? monthlyCost / budget : 0f):P0} of the naval budget {budget / 1e6f:0}M), capacity now {cap:0} t, largest ship {dock:0} t");
+            else if (y.Left > 0 && left <= 0)
+                MelonLogger.Msg($"[DIP GG Fixes][Shipyard] {who}: expansion finished after {Month() - y.StartMonth} month(s) - capacity {y.Cap:0} -> {cap:0} t ({(y.Cap > 0f ? cap / y.Cap : 0f):0.00}x), largest ship {y.Dock:0} -> {dock:0} t");
+            if (y.Left <= 0 && left > 0) { y.Cap = cap; y.Dock = dock; y.StartMonth = Month(); }
+            y.Left = left;
+        }
         internal static string Name(Player p) { return NameUi(p); }
 
         internal static float GrowthBonusMonthly(Player p)
