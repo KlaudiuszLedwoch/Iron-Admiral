@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.359", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.360", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2123,7 +2123,9 @@ namespace DipGgFixes
             bool cross = (pOrder || aiTactics) && CrossSlot(div, best, out xdir, out xslot, out xof);   // 1.11.302; AI since 1.11.318
             // 1.11.343 (author 28.10, 12:39): an AI light division with a two-way role approaches fine on the bow or on the quarter
             UnityEngine.Vector3 pdir = UnityEngine.Vector3.zero;
-            bool twoWay = !pOrder && IsLight(leader) && TorpedoPincer.Approach(div, leader, best, out pdir);
+            // 1.11.360 (author 29.10: the player should see the same attack under the Torpedo attack order): also for a player's
+            // division under that order (ordered charge) - before, only the target choice applied to it, not the approach
+            bool twoWay = !playerSide && IsLight(leader) && TorpedoPincer.Approach(div, leader, best, out pdir);
             if (twoWay)
             {
                 xdir = pdir; cross = false;
@@ -2139,7 +2141,7 @@ namespace DipGgFixes
                     var aim = (cross || twoWay) ? tt.position + xdir * launchAt : tt.position;
                     // 1.11.344 (author 28.10, 12:45: "during the approach, when the hits of the defensive fire begin, we lay smoke"): an AI
                     // light division that takes damage or loses a ship during the run-in lays smoke (every 30 s at most, while hit again)
-                    if (!pOrder && IsLight(leader) && DipGgFixesMod.AiApproachSmoke != null && DipGgFixesMod.AiApproachSmoke.Value)
+                    if (!playerSide && IsLight(leader) && DipGgFixesMod.AiApproachSmoke != null && DipGgFixesMod.AiApproachSmoke.Value) // 1.11.360: also the player's Torpedo attack order
                     {
                         float dd = DivDamage(div);
                         if (st.approachDmg >= 0f && dd > st.approachDmg + 0.005f)
