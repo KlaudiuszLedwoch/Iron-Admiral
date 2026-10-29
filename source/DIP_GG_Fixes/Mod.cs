@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.373", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.374", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -957,6 +957,8 @@ namespace DipGgFixes
         {
             try
             {
+                // 1.11.374 (#84 step b): build mix fitted against the likely enemies (EnemyFitBuildMix)
+                if (__instance != null && __result > 0f && !string.IsNullOrEmpty(shipType)) { try { if (__instance.isAi && __instance.isMajor) __result *= EnemyProfile.BuildFactor(__instance, shipType); } catch { } }
                 if (DipGgFixesMod.CruisersWhenPoor == null || !DipGgFixesMod.CruisersWhenPoor.Value) return;
                 if (__instance == null || __result <= 0f || string.IsNullOrEmpty(shipType)) return;
                 bool big = shipType == "bb" || shipType == "bc";
