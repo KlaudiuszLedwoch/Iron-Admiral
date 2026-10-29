@@ -3939,7 +3939,9 @@ namespace DipGgFixes
                     byte[] data;
                     using (var hc = new System.Net.Http.HttpClient())
                     {
-                        hc.Timeout = TimeSpan.FromSeconds(120);
+                        // 1.11.360 (#82, player 28.10 on a slow connection: the update to 1.2.75 did not happen): the whole ~7-8 MB
+                        // package had to arrive within 120 s (about 60 KB/s); now 15 minutes
+                        hc.Timeout = TimeSpan.FromMinutes(15);
                         hc.DefaultRequestHeaders.UserAgent.ParseAdd("IronAdmiral-DIP_GG_Fixes");
                         data = await hc.GetByteArrayAsync(url);
                     }
