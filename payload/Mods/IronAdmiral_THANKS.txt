@@ -1,0 +1,9 @@
+# Iron Admiral - thanks to the players who test, report and record.
+# One line per person: name | reports (forum posts and videos) | what they did. Ordered by the number and length of their reports.
+# Updated with the forum reviews; shown on the main menu and written to the log at start.
+thunderspirit2014 | 23 | test battles on every version, videos on YouTube (youtube.com/@UltimateAdmiralDreadnoughts1.7), test plans
+hurepoix | 28 | long campaigns 1890-1910, historical gunnery and penetration, prizes, occupation, conflicts, designs
+VodkaBear | 10 | torpedo boat damage, diplomacy and wars, pre-dreadnought damage
+BABUT | 4 | ship data in battle, finishing off at range, ideas from other mods
+The Titan | 2 | questions for new players
+rhett73step | 1 | custom battles and the ship generator
