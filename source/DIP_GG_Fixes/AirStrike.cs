@@ -26,7 +26,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<string> Model;
         internal static MelonPreferences_Entry<bool> Carrier; internal static MelonPreferences_Entry<int> CarrierFrom, CarrierTo;
         internal static MelonPreferences_Entry<int> Waves, PerWave;
-        internal static MelonPreferences_Entry<float> FirstAfter, Interval, SpeedMs, AaRange, AaPerGun, SplashRange, SplashPerGun, TorpRunM, TorpKn, Scale, Spacing, Turb;
+        internal static MelonPreferences_Entry<float> FirstAfter, Interval, SpeedMs, AaRange, AaPerGun, SplashRange, SplashPerGun, TorpRunM, TorpKn, Scale, Spacing, Turb, AttackAngle;
         internal static MelonPreferences_Entry<bool> BarrageFx;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
@@ -50,6 +50,7 @@ namespace DipGgFixes
             Scale = cat.CreateEntry("AirStrikeAircraftScale", 1f, null, "Battle (test): drawing scale of the aircraft (1 = true size, about 14 m span)");
             Spacing = cat.CreateEntry("AirStrikeSpacing", 250f, null, "Battle (test): distance (m) between the aircraft of one section in the formation and between their drop points along the target");
             Turb = cat.CreateEntry("AirStrikeTurbulence", 1f, null, "Battle (test): strength of the aircraft's natural motion - bumps, drift, wobble and banking into turns (0 = rigid flight)");
+            AttackAngle = cat.CreateEntry("AirStrikeAttackAngle", 45f, null, "Battle (test): angle off the target's bow from which the two halves of a wave make their torpedo runs - 45 = the anvil attack on both bows (historical), 80 = nearly abeam");
             BarrageFx = cat.CreateEntry("AirStrikeBarrage", true, null, "Battle (test): show the defending fleet's barrage - tracers and shell bursts of the light guns, splash columns of the heavy guns ahead of aircraft running in low");
         }
 
@@ -168,7 +169,7 @@ namespace DipGgFixes
                 // 1.11.391 (author 29.10 17:57: "they are too close together"): each aircraft keeps its own place - sections spaced
                 // AirStrikeSpacing apart, staggered back and up, and each drops at its own point along the target (a fan of torpedoes)
                 int slot = k / 2, perSide = (n + (side > 0 ? 1 : 0)) / 2; float sp = Spacing.Value;
-                var start = tp + from * (startDist + slot * sp * 0.5f) + right * side * (800f + slot * sp) + Vector3.up * (300f + slot * 25f);
+                var start = tp + from * (startDist + slot * sp * 0.5f) + right * side * (800f + slot * sp) + Vector3.up * (Era(curYear).alt + slot * 25f);
                 int yr = 1925; try { yr = (int)target.GetYear(target); } catch { }
                 var go = Build(yr);
                 var pl = new Plane { Go = go, Ctl = lastCtl, Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
@@ -388,9 +389,34 @@ namespace DipGgFixes
             var t = p.Target.transform; var f = t.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) f = Vector3.forward; f.Normalize();
             var vel = Vel(p.Target); float tw = TorpedoSettings.World(TorpKn.Value * 0.5144f), pv = p.Spd * WorldScale();
             float toDrop = Flat(t.position - p.Pos) / Mathf.Max(1f, pv);
-            var future = t.position + vel * (toDrop + 1000f / Mathf.Max(1f, tw));
-            var dir = Quaternion.Euler(0f, p.Side * 80f, 0f) * f;
-            var rp = future + dir * 1000f + f * p.SlotOff; rp.y = 30f; return rp;
+            var e = Era(curYear);
+            var future = t.position + vel * (toDrop + e.release / Mathf.Max(1f, tw));
+            var dir = RunDir(p, f);
+            var rp = future + dir * e.release + f * p.SlotOff; rp.y = e.dropY; return rp;
+        }
+        static Vector3 RunDir(Plane p, Vector3 f) { return Quaternion.Euler(0f, p.Side * (AttackAngle != null ? AttackAngle.Value : 45f), 0f) * f; }
+
+        // 1.11.401 (author 29.10 19:30: "check the speeds of the strikes and the tactics itself - make it look historical"):
+        //  - approach high, then a glide down to the sea and a level run to the drop: torpedo squadrons "cruised at high altitude
+        //    and dived when they spotted a target", pulling out "at an altitude of 100 feet or less" (daveswarbirds, Torpedo
+        //    Attacks); at Taranto the strike flew in "above cloud cover at 7,500 feet" and the torpedo runs were "straight and
+        //    level at wave-top height" (HistoryNet, British biplanes) - here 2,000 m for the 1935+ types, 1,200 m for 1925-1934,
+        //    450 m for the Short 184, whose performance with a torpedo was "marginal" (Wikipedia, Short Type 184) - the last two
+        //    heights are estimates, not from a source;
+        //  - drop: "100 kts and 50' were standard around 1930" (Naval Gazing, Air Attack on Ships part 2) - the run is flown at
+        //    no more than 51 m/s (100 kn) and the drop made from 15 m; Williamson at Taranto dropped "from a height of just
+        //    30 feet" (10 m, used from 1935);
+        //  - release range: "1,000 yards or less" (daveswarbirds); Taranto torpedoes from "400 yards" and "some 700 yards" -
+        //    700 m from 1935; 900 m before (estimate);
+        //  - from both bows, not the beams: the anvil attack, "two lines about 45 degrees on either side of the bow" (Naval
+        //    Gazing) - whichever way the ship turns she shows her side to one of them. AirStrikeAttackAngle (45 = off the bow,
+        //    80 = nearly abeam as before).
+        internal struct EraT { public float alt, diveAt, release, dropY; }
+        static EraT Era(int year)
+        {
+            if (year < 1925) return new EraT { alt = 450f, diveAt = 3500f, release = 900f, dropY = 12f };
+            if (year < 1935) return new EraT { alt = 1200f, diveAt = 6000f, release = 900f, dropY = 15f };
+            return new EraT { alt = 2000f, diveAt = 8000f, release = 700f, dropY = 10f };
         }
 
         static void Move(float dt, Il2CppSystem.Collections.Generic.List<Ship> ships)
@@ -410,10 +436,13 @@ namespace DipGgFixes
                     }
                     if (!Alive(p.Target) && !p.Dropped) { p.P = Phase.Away; }
                     Vector3 goal;
-                    if (p.P == Phase.Approach) { goal = RunPoint(p); goal.y = 300f; if (Flat(goal - p.Pos) < 3000f) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f, p); Radio(p.Wave, "runin", atkIsPlayer ? Pick($"Tally-ho! {Dispatch.Ship(p.Target.name)} dead ahead - split and go down to the deck!", $"There she is - {Dispatch.Ship(p.Target.name)}. Port section left, starboard section right. Down we go!", $"Target in sight. Going down - take her from both beams, chaps!") : Pick($"Enemy aircraft low on the water - coming in on {Dispatch.Ship(p.Target.name)}!", $"Torpedo planes! Both beams!")); } }
+                    if (p.P == Phase.Approach) { var era = Era(curYear); goal = RunPoint(p); goal.y = era.alt; if (Flat(goal - p.Pos) < era.diveAt) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f, p); Radio(p.Wave, "runin", atkIsPlayer ? Pick($"Tally-ho! {Dispatch.Ship(p.Target.name)} dead ahead - split and go down to the deck!", $"There she is - {Dispatch.Ship(p.Target.name)}. Port section left, starboard section right. Down we go!", $"Target in sight. Going down - take her on both bows, chaps!") : Pick($"Enemy aircraft low on the water - coming in on {Dispatch.Ship(p.Target.name)}!", $"Torpedo planes! Both bows!")); } }
                     else if (p.P == Phase.Run)
                     {
                         goal = RunPoint(p);
+                        // glide down to a point 1,500 m short of the drop at drop height, then the level run (1.11.401)
+                        { var tf = p.Target.transform.forward; tf.y = 0f; if (tf.sqrMagnitude < 0.01f) tf = Vector3.forward; tf.Normalize();
+                          var lvl = goal + RunDir(p, tf) * 1500f; if (Flat(goal - p.Pos) > 1700f) goal = lvl; }
                         Shot($"wave{p.Wave}_run", 3f, p);
                         if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); Radio(p.Wave, "drop", atkIsPlayer ? Pick("Fish away! Pulling up - hard right!", "Torpedo gone! Running true... get out of here!", "Released! Climbing away - watch the flak!") : "They have dropped - torpedoes in the water!"); }
                     }
@@ -428,6 +457,7 @@ namespace DipGgFixes
                     var d = goal - p.Pos; var nd = d.sqrMagnitude > 1f ? d.normalized : p.Dir;
                     var oldDir = p.Dir;
                     p.Dir = p.Dir.sqrMagnitude < 0.01f ? nd : Vector3.Slerp(p.Dir, nd, Mathf.Clamp01(dt * 1.5f)).normalized;
+                    if (p.P == Phase.Run) { if (p.Pos.y > 60f && p.Dir.y < -0.05f) v *= 1.25f; else v = Mathf.Min(v, 51f * WorldScale()); }   // 1.11.401
                     p.Pos += p.Dir * v * dt;
                     Pose(p, oldDir, dt);
                     // wing rocking over our own ships - the airmen's greeting to the sailors below: a few rolls of about 25 deg
@@ -867,7 +897,7 @@ namespace DipGgFixes
         static float ModelSpeed(string m)
         {
             float k = SpeedMs != null ? SpeedMs.Value / 55f : 1f;
-            switch (m) { case "short_184": return 34f * k; case "sopwith_camel": return 45f * k; case "swordfish_i": return 50f * k; case "albacore": return 55f * k;
+            switch (m) { case "short_184": return 34f * k; case "sopwith_camel": return 45f * k; case "swordfish_i": return 45f * k; case "albacore": return 52f * k;
                 case "beaufort": case "hampden_tb": return 62f * k; case "beaufighter_tf": return 70f * k; default: return SpeedMs != null ? SpeedMs.Value : 55f; }
         }
         static string CarrierName()
