@@ -111,6 +111,10 @@ namespace DipGgFixes
         }
 
         static readonly float[] rangeKm = { 0f, 100f, 400f, 500f, 900f, 1000f };
+        // misidentification of air reports by patrol type (claude/technologie_lotnicze_85.md group A; the airships of 19 August 1916:
+        // 4 of 7 reports wrong, L 13 took cruisers for battleships)
+        static readonly float[] misRate = { 0f, 0.40f, 0.45f, 0.25f, 0.15f, 0.10f };
+        internal static float MisRate(int lv) { return lv >= 0 && lv < misRate.Length ? misRate[lv] : 0f; }
         static readonly string[] what = { "", "seaplane stations", "airships", "flying boats", "long-range patrol", "patrol aircraft with radar" };
         static int logged;
 

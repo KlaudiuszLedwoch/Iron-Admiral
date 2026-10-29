@@ -218,10 +218,28 @@ namespace DipGgFixes
             catch { }
             return n;
         }
+        // 1.11.408 (#85): misidentification when the force was found by air patrols - their reports cannot be better than the
+        // patrol type allows (airships ~45 %, seaplanes ~40 %, flying boats ~25 %, long-range patrol ~15 %, radar ~10 %), unless
+        // other sources (ports, own forces) give a better picture anyway. Key as in Q; value: Q without the air term, air error rate.
+        static readonly Dictionary<string, (float qNoAir, float mis)> airPic = new Dictionary<string, (float, float)>();
+        static int airPLogged;
+        internal static float AirP(Player obs, CampaignController.TaskForce tf, float p)
+        {
+            try
+            {
+                if (obs == null || tf == null) return p;
+                if (!airPic.TryGetValue(PName(obs) + "|" + tf.Id.ToString(), out var a)) return p;
+                float pNo = Mathf.Clamp(0.6f * (1f - a.qNoAir) / 0.65f, 0f, 0.6f);
+                float r = Mathf.Max(p, Mathf.Min(pNo, a.mis));
+                if (r > p && airPLogged++ < 6) Log($"air report: misidentification chance {p:0.00} -> {r:0.00} (air patrol error rate {a.mis:0.00})");
+                return r;
+            }
+            catch { return p; }
+        }
         internal static float Q(Player obs, CampaignController.TaskForce tf)
         {
             if (obs == null || tf == null) return 1f;
-            int m = Month(); if (m != qMonth) { qMonth = m; qCache.Clear(); qLogged = 0; }
+            int m = Month(); if (m != qMonth) { qMonth = m; qCache.Clear(); airPic.Clear(); qLogged = 0; }
             string key = PName(obs) + "|" + tf.Id.ToString(); float q;
             if (qCache.TryGetValue(key, out q)) return q;
             q = 1f; string why = "";
@@ -261,6 +279,9 @@ namespace DipGgFixes
                 float weather = -0.15f + 0.20f * Roll($"wx|{m}|{cx}|{cz}");
                 int mon = ((m - 1) % 12 + 12) % 12 + 1; if (mon == 11 || mon == 12 || mon == 1 || mon == 2) weather -= 0.05f;
                 q = Fogged(Clamp01(baseQ + port + air + fleet + size + weather));
+                // 1.11.408: air reports found the force but often misidentified it - remember the picture without them
+                if (air > 0f) airPic[key] = (Fogged(Clamp01(baseQ + port + fleet + size + weather)), NavalAviation.MisRate(NavalAviation.ReconLevel(obs)));
+                else airPic.Remove(key);
                 why = $"era {era:0.00} x tech {tfac:0.00} x budget {bfac:0.00} + port {port:0.00} ({portKm:0} km){(airWhy != "" ? " + " + airWhy : "")} + forces {fleet:0.00}{(fleetWhy != "" ? " (" + fleetWhy + ")" : "")} + size {size:0.00} + weather {weather:0.00}";
             }
             catch (Exception e) { Err("Q", e); q = 1f; }
@@ -509,6 +530,7 @@ namespace DipGgFixes
             try
             {
                 float p = Mathf.Clamp(0.6f * (1f - q) / 0.65f, 0f, 0.6f);
+                p = AirP(Main(), tf, p);   // 1.11.408
                 int m = Month(); int shown = 0, hiddenN = 0;
                 var list = ui.ships;
                 for (int i = 0; list != null && i < list.Count; i++)
