@@ -35,7 +35,7 @@ namespace DipGgFixes
             Carrier = cat.CreateEntry("CustomBattleCarrier", true, null, "Battle (beta): in a custom battle of the aircraft model's years (CustomBattleCarrierFrom-To) the player has a carrier beyond the horizon - its torpedo aircraft attack the enemy's largest ship in waves by day");
             CarrierFrom = cat.CreateEntry("CustomBattleCarrierFrom", 1915, null, "Battle (beta): first year of custom battles with our carrier (Short 184 seaplanes flew from the seaplane carrier HMS Ben-my-Chree from 1915)");
             CarrierTo = cat.CreateEntry("CustomBattleCarrierTo", 1945, null, "Battle (beta): last year of custom battles with our carrier");
-            Model = cat.CreateEntry("AirStrikeModel", "auto", null, "Battle (test): aircraft model from Mods\\IronAdmiral_Models (file name without .iam); auto = the carrier torpedo aircraft of the battle year (Short 184 to 1925, Swordfish, Albacore 1940-42); empty or missing = aircraft drawn from simple solids");
+            Model = cat.CreateEntry("AirStrikeAircraft", "auto", null, "Battle (test): aircraft model from Mods\\IronAdmiral_Models (file name without .iam); auto = the carrier torpedo aircraft of the battle year (Short 184 to 1925, Swordfish, Albacore 1940-42); empty or missing = aircraft drawn from simple solids");
             Waves = cat.CreateEntry("AirStrikeWaves", 3, null, "Battle (test): number of air strike waves per battle");
             PerWave = cat.CreateEntry("AirStrikeAircraftPerWave", 6, null, "Battle (test): torpedo aircraft in one wave");
             FirstAfter = cat.CreateEntry("AirStrikeFirstAfter", 60f, null, "Battle (test): seconds of battle time before the first wave arrives");
@@ -75,7 +75,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            FxClear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            FxClear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); lightGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -536,36 +536,79 @@ namespace DipGgFixes
             catch { }
             return g;
         }
+        // 1.11.402 (author 29.10 19:46, video: "explosions and extra artefacts on the water - spheres instead of volumetric smoke, and
+        // the cubes that fell into the water, I don't know what they are"): the barrage is drawn with the game's own effects now,
+        // not with solid shapes - the muzzle flash and smoke of the defending ships' light guns (Effect.GunShoot at the guns
+        // themselves), the game's shell-burst effect in the air around the aircraft (Effect.Get("HitNone"), the burst of a shell
+        // that hits nothing) and the game's shell splash in the sea ahead of aircraft running in low (Effect.WaterSplash). The
+        // black spheres (shell bursts) and the orange cubes (tracers, which fell into the sea) are gone.
+        static readonly Dictionary<IntPtr, List<Part>> lightGuns = new Dictionary<IntPtr, List<Part>>();
+        static List<Part> LightGuns(Ship s)
+        {
+            if (lightGuns.TryGetValue(s.Pointer, out var l)) return l;
+            l = new List<Part>();
+            try
+            {
+                var parts = s.parts;
+                for (int i = 0; parts != null && i < parts.Count; i++)
+                {
+                    var pt = parts[i]; var pd = pt != null ? pt.data : null; if (pd == null || !pd.isGun) continue;
+                    float cal = 99f; try { cal = G.GameData.GunData(pd).caliberInch; } catch { }
+                    if (cal <= 3.1f) l.Add(pt);
+                }
+            }
+            catch { }
+            lightGuns[s.Pointer] = l; return l;
+        }
+        static bool fxBroken; static int fxLogged; static GameObject burstPrefab; static bool burstLooked;
+        static void Burst(Vector3 at)
+        {
+            if (!burstLooked)
+            {
+                burstLooked = true;
+                try { var ei = Effect.Get("HitNone"); burstPrefab = ei != null ? (ei.prefab as GameObject ?? ei.obj as GameObject) : null; } catch (Exception e) { Log("shell-burst effect: " + e.Message); }
+                Log(burstPrefab != null ? "barrage: the game's shell-burst effect found" : "barrage: no shell-burst effect found - bursts in the air not drawn");
+            }
+            if (burstPrefab == null) return;
+            var go = UnityEngine.Object.Instantiate(burstPrefab, at, Quaternion.identity);
+            try { EffectExt.PlayAndDelete(go); } catch { UnityEngine.Object.Destroy(go, 6f); }
+        }
         static void Barrage(Plane p, Ship s, float d, (int light, int heavy) g, bool low, float dt)
         {
-            if (BarrageFx == null || !BarrageFx.Value || fx.Count >= 220 || p.Go == null) return;
-            var ap = p.Go.transform.position; float now = Time.time;
-            var sp = s.transform.position + Vector3.up * 10f;
-            if (g.light > 0)
+            if (BarrageFx == null || !BarrageFx.Value || fxBroken || p.Go == null) return;
+            try
             {
-                float n = Mathf.Min(g.light, 8);
-                if (UnityEngine.Random.value < n * 1.2f * dt)
-                {   // tracer: a short glowing streak flying from the ship past the aircraft
-                    var aim = ap + p.Dir * UnityEngine.Random.Range(-40f, 120f) + UnityEngine.Random.insideUnitSphere * 45f;
-                    var go = FxPrim(PrimitiveType.Cube, new Color(1f, 0.55f, 0.15f), true);
-                    go.transform.localScale = new Vector3(0.6f, 0.6f, 28f);
-                    fx.Add(new Fx { G = go, T0 = now, Life = Mathf.Clamp((aim - sp).magnitude / 900f, 0.4f, 2.5f), Kind = 0, A = sp, B = aim });
+                var ap = p.Go.transform.position;
+                if (g.light > 0)
+                {
+                    float n = Mathf.Min(g.light, 8);
+                    if (UnityEngine.Random.value < n * 0.8f * dt)
+                    {   // a light gun of the ship fires: the game's muzzle flash and smoke at the gun
+                        var lg = LightGuns(s);
+                        if (lg.Count > 0)
+                        {
+                            var gun = lg[UnityEngine.Random.Range(0, lg.Count)];
+                            if (gun != null && gun.transform != null)
+                            {
+                                var gp = gun.transform.position; var aim = ap - gp;
+                                Effect.GunShoot(gun.gameObject, gp, Quaternion.LookRotation(aim.sqrMagnitude > 1f ? aim.normalized : Vector3.up, Vector3.up), 0.6f);
+                            }
+                        }
+                    }
+                    if (UnityEngine.Random.value < n * 0.5f * dt)
+                    {   // the shell bursts in the air near the aircraft
+                        var at = ap + p.Dir * UnityEngine.Random.Range(-60f, 160f) + UnityEngine.Random.insideUnitSphere * 75f; if (at.y < 12f) at.y = 12f + UnityEngine.Random.value * 15f;
+                        Burst(at);
+                    }
                 }
-                if (UnityEngine.Random.value < n * 0.7f * dt)
-                {   // shell burst around the aircraft
-                    var at = ap + p.Dir * UnityEngine.Random.Range(-60f, 160f) + UnityEngine.Random.insideUnitSphere * 75f; if (at.y < 12f) at.y = 12f + UnityEngine.Random.value * 15f;
-                    var go = FxPrim(PrimitiveType.Sphere, new Color(0.13f, 0.12f, 0.11f), false); go.transform.position = at; go.transform.localScale = Vector3.one * 2f;
-                    fx.Add(new Fx { G = go, T0 = now, Life = 3.2f, Kind = 1, A = at, Size = UnityEngine.Random.Range(9f, 15f) });
+                if (low && g.heavy > 0 && d <= SplashRange.Value && UnityEngine.Random.value < Mathf.Min(g.heavy, 6) * 0.35f * dt)
+                {   // a heavy shell fired into the sea ahead of the aircraft: the game's shell splash
+                    var fw = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; var r = Vector3.Cross(Vector3.up, fw);
+                    var at = p.Pos + fw * UnityEngine.Random.Range(80f, 650f) + r * UnityEngine.Random.Range(-90f, 90f); at.y = 0f;
+                    Effect.WaterSplash(UnityEngine.Random.Range(1.2f, 2.2f), at, Quaternion.identity);
                 }
             }
-            if (low && g.heavy > 0 && d <= SplashRange.Value && UnityEngine.Random.value < Mathf.Min(g.heavy, 6) * 0.35f * dt)
-            {   // splash column of a heavy shell fired into the sea ahead of the aircraft
-                var f = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; var r = Vector3.Cross(Vector3.up, f);
-                var at = p.Pos + f * UnityEngine.Random.Range(80f, 650f) + r * UnityEngine.Random.Range(-90f, 90f); at.y = 0f;
-                var go = FxPrim(PrimitiveType.Cylinder, new Color(0.90f, 0.93f, 0.95f), false);
-                fx.Add(new Fx { G = go, T0 = now, Life = 4f, Kind = 2, A = at, Size = UnityEngine.Random.Range(28f, 48f) });
-                go.transform.position = at; go.transform.localScale = new Vector3(7f, 0.01f, 7f);
-            }
+            catch (Exception e) { if (fxLogged++ < 3) Log("barrage effects off: " + e.Message); fxBroken = true; }
         }
         static void FxTick()
         {
