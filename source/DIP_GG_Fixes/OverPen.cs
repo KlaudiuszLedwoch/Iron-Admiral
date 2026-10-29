@@ -34,6 +34,7 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("OverPenDamage", true, null, "Battle: an AP shell passing clean through a ship does a fraction of the damage of a shell bursting inside (holes, splinters, cut cables and pipes), instead of almost nothing");
             Frac = cat.CreateEntry("OverPenDamageFraction", 0.15f, null, "Battle: damage of an AP pass-through as a fraction of a normal penetration when the location is not known (from the US Navy war damage reports)");
+            EndsMult = cat.CreateEntry("OverPenWaterlineEndsMult", 1.25f, null, "Battle: an AP pass-through at the waterline of the bow or stern floods more - its damage x this value, then x (1 + way ahead / top speed) for a bow hole (down to x0.6 going astern), the other way round for a stern hole; 0 = off"); // 1.11.369 (#73)
             BySection = cat.CreateEntry("OverPenBySection", true, null, "Battle: the pass-through damage follows the place the shell went through (upper works 5 %, turret 10 %, hull ends 15 %, citadel and machinery 20 %, +5 % at the waterline) of the damage the same shell would do as a penetration there");
         }
         // the hit being resolved: GetArmorModForPenetrations runs right before DealDamageToPartSectionAndSpread for the same hit
@@ -116,6 +117,47 @@ namespace DipGgFixes
             return where;
         }
 
+        // 1.11.369 (#73, author 29.10: a pass-through at the waterline in the hull ends floods more - "like Bismarck's bow at the
+        // Denmark Strait"; "the bow takes more water because the ship moves forward; when she stops or goes astern the flooding is
+        // slower"). An AP pass-through at the waterline of the bow or stern does WaterlineEndsMult more damage (the two holes let the
+        // sea in), and that is scaled by the ship's way through the water: a bow hole x (1 + speed ahead / top speed), down to x0.6
+        // going astern; a stern hole the other way round. Stopped: x1. (The factors are a first estimate.)
+        internal static MelonPreferences_Entry<float> EndsMult;
+        static readonly Dictionary<IntPtr, (Vector3 p, float t, float v)> way = new Dictionary<IntPtr, (Vector3, float, float)>();
+        static float WayAhead(Ship s)   // speed ahead (+) or astern (-), m/s, from the ship's own movement
+        {
+            try
+            {
+                var tr = s.transform; if (tr == null) return 0f;
+                var p = tr.position; float t = Time.time;
+                if (way.TryGetValue(s.Pointer, out var w) && t - w.t > 0.2f && t - w.t < 30f)
+                {
+                    var d = p - w.p; d.y = 0f; float v = Vector3.Dot(d, tr.forward) / (t - w.t);
+                    way[s.Pointer] = (p, t, v); return v;
+                }
+                if (!way.ContainsKey(s.Pointer) || t - w.t >= 30f) way[s.Pointer] = (p, t, w.v);
+                return way.TryGetValue(s.Pointer, out w) ? w.v : 0f;
+            }
+            catch { return 0f; }
+        }
+        static int floodLogs;
+        static float EndFlood(Ship ship, Ship.Section sec, string loc)
+        {
+            try
+            {
+                if (EndsMult == null || EndsMult.Value <= 0f || sec == null || loc == null || !loc.StartsWith("hull ends") || !loc.Contains("waterline")) return 1f;
+                bool bow = sec.armor == Ship.A.BeltBow || sec.armor == Ship.A.DeckBow;
+                float vmax = 0f; try { vmax = ship.speedMax; } catch { }
+                float v = WayAhead(ship);
+                float rel = vmax > 0.5f ? Mathf.Clamp(v / vmax, -1f, 1f) : 0f;
+                if (!bow) rel = -rel;                                         // a stern hole floods faster going astern
+                float f = EndsMult.Value * (rel >= 0f ? 1f + rel : 1f + 0.4f * rel);
+                if (floodLogs++ < 20) MelonLogger.Msg($"[DIP GG Fixes][Damage] waterline pass-through in the {(bow ? "bow" : "stern")} of {ship.name}: way {v * 1.94384f:0.0} kn {(v >= 0f ? "ahead" : "astern")} - flooding x{f:0.00}");
+                return f;
+            }
+            catch { return 1f; }
+        }
+
         // Ship.DealDamageToPartSectionAndSpread(Part part, Section section, float damage, Vector3 impact, ...)
         internal static void Deal(Ship ship, Part part, Ship.Section sec, ref float damage, bool useHe)
         {
@@ -134,6 +176,7 @@ namespace DipGgFixes
                     float want = raw / curMod * curNormal * frac;
                     if (want > damage) { damage = want; raised++; }
                 }
+                if (known && type == "over" && !useHe && !curHe) damage *= EndFlood(ship, sec, loc);   // 1.11.369 (#73)
                 LightShipDamage.Apply(ship, ref damage, DmgKind);   // 1.11.322 (#67); 1.11.325: not torpedoes
                 LastLoc = loc; LastFrame = Time.frameCount; LastRaw = raw; LastNew = damage; LastFire = false; LastFlood = false; LastModules = null; LastMod = known ? curMod : 0f; LastType = type;
                 string key = $"{loc} | {(useHe ? "He" : "Ap")} {type}";
