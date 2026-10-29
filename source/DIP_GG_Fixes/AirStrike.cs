@@ -98,6 +98,15 @@ namespace DipGgFixes
                     bool custom = false; try { custom = GameManager.IsCustomBattle; } catch { }
                     atkIsPlayer = car && custom && yr >= CarrierFrom.Value && yr <= CarrierTo.Value;
                     active = atkIsPlayer || test;
+                    // 1.11.408: in a campaign battle the attacking nation's Naval Aviation technologies decide the strike
+                    camp = NavalAviation.CampaignBattle(); atkP = null;
+                    try { for (int i = 0; i < b.Ships.Count && atkP == null; i++) { var s = b.Ships[i]; if (s != null && !Defender(s)) atkP = s.player; } } catch { }
+                    if (active && camp)
+                    {
+                        if (atkP == null) { Log("campaign battle: attacking nation unknown - no air strike"); active = false; }
+                        else if (!NavalAviation.CanStrike(atkP, out var why)) { Log($"campaign battle: {atkP.data.name} - {why}: no air strike"); active = false; }
+                        else Log($"campaign battle: {atkP.data.name} Naval Aviation - {NavalAviation.Summary(atkP)}");
+                    }
                     if (atkIsPlayer) Log($"custom battle {yr}: our carrier ({CarrierName()}, {TypeName()}) is beyond the horizon - its waves attack the enemy's largest ship");
                     else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
                 }
@@ -105,9 +114,10 @@ namespace DipGgFixes
                 if (lastTube == null) lastTube = FindTube(b.Ships);
                 float dt = Time.deltaTime; if (dt <= 0f) return;
                 battleT += dt;
-                if (wavesSent < Waves.Value && battleT >= nextWave)
+                int maxW = camp && atkP != null ? Math.Min(Waves.Value, NavalAviation.MaxWaves(atkP)) : Waves.Value;
+                if (wavesSent < maxW && battleT >= nextWave)
                 {
-                    nextWave = battleT + Interval.Value;
+                    nextWave = battleT + Interval.Value * (camp && atkP != null ? NavalAviation.IntervalF(atkP) : 1f);
                     bool night = false; try { night = BattleAi.IsNight(); } catch { }
                     if (night) { if (wavesSent == 0) Log("night - no air strike while it is dark"); }
                     else Launch(b.Ships);
@@ -128,7 +138,7 @@ namespace DipGgFixes
         }
 
         static bool Player(Ship s) { try { return s.player != null && s.player.isMain; } catch { return false; } }
-        static bool atkIsPlayer, active;
+        static bool atkIsPlayer, active, camp; static Player atkP;
         static bool Defender(Ship s) { return atkIsPlayer ? !Player(s) : Player(s); }
 
         static void Launch(Il2CppSystem.Collections.Generic.List<Ship> ships)
@@ -159,7 +169,8 @@ namespace DipGgFixes
             float startDist = 14000f;
             for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (!Alive(s) || Defender(s)) continue; var d = s.transform.position - tp; d.y = 0f; float along = Vector3.Dot(d, from); if (along + 8000f > startDist) startDist = along + 8000f; }
             int n = Math.Max(1, PerWave.Value);
-            { int y0 = 1925; try { y0 = (int)target.GetYear(target); } catch { } curYear = y0; curModel = ModelFor(y0, wave); }   // 1.11.399
+            if (camp && atkP != null) n = Math.Min(n, NavalAviation.MaxPerWave(atkP));
+            { int y0 = 1925; try { y0 = (int)target.GetYear(target); } catch { } if (camp && atkP != null) y0 = NavalAviation.StrikeYear(atkP); curYear = y0; curModel = ModelFor(y0, wave); }   // 1.11.399, 1.11.408
             float spd = ModelSpeed(curModel);
             waveStats[wave] = new int[4]; waveStats[wave][0] = n;
             for (int k = 0; k < n; k++)
@@ -170,8 +181,7 @@ namespace DipGgFixes
                 // AirStrikeSpacing apart, staggered back and up, and each drops at its own point along the target (a fan of torpedoes)
                 int slot = k / 2, perSide = (n + (side > 0 ? 1 : 0)) / 2; float sp = Spacing.Value;
                 var start = tp + from * (startDist + slot * sp * 0.5f) + right * side * (800f + slot * sp) + Vector3.up * (Era(curYear).alt + slot * 25f);
-                int yr = 1925; try { yr = (int)target.GetYear(target); } catch { }
-                var go = Build(yr);
+                var go = Build(curYear);
                 var pl = new Plane { Go = go, Ctl = lastCtl, Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
                     SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f, Spd = spd };
                 planes.Add(pl);
@@ -945,9 +955,13 @@ namespace DipGgFixes
 
         static float YearF(Ship s)
         {
+            if (camp) { try { if (s.player != null) return NavalAviation.AaF(s.player); } catch { } }
             int y = 1925; try { y = (int)s.GetYear(s); } catch { }
             if (y < 1920) return 0.35f; if (y < 1930) return 0.6f; if (y < 1937) return 1f; if (y < 1942) return 1.5f; return 2.5f;
         }
+
+        // 1.11.408: in a campaign battle the splash barrage of the heavy guns needs the defender's aa_2
+        static bool SplashOk(Ship s) { if (!camp) return true; try { return s.player != null && NavalAviation.Splash(s.player); } catch { return true; } }
 
         static void Aa(Plane p, float dt, Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
@@ -962,7 +976,7 @@ namespace DipGgFixes
                 try { Barrage(p, s, d, g, low, dt); } catch { }
                 float ml = Mathf.Pow(1f - Mathf.Clamp01(AaPerGun.Value * YearF(s)), g.light * dt);
                 miss *= ml; missLight *= ml;
-                if (low && d <= SplashRange.Value && g.heavy > 0) { heavy += g.heavy; miss *= Mathf.Pow(1f - Mathf.Clamp01(SplashPerGun.Value), g.heavy * dt); }
+                if (low && d <= SplashRange.Value && g.heavy > 0 && SplashOk(s)) { heavy += g.heavy; miss *= Mathf.Pow(1f - Mathf.Clamp01(SplashPerGun.Value), g.heavy * dt); }
             }
             if (guns == 0 && heavy == 0) return;
             if (UnityEngine.Random.value > miss)
@@ -988,6 +1002,7 @@ namespace DipGgFixes
         {
             int y = 1925; try { y = (int)hit.GetYear(hit); } catch { }
             float f = y < 1930 ? 0.5f : y < 1940 ? 0.6f : 0.75f;
+            if (camp && atkP != null) f = NavalAviation.WarheadF(atkP);   // 1.11.408: the attacker's aerial torpedo technology
             if (factorLogged++ < 6) Log($"aerial torpedo hit on {hit.name}: damage x{f:0.00} (aerial warhead of its time)");
             return f;
         }
