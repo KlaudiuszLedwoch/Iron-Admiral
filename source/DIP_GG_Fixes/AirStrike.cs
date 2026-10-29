@@ -160,13 +160,20 @@ namespace DipGgFixes
             try { Dispatch.Air(atkIsPlayer ? $"HMS Furious: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
             Log($"wave {wave}: {n} {(atkIsPlayer ? "of our" : "enemy")} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
         }
-        static Part lastTube;
+        static Part lastTube; static int tubeLogged;
         static Part FindTube(Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
             for (int i = 0; ships != null && i < ships.Count; i++)
             {
                 var s = ships[i]; if (s == null || Defender(s)) continue;
                 try { var ts = s.torpedoesAll; if (ts != null && ts.Count > 0 && ts[0] != null) return ts[0]; } catch { }
+            }
+            // 1.11.388 (author's custom battle 29.10 17:13: none of his ships had torpedo tubes - "wave not sent"): the aircraft come from
+            // the carrier, not from those ships - the torpedo data then come from any tube in the battle (the warhead is scaled anyway)
+            for (int i = 0; ships != null && i < ships.Count; i++)
+            {
+                var s = ships[i]; if (s == null) continue;
+                try { var ts = s.torpedoesAll; if (ts != null && ts.Count > 0 && ts[0] != null) { if (tubeLogged++ < 3) Log($"no torpedo tube on the attacking side - torpedo data from {s.name}"); return ts[0]; } } catch { }
             }
             return null;
         }
