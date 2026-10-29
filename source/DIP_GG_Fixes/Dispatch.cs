@@ -123,6 +123,8 @@ namespace DipGgFixes
         }
         static string Pick(params string[] v) { return v[rng.Next(v.Length)]; }
         internal static void SayHit(string key, string text) { Say(key, text); } // 1.11.258 (HitDispatch)
+        // 1.11.386 (#85, author 29.10 17:02: "and the dispatch log"): air strike reports go to the dispatch file and panel (no ship)
+        internal static void Air(string text) { if (!Active || string.IsNullOrEmpty(text)) return; Write(text); AddLog(null, text); }
         // 1.11.283: a line from the language files (lang, id, placeholder name/value pairs)
         static void SayT(string key, string lang, string id, params string[] kv)
         {

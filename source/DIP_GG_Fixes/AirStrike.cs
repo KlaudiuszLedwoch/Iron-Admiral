@@ -67,7 +67,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -157,6 +157,7 @@ namespace DipGgFixes
                 var pl = new Plane { Go = Build(yr), Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave };
                 planes.Add(pl);
             }
+            try { Dispatch.Air(atkIsPlayer ? $"HMS Furious: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
             Log($"wave {wave}: {n} {(atkIsPlayer ? "of our" : "enemy")} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
         }
         static Part lastTube;
@@ -376,12 +377,12 @@ namespace DipGgFixes
                     }
                     if (!Alive(p.Target) && !p.Dropped) { p.P = Phase.Away; }
                     Vector3 goal;
-                    if (p.P == Phase.Approach) { goal = RunPoint(p); goal.y = 300f; if (Flat(goal - p.Pos) < 3000f) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f, p); } }
+                    if (p.P == Phase.Approach) { goal = RunPoint(p); goal.y = 300f; if (Flat(goal - p.Pos) < 3000f) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f, p); Radio(p.Wave, "runin", atkIsPlayer ? Pick($"Tally-ho! {Dispatch.Ship(p.Target.name)} dead ahead - split and go down to the deck!", $"There she is - {Dispatch.Ship(p.Target.name)}. Port section left, starboard section right. Down we go!", $"Target in sight. Going down - take her from both beams, chaps!") : Pick($"Enemy aircraft low on the water - coming in on {Dispatch.Ship(p.Target.name)}!", $"Torpedo planes! Both beams!")); } }
                     else if (p.P == Phase.Run)
                     {
                         goal = RunPoint(p);
                         Shot($"wave{p.Wave}_run", 3f, p);
-                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); }
+                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); Radio(p.Wave, "drop", atkIsPlayer ? Pick("Fish away! Pulling up - hard right!", "Torpedo gone! Running true... get out of here!", "Released! Climbing away - watch the flak!") : "They have dropped - torpedoes in the water!"); }
                     }
                     else goal = p.Pos + new Vector3(p.Dir.x, 0f, p.Dir.z) * 1000f + Vector3.up * 40f;
                     if (p.P == Phase.Away)
@@ -645,6 +646,7 @@ namespace DipGgFixes
                 float pl = 1f - missLight, pt = 1f - miss; bool splash = heavy > 0 && UnityEngine.Random.value * pt > pl;
                 p.P = Phase.Down; waveStats[p.Wave][2]++; if (splash) waveStats[p.Wave][3]++;
                 Shot($"wave{p.Wave}_shotdown", 1.2f, p);
+                Radio(p.Wave, null, atkIsPlayer ? (splash ? Pick("Christ - he flew into a splash! He's gone in!", "Heavy guns firing into the sea ahead of us - Number Four caught it!") : Pick("Number Three's hit - he's going down in flames!", "They've got Jenkins! Keep low, keep low!", "Flak's thick - lost one of ours!")) : Pick("Got one! Enemy plane down in the sea!", "Splash one torpedo plane!"));
                 if (waveStats[p.Wave][2] <= 4) Log($"wave {p.Wave}: aircraft shot down {(splash ? $"by the splash barrage of the heavy guns ({heavy} gun(s) firing into the sea ahead of it)" : $"by light anti-aircraft guns ({guns} gun(s) of 2-3 in in range)")}{(p.Dropped ? ", after its drop" : ", before its drop")}");
             }
         }
@@ -671,15 +673,76 @@ namespace DipGgFixes
         }
         static bool Alive(Torpedo t) { try { return t != null && t.gameObject != null && t.gameObject.activeInHierarchy; } catch { return false; } }
 
+        // ---------------------------------------------------------------------------------------------------------------------------
+        // 1.11.386 (author 29.10 17:02: "above the attacking squadron there should be an identification label - and the dispatch log -
+        // and a bubble with the pilots' talk"): a label over every wave in the air (who, how many, what), the radio talk of its pilots
+        // in a bubble under the label at the run-in, the drop, hits and losses, and the same lines in the dispatch log
+        static readonly System.Random rnd = new System.Random();
+        static readonly Dictionary<int, (string text, float t)> radio = new Dictionary<int, (string, float)>();
+        static readonly HashSet<string> said = new HashSet<string>();
+        static string Pick(params string[] v) { return v[rnd.Next(v.Length)]; }
+        static string Flight(int wave) { return atkIsPlayer ? $"Flight {(char)('A' + (wave - 1) % 26)}, HMS Furious" : $"Enemy torpedo flight {wave}"; }
+        static string TypeName() { var m = Model != null ? Model.Value : ""; return m == "sopwith_camel" ? "Sopwith Camel" : string.IsNullOrEmpty(m) ? "torpedo biplane" : m.Replace('_', ' '); }
+        static void Radio(int wave, string key, string text, bool log = true)
+        {
+            if (key != null && !said.Add(wave + "|" + key)) return;
+            radio[wave] = (text, Time.unscaledTime);
+            if (log) { try { Dispatch.Air($"{Flight(wave)}: \"{text}\""); } catch { } }
+        }
+        static readonly HashSet<string> hitSaid = new HashSet<string>();
+        internal static void OnAerialHit(Ship hit)
+        {
+            try
+            {
+                int wave = 0; foreach (var kv in waveStats) if (kv.Key > wave) wave = kv.Key;
+                if (wave == 0) return;
+                string n = Dispatch.Ship(hit.name);
+                if (!hitSaid.Add(wave + "|" + n + "|" + (int)(Time.unscaledTime / 3f))) return;
+                Radio(wave, null, atkIsPlayer
+                    ? Pick($"Hit! Right under her funnels - {n} is down by the head!", $"Fish running true... HIT! Big column of water on {n}!", $"That's one in {n}'s side - she's slowing!", $"Got her! {n} is listing to port!")
+                    : Pick($"Torpedo hit on {n}!", $"{n} hit by an aerial torpedo - flooding forward!"));
+            }
+            catch { }
+        }
+        static GUIStyle sTag, sTalk;
+        static void DrawLabels()
+        {
+            var cam = Camera.main; if (cam == null) return;
+            if (sTag == null) { sTag = new GUIStyle(); sTag.fontSize = 15; sTag.fontStyle = FontStyle.Bold; sTag.alignment = TextAnchor.MiddleCenter; sTag.normal.textColor = new Color(0.75f, 0.92f, 1f); }
+            if (sTalk == null) { sTalk = new GUIStyle(); sTalk.fontSize = 14; sTalk.wordWrap = true; sTalk.alignment = TextAnchor.UpperCenter; sTalk.normal.textColor = new Color(1f, 0.95f, 0.8f); }
+            var groups = new Dictionary<int, (Vector3 sum, int n, int up)>();
+            foreach (var p in planes) { if (p.Go == null) continue; groups.TryGetValue(p.Wave, out var g); g.sum += p.Pos; g.n++; if (p.P != Phase.Down) g.up++; groups[p.Wave] = g; }
+            foreach (var kv in groups)
+            {
+                if (kv.Value.up == 0) continue;
+                var c = kv.Value.sum / kv.Value.n; var sp = cam.WorldToScreenPoint(c + Vector3.up * 25f * Scale.Value); if (sp.z <= 0f) continue;
+                float k = UiScale.F > 0.01f ? UiScale.F : 1f, x = sp.x / k, y = (Screen.height - sp.y) / k;
+                string tag = $"{Flight(kv.Key)} - {kv.Value.up} x {TypeName()} (torpedo)";
+                float w = 360f, h = 24f;
+                var col = GUI.color; GUI.color = atkIsPlayer ? new Color(0.6f, 0.85f, 1f, 0.95f) : new Color(1f, 0.55f, 0.5f, 0.95f);
+                GUI.Box(new Rect(x - w / 2f, y - h - 6f, w, h), ""); GUI.color = col;
+                sTag.normal.textColor = atkIsPlayer ? new Color(0.75f, 0.92f, 1f) : new Color(1f, 0.75f, 0.7f);
+                GUI.Label(new Rect(x - w / 2f, y - h - 6f, w, h), tag, sTag);
+                if (radio.TryGetValue(kv.Key, out var rt) && Time.unscaledTime - rt.t < 9f)
+                {
+                    float bw = 380f, bh = 54f; var r = new Rect(x - bw / 2f, y + 2f, bw, bh);
+                    GUI.Box(r, ""); GUI.Box(r, "");
+                    GUI.Label(new Rect(r.x + 6f, r.y + 4f, r.width - 12f, r.height - 8f), rt.text, sTalk);
+                }
+            }
+        }
+
         // camera buttons while an air strike is on: follow an aircraft, follow a torpedo just above the water, or free (the game's camera)
         enum Follow { None, Plane, Torpedo }
         static Follow follow; static int followIdx; static bool camPaused; static CameraController fcc; static Cam fcam; static bool fccWas, fcamWas;
         internal static void OnGUI()
         {
             if (!active || !GameManager.IsBattle || Hiding) return;
+            try { DrawLabels(); } catch { }
             bool any = planes.Count > 0 || aerial.Count > 0 || follow != Follow.None;
             if (!any) return;
-            float w = 150f, h = 26f, x = Screen.width / 2f - w * 1.5f - 8f, y = Screen.height - h - 70f;
+            float kk = UiScale.F > 0.01f ? UiScale.F : 1f;
+            float w = 150f, h = 26f, x = Screen.width / kk / 2f - w * 1.5f - 8f, y = Screen.height / kk - h - 70f;
             GUI.Box(new Rect(x - 6f, y - 22f, w * 3f + 28f, h + 30f), "Air strike camera");
             if (GUI.Button(new Rect(x, y, w, h), (follow == Follow.Plane ? "> " : "") + "Aircraft")) { follow = Follow.Plane; followIdx++; }
             if (GUI.Button(new Rect(x + w + 8f, y, w, h), (follow == Follow.Torpedo ? "> " : "") + "Torpedo (at the water)")) { follow = Follow.Torpedo; followIdx++; }

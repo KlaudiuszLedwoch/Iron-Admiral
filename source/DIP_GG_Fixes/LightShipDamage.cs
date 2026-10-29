@@ -132,7 +132,7 @@ namespace DipGgFixes
         {
             // 1.11.385 (#85, author's custom battle 29.10 16:55: five torpedoes of the first wave of Camels sank the battleship Kaga, hits of
             // up to 17,500): a torpedo dropped by an aircraft hits with an aerial warhead - a share of the ship torpedo's damage by year
-            try { if (ship != null && damage > 0f && InTorpedo > 0 && AirStrike.IsAerial(CurTorp)) damage *= AirStrike.WarheadFactor(ship); } catch { }
+            try { if (ship != null && damage > 0f && InTorpedo > 0 && AirStrike.IsAerial(CurTorp)) { damage *= AirStrike.WarheadFactor(ship); AirStrike.OnAerialHit(ship); } } catch { }
             if (On == null || !On.Value || ship == null || !(damage > 0f)) return;
             try
             {
