@@ -552,9 +552,30 @@ namespace DipGgFixes
             }
             catch { return null; }
         }
+        // 1.11.362 (author 29.10: "when the player moves the camera the order buttons hide - as long as he holds the camera, even when
+        // it is not moving at that moment"): a camera button (right or middle mouse) or a camera key (WASD, Q/E, arrows) held, and
+        // 0.4 s after it is let go
+        static float camBusyUntil;
+        static readonly KeyCode[] camKeys = { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Q, KeyCode.E, KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow };
+        static bool CameraBusy()
+        {
+            bool held = false;
+            try
+            {
+                if (!(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+                {
+                    held = Input.GetMouseButton(1) || Input.GetMouseButton(2);
+                    if (!held) foreach (var k in camKeys) if (Input.GetKey(k)) { held = true; break; }
+                }
+            }
+            catch { }
+            if (held) camBusyUntil = Time.realtimeSinceStartup + 0.4f;
+            return Time.realtimeSinceStartup < camBusyUntil;
+        }
         internal static void OrdersOnGUI()
         {
             if (OrdersOn == null || !OrdersOn.Value || !GameManager.IsBattle || BattleScreen.Hidden) return; // 1.11.250: not over the result screen / "Play again?"
+            if (CameraBusy()) return; // 1.11.362 (author 29.10): panel and order tags hidden while the player works the camera
             try { OrderTags(); } catch (Exception e) { if (oErrors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] order tags: " + e.Message); }
             try
             {
