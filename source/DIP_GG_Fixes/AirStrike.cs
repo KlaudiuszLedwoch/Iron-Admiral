@@ -735,8 +735,35 @@ namespace DipGgFixes
         // camera buttons while an air strike is on: follow an aircraft, follow a torpedo just above the water, or free (the game's camera)
         enum Follow { None, Plane, Torpedo }
         static Follow follow; static int followIdx; static bool camPaused; static CameraController fcc; static Cam fcam; static bool fccWas, fcamWas;
+        // 1.11.387 (author 29.10 17:11: "in the custom battle panel there should be a class 'torpedo air strike' with the number of waves
+        // and of aircraft in a wave"): a small panel on the custom battle setup screen - our carrier's strike on or off, waves, aircraft
+        // per wave (written to CustomBattleCarrier, AirStrikeWaves, AirStrikeAircraftPerWave)
+        static GUIStyle sSet, sSetH;
+        static void SetupPanel()
+        {
+            bool setup = false; try { setup = GameManager.IsCustomBattleSetup; } catch { }
+            if (!setup || Carrier == null || Waves == null || PerWave == null) return;
+            float k = UiScale.F > 0.01f ? UiScale.F : 1f, W = Screen.width / k, H = Screen.height / k;
+            if (sSetH == null) { sSetH = new GUIStyle(); sSetH.fontStyle = FontStyle.Bold; sSetH.fontSize = 15; sSetH.normal.textColor = new Color(0.85f, 0.93f, 1f); }
+            if (sSet == null) { sSet = new GUIStyle(); sSet.fontSize = 14; sSet.normal.textColor = Color.white; }
+            float w = 300f, h = 150f, x = W - w - 24f, y = H * 0.42f;
+            GUI.Box(new Rect(x, y, w, h), ""); GUI.Box(new Rect(x, y, w, h), "");
+            GUI.Label(new Rect(x + 10f, y + 6f, w - 20f, 22f), "Torpedo air strike (our carrier)", sSetH);
+            bool on = Carrier.Value;
+            if (GUI.Button(new Rect(x + 10f, y + 32f, w - 20f, 24f), on ? "ON - click to switch off" : "OFF - click to switch on")) Carrier.Value = !on;
+            int wv = Waves.Value, pw = PerWave.Value;
+            GUI.Label(new Rect(x + 10f, y + 64f, 150f, 24f), $"Waves: {wv}", sSet);
+            if (GUI.Button(new Rect(x + w - 90f, y + 64f, 36f, 22f), "-") && wv > 1) Waves.Value = wv - 1;
+            if (GUI.Button(new Rect(x + w - 48f, y + 64f, 36f, 22f), "+") && wv < 8) Waves.Value = wv + 1;
+            GUI.Label(new Rect(x + 10f, y + 92f, 170f, 24f), $"Aircraft per wave: {pw}", sSet);
+            if (GUI.Button(new Rect(x + w - 90f, y + 92f, 36f, 22f), "-") && pw > 1) PerWave.Value = pw - 1;
+            if (GUI.Button(new Rect(x + w - 48f, y + 92f, 36f, 22f), "+") && pw < 24) PerWave.Value = pw + 1;
+            GUI.Label(new Rect(x + 10f, y + 120f, w - 20f, 22f), $"{TypeName()} - battles of {CarrierFrom.Value}-{CarrierTo.Value}", sSet);
+        }
+
         internal static void OnGUI()
         {
+            try { SetupPanel(); } catch { }
             if (!active || !GameManager.IsBattle || Hiding) return;
             try { DrawLabels(); } catch { }
             bool any = planes.Count > 0 || aerial.Count > 0 || follow != Follow.None;
