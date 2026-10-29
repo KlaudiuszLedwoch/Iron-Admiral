@@ -16,3 +16,10 @@ short_184.iam (+ short_184_t*.png)
   Changes: simplified (about 36,000 triangles), textures reduced to 512 px, ailerons, elevator and rudder cut out of the mesh
   and hinged, propeller separated to spin. Aviation Gazetteer: https://airmuseums.co.uk/hangar/short-184
 
+
+Fairey Swordfish I (swordfish_i), Fairey Albacore Mk I (albacore), Handley Page Hampden TB.I (hampden_tb), Bristol Beaufort Mk VIII (beaufort),
+Bristol Beaufighter TF.X (beaufighter_tf) - all by mgg8 on Sketchfab (https://sketchfab.com/mgg8/models), CC0 1.0 (public domain).
+  Visual interpretations; some details and markings are approximate (author's notes). Aviation Gazetteer: https://airmuseums.co.uk
+  Changes: simplified (about 36,000-46,000 triangles), textures reduced to 512 px, ailerons, elevators, rudders and propellers
+  cut out of the mesh and hinged; the Swordfish's torpedo separated so that it can be released.
+

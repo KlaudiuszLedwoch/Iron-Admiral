@@ -19,7 +19,8 @@ namespace DipGgFixes
 {
     internal static class AirModels
     {
-        internal class Ctl { public Transform Prop; public readonly List<(Transform t, Vector3 axis, int role)> Surfaces = new List<(Transform, Vector3, int)>(); }
+        // 1.11.399: every propeller (twin-engined types have two) and the model's own torpedo (role 6, hidden at the drop)
+        internal class Ctl { public Transform Prop, Torpedo; public readonly List<Transform> Props = new List<Transform>(); public readonly List<(Transform t, Vector3 axis, int role)> Surfaces = new List<(Transform, Vector3, int)>(); }
         class Part { public Mesh Mesh; public Material Mat; public int Role; public Vector3 Pivot, Axis; }
         class Model { public List<Part> Parts = new List<Part>(); public Bounds B; }
         static readonly Dictionary<string, Model> cache = new Dictionary<string, Model>();
@@ -127,7 +128,9 @@ namespace DipGgFixes
                     {
                         var pg = new GameObject("pivot" + p.Role); pg.transform.SetParent(body.transform, false); pg.transform.localPosition = p.Pivot;
                         parent = pg.transform; pivots[(p.Role, p.Pivot)] = parent;
-                        if (p.Role == 1) ctl.Prop = parent; else ctl.Surfaces.Add((parent, p.Axis, p.Role));
+                        if (p.Role == 1) { ctl.Props.Add(parent); if (ctl.Prop == null) ctl.Prop = parent; }
+                        else if (p.Role == 6) ctl.Torpedo = parent;
+                        else ctl.Surfaces.Add((parent, p.Axis, p.Role));
                     }
                 }
                 var g = new GameObject("part"); g.transform.SetParent(parent, false);
