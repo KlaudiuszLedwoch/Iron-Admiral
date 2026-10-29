@@ -71,7 +71,7 @@ namespace DipGgFixes
             {"CapturedTechNotCopied","Ship design"},{"BattleHourChoice","Campaign AI"},{"AiSmokeOnlyWhenNeeded","Battle AI"},{"AiTorpedoPincer","Battle AI"},{"AiApproachSmoke","Battle AI"},
             {"AiWithdrawLowAmmo","Battle AI"},{"BattleDispatchPanel","Display"},{"PrizeScuttle","Crews & prizes"},{"DivisionTorpedoSplit","Battle AI"},{"StackedGunsPenalty","Gunnery & damage"},
             {"TransportSpeedByYear","Battle AI"},{"EnemyProfileLog","Campaign AI"},{"ThanksOnMainMenu","Display"},{"AirStrikeTest","Battle AI"},{"EnemyFitBuildMix","Campaign AI"},
-            {"CustomBattleCarrier","Battle AI"},{"PlayerDesignsFirst","Other"},{"CustomBattleSaveDesigns","Other"},
+            {"CustomBattleCarrier","Battle AI"},{"PlayerDesignsFirst","Other"},{"CustomBattleSaveDesigns","Other"},{"DesignStats","Other"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -106,7 +106,7 @@ namespace DipGgFixes
             {"UsageStatistics",160},{"AiTorpedoCapitalsFirst",161},{"CapturedTechNotCopied",162},{"BattleHourChoice",163},{"AiSmokeOnlyWhenNeeded",164},{"AiTorpedoPincer",165},
             {"AiApproachSmoke",166},{"AiWithdrawLowAmmo",167},{"BattleDispatchPanel",168},{"PrizeScuttle",169},{"DivisionTorpedoSplit",170},{"StackedGunsPenalty",171},
             {"TransportSpeedByYear",172},{"EnemyProfileLog",173},{"ThanksOnMainMenu",174},{"AirStrikeTest",175},{"EnemyFitBuildMix",176},{"CustomBattleCarrier",177},
-            {"PlayerDesignsFirst",178},{"CustomBattleSaveDesigns",179},
+            {"PlayerDesignsFirst",178},{"CustomBattleSaveDesigns",179},{"DesignStats",180},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {

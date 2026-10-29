@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.396", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.397", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -299,6 +299,7 @@ namespace DipGgFixes
             try { Dispatch.LogPanelGUI(); } catch { } // 1.11.349
             try { Thanks.OnGUI(); } catch { } // 1.11.370
             try { AirStrike.OnGUI(); } catch { } // 1.11.385
+            try { DesignStats.OnGUI(); } catch { } // 1.11.397
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
             RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { BattleHour.OnGUI(); } catch { } try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } try { GunOrders.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
@@ -625,6 +626,7 @@ namespace DipGgFixes
             AutoTest.CreatePrefs(cat);
             HistPriority.CreatePrefs(cat);
             PlayerDesigns.CreatePrefs(cat); // 1.11.394
+            DesignStats.CreatePrefs(cat); // 1.11.397
             Trade.CreatePrefs(cat);
             TorpedoSizeBest.CreatePrefs(cat); // 1.11.296 (#47)
             TorpedoTubesMin.CreatePrefs(cat); // 1.11.309 (#47, part 2)
