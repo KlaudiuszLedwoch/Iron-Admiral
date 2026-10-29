@@ -73,6 +73,10 @@ namespace DipGgFixes
             {
                 if (__result == null || !Il2Cpp.GameManager.IsCustomBattle || MaxAge == null || MaxAge.Value <= 0) return;
                 float y = __result.GetYear(__result);
+                // 1.11.371 (#80, test 29.10 11:05: usa cl 1916 got "Matsushima", a design of a later year on the 1891 hull
+                // cl_2_straightbow): the hull's technology year counts too - the older of the two decides
+                int hy = 0; try { hy = ShipGenSpeed.HullYear(__result.hull != null && __result.hull.data != null ? __result.hull.data.name : null); } catch { }
+                if (hy > 0 && (y <= 0f || hy < y)) y = hy;
                 if (y <= 0f || year - y <= MaxAge.Value) return;
                 if (oldDropped++ < 20) MelonLogger.Msg($"[DIP GG Fixes][CustomBattle] shared design {__result.vesselName} ({y:0}) for {shipType?.name} {year} is more than {MaxAge.Value} years old - the ship generator designs one for the year");
                 __result = null;
