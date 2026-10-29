@@ -1,0 +1,11 @@
+Iron Admiral - aircraft models (Mods\IronAdmiral_Models)
+
+The models are simplified for the game: node transforms baked, small parts removed, meshes reduced (fast quadric
+mesh reduction), textures reduced to 512 px, back faces added. They are converted copies, not the originals.
+No endorsement by the original authors is implied.
+
+sopwith_camel.iam
+  "Sopwith Camel (Red Baron Arcade)" by NCTKM (https://sketchfab.com/NCTKM)
+  Source: https://sketchfab.com/3d-models/sopwith-camel-red-baron-arcade-4f97f09e936945c7b4bf1bc90b64589c
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral (see above).
