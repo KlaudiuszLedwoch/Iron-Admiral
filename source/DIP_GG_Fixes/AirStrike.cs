@@ -34,9 +34,9 @@ namespace DipGgFixes
             Interval = cat.CreateEntry("AirStrikeInterval", 240f, null, "Battle (test): seconds of battle time between waves");
             SpeedMs = cat.CreateEntry("AirStrikeSpeed", 55f, null, "Battle (test): aircraft speed in m/s (55 = about 107 kn, a 1930s torpedo bomber)");
             AaRange = cat.CreateEntry("AirStrikeAaRange", 4000f, null, "Battle (test): range (m) of the defending ships' anti-aircraft fire");
-            AaPerGun = cat.CreateEntry("AirStrikeAaPerGun", 0.002f, null, "Battle (test): chance per second per light gun of 2-3 in in range to shoot down an aircraft (scaled by the year)");
+            AaPerGun = cat.CreateEntry("AirStrikeAaPerGun", 0.00004f, null, "Battle (test): chance per second per light gun of 2-3 in in range to shoot down an aircraft (scaled by the year)");
             SplashRange = cat.CreateEntry("AirStrikeSplashRange", 2700f, null, "Battle (test): range (m) within which guns over 3 in fire into the sea ahead of torpedo aircraft running in low, to bring them down with the splashes");
-            SplashPerGun = cat.CreateEntry("AirStrikeSplashPerGun", 0.0008f, null, "Battle (test): chance per second per gun over 3 in to bring down a low-flying torpedo aircraft with its splashes");
+            SplashPerGun = cat.CreateEntry("AirStrikeSplashPerGun", 0.00002f, null, "Battle (test): chance per second per gun over 3 in to bring down a low-flying torpedo aircraft with its splashes");
             TorpRunM = cat.CreateEntry("AirStrikeTorpedoRun", 3000f, null, "Battle (test): run of an aerial torpedo (m)");
             TorpKn = cat.CreateEntry("AirStrikeTorpedoSpeed", 35f, null, "Battle (test): speed of an aerial torpedo (kn)");
             Scale = cat.CreateEntry("AirStrikeAircraftScale", 2.5f, null, "Battle (test): drawing scale of the aircraft (1 = true size, about 12 m span)");
@@ -55,12 +55,12 @@ namespace DipGgFixes
         static IntPtr battle; static float battleT; static int wavesSent; static float nextWave;
         static readonly Dictionary<int, int[]> waveStats = new Dictionary<int, int[]>(); // wave -> sent, dropped, lost, of them to the splash barrage
         static readonly Dictionary<IntPtr, (int light, int heavy)> aaGuns = new Dictionary<IntPtr, (int light, int heavy)>();
-        static int errors;
+        static int errors, drops; static readonly HashSet<int> reported = new HashSet<int>();
 
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            planes.Clear(); waveStats.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            planes.Clear(); waveStats.Clear(); reported.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -71,7 +71,8 @@ namespace DipGgFixes
                 if (!GameManager.IsBattle) { if (planes.Count > 0 || battle != IntPtr.Zero) { Summary(); Clear(); battle = IntPtr.Zero; } return; }
                 var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
                 if (b == null || b.Ships == null || b.Ships.Count == 0) return;
-                if (b.Pointer != battle) { Clear(); battle = b.Pointer; nextWave = FirstAfter.Value; }
+                if (b.Pointer != battle) { Clear(); battle = b.Pointer; nextWave = FirstAfter.Value; lastTube = null; }
+                if (lastTube == null) lastTube = FindTube(b.Ships);
                 float dt = Time.deltaTime; if (dt <= 0f) return;
                 battleT += dt;
                 if (wavesSent < Waves.Value && battleT >= nextWave)
@@ -83,6 +84,15 @@ namespace DipGgFixes
                     wavesSent++;
                 }
                 Move(dt, b.Ships);
+                // a wave whose aircraft have all gone (away or down): its result once
+                foreach (var kv in waveStats)
+                {
+                    if (reported.Contains(kv.Key)) continue;
+                    bool any = false; foreach (var q in planes) if (q.Wave == kv.Key) { any = true; break; }
+                    if (any) continue;
+                    reported.Add(kv.Key);
+                    Log($"wave {kv.Key} result: {kv.Value[0]} aircraft, {kv.Value[1]} torpedoes dropped, {kv.Value[2]} shot down ({kv.Value[3]} by the splash barrage of heavy guns)");
+                }
             }
             catch (Exception e) { if (errors++ < 10) Log("tick: " + e.Message); }
         }
@@ -100,9 +110,11 @@ namespace DipGgFixes
                 else
                 {
                     aiC += s.transform.position; aiN++;
-                    if (tube == null) { try { var ts = s.torpedoesAll; if (ts != null && ts.Count > 0) tube = ts[0]; } catch { } }
                 }
             }
+            // 1.11.375 (test 29.10 13:11: the AI surface ships were all sunk by the second wave and it found no tube): the torpedo
+            // data come from a tube found at the start of the battle; the aircraft fly from beyond the horizon, not from those ships
+            tube = lastTube ?? FindTube(ships); if (tube != null) lastTube = tube;
             int wave = wavesSent + 1;
             if (target == null) { Log($"wave {wave}: no target of the player's side"); return; }
             if (tube == null) { Log($"wave {wave}: no ship of the attacking side carries torpedo tubes - torpedo data unavailable, wave not sent"); return; }
@@ -121,9 +133,17 @@ namespace DipGgFixes
                 planes.Add(pl);
             }
             Log($"wave {wave}: {n} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
-            lastTube = tube;
         }
         static Part lastTube;
+        static Part FindTube(Il2CppSystem.Collections.Generic.List<Ship> ships)
+        {
+            for (int i = 0; ships != null && i < ships.Count; i++)
+            {
+                var s = ships[i]; if (s == null || Player(s)) continue;
+                try { var ts = s.torpedoesAll; if (ts != null && ts.Count > 0 && ts[0] != null) return ts[0]; } catch { }
+            }
+            return null;
+        }
 
         static GameObject Build()
         {
@@ -214,8 +234,9 @@ namespace DipGgFixes
                 var dir = (aim - start); dir.y = 0f; dir.Normalize();
                 float speedArg = TorpedoSettings.World(tv);
                 float duration = TorpRunM.Value / Mathf.Max(0.1f, speedArg);
-                Torpedo.Create(lastTube, start, dir, duration, speedArg);
+                var tor = Torpedo.Create(lastTube, start, dir, duration, speedArg);
                 waveStats[p.Wave][1]++;
+                if (drops++ < 30) Log($"wave {p.Wave}: torpedo dropped {dist:0} m from {p.Target.name}, {Vector3.Angle(f, -dir):0} deg off her bow{(tor == null ? " - the game returned no torpedo" : "")}");
             }
             catch (Exception e) { if (errors++ < 10) Log("drop: " + e.Message); }
         }
@@ -274,7 +295,7 @@ namespace DipGgFixes
 
         static void Summary()
         {
-            foreach (var kv in waveStats) Log($"wave {kv.Key} result: {kv.Value[0]} aircraft, {kv.Value[1]} torpedoes dropped, {kv.Value[2]} shot down ({kv.Value[3]} by the splash barrage of heavy guns)");
+            foreach (var kv in waveStats) if (!reported.Contains(kv.Key)) Log($"wave {kv.Key} result: {kv.Value[0]} aircraft, {kv.Value[1]} torpedoes dropped, {kv.Value[2]} shot down ({kv.Value[3]} by the splash barrage of heavy guns)");
         }
     }
 }
