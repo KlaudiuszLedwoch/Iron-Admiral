@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.371", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.372", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -262,6 +262,7 @@ namespace DipGgFixes
             try { DesignerText.Tick(); } catch { } // 1.11.357
             try { OtherMods.ReportOverlapsOnce(Harm); } catch { } // 1.11.361
             try { EnemyProfile.Tick(); } catch { } // 1.11.368 (#84)
+            try { AirStrike.Tick(); } catch { } // 1.11.372 (#85)
             try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251, 1.11.259
             try { HistDesigner.Tick(); } catch { }
             try { AutoTest.Tick(); } catch { } try { RelationRepair.Tick(); } catch { } // 1.11.286
@@ -649,6 +650,7 @@ namespace DipGgFixes
             StackedGuns.CreatePrefs(cat); // 1.11.364 (#81)
             TransportSpeed.CreatePrefs(cat); TransportSpeed.CreateArmedPrefs(cat); // 1.11.365, 1.11.366 (#79)
             EnemyProfile.CreatePrefs(cat); // 1.11.368 (#84)
+            AirStrike.CreatePrefs(cat); // 1.11.372 (#85)
             Thanks.CreatePrefs(cat); // 1.11.370
             BattleHour.CreatePrefs(cat); // 1.11.334 (#57)
             DesignRecorder.CreatePrefs(cat); // 1.11.310 (#64)
