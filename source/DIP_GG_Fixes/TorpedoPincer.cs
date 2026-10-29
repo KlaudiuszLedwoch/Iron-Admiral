@@ -32,11 +32,13 @@ namespace DipGgFixes
         enum Role { None, Bow, Stern }
         static readonly Dictionary<IntPtr, Role> roles = new Dictionary<IntPtr, Role>();
         static readonly HashSet<IntPtr> split = new HashSet<IntPtr>();
+        static readonly Dictionary<IntPtr, IntPtr> bowBy = new Dictionary<IntPtr, IntPtr>();    // leading ship -> flotilla taking it from ahead
+        static readonly Dictionary<IntPtr, IntPtr> sternBy = new Dictionary<IntPtr, IntPtr>();  // last ship -> flotilla taking it from the quarter
         static IntPtr battle;
         static void Reset()
         {
             var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
-            IntPtr bp = b != null ? b.Pointer : IntPtr.Zero; if (bp != battle) { battle = bp; split.Clear(); roles.Clear(); }
+            IntPtr bp = b != null ? b.Pointer : IntPtr.Zero; if (bp != battle) { battle = bp; split.Clear(); roles.Clear(); bowBy.Clear(); sternBy.Clear(); }
         }
 
         // the column 'nearest' belongs to, ordered from the leading ship to the last one
@@ -81,8 +83,16 @@ namespace DipGgFixes
                     bool ahead = false;
                     try { var lt = col[0].transform; var d = leader.transform.position - lt.position; d.y = 0f; ahead = f.sqrMagnitude > 0.01f && UnityEngine.Vector3.Dot(d, f) > 0f; } catch { }
                     role = (vs >= vt * 1.05f || (ahead && vs >= vt * 0.9f)) ? Role.Bow : Role.Stern;
+                    // 1.11.358 (test 29.10 07:05: two flotillas of 3 - too small to split - both went for the leading ship from ahead,
+                    // no two-way attack in 4 samples): when another flotilla already takes the leading ship of this column from ahead
+                    // and nobody takes the last one, this flotilla takes the last ship from the quarter
+                    bool second = false;
+                    if (role == Role.Bow && bowBy.TryGetValue(col[0].Pointer, out var other) && other != div.Pointer && !sternBy.ContainsKey(col[col.Count - 1].Pointer)) { role = Role.Stern; second = true; }
                     roles[div.Pointer] = role;
-                    Log($"{leader.name}: torpedo attack {(role == Role.Bow ? "from ahead on the leading ship" : "from the quarter on the last ship")} of a column of {col.Count} (speed {vs:0.0} vs {vt:0.0}{(ahead ? ", already ahead of her beam" : "")})");
+                    if (role == Role.Bow) { if (!bowBy.ContainsKey(col[0].Pointer)) bowBy[col[0].Pointer] = div.Pointer; }
+                    else if (!sternBy.ContainsKey(col[col.Count - 1].Pointer)) sternBy[col[col.Count - 1].Pointer] = div.Pointer;
+                    if (second) Log($"{leader.name}: two-way torpedo attack - another flotilla takes the leading ship from ahead, this one the last ship of the column of {col.Count} from the quarter (speed {vs:0.0} vs {vt:0.0})");
+                    else Log($"{leader.name}: torpedo attack {(role == Role.Bow ? "from ahead on the leading ship" : "from the quarter on the last ship")} of a column of {col.Count} (speed {vs:0.0} vs {vt:0.0}{(ahead ? ", already ahead of her beam" : "")})");
                 }
                 var t = role == Role.Bow ? col[0] : col[col.Count - 1];
                 dist = BattleAi.Dist(leader, t);
