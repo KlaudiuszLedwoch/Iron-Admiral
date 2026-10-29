@@ -246,40 +246,55 @@ namespace DipGgFixes
         static float nextShot; static int shots;
         // 1.11.378 (first series 29.10 15:04: the unattended test keeps the Start Battle panel on screen and the battle camera was
         // not on the aircraft): the series is rendered by a camera of its own placed at the aircraft, to a texture, without the UI
+        // 1.11.379 (author 29.10 15:51: "screenshots from the ship, from the observer - the player watching; make the ship visible"):
+        // the series is rendered through the game's own battle camera (real sea), moved for that one render to an observer at the
+        // attacked ship - low, behind the ship on the side away from the aircraft, the ship in the foreground and the aircraft beyond
+        // it; every other shot from her bridge. Name tags are left out (UI layer), the interface is not on the picture. Separate
+        // timers for the run-in series and for drops / aircraft shot down.
+        static float nextDrop;
         static void Shot(string tag, float gap, Plane p = null)
         {
-            if (Screens == null || !Screens.Value || shots >= 60 || Time.realtimeSinceStartup < nextShot) return;
-            nextShot = Time.realtimeSinceStartup + gap; shots++;
+            if (Screens == null || !Screens.Value || shots >= 60) return;
+            bool ev = tag.EndsWith("drop") || tag.EndsWith("shotdown");
+            if (ev) { if (Time.realtimeSinceStartup < nextDrop) return; nextDrop = Time.realtimeSinceStartup + gap; }
+            else { if (Time.realtimeSinceStartup < nextShot) return; nextShot = Time.realtimeSinceStartup + gap; }
+            shots++;
             if (p == null || p.Go == null || p.Target == null || !View(p, tag)) AutoTest.Shot("airstrike_" + tag);
         }
         static Type convT; static System.Reflection.MethodInfo encode;
         static bool View(Plane p, string tag)
         {
-            GameObject go = null; RenderTexture rt = null; Texture2D tex = null;
+            RenderTexture rt = null; Texture2D tex = null; Camera c = null;
+            Vector3 oPos = Vector3.zero; Quaternion oRot = Quaternion.identity; float oFov = 60f; int oMask = -1; RenderTexture oTarget = null; bool moved = false;
             try
             {
-                var tp = p.Target.transform.position; var pp = p.Pos; var dir = p.Dir.sqrMagnitude > 0.01f ? p.Dir : (tp - pp).normalized;
-                Vector3 cam, look;
-                if (tag.EndsWith("drop") || tag.EndsWith("shotdown"))
-                {   // from the side, wide: the aircraft, the target and the water between them
-                    var mid = (pp + tp) * 0.5f; mid.y = 0f; var side = Vector3.Cross(Vector3.up, (tp - pp).normalized);
-                    cam = mid + side * 1400f + Vector3.up * 260f; look = mid + Vector3.up * 20f;
+                var st = p.Target.transform; var tp = st.position; tp.y = 0f; var pp = p.Pos;
+                var toPlane = pp - tp; toPlane.y = 0f; if (toPlane.sqrMagnitude < 1f) toPlane = st.right; toPlane.Normalize();
+                var f = st.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) f = Vector3.forward; f.Normalize();
+                Vector3 cam, look; float fov;
+                bool bridge = (shots % 2) == 0 && !tag.EndsWith("shotdown");
+                if (bridge)
+                {   // on the bridge: a little abaft the bow, about 30 m up, looking out at the aircraft over the ship's side
+                    cam = tp + f * 25f + Vector3.up * 32f - toPlane * 8f;
+                    look = new Vector3(pp.x, Mathf.Max(20f, pp.y * 0.6f), pp.z);
+                    fov = 55f;
                 }
                 else
-                {   // behind and above the aircraft, looking past it at the target
-                    var flat = dir; flat.y = 0f; flat.Normalize();
-                    cam = pp - flat * 90f * Scale.Value + Vector3.up * 25f * Scale.Value; look = Vector3.Lerp(pp, tp, 0.5f);
+                {   // observer on the water: behind the ship on the side away from the aircraft, the ship in the foreground
+                    cam = tp - toPlane * 650f - f * 250f + Vector3.up * 70f;
+                    look = Vector3.Lerp(tp, new Vector3(pp.x, 0f, pp.z), 0.35f) + Vector3.up * 40f;
+                    fov = 50f;
                 }
-                go = new GameObject("IA_AirStrike_Camera");
-                var c = go.AddComponent<Camera>();
-                var main = Camera.main; if (main != null) c.CopyFrom(main);
-                c.enabled = false; c.fieldOfView = 45f; c.nearClipPlane = 1f; c.farClipPlane = 60000f;
-                go.transform.position = cam; go.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up);
+                c = Camera.main; if (c == null) return false;
+                oPos = c.transform.position; oRot = c.transform.rotation; oFov = c.fieldOfView; oMask = c.cullingMask; oTarget = c.targetTexture; moved = true;
+                int ui = LayerMask.NameToLayer("UI");
+                c.transform.position = cam; c.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up); c.fieldOfView = fov;
+                if (ui >= 0) c.cullingMask = oMask & ~(1 << ui);
                 int w = 1920, h = 1080;
                 rt = new RenderTexture(w, h, 24); c.targetTexture = rt; c.Render();
                 var prev = RenderTexture.active; RenderTexture.active = rt;
                 tex = new Texture2D(w, h, TextureFormat.RGB24, false); tex.ReadPixels(new Rect(0, 0, w, h), 0, 0); tex.Apply();
-                RenderTexture.active = prev; c.targetTexture = null;
+                RenderTexture.active = prev;
                 if (encode == null)
                 {
                     foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) { convT = a.GetType("UnityEngine.ImageConversion"); if (convT != null) break; }
@@ -290,17 +305,17 @@ namespace DipGgFixes
                 if (res == null) return false;
                 var bytes = new byte[res.Length]; for (int i = 0; i < bytes.Length; i++) bytes[i] = res[i];
                 var dirOut = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "screens"); System.IO.Directory.CreateDirectory(dirOut);
-                var f = System.IO.Path.Combine(dirOut, $"{DateTime.Now:yyyyMMdd_HHmmss}_{shots:00}_airstrike_{tag}.png");
-                System.IO.File.WriteAllBytes(f, bytes);
-                Log("screenshot " + f);
+                var file = System.IO.Path.Combine(dirOut, $"{DateTime.Now:yyyyMMdd_HHmmss}_{shots:00}_airstrike_{tag}_{(bridge ? "bridge" : "observer")}.png");
+                System.IO.File.WriteAllBytes(file, bytes);
+                Log("screenshot " + file);
                 return true;
             }
             catch (Exception e) { if (errors++ < 10) Log("screenshot view: " + e.Message); return false; }
             finally
             {
+                if (moved && c != null) { try { c.targetTexture = oTarget; c.transform.position = oPos; c.transform.rotation = oRot; c.fieldOfView = oFov; c.cullingMask = oMask; } catch { } }
                 try { if (tex != null) UnityEngine.Object.Destroy(tex); } catch { }
                 try { if (rt != null) { rt.Release(); UnityEngine.Object.Destroy(rt); } } catch { }
-                try { if (go != null) UnityEngine.Object.Destroy(go); } catch { }
             }
         }
 
