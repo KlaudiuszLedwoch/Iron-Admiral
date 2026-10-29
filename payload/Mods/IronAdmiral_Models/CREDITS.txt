@@ -9,3 +9,10 @@ sopwith_camel.iam
   Source: https://sketchfab.com/3d-models/sopwith-camel-red-baron-arcade-4f97f09e936945c7b4bf1bc90b64589c
   License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
   Changes: simplified and converted for Iron Admiral (see above).
+
+short_184.iam (+ short_184_t*.png)
+  "Short Admiralty Type 184" by mgg8 - https://sketchfab.com/3d-models/short-admiralty-type-184-526e88301c1c40baa451374b85948c3f
+  Licence: CC0 1.0 (public domain). Visual interpretation; some details and markings are approximate (author's note).
+  Changes: simplified (about 36,000 triangles), textures reduced to 512 px, ailerons, elevator and rudder cut out of the mesh
+  and hinged, propeller separated to spin. Aviation Gazetteer: https://airmuseums.co.uk/hangar/short-184
+

@@ -33,9 +33,9 @@ namespace DipGgFixes
             On = cat.CreateEntry("AirStrikeTest", false, null, "Battle (test): torpedo aircraft of the AI side come in waves from beyond the horizon in daylight and attack the largest ship of the player's side from both beams; light guns of 2-3 in on the defending ships can shoot them down, heavier guns fire splash barrages at aircraft running in low (prototype of carrier and shore-based air strikes, #85)");
             Screens = cat.CreateEntry("AirStrikeScreenshots", false, null, "Battle (test): a series of screenshots of every air strike - the run-in, each torpedo drop and each aircraft shot down (UserData\\IronAdmiral\\screens)");
             Carrier = cat.CreateEntry("CustomBattleCarrier", true, null, "Battle (beta): in a custom battle of the aircraft model's years (CustomBattleCarrierFrom-To) the player has a carrier beyond the horizon - its torpedo aircraft attack the enemy's largest ship in waves by day");
-            CarrierFrom = cat.CreateEntry("CustomBattleCarrierFrom", 1917, null, "Battle (beta): first year of custom battles with our carrier (the Sopwith Camel flew from HMS Furious from 1918)");
+            CarrierFrom = cat.CreateEntry("CustomBattleCarrierFrom", 1915, null, "Battle (beta): first year of custom battles with our carrier (Short 184 seaplanes flew from the seaplane carrier HMS Ben-my-Chree from 1915)");
             CarrierTo = cat.CreateEntry("CustomBattleCarrierTo", 1925, null, "Battle (beta): last year of custom battles with our carrier");
-            Model = cat.CreateEntry("AirStrikeModel", "sopwith_camel", null, "Battle (test): aircraft model from Mods\\IronAdmiral_Models (file name without .iam); empty or missing = aircraft drawn from simple solids");
+            Model = cat.CreateEntry("AirStrikeModel", "short_184", null, "Battle (test): aircraft model from Mods\\IronAdmiral_Models (file name without .iam); empty or missing = aircraft drawn from simple solids");
             Waves = cat.CreateEntry("AirStrikeWaves", 3, null, "Battle (test): number of air strike waves per battle");
             PerWave = cat.CreateEntry("AirStrikeAircraftPerWave", 6, null, "Battle (test): torpedo aircraft in one wave");
             FirstAfter = cat.CreateEntry("AirStrikeFirstAfter", 60f, null, "Battle (test): seconds of battle time before the first wave arrives");
@@ -62,6 +62,7 @@ namespace DipGgFixes
             public GameObject Go, Torp; public Transform Prop; public Phase P; public Vector3 Pos, Dir; public Ship Target; public float Side; public bool Dropped;
             public float Fall; public int Wave; public float RockFrom = -1f; public HashSet<IntPtr> Greeted = new HashSet<IntPtr>();
             public float SlotOff, Seed, Roll;   // 1.11.391: own place in the attack (along the target), turbulence seed, bank angle
+            public AirModels.Ctl Ctl; public float RollVis, Ail, Elev, Rud;   // 1.11.393: moving control surfaces of the model
         }
         static readonly List<Plane> planes = new List<Plane>();
         static IntPtr battle; static float battleT; static int wavesSent; static float nextWave;
@@ -95,7 +96,7 @@ namespace DipGgFixes
                     bool custom = false; try { custom = GameManager.IsCustomBattle; } catch { }
                     atkIsPlayer = car && custom && yr >= CarrierFrom.Value && yr <= CarrierTo.Value;
                     active = atkIsPlayer || test;
-                    if (atkIsPlayer) Log($"custom battle {yr}: our carrier (HMS Furious type, Sopwith Camels) is beyond the horizon - its waves attack the enemy's largest ship");
+                    if (atkIsPlayer) Log($"custom battle {yr}: our carrier ({CarrierName()}, {TypeName()}) is beyond the horizon - its waves attack the enemy's largest ship");
                     else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
                 }
                 if (!active) return;
@@ -166,11 +167,12 @@ namespace DipGgFixes
                 int slot = k / 2, perSide = (n + (side > 0 ? 1 : 0)) / 2; float sp = Spacing.Value;
                 var start = tp + from * (startDist + slot * sp * 0.5f) + right * side * (800f + slot * sp) + Vector3.up * (300f + slot * 25f);
                 int yr = 1925; try { yr = (int)target.GetYear(target); } catch { }
-                var pl = new Plane { Go = Build(yr), Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
+                var go = Build(yr);
+                var pl = new Plane { Go = go, Ctl = lastCtl, Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
                     SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f };
                 planes.Add(pl);
             }
-            try { Dispatch.Air(atkIsPlayer ? $"HMS Furious: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
+            try { Dispatch.Air(atkIsPlayer ? $"{CarrierName()}: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
             Log($"wave {wave}: start {startDist / 1000f:0.0} km from the target, behind the attacking fleet");
             Log($"wave {wave}: {n} {(atkIsPlayer ? "of our" : "enemy")} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
         }
@@ -201,23 +203,25 @@ namespace DipGgFixes
         //    span about 14.2 m, length about 8.7 m (dimensions from memory, not from a source);
         //  - from 1930: Fairey Swordfish type - radial engine with a ring cowling, aluminium dope, three open cockpits, span about
         //    13.9 m, length about 10.9 m (dimensions from memory, not from a source).
-        static Transform lastProp; static GameObject lastTorp;
+        static Transform lastProp; static GameObject lastTorp; static AirModels.Ctl lastCtl;
         static GameObject Build(int year)
         {
+            lastCtl = null;
             // 1.11.383: a model from Mods\IronAdmiral_Models when there is one (AirStrikeModel), with the torpedo slung under it
             var model = Model != null ? Model.Value : "";
             if (!string.IsNullOrEmpty(model))
             {
-                var mg = AirModels.Spawn(model, Scale.Value);
+                var mg = AirModels.Spawn(model, Scale.Value, out var ctl);
                 if (mg != null)
                 {
+                    lastCtl = ctl;
                     var mt = new GameObject("torpedo"); mt.transform.SetParent(mg.transform, false);
                     var body = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     try { UnityEngine.Object.Destroy(body.GetComponent<Collider>()); } catch { }
                     try { body.GetComponent<Renderer>().material.color = new Color(0.20f, 0.21f, 0.22f); } catch { }
                     body.transform.SetParent(mt.transform, false); body.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
                     body.transform.localScale = new Vector3(0.45f, 2.3f, 0.45f) * Scale.Value; body.transform.localPosition = new Vector3(0f, -1.0f, 0f) * Scale.Value;
-                    lastProp = null; lastTorp = mt;
+                    lastProp = ctl != null ? ctl.Prop : null; lastTorp = mt;
                     return mg;
                 }
             }
@@ -425,7 +429,6 @@ namespace DipGgFixes
                             var s = ships[si]; if (!Alive(s) || Defender(s) || p.Greeted.Contains(s.Pointer)) continue;
                             if (Flat(s.transform.position - p.Pos) < 450f) { p.Greeted.Add(s.Pointer); if (p.RockFrom < 0f || Time.time - p.RockFrom > 3.5f) p.RockFrom = Time.time; Radio(p.Wave, "greet|" + Dispatch.Ship(s.name), atkIsPlayer ? Pick($"Waggle your wings for the lads on {Dispatch.Ship(s.name)}!", $"There's {Dispatch.Ship(s.name)} - give them a wave, chaps!", $"{Dispatch.Ship(s.name)} below - they're cheering us on!") : "Enemy aircraft passing over their own fleet.", false); }
                         }
-                    if (p.RockFrom >= 0f) { float a = Time.time - p.RockFrom; if (a < 3.2f) p.Go.transform.rotation *= Quaternion.Euler(0f, 0f, 25f * Mathf.Sin(a * 6f) * (1f - a / 3.2f * 0.4f)); }
                     try { if (p.Prop != null) p.Prop.Rotate(0f, 0f, 1800f * dt, Space.Self); } catch { }
                     if (p.P != Phase.Away || p.Pos.y < 200f) Aa(p, dt, ships);
                 }
@@ -453,7 +456,27 @@ namespace DipGgFixes
             var pos = p.Pos + Vector3.up * (N(0f, 0.55f) * 3.5f + N(7f, 2.1f) * 0.8f) * amp + right * N(13f, 0.35f) * 5f * amp;
             p.Go.transform.position = pos;
             float pitch = N(21f, 0.9f) * 3f * amp, yaw = N(29f, 0.6f) * 2.5f * amp, roll = (N(37f, 0.8f) * 6f + N(43f, 3.0f) * 1.5f) * amp;
-            p.Go.transform.rotation = Quaternion.LookRotation(p.Dir, Vector3.up) * Quaternion.Euler(pitch, yaw, p.Roll + roll);
+            float rock = 0f;
+            if (p.RockFrom >= 0f) { float a = Time.time - p.RockFrom; if (a < 3.2f) rock = 25f * Mathf.Sin(a * 6f) * (1f - a / 3.2f * 0.4f); }
+            float rollVis = p.Roll + roll + rock;
+            p.Go.transform.rotation = Quaternion.LookRotation(p.Dir, Vector3.up) * Quaternion.Euler(pitch, yaw, rollVis);
+            // 1.11.393 (author 29.10 18:15: "with ailerons, best"): the model's moving parts follow the motion - the ailerons with the
+            // rate of roll (bank, gusts, the wing rocking), the elevator with the climb or dive and the pitch bumps, the rudder with
+            // the rate of turn and the yaw bumps; each moves smoothly, at most about 20 degrees
+            if (p.Ctl != null && p.Ctl.Surfaces.Count > 0 && dt > 0f)
+            {
+                float rr = (rollVis - p.RollVis) / dt; p.RollVis = rollVis;
+                float sm = Mathf.Clamp01(dt * 6f);
+                p.Ail = Mathf.Lerp(p.Ail, Mathf.Clamp(rr * 0.25f, -20f, 20f), sm);
+                p.Elev = Mathf.Lerp(p.Elev, Mathf.Clamp(-p.Dir.y * 90f + pitch * 3f, -20f, 20f), sm);
+                p.Rud = Mathf.Lerp(p.Rud, Mathf.Clamp(rate * 0.4f + yaw * 3f, -20f, 20f), sm);
+                foreach (var (tr, axis, role) in p.Ctl.Surfaces)
+                {
+                    if (tr == null) continue;
+                    float ang = role == 2 ? p.Ail : role == 3 ? -p.Ail : role == 4 ? p.Elev : p.Rud;
+                    tr.localRotation = Quaternion.AngleAxis(ang, axis);
+                }
+            }
         }
 
         // 1.11.391 (author 29.10 17:57: "I didn't see a barrage of the whole fleet - the whole fleet should fire"): every defending
@@ -812,8 +835,10 @@ namespace DipGgFixes
         static readonly Dictionary<int, (string text, float t)> radio = new Dictionary<int, (string, float)>();
         static readonly HashSet<string> said = new HashSet<string>();
         static string Pick(params string[] v) { return v[rnd.Next(v.Length)]; }
-        static string Flight(int wave) { return atkIsPlayer ? $"Flight {(char)('A' + (wave - 1) % 26)}, HMS Furious" : $"Enemy torpedo flight {wave}"; }
-        static string TypeName() { var m = Model != null ? Model.Value : ""; return m == "sopwith_camel" ? "Sopwith Camel" : string.IsNullOrEmpty(m) ? "torpedo biplane" : m.Replace('_', ' '); }
+        static string Flight(int wave) { return atkIsPlayer ? $"Flight {(char)('A' + (wave - 1) % 26)}, {CarrierName()}" : $"Enemy torpedo flight {wave}"; }
+        // 1.11.393: the Short 184 flew from seaplane carriers - HMS Ben-my-Chree's Short 184 made the first sinking by an air-dropped torpedo (Dardanelles, August 1915)
+        static string CarrierName() { var m = Model != null ? Model.Value : ""; return m == "short_184" ? "HMS Ben-my-Chree" : "HMS Furious"; }
+        static string TypeName() { var m = Model != null ? Model.Value : ""; return m == "sopwith_camel" ? "Sopwith Camel" : m == "short_184" ? "Short 184" : string.IsNullOrEmpty(m) ? "torpedo biplane" : m.Replace('_', ' '); }
         static void Radio(int wave, string key, string text, bool log = true)
         {
             if (key != null && !said.Add(wave + "|" + key)) return;

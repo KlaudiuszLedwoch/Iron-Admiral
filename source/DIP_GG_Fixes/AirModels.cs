@@ -4,6 +4,10 @@
 // pm\models\glb2ia.py: node transforms baked, tiny parts dropped, every part simplified (fast quadric reduction), textures down to
 // 512 px, double-sided materials given back faces. Layout: 'IAM1', materials (rgba sRGB, texture file), meshes (material, vertices,
 // normals, uv, triangle indices), glTF coordinates in metres - converted here to Unity (x mirrored, winding reversed).
+// 1.11.393 (author 29.10 18:15: "find a proper model of the first torpedo aircraft, best with ailerons"): 'IAM2' (pm\models\
+// glb2ia2.py) adds moving parts cut out of the original mesh - each mesh carries a role (1 propeller, 2 left aileron, 3 right
+// aileron, 4 elevator, 5 rudder), a hinge point and a hinge axis; its vertices are relative to the hinge. Each moving part gets a
+// pivot of its own, which AirStrike turns with the aircraft's motion.
 // Credits and licences: Mods\IronAdmiral_Models\CREDITS.txt.
 using System;
 using System.Collections.Generic;
@@ -15,7 +19,9 @@ namespace DipGgFixes
 {
     internal static class AirModels
     {
-        class Model { public List<(Mesh mesh, Material mat)> Parts = new List<(Mesh, Material)>(); public Bounds B; }
+        internal class Ctl { public Transform Prop; public readonly List<(Transform t, Vector3 axis, int role)> Surfaces = new List<(Transform, Vector3, int)>(); }
+        class Part { public Mesh Mesh; public Material Mat; public int Role; public Vector3 Pivot, Axis; }
+        class Model { public List<Part> Parts = new List<Part>(); public Bounds B; }
         static readonly Dictionary<string, Model> cache = new Dictionary<string, Model>();
         static readonly HashSet<string> failed = new HashSet<string>();
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][AirModels] " + m); }
@@ -53,7 +59,8 @@ namespace DipGgFixes
                 if (!File.Exists(path)) { failed.Add(name); Log("no model file " + path + " - the aircraft are drawn from simple solids"); return null; }
                 using (var br = new BinaryReader(File.OpenRead(path)))
                 {
-                    if (new string(br.ReadChars(4)) != "IAM1") throw new Exception("not an IAM1 file");
+                    string magic = new string(br.ReadChars(4)); bool v2 = magic == "IAM2";
+                    if (magic != "IAM1" && !v2) throw new Exception("not an IAM1/IAM2 file");
                     int nm = br.ReadInt32(); var mats = new List<Material>();
                     var shader = Shader.Find("Standard");
                     for (int i = 0; i < nm; i++)
@@ -65,7 +72,7 @@ namespace DipGgFixes
                         if (tex != "") { var t = LoadTex(Path.Combine(Dir(), tex)); if (t != null) mat.mainTexture = t; }
                         mats.Add(mat);
                     }
-                    int nme = br.ReadInt32(); m = new Model(); bool first = true; int tris = 0;
+                    int nme = br.ReadInt32(); m = new Model(); bool first = true; int tris = 0, moving = 0;
                     for (int k = 0; k < nme; k++)
                     {
                         int mi = br.ReadInt32(), vc = br.ReadInt32();
@@ -75,35 +82,61 @@ namespace DipGgFixes
                         for (int i = 0; i < vc; i++) uv[i] = new Vector2(br.ReadSingle(), 1f - br.ReadSingle());   // glTF uv origin top-left
                         int ic = br.ReadInt32(); var idx = new int[ic];
                         for (int i = 0; i < ic; i += 3) { int a = br.ReadInt32(), b = br.ReadInt32(), c = br.ReadInt32(); idx[i] = a; idx[i + 1] = c; idx[i + 2] = b; }   // mirrored: reverse winding
+                        var p = new Part();
+                        if (v2)
+                        {
+                            p.Role = br.ReadInt32();
+                            p.Pivot = new Vector3(-br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+                            p.Axis = new Vector3(-br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+                            if (p.Role > 0) moving++;
+                        }
                         var mesh = new Mesh(); mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                         mesh.vertices = v; mesh.normals = n; mesh.uv = uv; mesh.triangles = idx; mesh.RecalculateBounds();
-                        m.Parts.Add((mesh, mi >= 0 && mi < mats.Count ? mats[mi] : mats.Count > 0 ? mats[0] : new Material(shader)));
-                        if (first) { m.B = mesh.bounds; first = false; } else m.B.Encapsulate(mesh.bounds);
+                        p.Mesh = mesh; p.Mat = mi >= 0 && mi < mats.Count ? mats[mi] : mats.Count > 0 ? mats[0] : new Material(shader);
+                        m.Parts.Add(p);
+                        var bb = mesh.bounds; bb.center += p.Pivot;
+                        if (first) { m.B = bb; first = false; } else m.B.Encapsulate(bb);
                         tris += ic / 3;
                     }
                     cache[name] = m;
-                    Log($"{name}: {m.Parts.Count} part(s), {tris} triangles, {nm} material(s), size {m.B.size.x:0.0} x {m.B.size.y:0.0} x {m.B.size.z:0.0} m");
+                    Log($"{name}: {m.Parts.Count} part(s) ({moving} moving), {tris} triangles, {nm} material(s), size {m.B.size.x:0.0} x {m.B.size.y:0.0} x {m.B.size.z:0.0} m");
                     return m;
                 }
             }
             catch (Exception e) { failed.Add(name); Log($"{name}: {e.Message} - the aircraft are drawn from simple solids"); return null; }
         }
 
-        // a new aircraft of model 'name' under 'parent', its centre at the parent's origin, nose along +z; null = no model
-        internal static GameObject Spawn(string name, float scale)
+        // a new aircraft of model 'name', its centre at the root's origin, nose along +z; null = no model
+        internal static GameObject Spawn(string name, float scale) { return Spawn(name, scale, out _); }
+        internal static GameObject Spawn(string name, float scale, out Ctl ctl)
         {
+            ctl = null;
             var m = Load(name); if (m == null) return null;
+            ctl = new Ctl();
             var root = new GameObject("IA_AirModel_" + name);
             var body = new GameObject("body"); body.transform.SetParent(root.transform, false);
             body.transform.localScale = Vector3.one * scale; body.transform.localPosition = -m.B.center * scale;
-            foreach (var (mesh, mat) in m.Parts)
+            // one pivot per moving part with the same role and hinge
+            var pivots = new Dictionary<(int, Vector3), Transform>();
+            foreach (var p in m.Parts)
             {
-                var g = new GameObject("part"); g.transform.SetParent(body.transform, false);
-                g.AddComponent<MeshFilter>().sharedMesh = mesh;
-                var r = g.AddComponent<MeshRenderer>(); r.sharedMaterial = mat;
+                Transform parent = body.transform;
+                if (p.Role > 0)
+                {
+                    if (!pivots.TryGetValue((p.Role, p.Pivot), out parent))
+                    {
+                        var pg = new GameObject("pivot" + p.Role); pg.transform.SetParent(body.transform, false); pg.transform.localPosition = p.Pivot;
+                        parent = pg.transform; pivots[(p.Role, p.Pivot)] = parent;
+                        if (p.Role == 1) ctl.Prop = parent; else ctl.Surfaces.Add((parent, p.Axis, p.Role));
+                    }
+                }
+                var g = new GameObject("part"); g.transform.SetParent(parent, false);
+                g.AddComponent<MeshFilter>().sharedMesh = p.Mesh;
+                var r = g.AddComponent<MeshRenderer>(); r.sharedMaterial = p.Mat;
             }
             return root;
         }
         internal static float Length(string name) { var m = Load(name); return m != null ? m.B.size.z : 0f; }
+        internal static float Height(string name) { var m = Load(name); return m != null ? m.B.size.y : 0f; }
     }
 }
