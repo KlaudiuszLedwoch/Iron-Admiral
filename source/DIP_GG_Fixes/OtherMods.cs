@@ -30,6 +30,7 @@ namespace DipGgFixes
             { "LilyzTTS.dll", (2, "cheat: homing torpedoes for one nation") },
             { "LilyzMod.dll", (2, "cheat: homing torpedoes for one nation (Lilyz TTS)") },
             { "TaskForceNames.dll", (0, "names for your task forces - no known conflict") },
+            { "UADCarrierPrototype.dll", (1, "overlaps with Iron Admiral: economy, intelligence, fleet formations, auxiliary/logistics campaign, torpedoes - not tested together, double effects are possible") }, // 1.11.361
         };
 
         internal static void CreatePrefs(MelonPreferences_Category cat)

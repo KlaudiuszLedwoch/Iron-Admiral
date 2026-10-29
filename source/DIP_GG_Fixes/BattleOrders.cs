@@ -31,6 +31,9 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> Leash, BreakOff, ScoutSearch;
         internal static MelonPreferences_Entry<bool> ScoutSmoke; // 1.11.256
         internal static MelonPreferences_Entry<float> FinishDamage; // 1.11.285 (#1)
+        internal static MelonPreferences_Entry<bool> TorpSplit; // 1.11.361
+        static readonly Dictionary<IntPtr, bool> splitChoice = new Dictionary<IntPtr, bool>(); // division -> split chosen in the panel
+        static bool SplitWanted(Division div) { if (div != null && splitChoice.TryGetValue(div.Pointer, out var v)) return v; return TorpSplit == null || TorpSplit.Value; }
         internal static void CreateOrderPrefs(MelonPreferences_Category cat)
         {
             OrdersOn = cat.CreateEntry("DivisionOrders", true, null, "Battle: orders for the player's divisions with autonomy (screen, scout, torpedo attack, free action) - the division is led by the AI within the limits of the order; panel in battle or Alt+1..Alt+5");
@@ -39,6 +42,8 @@ namespace DipGgFixes
             ScoutSearch = cat.CreateEntry("ScoutSearchKm", 20f, null, "Battle: how far (km) ahead of the main body a scouting division ranges while searching for the enemy (sweeping left and right of the expected bearing)"); // 1.11.201
             ScoutSmoke = cat.CreateEntry("ScoutTowardsSmoke", true, null, "Battle: a scouting division heads for smoke reported by the lookouts (an enemy ship sighted but not identified yet) and closes until she can be made out"); // 1.11.256
             FinishDamage = cat.CreateEntry("DivisionFinishDamage", 0.4f, null, "Battle: estimated damage (0-1) from which an enemy ship counts as crippled for the Finish off order (Alt+7)"); // 1.11.285
+            // 1.11.361 (author 29.10): the split for an attack from two sides can be switched off - default here, per division in the panel
+            TorpSplit = cat.CreateEntry("DivisionTorpedoSplit", true, null, "Battle: under the Torpedo attack order a division of two or more ships splits in two and attacks from two sides (the detached part joins again after its salvo); the orders panel switches it for each division");
             BreakOff = cat.CreateEntry("DivisionBreakOffDamage", 0.5f, null, "Battle: average damage (0-1) at which a screening or scouting division breaks off and falls back behind the main body");
             // 1.11.330 (#69): the panel starts folded to a small tab, a key folds / unfolds it, the state is kept between battles
             PanelFolded = cat.CreateEntry("DivisionOrdersPanelFolded", true, null, "Battle: the division orders panel is folded to a small tab (kept between battles; written by the mod)");
@@ -174,7 +179,7 @@ namespace DipGgFixes
                 if (!States.TryGetValue(div.Pointer, out var ds)) { ds = new DivState { name = o.Name }; States[div.Pointer] = ds; }
                 // 1.11.303 (author 26.10, 20:29): a division of two or more ships splits by itself for a cross attack and joins again
                 // once the detached part has fired its torpedoes
-                if (!splitDone.Contains(div.Pointer)) { splitDone.Add(div.Pointer); SplitForCross(div, leader, o); }
+                if (!splitDone.Contains(div.Pointer)) { splitDone.Add(div.Pointer); if (SplitWanted(div)) SplitForCross(div, leader, o); else Log($"{o.Name}: torpedo attack as one group (split off)"); }
                 Issuing = true; OrderedCharge = true; try { TorpedoCharge(leader, div, ds, Doctrines.For(player), enemies, false); } finally { Issuing = false; OrderedCharge = false; }
                 if (splitFrom.TryGetValue(div.Pointer, out var orig) && ds.reason == "tubes empty - opening the range") Rejoin(div, orig, o);
                 OWhy(o, ds.reason ?? "torpedo attack"); return true;
@@ -572,7 +577,16 @@ namespace DipGgFixes
                 GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
                 if (why.Length > 60) why = why.Substring(0, 60) + "...";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 40f, 18f), $"<b>Division orders</b> (Alt+1..7, {panelKey} folds): {OrderNames[(int)cur]}{why}", oTitle);
+                GUI.Label(new Rect(x + 8f, y + 4f, w - 170f, 18f), $"<b>Division orders</b> (Alt+1..7, {panelKey} folds): {OrderNames[(int)cur]}{why}", oTitle);
+                // 1.11.361 (author 29.10): split or not for the Torpedo attack order, for this division (default: F10 DivisionTorpedoSplit)
+                bool sw = SplitWanted(div);
+                TorpedoSettings.BeginSmall();
+                try
+                {
+                    if (GUI.Button(new Rect(x + w - 160f, y + 3f, 128f, 18f), sw ? "Torpedo: split in two" : "Torpedo: one group"))
+                    { splitChoice[div.Pointer] = !sw; Log($"{(o != null ? o.Name : div.Pointer.ToString())}: torpedo attack {(!sw ? "splits in two" : "as one group")} (panel)"); }
+                }
+                finally { TorpedoSettings.EndSmall(); }
                 if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) oFolded = true;
                 float bw = (w - 16f - 4f * 6f) / 7f; TorpedoSettings.BeginSmall(); try {
                 for (int i = 0; i < OrderNames.Length; i++)
