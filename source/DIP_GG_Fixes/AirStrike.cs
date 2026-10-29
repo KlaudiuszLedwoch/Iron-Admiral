@@ -24,12 +24,16 @@ namespace DipGgFixes
     {
         internal static MelonPreferences_Entry<bool> On, Screens;
         internal static MelonPreferences_Entry<string> Model;
+        internal static MelonPreferences_Entry<bool> Carrier; internal static MelonPreferences_Entry<int> CarrierFrom, CarrierTo;
         internal static MelonPreferences_Entry<int> Waves, PerWave;
         internal static MelonPreferences_Entry<float> FirstAfter, Interval, SpeedMs, AaRange, AaPerGun, SplashRange, SplashPerGun, TorpRunM, TorpKn, Scale;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("AirStrikeTest", false, null, "Battle (test): torpedo aircraft of the AI side come in waves from beyond the horizon in daylight and attack the largest ship of the player's side from both beams; light guns of 2-3 in on the defending ships can shoot them down, heavier guns fire splash barrages at aircraft running in low (prototype of carrier and shore-based air strikes, #85)");
             Screens = cat.CreateEntry("AirStrikeScreenshots", false, null, "Battle (test): a series of screenshots of every air strike - the run-in, each torpedo drop and each aircraft shot down (UserData\\IronAdmiral\\screens)");
+            Carrier = cat.CreateEntry("CustomBattleCarrier", true, null, "Battle (beta): in a custom battle of the aircraft model's years (CustomBattleCarrierFrom-To) the player has a carrier beyond the horizon - its torpedo aircraft attack the enemy's largest ship in waves by day");
+            CarrierFrom = cat.CreateEntry("CustomBattleCarrierFrom", 1917, null, "Battle (beta): first year of custom battles with our carrier (the Sopwith Camel flew from HMS Furious from 1918)");
+            CarrierTo = cat.CreateEntry("CustomBattleCarrierTo", 1925, null, "Battle (beta): last year of custom battles with our carrier");
             Model = cat.CreateEntry("AirStrikeModel", "sopwith_camel", null, "Battle (test): aircraft model from Mods\\IronAdmiral_Models (file name without .iam); empty or missing = aircraft drawn from simple solids");
             Waves = cat.CreateEntry("AirStrikeWaves", 3, null, "Battle (test): number of air strike waves per battle");
             PerWave = cat.CreateEntry("AirStrikeAircraftPerWave", 6, null, "Battle (test): torpedo aircraft in one wave");
@@ -68,13 +72,28 @@ namespace DipGgFixes
 
         internal static void Tick()
         {
-            if (On == null || !On.Value) { if (planes.Count > 0) Clear(); return; }
+            bool test = On != null && On.Value, car = Carrier != null && Carrier.Value;
+            if (!test && !car) { if (planes.Count > 0) Clear(); return; }
             try
             {
                 if (!GameManager.IsBattle) { if (planes.Count > 0 || battle != IntPtr.Zero) { Summary(); Clear(); battle = IntPtr.Zero; } return; }
                 var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
                 if (b == null || b.Ships == null || b.Ships.Count == 0) return;
-                if (b.Pointer != battle) { Clear(); battle = b.Pointer; nextWave = FirstAfter.Value; lastTube = null; }
+                if (b.Pointer != battle)
+                {
+                    Clear(); battle = b.Pointer; nextWave = FirstAfter.Value; lastTube = null;
+                    // 1.11.384 (author 29.10 16:43-16:44: "add our carrier to the custom battle in the beta - at a date that fits the aircraft
+                    // model"; he picks his own designs of the period in the custom battle): in a custom battle of CustomBattleCarrierFrom..To
+                    // (the Sopwith Camel years: HMS Furious flew 2F.1 Camels against Tondern in July 1918) the player has a carrier beyond the
+                    // horizon - its waves attack the enemy; otherwise the test switch sends the AI side's aircraft at the player
+                    int yr = 0; try { for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null && Player(s)) { int y = (int)s.GetYear(s); if (y > yr) yr = y; } } } catch { }
+                    bool custom = false; try { custom = GameManager.IsCustomBattle; } catch { }
+                    atkIsPlayer = car && custom && yr >= CarrierFrom.Value && yr <= CarrierTo.Value;
+                    active = atkIsPlayer || test;
+                    if (atkIsPlayer) Log($"custom battle {yr}: our carrier (HMS Furious type, Sopwith Camels) is beyond the horizon - its waves attack the enemy's largest ship");
+                    else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
+                }
+                if (!active) return;
                 if (lastTube == null) lastTube = FindTube(b.Ships);
                 float dt = Time.deltaTime; if (dt <= 0f) return;
                 battleT += dt;
@@ -101,6 +120,8 @@ namespace DipGgFixes
         }
 
         static bool Player(Ship s) { try { return s.player != null && s.player.isMain; } catch { return false; } }
+        static bool atkIsPlayer, active;
+        static bool Defender(Ship s) { return atkIsPlayer ? !Player(s) : Player(s); }
 
         static void Launch(Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
@@ -109,7 +130,7 @@ namespace DipGgFixes
             for (int i = 0; i < ships.Count; i++)
             {
                 var s = ships[i]; if (!Alive(s)) continue;
-                if (Player(s)) { float t = 0f; try { t = s.Tonnage(); } catch { } if (t > best) { best = t; target = s; } }
+                if (Defender(s)) { float t = 0f; try { t = s.Tonnage(); } catch { } if (t > best) { best = t; target = s; } }
                 else
                 {
                     aiC += s.transform.position; aiN++;
@@ -136,14 +157,14 @@ namespace DipGgFixes
                 var pl = new Plane { Go = Build(yr), Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave };
                 planes.Add(pl);
             }
-            Log($"wave {wave}: {n} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
+            Log($"wave {wave}: {n} {(atkIsPlayer ? "of our" : "enemy")} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
         }
         static Part lastTube;
         static Part FindTube(Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
             for (int i = 0; ships != null && i < ships.Count; i++)
             {
-                var s = ships[i]; if (s == null || Player(s)) continue;
+                var s = ships[i]; if (s == null || Defender(s)) continue;
                 try { var ts = s.torpedoesAll; if (ts != null && ts.Count > 0 && ts[0] != null) return ts[0]; } catch { }
             }
             return null;
@@ -609,7 +630,7 @@ namespace DipGgFixes
             bool low = p.Pos.y < 80f;   // the torpedo run (30 m): within reach of the splash barrage
             for (int i = 0; i < ships.Count; i++)
             {
-                var s = ships[i]; if (!Alive(s) || !Player(s)) continue;
+                var s = ships[i]; if (!Alive(s) || !Defender(s)) continue;
                 float d = Flat(s.transform.position - p.Pos);
                 if (d > r) continue;
                 var g = Guns(s); guns += g.light;
