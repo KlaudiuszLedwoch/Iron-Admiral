@@ -203,6 +203,17 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 - Kąt trafienia w pancerz: przy trafieniach skośnych pas liczy się grubiej
   na drodze pocisku; czepiec przestaje pomagać przy dużych kątach, wczesne
   pociski bez czepca tracą więcej.
+- Lotnictwo morskie (beta, #85): w bitwach wlasnych 1915-1945 nasz lotniskowiec
+  za horyzontem wysyla fale samolotow torpedowych roku bitwy (Short 184,
+  Swordfish, Albacore - modele CC0 z ruchomymi sterami). Atak jak w zrodlach:
+  wysokie podejscie, lot slizgowy, prosty przelot tuz nad woda, zrzut przy
+  100 wezlach z 700-900 m, z obu dziobow ("kowadlo"). Obrona: lekkie dziala
+  2-3" i rozbryzgi ciezkich dzial przed nisko lecacymi samolotami. Nowy typ
+  technologii Lotnictwo morskie (32 technologie 1912-1944) w zakladce Taktyka.
+- Twoje projekty i przebieg sluzby: okrety z konstruktora bitwy wlasnej trafiaja
+  do shared designs, kraje biora najpierw Twoje projekty; kazda klasa ma przebieg
+  sluzby (bitwy, zwyciestwa, porazki, zatopione), a SI woli projekty z najlepszym.
+
 7. STABILNOŚĆ I KONTROLA
 ----------------------------------------------------------------------------
 - Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie
@@ -685,6 +696,18 @@ files cannot reach. One-click install, full uninstall, source code included.
 - Armour obliquity: at oblique hits the belt counts thicker along the
   shell's path; caps stop helping at steep angles, early uncapped shells
   suffer more.
+- Naval aviation (beta, #85): in custom battles of 1915-1945 our carrier beyond
+  the horizon sends waves of the torpedo aircraft of the year (Short 184,
+  Swordfish, Albacore - CC0 models with moving controls). They attack as the
+  sources describe: high approach, glide, straight run at wave-top height, drop
+  at 100 knots from 700-900 m, on both bows (the anvil). Defence: light 2-3 in
+  guns and the splash barrage of heavy guns against aircraft running in low.
+  New technology type Naval Aviation (32 technologies 1912-1944), Tactics tab.
+- Your designs and their service record: ships finished in the custom battle
+  constructor go to the shared designs and nations take your designs first;
+  every class keeps a service record (battles, wins, losses, ships sunk), and
+  the AI prefers the designs with the best record.
+
 7. STABILITY AND CONTROL
 ----------------------------------------------------------------------------
 - The add-on catches two bugs in the game's own code that aborted turn
