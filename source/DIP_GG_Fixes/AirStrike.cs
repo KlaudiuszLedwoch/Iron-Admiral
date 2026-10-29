@@ -35,6 +35,9 @@ namespace DipGgFixes
             Carrier = cat.CreateEntry("CustomBattleCarrier", true, null, "Battle (beta): in a custom battle of the aircraft model's years (CustomBattleCarrierFrom-To) the player has a carrier beyond the horizon - its torpedo aircraft attack the enemy's largest ship in waves by day");
             CarrierFrom = cat.CreateEntry("CustomBattleCarrierFrom", 1915, null, "Battle (beta): first year of custom battles with our carrier (Short 184 seaplanes flew from the seaplane carrier HMS Ben-my-Chree from 1915)");
             CarrierTo = cat.CreateEntry("CustomBattleCarrierTo", 1945, null, "Battle (beta): last year of custom battles with our carrier");
+            // 1.11.409 (test 30.10 00:20: the cfg still held the Sopwith Camel years 1917-1925 of 1.11.384, so a 1916, 1938 or 1941
+            // custom battle had no carrier): the old default pair moves to the current one once
+            if (CarrierFrom.Value == 1917 && CarrierTo.Value == 1925) { CarrierFrom.Value = 1915; CarrierTo.Value = 1945; Log("custom battle carrier years 1917-1925 (old default) set to 1915-1945"); }
             Model = cat.CreateEntry("AirStrikeAircraft", "auto", null, "Battle (test): aircraft model from Mods\\IronAdmiral_Models (file name without .iam); auto = the carrier torpedo aircraft of the battle year (Short 184 to 1925, Swordfish, Albacore 1940-42); empty or missing = aircraft drawn from simple solids");
             Waves = cat.CreateEntry("AirStrikeWaves", 3, null, "Battle (test): number of air strike waves per battle");
             PerWave = cat.CreateEntry("AirStrikeAircraftPerWave", 6, null, "Battle (test): torpedo aircraft in one wave");
