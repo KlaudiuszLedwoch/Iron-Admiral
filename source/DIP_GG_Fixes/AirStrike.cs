@@ -22,12 +22,13 @@ namespace DipGgFixes
 {
     internal static class AirStrike
     {
-        internal static MelonPreferences_Entry<bool> On;
+        internal static MelonPreferences_Entry<bool> On, Screens;
         internal static MelonPreferences_Entry<int> Waves, PerWave;
         internal static MelonPreferences_Entry<float> FirstAfter, Interval, SpeedMs, AaRange, AaPerGun, SplashRange, SplashPerGun, TorpRunM, TorpKn, Scale;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("AirStrikeTest", false, null, "Battle (test): torpedo aircraft of the AI side come in waves from beyond the horizon in daylight and attack the largest ship of the player's side from both beams; light guns of 2-3 in on the defending ships can shoot them down, heavier guns fire splash barrages at aircraft running in low (prototype of carrier and shore-based air strikes, #85)");
+            Screens = cat.CreateEntry("AirStrikeScreenshots", false, null, "Battle (test): a series of screenshots of every air strike - the run-in, each torpedo drop and each aircraft shot down (UserData\\IronAdmiral\\screens)");
             Waves = cat.CreateEntry("AirStrikeWaves", 3, null, "Battle (test): number of air strike waves per battle");
             PerWave = cat.CreateEntry("AirStrikeAircraftPerWave", 6, null, "Battle (test): torpedo aircraft in one wave");
             FirstAfter = cat.CreateEntry("AirStrikeFirstAfter", 60f, null, "Battle (test): seconds of battle time before the first wave arrives");
@@ -60,7 +61,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -213,11 +214,12 @@ namespace DipGgFixes
                     }
                     if (!Alive(p.Target) && !p.Dropped) { p.P = Phase.Away; }
                     Vector3 goal;
-                    if (p.P == Phase.Approach) { goal = RunPoint(p); goal.y = 300f; if (Flat(goal - p.Pos) < 3000f) p.P = Phase.Run; }
+                    if (p.P == Phase.Approach) { goal = RunPoint(p); goal.y = 300f; if (Flat(goal - p.Pos) < 3000f) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f); } }
                     else if (p.P == Phase.Run)
                     {
                         goal = RunPoint(p);
-                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; }
+                        Shot($"wave{p.Wave}_run", 3f);
+                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f); }
                     }
                     else goal = p.Pos + new Vector3(p.Dir.x, 0f, p.Dir.z) * 1000f + Vector3.up * 40f;
                     if (p.P == Phase.Away)
@@ -238,6 +240,16 @@ namespace DipGgFixes
             }
         }
         static float Flat(Vector3 d) { d.y = 0f; return d.magnitude; }
+
+        // 1.11.377 (author 29.10 14:59: "take a screenshot of the air strike - or a series"): screenshots at the run-in, then every 3 s
+        // of real time while aircraft are running in, at each drop and at each aircraft shot down (at most 60 per battle)
+        static float nextShot; static int shots;
+        static void Shot(string tag, float gap)
+        {
+            if (Screens == null || !Screens.Value || shots >= 60 || Time.realtimeSinceStartup < nextShot) return;
+            nextShot = Time.realtimeSinceStartup + gap; shots++;
+            AutoTest.Shot("airstrike_" + tag);
+        }
 
         static void Drop(Plane p)
         {
@@ -313,6 +325,7 @@ namespace DipGgFixes
                 // which fire brought it down: in proportion to the share of each in the total chance
                 float pl = 1f - missLight, pt = 1f - miss; bool splash = heavy > 0 && UnityEngine.Random.value * pt > pl;
                 p.P = Phase.Down; waveStats[p.Wave][2]++; if (splash) waveStats[p.Wave][3]++;
+                Shot($"wave{p.Wave}_shotdown", 1.2f);
                 if (waveStats[p.Wave][2] <= 4) Log($"wave {p.Wave}: aircraft shot down {(splash ? $"by the splash barrage of the heavy guns ({heavy} gun(s) firing into the sea ahead of it)" : $"by light anti-aircraft guns ({guns} gun(s) of 2-3 in in range)")}{(p.Dropped ? ", after its drop" : ", before its drop")}");
             }
         }
