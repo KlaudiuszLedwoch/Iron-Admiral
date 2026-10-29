@@ -23,7 +23,11 @@ namespace DipGgFixes
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("DesignStats", true, null, "Every design keeps a battle record - battles, victories, draws, defeats, ships lost - in campaign and custom battles; shown in the designer (UserData\\IronAdmiral\\design_stats.csv)");
+            Prefer = cat.CreateEntry("DesignStatsPreferBest", true, null, "Nations prefer the designs with the best battle record: after your own designs a proven design is taken before the historical classes, and among equals the better record goes first");
+            ProvenBattles = cat.CreateEntry("DesignStatsProvenBattles", 3, null, "How many battles a design must have fought to count as proven");
+            ProvenScore = cat.CreateEntry("DesignStatsProvenScore", 0.55f, null, "Lowest score of a proven design (share of battles won, smoothed, less half the share of ships sunk; 0.5 = no record)");
         }
+        internal static MelonPreferences_Entry<bool> Prefer; internal static MelonPreferences_Entry<int> ProvenBattles; internal static MelonPreferences_Entry<float> ProvenScore;
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][DesignStats] " + m); }
         static string FilePath { get { return Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "design_stats.csv"); } }
 
@@ -55,6 +59,31 @@ namespace DipGgFixes
                 Directory.CreateDirectory(Path.GetDirectoryName(FilePath)); File.WriteAllText(FilePath, sb.ToString());
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][DesignStats] write: " + e.Message); }
+        }
+
+        // 1.11.398 (author 29.10 19:01: "now for the AI - prefer the designs with the best statistics"): a design's score from its
+        // record - the share of battles won (a draw counts half), smoothed so that one lucky battle does not outrank a long good
+        // record ((won + 1) / (battles + 2)), less half the share of its ships sunk per battle. A design with no record scores 0.5.
+        internal static float Score(string id, out int battles)
+        {
+            battles = 0;
+            if (On == null || !On.Value || string.IsNullOrEmpty(id) || !All().TryGetValue(id, out var r) || r.Battles <= 0) return 0.5f;
+            battles = r.Battles;
+            float won = r.Wins + 0.5f * r.Draws;
+            return (won + 1f) / (r.Battles + 2f) - 0.5f * Mathf.Min(1f, (float)r.Lost / r.Battles);
+        }
+        // 1.11.398: after the player's own designs, a nation takes a proven design - a shared design of its own with at least
+        // DesignStatsProvenBattles battles and a score of DesignStatsProvenScore or more, the best record first - before the
+        // historical classes and the rest. Within the player's designs and the historical classes the best record goes first too.
+        internal static Ship PickProven(Player player, ShipType shipType, int year, bool checkTech, System.Collections.Generic.List<Il2CppSystem.Guid> ignore)
+        {
+            if (On == null || !On.Value || Prefer == null || !Prefer.Value) return null;
+            return HistPriority.PickSet(null, "proven design", "DesignStats", player, shipType, year, checkTech, ignore, 12, Math.Max(1, ProvenBattles.Value), ProvenScore.Value);
+        }
+        internal static string Describe(string id)
+        {
+            if (string.IsNullOrEmpty(id) || !All().TryGetValue(id, out var r) || r.Battles <= 0) return "no battle record";
+            return $"{r.Battles} battle(s), {r.Wins} won, {r.Draws} drawn, {r.Losses} lost, {r.Lost} sunk";
         }
 
         static string Clean(string s) { return (s ?? "").Replace(',', ' ').Replace('\n', ' ').Replace('\r', ' ').Trim(); }

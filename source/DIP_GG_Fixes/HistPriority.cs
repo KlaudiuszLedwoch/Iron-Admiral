@@ -74,9 +74,11 @@ namespace DipGgFixes
             return PickSet(Ids(), "historical class", "Historical", player, shipType, year, checkTech, ignore, yearsBack >= 0 ? yearsBack : YearsBack.Value);
         }
         // 1.11.394: shared by the historical classes and the player's own designs (PlayerDesigns, chosen before everything else)
-        internal static Ship PickSet(HashSet<string> set, string what, string tag, Player player, ShipType shipType, int year, bool checkTech, System.Collections.Generic.List<Il2CppSystem.Guid> ignore, int yearsBack)
+        // 1.11.398: set == null = any shared design of the nation that has a record of at least minBattles battles and a score of at least minScore;
+        // the candidates are tried best record first (DesignStats.Score), then newest first
+        internal static Ship PickSet(HashSet<string> set, string what, string tag, Player player, ShipType shipType, int year, bool checkTech, System.Collections.Generic.List<Il2CppSystem.Guid> ignore, int yearsBack, int minBattles = 0, float minScore = -1f)
         {
-            if (set == null || set.Count == 0 || player == null || shipType == null) return null;
+            if ((set != null && set.Count == 0) || player == null || shipType == null) return null;
             Il2CppSystem.Collections.Generic.List<Il2CppSystem.ValueTuple<Ship.Store, string>> designs = null;
             try { if (!G.GameData.sharedDesignsPerNation.TryGetValue(player.data.name, out designs)) return null; } catch { return null; }
             var owned = new HashSet<string>();
@@ -86,14 +88,15 @@ namespace DipGgFixes
             {
                 var st = tuple.Item1; if (st == null) continue;
                 string id; try { id = st.id.ToString(); } catch { continue; }
-                if (!set.Contains(id) || owned.Contains(id)) continue;
+                if ((set != null && !set.Contains(id)) || owned.Contains(id)) continue;
+                if (set == null) { float sc = DesignStats.Score(id, out int nb); if (nb < minBattles || sc < minScore) continue; }
                 if (ignore != null) { bool skip = false; foreach (var g in ignore) if (g.ToString() == id) { skip = true; break; } if (skip) continue; }
                 if (st.shipType != shipType.name) continue;
                 int y = st.YearCreated;
                 if (y > year || y < year - yearsBack) continue;
                 cands.Add(st);
             }
-            foreach (var st in cands.OrderByDescending(x => x.YearCreated))
+            foreach (var st in cands.OrderByDescending(x => { int nb; return DesignStats.Score(x.id.ToString(), out nb); }).ThenByDescending(x => x.YearCreated))
             {
                 var ship = Ship.Create(null, null, false, false, false);
                 if (!ship.FromStore(st, new Il2CppSystem.Nullable<Il2CppSystem.Guid>(), null, null, false)) { try { ship.Erase(); } catch { } continue; }
@@ -101,7 +104,7 @@ namespace DipGgFixes
                 float r = checkTech ? TechRatio(player, ship) : -1f;
                 if (r >= 0f && r < 0.9f) { try { ship.Erase(); } catch { } continue; }   // nation lacks the technology of this class
                 if (ship.id == Il2CppSystem.Guid.Empty) ship.id = Il2CppSystem.Guid.NewGuid();
-                if (logged++ < 40) MelonLogger.Msg($"[DIP GG Fixes][{tag}] {player.data.name} {shipType.name} {year}: {what} {st.vesselName} ({st.YearCreated}) chosen{(r >= 0f ? $", tech match {r:0.00}" : "")}");
+                if (logged++ < 40) MelonLogger.Msg($"[DIP GG Fixes][{tag}] {player.data.name} {shipType.name} {year}: {what} {st.vesselName} ({st.YearCreated}) chosen{(r >= 0f ? $", tech match {r:0.00}" : "")}, record: {DesignStats.Describe(st.id.ToString())}");
                 return ship;
             }
             return null;
@@ -117,7 +120,7 @@ namespace DipGgFixes
         {
             try
             {
-                var s = PlayerDesigns.Pick(player, shipType, year, true, null) ?? HistPriority.Pick(player, shipType, year);
+                var s = PlayerDesigns.Pick(player, shipType, year, true, null) ?? DesignStats.PickProven(player, shipType, year, true, null) ?? HistPriority.Pick(player, shipType, year);
                 if (s != null) { __result = s; return false; }
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Historical] " + e.Message); }
