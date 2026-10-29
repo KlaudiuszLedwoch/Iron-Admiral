@@ -234,6 +234,9 @@ namespace DipGgFixes
                 float portKm = 99999f;
                 try { float sqr = float.MaxValue; var pt = CampaignMap.PortsDb.NearestPort(pos, out sqr, obs, true); if (pt != null && sqr < float.MaxValue) portKm = Mathf.Sqrt(sqr) * kpu; } catch { }
                 float port = 0.35f * Clamp01(1f - (portKm - 200f) / 1300f);
+                // 1.11.407 (#85 step 1): air patrols of the Naval Aviation technologies from our ports
+                string airWhy; int acx = (int)Mathf.Floor(pos.x * kpu / 800f), acz = (int)Mathf.Floor(pos.z * kpu / 800f);
+                float air = NavalAviation.AirQ(obs, portKm, m, acx, acz, out airWhy);
                 // own or allied forces nearby: stationary = patrol (larger radius), light ships = scouts
                 float fleet = 0f; string fleetWhy = "";
                 try
@@ -257,8 +260,8 @@ namespace DipGgFixes
                 int cx = (int)Mathf.Floor(pos.x * kpu / 800f), cz = (int)Mathf.Floor(pos.z * kpu / 800f);
                 float weather = -0.15f + 0.20f * Roll($"wx|{m}|{cx}|{cz}");
                 int mon = ((m - 1) % 12 + 12) % 12 + 1; if (mon == 11 || mon == 12 || mon == 1 || mon == 2) weather -= 0.05f;
-                q = Fogged(Clamp01(baseQ + port + fleet + size + weather));
-                why = $"era {era:0.00} x tech {tfac:0.00} x budget {bfac:0.00} + port {port:0.00} ({portKm:0} km) + forces {fleet:0.00}{(fleetWhy != "" ? " (" + fleetWhy + ")" : "")} + size {size:0.00} + weather {weather:0.00}";
+                q = Fogged(Clamp01(baseQ + port + air + fleet + size + weather));
+                why = $"era {era:0.00} x tech {tfac:0.00} x budget {bfac:0.00} + port {port:0.00} ({portKm:0} km){(airWhy != "" ? " + " + airWhy : "")} + forces {fleet:0.00}{(fleetWhy != "" ? " (" + fleetWhy + ")" : "")} + size {size:0.00} + weather {weather:0.00}";
             }
             catch (Exception e) { Err("Q", e); q = 1f; }
             qCache[key] = q;
