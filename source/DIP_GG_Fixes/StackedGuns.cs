@@ -35,6 +35,7 @@ namespace DipGgFixes
             internal readonly Dictionary<IntPtr, int> Above = new Dictionary<IntPtr, int>();        // lower gun -> guns above it
             internal readonly Dictionary<IntPtr, List<Part>> Below = new Dictionary<IntPtr, List<Part>>(); // upper gun -> guns below it
             internal readonly HashSet<IntPtr> Silenced = new HashSet<IntPtr>();
+            internal readonly HashSet<IntPtr> UpperData = new HashSet<IntPtr>();   // gun types (PartData) mounted only as upper guns
         }
 
         // built once per ship and battle
@@ -72,6 +73,12 @@ namespace DipGgFixes
                     }
                     if (above > 0) { m.Above[lo.p.Pointer] = above; names.Add($"{lo.n} x{above}"); }
                 }
+                var all = new Dictionary<IntPtr, (int n, int up)>();
+                foreach (var gn in guns)
+                {
+                    var dp = gn.p.data.Pointer; all.TryGetValue(dp, out var c); c.n++; if (m.Below.ContainsKey(gn.p.Pointer)) c.up++; all[dp] = c;
+                }
+                foreach (var kv in all) if (kv.Value.up > 0 && kv.Value.up == kv.Value.n) m.UpperData.Add(kv.Key);
                 if (m.Above.Count > 0) MelonLogger.Msg($"[DIP GG Fixes][Gunnery] {s.name}: superposed guns - {m.Above.Count} gun(s) with guns mounted above them ({string.Join(", ", names)}): lower reload +{(Penalty != null ? Penalty.Value : 0.25f) * 100f:0} % per gun above (hoists), upper hit chance -{(AimPenalty != null ? AimPenalty.Value : 0.15f) * 100f:0} % (no independent training){(Silence == null || Silence.Value ? ", upper silenced when the lower is ruined" : "")}");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Gunnery] superposed guns: " + e.Message); }
@@ -116,18 +123,20 @@ namespace DipGgFixes
             }
         }
 
-        // Ship.HitChance(dynamic, from, fromPoint, target, targetPoint, gun, gunData, ...): argument 5 is the firing gun
-        [HarmonyPatch(typeof(Ship), nameof(Ship.HitChance))]
+        // 1.11.392: the aim penalty went through a postfix on Ship.HitChance in 1.11.390 - the game crashed in the .NET runtime
+        // (coreclr access violation) as a campaign battle opened (author 29.10 18:15). It now goes through GunData.HitChanceMult
+        // (ship, gun type), patched safely elsewhere: the penalty applies to a gun type of the ship whose every mount is an upper
+        // gun of a superposed pair (the Kearsarge case: the 8 in on top, the 13 in below).
+        [HarmonyPatch(typeof(GunData), "HitChanceMult")]
         static class Patch_Aim
         {
             [HarmonyPriority(Priority.Low)]
-            static void Postfix(Ship __1, Part __5, ref float __result)
+            static void Postfix(Ship __0, PartData __1, ref float __result)
             {
                 try
                 {
-                    if (On == null || !On.Value || __1 == null || __5 == null || !GameManager.IsBattle) return;
-                    var m = For(__1); if (m.Below.Count == 0 || !m.Below.ContainsKey(__5.Pointer)) return;
-                    if (Silenced(__1, m, __5)) { __result = 0f; return; }
+                    if (On == null || !On.Value || __0 == null || __1 == null || !GameManager.IsBattle) return;
+                    var m = For(__0); if (m.UpperData.Count == 0 || !m.UpperData.Contains(__1.Pointer)) return;
                     __result *= Mathf.Clamp01(1f - AimPenalty.Value);
                 }
                 catch { }
