@@ -40,7 +40,7 @@ namespace DipGgFixes
             SplashPerGun = cat.CreateEntry("AirStrikeSplashPerGun", 0.00002f, null, "Battle (test): chance per second per gun over 3 in to bring down a low-flying torpedo aircraft with its splashes");
             TorpRunM = cat.CreateEntry("AirStrikeTorpedoRun", 3000f, null, "Battle (test): run of an aerial torpedo (m)");
             TorpKn = cat.CreateEntry("AirStrikeTorpedoSpeed", 35f, null, "Battle (test): speed of an aerial torpedo (kn)");
-            Scale = cat.CreateEntry("AirStrikeAircraftScale", 2.5f, null, "Battle (test): drawing scale of the aircraft (1 = true size, about 12 m span)");
+            Scale = cat.CreateEntry("AirStrikeAircraftScale", 1f, null, "Battle (test): drawing scale of the aircraft (1 = true size, about 14 m span)");
         }
 
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][AirStrike] " + m); }
@@ -49,7 +49,7 @@ namespace DipGgFixes
         enum Phase { Approach, Run, Away, Down }
         class Plane
         {
-            public GameObject Go; public Phase P; public Vector3 Pos, Dir; public Ship Target; public float Side; public bool Dropped;
+            public GameObject Go, Torp; public Transform Prop; public Phase P; public Vector3 Pos, Dir; public Ship Target; public float Side; public bool Dropped;
             public float Fall; public int Wave;
         }
         static readonly List<Plane> planes = new List<Plane>();
@@ -130,7 +130,8 @@ namespace DipGgFixes
                 float side = (k % 2 == 0) ? 1f : -1f;                       // half on each beam
                 var right = Vector3.Cross(Vector3.up, from);
                 var start = tp + from * 14000f + right * (side * 800f + (k / 2) * 120f * side) + Vector3.up * 300f;
-                var pl = new Plane { Go = Build(), P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave };
+                int yr = 1925; try { yr = (int)target.GetYear(target); } catch { }
+                var pl = new Plane { Go = Build(yr), Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave };
                 planes.Add(pl);
             }
             Log($"wave {wave}: {n} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
@@ -146,22 +147,143 @@ namespace DipGgFixes
             return null;
         }
 
-        static GameObject Build()
+        // 1.11.381 (author 29.10 15:53-15:58: "slow biplanes at first", photos of the Sopwith Cuckoo dropping a torpedo and of the
+        // Fairey Swordfish, a three-view drawing of the Cuckoo; "can't you build the model yourself?"): the aircraft are built at run
+        // time from simple solids after the drawings - tapered fabric fuselage, two staggered wings with interplane and cabane struts
+        // and bracing wires, split-axle undercarriage, tailplane, fin and rudder, a turning propeller, RAF roundels and the torpedo
+        // slung under the fuselage, which disappears at the drop.
+        //  - up to 1929: Sopwith T.1 Cuckoo type - inline engine, olive-brown (PC10) upper surfaces over doped-linen undersides,
+        //    span about 14.2 m, length about 8.7 m (dimensions from memory, not from a source);
+        //  - from 1930: Fairey Swordfish type - radial engine with a ring cowling, aluminium dope, three open cockpits, span about
+        //    13.9 m, length about 10.9 m (dimensions from memory, not from a source).
+        static Transform lastProp; static GameObject lastTorp;
+        static GameObject Build(int year)
         {
             var root = new GameObject("IA_AirStrike_Plane");
             float s = Scale.Value;
-            var col = new Color(0.22f, 0.24f, 0.2f);
-            void Box(Vector3 size, Vector3 at)
+            bool late = year >= 1930;
+            Color skin = late ? new Color(0.72f, 0.74f, 0.74f) : new Color(0.33f, 0.30f, 0.19f);
+            Color under = late ? new Color(0.66f, 0.68f, 0.68f) : new Color(0.80f, 0.75f, 0.60f);
+            Color metal = late ? new Color(0.58f, 0.60f, 0.61f) : new Color(0.25f, 0.25f, 0.24f);
+            Color dark = new Color(0.08f, 0.08f, 0.08f), strut = late ? new Color(0.55f, 0.56f, 0.56f) : new Color(0.42f, 0.33f, 0.20f);
+            Color red = new Color(0.65f, 0.08f, 0.07f), white = new Color(0.92f, 0.92f, 0.90f), blue = new Color(0.10f, 0.16f, 0.42f);
+            Color torpCol = new Color(0.20f, 0.21f, 0.22f);
+            GameObject Prim(PrimitiveType t, Color col, Transform parent)
             {
-                var g = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                var g = GameObject.CreatePrimitive(t);
                 try { var c = g.GetComponent<Collider>(); if (c != null) UnityEngine.Object.Destroy(c); } catch { }
-                try { g.GetComponent<Renderer>().material.color = col; } catch { }
-                g.transform.SetParent(root.transform, false); g.transform.localScale = size * s; g.transform.localPosition = at * s;
+                try { var m = g.GetComponent<Renderer>().material; m.color = col; try { m.SetFloat("_Glossiness", 0.15f); } catch { } } catch { }
+                g.transform.SetParent(parent ?? root.transform, false); return g;
             }
-            Box(new Vector3(1.2f, 1.2f, 10f), Vector3.zero);            // fuselage
-            Box(new Vector3(13f, 0.25f, 2f), new Vector3(0f, 0.3f, 1f)); // wing
-            Box(new Vector3(4.5f, 0.2f, 1.2f), new Vector3(0f, 0.4f, -4.4f)); // tailplane
-            Box(new Vector3(0.2f, 2f, 1.2f), new Vector3(0f, 1.3f, -4.4f));   // fin
+            GameObject Box(Vector3 size, Vector3 at, Color col, Vector3 euler = default(Vector3), Transform parent = null)
+            {
+                var g = Prim(PrimitiveType.Cube, col, parent); g.transform.localScale = size * s; g.transform.localPosition = at * s; g.transform.localRotation = Quaternion.Euler(euler); return g;
+            }
+            // a cylinder along the aircraft's length (z), or across (x) / up (y)
+            GameObject Cyl(float dia, float len, Vector3 at, Color col, char axis = 'z', Transform parent = null)
+            {
+                var g = Prim(PrimitiveType.Cylinder, col, parent); g.transform.localScale = new Vector3(dia, len * 0.5f, dia) * s; g.transform.localPosition = at * s;
+                g.transform.localRotation = axis == 'z' ? Quaternion.Euler(90f, 0f, 0f) : axis == 'x' ? Quaternion.Euler(0f, 0f, 90f) : Quaternion.identity; return g;
+            }
+            // a strut or wire between two points
+            void Rod(Vector3 a, Vector3 b, float th, Color col)
+            {
+                var g = Prim(PrimitiveType.Cube, col, null); var d = b - a;
+                g.transform.localPosition = (a + b) * 0.5f * s; g.transform.localRotation = Quaternion.LookRotation(d.normalized, Vector3.up);
+                g.transform.localScale = new Vector3(th, th, d.magnitude) * s;
+            }
+            // RAF roundel on a surface: three flat discs; 'up' = facing up (wing), otherwise facing sideways (fuselage, side sign)
+            void Roundel(Vector3 at, float dia, bool up, float side = 1f)
+            {
+                Color[] cols = { blue, white, red }; float[] f = { 1f, 0.66f, 0.33f };
+                for (int i = 0; i < 3; i++)
+                {
+                    var g = Prim(PrimitiveType.Cylinder, cols[i], null);
+                    float t = 0.01f + i * 0.004f;
+                    g.transform.localScale = new Vector3(dia * f[i], t, dia * f[i]) * s;
+                    g.transform.localPosition = (at + (up ? Vector3.up * (t * 1.0f) : Vector3.right * side * (t * 1.0f))) * s;
+                    g.transform.localRotation = up ? Quaternion.identity : Quaternion.Euler(0f, 0f, 90f);
+                }
+            }
+
+            float L = late ? 10.9f : 8.7f, span = late ? 13.9f : 14.2f, chord = late ? 1.75f : 1.85f, gap = late ? 1.95f : 1.85f;
+            float zNose = L * 0.5f, zTail = -L * 0.5f;
+            // fuselage: tapered from the engine bay to the sternpost, in segments
+            int seg = 6;
+            for (int i = 0; i < seg; i++)
+            {
+                float a = i / (float)seg, b = (i + 1) / (float)seg;
+                float w = Mathf.Lerp(1.05f, 0.22f, (a + b) * 0.5f * (a + b) * 0.5f + 0.15f * (a + b));
+                float h = Mathf.Lerp(1.30f, 0.45f, (a + b) * 0.5f);
+                float z0 = Mathf.Lerp(zNose - 1.2f, zTail, a), z1 = Mathf.Lerp(zNose - 1.2f, zTail, b);
+                float y = Mathf.Lerp(0f, 0.25f, (a + b) * 0.5f);
+                Box(new Vector3(w, h, Mathf.Abs(z1 - z0) + 0.05f), new Vector3(0f, y, (z0 + z1) * 0.5f), skin);
+                Box(new Vector3(w * 0.98f, 0.04f, Mathf.Abs(z1 - z0) + 0.05f), new Vector3(0f, y - h * 0.5f, (z0 + z1) * 0.5f), under);
+            }
+            // engine and propeller
+            Transform prop;
+            if (late)
+            {
+                Cyl(1.45f, 0.75f, new Vector3(0f, 0.05f, zNose - 0.75f), metal);                 // Pegasus radial
+                Cyl(1.55f, 0.30f, new Vector3(0f, 0.05f, zNose - 0.30f), skin);                  // Townend ring
+                Cyl(0.55f, 0.35f, new Vector3(0f, 0.05f, zNose - 0.05f), dark);                  // crankcase / hub
+                prop = new GameObject("prop").transform; prop.SetParent(root.transform, false); prop.localPosition = new Vector3(0f, 0.05f, zNose + 0.15f) * s;
+                for (int k = 0; k < 3; k++) { var bl = Box(new Vector3(0.20f, 1.65f, 0.06f), new Vector3(0f, 0.82f, 0f), dark, default(Vector3), prop); var hb = new GameObject("b"); hb.transform.SetParent(prop, false); hb.transform.localRotation = Quaternion.Euler(0f, 0f, k * 120f); bl.transform.SetParent(hb.transform, false); }
+                // three open cockpits with the crew's heads
+                for (int k = 0; k < 3; k++) { Box(new Vector3(0.62f, 0.08f, 0.9f), new Vector3(0f, 0.68f, 0.9f - k * 1.15f), dark); Cyl(0.24f, 0.24f, new Vector3(0f, 0.86f, 0.9f - k * 1.15f), new Color(0.25f, 0.2f, 0.15f), 'y'); }
+            }
+            else
+            {
+                Box(new Vector3(0.95f, 1.05f, 1.35f), new Vector3(0f, 0.05f, zNose - 0.65f), metal);   // Sunbeam Arab under its cowling
+                Box(new Vector3(0.75f, 0.85f, 0.25f), new Vector3(0f, -0.05f, zNose + 0.05f), dark);  // radiator
+                Box(new Vector3(0.08f, 0.55f, 0.08f), new Vector3(0.42f, 0.65f, zNose - 0.9f), dark); Box(new Vector3(0.08f, 0.55f, 0.08f), new Vector3(-0.42f, 0.65f, zNose - 0.9f), dark); // exhausts
+                prop = new GameObject("prop").transform; prop.SetParent(root.transform, false); prop.localPosition = new Vector3(0f, 0.05f, zNose + 0.22f) * s;
+                Box(new Vector3(0.22f, 2.9f, 0.08f), Vector3.zero, new Color(0.35f, 0.22f, 0.10f), default(Vector3), prop);   // two-blade wooden propeller
+                Box(new Vector3(0.62f, 0.08f, 0.85f), new Vector3(0f, 0.68f, -0.6f), dark);                                       // cockpit
+                Cyl(0.24f, 0.24f, new Vector3(0f, 0.86f, -0.6f), new Color(0.3f, 0.22f, 0.12f), 'y');                              // pilot
+            }
+            // wings: the lower at the bottom of the fuselage, the upper one gap above, staggered forward
+            float zW = late ? 1.6f : 1.05f, yLow = -0.55f, yUp = yLow + gap, stagger = late ? 0.25f : 0.15f;
+            Box(new Vector3(span, 0.12f, chord), new Vector3(0f, yUp, zW + stagger), skin);
+            Box(new Vector3(span, 0.02f, chord * 0.98f), new Vector3(0f, yUp - 0.07f, zW + stagger), under);
+            Box(new Vector3(span * 0.97f, 0.11f, chord), new Vector3(0f, yLow, zW), skin);
+            Box(new Vector3(span * 0.97f, 0.02f, chord * 0.98f), new Vector3(0f, yLow - 0.065f, zW), under);
+            Roundel(new Vector3(span * 0.36f, yUp + 0.06f, zW + stagger), 1.25f, true); Roundel(new Vector3(-span * 0.36f, yUp + 0.06f, zW + stagger), 1.25f, true);
+            // interplane struts (two bays a side on the Cuckoo, one and a half on the Swordfish) and the cabane
+            float[] bays = late ? new[] { 0.30f, 0.46f } : new[] { 0.22f, 0.44f };
+            foreach (var sd in new[] { 1f, -1f })
+                foreach (var fb in bays)
+                {
+                    float x = sd * span * fb;
+                    Rod(new Vector3(x, yLow, zW + chord * 0.32f), new Vector3(x, yUp, zW + stagger + chord * 0.32f), 0.09f, strut);
+                    Rod(new Vector3(x, yLow, zW - chord * 0.32f), new Vector3(x, yUp, zW + stagger - chord * 0.32f), 0.09f, strut);
+                    // bracing wires (crossed)
+                    Rod(new Vector3(x, yLow, zW), new Vector3(x - sd * span * 0.2f, yUp, zW + stagger), 0.025f, dark);
+                    Rod(new Vector3(x, yUp, zW + stagger), new Vector3(x - sd * span * 0.2f, yLow, zW), 0.025f, dark);
+                }
+            foreach (var sd in new[] { 0.45f, -0.45f }) { Rod(new Vector3(sd, 0.55f, zW + 0.6f), new Vector3(sd * 1.4f, yUp, zW + stagger + 0.6f), 0.08f, strut); Rod(new Vector3(sd, 0.55f, zW - 0.5f), new Vector3(sd * 1.4f, yUp, zW + stagger - 0.5f), 0.08f, strut); }
+            // tail: tailplane, fin and rudder (with the rudder stripes on the Cuckoo)
+            Box(new Vector3(late ? 4.6f : 4.3f, 0.08f, 1.35f), new Vector3(0f, 0.35f, zTail + 0.7f), skin);
+            Box(new Vector3(0.08f, 1.25f, 1.0f), new Vector3(0f, 1.0f, zTail + 0.55f), skin);
+            if (!late) { Box(new Vector3(0.09f, 1.15f, 0.22f), new Vector3(0f, 0.95f, zTail - 0.02f), blue); Box(new Vector3(0.09f, 1.15f, 0.22f), new Vector3(0f, 0.95f, zTail - 0.24f), white); Box(new Vector3(0.09f, 1.15f, 0.22f), new Vector3(0f, 0.95f, zTail - 0.46f), red); }
+            else Box(new Vector3(0.09f, 1.2f, 0.65f), new Vector3(0f, 0.95f, zTail - 0.2f), skin);
+            Rod(new Vector3(0f, 0.15f, zTail + 0.3f), new Vector3(0f, -0.25f, zTail + 0.1f), 0.07f, dark);            // tail skid
+            // fuselage roundels
+            Roundel(new Vector3(0.36f, 0.35f, zTail + L * 0.33f), 0.8f, false, 1f); Roundel(new Vector3(-0.36f, 0.35f, zTail + L * 0.33f), 0.8f, false, -1f);
+            // split-axle undercarriage (clear of the torpedo) and wheels
+            foreach (var sd in new[] { 1f, -1f })
+            {
+                var wh = new Vector3(sd * 1.0f, -1.55f, zW + 0.55f);
+                Rod(new Vector3(sd * 0.4f, -0.6f, zW + 1.1f), wh, 0.08f, strut); Rod(new Vector3(sd * 0.4f, -0.6f, zW - 0.2f), wh, 0.08f, strut); Rod(new Vector3(sd * 0.15f, -0.65f, zW + 0.55f), wh, 0.06f, strut);
+                Cyl(0.85f, 0.16f, wh, dark, 'x');
+            }
+            // the torpedo, slung under the fuselage between the wheels
+            var torp = new GameObject("torpedo"); torp.transform.SetParent(root.transform, false);
+            Cyl(0.45f, late ? 4.9f : 4.6f, new Vector3(0f, -1.0f, zW - 0.6f), torpCol, 'z', torp.transform);
+            Cyl(0.30f, 0.45f, new Vector3(0f, -1.0f, zW - 0.6f + (late ? 2.6f : 2.45f)), late ? new Color(0.70f, 0.10f, 0.08f) : torpCol, 'z', torp.transform);   // warhead (red exercise head on the Swordfish photo)
+            Box(new Vector3(0.7f, 0.05f, 0.25f), new Vector3(0f, -1.0f, zW - 0.6f - (late ? 2.45f : 2.3f)), torpCol, default(Vector3), torp.transform);
+            Box(new Vector3(0.05f, 0.7f, 0.25f), new Vector3(0f, -1.0f, zW - 0.6f - (late ? 2.45f : 2.3f)), torpCol, default(Vector3), torp.transform);
+            lastProp = prop; lastTorp = torp;
             return root;
         }
 
@@ -234,6 +356,7 @@ namespace DipGgFixes
                     p.Pos += p.Dir * v * dt;
                     p.Go.transform.position = p.Pos;
                     p.Go.transform.rotation = Quaternion.LookRotation(p.Dir, Vector3.up);
+                    try { if (p.Prop != null) p.Prop.Rotate(0f, 0f, 1800f * dt, Space.Self); } catch { }
                     if (p.P != Phase.Away || p.Pos.y < 200f) Aa(p, dt, ships);
                 }
                 catch (Exception e) { if (errors++ < 10) Log("move: " + e.Message); try { UnityEngine.Object.Destroy(p.Go); } catch { } planes.RemoveAt(i); }
@@ -387,6 +510,7 @@ namespace DipGgFixes
         static void Drop(Plane p)
         {
             if (p.Dropped) return; p.Dropped = true;
+            try { if (p.Torp != null) p.Torp.SetActive(false); } catch { }
             try
             {
                 if (lastTube == null) return;
