@@ -26,7 +26,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<string> Model;
         internal static MelonPreferences_Entry<bool> Carrier; internal static MelonPreferences_Entry<int> CarrierFrom, CarrierTo;
         internal static MelonPreferences_Entry<int> Waves, PerWave;
-        internal static MelonPreferences_Entry<float> FirstAfter, Interval, SpeedMs, AaRange, AaPerGun, SplashRange, SplashPerGun, TorpRunM, TorpKn, Scale;
+        internal static MelonPreferences_Entry<float> FirstAfter, Interval, SpeedMs, AaRange, AaPerGun, SplashRange, SplashPerGun, TorpRunM, TorpKn, Scale, Spacing, Turb;
+        internal static MelonPreferences_Entry<bool> BarrageFx;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("AirStrikeTest", false, null, "Battle (test): torpedo aircraft of the AI side come in waves from beyond the horizon in daylight and attack the largest ship of the player's side from both beams; light guns of 2-3 in on the defending ships can shoot them down, heavier guns fire splash barrages at aircraft running in low (prototype of carrier and shore-based air strikes, #85)");
@@ -47,6 +48,9 @@ namespace DipGgFixes
             TorpRunM = cat.CreateEntry("AirStrikeTorpedoRun", 3000f, null, "Battle (test): run of an aerial torpedo (m)");
             TorpKn = cat.CreateEntry("AirStrikeTorpedoSpeed", 35f, null, "Battle (test): speed of an aerial torpedo (kn)");
             Scale = cat.CreateEntry("AirStrikeAircraftScale", 1f, null, "Battle (test): drawing scale of the aircraft (1 = true size, about 14 m span)");
+            Spacing = cat.CreateEntry("AirStrikeSpacing", 250f, null, "Battle (test): distance (m) between the aircraft of one section in the formation and between their drop points along the target");
+            Turb = cat.CreateEntry("AirStrikeTurbulence", 1f, null, "Battle (test): strength of the aircraft's natural motion - bumps, drift, wobble and banking into turns (0 = rigid flight)");
+            BarrageFx = cat.CreateEntry("AirStrikeBarrage", true, null, "Battle (test): show the defending fleet's barrage - tracers and shell bursts of the light guns, splash columns of the heavy guns ahead of aircraft running in low");
         }
 
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][AirStrike] " + m); }
@@ -57,6 +61,7 @@ namespace DipGgFixes
         {
             public GameObject Go, Torp; public Transform Prop; public Phase P; public Vector3 Pos, Dir; public Ship Target; public float Side; public bool Dropped;
             public float Fall; public int Wave; public float RockFrom = -1f; public HashSet<IntPtr> Greeted = new HashSet<IntPtr>();
+            public float SlotOff, Seed, Roll;   // 1.11.391: own place in the attack (along the target), turbulence seed, bank angle
         }
         static readonly List<Plane> planes = new List<Plane>();
         static IntPtr battle; static float battleT; static int wavesSent; static float nextWave;
@@ -67,7 +72,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            FxClear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -105,7 +110,7 @@ namespace DipGgFixes
                     else Launch(b.Ships);
                     wavesSent++;
                 }
-                Move(dt, b.Ships);
+                Move(dt, b.Ships); FxTick();
                 // a wave whose aircraft have all gone (away or down): its result once
                 foreach (var kv in waveStats)
                 {
@@ -156,9 +161,13 @@ namespace DipGgFixes
             {
                 float side = (k % 2 == 0) ? 1f : -1f;                       // half on each beam
                 var right = Vector3.Cross(Vector3.up, from);
-                var start = tp + from * startDist + right * (side * 800f + (k / 2) * 120f * side) + Vector3.up * 300f;
+                // 1.11.391 (author 29.10 17:57: "they are too close together"): each aircraft keeps its own place - sections spaced
+                // AirStrikeSpacing apart, staggered back and up, and each drops at its own point along the target (a fan of torpedoes)
+                int slot = k / 2, perSide = (n + (side > 0 ? 1 : 0)) / 2; float sp = Spacing.Value;
+                var start = tp + from * (startDist + slot * sp * 0.5f) + right * side * (800f + slot * sp) + Vector3.up * (300f + slot * 25f);
                 int yr = 1925; try { yr = (int)target.GetYear(target); } catch { }
-                var pl = new Plane { Go = Build(yr), Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave };
+                var pl = new Plane { Go = Build(yr), Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
+                    SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f };
                 planes.Add(pl);
             }
             try { Dispatch.Air(atkIsPlayer ? $"HMS Furious: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
@@ -368,7 +377,7 @@ namespace DipGgFixes
             float toDrop = Flat(t.position - p.Pos) / Mathf.Max(1f, pv);
             var future = t.position + vel * (toDrop + 1000f / Mathf.Max(1f, tw));
             var dir = Quaternion.Euler(0f, p.Side * 80f, 0f) * f;
-            var rp = future + dir * 1000f; rp.y = 30f; return rp;
+            var rp = future + dir * 1000f + f * p.SlotOff; rp.y = 30f; return rp;
         }
 
         static void Move(float dt, Il2CppSystem.Collections.Generic.List<Ship> ships)
@@ -405,10 +414,10 @@ namespace DipGgFixes
                         if (Flat(p.Pos - tp) > 12000f) { UnityEngine.Object.Destroy(p.Go); planes.RemoveAt(i); continue; }
                     }
                     var d = goal - p.Pos; var nd = d.sqrMagnitude > 1f ? d.normalized : p.Dir;
+                    var oldDir = p.Dir;
                     p.Dir = p.Dir.sqrMagnitude < 0.01f ? nd : Vector3.Slerp(p.Dir, nd, Mathf.Clamp01(dt * 1.5f)).normalized;
                     p.Pos += p.Dir * v * dt;
-                    p.Go.transform.position = p.Pos;
-                    p.Go.transform.rotation = Quaternion.LookRotation(p.Dir, Vector3.up);
+                    Pose(p, oldDir, dt);
                     // wing rocking over our own ships - the airmen's greeting to the sailors below: a few rolls of about 25 deg
                     if (p.P == Phase.Approach)
                         for (int si = 0; si < ships.Count; si++)
@@ -424,6 +433,107 @@ namespace DipGgFixes
             }
         }
         static float Flat(Vector3 d) { d.y = 0f; return d.magnitude; }
+
+        // 1.11.391 (author 29.10 17:57: "the flight looks plastic - no buffeting, no drift, the controls don't work"): the drawn
+        // aircraft is no longer nailed to its path. It banks into every turn (roll follows the rate of turn, smoothed), its nose
+        // follows the climb or dive, and slow noise adds the bumps of gusty air - rising and sinking a few metres, drifting sideways,
+        // small rolls, pitch and yaw. Low over the sea (the torpedo run at 30 m) the bumps are smaller and quicker. The path itself
+        // (aim, drop, anti-aircraft) is unchanged; AirStrikeTurbulence scales the motion, 0 = rigid as before.
+        static void Pose(Plane p, Vector3 oldDir, float dt)
+        {
+            float k = Turb != null ? Mathf.Max(0f, Turb.Value) : 1f;
+            Vector3 fa = new Vector3(oldDir.x, 0f, oldDir.z), fb = new Vector3(p.Dir.x, 0f, p.Dir.z);
+            float rate = (fa.sqrMagnitude > 0.001f && fb.sqrMagnitude > 0.001f && dt > 0f) ? Vector3.SignedAngle(fa, fb, Vector3.up) / dt : 0f;
+            float bank = Mathf.Clamp(-rate * 1.6f, -55f, 55f) * Mathf.Min(1f, k);
+            p.Roll = Mathf.Lerp(p.Roll, bank, Mathf.Clamp01(dt * 2.5f));
+            float t = Time.time, s = p.Seed; bool low = p.Pos.y < 80f;
+            float amp = (low ? 0.5f : 1f) * k, fq = low ? 1.6f : 1f;
+            float N(float o, float f) { return (Mathf.PerlinNoise(s + o, t * f * fq) - 0.5f) * 2f; }
+            var right = Vector3.Cross(Vector3.up, fb.sqrMagnitude > 0.001f ? fb.normalized : Vector3.forward);
+            var pos = p.Pos + Vector3.up * (N(0f, 0.55f) * 3.5f + N(7f, 2.1f) * 0.8f) * amp + right * N(13f, 0.35f) * 5f * amp;
+            p.Go.transform.position = pos;
+            float pitch = N(21f, 0.9f) * 3f * amp, yaw = N(29f, 0.6f) * 2.5f * amp, roll = (N(37f, 0.8f) * 6f + N(43f, 3.0f) * 1.5f) * amp;
+            p.Go.transform.rotation = Quaternion.LookRotation(p.Dir, Vector3.up) * Quaternion.Euler(pitch, yaw, p.Roll + roll);
+        }
+
+        // 1.11.391 (author 29.10 17:57: "I didn't see a barrage of the whole fleet - the whole fleet should fire"): every defending
+        // ship in range shows its fire at the aircraft - tracers of the light guns from the ship towards the aircraft, dark shell bursts
+        // around them, and white splash columns that the heavy guns raise in the sea ahead of aircraft running in low. Only the
+        // picture: the chance of bringing an aircraft down is the one of Aa(). Switch AirStrikeBarrage; at most 220 effects at once.
+        class Fx { public GameObject G; public float T0, Life, Size; public int Kind; public Vector3 A, B; }
+        static readonly List<Fx> fx = new List<Fx>();
+        static GameObject FxPrim(PrimitiveType t, Color c, bool glow)
+        {
+            var g = GameObject.CreatePrimitive(t);
+            try { var cl = g.GetComponent<Collider>(); if (cl != null) UnityEngine.Object.Destroy(cl); } catch { }
+            try
+            {
+                var r = g.GetComponent<Renderer>(); var m = r.material; m.color = c; try { m.SetFloat("_Glossiness", 0.05f); } catch { }
+                if (glow) { try { m.EnableKeyword("_EMISSION"); m.SetColor("_EmissionColor", c * 3f); } catch { } }
+                try { r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; r.receiveShadows = false; } catch { }
+            }
+            catch { }
+            return g;
+        }
+        static void Barrage(Plane p, Ship s, float d, (int light, int heavy) g, bool low, float dt)
+        {
+            if (BarrageFx == null || !BarrageFx.Value || fx.Count >= 220 || p.Go == null) return;
+            var ap = p.Go.transform.position; float now = Time.time;
+            var sp = s.transform.position + Vector3.up * 10f;
+            if (g.light > 0)
+            {
+                float n = Mathf.Min(g.light, 8);
+                if (UnityEngine.Random.value < n * 1.2f * dt)
+                {   // tracer: a short glowing streak flying from the ship past the aircraft
+                    var aim = ap + p.Dir * UnityEngine.Random.Range(-40f, 120f) + UnityEngine.Random.insideUnitSphere * 45f;
+                    var go = FxPrim(PrimitiveType.Cube, new Color(1f, 0.55f, 0.15f), true);
+                    go.transform.localScale = new Vector3(0.6f, 0.6f, 28f);
+                    fx.Add(new Fx { G = go, T0 = now, Life = Mathf.Clamp((aim - sp).magnitude / 900f, 0.4f, 2.5f), Kind = 0, A = sp, B = aim });
+                }
+                if (UnityEngine.Random.value < n * 0.7f * dt)
+                {   // shell burst around the aircraft
+                    var at = ap + p.Dir * UnityEngine.Random.Range(-60f, 160f) + UnityEngine.Random.insideUnitSphere * 75f; if (at.y < 12f) at.y = 12f + UnityEngine.Random.value * 15f;
+                    var go = FxPrim(PrimitiveType.Sphere, new Color(0.13f, 0.12f, 0.11f), false); go.transform.position = at; go.transform.localScale = Vector3.one * 2f;
+                    fx.Add(new Fx { G = go, T0 = now, Life = 3.2f, Kind = 1, A = at, Size = UnityEngine.Random.Range(9f, 15f) });
+                }
+            }
+            if (low && g.heavy > 0 && d <= SplashRange.Value && UnityEngine.Random.value < Mathf.Min(g.heavy, 6) * 0.35f * dt)
+            {   // splash column of a heavy shell fired into the sea ahead of the aircraft
+                var f = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; var r = Vector3.Cross(Vector3.up, f);
+                var at = p.Pos + f * UnityEngine.Random.Range(80f, 650f) + r * UnityEngine.Random.Range(-90f, 90f); at.y = 0f;
+                var go = FxPrim(PrimitiveType.Cylinder, new Color(0.90f, 0.93f, 0.95f), false);
+                fx.Add(new Fx { G = go, T0 = now, Life = 4f, Kind = 2, A = at, Size = UnityEngine.Random.Range(28f, 48f) });
+                go.transform.position = at; go.transform.localScale = new Vector3(7f, 0.01f, 7f);
+            }
+        }
+        static void FxTick()
+        {
+            float now = Time.time;
+            for (int i = fx.Count - 1; i >= 0; i--)
+            {
+                var e = fx[i];
+                try
+                {
+                    float a = (now - e.T0) / e.Life;
+                    if (e.G == null || a >= 1f || a < 0f) { if (e.G != null) UnityEngine.Object.Destroy(e.G); fx.RemoveAt(i); continue; }
+                    var tr = e.G.transform;
+                    if (e.Kind == 0) { var d = e.B - e.A; tr.position = e.A + d * a; tr.rotation = Quaternion.LookRotation(d.normalized, Vector3.up); }
+                    else if (e.Kind == 1)
+                    {
+                        float sc = a < 0.12f ? Mathf.Lerp(2f, e.Size, a / 0.12f) : a < 0.6f ? e.Size * (1f + (a - 0.12f) * 0.4f) : e.Size * 1.2f * (1f - (a - 0.6f) / 0.4f);
+                        tr.localScale = Vector3.one * Mathf.Max(0.01f, sc); tr.position = e.A + Vector3.up * (now - e.T0) * 1.2f;
+                    }
+                    else
+                    {
+                        float h = a < 0.2f ? e.Size * (a / 0.2f) : a < 0.45f ? e.Size : e.Size * (1f - (a - 0.45f) / 0.55f);
+                        float w = 7f + a * 9f; h = Mathf.Max(0.01f, h);
+                        tr.localScale = new Vector3(w, h * 0.5f, w); tr.position = e.A + Vector3.up * (h * 0.5f);
+                    }
+                }
+                catch { try { UnityEngine.Object.Destroy(e.G); } catch { } fx.RemoveAt(i); }
+            }
+        }
+        static void FxClear() { foreach (var e in fx) { try { if (e.G != null) UnityEngine.Object.Destroy(e.G); } catch { } } fx.Clear(); }
 
         // 1.11.377 (author 29.10 14:59: "take a screenshot of the air strike - or a series"): screenshots at the run-in, then every 3 s
         // of real time while aircraft are running in, at each drop and at each aircraft shot down (at most 60 per battle)
@@ -655,6 +765,7 @@ namespace DipGgFixes
                 float d = Flat(s.transform.position - p.Pos);
                 if (d > r) continue;
                 var g = Guns(s); guns += g.light;
+                try { Barrage(p, s, d, g, low, dt); } catch { }
                 float ml = Mathf.Pow(1f - Mathf.Clamp01(AaPerGun.Value * YearF(s)), g.light * dt);
                 miss *= ml; missLight *= ml;
                 if (low && d <= SplashRange.Value && g.heavy > 0) { heavy += g.heavy; miss *= Mathf.Pow(1f - Mathf.Clamp01(SplashPerGun.Value), g.heavy * dt); }
