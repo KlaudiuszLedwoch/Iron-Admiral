@@ -23,12 +23,14 @@ namespace DipGgFixes
     internal static class AirStrike
     {
         internal static MelonPreferences_Entry<bool> On, Screens;
+        internal static MelonPreferences_Entry<string> Model;
         internal static MelonPreferences_Entry<int> Waves, PerWave;
         internal static MelonPreferences_Entry<float> FirstAfter, Interval, SpeedMs, AaRange, AaPerGun, SplashRange, SplashPerGun, TorpRunM, TorpKn, Scale;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("AirStrikeTest", false, null, "Battle (test): torpedo aircraft of the AI side come in waves from beyond the horizon in daylight and attack the largest ship of the player's side from both beams; light guns of 2-3 in on the defending ships can shoot them down, heavier guns fire splash barrages at aircraft running in low (prototype of carrier and shore-based air strikes, #85)");
             Screens = cat.CreateEntry("AirStrikeScreenshots", false, null, "Battle (test): a series of screenshots of every air strike - the run-in, each torpedo drop and each aircraft shot down (UserData\\IronAdmiral\\screens)");
+            Model = cat.CreateEntry("AirStrikeModel", "sopwith_camel", null, "Battle (test): aircraft model from Mods\\IronAdmiral_Models (file name without .iam); empty or missing = aircraft drawn from simple solids");
             Waves = cat.CreateEntry("AirStrikeWaves", 3, null, "Battle (test): number of air strike waves per battle");
             PerWave = cat.CreateEntry("AirStrikeAircraftPerWave", 6, null, "Battle (test): torpedo aircraft in one wave");
             FirstAfter = cat.CreateEntry("AirStrikeFirstAfter", 60f, null, "Battle (test): seconds of battle time before the first wave arrives");
@@ -159,6 +161,23 @@ namespace DipGgFixes
         static Transform lastProp; static GameObject lastTorp;
         static GameObject Build(int year)
         {
+            // 1.11.383: a model from Mods\IronAdmiral_Models when there is one (AirStrikeModel), with the torpedo slung under it
+            var model = Model != null ? Model.Value : "";
+            if (!string.IsNullOrEmpty(model))
+            {
+                var mg = AirModels.Spawn(model, Scale.Value);
+                if (mg != null)
+                {
+                    var mt = new GameObject("torpedo"); mt.transform.SetParent(mg.transform, false);
+                    var body = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    try { UnityEngine.Object.Destroy(body.GetComponent<Collider>()); } catch { }
+                    try { body.GetComponent<Renderer>().material.color = new Color(0.20f, 0.21f, 0.22f); } catch { }
+                    body.transform.SetParent(mt.transform, false); body.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                    body.transform.localScale = new Vector3(0.45f, 2.3f, 0.45f) * Scale.Value; body.transform.localPosition = new Vector3(0f, -1.0f, 0f) * Scale.Value;
+                    lastProp = null; lastTorp = mt;
+                    return mg;
+                }
+            }
             var root = new GameObject("IA_AirStrike_Plane");
             float s = Scale.Value;
             bool late = year >= 1930;
@@ -391,7 +410,9 @@ namespace DipGgFixes
         // (or the bridge), time frozen, the interface hidden (canvases and the mod's own panels), ReShade's screenshot key
         // (PrintScreen, ReShade.ini KeyScreenshot=44) pressed, then everything restored. ReShade saves the picture at the screen's
         // resolution in the game folder's screenshots folder (ReShade.ini SavePath).
-        internal static bool Hiding; static bool busy, lastBridge;
+        internal static bool Hiding; static bool busy, lastBridge, cam2Was; static Cam cam2;
+        static Camera holdCam; static Vector3 holdPos; static Quaternion holdRot; static float holdFov;
+        internal static void LateTick() { if (holdCam == null) return; try { holdCam.transform.position = holdPos; holdCam.transform.rotation = holdRot; holdCam.fieldOfView = holdFov; } catch { } }
         // the game's own screen capture at the screen's resolution (UserData\IronAdmiral\screens); it is written at the end of the frame
         static System.Reflection.MethodInfo capture;
         static void SaveScreen(string tag)
@@ -435,11 +456,14 @@ namespace DipGgFixes
                 {
                     Pose(p, tag, out var cam, out var look, out var fov, out var bridge); lastBridge = bridge;
                     try { cc = UnityEngine.Object.FindObjectOfType<CameraController>(); if (cc != null) { ccWas = cc.enabled; cc.enabled = false; } } catch { }
+                    // 1.11.383 (shots 16:27: the battle camera Cam kept its own view): pause Cam too, and hold the pose every LateUpdate
+                    try { cam2 = Cam.Instance; if (cam2 != null) { cam2Was = cam2.enabled; cam2.enabled = false; } } catch { }
                     oPos = c.transform.position; oRot = c.transform.rotation; oFov = c.fieldOfView; oMask = c.cullingMask; oScale = Time.timeScale;
                     Time.timeScale = 0f; Hiding = true;
                     try { foreach (var x in UnityEngine.Object.FindObjectsOfType<Canvas>()) if (x != null && x.enabled) { x.enabled = false; canv.Add(x); } } catch { }
                     int ui = LayerMask.NameToLayer("UI"); if (ui >= 0) c.cullingMask = oMask & ~(1 << ui);
                     c.transform.position = cam; c.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up); c.fieldOfView = fov;
+                    holdCam = c; holdPos = cam; holdRot = c.transform.rotation; holdFov = fov;
                     set = true;
                     Log($"screenshot on screen: {tag} ({(bridge ? "from the bridge" : "observer at the ship")}) - {p.Target.name}");
                 }
@@ -460,9 +484,10 @@ namespace DipGgFixes
                     Time.timeScale = oScale;
                 }
                 if (cc != null) cc.enabled = ccWas;
+                if (cam2 != null) cam2.enabled = cam2Was;
             }
             catch { }
-            Hiding = false; busy = false;
+            holdCam = null; Hiding = false; busy = false;
         }
         static Type convT; static System.Reflection.MethodInfo encode;
         static bool View(Plane p, string tag)
@@ -492,6 +517,7 @@ namespace DipGgFixes
                 oPos = c.transform.position; oRot = c.transform.rotation; oFov = c.fieldOfView; oMask = c.cullingMask; oTarget = c.targetTexture; moved = true;
                 int ui = LayerMask.NameToLayer("UI");
                 c.transform.position = cam; c.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up); c.fieldOfView = fov;
+                    holdCam = c; holdPos = cam; holdRot = c.transform.rotation; holdFov = fov;
                 if (ui >= 0) c.cullingMask = oMask & ~(1 << ui);
                 int w = 1920, h = 1080;
                 rt = new RenderTexture(w, h, 24); c.targetTexture = rt; c.Render();
