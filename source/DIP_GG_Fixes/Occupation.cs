@@ -21,6 +21,9 @@ namespace DipGgFixes
     internal static class Occupation
     {
         internal static MelonPreferences_Entry<bool> On;
+        // 1.11.359: the monthly garrison cost taken by Independence (Economy.cs) per occupier - shown in the decision window
+        internal struct BurdenInfo { internal float Money; internal int Count; }
+        internal static readonly Dictionary<IntPtr, BurdenInfo> Burden = new Dictionary<IntPtr, BurdenInfo>();
         internal static MelonPreferences_Entry<float> RelMonthly, PayShare, HardUnrest, HardRevolt, Relief;
         internal static MelonPreferences_Entry<float> Steps;
 
@@ -60,7 +63,7 @@ namespace DipGgFixes
             foreach (var kv in autonomy) yield return "A|" + kv.Key + "|" + kv.Value;
             foreach (var kv in hardUntil) yield return "H|" + kv.Key + "|" + kv.Value;
         }
-        internal static void Reset() { autonomy.Clear(); hardUntil.Clear(); held.Clear(); queue.Clear(); }
+        internal static void Reset() { autonomy.Clear(); hardUntil.Clear(); held.Clear(); queue.Clear(); Burden.Clear(); }
 
         // 1.11.153: cost base - the net monthly income, but never less than a quarter of the monthly revenue (Budget; Income =
         // Budget - Expenses). 23.10 log: Germany, Spain, Russia paid 0.0M because their net income was not positive.
@@ -278,18 +281,22 @@ namespace DipGgFixes
                 next.Clear();
                 var d = queue[0];
                 // 1.11.191: one window per occupied province, one after another (the queue is filled strongest rising first)
-                float w = Math.Min(640f, UiScale.W - 40f), h = 330f;
+                float w = Math.Min(640f, UiScale.W - 40f), h = 370f;
                 var r = new Rect((UiScale.W - w) / 2f, (UiScale.H - h) / 2f, w, h);
                 GUI.Box(r, ""); GUI.Box(r, ""); GUI.Box(r, "");
                 string tgt = Nice(d.Target.Id); int lv = Level(d.Target.Id) + 1;
                 int left = queue.Count(q => q.Who.Pointer == d.Who.Pointer) - 1;
                 string owner = d.Target.Nation; try { if (d.Target.Orig != null) owner = Economy.Name(d.Target.Orig); } catch { }
                 GUI.Label(new Rect(r.x + 14f, r.y + 10f, w - 28f, 24f), $"<b>Administration of the occupied lands: {tgt}</b>" + (left > 0 ? $"  ({left} more to decide)" : ""), sTitle);
-                GUI.Label(new Rect(r.x + 14f, r.y + 40f, w - 28f, 190f),
+                GUI.Label(new Rect(r.x + 14f, r.y + 40f, w - 28f, 230f),
                     $"We hold {tgt}, national land of {owner}" + (Level(d.Target.Id) > 0 ? $" (autonomy {Level(d.Target.Id)}/{MaxSteps()})" : "") + ". Its people do not accept our rule and the other powers watch us. How shall we govern it this turn?\n\n" +
-                    $"<b>Pay</b> for garrisons and administration: about {d.Cost / 1e6f:0.0}M.\n" +
+                    // 1.11.359 (#78, player 29.10: "100 millions evaporated" at the start of the turn before any answer): the monthly
+                    // garrison cost of all occupied core provinces is taken automatically at the turn start, whatever is chosen here -
+                    // the window now says so and how much it was
+                    (Burden.TryGetValue(d.Who.Pointer, out var bn) && bn.Money > 0f ? $"<b>Already taken this month</b>: {bn.Money / 1e6f:0.0}M - the standing garrison cost of all {bn.Count} occupied core province(s), whatever you choose below.\n" : "") +
+                    $"<b>Pay</b> for garrisons and administration: about {d.Cost / 1e6f:0.0}M more.\n" +
                     $"<b>Grant autonomy</b> to {tgt}: step {lv} of {MaxSteps()}" + (lv >= MaxSteps() ? " - the province returns peacefully to its nation" : " - less unrest and fewer risings there, better relations with its nation") + ".\n" +
-                    $"<b>Hard hand</b>: no money, but unrest at home +{d.Unrest:0.#}, stronger risings for three months and worse relations.", sText);
+                    $"<b>Hard hand</b>: no more money, but unrest at home +{d.Unrest:0.#}, stronger risings for three months and worse relations.", sText);
                 float bw = (w - 56f) / 3f, by = r.yMax - 64f;
                 Btn(new Rect(r.x + 14f, by, bw, 48f), "<b>Pay</b>", () => { queue.RemoveAt(0); Pay(d); });
                 Btn(new Rect(r.x + 28f + bw, by, bw, 48f), lv >= MaxSteps() ? "<b>Grant self-rule</b>" : "<b>Grant autonomy</b>", () => { queue.RemoveAt(0); Autonomy(d); });

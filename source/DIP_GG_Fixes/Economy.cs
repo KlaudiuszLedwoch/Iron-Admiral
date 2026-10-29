@@ -1101,6 +1101,7 @@ namespace DipGgFixes
                     float money = Occupation.CostBase(who) * share; // 1.11.153: budget when the net income is zero or negative (cost was 0)
                     try { if (u > 0f) who.AddUnrest(u); } catch { }
                     try { if (money > 0f) who.cash = who.cash - money; } catch { }
+                    Occupation.Burden[who.Pointer] = new Occupation.BurdenInfo { Money = Math.Max(0f, money), Count = burdenCount[kv.Key] }; // 1.11.359 (#78)
                     MelonLogger.Msg($"[DIP GG Fixes][Independence] occupation of {burdenCount[kv.Key]} foreign core province(s) by {Economy.Name(who)}: unrest +{u:0.##}, garrison cost {money / 1e6f:0.0}M this month");
                 }
                 try { Occupation.Month(now); } catch (Exception oe) { MelonLogger.Warning("[DIP GG Fixes][Occupation] " + oe.Message); } // 1.11.151
