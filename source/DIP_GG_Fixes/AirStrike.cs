@@ -382,7 +382,7 @@ namespace DipGgFixes
             if (ev) { if (Time.realtimeSinceStartup < nextDrop) return; nextDrop = Time.realtimeSinceStartup + gap; }
             else { if (Time.realtimeSinceStartup < nextShot) return; nextShot = Time.realtimeSinceStartup + gap; }
             shots++;
-            if (p != null && p.Go != null && p.Target != null && ReShadeOn()) { if (!busy) MelonCoroutines.Start(ScreenShot(p, tag)); return; }
+            if (p != null && p.Go != null && p.Target != null) { if (!busy) MelonCoroutines.Start(ScreenShot(p, tag)); return; }   // 1.11.382 (author 29.10 16:09: "do it without ReShade"): on screen, saved by the game (ScreenCapture)
             if (p == null || p.Go == null || p.Target == null || !View(p, tag)) AutoTest.Shot("airstrike_" + tag);
         }
 
@@ -391,7 +391,22 @@ namespace DipGgFixes
         // (or the bridge), time frozen, the interface hidden (canvases and the mod's own panels), ReShade's screenshot key
         // (PrintScreen, ReShade.ini KeyScreenshot=44) pressed, then everything restored. ReShade saves the picture at the screen's
         // resolution in the game folder's screenshots folder (ReShade.ini SavePath).
-        internal static bool Hiding; static bool busy;
+        internal static bool Hiding; static bool busy, lastBridge;
+        // the game's own screen capture at the screen's resolution (UserData\IronAdmiral\screens); it is written at the end of the frame
+        static System.Reflection.MethodInfo capture;
+        static void SaveScreen(string tag)
+        {
+            if (capture == null)
+            {
+                Type st = null; foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) { st = a.GetType("UnityEngine.ScreenCapture"); if (st != null) break; }
+                if (st != null) capture = st.GetMethod("CaptureScreenshot", new[] { typeof(string), typeof(int) });
+            }
+            if (capture == null) { Log("screenshot: UnityEngine.ScreenCapture not found"); return; }
+            var dirOut = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "screens"); System.IO.Directory.CreateDirectory(dirOut);
+            var file = System.IO.Path.Combine(dirOut, $"{DateTime.Now:yyyyMMdd_HHmmss}_{shots:00}_airstrike_{tag}.png");
+            capture.Invoke(null, new object[] { file, 1 });
+            Log($"screenshot {file} ({Screen.width}x{Screen.height})");
+        }
         static int reshade = -1;
         static bool ReShadeOn()
         {
@@ -418,7 +433,7 @@ namespace DipGgFixes
             {
                 if (c != null && p.Target != null)
                 {
-                    Pose(p, tag, out var cam, out var look, out var fov, out var bridge);
+                    Pose(p, tag, out var cam, out var look, out var fov, out var bridge); lastBridge = bridge;
                     try { cc = UnityEngine.Object.FindObjectOfType<CameraController>(); if (cc != null) { ccWas = cc.enabled; cc.enabled = false; } } catch { }
                     oPos = c.transform.position; oRot = c.transform.rotation; oFov = c.fieldOfView; oMask = c.cullingMask; oScale = Time.timeScale;
                     Time.timeScale = 0f; Hiding = true;
@@ -426,14 +441,14 @@ namespace DipGgFixes
                     int ui = LayerMask.NameToLayer("UI"); if (ui >= 0) c.cullingMask = oMask & ~(1 << ui);
                     c.transform.position = cam; c.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up); c.fieldOfView = fov;
                     set = true;
-                    Log($"screenshot through ReShade: {tag} ({(bridge ? "from the bridge" : "observer at the ship")}) - {p.Target.name}");
+                    Log($"screenshot on screen: {tag} ({(bridge ? "from the bridge" : "observer at the ship")}) - {p.Target.name}");
                 }
             }
             catch (Exception e) { Log("screenshot (ReShade): " + e.Message); }
             if (set)
             {
                 for (int i = 0; i < 3; i++) yield return null;
-                try { keybd_event(0x2C, 0, 0, UIntPtr.Zero); keybd_event(0x2C, 0, 2, UIntPtr.Zero); } catch (Exception e) { Log("screenshot key: " + e.Message); }
+                try { SaveScreen(tag + "_" + (lastBridge ? "bridge" : "observer")); } catch (Exception e) { Log("screenshot save: " + e.Message); }
                 for (int i = 0; i < 8; i++) yield return null;
             }
             try
