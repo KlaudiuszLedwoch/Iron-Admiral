@@ -259,7 +259,72 @@ namespace DipGgFixes
             if (ev) { if (Time.realtimeSinceStartup < nextDrop) return; nextDrop = Time.realtimeSinceStartup + gap; }
             else { if (Time.realtimeSinceStartup < nextShot) return; nextShot = Time.realtimeSinceStartup + gap; }
             shots++;
+            if (p != null && p.Go != null && p.Target != null && ReShadeOn()) { if (!busy) MelonCoroutines.Start(ScreenShot(p, tag)); return; }
             if (p == null || p.Go == null || p.Target == null || !View(p, tag)) AutoTest.Shot("airstrike_" + tag);
+        }
+
+        // 1.11.380 (author 29.10 15:52: "make them nice - high resolution and ReShade"): with ReShade installed in the game folder
+        // the shot is taken on screen, through ReShade: the battle camera's controller is paused, the camera moved to the observer
+        // (or the bridge), time frozen, the interface hidden (canvases and the mod's own panels), ReShade's screenshot key
+        // (PrintScreen, ReShade.ini KeyScreenshot=44) pressed, then everything restored. ReShade saves the picture at the screen's
+        // resolution in the game folder's screenshots folder (ReShade.ini SavePath).
+        internal static bool Hiding; static bool busy;
+        static int reshade = -1;
+        static bool ReShadeOn()
+        {
+            if (reshade < 0) { try { var g = MelonUtils.GameDirectory; reshade = System.IO.File.Exists(System.IO.Path.Combine(g, "ReShade.ini")) && System.IO.File.Exists(System.IO.Path.Combine(g, "dxgi.dll")) ? 1 : 0; } catch { reshade = 0; } Log("screenshots: " + (reshade == 1 ? "through ReShade (PrintScreen)" : "rendered by the mod (no ReShade)")); }
+            return reshade == 1;
+        }
+        [System.Runtime.InteropServices.DllImport("user32.dll")] static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
+        static void Pose(Plane p, string tag, out Vector3 cam, out Vector3 look, out float fov, out bool bridge)
+        {
+            var st = p.Target.transform; var tp = st.position; tp.y = 0f; var pp = p.Pos;
+            var toPlane = pp - tp; toPlane.y = 0f; if (toPlane.sqrMagnitude < 1f) toPlane = st.right; toPlane.Normalize();
+            var f = st.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) f = Vector3.forward; f.Normalize();
+            bridge = (shots % 2) == 0 && !tag.EndsWith("shotdown");
+            if (bridge) { cam = tp + toPlane * 22f - f * 10f + Vector3.up * 40f; look = new Vector3(pp.x, Mathf.Max(15f, pp.y * 0.8f), pp.z); fov = 45f; }   // the bridge wing on the side of the attack (test 15:56: from inside the superstructure)
+            else { cam = tp - toPlane * 420f - f * 160f + Vector3.up * 45f; look = Vector3.Lerp(tp, new Vector3(pp.x, 0f, pp.z), 0.5f) + Vector3.up * 30f; fov = 40f; }
+        }
+        static System.Collections.IEnumerator ScreenShot(Plane p, string tag)
+        {
+            busy = true;
+            Camera c = Camera.main; CameraController cc = null; bool ccWas = false;
+            Vector3 oPos = Vector3.zero; Quaternion oRot = Quaternion.identity; float oFov = 60f, oScale = 1f; int oMask = -1;
+            var canv = new List<Canvas>(); bool set = false;
+            try
+            {
+                if (c != null && p.Target != null)
+                {
+                    Pose(p, tag, out var cam, out var look, out var fov, out var bridge);
+                    try { cc = UnityEngine.Object.FindObjectOfType<CameraController>(); if (cc != null) { ccWas = cc.enabled; cc.enabled = false; } } catch { }
+                    oPos = c.transform.position; oRot = c.transform.rotation; oFov = c.fieldOfView; oMask = c.cullingMask; oScale = Time.timeScale;
+                    Time.timeScale = 0f; Hiding = true;
+                    try { foreach (var x in UnityEngine.Object.FindObjectsOfType<Canvas>()) if (x != null && x.enabled) { x.enabled = false; canv.Add(x); } } catch { }
+                    int ui = LayerMask.NameToLayer("UI"); if (ui >= 0) c.cullingMask = oMask & ~(1 << ui);
+                    c.transform.position = cam; c.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up); c.fieldOfView = fov;
+                    set = true;
+                    Log($"screenshot through ReShade: {tag} ({(bridge ? "from the bridge" : "observer at the ship")}) - {p.Target.name}");
+                }
+            }
+            catch (Exception e) { Log("screenshot (ReShade): " + e.Message); }
+            if (set)
+            {
+                for (int i = 0; i < 3; i++) yield return null;
+                try { keybd_event(0x2C, 0, 0, UIntPtr.Zero); keybd_event(0x2C, 0, 2, UIntPtr.Zero); } catch (Exception e) { Log("screenshot key: " + e.Message); }
+                for (int i = 0; i < 8; i++) yield return null;
+            }
+            try
+            {
+                if (set)
+                {
+                    foreach (var x in canv) try { if (x != null) x.enabled = true; } catch { }
+                    c.transform.position = oPos; c.transform.rotation = oRot; c.fieldOfView = oFov; c.cullingMask = oMask;
+                    Time.timeScale = oScale;
+                }
+                if (cc != null) cc.enabled = ccWas;
+            }
+            catch { }
+            Hiding = false; busy = false;
         }
         static Type convT; static System.Reflection.MethodInfo encode;
         static bool View(Plane p, string tag)

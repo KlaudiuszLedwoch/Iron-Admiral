@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.379", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.380", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -284,6 +284,7 @@ namespace DipGgFixes
 
         public override void OnGUI()
         {
+            if (AirStrike.Hiding) return;   // 1.11.380: no mod panels on an air strike screenshot
             long t0 = Perf.Enabled ? Perf.T() : 0;
             try { UiScale.Begin(); Gui0(); } finally { UiScale.End(); if (t0 != 0) Perf.Add(Perf.GUI, t0); }
         }
