@@ -49,5 +49,43 @@ namespace DipGgFixes
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][UI] designer part window text: " + e.Message); }
         }
+
+        // 1.11.396 (author 29.10 18:48-18:51, screenshot of the refit designer at 3840x2160: the part window's text still fills the
+        // right edge - "Weight: 617 t" in letters a third of the panel wide): the window's text comes from Ui.GetPartInfoText with
+        // its own <size=..> tags, which override the font size set above, so the 1.11.357 change had no effect (nothing in the log).
+        // The text itself is scaled now: every absolute <size=N> tag becomes N x DesignerPartTextScale and the whole text is
+        // wrapped in <size=..%>, in the designer only.
+        static int textLogged;
+        [HarmonyLib.HarmonyPatch(typeof(Ui), nameof(Ui.GetPartInfoText))]
+        static class Patch_PartInfoText
+        {
+            static void Postfix(ref string __result)
+            {
+                try
+                {
+                    if (Scale == null || string.IsNullOrEmpty(__result)) return;
+                    bool cons = false; try { cons = GameManager.IsConstructor; } catch { }
+                    if (!cons) return;
+                    float k = Mathf.Clamp(Scale.Value, 0.4f, 1.5f); if (Math.Abs(k - 1f) < 0.01f) return;
+                    int tags = 0; var ci = System.Globalization.CultureInfo.InvariantCulture;
+                    var sb = new System.Text.StringBuilder(__result.Length + 32); string src = __result; int pos = 0;
+                    while (true)
+                    {
+                        int a = src.IndexOf("<size=", pos, StringComparison.OrdinalIgnoreCase);
+                        if (a < 0) { sb.Append(src, pos, src.Length - pos); break; }
+                        int b = src.IndexOf('>', a); if (b < 0) { sb.Append(src, pos, src.Length - pos); break; }
+                        string val = src.Substring(a + 6, b - a - 6).Trim(); if (val.EndsWith("px", StringComparison.OrdinalIgnoreCase)) val = val.Substring(0, val.Length - 2);
+                        sb.Append(src, pos, a - pos);
+                        if (float.TryParse(val, System.Globalization.NumberStyles.Float, ci, out float v)) { sb.Append("<size=").Append((v * k).ToString("0.#", ci)).Append('>'); tags++; }
+                        else sb.Append(src, a, b - a + 1);   // % or em: relative, follows the wrapper
+                        pos = b + 1;
+                    }
+                    string s = sb.ToString();
+                    __result = "<size=" + (k * 100f).ToString("0", System.Globalization.CultureInfo.InvariantCulture) + "%>" + s + "</size>";
+                    if (textLogged++ < 2) MelonLogger.Msg($"[DIP GG Fixes][UI] designer part text drawn at {k:P0} ({tags} size tag(s) scaled)");
+                }
+                catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][UI] designer part text: " + e.Message); }
+            }
+        }
     }
 }
