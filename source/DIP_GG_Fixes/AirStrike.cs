@@ -56,7 +56,7 @@ namespace DipGgFixes
         class Plane
         {
             public GameObject Go, Torp; public Transform Prop; public Phase P; public Vector3 Pos, Dir; public Ship Target; public float Side; public bool Dropped;
-            public float Fall; public int Wave;
+            public float Fall; public int Wave; public float RockFrom = -1f; public HashSet<IntPtr> Greeted = new HashSet<IntPtr>();
         }
         static readonly List<Plane> planes = new List<Plane>();
         static IntPtr battle; static float battleT; static int wavesSent; static float nextWave;
@@ -146,18 +146,23 @@ namespace DipGgFixes
             // come in from the side of the attacking fleet, from beyond the horizon (14 km)
             Vector3 from = aiN > 0 ? (aiC / aiN) - tp : -target.transform.forward; from.y = 0f;
             if (from.sqrMagnitude < 1f) from = Vector3.forward; from.Normalize();
+            // 1.11.389 (author 29.10 17:20: "let them appear from behind - flying over their own ships, rocking their wings"): the waves
+            // start 8 km behind the attacking fleet's farthest ship, seen from the target, so they always come over their own ships
+            float startDist = 14000f;
+            for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (!Alive(s) || Defender(s)) continue; var d = s.transform.position - tp; d.y = 0f; float along = Vector3.Dot(d, from); if (along + 8000f > startDist) startDist = along + 8000f; }
             int n = Math.Max(1, PerWave.Value);
             waveStats[wave] = new int[4]; waveStats[wave][0] = n;
             for (int k = 0; k < n; k++)
             {
                 float side = (k % 2 == 0) ? 1f : -1f;                       // half on each beam
                 var right = Vector3.Cross(Vector3.up, from);
-                var start = tp + from * 14000f + right * (side * 800f + (k / 2) * 120f * side) + Vector3.up * 300f;
+                var start = tp + from * startDist + right * (side * 800f + (k / 2) * 120f * side) + Vector3.up * 300f;
                 int yr = 1925; try { yr = (int)target.GetYear(target); } catch { }
                 var pl = new Plane { Go = Build(yr), Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave };
                 planes.Add(pl);
             }
             try { Dispatch.Air(atkIsPlayer ? $"HMS Furious: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
+            Log($"wave {wave}: start {startDist / 1000f:0.0} km from the target, behind the attacking fleet");
             Log($"wave {wave}: {n} {(atkIsPlayer ? "of our" : "enemy")} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
         }
         static Part lastTube; static int tubeLogged;
@@ -404,6 +409,14 @@ namespace DipGgFixes
                     p.Pos += p.Dir * v * dt;
                     p.Go.transform.position = p.Pos;
                     p.Go.transform.rotation = Quaternion.LookRotation(p.Dir, Vector3.up);
+                    // wing rocking over our own ships - the airmen's greeting to the sailors below: a few rolls of about 25 deg
+                    if (p.P == Phase.Approach)
+                        for (int si = 0; si < ships.Count; si++)
+                        {
+                            var s = ships[si]; if (!Alive(s) || Defender(s) || p.Greeted.Contains(s.Pointer)) continue;
+                            if (Flat(s.transform.position - p.Pos) < 450f) { p.Greeted.Add(s.Pointer); if (p.RockFrom < 0f || Time.time - p.RockFrom > 3.5f) p.RockFrom = Time.time; Radio(p.Wave, "greet|" + Dispatch.Ship(s.name), atkIsPlayer ? Pick($"Waggle your wings for the lads on {Dispatch.Ship(s.name)}!", $"There's {Dispatch.Ship(s.name)} - give them a wave, chaps!", $"{Dispatch.Ship(s.name)} below - they're cheering us on!") : "Enemy aircraft passing over their own fleet.", false); }
+                        }
+                    if (p.RockFrom >= 0f) { float a = Time.time - p.RockFrom; if (a < 3.2f) p.Go.transform.rotation *= Quaternion.Euler(0f, 0f, 25f * Mathf.Sin(a * 6f) * (1f - a / 3.2f * 0.4f)); }
                     try { if (p.Prop != null) p.Prop.Rotate(0f, 0f, 1800f * dt, Space.Self); } catch { }
                     if (p.P != Phase.Away || p.Pos.y < 200f) Aa(p, dt, ships);
                 }
