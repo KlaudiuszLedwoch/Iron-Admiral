@@ -40,6 +40,32 @@ namespace DipGgFixes
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Mods] " + m); }
 
+        // 1.11.361 (author 29.10: "can we cover it so that our solutions are on top"): once, 30 s after start (when every mod has
+        // patched), list the game methods that Iron Admiral and another mod both patch, with the owners and the order of the
+        // prefixes - the basis for deciding where our patch must win (Harmony priority) or the other mod's patch must go
+        static bool overlapsDone;
+        internal static void ReportOverlapsOnce(HarmonyLib.Harmony ours)
+        {
+            if (overlapsDone || ours == null || Time.realtimeSinceStartup < 30f) return;
+            overlapsDone = true;
+            try
+            {
+                int n = 0; var byOwner = new Dictionary<string, int>();
+                foreach (var m in HarmonyLib.Harmony.GetAllPatchedMethods().ToList())
+                {
+                    var info = HarmonyLib.Harmony.GetPatchInfo(m); if (info == null) continue;
+                    var owners = info.Owners.ToList();
+                    if (owners.Count < 2 || !owners.Contains(ours.Id)) continue;
+                    n++;
+                    foreach (var ow in owners) if (ow != ours.Id) { byOwner.TryGetValue(ow, out var c); byOwner[ow] = c + 1; }
+                    string pre = string.Join(" > ", info.Prefixes.OrderByDescending(p => p.priority).Select(p => p.owner + "(" + p.priority + ")"));
+                    if (n <= 60) Log($"shared method {m.DeclaringType?.Name}.{m.Name}: owners {string.Join(", ", owners)}; prefixes {(pre.Length > 0 ? pre : "-")}; postfixes {info.Postfixes.Count}, transpilers {info.Transpilers.Count}");
+                }
+                Log(n == 0 ? "no game method is patched by Iron Admiral and another mod" : $"{n} game method(s) patched by Iron Admiral and another mod: {string.Join(", ", byOwner.Select(kv => kv.Key + " " + kv.Value))}");
+            }
+            catch (Exception e) { Log("overlap report failed: " + e.Message); }
+        }
+
         internal static void Scan()
         {
             if (scanned) return; scanned = true;

@@ -260,6 +260,7 @@ namespace DipGgFixes
             try { Dispatch.Tick(); } catch { }
             try { PrizeDesign.SessionMerge(); } catch { } // 1.11.353 (#72)
             try { DesignerText.Tick(); } catch { } // 1.11.357
+            try { OtherMods.ReportOverlapsOnce(Harm); } catch { } // 1.11.361
             try { TorpedoSettings.Tick(); } catch { } try { TorpedoPriority.Tick(); } catch { } // 1.11.251, 1.11.259
             try { HistDesigner.Tick(); } catch { }
             try { AutoTest.Tick(); } catch { } try { RelationRepair.Tick(); } catch { } // 1.11.286
