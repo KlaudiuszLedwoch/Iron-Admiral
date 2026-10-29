@@ -60,7 +60,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            planes.Clear(); waveStats.Clear(); reported.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -166,18 +166,38 @@ namespace DipGgFixes
 
         // aim point for the run (author 29.10 12:40: torpedo aircraft attacked from the beam - the longest target): abeam of the point the
         // target will reach (80 deg off its bow) on the plane's side, 1000 m out - both halves of the wave from opposite beams (anvil)
+        // 1.11.376 (test 29.10 14:05, 1918: 13 torpedoes dropped 1640 m out at 47 deg off the bow, no hit; the 30 deg / 1200 m point
+        // had stayed in by mistake): the drop point is abeam (80 deg) of where the target will be when the torpedo arrives, 1000 m out.
+        // Everything in world units: the battle runs ships and torpedoes faster than real time (a torpedo of 35 kn = 18 m/s runs at
+        // about 3.4 world units/s per m/s - Ship.ModifySpeedTorpedo), so the aircraft fly at the same scale and the target's velocity
+        // is measured from its movement, not taken from the game's speed units.
+        static float Scale0 = -1f;
+        static float WorldScale() { if (Scale0 <= 0f) { Scale0 = TorpedoSettings.World(10f) / 10f; if (Scale0 <= 0.1f || Scale0 > 20f) Scale0 = 3.2f; } return Scale0; }
+        static readonly Dictionary<IntPtr, (Vector3 pos, Vector3 vel, float t)> track = new Dictionary<IntPtr, (Vector3, Vector3, float)>();
+        static Vector3 Vel(Ship s)
+        {
+            var pos = s.transform.position; pos.y = 0f; float now = battleT;
+            if (track.TryGetValue(s.Pointer, out var k))
+            {
+                float dt = now - k.t; if (dt < 0.5f) return k.vel;
+                var v = (pos - k.pos) / dt; v = Vector3.Lerp(k.vel, v, k.vel == Vector3.zero ? 1f : 0.5f);
+                track[s.Pointer] = (pos, v, now); return v;
+            }
+            track[s.Pointer] = (pos, Vector3.zero, now); return Vector3.zero;
+        }
         static Vector3 RunPoint(Plane p)
         {
             var t = p.Target.transform; var f = t.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) f = Vector3.forward; f.Normalize();
-            float v = 0f; try { v = BattleAi.Speed(p.Target); } catch { }
-            var ahead = t.position + f * Mathf.Clamp(v * 60f, 0f, 1500f);
-            var dir = Quaternion.Euler(0f, p.Side * 30f, 0f) * f;
-            var rp = ahead + dir * 1200f; rp.y = 30f; return rp;
+            var vel = Vel(p.Target); float tw = TorpedoSettings.World(TorpKn.Value * 0.5144f), pv = SpeedMs.Value * WorldScale();
+            float toDrop = Flat(t.position - p.Pos) / Mathf.Max(1f, pv);
+            var future = t.position + vel * (toDrop + 1000f / Mathf.Max(1f, tw));
+            var dir = Quaternion.Euler(0f, p.Side * 80f, 0f) * f;
+            var rp = future + dir * 1000f; rp.y = 30f; return rp;
         }
 
         static void Move(float dt, Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
-            float v = SpeedMs.Value;
+            float v = SpeedMs.Value * WorldScale();
             for (int i = planes.Count - 1; i >= 0; i--)
             {
                 var p = planes[i];
@@ -197,7 +217,7 @@ namespace DipGgFixes
                     else if (p.P == Phase.Run)
                     {
                         goal = RunPoint(p);
-                        if (Flat(goal - p.Pos) < 150f) { Drop(p); p.P = Phase.Away; }
+                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; }
                     }
                     else goal = p.Pos + new Vector3(p.Dir.x, 0f, p.Dir.z) * 1000f + Vector3.up * 40f;
                     if (p.P == Phase.Away)
@@ -208,7 +228,7 @@ namespace DipGgFixes
                         if (Flat(p.Pos - tp) > 12000f) { UnityEngine.Object.Destroy(p.Go); planes.RemoveAt(i); continue; }
                     }
                     var d = goal - p.Pos; var nd = d.sqrMagnitude > 1f ? d.normalized : p.Dir;
-                    p.Dir = p.Dir.sqrMagnitude < 0.01f ? nd : Vector3.Slerp(p.Dir, nd, Mathf.Clamp01(dt * 0.8f)).normalized;
+                    p.Dir = p.Dir.sqrMagnitude < 0.01f ? nd : Vector3.Slerp(p.Dir, nd, Mathf.Clamp01(dt * 1.5f)).normalized;
                     p.Pos += p.Dir * v * dt;
                     p.Go.transform.position = p.Pos;
                     p.Go.transform.rotation = Quaternion.LookRotation(p.Dir, Vector3.up);
@@ -226,13 +246,17 @@ namespace DipGgFixes
             {
                 if (lastTube == null) return;
                 var t = p.Target.transform; var tp = t.position;
-                float tv = TorpKn.Value * 0.5144f, sv = 0f; try { sv = BattleAi.Speed(p.Target); } catch { }
-                // lead the target: aim where it will be when a torpedo running straight from here reaches its track
-                var start = p.Pos; start.y = 0f; var f = t.forward; f.y = 0f; f.Normalize();
-                float dist = Flat(tp - start), tt = dist / Mathf.Max(1f, tv);
-                var aim = tp + f * sv * tt; aim.y = 0f;
-                var dir = (aim - start); dir.y = 0f; dir.Normalize();
+                float tv = TorpKn.Value * 0.5144f;
                 float speedArg = TorpedoSettings.World(tv);
+                // lead the target (world units): the intercept of a torpedo at speedArg with the target's measured velocity
+                var start = p.Pos; start.y = 0f; var f = t.forward; f.y = 0f; f.Normalize();
+                tp.y = 0f; float dist = Flat(tp - start);
+                var V = Vel(p.Target); var P = tp - start;
+                float a = V.sqrMagnitude - speedArg * speedArg, b = 2f * Vector3.Dot(P, V), c = P.sqrMagnitude, T = dist / Mathf.Max(1f, speedArg);
+                float disc = b * b - 4f * a * c;
+                if (Mathf.Abs(a) > 1e-3f && disc >= 0f) { float sq = Mathf.Sqrt(disc), t1 = (-b - sq) / (2f * a), t2 = (-b + sq) / (2f * a); float tt = t1 > 0f && (t1 < t2 || t2 <= 0f) ? t1 : t2; if (tt > 0f) T = tt; }
+                var aim = tp + V * T; aim.y = 0f;
+                var dir = (aim - start); dir.y = 0f; dir.Normalize();
                 float duration = TorpRunM.Value / Mathf.Max(0.1f, speedArg);
                 var tor = Torpedo.Create(lastTube, start, dir, duration, speedArg);
                 waveStats[p.Wave][1]++;
