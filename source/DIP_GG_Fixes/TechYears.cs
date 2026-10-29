@@ -15,7 +15,7 @@ namespace DipGgFixes
     {
         static readonly Dictionary<long, int> fc = new Dictionary<long, int>();
         static readonly Dictionary<long, int> nose = new Dictionary<long, int>(); static int plLogged;
-        static int logged;
+        static int logged; static readonly System.Collections.Generic.HashSet<string> noseSeen = new System.Collections.Generic.HashSet<string>();   // 1.11.406: one line per ship and generation (log 29.10 23:19: the same ships twice in 30 s)
         internal static void Reset() { fc.Clear(); nose.Clear(); logged = 0; plLogged = 0; }
 
         // year of the newest fire-control component (rangefinder or radar) fitted to the ship; 0 = none found
@@ -69,7 +69,7 @@ namespace DipGgFixes
             {
                 n = fitted >= 1927 ? 2 : fitted >= 1903 ? 1 : 0;
                 bool isPl0 = false; try { isPl0 = s.player != null && s.player.isMain; } catch { }
-                if (logged < 24 || (isPl0 && plLogged++ < 12)) { if (!isPl0) logged++; try { MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = ballistic cap, 2 = 1927+ shells){(isPl0 ? " [player]" : "")} - from the AP shell fitted ({fitted})"); } catch { } }
+                if (noseSeen.Add(s.name + "|" + n) && (logged < 24 || (isPl0 && plLogged++ < 12))) { if (!isPl0) logged++; try { MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = ballistic cap, 2 = 1927+ shells){(isPl0 ? " [player]" : "")} - from the AP shell fitted ({fitted})"); } catch { } }
                 nose[k] = n; return n;
             }
             // 1.11.257 (#31, author's 25.10 battle 13:42: both player BBs of 1921 at generation 0, every British ship at 1): count what
@@ -137,7 +137,7 @@ namespace DipGgFixes
                 }
             }            bool isPl = false; try { isPl = s.player != null && s.player.isMain; } catch { }
             // 1.11.260: the player's ships are always logged (in 1.11.257 the campaign's generated designs used up the 24 lines before any battle)
-            if (logged < 24 || (isPl && plLogged++ < 12)) { if (!isPl) logged++; try { bool pl = isPl; MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}{noseFallback}"); } catch { } }
+            if (noseSeen.Add(s.name + "|" + n) && (logged < 24 || (isPl && plLogged++ < 12))) { if (!isPl) logged++; try { bool pl = isPl; MelonLogger.Msg($"[DIP GG Fixes][Tech] shell nose of {s.name}: generation {n} (0 blunt, 1 = 1907 nose, 2 = 1927 shells){(pl ? " [player]" : "")}; sources: design techs {cDesign}, navy researched {cAll}, navy list {cList} ({cRes} researched); nose technologies seen:{(seen.Length > 0 ? seen.ToString() : " none")}{noseFallback}"); } catch { } }
             nose[k] = n; return n;
         }
     }
