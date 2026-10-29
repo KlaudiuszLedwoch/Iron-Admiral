@@ -432,6 +432,18 @@ namespace DipGgFixes
             //           Dreadnought-era battleships on the 1890 French large hull while modern hulls failed in the generator
             if (!unlockYear.TryGetValue(name, out y)) y = 1890;
             string pk = player.data != null ? player.data.name : player.Pointer.ToString();
+            // 1.11.403 (log 29.10 19:11-19:17, custom battle 1920: Japan's generator took the 1927 hull bb_5_old - Modern Battleship I,
+            // the Yamato-style hull - and failed attempt after attempt, a minute each, because the main tower and funnel that fit it
+            // were not available in 1920 ("Unmet Requirements: tower_main 0, funnel 0", "Tonnage outside tech range")): in a custom
+            // battle a hull whose unlocking technology is later than the battle year is not offered to the generator
+            int cy = CustomBattle.LastYear;
+            bool cb = false; try { cb = GameManager.IsCustomBattle || GameManager.IsCustomBattleSetup; } catch { }
+            if (cb && cy > 0 && y > cy)
+            {
+                result = false;
+                if (logged < 60 && loggedKeys.Add(pk + "|" + name + "|cb")) { logged++; Log($"{pk}: hull {name} ({y}) left out for the AI design - later than the custom battle year {cy}"); }
+                return;
+            }
             string key = pk + "|" + type;
             int m = MonthIndex(); if (m != newestMonth) { newest.Clear(); newestMonth = m; }
             int top;

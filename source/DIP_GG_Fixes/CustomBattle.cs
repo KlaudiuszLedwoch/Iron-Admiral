@@ -51,6 +51,7 @@ namespace DipGgFixes
             try
             {
                 if (!Il2Cpp.GameManager.IsCustomBattle) return true;
+                LastYear = year;   // 1.11.403: the generator's hull filter needs the battle year
                 // 1.11.244 (author's tool): generator tests - no shared design is offered, every ship comes from the generator
                 if (NoShared != null && NoShared.Value) { __result = null; return false; }
                 // 1.11.367 (#80, test 29.10 10:05: usa bb 1916 got the historical class Mississippi (BB-23) of 1908 - a pre-dreadnought,
@@ -67,6 +68,7 @@ namespace DipGgFixes
         // 1.11.363 (#80, player video 28.10: in a 1916 custom battle the AI got a pre-dreadnought and 1890s light cruisers): a shared
         // design much older than the battle year is not used - the ship generator designs a ship for the year instead
         internal static MelonPreferences_Entry<int> MaxAge, HistBack;
+        internal static int LastYear;
         static int oldDropped;
         static void PostShared(Il2Cpp.ShipType shipType, int year, ref Il2Cpp.Ship __result)
         {
