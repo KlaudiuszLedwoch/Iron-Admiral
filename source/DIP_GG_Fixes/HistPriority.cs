@@ -68,7 +68,7 @@ namespace DipGgFixes
         internal static Ship Pick(Player player, ShipType shipType, int year) { return Pick(player, shipType, year, true, null); }
         // 1.11.82: also used for custom battles (TweaksAndFixes' own shared-design call, no technology check, ignore list = designs
         // already placed in this battle)
-        internal static Ship Pick(Player player, ShipType shipType, int year, bool checkTech, System.Collections.Generic.List<Il2CppSystem.Guid> ignore)
+        internal static Ship Pick(Player player, ShipType shipType, int year, bool checkTech, System.Collections.Generic.List<Il2CppSystem.Guid> ignore, int yearsBack = -1)
         {
             if (On == null || !On.Value || player == null || shipType == null) return null;
             var set = Ids(); if (set.Count == 0) return null;
@@ -85,7 +85,7 @@ namespace DipGgFixes
                 if (ignore != null) { bool skip = false; foreach (var g in ignore) if (g.ToString() == id) { skip = true; break; } if (skip) continue; }
                 if (st.shipType != shipType.name) continue;
                 int y = st.YearCreated;
-                if (y > year || y < year - YearsBack.Value) continue;
+                if (y > year || y < year - (yearsBack >= 0 ? yearsBack : YearsBack.Value)) continue;
                 cands.Add(st);
             }
             foreach (var st in cands.OrderByDescending(x => x.YearCreated))

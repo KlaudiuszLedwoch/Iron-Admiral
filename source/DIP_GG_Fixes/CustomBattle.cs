@@ -26,7 +26,8 @@ namespace DipGgFixes
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            MaxAge = cat.CreateEntry("CustomBattleDesignMaxAge", 15, null, "Custom battles: a shared design older than this many years before the battle year is not used - the ship generator designs a ship for the year (0 = any age)"); // 1.11.363 (#80)
+            HistBack = cat.CreateEntry("CustomBattleHistoricalYearsBack", 6, null, "Custom battles: a historical class is chosen only when it is at most this many years older than the battle year (campaign: HistoricalDesignsYearsBack); older - the ship generator designs a ship for the year"); // 1.11.367 (#80)
+            MaxAge = cat.CreateEntry("CustomBattleDesignMaxAge", 8, null, /* 1.11.367: 15 -> 8 (an 8-year-old pre-dreadnought got through in 1916) */ "Custom battles: a shared design older than this many years before the battle year is not used - the ship generator designs a ship for the year (0 = any age)"); // 1.11.363 (#80)
             NoShared = cat.CreateEntry("CustomBattleNoSharedDesigns", false, null, "Author's tool: custom battles take no shared design - every ship comes from the ship generator (generator tests)");
             Pregenerated = cat.CreateEntry("CustomBattlePregenerated", false, null,
                 "Custom battles: let TweaksAndFixes use predefined designs when no shared design fits (off = straight to the ship generator; the game's built-in predefined designs do not load in Iron Admiral). The \"Pregenerated\" button in the custom battle screen still switches it for the running game");
@@ -52,7 +53,10 @@ namespace DipGgFixes
                 if (!Il2Cpp.GameManager.IsCustomBattle) return true;
                 // 1.11.244 (author's tool): generator tests - no shared design is offered, every ship comes from the generator
                 if (NoShared != null && NoShared.Value) { __result = null; return false; }
-                var s = HistPriority.Pick(player, shipType, year, false, ignore);
+                // 1.11.367 (#80, test 29.10 10:05: usa bb 1916 got the historical class Mississippi (BB-23) of 1908 - a pre-dreadnought,
+                // the newest US battleship class in the set): in custom battles a historical class may be at most
+                // CustomBattleHistoricalYearsBack years older than the battle, otherwise the generator designs the ship
+                var s = HistPriority.Pick(player, shipType, year, false, ignore, HistBack != null ? HistBack.Value : -1);
                 if (s != null) { __result = s; return false; }
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][CustomBattle] historical-first: " + e.Message); }
@@ -61,7 +65,7 @@ namespace DipGgFixes
 
         // 1.11.363 (#80, player video 28.10: in a 1916 custom battle the AI got a pre-dreadnought and 1890s light cruisers): a shared
         // design much older than the battle year is not used - the ship generator designs a ship for the year instead
-        internal static MelonPreferences_Entry<int> MaxAge;
+        internal static MelonPreferences_Entry<int> MaxAge, HistBack;
         static int oldDropped;
         static void PostShared(Il2Cpp.ShipType shipType, int year, ref Il2Cpp.Ship __result)
         {
