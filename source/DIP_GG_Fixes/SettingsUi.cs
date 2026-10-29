@@ -177,6 +177,8 @@ namespace DipGgFixes
         static readonly Dictionary<string, Num> Nums = new Dictionary<string, Num>
         {
             {"TorpedoSettings", new Num { E = () => TorpedoSettings.ChangeSeconds, Step = 10f, Min = 0f, Max = 300f, Unit = "s tube reset" } },
+            {"AirStrikeTest", new Num { E = () => AirStrike.Scale, Step = 0.5f, Min = 0.5f, Max = 5f, Unit = "x aircraft size" } },   // 1.11.385
+            {"CustomBattleCarrier", new Num { E = () => AirStrike.Scale, Step = 0.5f, Min = 0.5f, Max = 5f, Unit = "x aircraft size" } },
         };
         static int NumberOf(string id) { int n; return NumOf.TryGetValue(id, out n) ? n : 10000; }
         static List<MelonPreferences_Entry<bool>> Entries(string group)

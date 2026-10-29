@@ -127,8 +127,12 @@ namespace DipGgFixes
         }
 
         // last step of the damage path (OverPen.Deal), after the historical model and the pass-through rule
+        internal static IntPtr CurTorp;
         internal static void Apply(Ship ship, ref float damage, string kind)
         {
+            // 1.11.385 (#85, author's custom battle 29.10 16:55: five torpedoes of the first wave of Camels sank the battleship Kaga, hits of
+            // up to 17,500): a torpedo dropped by an aircraft hits with an aerial warhead - a share of the ship torpedo's damage by year
+            try { if (ship != null && damage > 0f && InTorpedo > 0 && AirStrike.IsAerial(CurTorp)) damage *= AirStrike.WarheadFactor(ship); } catch { }
             if (On == null || !On.Value || ship == null || !(damage > 0f)) return;
             try
             {
@@ -158,13 +162,13 @@ namespace DipGgFixes
     [HarmonyLib.HarmonyPatch(typeof(Torpedo), "Update")]
     internal static class Patch_TorpedoUpdateMark
     {
-        private static void Prefix() { LightShipDamage.InTorpedo++; }
+        private static void Prefix(Torpedo __instance) { LightShipDamage.InTorpedo++; try { LightShipDamage.CurTorp = __instance != null ? __instance.Pointer : IntPtr.Zero; } catch { } }
         private static void Finalizer() { if (LightShipDamage.InTorpedo > 0) LightShipDamage.InTorpedo--; }
     }
     [HarmonyLib.HarmonyPatch(typeof(Torpedo), "FixedUpdate")]
     internal static class Patch_TorpedoFixedUpdateMark
     {
-        private static void Prefix() { LightShipDamage.InTorpedo++; }
+        private static void Prefix(Torpedo __instance) { LightShipDamage.InTorpedo++; try { LightShipDamage.CurTorp = __instance != null ? __instance.Pointer : IntPtr.Zero; } catch { } }
         private static void Finalizer() { if (LightShipDamage.InTorpedo > 0) LightShipDamage.InTorpedo--; }
     }
 }

@@ -67,7 +67,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); aaGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -433,7 +433,7 @@ namespace DipGgFixes
         // resolution in the game folder's screenshots folder (ReShade.ini SavePath).
         internal static bool Hiding; static bool busy, lastBridge, cam2Was; static Cam cam2;
         static Camera holdCam; static Vector3 holdPos; static Quaternion holdRot; static float holdFov;
-        internal static void LateTick() { if (holdCam == null) return; try { holdCam.transform.position = holdPos; holdCam.transform.rotation = holdRot; holdCam.fieldOfView = holdFov; } catch { } }
+        internal static void LateTick() { try { FollowTick(); } catch { } if (holdCam == null) return; try { holdCam.transform.position = holdPos; holdCam.transform.rotation = holdRot; holdCam.fieldOfView = holdFov; } catch { } }
         // the game's own screen capture at the screen's resolution (UserData\IronAdmiral\screens); it is written at the end of the frame
         static System.Reflection.MethodInfo capture;
         static void SaveScreen(string tag)
@@ -589,7 +589,7 @@ namespace DipGgFixes
                 var aim = tp + V * T; aim.y = 0f;
                 var dir = (aim - start); dir.y = 0f; dir.Normalize();
                 float duration = TorpRunM.Value / Mathf.Max(0.1f, speedArg);
-                var tor = Torpedo.Create(lastTube, start, dir, duration, speedArg);
+                var tor = Torpedo.Create(lastTube, start, dir, duration, speedArg); Register(tor, dir);
                 waveStats[p.Wave][1]++;
                 if (drops++ < 30) Log($"wave {p.Wave}: torpedo dropped {dist:0} m from {p.Target.name}, {Vector3.Angle(f, -dir):0} deg off her bow{(tor == null ? " - the game returned no torpedo" : "")}");
             }
@@ -647,6 +647,85 @@ namespace DipGgFixes
                 Shot($"wave{p.Wave}_shotdown", 1.2f, p);
                 if (waveStats[p.Wave][2] <= 4) Log($"wave {p.Wave}: aircraft shot down {(splash ? $"by the splash barrage of the heavy guns ({heavy} gun(s) firing into the sea ahead of it)" : $"by light anti-aircraft guns ({guns} gun(s) of 2-3 in in range)")}{(p.Dropped ? ", after its drop" : ", before its drop")}");
             }
+        }
+
+        // ---------------------------------------------------------------------------------------------------------------------------
+        // 1.11.385 (#85) aerial torpedoes: their own warhead, and a camera that follows them
+        static readonly List<(Torpedo t, Vector3 dir)> aerial = new List<(Torpedo, Vector3)>();
+        static readonly HashSet<IntPtr> aerialPtr = new HashSet<IntPtr>();
+        internal static bool IsAerial(IntPtr p) { return p != IntPtr.Zero && aerialPtr.Contains(p); }
+        // aerial warhead against the ship torpedo of the tube the data come from (claude/torpedy_lotnicze_technologie_85.md: aerial
+        // warheads 145 kg about 1920, 150-210 kg 1931-1937, 240-270 kg 1943-1945; ship torpedoes of the same years carried more)
+        static int factorLogged;
+        internal static float WarheadFactor(Ship hit)
+        {
+            int y = 1925; try { y = (int)hit.GetYear(hit); } catch { }
+            float f = y < 1930 ? 0.5f : y < 1940 ? 0.6f : 0.75f;
+            if (factorLogged++ < 6) Log($"aerial torpedo hit on {hit.name}: damage x{f:0.00} (aerial warhead of its time)");
+            return f;
+        }
+        static void Register(Torpedo t, Vector3 dir)
+        {
+            if (t == null) return;
+            try { aerial.Add((t, dir)); aerialPtr.Add(t.Pointer); } catch { }
+        }
+        static bool Alive(Torpedo t) { try { return t != null && t.gameObject != null && t.gameObject.activeInHierarchy; } catch { return false; } }
+
+        // camera buttons while an air strike is on: follow an aircraft, follow a torpedo just above the water, or free (the game's camera)
+        enum Follow { None, Plane, Torpedo }
+        static Follow follow; static int followIdx; static bool camPaused; static CameraController fcc; static Cam fcam; static bool fccWas, fcamWas;
+        internal static void OnGUI()
+        {
+            if (!active || !GameManager.IsBattle || Hiding) return;
+            bool any = planes.Count > 0 || aerial.Count > 0 || follow != Follow.None;
+            if (!any) return;
+            float w = 150f, h = 26f, x = Screen.width / 2f - w * 1.5f - 8f, y = Screen.height - h - 70f;
+            GUI.Box(new Rect(x - 6f, y - 22f, w * 3f + 28f, h + 30f), "Air strike camera");
+            if (GUI.Button(new Rect(x, y, w, h), (follow == Follow.Plane ? "> " : "") + "Aircraft")) { follow = Follow.Plane; followIdx++; }
+            if (GUI.Button(new Rect(x + w + 8f, y, w, h), (follow == Follow.Torpedo ? "> " : "") + "Torpedo (at the water)")) { follow = Follow.Torpedo; followIdx++; }
+            if (GUI.Button(new Rect(x + 2f * (w + 8f), y, w, h), (follow == Follow.None ? "> " : "") + "Free camera")) { follow = Follow.None; }
+        }
+        static void PauseCam(bool pause)
+        {
+            if (pause == camPaused) return;
+            try
+            {
+                if (pause)
+                {
+                    fcc = UnityEngine.Object.FindObjectOfType<CameraController>(); if (fcc != null) { fccWas = fcc.enabled; fcc.enabled = false; }
+                    fcam = Cam.Instance; if (fcam != null) { fcamWas = fcam.enabled; fcam.enabled = false; }
+                }
+                else { if (fcc != null) fcc.enabled = fccWas; if (fcam != null) fcam.enabled = fcamWas; }
+            }
+            catch { }
+            camPaused = pause;
+        }
+        static void FollowTick()
+        {
+            if (holdCam != null) return;   // a screenshot holds the camera now
+            if (follow == Follow.None || !GameManager.IsBattle) { PauseCam(false); if (!GameManager.IsBattle) follow = Follow.None; return; }
+            var c = Camera.main; if (c == null) return;
+            Vector3 cam, look;
+            if (follow == Follow.Plane)
+            {
+                Plane p = null; int n = planes.Count;
+                for (int k = 0; k < n && p == null; k++) { var q = planes[(followIdx + k) % n]; if (q.Go != null && q.P != Phase.Down) p = q; }
+                if (p == null) { follow = Follow.None; PauseCam(false); return; }
+                var d = p.Dir; d.y = 0f; if (d.sqrMagnitude < 0.01f) d = Vector3.forward; d.Normalize();
+                cam = p.Pos - d * 28f * Scale.Value + Vector3.up * 7f * Scale.Value; look = p.Pos + d * 120f;
+            }
+            else
+            {
+                (Torpedo t, Vector3 dir) best = (null, Vector3.zero); int n = aerial.Count;
+                for (int k = n - 1; k >= 0; k--) if (!Alive(aerial[k].t)) { aerialPtr.Remove(aerial[k].t != null ? aerial[k].t.Pointer : IntPtr.Zero); aerial.RemoveAt(k); }
+                n = aerial.Count; if (n > 0) best = aerial[(followIdx % n + n) % n];
+                if (best.t == null) { if (planes.Count > 0) return; follow = Follow.None; PauseCam(false); return; }
+                var pos = best.t.transform.position; var d = best.dir; d.y = 0f; d.Normalize();
+                cam = new Vector3(pos.x, 0f, pos.z) - d * 14f + Vector3.up * 1.4f;   // just above the surface, behind the torpedo: its wake ahead
+                look = new Vector3(pos.x, 0f, pos.z) + d * 70f + Vector3.up * 0.4f;
+            }
+            PauseCam(true);
+            c.transform.position = cam; c.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up);
         }
 
         static void Summary()
