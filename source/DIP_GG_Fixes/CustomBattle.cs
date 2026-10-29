@@ -26,6 +26,7 @@ namespace DipGgFixes
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
+            MaxAge = cat.CreateEntry("CustomBattleDesignMaxAge", 15, null, "Custom battles: a shared design older than this many years before the battle year is not used - the ship generator designs a ship for the year (0 = any age)"); // 1.11.363 (#80)
             NoShared = cat.CreateEntry("CustomBattleNoSharedDesigns", false, null, "Author's tool: custom battles take no shared design - every ship comes from the ship generator (generator tests)");
             Pregenerated = cat.CreateEntry("CustomBattlePregenerated", false, null,
                 "Custom battles: let TweaksAndFixes use predefined designs when no shared design fits (off = straight to the ship generator; the game's built-in predefined designs do not load in Iron Admiral). The \"Pregenerated\" button in the custom battle screen still switches it for the running game");
@@ -38,7 +39,8 @@ namespace DipGgFixes
                 var t = HarmonyLib.AccessTools.TypeByName("TweaksAndFixes.CampaignControllerM");
                 var m = t == null ? null : HarmonyLib.AccessTools.Method(t, "GetSharedDesign");
                 if (m == null) { MelonLogger.Warning("[DIP GG Fixes][CustomBattle] TweaksAndFixes GetSharedDesign not found - historical-first in custom battles off"); return; }
-                h.Patch(m, new HarmonyLib.HarmonyMethod(typeof(CustomBattle).GetMethod(nameof(PreShared), BindingFlags.Static | BindingFlags.NonPublic)));
+                h.Patch(m, new HarmonyLib.HarmonyMethod(typeof(CustomBattle).GetMethod(nameof(PreShared), BindingFlags.Static | BindingFlags.NonPublic)),
+                new HarmonyLib.HarmonyMethod(typeof(CustomBattle).GetMethod(nameof(PostShared), BindingFlags.Static | BindingFlags.NonPublic))); // 1.11.363 (#80)
                 MelonLogger.Msg("[DIP GG Fixes][CustomBattle] historical classes first in custom battles: hooked");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][CustomBattle] hook failed: " + e.Message); }
@@ -55,6 +57,23 @@ namespace DipGgFixes
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][CustomBattle] historical-first: " + e.Message); }
             return true;
+        }
+
+        // 1.11.363 (#80, player video 28.10: in a 1916 custom battle the AI got a pre-dreadnought and 1890s light cruisers): a shared
+        // design much older than the battle year is not used - the ship generator designs a ship for the year instead
+        internal static MelonPreferences_Entry<int> MaxAge;
+        static int oldDropped;
+        static void PostShared(Il2Cpp.ShipType shipType, int year, ref Il2Cpp.Ship __result)
+        {
+            try
+            {
+                if (__result == null || !Il2Cpp.GameManager.IsCustomBattle || MaxAge == null || MaxAge.Value <= 0) return;
+                float y = __result.GetYear(__result);
+                if (y <= 0f || year - y <= MaxAge.Value) return;
+                if (oldDropped++ < 20) MelonLogger.Msg($"[DIP GG Fixes][CustomBattle] shared design {__result.vesselName} ({y:0}) for {shipType?.name} {year} is more than {MaxAge.Value} years old - the ship generator designs one for the year");
+                __result = null;
+            }
+            catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][CustomBattle] design age: " + e.Message); }
         }
 
         static bool Find()
