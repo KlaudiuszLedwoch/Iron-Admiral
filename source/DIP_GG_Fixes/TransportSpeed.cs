@@ -74,7 +74,7 @@ namespace DipGgFixes
                         {
                             var x = all[i]; var t = x != null ? x.shipType : null; if (t == null || t.name != "tr" || x.player == null) continue;
                             bool armed = false; var ps = x.parts;
-                            for (int j = 0; ps != null && j < ps.Count; j++) { var pd = ps[j] != null ? ps[j].data : null; if (pd != null && pd.isGun) { armed = true; break; } }
+                            for (int j = 0; ps != null && j < ps.Count; j++) { var pd = ps[j] != null ? ps[j].data : null; if (pd != null && (pd.isGun || pd.isTorpedo)) { armed = true; break; } }
                             if (!armed) continue;
                             if (!bySide.TryGetValue(x.player.Pointer, out var l)) { l = new List<Ship>(); bySide[x.player.Pointer] = l; }
                             l.Add(x);
@@ -100,6 +100,17 @@ namespace DipGgFixes
             {
                 try { if (__instance != null && GameManager.IsBattle && Silent(__instance)) return false; } catch { }
                 return true;
+            }
+        }
+
+        // 1.11.373 (test 29.10 12:25, 1935: all six US transports carried torpedo tubes and the torpedo-setting logic wanted to fire
+        // them - none did in that battle): a transport sailing as an unarmed merchant ship does not fire torpedoes either
+        [HarmonyPatch(typeof(Ship), nameof(Ship.allowedToShootTorpedoes), MethodType.Getter)]
+        static class Patch_AllowedTorpedoes
+        {
+            static void Postfix(Ship __instance, ref bool __result)
+            {
+                try { if (__result && __instance != null && GameManager.IsBattle && Silent(__instance)) __result = false; } catch { }
             }
         }
 
