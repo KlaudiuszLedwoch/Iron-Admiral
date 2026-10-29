@@ -294,3 +294,69 @@ $IA_Help_title_ia_49;Settings #148-153: Logs
 $IA_Help_desc_ia_49;Extra lines in the MelonLoader log (Latest.log) for problem reports. They do not change the game; leave them off unless the author asks for them. The tab has 6 switches.\n\n*#148 ArmorDiagnostics* (default OFF)\n[ON] Log only: tests whether the game's penetration depends on target aspect, records impact angles, side/deck hit chances and hit types per battle ([Armor] lines). No effect on gameplay.\n[OFF] No [Armor] lines in the log.\n\n*#149 BallisticsLog* (default ON)\n[ON] Write the shells' time of flight, elevation and angle of fall per calibre and range to the log (for checking the ballistics against real range tables)\n[OFF] No ballistics lines in the log.\n\n*#150 BattleAiLog* (default ON)\n[ON] Write charge/retreat/focus decisions to the MelonLoader log.\n[OFF] The AI's decisions are not written to the log.\n\n*#151 DamageDiagLog* (default ON)\n[ON] Battle log: the game's explosion-damage computation (arguments and result) for the first 60 hits of a battle, with the shell being resolved - for the calibration of the damage model.\n[OFF] No damage computation lines in the log.\n\n*#152 HitLog* (default ON)\n[ON] One log line per shell hit - calibre, weight, striking velocity, angle of fall, armour zone, plate, physical and game penetration, result and damage.\n[OFF] No hit lines in the log.\n\n*#153 PerformanceLog* (default ON)\n[ON] Write a [Perf] line every 30 s with the frame rate and the time the mod takes per frame (for finding slowdowns in large battles)\n[OFF] No [Perf] lines in the log.
 $IA_Help_title_ia_50;Settings #154-160: Info & updates
 $IA_Help_desc_ia_50;Update check, beta channel, problem reports and save compatibility. The tab has 7 switches.\n\n*#154 BetaUpdates* (default OFF - applies after a game restart)\n[ON] Beta updates (for testers - needs Share logs on): the update check offers beta versions (new features under test), off = stable versions, also back from a beta to the latest stable. Takes effect at the next start.\n[OFF] The update check offers stable versions only.\n\n*#155 CheckForUpdates* (default ON - applies after a game restart)\n[ON] At game start fetch the VERSION file of the Iron Admiral GitHub repository (one HTTPS request to raw.githubusercontent.com) and show a message when a newer release exists (1.11.9)\n[OFF] No update check at start.\n\n*#156 CheckOtherMods* (default ON)\n[ON] At start, list other mods installed next to Iron Admiral and offer to move them to a backup folder.\n[OFF] Other mods are not listed at start.\n\n*#157 SaveCompatibilityFix* (default ON)\n[ON] While a save loads, ship designs and nations are checked against the installed game data, parts, components, technologies or turret calibres that no longer exist are removed so the save loads (backup of the saves before the first change). Missing hulls are only reported.\n[OFF] A save with parts or technologies that no longer exist may fail to load.\n\n*#158 ShareLogs* (default OFF)\n[ON] Share logs with the author: battle logs, errors and the session log are sent to help fix and balance the mod (the Windows user name is removed). Required for Beta updates.\n[OFF] Nothing is sent (default).\n\n*#159 UpdateDownloadButton* (default ON - applies after a game restart)\n[ON] Show a Download button in the update message, the download starts only after the player clicks it (1.11.11). false = message with a link only.\n[OFF] The update message has a link only.\n\n*#160 UsageStatistics* (default OFF)\n[ON] Keep anonymous usage counters on this PC (sessions, turns, battles, nation and year) and add them to a problem report - nothing is ever sent, you send the report yourself.\n[OFF] No usage counters are kept (default).
+$techType_name_naval_aviation;Naval Aviation
+$techType_tooltip_naval_aviation;- Develops naval aviation: reconnaissance, aerial torpedoes, carriers and the defence against aircraft.
+$technology_name_av_recon_1;Coastal Seaplane Stations
+$technology_desc_av_recon_1;Seaplanes from stations at our ports patrol the coastal waters (about 100 km). Many reports are wrong and bad weather grounds the aircraft.
+$technology_name_av_recon_2;Naval Airships
+$technology_desc_av_recon_2;Airships scout far out to sea (up to 400 km), but often mistake the ships they sight - cruisers for battleships.
+$technology_name_av_recon_3;Flying Boats
+$technology_desc_av_recon_3;Large flying boats patrol up to about 500 km from base, with fewer mistaken reports.
+$technology_name_av_recon_4;Long-Range Maritime Patrol
+$technology_desc_av_recon_4;Long-range flying boats and patrol aircraft search 800-1000 km out to sea.
+$technology_name_av_recon_5;Airborne Search Radar
+$technology_desc_av_recon_5;Patrol aircraft find ships at night and in fog; reports become reliable.
+$technology_name_av_ship_1;Shipborne Seaplanes
+$technology_desc_av_ship_1;Ships carry seaplanes, hoisted out by crane, to scout before a battle in daylight and calm weather.
+$technology_name_av_ship_2;Shipboard Catapult
+$technology_desc_av_ship_2;Battleships and cruisers launch their floatplanes by catapult without stopping: scouting during the battle.
+$technology_name_av_ship_3;Aerial Gunnery Spotting
+$technology_desc_av_ship_3;Aircraft spot the fall of shot at long range: better accuracy beyond 15 km while a plane is up.
+$technology_name_at_1;Experimental Aerial Torpedo
+$technology_desc_at_1;A light torpedo carried by a seaplane. Only merchant ships and small craft are worth attacking; half the warhead of a ship torpedo.
+$technology_name_at_2;18-inch Aerial Torpedo
+$technology_desc_at_2;A purpose-built aerial torpedo with a warhead of about 145 kg; many runs still fail.
+$technology_name_at_3;Modern Aerial Torpedo
+$technology_desc_at_3;Warhead about 170 kg, 40 knots over 2 km. Dropped at no more than 100 knots from about 15 m.
+$technology_name_at_4;Air Tail Stabilisers
+$technology_desc_at_4;Wooden stabilisers let the torpedo be dropped higher and faster (20 m, 180 knots): a shorter, safer run-in.
+$technology_name_at_5;Heavy Aerial Warhead
+$technology_desc_at_5;Warhead of 210-240 kg.
+$technology_name_at_6;Torpex Filling
+$technology_desc_at_6;Torpex makes the warhead about one and a half times as powerful.
+$technology_name_at_7;Drag Ring and Shroud Ring
+$technology_desc_at_7;The torpedo survives drops from 240-730 m at 300 knots: almost no low run-in and almost no failed runs.
+$technology_name_av_carrier_1;Seaplane Carrier
+$technology_desc_av_carrier_1;Converted ships carry seaplanes for strikes: two small waves at most, only in calm seas.
+$technology_name_av_carrier_2;Flying-Off Deck
+$technology_desc_av_carrier_2;Aircraft take off from - and land on - a deck at sea: larger waves.
+$technology_name_av_carrier_3;Full-Length Flight Deck
+$technology_desc_av_carrier_3;A full flight deck: more waves in a battle.
+$technology_name_av_carrier_4;Arresting Gear
+$technology_desc_av_carrier_4;Arrester wires and hooks: faster turnaround between waves.
+$technology_name_av_types_1;Torpedo Biplane of the 1930s
+$technology_desc_av_types_1;Torpedo aircraft of the Swordfish class: approach high, glide down, drop at 700 m.
+$technology_name_av_types_2;Enclosed-Cabin Torpedo Bomber
+$technology_desc_av_types_2;Faster torpedo aircraft of the Albacore class.
+$technology_name_av_types_3;Fast Torpedo Bomber
+$technology_desc_av_types_3;Monoplane torpedo bombers at 60-70 m/s.
+$technology_name_av_tactics_1;Anvil Attack
+$technology_desc_av_tactics_1;Torpedo aircraft attack on both bows at about 45 degrees: whichever way the ship turns, she shows her side to one of them.
+$technology_name_av_strike_shore;Shore-Based Torpedo Aviation
+$technology_desc_av_strike_shore;Land-based torpedo bombers strike ships near our coasts.
+$technology_name_av_dive_1;Dive Bombing
+$technology_desc_av_dive_1;Dive bombers attack ships with bombs into the deck.
+$technology_name_aa_1;Anti-Aircraft Guns
+$technology_desc_aa_1;Light guns of 2-3 inch on high-angle mountings fire at aircraft.
+$technology_name_aa_2;Splash Barrage
+$technology_desc_aa_2;Heavy guns fire into the sea ahead of low-flying torpedo aircraft to bring them down with the splashes.
+$technology_name_aa_3;Anti-Aircraft Fire Control
+$technology_desc_aa_3;A director aims the anti-aircraft guns.
+$technology_name_aa_4;Air Search Radar
+$technology_desc_aa_4;Radar finds the incoming waves far out: the guns are ready sooner.
+$technology_name_aa_5;Light Automatic AA Guns
+$technology_desc_aa_5;20-40 mm automatic guns in numbers.
+$technology_name_aa_6;Proximity Fuze
+$technology_desc_aa_6;Shells burst near the aircraft without a direct hit: anti-aircraft fire three to four times as effective.
+$technology_name_aa_7;Combat Air Patrol
+$technology_desc_aa_7;Fighters over the fleet intercept part of an attacking wave.

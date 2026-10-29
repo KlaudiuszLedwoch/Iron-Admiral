@@ -773,3 +773,36 @@ gun_main_58,gun_xlarge,,$technology_name_gun_main_58,1949,,140,gun(18;5),,,$tech
 gun_main_59,gun_xlarge,,$technology_name_gun_main_59,1950,,140,gun(19;5),,,$technology_desc_gun_main_59,,,
 gun_main_60,gun_xlarge,,$technology_name_gun_main_60,1950,,140,gun(20;5),,,$technology_desc_gun_main_60,,,
 #,,,,,,,,,,,,,
+# $techType_name_naval_aviation,,,,,,,,,,,,,
+av_recon_1,naval_aviation,,$technology_name_av_recon_1,1912,1,180,"recon(5)",,,$technology_desc_av_recon_1,,,#85 naval aviation
+av_recon_2,naval_aviation,,$technology_name_av_recon_2,1915,1,220,"recon(5)",,,$technology_desc_av_recon_2,,,#85 naval aviation
+av_recon_3,naval_aviation,,$technology_name_av_recon_3,1918,1,260,"recon(5)",,,$technology_desc_av_recon_3,,,#85 naval aviation
+av_recon_4,naval_aviation,,$technology_name_av_recon_4,1930,1,340,"recon(5)",,,$technology_desc_av_recon_4,,,#85 naval aviation
+av_recon_5,naval_aviation,,$technology_name_av_recon_5,1941,1,480,"recon(5)",,,$technology_desc_av_recon_5,,,#85 naval aviation
+av_ship_1,naval_aviation,,$technology_name_av_ship_1,1914,1,200,"recon(1)",,,$technology_desc_av_ship_1,,,#85 naval aviation
+av_ship_2,naval_aviation,,$technology_name_av_ship_2,1922,1,280,"recon(1)",,,$technology_desc_av_ship_2,,,#85 naval aviation
+av_ship_3,naval_aviation,,$technology_name_av_ship_3,1925,1,300,"recon(1)",,,$technology_desc_av_ship_3,,,#85 naval aviation
+at_1,naval_aviation,,$technology_name_at_1,1914,1,200,"recon(1)",,,$technology_desc_at_1,,,#85 naval aviation
+at_2,naval_aviation,,$technology_name_at_2,1918,1,240,"recon(1)",,,$technology_desc_at_2,,,#85 naval aviation
+at_3,naval_aviation,,$technology_name_at_3,1932,1,320,"recon(1)",,,$technology_desc_at_3,,,#85 naval aviation
+at_4,naval_aviation,,$technology_name_at_4,1937,1,380,"recon(1)",,,$technology_desc_at_4,,,#85 naval aviation
+at_5,naval_aviation,,$technology_name_at_5,1941,1,440,"recon(1)",,,$technology_desc_at_5,,,#85 naval aviation
+at_6,naval_aviation,,$technology_name_at_6,1943,1,480,"recon(1)",,,$technology_desc_at_6,,,#85 naval aviation
+at_7,naval_aviation,,$technology_name_at_7,1944,1,520,"recon(1)",,,$technology_desc_at_7,,,#85 naval aviation
+av_carrier_1,naval_aviation,,$technology_name_av_carrier_1,1914,1,220,"recon(1)",,,$technology_desc_av_carrier_1,,,#85 naval aviation
+av_carrier_2,naval_aviation,,$technology_name_av_carrier_2,1917,1,260,"recon(1)",,,$technology_desc_av_carrier_2,,,#85 naval aviation
+av_carrier_3,naval_aviation,,$technology_name_av_carrier_3,1918,1,300,"recon(1)",,,$technology_desc_av_carrier_3,,,#85 naval aviation
+av_carrier_4,naval_aviation,,$technology_name_av_carrier_4,1925,1,320,"recon(1)",,,$technology_desc_av_carrier_4,,,#85 naval aviation
+av_types_1,naval_aviation,,$technology_name_av_types_1,1934,1,360,"recon(1)",,,$technology_desc_av_types_1,,,#85 naval aviation
+av_types_2,naval_aviation,,$technology_name_av_types_2,1940,1,420,"recon(1)",,,$technology_desc_av_types_2,,,#85 naval aviation
+av_types_3,naval_aviation,,$technology_name_av_types_3,1942,1,460,"recon(1)",,,$technology_desc_av_types_3,,,#85 naval aviation
+av_tactics_1,naval_aviation,,$technology_name_av_tactics_1,1935,1,340,"recon(1)",,,$technology_desc_av_tactics_1,,,#85 naval aviation
+av_strike_shore,naval_aviation,,$technology_name_av_strike_shore,1935,1,380,"recon(1)",,,$technology_desc_av_strike_shore,,,#85 naval aviation
+av_dive_1,naval_aviation,,$technology_name_av_dive_1,1938,1,400,"recon(1)",,,$technology_desc_av_dive_1,,,#85 naval aviation
+aa_1,naval_aviation,,$technology_name_aa_1,1915,1,200,"recon(1)",,,$technology_desc_aa_1,,,#85 naval aviation
+aa_2,naval_aviation,,$technology_name_aa_2,1920,1,240,"recon(1)",,,$technology_desc_aa_2,,,#85 naval aviation
+aa_3,naval_aviation,,$technology_name_aa_3,1930,1,320,"recon(1)",,,$technology_desc_aa_3,,,#85 naval aviation
+aa_4,naval_aviation,,$technology_name_aa_4,1940,1,420,"recon(1)",,,$technology_desc_aa_4,,,#85 naval aviation
+aa_5,naval_aviation,,$technology_name_aa_5,1941,1,440,"recon(1)",,,$technology_desc_aa_5,,,#85 naval aviation
+aa_6,naval_aviation,,$technology_name_aa_6,1943,1,480,"recon(1)",,,$technology_desc_aa_6,,,#85 naval aviation
+aa_7,naval_aviation,,$technology_name_aa_7,1940,1,420,"recon(1)",,,$technology_desc_aa_7,,,#85 naval aviation
