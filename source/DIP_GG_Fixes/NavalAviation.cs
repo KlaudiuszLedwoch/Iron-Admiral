@@ -110,6 +110,48 @@ namespace DipGgFixes
             return $"carrier {CarrierLevel(p)}/4, aerial torpedo {TorpLevel(p)}/7, aircraft types {TypesLevel(p)}/3 -> aircraft of {StrikeYear(p)}, warhead x{WarheadF(p):0.00}, up to {MaxWaves(p)} waves of {MaxPerWave(p)}";
         }
 
+        // -----------------------------------------------------------------------------------------------------------------------
+        // 1.11.410 (#85 step 2 - group B): spotting aircraft from catapults. Battleships, battlecruisers and cruisers of a nation
+        // with the ship catapult (av_ship_2) launch a spotter in daylight; the observer reports the fall of shot beyond the
+        // horizon of the ship's own control top. Hit chance x1.10 with the catapult, x1.25 with air spotting procedures
+        // (av_ship_3), growing from nothing at 12 km to the full bonus at 18 km (estimates, not from a source). Custom battles:
+        // catapult from 1922, spotting from 1925. Switch: NavalAviationSpotting.
+        internal static MelonPreferences_Entry<bool> Spotting;
+        internal static void CreateSpottingPrefs(MelonPreferences_Category cat)
+        {
+            Spotting = cat.CreateEntry("NavalAviationSpotting", true, null, "Battle: battleships and cruisers of a nation with the ship catapult launch spotting aircraft in daylight - better hit chance beyond 12 km (more with air spotting procedures); custom battles by the year (catapult 1922, spotting 1925)");
+        }
+        static readonly Dictionary<IntPtr, int> spotLv = new Dictionary<IntPtr, int>(); static IntPtr spotBattle; static int spotLogged;
+        static int SpotLevel(Ship s)
+        {
+            IntPtr b = IntPtr.Zero; try { var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb != null) b = cb.Pointer; } catch { }
+            if (b != spotBattle) { spotBattle = b; spotLv.Clear(); spotLogged = 0; }
+            if (spotLv.TryGetValue(s.Pointer, out int lv)) return lv;
+            lv = 0;
+            try
+            {
+                string t = s.shipType != null ? s.shipType.name : "";
+                if (t == "bb" || t == "bc" || t == "ca" || t == "cl")
+                {
+                    if (CampaignBattle()) { if (s.player != null) lv = Has(s.player, "av_ship_3") ? 2 : Has(s.player, "av_ship_2") ? 1 : 0; }
+                    else { int y = (int)s.GetYear(s); lv = y >= 1925 ? 2 : y >= 1922 ? 1 : 0; }
+                }
+            }
+            catch { }
+            spotLv[s.Pointer] = lv;
+            if (lv > 0 && spotLogged++ < 4) Log($"{s.name}: spotting aircraft from the catapult{(lv >= 2 ? " with air spotting procedures" : "")}");
+            return lv;
+        }
+        internal static float SpotF(Ship s, float d)
+        {
+            if (Spotting == null || !Spotting.Value || s == null || d <= 12000f) return 1f;
+            bool night = false; try { night = BattleAi.IsNight(); } catch { }
+            if (night) return 1f;
+            int lv = SpotLevel(s); if (lv == 0) return 1f;
+            float full = lv >= 2 ? 1.25f : 1.10f;
+            return 1f + (full - 1f) * Mathf.Clamp01((d - 12000f) / 6000f);
+        }
+
         static readonly float[] rangeKm = { 0f, 100f, 400f, 500f, 900f, 1000f };
         // misidentification of air reports by patrol type (claude/technologie_lotnicze_85.md group A; the airships of 19 August 1916:
         // 4 of 7 reports wrong, L 13 took cruisers for battleships)

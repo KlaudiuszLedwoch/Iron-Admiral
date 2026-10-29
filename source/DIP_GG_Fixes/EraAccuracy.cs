@@ -160,6 +160,7 @@ namespace DipGgFixes
                     float t = UnityEngine.Mathf.Clamp((d - 2000f) / 10000f, 0.35f, 1f);
                     f = (float)Math.Pow(f, t);
                 }
+                if (d > 12000f) f *= NavalAviation.SpotF(__0, d);   // 1.11.410: spotting aircraft (#85 step 2)
                 __result *= f;
             }
             catch { }
