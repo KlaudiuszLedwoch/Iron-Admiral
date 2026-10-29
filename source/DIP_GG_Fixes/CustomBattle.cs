@@ -56,7 +56,8 @@ namespace DipGgFixes
                 // 1.11.367 (#80, test 29.10 10:05: usa bb 1916 got the historical class Mississippi (BB-23) of 1908 - a pre-dreadnought,
                 // the newest US battleship class in the set): in custom battles a historical class may be at most
                 // CustomBattleHistoricalYearsBack years older than the battle, otherwise the generator designs the ship
-                var s = HistPriority.Pick(player, shipType, year, false, ignore, HistBack != null ? HistBack.Value : -1);
+                // 1.11.394 (author 29.10 18:28: "the players' designs always on top"): the player's own designs come first
+                var s = PlayerDesigns.Pick(player, shipType, year, false, ignore) ?? HistPriority.Pick(player, shipType, year, false, ignore, HistBack != null ? HistBack.Value : -1);
                 if (s != null) { __result = s; return false; }
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][CustomBattle] historical-first: " + e.Message); }
