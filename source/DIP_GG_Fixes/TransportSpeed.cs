@@ -46,6 +46,63 @@ namespace DipGgFixes
             cap[s.Pointer] = c; return c;
         }
 
+        // 1.11.366 (#79 step 2, author 29.10: a mixed convoy): the game arms transports by national technology (armed_transports), so a
+        // convoy is armed or unarmed as a whole. Now only part of the armed transports of each side keep their guns in battle - about
+        // TransportArmedShare of them (at least one: the auxiliary cruiser of the convoy); the others do not fire.
+        internal static MelonPreferences_Entry<float> ArmedShare;
+        internal static void CreateArmedPrefs(MelonPreferences_Category cat)
+        {
+            ArmedShare = cat.CreateEntry("TransportArmedShare", 0.35f, null, "Battle: share of a convoy's armed transports that keep their guns (at least one per side, like an auxiliary cruiser); the others are merchant ships that do not fire (0 = off, 1 = all armed as before)");
+        }
+        static readonly HashSet<IntPtr> silent = new HashSet<IntPtr>();
+        static IntPtr armBattle;
+        static bool Silent(Ship s)
+        {
+            var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null;
+            if (b == null) return false;
+            if (b.Pointer != armBattle)
+            {
+                armBattle = b.Pointer; silent.Clear();
+                try
+                {
+                    float share = ArmedShare != null ? ArmedShare.Value : 1f;
+                    if (share < 1f && share > 0f)
+                    {
+                        var bySide = new Dictionary<IntPtr, List<Ship>>();
+                        var all = b.Ships;
+                        for (int i = 0; all != null && i < all.Count; i++)
+                        {
+                            var x = all[i]; var t = x != null ? x.shipType : null; if (t == null || t.name != "tr" || x.player == null) continue;
+                            bool armed = false; var ps = x.parts;
+                            for (int j = 0; ps != null && j < ps.Count; j++) { var pd = ps[j] != null ? ps[j].data : null; if (pd != null && pd.isGun) { armed = true; break; } }
+                            if (!armed) continue;
+                            if (!bySide.TryGetValue(x.player.Pointer, out var l)) { l = new List<Ship>(); bySide[x.player.Pointer] = l; }
+                            l.Add(x);
+                        }
+                        foreach (var l in bySide.Values)
+                        {
+                            l.Sort((p, q) => p.Pointer.ToInt64().CompareTo(q.Pointer.ToInt64()));
+                            int keep = Math.Max(1, (int)Math.Round(l.Count * share));
+                            for (int i = keep; i < l.Count; i++) silent.Add(l[i].Pointer);
+                            MelonLogger.Msg($"[DIP GG Fixes][Convoy] {Economy.Name(l[0].player)}: {keep} of {l.Count} armed transport(s) keep their guns, {l.Count - keep} sail as unarmed merchant ships");
+                        }
+                    }
+                }
+                catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Convoy] armed share: " + e.Message); }
+            }
+            return silent.Contains(s.Pointer);
+        }
+
+        [HarmonyPatch(typeof(Ship), nameof(Ship.AimAndShoot))]
+        static class Patch_AimAndShoot
+        {
+            static bool Prefix(Ship __instance)
+            {
+                try { if (__instance != null && GameManager.IsBattle && Silent(__instance)) return false; } catch { }
+                return true;
+            }
+        }
+
         [HarmonyPatch(typeof(Ship), nameof(Ship.SpeedMax))]
         static class Patch_SpeedMax
         {
