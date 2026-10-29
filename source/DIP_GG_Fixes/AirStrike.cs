@@ -214,12 +214,12 @@ namespace DipGgFixes
                     }
                     if (!Alive(p.Target) && !p.Dropped) { p.P = Phase.Away; }
                     Vector3 goal;
-                    if (p.P == Phase.Approach) { goal = RunPoint(p); goal.y = 300f; if (Flat(goal - p.Pos) < 3000f) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f); } }
+                    if (p.P == Phase.Approach) { goal = RunPoint(p); goal.y = 300f; if (Flat(goal - p.Pos) < 3000f) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f, p); } }
                     else if (p.P == Phase.Run)
                     {
                         goal = RunPoint(p);
-                        Shot($"wave{p.Wave}_run", 3f);
-                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f); }
+                        Shot($"wave{p.Wave}_run", 3f, p);
+                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); }
                     }
                     else goal = p.Pos + new Vector3(p.Dir.x, 0f, p.Dir.z) * 1000f + Vector3.up * 40f;
                     if (p.P == Phase.Away)
@@ -244,11 +244,64 @@ namespace DipGgFixes
         // 1.11.377 (author 29.10 14:59: "take a screenshot of the air strike - or a series"): screenshots at the run-in, then every 3 s
         // of real time while aircraft are running in, at each drop and at each aircraft shot down (at most 60 per battle)
         static float nextShot; static int shots;
-        static void Shot(string tag, float gap)
+        // 1.11.378 (first series 29.10 15:04: the unattended test keeps the Start Battle panel on screen and the battle camera was
+        // not on the aircraft): the series is rendered by a camera of its own placed at the aircraft, to a texture, without the UI
+        static void Shot(string tag, float gap, Plane p = null)
         {
             if (Screens == null || !Screens.Value || shots >= 60 || Time.realtimeSinceStartup < nextShot) return;
             nextShot = Time.realtimeSinceStartup + gap; shots++;
-            AutoTest.Shot("airstrike_" + tag);
+            if (p == null || p.Go == null || p.Target == null || !View(p, tag)) AutoTest.Shot("airstrike_" + tag);
+        }
+        static Type convT; static System.Reflection.MethodInfo encode;
+        static bool View(Plane p, string tag)
+        {
+            GameObject go = null; RenderTexture rt = null; Texture2D tex = null;
+            try
+            {
+                var tp = p.Target.transform.position; var pp = p.Pos; var dir = p.Dir.sqrMagnitude > 0.01f ? p.Dir : (tp - pp).normalized;
+                Vector3 cam, look;
+                if (tag.EndsWith("drop") || tag.EndsWith("shotdown"))
+                {   // from the side, wide: the aircraft, the target and the water between them
+                    var mid = (pp + tp) * 0.5f; mid.y = 0f; var side = Vector3.Cross(Vector3.up, (tp - pp).normalized);
+                    cam = mid + side * 1400f + Vector3.up * 260f; look = mid + Vector3.up * 20f;
+                }
+                else
+                {   // behind and above the aircraft, looking past it at the target
+                    var flat = dir; flat.y = 0f; flat.Normalize();
+                    cam = pp - flat * 90f * Scale.Value + Vector3.up * 25f * Scale.Value; look = Vector3.Lerp(pp, tp, 0.5f);
+                }
+                go = new GameObject("IA_AirStrike_Camera");
+                var c = go.AddComponent<Camera>();
+                var main = Camera.main; if (main != null) c.CopyFrom(main);
+                c.enabled = false; c.fieldOfView = 45f; c.nearClipPlane = 1f; c.farClipPlane = 60000f;
+                go.transform.position = cam; go.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up);
+                int w = 1920, h = 1080;
+                rt = new RenderTexture(w, h, 24); c.targetTexture = rt; c.Render();
+                var prev = RenderTexture.active; RenderTexture.active = rt;
+                tex = new Texture2D(w, h, TextureFormat.RGB24, false); tex.ReadPixels(new Rect(0, 0, w, h), 0, 0); tex.Apply();
+                RenderTexture.active = prev; c.targetTexture = null;
+                if (encode == null)
+                {
+                    foreach (var a in AppDomain.CurrentDomain.GetAssemblies()) { convT = a.GetType("UnityEngine.ImageConversion"); if (convT != null) break; }
+                    if (convT != null) encode = convT.GetMethod("EncodeToPNG", new[] { typeof(Texture2D) });
+                }
+                if (encode == null) { Log("screenshot: UnityEngine.ImageConversion.EncodeToPNG not found"); return false; }
+                var res = encode.Invoke(null, new object[] { tex }) as Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppStructArray<byte>;
+                if (res == null) return false;
+                var bytes = new byte[res.Length]; for (int i = 0; i < bytes.Length; i++) bytes[i] = res[i];
+                var dirOut = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "screens"); System.IO.Directory.CreateDirectory(dirOut);
+                var f = System.IO.Path.Combine(dirOut, $"{DateTime.Now:yyyyMMdd_HHmmss}_{shots:00}_airstrike_{tag}.png");
+                System.IO.File.WriteAllBytes(f, bytes);
+                Log("screenshot " + f);
+                return true;
+            }
+            catch (Exception e) { if (errors++ < 10) Log("screenshot view: " + e.Message); return false; }
+            finally
+            {
+                try { if (tex != null) UnityEngine.Object.Destroy(tex); } catch { }
+                try { if (rt != null) { rt.Release(); UnityEngine.Object.Destroy(rt); } } catch { }
+                try { if (go != null) UnityEngine.Object.Destroy(go); } catch { }
+            }
         }
 
         static void Drop(Plane p)
@@ -325,7 +378,7 @@ namespace DipGgFixes
                 // which fire brought it down: in proportion to the share of each in the total chance
                 float pl = 1f - missLight, pt = 1f - miss; bool splash = heavy > 0 && UnityEngine.Random.value * pt > pl;
                 p.P = Phase.Down; waveStats[p.Wave][2]++; if (splash) waveStats[p.Wave][3]++;
-                Shot($"wave{p.Wave}_shotdown", 1.2f);
+                Shot($"wave{p.Wave}_shotdown", 1.2f, p);
                 if (waveStats[p.Wave][2] <= 4) Log($"wave {p.Wave}: aircraft shot down {(splash ? $"by the splash barrage of the heavy guns ({heavy} gun(s) firing into the sea ahead of it)" : $"by light anti-aircraft guns ({guns} gun(s) of 2-3 in in range)")}{(p.Dropped ? ", after its drop" : ", before its drop")}");
             }
         }
