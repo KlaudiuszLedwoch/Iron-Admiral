@@ -54,7 +54,11 @@ namespace DipGgFixes
                 for (int i = 0; i < parts.Count; i++)
                 {
                     var p = parts[i]; var pd = p != null ? p.data : null; if (pd == null || !pd.isGun || p.transform == null) continue;
-                    guns.Add((p, st.InverseTransformPoint(p.transform.position), pd.name));
+                    // 1.11.395 (log 29.10 18:31-18:37: Mikaho's casemates on two decks and Hannover's small guns on turret roofs were
+                    // taken for superposed turrets): only turret guns count - casemates in tiers are another arrangement - and the
+                    // upper gun must be of 4 in or more; light guns on a turret roof were common and not the Kearsarge mounting
+                    string pn = pd.name ?? ""; if (pn.IndexOf("casemate", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+                    guns.Add((p, st.InverseTransformPoint(p.transform.position), pn));
                 }
                 float off = Offset != null ? Offset.Value : 3f; var names = new List<string>();
                 foreach (var lo in guns)
@@ -63,15 +67,18 @@ namespace DipGgFixes
                     foreach (var hi in guns)
                     {
                         if (hi.p.Pointer == lo.p.Pointer) continue;
+                        float cal = 0f; try { cal = G.GameData.GunData(hi.p.data).caliberInch; } catch { }
+                        if (cal > 0f && cal < 3.9f) continue;   // light gun on a turret roof
                         float dx = hi.v.x - lo.v.x, dz = hi.v.z - lo.v.z;
                         if (hi.v.y - lo.v.y >= 1f && dx * dx + dz * dz <= off * off)
                         {
                             above++;
                             if (!m.Below.TryGetValue(hi.p.Pointer, out var l)) m.Below[hi.p.Pointer] = l = new List<Part>();
                             l.Add(lo.p);
+                            names.Add($"{hi.n} ({cal:0.#} in) on {lo.n}, {Mathf.Sqrt(dx * dx + dz * dz):0.0} m off, {hi.v.y - lo.v.y:0.0} m up");
                         }
                     }
-                    if (above > 0) { m.Above[lo.p.Pointer] = above; names.Add($"{lo.n} x{above}"); }
+                    if (above > 0) m.Above[lo.p.Pointer] = above;
                 }
                 var all = new Dictionary<IntPtr, (int n, int up)>();
                 foreach (var gn in guns)
