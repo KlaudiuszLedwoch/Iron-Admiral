@@ -75,7 +75,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            FxClear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); lightGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            FxClear(); foreach (var tr in tracers) { try { if (tr.L != null) UnityEngine.Object.Destroy(tr.L.gameObject); } catch { } } tracers.Clear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); lightGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -113,7 +113,7 @@ namespace DipGgFixes
                     else Launch(b.Ships);
                     wavesSent++;
                 }
-                Move(dt, b.Ships); FxTick();
+                Move(dt, b.Ships); FxTick(); TracerTick();
                 // a wave whose aircraft have all gone (away or down): its result once
                 foreach (var kv in waveStats)
                 {
@@ -439,12 +439,27 @@ namespace DipGgFixes
                     if (p.P == Phase.Approach) { var era = Era(curYear); goal = RunPoint(p); goal.y = era.alt; if (Flat(goal - p.Pos) < era.diveAt) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f, p); Radio(p.Wave, "runin", atkIsPlayer ? Pick($"Tally-ho! {Dispatch.Ship(p.Target.name)} dead ahead - split and go down to the deck!", $"There she is - {Dispatch.Ship(p.Target.name)}. Port section left, starboard section right. Down we go!", $"Target in sight. Going down - take her on both bows, chaps!") : Pick($"Enemy aircraft low on the water - coming in on {Dispatch.Ship(p.Target.name)}!", $"Torpedo planes! Both bows!")); } }
                     else if (p.P == Phase.Run)
                     {
-                        goal = RunPoint(p);
-                        // glide down to a point 1,500 m short of the drop at drop height, then the level run (1.11.401)
-                        { var tf = p.Target.transform.forward; tf.y = 0f; if (tf.sqrMagnitude < 0.01f) tf = Vector3.forward; tf.Normalize();
-                          var lvl = goal + RunDir(p, tf) * 1500f; if (Flat(goal - p.Pos) > 1700f) goal = lvl; }
+                        var era2 = Era(curYear); float dT = Flat(p.Target.transform.position - p.Pos);
+                        bool fire = false;
+                        if (dT > era2.release + 1500f)
+                        {
+                            goal = RunPoint(p);
+                            // glide down to a point 1,500 m short of the drop at drop height, then the level run (1.11.401)
+                            var tf = p.Target.transform.forward; tf.y = 0f; if (tf.sqrMagnitude < 0.01f) tf = Vector3.forward; tf.Normalize();
+                            var lvl = goal + RunDir(p, tf) * 1500f; if (Flat(goal - p.Pos) > 1700f) goal = lvl;
+                        }
+                        else
+                        {
+                            // 1.11.404 (author 29.10 22:56: "an aerial torpedo always runs the way the aircraft flies - here it doesn't seem
+                            // so"; log: drops 1.9-4.1 km out instead of 0.9 km): the last 1.5 km the aircraft flies straight at the point
+                            // where its torpedo will meet the ship, and drops when it is at the release range and lined up on that point;
+                            // the torpedo runs along the aircraft's heading
+                            goal = AimPoint(p); goal.y = era2.dropY;
+                            var hd = new Vector3(p.Dir.x, 0f, p.Dir.z); var to = goal - p.Pos; to.y = 0f;
+                            fire = (dT <= era2.release && Vector3.Angle(hd, to) < 12f) || dT < era2.release * 0.45f;
+                        }
                         Shot($"wave{p.Wave}_run", 3f, p);
-                        if (Flat(goal - p.Pos) < 300f) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); Radio(p.Wave, "drop", atkIsPlayer ? Pick("Fish away! Pulling up - hard right!", "Torpedo gone! Running true... get out of here!", "Released! Climbing away - watch the flak!") : "They have dropped - torpedoes in the water!"); }
+                        if (fire) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); Radio(p.Wave, "drop", atkIsPlayer ? Pick("Fish away! Pulling up - hard right!", "Torpedo gone! Running true... get out of here!", "Released! Climbing away - watch the flak!") : "They have dropped - torpedoes in the water!"); }
                     }
                     else goal = p.Pos + new Vector3(p.Dir.x, 0f, p.Dir.z) * 1000f + Vector3.up * 40f;
                     if (p.P == Phase.Away)
@@ -566,12 +581,73 @@ namespace DipGgFixes
             if (!burstLooked)
             {
                 burstLooked = true;
-                try { var ei = Effect.Get("HitNone"); burstPrefab = ei != null ? (ei.prefab as GameObject ?? ei.obj as GameObject) : null; } catch (Exception e) { Log("shell-burst effect: " + e.Message); }
-                Log(burstPrefab != null ? "barrage: the game's shell-burst effect found" : "barrage: no shell-burst effect found - bursts in the air not drawn");
+                // 1.11.404: the game builds its hit effects as "hit_" + kind (Effect.Hit); the candidates are tried in turn and logged
+                foreach (var nm in new[] { "hit_none", "hit_he", "hit_normal", "hit_over", "hit_none_small", "hit_normal_small", "HitNone", "HitBase", "FlashFire", "CannonShooting" })
+                {
+                    try
+                    {
+                        var ei = Effect.Get(nm); if (ei == null) continue;
+                        GameObject eg = null; try { eg = ei.prefab; } catch { } if (eg == null) try { eg = ei.obj; } catch { }
+                        if (eg == null) try { if (!string.IsNullOrEmpty(ei.resource)) eg = Resources.Load<GameObject>(ei.resource); } catch { }
+                        Log($"barrage: effect '{nm}' - {(eg != null ? "found (" + eg.name + ")" : "listed, no object")}");
+                        if (eg != null && burstPrefab == null) burstPrefab = eg;
+                    }
+                    catch (Exception e) { Log($"barrage: effect '{nm}': {e.Message}"); }
+                }
+                Log(burstPrefab != null ? "barrage: shell bursts drawn with the game's effect " + burstPrefab.name : "barrage: no shell-burst effect found - bursts in the air not drawn");
             }
             if (burstPrefab == null) return;
             var go = UnityEngine.Object.Instantiate(burstPrefab, at, Quaternion.identity);
             try { EffectExt.PlayAndDelete(go); } catch { UnityEngine.Object.Destroy(go, 6f); }
+        }
+        // 1.11.404 (author 29.10 22:56: "the light guns did not fire at all, nothing fired - no shell traces to be seen"): tracers
+        // of the light guns are drawn as thin glowing streaks (a LineRenderer, an unlit particle shader of the game) from a light
+        // gun of the ship to a point near the aircraft - above the water, never into it - and gone when they get there
+        class Tr { public LineRenderer L; public Vector3 A, B; public float T0, Life; }
+        static readonly List<Tr> tracers = new List<Tr>();
+        static Material trMat; static bool trLooked;
+        static void Tracer(Ship s, Vector3 ap, Vector3 pdir)
+        {
+            if (tracers.Count > 160) return;
+            if (!trLooked)
+            {
+                trLooked = true;
+                foreach (var sn in new[] { "Legacy Shaders/Particles/Additive", "Particles/Additive", "Sprites/Default", "Unlit/Color" })
+                {
+                    var sh = Shader.Find(sn); if (sh == null) continue;
+                    trMat = new Material(sh); try { trMat.color = new Color(1f, 0.6f, 0.2f, 1f); trMat.SetColor("_TintColor", new Color(1f, 0.55f, 0.15f, 1f)); } catch { }
+                    Log("barrage: tracers drawn with the shader " + sn); break;
+                }
+                if (trMat == null) Log("barrage: no shader for tracers found - tracers not drawn");
+            }
+            if (trMat == null) return;
+            var lg = LightGuns(s); if (lg.Count == 0) return;
+            var gun = lg[UnityEngine.Random.Range(0, lg.Count)]; if (gun == null || gun.transform == null) return;
+            var a = gun.transform.position + Vector3.up * 1.5f;
+            var b = ap + pdir * UnityEngine.Random.Range(-30f, 120f) + UnityEngine.Random.insideUnitSphere * 40f;
+            if (b.y < ap.y - 5f) b.y = ap.y - 5f + UnityEngine.Random.value * 10f; if (b.y < 8f) b.y = 8f;
+            var go = new GameObject("IA_Tracer"); var lr = go.AddComponent<LineRenderer>();
+            lr.material = trMat; lr.positionCount = 2; lr.startWidth = 0.5f; lr.endWidth = 0.25f; lr.useWorldSpace = true;
+            try { lr.startColor = new Color(1f, 0.85f, 0.4f, 1f); lr.endColor = new Color(1f, 0.45f, 0.1f, 1f); lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; } catch { }
+            lr.SetPosition(0, a); lr.SetPosition(1, a);
+            tracers.Add(new Tr { L = lr, A = a, B = b, T0 = Time.time, Life = Mathf.Clamp((b - a).magnitude / 800f, 0.4f, 3f) });
+        }
+        static void TracerTick()
+        {
+            float now = Time.time;
+            for (int i = tracers.Count - 1; i >= 0; i--)
+            {
+                var r = tracers[i];
+                try
+                {
+                    float k = (now - r.T0) / r.Life;
+                    if (r.L == null || k >= 1f) { if (r.L != null) UnityEngine.Object.Destroy(r.L.gameObject); tracers.RemoveAt(i); continue; }
+                    var d = (r.B - r.A); float len = Mathf.Min(35f, d.magnitude);
+                    var head = r.A + d * k; var tail = head - d.normalized * len * Mathf.Min(1f, k * 4f);
+                    r.L.SetPosition(0, tail); r.L.SetPosition(1, head);
+                }
+                catch { try { UnityEngine.Object.Destroy(r.L.gameObject); } catch { } tracers.RemoveAt(i); }
+            }
         }
         static void Barrage(Plane p, Ship s, float d, (int light, int heavy) g, bool low, float dt)
         {
@@ -595,6 +671,7 @@ namespace DipGgFixes
                             }
                         }
                     }
+                    if (UnityEngine.Random.value < n * 1.5f * dt) Tracer(s, ap, p.Dir);   // 1.11.404: tracers of the light guns
                     if (UnityEngine.Random.value < n * 0.5f * dt)
                     {   // the shell bursts in the air near the aircraft
                         var at = ap + p.Dir * UnityEngine.Random.Range(-60f, 160f) + UnityEngine.Random.insideUnitSphere * 75f; if (at.y < 12f) at.y = 12f + UnityEngine.Random.value * 15f;
@@ -804,6 +881,17 @@ namespace DipGgFixes
             }
         }
 
+        // where a torpedo dropped now from the aircraft meets the target (target's measured velocity, torpedo speed)
+        static Vector3 AimPoint(Plane p)
+        {
+            var tp = p.Target.transform.position; tp.y = 0f; var start = p.Pos; start.y = 0f;
+            float speedArg = TorpedoSettings.World(TorpKn.Value * 0.5144f);
+            var V = Vel(p.Target); var P = tp - start; float dist = P.magnitude;
+            float a = V.sqrMagnitude - speedArg * speedArg, b = 2f * Vector3.Dot(P, V), c = P.sqrMagnitude, T = dist / Mathf.Max(1f, speedArg);
+            float disc = b * b - 4f * a * c;
+            if (Mathf.Abs(a) > 1e-3f && disc >= 0f) { float sq = Mathf.Sqrt(disc), t1 = (-b - sq) / (2f * a), t2 = (-b + sq) / (2f * a); float tt = t1 > 0f && (t1 < t2 || t2 <= 0f) ? t1 : t2; if (tt > 0f) T = tt; }
+            var aim = tp + V * T; aim.y = 0f; return aim;
+        }
         static void Drop(Plane p)
         {
             if (p.Dropped) return; p.Dropped = true;
@@ -822,11 +910,13 @@ namespace DipGgFixes
                 float disc = b * b - 4f * a * c;
                 if (Mathf.Abs(a) > 1e-3f && disc >= 0f) { float sq = Mathf.Sqrt(disc), t1 = (-b - sq) / (2f * a), t2 = (-b + sq) / (2f * a); float tt = t1 > 0f && (t1 < t2 || t2 <= 0f) ? t1 : t2; if (tt > 0f) T = tt; }
                 var aim = tp + V * T; aim.y = 0f;
-                var dir = (aim - start); dir.y = 0f; dir.Normalize();
+                var dir = new Vector3(p.Dir.x, 0f, p.Dir.z);   // 1.11.404: the torpedo runs the way the aircraft flies
+                if (dir.sqrMagnitude < 0.01f) { dir = aim - start; dir.y = 0f; }
+                dir.Normalize();
                 float duration = TorpRunM.Value / Mathf.Max(0.1f, speedArg);
                 var tor = Torpedo.Create(lastTube, start, dir, duration, speedArg); Register(tor, dir);
                 waveStats[p.Wave][1]++;
-                if (drops++ < 30) Log($"wave {p.Wave}: torpedo dropped {dist:0} m from {p.Target.name}, {Vector3.Angle(f, -dir):0} deg off her bow{(tor == null ? " - the game returned no torpedo" : "")}");
+                if (drops++ < 30) Log($"wave {p.Wave}: torpedo dropped {dist:0} m from {p.Target.name}, {Vector3.Angle(f, -dir):0} deg off her bow, {Vector3.Angle(dir, (aim - start).normalized):0} deg off the intercept course{(tor == null ? " - the game returned no torpedo" : "")}");
             }
             catch (Exception e) { if (errors++ < 10) Log("drop: " + e.Message); }
         }
