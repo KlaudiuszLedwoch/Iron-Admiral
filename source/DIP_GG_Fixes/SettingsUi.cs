@@ -69,7 +69,7 @@ namespace DipGgFixes
             {"ShipTrade","Economy"},{"ShipTradeAiSells","Economy"},{"ShipTradeRefits","Economy"},{"TechCatchUp","Campaign AI"},{"TechDiffusion","Campaign AI"},{"TorpedoSense","Battle AI"},
             {"TorpedoSensePlayer","Battle AI"},{"TorpedoSideCheck","Battle AI"},{"ResetSwitchesOnNewVersion","-"},{"DivisionOrdersPanelFolded","-"},{"AiTorpedoCapitalsFirst","Battle AI"},
             {"CapturedTechNotCopied","Ship design"},{"BattleHourChoice","Campaign AI"},{"AiSmokeOnlyWhenNeeded","Battle AI"},{"AiTorpedoPincer","Battle AI"},{"AiApproachSmoke","Battle AI"},
-            {"AiWithdrawLowAmmo","Battle AI"},{"BattleDispatchPanel","Display"},{"PrizeScuttle","Crews & prizes"},{"DivisionTorpedoSplit","Battle AI"},
+            {"AiWithdrawLowAmmo","Battle AI"},{"BattleDispatchPanel","Display"},{"PrizeScuttle","Crews & prizes"},{"DivisionTorpedoSplit","Battle AI"},{"StackedGunsPenalty","Gunnery & damage"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -102,7 +102,7 @@ namespace DipGgFixes
             {"ModUiScaleAuto",146},{"ReShadeNavalLook",147},{"ArmorDiagnostics",148},{"BallisticsLog",149},{"BattleAiLog",150},{"DamageDiagLog",151},{"HitLog",152},
             {"PerformanceLog",153},{"BetaUpdates",154},{"CheckForUpdates",155},{"CheckOtherMods",156},{"SaveCompatibilityFix",157},{"ShareLogs",158},{"UpdateDownloadButton",159},
             {"UsageStatistics",160},{"AiTorpedoCapitalsFirst",161},{"CapturedTechNotCopied",162},{"BattleHourChoice",163},{"AiSmokeOnlyWhenNeeded",164},{"AiTorpedoPincer",165},
-            {"AiApproachSmoke",166},{"AiWithdrawLowAmmo",167},{"BattleDispatchPanel",168},{"PrizeScuttle",169},{"DivisionTorpedoSplit",170},
+            {"AiApproachSmoke",166},{"AiWithdrawLowAmmo",167},{"BattleDispatchPanel",168},{"PrizeScuttle",169},{"DivisionTorpedoSplit",170},{"StackedGunsPenalty",171},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
