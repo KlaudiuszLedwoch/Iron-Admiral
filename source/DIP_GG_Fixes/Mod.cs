@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.483", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.484", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -628,6 +628,7 @@ namespace DipGgFixes
             AirRecon.CreatePrefs(cat); // 1.11.425 (#85)
             AirStrike.CreateCampaignPrefs(cat); // 1.11.426 (#85 step 3)
             AirStrike.CreateLandPrefs(cat); // 1.11.428 (#85 step 5)
+            CarrierShips.CreatePrefs(cat); // 1.11.484 (#104 stage 2)
             Climate.CreatePrefs(cat); // 1.11.431
             CampaignTest.CreatePrefs(cat); // 1.11.434
             SteamShots.CreatePrefs(cat); // 1.11.436

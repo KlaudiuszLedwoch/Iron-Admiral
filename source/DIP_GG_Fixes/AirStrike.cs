@@ -122,6 +122,7 @@ namespace DipGgFixes
                     if (camp && AirOnly.Is(b)) AirOnlySide(b);   // 1.11.440 (#96): aircraft only - the attacker's waves, no ships
                     else if ((camp && campOn && !test) || both) { camp = true; CampaignSides(b.Ships); LandSides(); }
                     else if (active) sides.Add(new SideCtx { Pl = atkIsPlayer, AP = atkP, Next = FirstAfter.Value, Year = curYear, Model = curModel });
+                    if (!camp && CarrierShips.Enabled) CustomCarrierSides(b.Ships);   // 1.11.484 (#104)
                     active = sides.Count > 0;
                 }
                 if (!active) return;
@@ -134,6 +135,8 @@ namespace DipGgFixes
                     var c = sides[si]; Use(c);
                     if (lastTube == null) lastTube = FindTube(b.Ships);
                     int maxW = camp && atkP != null ? (land ? LandWaves(atkP) : CarrierWaves(atkP)) : Waves.Value;
+                    // 1.11.484 (#104): the side's carriers all lost - no more waves, the aircraft still aboard go down with them
+                    if (c.Cvs != null && !c.CvLost && CvAfloat(c) == null) { c.CvLost = true; CarrierShips.Sunk(c.Cvs[0], atkP, c.Group, c.Flown, atkP != null ? StrikeSize(atkP) : 12); wavesSent = Math.Max(wavesSent, maxW); }
                     if (wavesSent < maxW && battleT >= nextWave)
                     {
                         nextWave = battleT + Interval.Value * (camp && atkP != null && !land ? NavalAviation.IntervalF(atkP) : 1f);
@@ -170,10 +173,14 @@ namespace DipGgFixes
         static float ReleaseMs(AirPhysics.State ph) { return ph.T.Vmax > 85f ? 77f : Mathf.Min(ph.T.Vmax, 51f); }
 
         // 1.11.426 (#85 step 3): the strike context of one side; the code works on the statics, switched per side and per aircraft
-        class SideCtx { public bool Pl; public Player AP; public int Waves; public float Next; public int Year = 1925; public string Model = ""; public Part Tube; public int WaveBase; public bool Land; public float PortKm; }
+        class SideCtx { public bool Pl; public Player AP; public int Waves; public float Next; public int Year = 1925; public string Model = ""; public Part Tube; public int WaveBase; public bool Land; public float PortKm;
+            public List<Ship> Cvs; public int Group, Flown; public bool CvLost; }   // 1.11.484 (#104): carriers afloat in the battle
+        static SideCtx curSide;
+        // 1.11.484 (#104): the first carrier of the side still afloat (null = none, or a carrier beyond the horizon)
+        static Ship CvAfloat(SideCtx c) { if (c == null || c.Cvs == null) return null; foreach (var s in c.Cvs) if (Alive(s)) return s; return null; }
         static readonly List<SideCtx> sides = new List<SideCtx>();
         static int waveBase; static bool land;
-        static void Use(SideCtx c) { atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; land = c.Land; }
+        static void Use(SideCtx c) { curSide = c; atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; land = c.Land; }
         static void Keep(SideCtx c) { c.Waves = wavesSent; c.Next = nextWave; c.Year = curYear; c.Model = curModel; c.Tube = lastTube; }
         static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; land = p.Land; }
         internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<string> UpkeepScale, PresenceScale;
@@ -227,6 +234,25 @@ namespace DipGgFixes
             string t = ""; try { t = s.shipType.name; } catch { }
             return t == "bb" || t == "bc" || t == "ca" || t == "cl";
         }
+        // 1.11.484 (#104): a custom battle - each side with a carrier hull (cv_) afloat flies off its own aircraft from it; a side
+        // that already has a carrier beyond the horizon (CustomBattleCarrier, AirStrikeTest) uses the real carrier instead
+        static void CustomCarrierSides(Il2CppSystem.Collections.Generic.List<Ship> ships)
+        {
+            foreach (bool pl in new[] { true, false })
+            {
+                var cvs = CarrierShips.Of(ships, pl); if (cvs.Count == 0) continue;
+                Player p = null; try { p = cvs[0].player; } catch { }
+                CarrierShips.Found(cvs, p, pl);
+                SideCtx c = null; foreach (var x in sides) if (x.Pl == pl && !x.Land) { c = x; break; }
+                if (c == null)
+                {
+                    int y = 1925; try { y = (int)cvs[0].GetYear(cvs[0]); } catch { }
+                    c = new SideCtx { Pl = pl, AP = p, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50 };
+                    sides.Add(c);
+                }
+                c.Cvs = cvs; c.Group = CarrierShips.Group(cvs);
+            }
+        }
         // both sides of a campaign battle: the player's and the AI's, each by its own nation's technologies
         static void CampaignSides(Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
@@ -251,11 +277,17 @@ namespace DipGgFixes
                 // main fleet more likely to have its carrier - +BigBattleStep per capital ship beyond the first, at most 90%
                 if (AirBudget.NoAircraft(p)) { Log($"campaign battle: {p.data.name} - no aircraft (naval aviation strength {AirBudget.Stock(p) * 100f:0}%): no air strike"); continue; }   // 1.11.467
                 int cap = pl ? capMine : capTheirs;
-                float ch0 = PresenceChance(p), ch = ch0 >= 1f ? 1f : Mathf.Min(0.9f, ch0 * (1f + BigBattleStep.Value / 100f * Math.Max(0, cap - 1))), r = UnityEngine.Random.value;
-                if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%): no air strike"); continue; }
-                Log($"campaign battle: {p.data.name} - the carrier is with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%)");
+                var cvs = CarrierShips.Of(ships, pl);   // 1.11.484 (#104): a carrier in the battle - no presence roll
+                if (cvs.Count > 0) CarrierShips.Found(cvs, p, pl);
+                else
+                {
+                    float ch0 = PresenceChance(p), ch = ch0 >= 1f ? 1f : Mathf.Min(0.9f, ch0 * (1f + BigBattleStep.Value / 100f * Math.Max(0, cap - 1))), r = UnityEngine.Random.value;
+                    if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%): no air strike"); continue; }
+                    Log($"campaign battle: {p.data.name} - the carrier is with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%)");
+                }
                 int y = NavalAviation.StrikeYear(p);
-                var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f };
+                var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f,
+                    Cvs = cvs.Count > 0 ? cvs : null, Group = CarrierShips.Group(cvs) };
                 sides.Add(c);
                 Log($"campaign battle: {p.data.name} Naval Aviation - {NavalAviation.Summary(p)}; strike by the air group and tactics: {CarrierWaves(p)} wave(s) of {CarrierPerWave(p)}; its waves attack the {(pl ? "enemy's" : "player's")} largest ship");
             }
@@ -414,6 +446,17 @@ namespace DipGgFixes
             for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (!Alive(s) || Defender(s)) continue; var d = s.transform.position - tp; d.y = 0f; float along = Vector3.Dot(d, from); if (along + 8000f > startDist) startDist = along + 8000f; }
             int n = Math.Max(1, PerWave.Value);
             if (camp && atkP != null) n = land ? LandPerWave(atkP) : CarrierPerWave(atkP);   // 1.11.433 (#95): the full number of the table
+            // 1.11.484 (#104): a carrier afloat in the battle - the wave flies off her: it starts at her position and its size
+            // follows her air group
+            var cv = land ? null : CvAfloat(curSide);
+            if (cv != null)
+            {
+                var cp = cv.transform.position - tp; cp.y = 0f;
+                if (cp.sqrMagnitude > 1f) { from = cp.normalized; startDist = cp.magnitude; }
+                int wv = camp && atkP != null ? Math.Max(1, CarrierWaves(atkP)) : Math.Max(1, Waves.Value);
+                n = CarrierShips.PerWave(curSide.Group, wv, atkP); curSide.Flown += n;
+                Log($"wave {wave}: flown off {cv.name} ({CarrierShips.HullName(cv)}, air group {curSide.Group}, {curSide.Flown} flown so far), {startDist / 1000f:0.0} km from the target");
+            }
             if (!land) { int y0 = 1925; try { y0 = (int)target.GetYear(target); } catch { } if (camp && atkP != null) y0 = NavalAviation.StrikeYear(atkP); curYear = y0; curModel = ModelFor(y0, wave); }   // 1.11.399, 1.11.408
             float spd = ModelSpeed(curModel);
             waveStats[wave] = new int[4]; waveStats[wave][0] = n;
