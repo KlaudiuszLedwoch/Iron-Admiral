@@ -57,6 +57,28 @@ namespace DipGgFixes
             return null;
         }
         static bool Allied(Player a, Player b) { var r = Rel(a, b); try { return r != null && r.isAlliance; } catch { return false; } }
+        static int logged;
+        // a lost province held by the holder next to the claimant's own land (its army can attack it - Pre_TryStartBattle)
+        static bool LandRoad(Player w, List<Province> lost)
+        {
+            try
+            {
+                string wn = Key(w);
+                foreach (var t in lost)
+                {
+                    var nb = t?.NeighbourProvinces; if (nb == null) continue;
+                    foreach (var n in nb) { string c = null; try { c = n.Controller; } catch { } if (c == wn) return true; }
+                }
+            }
+            catch { }
+            return false;
+        }
+        static IEnumerable<Player> AllMajors()
+        {
+            var l = new List<Player>();
+            try { var m = CampaignController.Instance.CampaignData.PlayersMajor; for (int i = 0; i < m.Count; i++) if (m[i] != null) l.Add(m[i]); } catch { }
+            return l;
+        }
         static bool AtWar(Player a, Player b) { var r = Rel(a, b); try { return r != null && r.isWar; } catch { return false; } }
         static float Fleet(Player p) { try { return p.TotalPowerProjection(); } catch { return 0f; } }
 
@@ -151,7 +173,19 @@ namespace DipGgFixes
                         bool wWar = false; try { wWar = w.IsAtWar(); } catch { }
                         float fw = Fleet(w), fh = Fleet(h);
                         float need = WarPower != null ? WarPower.Value : 1.2f; float minAtt = Attitude != null ? Attitude.Value : -40f;
-                        if (hWar && att <= minAtt && fw > 0f)
+                        // 1.11.430 (hurepoix, forum 30.10: "already at war, in recession, with 1/10 my GDP and 1/100 my fleet, it goes to war
+                        // anyway"): joining a war the holder is already fighting needs a way to win the territory back - a land road (a
+                        // lost province next to its own land, which its army can attack) or, at sea, its fleet together with the
+                        // holder's other enemies at least LostTerritoryWarPower times the holder's; a nation already at war
+                        // elsewhere joins only by land
+                        float coal = fw; try { foreach (var o in AllMajors()) { if (o == null || o.Pointer == w.Pointer || o.Pointer == h.Pointer) continue; if (AtWar(o, h)) coal += Fleet(o); } } catch { }
+                        bool road = LandRoad(w, kv.Value);
+                        bool canWin = road || (!wWar && fh > 0f && coal >= need * fh);
+                        if (hWar && att <= minAtt && fw > 0f && !canWin)
+                        {
+                            if (logged++ < 20) Log($"{N(w)} does not join the war against {N(h)}: no land road to its lost provinces and its fleet{(coal > fw ? " with the holder's other enemies" : "")} is x{(fh > 0f ? coal / fh : 0f):F2} of {N(h)}'s (needs x{need:F2}{(wWar ? ", and it is at war already" : "")})");
+                        }
+                        else if (hWar && att <= minAtt && fw > 0f)
                             Economy.DeclareWarPublic(w, h, $"joins the war against {N(h)} to win back {kv.Value[0].Id}{(kv.Value.Count > 1 ? $" and {kv.Value.Count - 1} more province(s)" : "")}");
                         else if (!wWar && att <= minAtt && fh > 0f && fw >= need * fh)
                             Economy.DeclareWarPublic(w, h, $"declares war on {N(h)} to win back {kv.Value[0].Id}{(kv.Value.Count > 1 ? $" and {kv.Value.Count - 1} more province(s)" : "")} (fleet power x{fw / fh:F2})");
