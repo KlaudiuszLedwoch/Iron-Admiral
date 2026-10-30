@@ -27,9 +27,13 @@ namespace DipGgFixes
         static readonly Dictionary<string, long> frameTotals = new Dictionary<string, long>();
         static int patched, logged;
 
-        internal static void Install(HarmonyLib.Harmony h)
+        // 1.11.464: MelonLoader reads the saved switch values only after OnInitializeMelon, so the probe is installed from the first
+        // frame on which the switch is on (Tick) - switching it on in F10 starts it at once, no restart needed.
+        static HarmonyLib.Harmony H; static bool done;
+        internal static void Install(HarmonyLib.Harmony h) { H = h; }
+        internal static void Tick() { if (!done && H != null && On != null && On.Value) { done = true; Apply(H); } }
+        static void Apply(HarmonyLib.Harmony h)
         {
-            if (On == null || !On.Value) return;
             var pre = new HarmonyMethod(typeof(SlowProbe).GetMethod(nameof(Pre), BindingFlags.Static | BindingFlags.NonPublic));
             var post = new HarmonyMethod(typeof(SlowProbe).GetMethod(nameof(Post), BindingFlags.Static | BindingFlags.NonPublic));
             foreach (var t in new[] { typeof(PlayerController), typeof(CampaignController), typeof(Player), typeof(Ui), typeof(GameData) })
