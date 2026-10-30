@@ -168,7 +168,21 @@ namespace DipGgFixes
         static void Use(SideCtx c) { atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; }
         static void Keep(SideCtx c) { c.Waves = wavesSent; c.Next = nextWave; c.Year = curYear; c.Model = curModel; c.Tube = lastTube; }
         static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; }
-        internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<string> UpkeepScale;
+        internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<string> UpkeepScale, PresenceScale;
+        internal static MelonPreferences_Entry<float> MinVisKm;
+        static float ScaleAt(string sc, int lv)
+        {
+            var a = (sc ?? "").Split(','); int k = Math.Min(lv, a.Length) - 1; float v = 0f;
+            if (k >= 0) float.TryParse(a[k].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v);
+            return Math.Max(0f, v);
+        }
+        internal static float PresenceChance(Player p)
+        {
+            if (BothTest != null && BothTest.Value) return 1f;   // the test always has the carrier
+            int lv = 0; try { lv = NavalAviation.CarrierLevel(p); } catch { }
+            return lv <= 0 ? 0f : Mathf.Clamp01(ScaleAt(PresenceScale.Value, lv) / 100f);
+        }
+        static float VisKm() { try { float d = BattleManager.Instance.GetDaytimeDetection(); return d > 1.5f ? d : 0f; } catch { return 0f; } }
         // the monthly upkeep of the naval air arm: a share of the fleet maintenance from the first carrier technology, growing with each
         internal static float UpkeepPct(Player p)
         {
@@ -193,6 +207,8 @@ namespace DipGgFixes
         internal static void CreateCampaignPrefs(MelonPreferences_Category cat)
         {
             BothTest = cat.CreateEntry("AirStrikeCampaignRulesTest", false, null, "Battle (test): a custom battle uses the campaign air strike rules - both sides strike by their nations' Naval Aviation technologies");
+            PresenceScale = cat.CreateEntry("NavalAviationCarrierPresence", "15,30,50,65", null, "Campaign: chance (%) that a fleet in a battle has a carrier with it, for carrier technology 1,2,3,4 - each side rolls separately");
+            MinVisKm = cat.CreateEntry("NavalAviationMinVisibilityKm", 8f, null, "Campaign: below this visibility (km) the carrier does not fly off its aircraft");
             UpkeepScale = cat.CreateEntry("NavalAviationUpkeepScale", "1.5,3.5,7,11.5", null, "Campaign: monthly upkeep of naval aviation in percent of the fleet maintenance for carrier technology 1,2,3,4 (seaplane carrier 1910s, first carriers 1920s, carrier fleet 1930s, large carrier force 1940s - from the Navy Estimates and US Navy budget shares of naval aviation)");
             CampOn = cat.CreateEntry("NavalAviationCampaignStrikes", true, null, "Campaign: in a daylight battle with battleships or cruisers each side whose nation has the seaplane carrier and the aerial torpedo researched sends torpedo aircraft from a carrier beyond the horizon - waves, aircraft and their type by its Naval Aviation technologies; the carrier costs a monthly upkeep");
         }
@@ -217,6 +233,13 @@ namespace DipGgFixes
             {
                 if (p == null) continue;
                 if (!NavalAviation.CanStrike(p, out var why)) { Log($"campaign battle: {p.data.name} - {why}: no air strike"); continue; }
+                // 1.11.427 (author 30.10 09:27: "not every battle can have these aircraft, even a battle of battleships"): the carrier
+                // sails with the fleet only in part of the battles - more often as the nation's carrier force grows; none in poor
+                // visibility (no flying, no finding the enemy)
+                float ch = PresenceChance(p), r = UnityEngine.Random.value;
+                if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet (chance {ch * 100f:0}%): no air strike"); continue; }
+                float vis = VisKm();
+                if (vis > 0f && vis < MinVisKm.Value) { Log($"campaign battle: {p.data.name} - visibility {vis:0} km, below {MinVisKm.Value:0} km: the carrier does not fly off its aircraft"); continue; }
                 int y = NavalAviation.StrikeYear(p);
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f };
                 sides.Add(c);
