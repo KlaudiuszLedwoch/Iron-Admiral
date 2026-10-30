@@ -74,7 +74,7 @@ namespace DipGgFixes
             {"CustomBattleCarrier","Battle AI"},{"PlayerDesignsFirst","Ship design"},{"CustomBattleSaveDesigns","Ship design"},{"DesignStats","Ship design"},{"DesignStatsPreferBest","Ship design"},
             {"NavalAviationRecon","Fog of war"},{"NavalAviationSpotting","Battle AI"},{"ShipGenSecondaryTower","Other"},{"NavalAviationSpotterPlanes","Battle AI"},
             {"NavalAviationAirRecon","Battle AI"},{"NavalAviationCampaignStrikes","Battle AI"},{"NavalAviationShoreStrikes","Battle AI"},{"BattleClimateWeather","Battle AI"},
-            {"ScreenshotsToSteam","Display"},{"AirStrikeScreenshots","Display"},{"ScreenshotsJpg","Display"},
+            {"ScreenshotsToSteam","Display"},{"AirStrikeScreenshots","Display"},{"ScreenshotsJpg","Display"},{"TechLevelRelative","Display"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -111,7 +111,7 @@ namespace DipGgFixes
             {"TransportSpeedByYear",172},{"EnemyProfileLog",173},{"ThanksOnMainMenu",174},{"AirStrikeTest",175},{"EnemyFitBuildMix",176},{"CustomBattleCarrier",177},
             {"PlayerDesignsFirst",178},{"CustomBattleSaveDesigns",179},{"DesignStats",180},{"DesignStatsPreferBest",181},{"NavalAviationRecon",182},{"NavalAviationSpotting",183},
             {"ShipGenSecondaryTower",184},{"NavalAviationSpotterPlanes",185},{"NavalAviationAirRecon",186},{"NavalAviationCampaignStrikes",187},{"NavalAviationShoreStrikes",188},
-            {"BattleClimateWeather",189},{"ScreenshotsToSteam",190},{"AirStrikeScreenshots",191},{"ScreenshotsJpg",192},
+            {"BattleClimateWeather",189},{"ScreenshotsToSteam",190},{"AirStrikeScreenshots",191},{"ScreenshotsJpg",192},{"TechLevelRelative",193},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {

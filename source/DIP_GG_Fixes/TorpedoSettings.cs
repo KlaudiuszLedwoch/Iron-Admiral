@@ -467,6 +467,7 @@ namespace DipGgFixes
         internal static void OnGUI()
         {
             if (!Enabled || !InBattle || BattleScreen.Hidden) return;
+            if (BattleAi.CameraBusy()) return; // 1.11.439 (author 30.10 16:00: "when the camera moves, the whole orders list does not disappear"): the fire settings rows hide with the order buttons
             try
             {
                 TorpedoSettings.BeginSmall();

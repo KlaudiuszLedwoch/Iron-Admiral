@@ -557,7 +557,7 @@ namespace DipGgFixes
         // 0.4 s after it is let go
         static float camBusyUntil;
         static readonly KeyCode[] camKeys = { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.Q, KeyCode.E, KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow };
-        static bool CameraBusy()
+        internal static bool CameraBusy()
         {
             bool held = false;
             try

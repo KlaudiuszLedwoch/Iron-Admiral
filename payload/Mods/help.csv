@@ -57,6 +57,7 @@ ia_50,,,$IA_Help_title_ia_50,,$IA_Help_desc_ia_50
 ia_51,,,$IA_Help_title_ia_51,,$IA_Help_desc_ia_51
 ia_52,,,$IA_Help_title_ia_52,,$IA_Help_desc_ia_52
 ia_53,,,$IA_Help_title_ia_53,,$IA_Help_desc_ia_53
+ia_54,,,$IA_Help_title_ia_54,,$IA_Help_desc_ia_54
 ship_types,,header,$Help_title_ship_types,-,
 7,,,$Help_title_7,Bayern_class_battleship,$LoadingScreens_Text_39
 8,,,$Help_title_8,HMS_Invincible,$LoadingScreens_Text_40
