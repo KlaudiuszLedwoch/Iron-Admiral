@@ -854,6 +854,54 @@ namespace DipGgFixes
             if (bridge) { cam = tp + toPlane * 22f - f * 10f + Vector3.up * 40f; look = new Vector3(pp.x, Mathf.Max(15f, pp.y * 0.8f), pp.z); fov = 45f; }   // the bridge wing on the side of the attack (test 15:56: from inside the superstructure)
             else { cam = tp - toPlane * 420f - f * 160f + Vector3.up * 45f; look = Vector3.Lerp(tp, new Vector3(pp.x, 0f, pp.z), 0.5f) + Vector3.up * 30f; fov = 40f; }
         }
+        // 1.11.421 (author 30.10 06:47: "I want to see what happens in the tests"): a shot from any pose (used for the spotting
+        // aircraft), with the same screenshot switch and the same handling of the camera, time and interface
+        internal static void ShotAt(Vector3 cam, Vector3 look, float fov, string tag)
+        {
+            if (Screens == null || !Screens.Value || busy || shots >= 80) return;
+            shots++; MelonCoroutines.Start(ShotAtCo(cam, look, fov, tag));
+        }
+        static System.Collections.IEnumerator ShotAtCo(Vector3 cam, Vector3 look, float fov, string tag)
+        {
+            busy = true;
+            Camera c = Camera.main; CameraController cc = null; bool ccWas = false;
+            Vector3 oPos = Vector3.zero; Quaternion oRot = Quaternion.identity; float oFov = 60f, oScale = 1f; int oMask = -1;
+            var canv = new List<Canvas>(); bool set = false;
+            try
+            {
+                if (c != null)
+                {
+                    try { cc = UnityEngine.Object.FindObjectOfType<CameraController>(); if (cc != null) { ccWas = cc.enabled; cc.enabled = false; } } catch { }
+                    try { cam2 = Cam.Instance; if (cam2 != null) { cam2Was = cam2.enabled; cam2.enabled = false; } } catch { }
+                    oPos = c.transform.position; oRot = c.transform.rotation; oFov = c.fieldOfView; oMask = c.cullingMask; oScale = Time.timeScale;
+                    Time.timeScale = 0f; Hiding = true;
+                    try { foreach (var x in UnityEngine.Object.FindObjectsOfType<Canvas>()) if (x != null && x.enabled) { x.enabled = false; canv.Add(x); } } catch { }
+                    int ui = LayerMask.NameToLayer("UI"); if (ui >= 0) c.cullingMask = oMask & ~(1 << ui);
+                    c.transform.position = cam; c.transform.rotation = Quaternion.LookRotation(look - cam, Vector3.up); c.fieldOfView = fov;
+                    holdCam = c; holdPos = cam; holdRot = c.transform.rotation; holdFov = fov; set = true;
+                }
+            }
+            catch (Exception e) { Log("screenshot: " + e.Message); }
+            if (set)
+            {
+                for (int i = 0; i < 3; i++) yield return null;
+                try { SaveScreen(tag); } catch (Exception e) { Log("screenshot save: " + e.Message); }
+                for (int i = 0; i < 8; i++) yield return null;
+            }
+            try
+            {
+                if (set)
+                {
+                    foreach (var x in canv) try { if (x != null) x.enabled = true; } catch { }
+                    c.transform.position = oPos; c.transform.rotation = oRot; c.fieldOfView = oFov; c.cullingMask = oMask;
+                    Time.timeScale = oScale;
+                }
+                if (cc != null) cc.enabled = ccWas;
+                if (cam2 != null) cam2.enabled = cam2Was;
+            }
+            catch { }
+            holdCam = null; Hiding = false; busy = false;
+        }
         static System.Collections.IEnumerator ScreenShot(Plane p, string tag)
         {
             busy = true;
