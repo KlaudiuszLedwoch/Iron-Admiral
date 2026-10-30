@@ -129,6 +129,7 @@ namespace DipGgFixes
                     var tilt = Quaternion.AngleAxis(-Mathf.Min(12f, p.T * 10f), Vector3.Cross(p.Dir, Vector3.up)) * p.Dir;
                     p.Go.transform.position = p.Pos; p.Go.transform.rotation = Quaternion.LookRotation(tilt, Vector3.up);
                     Props(p, dt);
+                    Shoot(p);   // 1.11.423: the catapult shot (test 30.10 07:00: the early return skipped it, so no spotter shot at all)
                     if (p.T > 1.3f) { p.P = Ph.Climb; p.T = 0f; }
                     return;
                 case Ph.Climb:

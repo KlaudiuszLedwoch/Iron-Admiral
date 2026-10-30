@@ -474,6 +474,9 @@ namespace DipGgFixes
                             goal = AimPoint(p); goal.y = era2.dropY;
                             var hd = new Vector3(p.Dir.x, 0f, p.Dir.z); var to = goal - p.Pos; to.y = 0f;
                             fire = (dT <= era2.release && Vector3.Angle(hd, to) < 12f) || dT < era2.release * 0.45f;
+                            // 1.11.423 (test 30.10 07:07: drops at 186-217 km/h): a torpedo released too fast breaks up - the pilot
+                            // holds it until the speed is down to the release limit (about 100 kn) unless he is already very close
+                            if (fire && p.Ph != null && p.Ph.V > Mathf.Min(p.Ph.T.Vmax, 51f) * 1.08f && dT > era2.release * 0.45f) fire = false;
                         }
                         Shot($"wave{p.Wave}_run", 3f, p);
                         if (fire) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); Radio(p.Wave, "drop", atkIsPlayer ? Pick("Fish away! Pulling up - hard right!", "Torpedo gone! Running true... get out of here!", "Released! Climbing away - watch the flak!") : "They have dropped - torpedoes in the water!"); }
