@@ -3,7 +3,10 @@
 // methods whose names speak of designs, saving, refits or ship lists in PlayerController, CampaignController, Player, Ui and
 // GameData are timed (Harmony prefix and postfix; methods with ref, out or Nullable parameters are left alone - patching those
 // crashes Il2Cpp), and every call that takes more than 300 ms is logged with its time; at the end of a slow frame the slowest
-// methods of that frame are listed. On by default since 1.11.465 (author 30.10 20:13); switch: SlowCallProbe.
+// methods of that frame are listed. Off by default; switch: SlowCallProbe.
+// 1.11.466: 1.11.465 timed 152 methods matched by words like Update, Check, Refresh and Ships - methods run every frame or from
+// worker threads - and the game crashed 3 s later. Now only methods named after designs, saving and refits are timed (no
+// Update/Refresh/Check/Ships/Fleet words), and methods with value-type (struct) parameters or results are left alone.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,10 +22,11 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("SlowCallProbe", true, null, "Diagnostics: time the game's design, save and refit methods and log every call over 300 ms (to find what makes saving a design and loading or refitting a ship slow)"); // 1.11.465: on by default (author 30.10 20:13)
+            On = cat.CreateEntry("SlowCallProbe", false, null, "Diagnostics: time the game's design, save and refit methods and log every call over 300 ms (to find what makes saving a design and loading or refitting a ship slow)"); // 1.11.466: off again - on by default in 1.11.465 it crashed the game 3 s after start (author 30.10 20:19)
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][SlowProbe] " + m); }
-        static readonly string[] Words = { "Design", "Save", "Refit", "Shared", "Ships", "Fleet", "Construct", "Validate", "Check", "Refresh", "Recalc", "Update" };
+        static readonly string[] Words = { "Design", "Save", "Refit", "Shared" };
+        static readonly string[] Never = { "Update", "Refresh", "Check", "OnGUI", "Tick", "Get", "Is", "Can", "Has" };
         [ThreadStatic] static Stack<long> stack;
         static readonly Dictionary<string, long> frameTotals = new Dictionary<string, long>();
         static int patched, logged;
@@ -46,8 +50,10 @@ namespace DipGgFixes
                         bool word = false; foreach (var w in Words) if (m.Name.Contains(w)) { word = true; break; }
                         if (!word) continue;
                         bool bad = false;
-                        foreach (var p in m.GetParameters()) { var pt = p.ParameterType; if (pt.IsByRef || p.IsOut || (pt.IsGenericType && pt.Name.StartsWith("Nullable"))) { bad = true; break; } }
-                        if (bad || m.ReturnType.IsByRef) continue;
+                        foreach (var w in Never) if (m.Name.StartsWith(w) || m.Name.Contains("Update") || m.Name.Contains("Refresh")) { bad = true; break; }
+                        foreach (var p in m.GetParameters()) { var pt = p.ParameterType; if (pt.IsByRef || p.IsOut || (pt.IsValueType && !pt.IsPrimitive && !pt.IsEnum)) { bad = true; break; } }
+                        var rt = m.ReturnType;
+                        if (bad || rt.IsByRef || (rt.IsValueType && !rt.IsPrimitive && !rt.IsEnum && rt != typeof(void))) continue;
                         h.Patch(m, pre, post); patched++;
                     }
                     catch (Exception e) { if (logged++ < 10) Log($"{t.Name}.{m.Name}: not timed - {e.Message}"); }
