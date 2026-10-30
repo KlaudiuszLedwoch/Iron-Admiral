@@ -35,17 +35,45 @@ namespace DipGgFixes
             // the cell: the highest ancestor of the Tech Budget controls that does not also hold the Crew Training slider
             var rowSrc = common;
             while (rowSrc.parent != null && rowSrc.parent.GetComponent<CampaignFinancesWindow>() == null && (w.CrewTrainigSlider == null || !w.CrewTrainigSlider.transform.IsChildOf(rowSrc.parent)) && (w.TransportCapacitySlider == null || !w.TransportCapacitySlider.transform.IsChildOf(rowSrc.parent))) rowSrc = rowSrc.parent;
-            if ((w.CrewTrainigSlider != null && w.CrewTrainigSlider.transform.IsChildOf(rowSrc)) || (w.TransportCapacitySlider != null && w.TransportCapacitySlider.transform.IsChildOf(rowSrc))) { Log("Finances window: the Tech Budget cell also holds the other sliders - no aviation slider"); return false; }
+            bool flat = (w.CrewTrainigSlider != null && w.CrewTrainigSlider.transform.IsChildOf(rowSrc)) || (w.TransportCapacitySlider != null && w.TransportCapacitySlider.transform.IsChildOf(rowSrc));
+            if (flat && (w.CrewTrainigSlider == null || w.CrewTrainigSlider.transform.parent != w.TechBudgetSlider.transform.parent)) { Log("Finances window: the sliders are laid out in an unknown way - no aviation slider"); return false; }
             string pSlider = PathFrom(rowSrc, w.TechBudgetSlider.transform), pPct = PathFrom(rowSrc, w.TechBudgetValue.transform), pCost = PathFrom(rowSrc, w.TechBudgetTotalValue.transform);
             row = UnityEngine.Object.Instantiate(rowSrc.gameObject, rowSrc.parent);
             row.name = "IA_NavalAviationRow";
             Strip(row);
             row.transform.SetSiblingIndex(rowSrc.GetSiblingIndex() + 1);
+            if (flat)
+            {
+                // keep the Tech Budget children (the slider, its two values and its label - the label is the text nearest above the slider)
+                var techRt = w.TechBudgetSlider.GetComponent<RectTransform>(); var crewRt = w.CrewTrainigSlider.GetComponent<RectTransform>();
+                float dy = crewRt != null && techRt != null ? crewRt.anchoredPosition.y - techRt.anchoredPosition.y : 0f;
+                float ty = techRt != null ? techRt.anchoredPosition.y : 0f, tx = techRt != null ? techRt.anchoredPosition.x : 0f;
+                var keep = new System.Collections.Generic.HashSet<string> { w.TechBudgetSlider.name, w.TechBudgetValue.name, w.TechBudgetTotalValue.name };
+                // the label: among the original's children, the text above the slider in the same column
+                Transform lab = null; float best = float.MaxValue;
+                for (int i = 0; i < rowSrc.childCount; i++)
+                {
+                    var c = rowSrc.GetChild(i); var rt = c.GetComponent<RectTransform>(); if (rt == null || c.GetComponent<TMP_Text>() == null || keep.Contains(c.name)) continue;
+                    float d = rt.anchoredPosition.y - ty; if (d <= 0f || Mathf.Abs(rt.anchoredPosition.x - tx) > 200f) continue;
+                    if (d < best) { best = d; lab = c; }
+                }
+                if (lab != null) keep.Add(lab.name);
+                int removed = 0;
+                for (int i = row.transform.childCount - 1; i >= 0; i--)
+                {
+                    var c = row.transform.GetChild(i);
+                    if (!keep.Contains(c.name)) { UnityEngine.Object.DestroyImmediate(c.gameObject); removed++; continue; }
+                    var rt = c.GetComponent<RectTransform>(); if (rt != null) rt.anchoredPosition += new Vector2(0f, dy);
+                }
+                var rr = row.GetComponent<RectTransform>(); if (rr != null && dy > 0f) rr.sizeDelta -= new Vector2(0f, dy);
+                var le = row.GetComponent<LayoutElement>(); if (le != null && dy > 0f) { if (le.preferredHeight > 0f) le.preferredHeight -= dy; if (le.minHeight > 0f) le.minHeight -= dy; }
+                Log($"Finances window: slider block copied, {removed} other slider part(s) removed, Tech Budget part(s) moved up {dy:0} (label '{(lab != null ? lab.name : "-")}')");
+            }
             slider = pSlider.Length > 0 ? row.transform.Find(pSlider)?.GetComponent<Slider>() : row.GetComponent<Slider>();
             pctText = row.transform.Find(pPct)?.GetComponent<TMP_Text>();
             costText = row.transform.Find(pCost)?.GetComponent<TMP_Text>();
             // the label: a text of the row that is neither of the two values
-            foreach (var t in row.GetComponentsInChildren<TMP_Text>(true)) { if (t != pctText && t != costText) { label = t; break; } }
+foreach (var t in row.GetComponentsInChildren<TMP_Text>(true)) { if (t == null || t == pctText || t == costText) continue; string n0 = ""; try { n0 = t.gameObject.name; } catch { } if (flat && !(n0.Length > 0)) continue; label = t; break; }
             if (slider == null) { Log($"Finances window: the copied row has no slider (path '{pSlider}')"); UnityEngine.Object.Destroy(row); row = null; return false; }
             slider.onValueChanged.RemoveAllListeners();
             slider.minValue = 0f; slider.maxValue = 20f; slider.wholeNumbers = true;   // 0-20 = 0-200% in steps of 10
