@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.445", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.446", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -2969,7 +2969,7 @@ namespace DipGgFixes
                 var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null) return;
                 var enemies = battle.ShipsOf(battle.OppositePlayer(player), true); if (enemies == null || enemies.Count == 0) return;
                 var cache = s.weaponRangesCache;
-                var main = s.mainGunsGroup;
+                var main = BattleAi.MainBatteryGun(s) ?? s.mainGunsGroup;   // 1.11.446 (#89): the game's mainGunsGroup can point at a secondary gun - 432 mm turrets were then handled as secondaries
                 bool heavy = false; try { var tn = s.shipType != null ? s.shipType.name : null; heavy = tn == "bb" || tn == "bc"; } catch { }
                 MemoReset(); // 1.11.96
                 EscortState(s, st, enemies);

@@ -132,7 +132,7 @@ namespace DipGgFixes
                 var p = tr.position; float t = Time.time;
                 if (way.TryGetValue(s.Pointer, out var w) && t - w.t > 0.2f && t - w.t < 30f)
                 {
-                    var d = p - w.p; d.y = 0f; float v = Vector3.Dot(d, tr.forward) / (t - w.t);
+                    var d = p - w.p; d.y = 0f; float v = Vector3.Dot(d, tr.forward) / (t - w.t) / Mathf.Max(1f, Time.timeScale);   // 1.11.446 (#93): not scaled by the time acceleration
                     way[s.Pointer] = (p, t, v); return v;
                 }
                 if (!way.ContainsKey(s.Pointer) || t - w.t >= 30f) way[s.Pointer] = (p, t, w.v);

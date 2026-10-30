@@ -91,6 +91,8 @@ namespace DipGgFixes
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
                 if (!battle) { since = -1f; return; }
                 if (!NavalAviation.CampaignBattle()) return;
+                bool custom = false; try { custom = GameManager.IsCustomBattle; } catch { }
+                if (custom || CampaignMap.Instance == null || CampaignController.Instance == null) return;   // 1.11.446 (#100): custom battle result window
                 var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (b == null || b.Pointer == done) return;
                 if (since < 0f) since = Time.realtimeSinceStartup;
                 if (Time.realtimeSinceStartup - since < 0.5f) return;
@@ -106,7 +108,7 @@ namespace DipGgFixes
                 dc.SetWind((DayCycleAndWeather.WindStrength)wi);
                 Log($"battle at {lat:0.0}, {lon:0.0} (raw {ll}), month {month}: {where} -> {(DayCycleAndWeather.WeatherType)w}, wind {(DayCycleAndWeather.WindStrength)wi}");
             }
-            catch (Exception e) { if (errors++ < 5) Log("failed: " + e.Message); }
+            catch (Exception e) { if (errors++ < 5) Log("failed: " + e.Message + " " + e.StackTrace); }
         }
     }
 }
