@@ -488,7 +488,7 @@ namespace DipGgFixes
                 if (p == null || p.isMain || HardStop == null || HardStop.Value <= 0f || budgetMonth != Economy.Month()) return false;
                 float used = Time.realtimeSinceStartup - budgetStart; if (used <= HardStop.Value) return false;
                 string n = p.data != null ? p.data.name : "?";
-                if (skippedAt.TryGetValue(n, out int last) && budgetMonth - last <= 1) return false;
+                if (skippedAt.TryGetValue(n, out int last)) { if (last == budgetMonth) return true; if (budgetMonth - last == 1) return false; }
                 skippedAt[n] = budgetMonth;
                 if (stopLogged.Add(n + "|" + budgetMonth)) Log($"{n}: no shipbuilding this month - the AI's ship design work has taken {used:0} s of this turn (limit {HardStop.Value:0} s, ShipGenTurnHardStop); it builds next month");
                 return true;
