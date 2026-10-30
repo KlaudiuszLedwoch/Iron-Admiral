@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.482", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.483", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -250,7 +250,7 @@ namespace DipGgFixes
             SettingsUi.Tick();
             ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } try { Spectacle.Tick(); } catch { } try { SlowProbe.Tick(); } catch { } try { SaveBackup.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } try { Spectacle.Tick(); } catch { } try { SlowProbe.Tick(); } catch { } try { SaveBackup.Tick(); } catch { } try { Patch_AiTakeReparation.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
@@ -707,6 +707,7 @@ Reparations.CreatePrefs(cat); // 1.11.482
             try { Irredenta.Apply(HarmonyInstance); } catch { } // 1.11.235
             try { SlowProbe.Install(HarmonyInstance); } catch (Exception e) { LoggerInstance.Warning("[SlowProbe] " + e.Message); } // 1.11.463
 try { RefitConfirm.Install(HarmonyInstance); } catch (Exception e) { LoggerInstance.Warning("[RefitConfirm] " + e.Message); } // 1.11.464
+try { Patch_AiTakeReparation.Install(HarmonyInstance); } catch { } // 1.11.483
             try { Scenarios.Apply(HarmonyInstance); } catch (Exception e) { LoggerInstance.Warning("[Scenario] hooks not applied: " + e.Message); }
             try { Fog.Apply(HarmonyInstance); Fog.ReportPatches(); } catch (Exception e) { LoggerInstance.Warning("[Fog] hooks not applied: " + e.Message); }
             Doctrines.Load();

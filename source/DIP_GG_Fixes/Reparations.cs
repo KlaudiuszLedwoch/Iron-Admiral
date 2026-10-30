@@ -91,9 +91,17 @@ namespace DipGgFixes
         }
     }
 
-    [HarmonyPatch(typeof(WarPreparationWindow), "AiTakeReparation")]
     internal static class Patch_AiTakeReparation
     {
+        static HarmonyLib.Harmony H; static bool done;
+        internal static void Install(HarmonyLib.Harmony h) { H = h; }
+        internal static void Tick()
+        {
+            if (done || H == null || Reparations.On == null || !Reparations.On.Value) return;
+            done = true;
+            try { H.Patch(AccessTools.Method(typeof(WarPreparationWindow), "AiTakeReparation"), prefix: new HarmonyMethod(typeof(Patch_AiTakeReparation).GetMethod(nameof(Prefix), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic))); MelonLogger.Msg("[DIP GG Fixes][Reparations] AI reparations limited (switch AiReparationsLimit)"); }
+            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Reparations] not installed: " + e.Message); }
+        }
         static bool Prefix(Player winner, Il2CppSystem.Collections.Generic.List<Ship> ships, Il2CppSystem.Collections.Generic.List<Province> provinces, float funds,
             out Il2CppSystem.Collections.Generic.List<Ship> takenShips, out Il2CppSystem.Collections.Generic.List<Province> takenProvinces, ref float __result)
         {
