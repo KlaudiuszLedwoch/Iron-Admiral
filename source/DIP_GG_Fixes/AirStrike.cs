@@ -168,13 +168,21 @@ namespace DipGgFixes
         static void Use(SideCtx c) { atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; }
         static void Keep(SideCtx c) { c.Waves = wavesSent; c.Next = nextWave; c.Year = curYear; c.Model = curModel; c.Tube = lastTube; }
         static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; }
-        internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<float> UpkeepBase, UpkeepStep;
+        internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<string> UpkeepScale;
         // the monthly upkeep of the naval air arm: a share of the fleet maintenance from the first carrier technology, growing with each
         internal static float UpkeepPct(Player p)
         {
             if (CampOn == null || !CampOn.Value || p == null) return 0f;
             int lv = 0; try { lv = NavalAviation.CarrierLevel(p); } catch { }
-            return lv <= 0 ? 0f : UpkeepBase.Value + UpkeepStep.Value * (lv - 1);
+            if (lv <= 0) return 0f;
+            // 1.11.427 (author 30.10 09:14: "research how this cost relation looked historically"): naval aviation against the
+            // naval budget - UK 1913 0.7% (RNAS), 1925 >= 2.1-2.5% (FAA), 1938 4.5% of the whole / 6.7% without new construction,
+            // 1939 7.9% / ~13% of the fleet maintenance (Hansard, Navy Estimates debates); USA BuAer ~4% 1923, 9% 1930, 6% 1935,
+            // 10% 1940 (Hone, Naval History 1990); Japan's armament programmes 7-15% for aviation. Per carrier level, % of maintenance:
+            var a = (UpkeepScale.Value ?? "").Split(',');
+            float v = 0f; int k = Math.Min(lv, a.Length) - 1;
+            if (k >= 0) float.TryParse(a[k].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v);
+            return Math.Max(0f, v);
         }
         internal static float Upkeep(Player p)
         {
@@ -185,8 +193,7 @@ namespace DipGgFixes
         internal static void CreateCampaignPrefs(MelonPreferences_Category cat)
         {
             BothTest = cat.CreateEntry("AirStrikeCampaignRulesTest", false, null, "Battle (test): a custom battle uses the campaign air strike rules - both sides strike by their nations' Naval Aviation technologies");
-            UpkeepBase = cat.CreateEntry("NavalAviationUpkeepPercent", 3f, null, "Campaign: monthly upkeep of naval aviation in percent of the fleet maintenance with the first carrier technology (av_carrier_1)");
-            UpkeepStep = cat.CreateEntry("NavalAviationUpkeepStep", 2f, null, "Campaign: percentage points of the fleet maintenance added to the naval aviation upkeep by each further carrier technology");
+            UpkeepScale = cat.CreateEntry("NavalAviationUpkeepScale", "1.5,3.5,7,11.5", null, "Campaign: monthly upkeep of naval aviation in percent of the fleet maintenance for carrier technology 1,2,3,4 (seaplane carrier 1910s, first carriers 1920s, carrier fleet 1930s, large carrier force 1940s - from the Navy Estimates and US Navy budget shares of naval aviation)");
             CampOn = cat.CreateEntry("NavalAviationCampaignStrikes", true, null, "Campaign: in a daylight battle with battleships or cruisers each side whose nation has the seaplane carrier and the aerial torpedo researched sends torpedo aircraft from a carrier beyond the horizon - waves, aircraft and their type by its Naval Aviation technologies; the carrier costs a monthly upkeep");
         }
         static bool BigShip(Ship s)

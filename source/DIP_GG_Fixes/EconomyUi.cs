@@ -123,7 +123,7 @@ namespace DipGgFixes
             if (b.Debt > 0f) sb.Append($"Debt: {M(b.Debt)}, interest {M(b.DebtInterest)} a month{(b.Erosion > 0f ? $", inflation erodes {M(b.Erosion)} of it" : "")}\n");
             if (st.LoanMonths > 0) sb.Append($"War loan: {M(st.LoanBalance)} left, {st.LoanMonths} months, repayment {M(b.LoanPayment)} a month\n");
             if (b.Savings > 0f) sb.Append($"Savings: {M(p.cash)} earn {b.SavingsRate:0.0}% a year = +{M(b.Savings)} a month\n");
-            if (b.Aviation > 0f) sb.Append($"Naval Aviation (carrier, aircraft, crews): {M(b.Aviation)} a month = {AirStrike.UpkeepPct(p):0}% of the fleet maintenance\n");
+            if (b.Aviation > 0f) sb.Append($"Naval Aviation (carrier, aircraft, crews): {M(b.Aviation)} a month = {AirStrike.UpkeepPct(p):0.#}% of the fleet maintenance\n");
             int month = Economy.Month();
             if (st.BankruptUntil > month) sb.Append($"Bankruptcy on record until {st.BankruptUntil / 12} - credit costs more\n");
             if (st.CutsMonths > 0) sb.Append($"Fleet cuts: {st.CutsMonths} months left\n");

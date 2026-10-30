@@ -182,15 +182,15 @@ namespace DipGgFixes
         static void Shoot(Sp p)
         {
             if (p.Go == null || p.S == null) return;
-            if (p.Shots == 0 && p.P == Ph.Catapult && p.T > 0.6f)
+            // 1.11.427 (tests 30.10 07:32-09:03: on the catapult the aircraft was hidden in the superstructure or not in the frame):
+            // the shot is taken just after it leaves the catapult, from beside and a little behind it, with its ship beyond
+            if (p.Shots == 0 && p.P == Ph.Climb && p.T > 0.4f)
             {
                 if (shotPlanes >= 2) { p.Shots = 9; return; }
                 shotPlanes++; p.Shots = 1;
-                // 1.11.425 (tests 30.10 07:32-08:34: the camera behind the aircraft stood inside the superstructure): the camera
-                // is out over the water ahead of the aircraft, looking back at it leaving the catapult with the ship behind
-                var hd = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized;
-                var cam = p.Pos + hd * 85f + Vector3.up * 8f;
-                AirStrike.ShotAt(cam, p.Pos + Vector3.down * 4f, 50f, "spotter_catapult", Highlights.Active());
+                var hd = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; var rt = Vector3.Cross(Vector3.up, hd).normalized * p.Side;
+                AirStrike.ShotAt(p.Pos + rt * 35f - hd * 20f + Vector3.up * 3f, p.Pos, 50f, "spotter_catapult", Highlights.Active());
+                return;
             }
             else if (p.Shots == 1 && p.P == Ph.Climb && p.T > 4f)
             {
