@@ -74,7 +74,11 @@ namespace DipGgFixes
             {"CustomBattleCarrier","Battle AI"},{"PlayerDesignsFirst","Ship design"},{"CustomBattleSaveDesigns","Ship design"},{"DesignStats","Ship design"},{"DesignStatsPreferBest","Ship design"},
             {"NavalAviationRecon","Fog of war"},{"NavalAviationSpotting","Battle AI"},{"ShipGenSecondaryTower","Other"},{"NavalAviationSpotterPlanes","Battle AI"},
             {"NavalAviationAirRecon","Battle AI"},{"NavalAviationCampaignStrikes","Battle AI"},{"NavalAviationShoreStrikes","Battle AI"},{"BattleClimateWeather","Battle AI"},
-            {"ScreenshotsToSteam","Display"},{"AirStrikeScreenshots","Display"},{"ScreenshotsJpg","Display"},{"TechLevelRelative","Display"},
+            {"ScreenshotsToSteam","Display"},{"AirStrikeScreenshots","Display"},{"ScreenshotsJpg","Display"},{"TechLevelRelative","Display"},{"AirOnlyBattles","Campaign AI"},
+            {"AirOnlyBattleChance","Campaign AI"},{"AirOnlyBattleTest","Tools"},{"TurretArmorDefault","Ship design"},{"TurretArmorDefaultRoofMm","Ship design"},{"PlayerAvoidTorpedoes","Battle AI"},
+            {"PlayerKeepDivisionLeader","Battle AI"},{"FormationSpacing","Battle AI"},{"SmallGunShieldArmor","Ship design"},{"SmallGunShieldSideMm","Ship design"},
+            {"SmallGunShieldTopMm","Ship design"},{"WarScoreReset","Diplomacy"},{"MoveUnbuildableDesigns","Ship design"},{"SeaRepair","Campaign AI"},{"SeaRepairPerTurn","Campaign AI"},
+            {"SeaRepairMaxShare","Campaign AI"},{"PenetrationReference","Logs"},{"SpectacularSinking","Display"},{"SlowCallProbe","Logs"},{"SkipRefitConfirm","Ship design"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -111,7 +115,10 @@ namespace DipGgFixes
             {"TransportSpeedByYear",172},{"EnemyProfileLog",173},{"ThanksOnMainMenu",174},{"AirStrikeTest",175},{"EnemyFitBuildMix",176},{"CustomBattleCarrier",177},
             {"PlayerDesignsFirst",178},{"CustomBattleSaveDesigns",179},{"DesignStats",180},{"DesignStatsPreferBest",181},{"NavalAviationRecon",182},{"NavalAviationSpotting",183},
             {"ShipGenSecondaryTower",184},{"NavalAviationSpotterPlanes",185},{"NavalAviationAirRecon",186},{"NavalAviationCampaignStrikes",187},{"NavalAviationShoreStrikes",188},
-            {"BattleClimateWeather",189},{"ScreenshotsToSteam",190},{"AirStrikeScreenshots",191},{"ScreenshotsJpg",192},{"TechLevelRelative",193},
+            {"BattleClimateWeather",189},{"ScreenshotsToSteam",190},{"AirStrikeScreenshots",191},{"ScreenshotsJpg",192},{"TechLevelRelative",193},{"AirOnlyBattles",194},
+            {"AirOnlyBattleChance",195},{"AirOnlyBattleTest",196},{"TurretArmorDefault",197},{"TurretArmorDefaultRoofMm",198},{"PlayerAvoidTorpedoes",199},{"PlayerKeepDivisionLeader",200},
+            {"FormationSpacing",201},{"SmallGunShieldArmor",202},{"SmallGunShieldSideMm",203},{"SmallGunShieldTopMm",204},{"WarScoreReset",205},{"MoveUnbuildableDesigns",206},
+            {"SeaRepair",207},{"SeaRepairPerTurn",208},{"SeaRepairMaxShare",209},{"PenetrationReference",210},{"SpectacularSinking",211},{"SlowCallProbe",212},{"SkipRefitConfirm",213},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
