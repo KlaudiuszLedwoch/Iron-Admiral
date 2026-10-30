@@ -23,7 +23,11 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("BattleHourChoice", true, null, "Campaign battles: the faster and better informed side chooses the hour of the battle (you choose in a window over the battle screen, the AI by doctrine and balance of forces); with a large reconnaissance edge a dusk or night battle starts as an ambush at about 10 km");
             SpeedKn = cat.CreateEntry("BattleHourSpeedKn", 3f, null, "Campaign battles: knots by which a force (its slowest ship) must be faster to choose the hour of the battle");
-            ReconMargin = cat.CreateEntry("BattleHourReconMargin", 0.15f, null, "Campaign battles: how much better (0-1) the contact report quality of the faster side must be to choose the hour");
+            ReconMargin = cat.CreateEntry("BattleHourReconMargin", 0f, null, "Campaign battles: how much better (0-1) the contact report quality of the faster side must be to choose the hour (0 = not worse than the other side's)");
+            // 1.11.427 (author 30.10 09:31: "in no campaign battle did I see the choice of the hour"): 3 kn faster AND 0.15 better reports
+            // together almost never happened (a battle line is as fast as its slowest ship, both sides' reports alike in one era) -
+            // the faster force chooses when its reports are not worse; the better-informed one still gets the ambush
+            if (Math.Abs(ReconMargin.Value - 0.15f) < 0.001f) ReconMargin.Value = 0f;
             AmbushMargin = cat.CreateEntry("BattleHourAmbushMargin", 0.35f, null, "Campaign battles: reconnaissance edge (0-1) from which a dusk or night battle chosen by the faster side starts as an ambush");
             AmbushKm = cat.CreateEntry("BattleHourAmbushKm", 10f, null, "Campaign battles: opening distance (km) of an ambush");
         }
