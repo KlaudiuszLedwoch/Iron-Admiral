@@ -424,6 +424,7 @@ namespace DipGgFixes
                 float[] a; if (!summary.TryGetValue(key, out a)) { a = new float[5]; summary[key] = a; }
                 a[0]++; a[1] += Math.Max(0f, armor); a[2] += physB; a[3] += Math.Max(0f, penetration); a[4] += damage;
                 HitDispatch.Hit(victim, sh != null ? sh.Shooter : (from != null ? from.ship : null), cal, hitType, damage);
+                if (sh != null && hitType != "torpedo") { try { PenReference.Hit(sh.Shooter, sh.G, sh.Range, sh.Fall, penetration, armor, hitType); } catch { } }   // 1.11.460
                 if (hitType == "none") { var st = AimPoint.StruckOf(s); string k = st == null ? "unknown" : $"{(st.Hull ? "hull" : st.Gun ? "gun" : st.Barb ? "barbette" : st.PartType)}{(st.Section != null ? " / " + st.Zone + (st.Underwater > 0.01f ? " underwater" : "") : "")}"; int c; noneBy.TryGetValue(k, out c); noneBy[k] = c + 1; }
                 if (hitType != "normal" && hitType != "over" && hitType != "torpedo" && OverPen.LastFrame == Time.frameCount) OverPen.NonPen($"{ty} {Band(cal)} | {OverPen.LastLoc ?? "?"} | {hitType}", damage, OverPen.LastFire, OverPen.LastFlood, OverPen.LastModules != null);
                 if (HitLog == null || !HitLog.Value) return;

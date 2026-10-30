@@ -26,6 +26,41 @@ namespace DipGgFixes
         const string Header = "cal_mm,cal_in,mark,year,nation,gun,shell_kg,mv_ms,quality,belt_1,belt_5,belt_10,belt_15,belt_20,belt_25,belt_30,deck_5,deck_10,deck_15,deck_20,deck_25,deck_30";
         static readonly int[] Km = { 1, 5, 10, 15, 20, 25, 30 };
         static HashSet<string> keys; static IntPtr battle; static float since = -1f; static bool done; static int errors;
+        // 1.11.460: hits of the battle, merged into penetration_hits.csv at its end
+        static string HitsPath { get { return Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "penetration_hits.csv"); } }
+        const string HitsHeader = "cal_mm,mark,decade,range_km,hits,pen_sum,plate_sum,pierced,fall_sum";
+        static readonly Dictionary<string, double[]> pending = new Dictionary<string, double[]>();
+        internal static void Hit(Ship shooter, PhysGun.G g, float range, float fall, float pen, float plate, string result)
+        {
+            if (On == null || !On.Value || g.CalMm <= 0f || plate <= 0.5f) return;   // a hit on no armour says nothing of penetration
+            int year = 0; try { year = (int)shooter.GetYear(shooter); } catch { }
+            int band = Math.Min(30, (int)(range / 5000f) * 5);
+            string key = $"{g.CalMm:0}|{g.Grade}|{year / 10 * 10}|{band}";
+            if (!pending.TryGetValue(key, out var a)) { a = new double[5]; pending[key] = a; }
+            a[0]++; a[1] += Math.Max(0f, pen); a[2] += plate; if (result == "normal" || result == "over") a[3]++; a[4] += fall;
+        }
+        static void FlushHits()
+        {
+            if (pending.Count == 0) return;
+            try
+            {
+                var all = new Dictionary<string, double[]>(); var ci = System.Globalization.CultureInfo.InvariantCulture;
+                if (File.Exists(HitsPath))
+                    foreach (var l in File.ReadAllLines(HitsPath))
+                    {
+                        var c = l.Split(','); if (c.Length < 9 || c[0] == "cal_mm") continue;
+                        var v = new double[5]; for (int i = 0; i < 5; i++) double.TryParse(c[4 + i], System.Globalization.NumberStyles.Float, ci, out v[i]);
+                        all[c[0] + "|" + c[1] + "|" + c[2] + "|" + c[3]] = v;
+                    }
+                int n = 0; foreach (var kv in pending) { if (!all.TryGetValue(kv.Key, out var v)) { v = new double[5]; all[kv.Key] = v; } for (int i = 0; i < 5; i++) v[i] += kv.Value[i]; n += (int)kv.Value[0]; }
+                var sb = new StringBuilder(HitsHeader + Environment.NewLine);
+                foreach (var kv in all) sb.Append(kv.Key.Replace('|', ',')).Append(',').Append(string.Join(",", Array.ConvertAll(kv.Value, x => x.ToString("0.#", ci)))).Append(Environment.NewLine);
+                Directory.CreateDirectory(Path.GetDirectoryName(HitsPath)); File.WriteAllText(HitsPath, sb.ToString());
+                Log($"{n} hit(s) on armour added to the measured penetration ({all.Count} calibre / range groups)");
+            }
+            catch (Exception e) { if (errors++ < 5) Log("hits: " + e.Message); }
+            pending.Clear();
+        }
 
         static void LoadKeys()
         {
@@ -38,9 +73,9 @@ namespace DipGgFixes
             try
             {
                 bool b = false; try { b = GameManager.IsBattle; } catch { }
-                if (!b) { battle = IntPtr.Zero; since = -1f; done = false; return; }
+                if (!b) { FlushHits(); battle = IntPtr.Zero; since = -1f; done = false; return; }
                 var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb == null || cb.Ships == null) return;
-                if (cb.Pointer != battle) { battle = cb.Pointer; since = Time.realtimeSinceStartup; done = false; }
+                if (cb.Pointer != battle) { FlushHits(); battle = cb.Pointer; since = Time.realtimeSinceStartup; done = false; }
                 if (done || Time.realtimeSinceStartup - since < 10f) return;
                 done = true; LoadKeys();
                 var sb = new StringBuilder(); int n = 0; var ci = System.Globalization.CultureInfo.InvariantCulture;
