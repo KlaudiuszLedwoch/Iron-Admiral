@@ -39,6 +39,7 @@ namespace DipGgFixes
             TolValue = cat.CreateEntry("GeneratorAsymmetryTolerance", 0.002f, null, "Weight asymmetry tolerated by the ship generator as a share of displacement (0.002 = 0.2 %, about 24 t on a 12 000 t cruiser)");
             InstMax = cat.CreateEntry("GeneratorInstabilityMax", 2f, null, "Ship generator: an attempt whose side instability stat (instability_x) is at most this value is accepted - 100 is the full handling/accuracy penalty, so 2 means under 1 %; 0 = the game's rule (any value above zero fails the attempt)"); // 1.11.245
             TrimOn = cat.CreateEntry("ShipGenTrimOverweight", true, null, "Ship generator: an attempt that comes out overweight has guns below the main calibre removed, smallest first and in pairs, until the ship makes its tonnage - instead of the whole attempt being thrown away (the 25.10 tests: 26 of 27 failed attempts were overweight)"); // 1.11.246
+            SecTowerOn = cat.CreateEntry("ShipGenSecondaryTower", true, null, "Ship generator: when an attempt comes out with a main tower and no secondary tower, the later attempts of that design get an available secondary tower on a free mount before the check (1938 battleships of Italy and Germany failed all 20 attempts without one)");
             TrimMax = cat.CreateEntry("GeneratorOverweightMax", 0.12f, null, "Trimming: attempts overweight by more than this share of the tonnage are left to the game (0.12 = 12 %)");
             TrimState = cat.CreateEntry("ShipGenTrimState", 20, null, "Author's tool: coroutine state of the generator at which trimming runs - 20 is the state that checks the attempt, after the game's own weight reductions (state log of 25.10: 8 parts, 12 armour, 13 and 15 weight reduction, 20 check)");
             Diag = cat.CreateEntry("ShipGenDiagnosis", false, null, "Author's tool: outside the campaign, every failed generator attempt is logged with its guns and tonnage, and when no main tower, secondary tower or funnel was placed, each tower/funnel part is checked with the game's own availability and placement tests"); // 1.11.245
@@ -197,6 +198,7 @@ namespace DipGgFixes
             if (st == 8) { try { DynamicCaps.Begin(ship, p); } catch { } }   // 1.11.248: limits for the displacement chosen
             if (st == 13) { try { TorpedoTubesMin.Apply(ship); } catch (Exception e) { if (trimLogged++ < 10) Log("torpedo tubes: " + e.Message); } } // 1.11.309 (#47)
             int want = TrimState != null ? TrimState.Value : 20;
+            if (st == want) { try { SecTower(p, ship); } catch (Exception e) { if (secLogged++ < 10) Log("secondary tower: " + e.Message); } } // 1.11.412
             if (TrimOn != null && TrimOn.Value)
             {
                 // 1.11.247: first pass as the armour has just been generated and before the game cuts it (state 13) - only the light
@@ -206,7 +208,98 @@ namespace DipGgFixes
                 if (st == want) { try { Trim(ship, false); } catch (Exception e) { if (trimLogged++ < 10) Log("trim: " + e.Message); } }
             }
         }
-        internal static void StateEnd(IntPtr p, Ship ship) { lastState.Remove(p); try { DynamicCaps.End(ship, p); } catch { } }
+        internal static void StateEnd(IntPtr p, Ship ship) { lastState.Remove(p); secMissing.Remove(p); try { DynamicCaps.End(ship, p); } catch { } }
+
+        // ---- 0e. secondary tower put in when the generator leaves it out (1.11.412) ----
+        // Tests 30.10 (custom battles 1938): every attempt on bb_6_littorio / bb_7_littorio (Italy) and bb_5_bisko_compact (Germany)
+        // ended "Unmet Requirements: tower_sec : 0 (1 ~ 1)" - 12 secondary towers were available and the hull took all of them
+        // (ShipGenDiagnosis), yet the random placement never put one in, and after 20 attempts per design the battle had not
+        // started in 25 minutes. When an attempt of a generation ends with a main tower and no secondary tower, every later attempt
+        // of that generation gets one before the check: a free mount that takes an available secondary tower, aft of the main
+        // tower first, the room checked with Part.CanPlace. Switch: ShipGenSecondaryTower.
+        internal static MelonPreferences_Entry<bool> SecTowerOn;
+        static readonly HashSet<IntPtr> secMissing = new HashSet<IntPtr>(); static int secLogged;
+        static void SecTower(IntPtr p, Ship ship)
+        {
+            if (SecTowerOn == null || !SecTowerOn.Value || ship == null) return;
+            int tm = 0, ts = 0; float tmz = 0f; float tmy = 0f;
+            var parts = ship.parts;
+            for (int i = 0; i < parts.Count; i++)
+            {
+                var d = parts[i] != null ? parts[i].data : null; if (d == null) continue;
+                string t = d.type ?? "";
+                if (t == "tower_main") { tm++; try { tmz = parts[i].transform.localPosition.z; tmy = parts[i].transform.localPosition.y; } catch { } }
+                else if (t == "tower_sec") ts++;
+            }
+            if (tm == 0 || ts > 0) return;
+            if (!secMissing.Contains(p)) { secMissing.Add(p); return; }   // the first attempt shows whether the hull needs one
+            string key = ""; try { key = ship.player.data.name + ": hull " + ship.hull.data.name; } catch { }
+            // available secondary towers the hull takes, real secondary towers first, lightest first
+            var cand = new List<PartData>();
+            foreach (var kv in G.GameData.parts)
+            {
+                var pd = kv.Value; if (pd == null || (pd.type ?? "") != "tower_sec") continue;
+                bool av = false; try { av = ship.IsPartAvailable(pd); } catch { }
+                if (!av) continue;
+                string why; bool ok = false; try { ok = Part.CanPlaceGeneric(pd, ship, false, out why); } catch { }
+                if (ok) cand.Add(pd);
+            }
+            if (cand.Count == 0) { if (secLogged++ < 20) Log($"{key} - no secondary tower: none available that the hull takes"); return; }
+            cand.Sort((a, b) =>
+            {
+                int sa = (a.name ?? "").Contains("tower_sec") ? 0 : 1, sb = (b.name ?? "").Contains("tower_sec") ? 0 : 1;
+                if (sa != sb) return sa - sb;
+                return a.weight.CompareTo(b.weight);
+            });
+            // free centre-line mounts, aft of the main tower first (nearest first), then forward
+            var mounts = new List<Mount>();
+            try
+            {
+                var ms = ship.mounts;
+                for (int i = 0; ms != null && i < ms.Count; i++)
+                {
+                    var m = ms[i]; if (m == null) continue;
+                    Part occ = null; try { occ = m.employedPart; } catch { }
+                    if (occ != null) continue;
+                    bool used = false; try { used = ship.mountsUsed.ContainsKey(m); } catch { }
+                    if (used) continue;
+                    mounts.Add(m);
+                }
+            }
+            catch { }
+            mounts.Sort((a, b) =>
+            {
+                float za = 0f, zb = 0f; try { za = a.transform.localPosition.z; zb = b.transform.localPosition.z; } catch { }
+                bool aa = za < tmz, ab = zb < tmz; if (aa != ab) return aa ? -1 : 1;
+                return Math.Abs(za - tmz).CompareTo(Math.Abs(zb - tmz));
+            });
+            int tries = 0;
+            foreach (var pd in cand)
+            {
+                foreach (var m in mounts)
+                {
+                    bool fits = false; try { fits = m.Fits(pd, null, null); } catch { }
+                    if (!fits) continue;
+                    if (tries++ > 60) break;
+                    Part part = null;
+                    try
+                    {
+                        part = Part.Create(pd, ship, ship.partsCont, new Il2CppSystem.Nullable<int>(), true);
+                        if (part == null) continue;
+                        ship.AddPart(part);
+                        try { part.LoadModel(ship, true); } catch { }
+                        try { part.UpdateCollidersSize(ship); } catch { }
+                        part.Mount(m, true);
+                        string why = null; bool ok = true; try { ok = part.CanPlace(out why); } catch { }
+                        if (!ok && why != "available") { ship.RemovePart(part, true, false); continue; }
+                        if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} put on a free mount {(m.transform.localPosition.z < tmz ? "aft" : "forward")} of the main tower");
+                        return;
+                    }
+                    catch (Exception e) { if (secLogged++ < 10) Log("secondary tower place: " + e.Message); try { if (part != null) ship.RemovePart(part, true, false); } catch { } }
+                }
+            }
+            if (secLogged++ < 20) Log($"{key} - attempt without a secondary tower: {cand.Count} tower(s) available, no free mount takes one");
+        }
         static void Trim(Ship ship, bool early)
         {
             float w = ship.Weight(true, true), t = ship.Tonnage();
