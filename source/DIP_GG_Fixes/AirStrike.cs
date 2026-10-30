@@ -118,7 +118,8 @@ namespace DipGgFixes
                     if (atkIsPlayer) Log($"custom battle {yr}: our carrier ({CarrierName()}, {TypeName()}) is beyond the horizon - its waves attack the enemy's largest ship");
                     else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
                     sides.Clear();
-                    if (camp && campOn && !test) CampaignSides(b.Ships);
+                    bool both = BothTest != null && BothTest.Value;   // test: the campaign rules in a custom battle (techs of the battle year)
+                    if ((camp && campOn && !test) || both) { camp = true; CampaignSides(b.Ships); }
                     else if (active) sides.Add(new SideCtx { Pl = atkIsPlayer, AP = atkP, Next = FirstAfter.Value, Year = curYear, Model = curModel });
                     active = sides.Count > 0;
                 }
@@ -167,7 +168,7 @@ namespace DipGgFixes
         static void Use(SideCtx c) { atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; }
         static void Keep(SideCtx c) { c.Waves = wavesSent; c.Next = nextWave; c.Year = curYear; c.Model = curModel; c.Tube = lastTube; }
         static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; }
-        internal static MelonPreferences_Entry<bool> CampOn; internal static MelonPreferences_Entry<float> UpkeepBase, UpkeepStep;
+        internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<float> UpkeepBase, UpkeepStep;
         // the monthly upkeep of the naval air arm: a share of the fleet maintenance from the first carrier technology, growing with each
         internal static float UpkeepPct(Player p)
         {
@@ -183,6 +184,7 @@ namespace DipGgFixes
         }
         internal static void CreateCampaignPrefs(MelonPreferences_Category cat)
         {
+            BothTest = cat.CreateEntry("AirStrikeCampaignRulesTest", false, null, "Battle (test): a custom battle uses the campaign air strike rules - both sides strike by their nations' Naval Aviation technologies");
             UpkeepBase = cat.CreateEntry("NavalAviationUpkeepPercent", 3f, null, "Campaign: monthly upkeep of naval aviation in percent of the fleet maintenance with the first carrier technology (av_carrier_1)");
             UpkeepStep = cat.CreateEntry("NavalAviationUpkeepStep", 2f, null, "Campaign: percentage points of the fleet maintenance added to the naval aviation upkeep by each further carrier technology");
             CampOn = cat.CreateEntry("NavalAviationCampaignStrikes", true, null, "Campaign: in a daylight battle with battleships or cruisers each side whose nation has the seaplane carrier and the aerial torpedo researched sends torpedo aircraft from a carrier beyond the horizon - waves, aircraft and their type by its Naval Aviation technologies; the carrier costs a monthly upkeep");
