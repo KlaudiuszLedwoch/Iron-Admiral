@@ -191,7 +191,7 @@ namespace DipGgFixes
                 if (shotPlanes >= 2) { p.Shots = 9; return; }
                 shotPlanes++; p.Shots = 1;
                 var hd = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; var rt = Vector3.Cross(Vector3.up, hd).normalized * p.Side;
-                AirStrike.ShotAt(p.Pos + rt * 35f - hd * 20f + Vector3.up * 3f, p.Pos, 50f, "spotter_catapult", Highlights.Active());
+                AirStrike.ShotAt(p.Pos + rt * 110f - hd * 30f + Vector3.up * 12f, p.Pos, 40f, "spotter_catapult", Highlights.Active());   // test 09:39: 35 m was inside the aircraft
                 return;
             }
             else if (p.Shots == 1 && p.P == Ph.Climb && p.T > 4f)
