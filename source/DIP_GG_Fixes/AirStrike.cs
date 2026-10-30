@@ -169,7 +169,7 @@ namespace DipGgFixes
         static void Keep(SideCtx c) { c.Waves = wavesSent; c.Next = nextWave; c.Year = curYear; c.Model = curModel; c.Tube = lastTube; }
         static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; }
         internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<string> UpkeepScale, PresenceScale;
-        internal static MelonPreferences_Entry<float> MinVisKm;
+        internal static MelonPreferences_Entry<float> MinVisKm, BigBattleStep;
         static float ScaleAt(string sc, int lv)
         {
             var a = (sc ?? "").Split(','); int k = Math.Min(lv, a.Length) - 1; float v = 0f;
@@ -208,10 +208,12 @@ namespace DipGgFixes
         {
             BothTest = cat.CreateEntry("AirStrikeCampaignRulesTest", false, null, "Battle (test): a custom battle uses the campaign air strike rules - both sides strike by their nations' Naval Aviation technologies");
             PresenceScale = cat.CreateEntry("NavalAviationCarrierPresence", "15,30,50,65", null, "Campaign: chance (%) that a fleet in a battle has a carrier with it, for carrier technology 1,2,3,4 - each side rolls separately");
+            BigBattleStep = cat.CreateEntry("NavalAviationCarrierPresenceBigBattle", 20f, null, "Campaign: the carrier presence chance grows by this many percent (of itself) for each capital ship of the fleet beyond the first, at most 90%");
             MinVisKm = cat.CreateEntry("NavalAviationMinVisibilityKm", 8f, null, "Campaign: below this visibility (km) the carrier does not fly off its aircraft");
             UpkeepScale = cat.CreateEntry("NavalAviationUpkeepScale", "1.5,3.5,7,11.5", null, "Campaign: monthly upkeep of naval aviation in percent of the fleet maintenance for carrier technology 1,2,3,4 (seaplane carrier 1910s, first carriers 1920s, carrier fleet 1930s, large carrier force 1940s - from the Navy Estimates and US Navy budget shares of naval aviation)");
             CampOn = cat.CreateEntry("NavalAviationCampaignStrikes", true, null, "Campaign: in a daylight battle with battleships or cruisers each side whose nation has the seaplane carrier and the aerial torpedo researched sends torpedo aircraft from a carrier beyond the horizon - waves, aircraft and their type by its Naval Aviation technologies; the carrier costs a monthly upkeep");
         }
+        static bool Capital(Ship s) { string t = ""; try { t = s.shipType.name; } catch { } return t == "bb" || t == "bc"; }
         static bool BigShip(Ship s)
         {
             string t = ""; try { t = s.shipType.name; } catch { }
@@ -220,11 +222,12 @@ namespace DipGgFixes
         // both sides of a campaign battle: the player's and the AI's, each by its own nation's technologies
         static void CampaignSides(Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
-            bool big = false; Player mine = null, theirs = null;
+            bool big = false; Player mine = null, theirs = null; int capMine = 0, capTheirs = 0;
             for (int i = 0; i < ships.Count; i++)
             {
                 var s = ships[i]; if (!Alive(s)) continue;
                 if (BigShip(s)) big = true;
+                if (Capital(s)) { if (Player(s)) capMine++; else capTheirs++; }
                 if (Player(s)) { if (mine == null) mine = s.player; } else if (theirs == null) theirs = s.player;
             }
             if (!big) { Log("campaign battle: no battleships or cruisers - no air strike (light forces and convoys fight without carriers)"); return; }
@@ -236,8 +239,12 @@ namespace DipGgFixes
                 // 1.11.427 (author 30.10 09:27: "not every battle can have these aircraft, even a battle of battleships"): the carrier
                 // sails with the fleet only in part of the battles - more often as the nation's carrier force grows; none in poor
                 // visibility (no flying, no finding the enemy)
-                float ch = PresenceChance(p), r = UnityEngine.Random.value;
-                if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet (chance {ch * 100f:0}%): no air strike"); continue; }
+                // 1.11.427 (author 30.10 09:31: "raise the probability for bigger battles"): a fleet with more capital ships is the
+                // main fleet more likely to have its carrier - +BigBattleStep per capital ship beyond the first, at most 90%
+                int cap = pl ? capMine : capTheirs;
+                float ch0 = PresenceChance(p), ch = ch0 >= 1f ? 1f : Mathf.Min(0.9f, ch0 * (1f + BigBattleStep.Value / 100f * Math.Max(0, cap - 1))), r = UnityEngine.Random.value;
+                if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%): no air strike"); continue; }
+                Log($"campaign battle: {p.data.name} - the carrier is with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%)");
                 float vis = VisKm();
                 if (vis > 0f && vis < MinVisKm.Value) { Log($"campaign battle: {p.data.name} - visibility {vis:0} km, below {MinVisKm.Value:0} km: the carrier does not fly off its aircraft"); continue; }
                 int y = NavalAviation.StrikeYear(p);
