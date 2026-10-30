@@ -56,7 +56,7 @@ namespace DipGgFixes
                 {
                     if (__instance == null || __0 == null) return;
                     float cal = 0f; try { cal = __0.caliber; } catch { }
-                    TurretArmor t = null; var ta = __instance.shipTurretArmor;
+                    Ship.TurretArmor t = null; var ta = __instance.shipTurretArmor;
                     for (int i = 0; ta != null && i < ta.Count; i++) { var x = ta[i]; if (x != null && x.turretPartData != null && (x.turretPartData.Pointer == __0.Pointer || x.turretPartData.name == __0.name)) { t = x; break; } }
                     float now = t == null ? -1f : __1 == Ship.A.TurretSide ? t.sideTurretArmor : __1 == Ship.A.TurretTop ? t.topTurretArmor : t.barbetteArmor;
                     if (setLogged++ < 20) Log($"designer: {__0.name} ({cal:0} mm) {__1} asked {__2:0.#} mm -> {now:0.#} mm{(t == null ? " (no turret armour entry)" : t.isCasemateGun ? " (casemate)" : "")}");
