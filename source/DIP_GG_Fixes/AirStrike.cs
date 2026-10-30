@@ -68,6 +68,7 @@ namespace DipGgFixes
             public float SlotOff, Seed, Roll;   // 1.11.391: own place in the attack (along the target), turbulence seed, bank angle
             public AirModels.Ctl Ctl; public float RollVis, Ail, Elev, Rud;   // 1.11.393: moving control surfaces of the model
             public float Spd = 55f;   // 1.11.399: speed of its type (m/s)
+            public bool Over; public float DropT = -1f; public int Track;   // 1.11.418: has hopped over its target; time of the drop (chase shots)
         }
         static readonly List<Plane> planes = new List<Plane>();
         static IntPtr battle; static float battleT; static int wavesSent; static float nextWave;
@@ -78,7 +79,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            FxClear(); foreach (var tr in tracers) { try { if (tr.L != null) UnityEngine.Object.Destroy(tr.L.gameObject); } catch { } } tracers.Clear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); aaLogged = 0; lightGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            FxClear(); foreach (var tr in tracers) { try { if (tr.L != null) UnityEngine.Object.Destroy(tr.L.gameObject); } catch { } } tracers.Clear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); aaLogged = 0; lightGuns.Clear(); fireMax = 0f; hitShot = null; wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -128,7 +129,7 @@ namespace DipGgFixes
                     else Launch(b.Ships);
                     wavesSent++;
                 }
-                Move(dt, b.Ships); FxTick(); TracerTick();
+                Move(dt, b.Ships); FxTick(); TracerTick(); try { ChaseTick(); } catch { }
                 // a wave whose aircraft have all gone (away or down): its result once
                 foreach (var kv in waveStats)
                 {
@@ -476,11 +477,28 @@ namespace DipGgFixes
                         Shot($"wave{p.Wave}_run", 3f, p);
                         if (fire) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); Radio(p.Wave, "drop", atkIsPlayer ? Pick("Fish away! Pulling up - hard right!", "Torpedo gone! Running true... get out of here!", "Released! Climbing away - watch the flak!") : "They have dropped - torpedoes in the water!"); }
                     }
-                    else goal = p.Pos + new Vector3(p.Dir.x, 0f, p.Dir.z) * 1000f + Vector3.up * 40f;
+                    else
+                    {
+                        goal = p.Pos + new Vector3(p.Dir.x, 0f, p.Dir.z) * 1000f + Vector3.up * 40f;
+                        // 1.11.418 (author 30.10 06:32: "the aircraft should fly over - hop over the ship they drop on"): after the
+                        // drop the aircraft does not turn away but presses on low and hops over its target at about mast height
+                        // (Taranto, the Bismarck attacks: the torpedo aircraft passed over or close by the ships they had attacked)
+                        if (p.Dropped && !p.Over)
+                        {
+                            if (Alive(p.Target))
+                            {
+                                var tq = p.Target.transform.position; var dq = tq - p.Pos; dq.y = 0f;
+                                var fq = new Vector3(p.Dir.x, 0f, p.Dir.z);
+                                if (dq.magnitude < 40f || (fq.sqrMagnitude > 0.01f && Vector3.Dot(dq, fq) < 0f)) { p.Over = true; Shot($"wave{p.Wave}_over", 2f, p); }
+                                else goal = new Vector3(tq.x, 55f, tq.z);
+                            }
+                            else p.Over = true;
+                        }
+                    }
                     if (p.P == Phase.Away)
                     {
                         if (p.Dir.sqrMagnitude < 0.01f) p.Dir = Vector3.forward;
-                        if (p.Pos.y < 250f) goal.y = p.Pos.y + 200f;
+                        if (p.Pos.y < 250f && (p.Over || !p.Dropped)) goal.y = p.Pos.y + 200f;
                         var tp = p.Target != null ? p.Target.transform.position : p.Pos;
                         if (Flat(p.Pos - tp) > 12000f) { UnityEngine.Object.Destroy(p.Go); planes.RemoveAt(i); continue; }
                     }
@@ -741,11 +759,30 @@ namespace DipGgFixes
         // attacked ship - low, behind the ship on the side away from the aircraft, the ship in the foreground and the aircraft beyond
         // it; every other shot from her bridge. Name tags are left out (UI layer), the interface is not on the picture. Separate
         // timers for the run-in series and for drops / aircraft shot down.
-        static float nextDrop;
+        static float nextDrop, fireMax; static Plane hitShot; static float hitShotAt;
+        // 1.11.418 (author 30.10 06:32: "in tests take shots from the aircraft's camera in the heaviest fire, so that the torpedo
+        // track, the aircraft and the explosion are seen"): chase shots - behind and a little above the aircraft, looking past it
+        // at its target - at the heaviest anti-aircraft fire of the run (most tracers in the air), 2 s and 6 s after the drop
+        // (the torpedo's track ahead), as it hops over the ship, and 0.6 s after a hit (the explosion)
+        static bool Chase(string tag) { return tag.EndsWith("fire") || tag.EndsWith("drop") || tag.EndsWith("track") || tag.EndsWith("over") || tag.EndsWith("hit"); }
+        static void ChaseTick()
+        {
+            if (Screens == null || !Screens.Value) return;
+            if (hitShot != null && Time.time >= hitShotAt) { var h = hitShot; hitShot = null; if (h.Go != null) Shot($"wave{h.Wave}_hit", 0.5f, h); }
+            Plane low = null; foreach (var q in planes) if (q.P == Phase.Run && q.Pos.y < 80f && q.Go != null) { low = q; break; }
+            if (low != null && tracers.Count >= 6 && tracers.Count >= fireMax) { fireMax = tracers.Count; Shot($"wave{low.Wave}_fire", 4f, low); }
+            foreach (var q in planes)
+            {
+                if (q.DropT < 0f || q.Go == null || q.P == Phase.Down) continue;
+                float a = Time.time - q.DropT;
+                if (a > 2f && q.Track == 0) { q.Track = 1; Shot($"wave{q.Wave}_track", 1f, q); }
+                else if (a > 6f && q.Track == 1) { q.Track = 2; Shot($"wave{q.Wave}_track", 1f, q); }
+            }
+        }
         static void Shot(string tag, float gap, Plane p = null)
         {
-            if (Screens == null || !Screens.Value || shots >= 60) return;
-            bool ev = tag.EndsWith("drop") || tag.EndsWith("shotdown");
+            if (Screens == null || !Screens.Value || shots >= 80) return;
+            bool ev = tag.EndsWith("drop") || tag.EndsWith("shotdown") || Chase(tag);
             if (ev) { if (Time.realtimeSinceStartup < nextDrop) return; nextDrop = Time.realtimeSinceStartup + gap; }
             else { if (Time.realtimeSinceStartup < nextShot) return; nextShot = Time.realtimeSinceStartup + gap; }
             shots++;
@@ -789,6 +826,15 @@ namespace DipGgFixes
             var toPlane = pp - tp; toPlane.y = 0f; if (toPlane.sqrMagnitude < 1f) toPlane = st.right; toPlane.Normalize();
             var f = st.forward; f.y = 0f; if (f.sqrMagnitude < 0.01f) f = Vector3.forward; f.Normalize();
             bridge = (shots % 2) == 0 && !tag.EndsWith("shotdown");
+            if (Chase(tag))
+            {   // 1.11.418: the aircraft's camera - 30 m behind it and 8 m above, looking past it at the target
+                bridge = false;
+                var fd = new Vector3(p.Dir.x, 0f, p.Dir.z); if (fd.sqrMagnitude < 0.01f) fd = -toPlane; fd.Normalize();
+                float sc = Scale != null ? Scale.Value : 1f;
+                cam = pp - fd * 30f * sc + Vector3.up * 8f * sc; if (cam.y < 6f) cam.y = 6f;
+                look = Vector3.Lerp(pp + fd * 60f, new Vector3(tp.x, 15f, tp.z), 0.5f);
+                fov = 60f; return;
+            }
             if (bridge) { cam = tp + toPlane * 22f - f * 10f + Vector3.up * 40f; look = new Vector3(pp.x, Mathf.Max(15f, pp.y * 0.8f), pp.z); fov = 45f; }   // the bridge wing on the side of the attack (test 15:56: from inside the superstructure)
             else { cam = tp - toPlane * 420f - f * 160f + Vector3.up * 45f; look = Vector3.Lerp(tp, new Vector3(pp.x, 0f, pp.z), 0.5f) + Vector3.up * 30f; fov = 40f; }
         }
@@ -909,7 +955,7 @@ namespace DipGgFixes
         }
         static void Drop(Plane p)
         {
-            if (p.Dropped) return; p.Dropped = true;
+            if (p.Dropped) return; p.Dropped = true; p.DropT = Time.time;
             try { if (p.Torp != null) p.Torp.SetActive(false); } catch { }
             try
             {
@@ -1091,6 +1137,9 @@ namespace DipGgFixes
             {
                 int wave = 0; foreach (var kv in waveStats) if (kv.Key > wave) wave = kv.Key;
                 if (wave == 0) return;
+                // 1.11.418: a shot from the camera of the aircraft that dropped on her, a moment after the hit (the explosion)
+                Plane best = null; foreach (var q in planes) if (q.Go != null && q.Dropped && q.P != Phase.Down && q.Target != null && q.Target.Pointer == hit.Pointer && (best == null || q.DropT > best.DropT)) best = q;
+                if (best != null) { hitShot = best; hitShotAt = Time.time + 0.6f; }
                 string n = Dispatch.Ship(hit.name);
                 if (!hitSaid.Add(wave + "|" + n + "|" + (int)(Time.unscaledTime / 3f))) return;
                 Radio(wave, null, atkIsPlayer
