@@ -76,6 +76,6 @@ namespace DipGgFixes
     [HarmonyPatch(typeof(GameData), "LoadSharedDesigns")]
     internal static class Patch_LoadSharedDesigns_TechFix
     {
-        static void Postfix(GameData __instance) { DesignTechFix.AfterLoad(__instance); }
+        static void Postfix(GameData __instance) { DesignTechFix.AfterLoad(__instance); DesignCleanup.AfterLoad(__instance); }
     }
 }

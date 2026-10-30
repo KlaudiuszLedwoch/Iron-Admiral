@@ -47,8 +47,10 @@ namespace DipGgFixes
                 // designs (Author) and the players' designs accepted from GitHub (Community)
                 foreach (var sub in new[] { "Author", "Community" }) { string d = Path.Combine(src, sub); if (Directory.Exists(d)) files.AddRange(Directory.GetFiles(d, "*.bindesign")); }
                 int replaced = 0; string aside = null;
+                var unbuildable = DesignCleanup.Moved();   // 1.11.451: designs moved out as unbuildable are not installed again
                 foreach (var f in files)
                 {
+                    if (unbuildable.Contains(Path.GetFileName(f))) { kept++; continue; }
                     string to = Path.Combine(dst, Path.GetFileName(f));
                     if (File.Exists(to))
                     {
