@@ -27,7 +27,12 @@ namespace DipGgFixes
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][SlowProbe] " + m); }
         // 1.11.473 (30.10 21:16: a design save took 22.3 s and none of the 25 timed methods of 1.11.466 went over 300 ms): also the ship's own
         // store/clone methods, the game manager and the save storage; the timed methods are listed in the log once
-        static readonly string[] Words = { "Design", "Save", "Refit", "Shared", "ToStore", "FromStore", "Clone", "Serialize" };
+        // 1.11.476 (30.10 21:32): 1.11.473 timed Ship.FromStore - its Il2CppSystem.Nullable parameter is a reference type in the interop
+        // and passed the value-type filter; the patched method threw on every ship while a campaign was loaded, the campaign came up
+        // without ships and the auto save overwrote it. Back to the 1.11.466 words and classes; methods with any Nullable, struct,
+        // ref/out parameter or a Store/Ship-loading name are never timed.
+        static readonly string[] Words = { "Design", "Save", "Refit", "Shared" };
+        static readonly string[] NeverNames = { "FromStore", "ToStore", "Load", "Clone", "Serialize", "Deserialize", "Init", "Create" };
         static readonly string[] Never = { "Update", "Refresh", "Check", "OnGUI", "Tick", "Get", "Is", "Can", "Has" };
         [ThreadStatic] static Stack<long> stack;
         static readonly Dictionary<string, long> frameTotals = new Dictionary<string, long>();
@@ -43,7 +48,7 @@ namespace DipGgFixes
             var pre = new HarmonyMethod(typeof(SlowProbe).GetMethod(nameof(Pre), BindingFlags.Static | BindingFlags.NonPublic));
             var post = new HarmonyMethod(typeof(SlowProbe).GetMethod(nameof(Post), BindingFlags.Static | BindingFlags.NonPublic));
             var names = new List<string>();
-            foreach (var t in new[] { typeof(PlayerController), typeof(CampaignController), typeof(Player), typeof(Ui), typeof(GameData), typeof(Ship), typeof(GameManager), typeof(Storage) })
+            foreach (var t in new[] { typeof(PlayerController), typeof(CampaignController), typeof(Player), typeof(Ui), typeof(GameData) })
             {
                 foreach (var m in t.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly))
                 {
@@ -54,7 +59,8 @@ namespace DipGgFixes
                         if (!word) continue;
                         bool bad = false;
                         foreach (var w in Never) if (m.Name.StartsWith(w) || m.Name.Contains("Update") || m.Name.Contains("Refresh")) { bad = true; break; }
-                        foreach (var p in m.GetParameters()) { var pt = p.ParameterType; if (pt.IsByRef || p.IsOut || (pt.IsValueType && !pt.IsPrimitive && !pt.IsEnum)) { bad = true; break; } }
+                        foreach (var w in NeverNames) if (m.Name.Contains(w)) { bad = true; break; }
+                        foreach (var p in m.GetParameters()) { var pt = p.ParameterType; if (pt.IsByRef || p.IsOut || pt.Name.Contains("Nullable") || (pt.FullName ?? "").Contains("Nullable") || (pt.IsValueType && !pt.IsPrimitive && !pt.IsEnum)) { bad = true; break; } }
                         var rt = m.ReturnType;
                         if (bad || rt.IsByRef || (rt.IsValueType && !rt.IsPrimitive && !rt.IsEnum && rt != typeof(void))) continue;
                         h.Patch(m, pre, post); patched++; names.Add(t.Name + "." + m.Name);
