@@ -50,6 +50,13 @@ namespace DipGgFixes
             return byShip.TryGetValue(s.Pointer, out var p) && (p.P == Ph.Climb || p.P == Ph.Spot);
         }
 
+        // 1.11.425 (#85): aircraft in the air that look round for the reconnaissance (AirRecon)
+        internal static void Eyes(Action<Player, Vector3, string> f)
+        {
+            if (On == null || !On.Value) return;
+            for (int i = 0; i < sps.Count; i++) { var p = sps[i]; if ((p.P == Ph.Climb || p.P == Ph.Spot) && Alive(p.S)) f(p.S.player, p.Pos, p.S.name); }
+        }
+
         static void Clear()
         {
             foreach (var p in sps) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }

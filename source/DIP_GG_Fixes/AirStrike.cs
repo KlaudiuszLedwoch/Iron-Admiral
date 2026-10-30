@@ -147,6 +147,15 @@ namespace DipGgFixes
         static bool Player(Ship s) { try { return s.player != null && s.player.isMain; } catch { return false; } }
         static bool atkIsPlayer, active, camp; static Player atkP;
         static bool Defender(Ship s) { return atkIsPlayer ? !Player(s) : Player(s); }
+        // 1.11.425 (#85): the strike aircraft in the air, for the reconnaissance (AirRecon)
+        internal static void Eyes(Action<Player, Vector3> f)
+        {
+            if (planes.Count == 0) return;
+            Player side = atkP;
+            if (side == null) { var b = BattleManager.Instance?.CurrentBattle; if (b != null) for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null && !Defender(s)) { side = s.player; break; } } }
+            if (side == null) return;
+            for (int i = 0; i < planes.Count; i++) { var p = planes[i]; if (p.P != Phase.Down && p.Go != null) f(side, p.Pos); }
+        }
 
         static void Launch(Il2CppSystem.Collections.Generic.List<Ship> ships)
         {
