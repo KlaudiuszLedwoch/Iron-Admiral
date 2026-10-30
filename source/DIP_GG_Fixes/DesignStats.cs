@@ -180,7 +180,9 @@ namespace DipGgFixes
             GUI.Box(new Rect(x, ry, w, h), "");
             GUI.Label(new Rect(x + 8f, ry + 4f, 400f, 20f), $"<b>Design ranking - {(rankAll || type == null ? "all types" : type.ToUpperInvariant())}</b> (score = share won, smoothed, less half the ships sunk)", sR);
             if (type != null && GUI.Button(new Rect(x + w - 110f, ry + 4f, 100f, 18f), rankAll ? "This type" : "All types")) { rankAll = !rankAll; rankAt = -1f; }
-            GUI.Label(new Rect(x + 8f, ry + 26f, w - 16f, 20f), "<color=#C0C0C0>#   design                                   nation        type   battles   won / drawn / lost   sunk   score</color>", sR);
+            if (GUI.Button(new Rect(x + w - 220f, ry + 4f, 105f, 18f), sunkList ? "Ranking" : "Ships sunk")) { sunkList = !sunkList; }
+            if (sunkList) { DrawSunk(x, ry, w, rh); return; }
+            GUI.Label(new Rect(x + 8f, ry + 26f, w - 16f, 20f), "<color=#C0C0C0>#   design                                   nation        type   battles   won / drawn / lost   lost  kills  score</color>", sR);
             if (rankRows.Count == 0) GUI.Label(new Rect(x + 8f, ry + 46f, w - 16f, rh), "No design has a battle record yet.", sR);
             for (int i = 0; i < rankRows.Count; i++)
             {
@@ -191,8 +193,24 @@ namespace DipGgFixes
                 GUI.Label(new Rect(x + 378f, yy, 40f, rh), r.Type.ToUpperInvariant(), sR);
                 GUI.Label(new Rect(x + 420f, yy, 40f, rh), r.Battles.ToString(), sR);
                 GUI.Label(new Rect(x + 462f, yy, 80f, rh), $"{r.Wins} / {r.Draws} / {r.Losses}", sR);
-                GUI.Label(new Rect(x + 545f, yy, 30f, rh), r.Lost.ToString(), sR);
-                GUI.Label(new Rect(x + 578f, yy, 40f, rh), Score(r.Id, out _).ToString("0.00"), sR);
+                GUI.Label(new Rect(x + 540f, yy, 26f, rh), r.Lost.ToString(), sR);
+                GUI.Label(new Rect(x + 566f, yy, 26f, rh), SinkLog.KillsOf(r.Id).ToString(), sR);
+                GUI.Label(new Rect(x + 592f, yy, 30f, rh), Score(r.Id, out _).ToString("0.00"), sR);
+            }
+        }
+        static bool sunkList;
+        // 1.11.456: the latest sinkings, newest first - the ship, her class, type, tonnage, nation and who sank her
+        static void DrawSunk(float x, float ry, float w, float rh)
+        {
+            var all = SinkLog.Rows(); int n = Math.Min(20, all.Count);
+            GUI.Box(new Rect(x, ry + 24f, w, 26f + rh * Math.Max(1, n)), "");
+            GUI.Label(new Rect(x + 8f, ry + 28f, w - 16f, 20f), $"<b>Ships sunk</b> <color=#C0C0C0>({all.Count} in all, newest first)</color>", sR);
+            if (n == 0) GUI.Label(new Rect(x + 8f, ry + 48f, w - 16f, rh), "No ship sunk yet - sinkings are recorded from this version on.", sR);
+            for (int i = 0; i < n; i++)
+            {
+                var r = all[all.Count - 1 - i];
+                string by = r.By == "unknown" ? "<color=#C0C0C0>no hit recorded</color>" : $"{r.By}{(r.ByClass.Length > 0 && !r.By.Contains(r.ByClass) ? " (" + r.ByClass + ")" : "")}";
+                GUI.Label(new Rect(x + 8f, ry + 48f + i * rh, w - 16f, rh), $"<color=#C0C0C0>{r.Date}</color>  {r.Type.ToUpperInvariant()} <b>{r.Ship}</b> ({r.Tons:N0} t, {r.Nation}) - sunk by {by}{(r.Weapon.Length > 0 ? ", " + r.Weapon : "")}", sR);
             }
         }
         static bool rankOpen, rankAll; static float rankAt = -1f; static List<Rec> rankRows = new List<Rec>(); static GUIStyle sR;

@@ -121,7 +121,7 @@ namespace DipGgFixes
             }
             catch (Exception e) { if (errors++ < 3) MelonLogger.Warning("[DIP GG Fixes][Report] scan: " + e.Message); }
         }
-        internal static void Sunk(Ship s) { try { if (s != null) Dispatch.Sunk(s.name); } catch { } try { Highlights.Sinking(s); } catch { } if (s == null || !inBattle) return; try { Record("sunk|" + s.Pointer, 9, $"{Short(s.name)} was sunk"); } catch { } }
+        internal static void Sunk(Ship s) { try { SinkLog.OnSunk(s); } catch { } try { if (s != null) Dispatch.Sunk(s.name); } catch { } try { Highlights.Sinking(s); } catch { } if (s == null || !inBattle) return; try { Record("sunk|" + s.Pointer, 9, $"{Short(s.name)} was sunk"); } catch { } }
         static void Store()
         {
             if (battleId == null || evs.Count == 0) return;

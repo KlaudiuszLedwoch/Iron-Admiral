@@ -149,6 +149,7 @@ namespace DipGgFixes
                 }
             }
             catch { }
+            try { SinkLog.Credit(ship, damage); } catch { }   // 1.11.456: who sank whom
             if (On == null || !On.Value || ship == null || !(damage > 0f)) return;
             try
             {
