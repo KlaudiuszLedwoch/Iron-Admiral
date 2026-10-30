@@ -701,6 +701,9 @@ namespace DipGgFixes
                             float minY = p.Pos.y < 120f ? -0.02f : -0.10f;
                             if (p.Dir.y < minY) { var hz2 = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; p.Dir = (hz2 * Mathf.Sqrt(1f - minY * minY) + Vector3.up * minY).normalized; }
                         }
+                        // 1.11.432 (test 30.10 10:4x: the Beauforts still dropped at 350 km/h - the shallow glide from 2000 m kept their speed):
+                        // too fast on the run-in the pilot also lowers the flaps - about 2 m/s each second off the speed
+                        if (p.P == Phase.Run && !p.Dropped && ph.V > release * 1.03f) ph.V = Mathf.Max(release, ph.V - 2f * dt);
                         float hop0 = ph.Hop;
                         AirPhysics.Step(ph, p.Dir.y, want, dt);
                         v = ph.V * WorldScale();
