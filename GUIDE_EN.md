@@ -209,6 +209,20 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 
 ---
 
+## 14. New in the 1.2.76 betas
+
+What the current beta adds to the campaign (each with its switch in the F10 panel):
+
+- **Naval aviation budget** - a slider in the Finances window; the number of aircraft follows the money month by month and decides the size of carrier and shore strikes and the air reconnaissance. See [Naval aviation](Naval-aviation).
+- **Technology level against the others** - the research screen shows your place among the great powers ("2/12, 420 tech.") instead of "Very Advanced" for everyone.
+- **A new war starts at zero** - war score left over from the previous war with the same enemy no longer counts (#205); the monthly treasury report explains where unrest came from.
+- **Ships repair slowly at sea** (experimental, off by default) - 3% a turn, at most half of the damage taken.
+- **Statistics** - in the designer: the design ranking (wins, losses, ships sunk by each design), the list of ships sunk with their names, and the service record of each ship.
+- **Designs that can never be built** by your nation are moved out of the shared designs folder to a dated folder next to it (nothing is deleted).
+- **Your divisions** dodge torpedoes by default (single ships too, and they return to their course), keep their leader, and have a spacing slider under the gun orders.
+- **Designer** - new turrets get armour by default (roof 25 mm, walls up to the calibre); 2-4 in guns may have a light gun house or shield; Refit enters refit mode without an extra question; the gun window shows the physical penetration, also published as the [penetration table](Penetration-table).
+- **Spectacular sinkings** - torpedoed on one side, big ships capsize; after a magazine hit they blow up; others break their back or settle burning.
+
 ### Guide history
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
 - **18 October 2026, Iron Admiral 1.2.16:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
@@ -253,6 +267,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **27 October 2026, Iron Admiral 1.2.74.2:** a ship that surrendered in battle is taken as a prize again (the game had already moved her to the sunk list); resolution guard when the game's settings fail at start.
 - **27 October 2026, Iron Admiral 1.2.74.3:** corrected package - the prize fix of 1.2.74.2 is in it (a surrendered ship is taken as a prize again).
 - **28 October 2026, Iron Admiral 1.2.75:** ships sink by their size (damage by tonnage, sinking at 40 % structure damage - torpedo boats and destroyers no longer unkillable); impact angle from the shell's fall; AI torpedo tactics (cross attack, turning to fire the other side); division order "Finish off"; coalition wars with a balance of power; 7 in guns no longer slower than 8 in.
+- **30 October 2026, Iron Admiral 1.2.76-beta.110:** section 14 - what the 1.2.76 betas add: naval aviation budget, technology ranking, war score reset, sea repairs, statistics, unbuildable designs moved, division orders, designer armour defaults and penetration table, spectacular sinkings.
 
 ---
 
