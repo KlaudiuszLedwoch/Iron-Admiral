@@ -341,7 +341,13 @@ namespace DipGgFixes
             // 1.11.414 (test 30.10 04:39-04:51, Britain bb_4_britain_nelson: 266 free centre-line mounts, none takes a tower - towers on
             // that hull are placed freely on the deck, not on mounts): free placement on the centre line, aft of the main tower first,
             // in 2 m steps, on the deck found at that point (Ship.FindDeckAtPoint, Part.Place), the room checked with Part.CanPlace
-            Transform st = null; try { st = ship.transform; } catch { }
+            // 1.11.415 (test 30.10 05:12-05:19, Germany bb_5_bismarck: the deck search never succeeded): positions in world space
+            // from the main tower along the ship's own axis (the tower's localPosition is relative to its parent, not to the ship);
+            // the refusals are counted and logged
+            Transform st = null; Vector3 basePos = Vector3.zero, fwd = Vector3.forward;
+            try { st = ship.transform; fwd = st.forward; fwd.y = 0f; fwd.Normalize(); } catch { }
+            for (int i = 0; i < parts.Count; i++) { var d = parts[i] != null ? parts[i].data : null; if (d != null && (d.type ?? "") == "tower_main") { try { basePos = parts[i].transform.position; } catch { } break; } }
+            var refused = new Dictionary<string, int>(); int noDeck = 0;
             if (st != null)
             {
                 foreach (var pd in cand)
@@ -357,12 +363,14 @@ namespace DipGgFixes
                         for (int k = 1; k <= 60; k++)
                         {
                             float dz = (k % 2 == 1 ? -1f : 1f) * 2f * ((k + 1) / 2) * (k % 2 == 1 ? 1f : 0.6f);   // aft steps 2 m, forward 1.2 m
-                            var wp = st.TransformPoint(new Vector3(0f, tmy + 30f, tmz + dz));
+                            var wp = basePos + fwd * dz; wp.y = basePos.y + 30f;
                             BoxCollider deck = null; try { deck = ship.FindDeckAtPoint(wp); } catch { }
-                            if (deck == null) continue;
+                            if (deck == null) { wp.y = basePos.y; try { deck = ship.FindDeckAtPoint(wp); } catch { } }
+                            if (deck == null) { noDeck++; continue; }
                             wp.y = deck.bounds.max.y;
-                            try { part.Place(wp, true); } catch { continue; }
+                            try { part.Place(wp, true); } catch (Exception e) { int c0; refused.TryGetValue("place: " + e.Message, out c0); refused["place: " + e.Message] = c0 + 1; continue; }
                             string why = null; bool ok = false; try { ok = part.CanPlace(out why); } catch { }
+                            if (!ok && why != "available") { string w2 = why ?? "(no reason)"; int c1; refused.TryGetValue(w2, out c1); refused[w2] = c1 + 1; }
                             if (ok || why == "available")
                             {
                                 if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} placed on the deck {Math.Abs(dz):0} m {(dz < 0 ? "aft" : "forward")} of the main tower");
@@ -374,7 +382,7 @@ namespace DipGgFixes
                     catch (Exception e) { if (secLogged++ < 10) Log("secondary tower deck: " + e.Message); try { if (part != null) ship.RemovePart(part, true, false); } catch { } }
                 }
             }
-            if (secLogged++ < 20) Log($"{key} - attempt without a secondary tower: {cand.Count} tower(s) available, no centre-line mount or deck place takes one ({mounts.Count} free mounts, {taken.Count} with lighter guns)");
+            if (secLogged++ < 20) Log($"{key} - attempt without a secondary tower: {cand.Count} tower(s) available, no centre-line mount or deck place takes one ({mounts.Count} free mounts, {taken.Count} with lighter guns; deck places: {noDeck} without deck{string.Concat(refused.OrderByDescending(x => x.Value).Take(3).Select(x => $", {x.Value}x {x.Key}"))})");
         }
         static void Trim(Ship ship, bool early)
         {
