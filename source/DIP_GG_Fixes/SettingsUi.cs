@@ -80,7 +80,7 @@ namespace DipGgFixes
             {"SmallGunShieldTopMm","Ship design"},{"WarScoreReset","Diplomacy"},{"MoveUnbuildableDesigns","Ship design"},{"SeaRepair","Campaign AI"},{"SeaRepairPerTurn","Campaign AI"},
             {"SeaRepairMaxShare","Campaign AI"},{"PenetrationReference","Logs"},{"SpectacularSinking","Display"},{"SlowCallProbeV2","Logs"},{"SkipRefitConfirm","Ship design"},
             {"NavalAviationBudget","Economy"},{"NavalAviationBudgetStep","Economy"},{"NavalAviationBudgetPool","Economy"},{"NavalAviationBudgetAi","Economy"},{"SaveBackup","Info & updates"},
-            {"SaveBackupKeep","Info & updates"},
+            {"SaveBackupKeep","Info & updates"},{"ShipGenTurnBudget","Campaign AI"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -122,6 +122,7 @@ namespace DipGgFixes
             {"FormationSpacing",201},{"SmallGunShieldArmor",202},{"SmallGunShieldSideMm",203},{"SmallGunShieldTopMm",204},{"WarScoreReset",205},{"MoveUnbuildableDesigns",206},
             {"SeaRepair",207},{"SeaRepairPerTurn",208},{"SeaRepairMaxShare",209},{"PenetrationReference",210},{"SpectacularSinking",211},{"SlowCallProbeV2",212},{"SkipRefitConfirm",213},
             {"NavalAviationBudget",214},{"NavalAviationBudgetStep",215},{"NavalAviationBudgetPool",216},{"NavalAviationBudgetAi",217},{"SaveBackup",218},{"SaveBackupKeep",219},
+            {"ShipGenTurnBudget",220},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
