@@ -619,7 +619,7 @@ namespace DipGgFixes
             return r[Math.Max(0, Math.Min(6, (int)Math.Round(f * 6)))];
         }
 
-        internal struct Breakdown { public float Raw, Surcharge, DebtInterest, LoanPayment, Savings, Cuts, Rate, SavingsRate, Debt, Erosion; public float Net { get { return Surcharge + DebtInterest + LoanPayment - Savings - Cuts - Erosion; } } }
+        internal struct Breakdown { public float Raw, Surcharge, DebtInterest, LoanPayment, Savings, Cuts, Rate, SavingsRate, Debt, Erosion, Aviation; public float Net { get { return Surcharge + DebtInterest + LoanPayment - Savings - Cuts - Erosion + Aviation; } } }
 
         internal static Breakdown Parts(Player p, EconState st, float raw)
         {
@@ -636,6 +636,7 @@ namespace DipGgFixes
             b.SavingsRate = Math.Max(0f, i - EcoPrefs.SavingsMult.Value);
             if (cash > 0f && b.SavingsRate > 0f) b.Savings = cash * b.SavingsRate / 1200f;
             if (st.CutsMonths > 0) { float m = p.ExpensesShipMaintenance(); if (m > 0f) b.Cuts = m * DipGgFixesMod.CutsMaintenanceSaving.Value; }
+            b.Aviation = AirStrike.Upkeep(p);   // 1.11.426 (#85 step 3): the carrier beyond the horizon costs a monthly upkeep
             return b;
         }
 

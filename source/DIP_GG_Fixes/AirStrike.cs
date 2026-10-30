@@ -69,6 +69,7 @@ namespace DipGgFixes
             public AirModels.Ctl Ctl; public float RollVis, Ail, Elev, Rud;   // 1.11.393: moving control surfaces of the model
             public float Spd = 55f;   // 1.11.399: speed of its type (m/s)
             public bool Over; public float DropT = -1f; public int Track;
+            public bool Pl; public Player AP; public int Year = 1925; public string Model = ""; public Part Tube;   // 1.11.426: its side's strike context
             public AirPhysics.State Ph;   // 1.11.419: flight model (null = the old fixed speed)   // 1.11.418: has hopped over its target; time of the drop (chase shots)
         }
         static readonly List<Plane> planes = new List<Plane>();
@@ -85,8 +86,8 @@ namespace DipGgFixes
 
         internal static void Tick()
         {
-            bool test = On != null && On.Value, car = Carrier != null && Carrier.Value;
-            if (!test && !car) { if (planes.Count > 0) Clear(); return; }
+            bool test = On != null && On.Value, car = Carrier != null && Carrier.Value, campOn = CampOn != null && CampOn.Value;
+            if (!test && !car && !campOn) { if (planes.Count > 0) Clear(); return; }
             try
             {
                 if (!GameManager.IsBattle) { if (planes.Count > 0 || battle != IntPtr.Zero) { Summary(); Clear(); battle = IntPtr.Zero; } return; }
@@ -116,19 +117,30 @@ namespace DipGgFixes
                     curYear = camp && atkP != null ? NavalAviation.StrikeYear(atkP) : (yr > 0 ? yr : 1925); curModel = ModelFor(curYear, 1);
                     if (atkIsPlayer) Log($"custom battle {yr}: our carrier ({CarrierName()}, {TypeName()}) is beyond the horizon - its waves attack the enemy's largest ship");
                     else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
+                    sides.Clear();
+                    if (camp && campOn && !test) CampaignSides(b.Ships);
+                    else if (active) sides.Add(new SideCtx { Pl = atkIsPlayer, AP = atkP, Next = FirstAfter.Value, Year = curYear, Model = curModel });
+                    active = sides.Count > 0;
                 }
                 if (!active) return;
-                if (lastTube == null) lastTube = FindTube(b.Ships);
                 float dt = Time.deltaTime; if (dt <= 0f) return;
                 battleT += dt;
-                int maxW = camp && atkP != null ? Math.Min(Waves.Value, NavalAviation.MaxWaves(atkP)) : Waves.Value;
-                if (wavesSent < maxW && battleT >= nextWave)
+                // 1.11.426 (#85 step 3, author 30.10 09:12: "both sides must have the possibility"): every side with a strike has
+                // its own waves; the shared statics are switched to that side while its wave is sent
+                for (int si = 0; si < sides.Count; si++)
                 {
-                    nextWave = battleT + Interval.Value * (camp && atkP != null ? NavalAviation.IntervalF(atkP) : 1f);
-                    bool night = false; try { night = BattleAi.IsNight(); } catch { }
-                    if (night) { if (wavesSent == 0) Log("night - no air strike while it is dark"); }
-                    else Launch(b.Ships);
-                    wavesSent++;
+                    var c = sides[si]; Use(c);
+                    if (lastTube == null) lastTube = FindTube(b.Ships);
+                    int maxW = camp && atkP != null ? Math.Min(Waves.Value, NavalAviation.MaxWaves(atkP)) : Waves.Value;
+                    if (wavesSent < maxW && battleT >= nextWave)
+                    {
+                        nextWave = battleT + Interval.Value * (camp && atkP != null ? NavalAviation.IntervalF(atkP) : 1f);
+                        bool night = false; try { night = BattleAi.IsNight(); } catch { }
+                        if (night) { if (wavesSent == 0) Log("night - no air strike while it is dark"); }
+                        else Launch(b.Ships);
+                        wavesSent++;
+                    }
+                    Keep(c);
                 }
                 Move(dt, b.Ships); FxTick(); TracerTick(); try { ChaseTick(); } catch { }
                 // a wave whose aircraft have all gone (away or down): its result once
@@ -147,14 +159,73 @@ namespace DipGgFixes
         static bool Player(Ship s) { try { return s.player != null && s.player.isMain; } catch { return false; } }
         static bool atkIsPlayer, active, camp; static Player atkP;
         static bool Defender(Ship s) { return atkIsPlayer ? !Player(s) : Player(s); }
+
+        // 1.11.426 (#85 step 3): the strike context of one side; the code works on the statics, switched per side and per aircraft
+        class SideCtx { public bool Pl; public Player AP; public int Waves; public float Next; public int Year = 1925; public string Model = ""; public Part Tube; public int WaveBase; }
+        static readonly List<SideCtx> sides = new List<SideCtx>();
+        static int waveBase;
+        static void Use(SideCtx c) { atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; }
+        static void Keep(SideCtx c) { c.Waves = wavesSent; c.Next = nextWave; c.Year = curYear; c.Model = curModel; c.Tube = lastTube; }
+        static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; }
+        internal static MelonPreferences_Entry<bool> CampOn; internal static MelonPreferences_Entry<float> UpkeepBase, UpkeepStep;
+        // the monthly upkeep of the naval air arm: a share of the fleet maintenance from the first carrier technology, growing with each
+        internal static float UpkeepPct(Player p)
+        {
+            if (CampOn == null || !CampOn.Value || p == null) return 0f;
+            int lv = 0; try { lv = NavalAviation.CarrierLevel(p); } catch { }
+            return lv <= 0 ? 0f : UpkeepBase.Value + UpkeepStep.Value * (lv - 1);
+        }
+        internal static float Upkeep(Player p)
+        {
+            float pct = UpkeepPct(p); if (pct <= 0f) return 0f;
+            float m = 0f; try { m = p.ExpensesShipMaintenance(); } catch { }
+            return m > 0f ? m * pct / 100f : 0f;
+        }
+        internal static void CreateCampaignPrefs(MelonPreferences_Category cat)
+        {
+            UpkeepBase = cat.CreateEntry("NavalAviationUpkeepPercent", 3f, null, "Campaign: monthly upkeep of naval aviation in percent of the fleet maintenance with the first carrier technology (av_carrier_1)");
+            UpkeepStep = cat.CreateEntry("NavalAviationUpkeepStep", 2f, null, "Campaign: percentage points of the fleet maintenance added to the naval aviation upkeep by each further carrier technology");
+            CampOn = cat.CreateEntry("NavalAviationCampaignStrikes", true, null, "Campaign: in a daylight battle with battleships or cruisers each side whose nation has the seaplane carrier and the aerial torpedo researched sends torpedo aircraft from a carrier beyond the horizon - waves, aircraft and their type by its Naval Aviation technologies; the carrier costs a monthly upkeep");
+        }
+        static bool BigShip(Ship s)
+        {
+            string t = ""; try { t = s.shipType.name; } catch { }
+            return t == "bb" || t == "bc" || t == "ca" || t == "cl";
+        }
+        // both sides of a campaign battle: the player's and the AI's, each by its own nation's technologies
+        static void CampaignSides(Il2CppSystem.Collections.Generic.List<Ship> ships)
+        {
+            bool big = false; Player mine = null, theirs = null;
+            for (int i = 0; i < ships.Count; i++)
+            {
+                var s = ships[i]; if (!Alive(s)) continue;
+                if (BigShip(s)) big = true;
+                if (Player(s)) { if (mine == null) mine = s.player; } else if (theirs == null) theirs = s.player;
+            }
+            if (!big) { Log("campaign battle: no battleships or cruisers - no air strike (light forces and convoys fight without carriers)"); return; }
+            var cand = new List<(bool, Player)> { (true, mine), (false, theirs) };
+            foreach (var (pl, p) in cand)
+            {
+                if (p == null) continue;
+                if (!NavalAviation.CanStrike(p, out var why)) { Log($"campaign battle: {p.data.name} - {why}: no air strike"); continue; }
+                int y = NavalAviation.StrikeYear(p);
+                var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f };
+                sides.Add(c);
+                Log($"campaign battle: {p.data.name} Naval Aviation - {NavalAviation.Summary(p)}; its waves attack the {(pl ? "enemy's" : "player's")} largest ship");
+            }
+        }
         // 1.11.425 (#85): the strike aircraft in the air, for the reconnaissance (AirRecon)
         internal static void Eyes(Action<Player, Vector3> f)
         {
             if (planes.Count == 0) return;
-            Player side = atkP;
-            if (side == null) { var b = BattleManager.Instance?.CurrentBattle; if (b != null) for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null && !Defender(s)) { side = s.player; break; } } }
-            if (side == null) return;
-            for (int i = 0; i < planes.Count; i++) { var p = planes[i]; if (p.P != Phase.Down && p.Go != null) f(side, p.Pos); }
+            var b = BattleManager.Instance?.CurrentBattle;
+            for (int i = 0; i < planes.Count; i++)
+            {
+                var p = planes[i]; if (p.P == Phase.Down || p.Go == null) continue;
+                Player side = p.AP;
+                if (side == null && b != null) for (int k = 0; k < b.Ships.Count; k++) { var s = b.Ships[k]; if (s == null) continue; bool pl = false; try { pl = s.player != null && s.player.isMain; } catch { } if (pl == p.Pl) { side = s.player; break; } }
+                if (side != null) f(side, p.Pos);
+            }
         }
 
         static void Launch(Il2CppSystem.Collections.Generic.List<Ship> ships)
@@ -173,7 +244,7 @@ namespace DipGgFixes
             // 1.11.375 (test 29.10 13:11: the AI surface ships were all sunk by the second wave and it found no tube): the torpedo
             // data come from a tube found at the start of the battle; the aircraft fly from beyond the horizon, not from those ships
             tube = lastTube ?? FindTube(ships); if (tube != null) lastTube = tube;
-            int wave = wavesSent + 1;
+            int wave = waveBase + wavesSent + 1;
             if (target == null) { Log($"wave {wave}: no target of the player's side"); return; }
             if (tube == null) { Log($"wave {wave}: no ship of the attacking side carries torpedo tubes - torpedo data unavailable, wave not sent"); return; }
             var tp = target.transform.position; tp.y = 0f;
@@ -199,7 +270,8 @@ namespace DipGgFixes
                 var start = tp + from * (startDist + slot * sp * 0.5f) + right * side * (800f + slot * sp) + Vector3.up * (Era(curYear).alt + slot * 25f);
                 var go = Build(curYear);
                 var pl = new Plane { Go = go, Ctl = lastCtl, Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
-                    SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f, Spd = spd, Ph = AirPhysics.Start(curModel, true) };
+                    SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f, Spd = spd, Ph = AirPhysics.Start(curModel, true),
+                    Pl = atkIsPlayer, AP = atkP, Year = curYear, Model = curModel, Tube = tube };
                 planes.Add(pl);
             }
             try { Dispatch.Air(atkIsPlayer ? $"{CarrierName()}: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
@@ -452,6 +524,7 @@ namespace DipGgFixes
                 var p = planes[i]; float v = p.Spd * WorldScale();
                 try
                 {
+                    Use(p);   // 1.11.426: this aircraft's side
                     if (p.Go == null) { planes.RemoveAt(i); continue; }
                     if (p.P == Phase.Down)
                     {
