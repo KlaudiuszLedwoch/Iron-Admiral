@@ -119,7 +119,8 @@ namespace DipGgFixes
                     else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
                     sides.Clear();
                     bool both = BothTest != null && BothTest.Value;   // test: the campaign rules in a custom battle (techs of the battle year)
-                    if ((camp && campOn && !test) || both) { camp = true; CampaignSides(b.Ships); LandSides(); }
+                    if (camp && AirOnly.Is(b)) AirOnlySide(b);   // 1.11.440 (#96): aircraft only - the attacker's waves, no ships
+                    else if ((camp && campOn && !test) || both) { camp = true; CampaignSides(b.Ships); LandSides(); }
                     else if (active) sides.Add(new SideCtx { Pl = atkIsPlayer, AP = atkP, Next = FirstAfter.Value, Year = curYear, Model = curModel });
                     active = sides.Count > 0;
                 }
@@ -270,6 +271,23 @@ namespace DipGgFixes
             LandOn = cat.CreateEntry("NavalAviationShoreStrikes", true, null, "Campaign: shore-based torpedo aircraft strike a daylight battle within reach of the nation's nearest port - needs the aerial torpedo (at_1) and shore aviation (av_recon_1); the reach grows with the shore aviation technologies");
             LandRadius = cat.CreateEntry("NavalAviationShoreRadiusKm", "120,250,400,600,750", null, "Campaign: reach (km from the nearest own port) of shore-based torpedo aircraft for shore aviation technology 1-5 (seaplane stations, airships, flying boats, long-range patrol, patrol aircraft with radar)");
             LandChance = cat.CreateEntry("NavalAviationShoreChance", 70f, null, "Campaign: chance (%) of a shore-based strike on a battle next to the port; it falls linearly to 0 at the edge of the reach");
+        }
+        internal static float ShoreReach(int reconLevel) { return ScaleAt(LandRadius.Value, Math.Max(1, Math.Min(5, reconLevel))); }
+        // 1.11.440 (#96): an air-only battle - the side of the battle's attacking nation (shore aircraft or carrier aircraft)
+        static void AirOnlySide(CampaignBattle b)
+        {
+            Player p = null; try { p = b.Attacker; if (p != null && p.isMain) p = b.Defender; } catch { }
+            if (p == null) { Log("air-only battle: the attacking nation is unknown - no waves"); return; }
+            bool ld = AirOnly.IsLand(b); int y = Fog.Year();
+            var c = new SideCtx { Pl = false, AP = p, Year = y, Model = ld ? LandModel(y) : ModelFor(y, 1), Land = ld, PortKm = AirOnly.Km(b), WaveBase = ld ? 200 : 0, Next = Math.Min(FirstAfter.Value, 30f) };
+            sides.Add(c);
+            Log($"air-only battle: {p.data.name} {(ld ? "shore-based " + LandModel(y) + $" from a port {c.PortKm:0} km away, {LandWaves(p)} wave(s) of {LandPerWave(p)}" : $"carrier aircraft, {CarrierWaves(p)} wave(s) of {CarrierPerWave(p)}")} against the player's largest ship");
+        }
+        internal static bool AirOnlyBusy()
+        {
+            if (!active) return sides.Count > 0;
+            foreach (var c in sides) { if (c.AP == null) continue; int maxW = c.Land ? LandWaves(c.AP) : CarrierWaves(c.AP); if (c.Waves < maxW) return true; }
+            return planes.Count > 0;
         }
         static int y0Of(Player p) { try { return NavalAviation.StrikeYear(p); } catch { return 1925; } }
         // 1.11.433 (#95, claude/grupy_lotnicze_fale_95.md - Taranto 12+9, Bismarck 9 and 15, Channel Dash 6, US torpedo squadrons
