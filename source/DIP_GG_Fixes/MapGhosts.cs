@@ -23,7 +23,28 @@ namespace DipGgFixes
         }
         static float next; static int errors, logged, hidden; static readonly HashSet<IntPtr> seen = new HashSet<IntPtr>();
         static readonly HashSet<IntPtr> designLogged = new HashSet<IntPtr>();
-        static HashSet<IntPtr> pending = new HashSet<IntPtr>();   // seen as a ghost once; hidden only when still a ghost on the next check (a part being placed in the designer is not touched)
+        static HashSet<IntPtr> pending = new HashSet<IntPtr>();
+        // 1.11.471 (author 30.10 20:47, refit: "the buttons do not work, neither a part nor a group can be chosen from the bottom menu";
+        // log: NullReferenceException in Ui NewGameUI b__7 after "[MapGhosts] gun_2_x3 (no ship) ... parent Preview"): the check ran
+        // in the designer too and switched off the part previews of the designer's bottom menu (parts without a ship under "Preview").
+        // Now: nothing is checked in the designer or while loading, parts under a "Preview" object are never touched, and renderers
+        // switched off on such parts before are switched back on.
+        static readonly HashSet<IntPtr> hiddenParts = new HashSet<IntPtr>();
+        static bool UnderPreview(Transform t) { for (var x = t; x != null; x = x.parent) { string n = ""; try { n = x.name; } catch { } if (n.IndexOf("Preview", StringComparison.OrdinalIgnoreCase) >= 0) return true; } return false; }
+        static int restored;
+        static void Restore()
+        {
+            if (hiddenParts.Count == 0) return;
+            var objs = UnityEngine.Object.FindObjectsOfType(Il2CppType.Of<Part>()); if (objs == null) return;
+            for (int i = 0; i < objs.Length; i++)
+            {
+                var p = objs[i] != null ? objs[i].TryCast<Part>() : null; if (p == null || !hiddenParts.Contains(p.Pointer)) continue;
+                Transform t = null; try { t = p.transform; } catch { } if (t == null || !UnderPreview(t)) continue;
+                try { var rs = t.GetComponentsInChildren<Renderer>(true); if (rs != null) for (int k = 0; k < rs.Length; k++) if (rs[k] != null && !rs[k].enabled) { rs[k].enabled = true; restored++; } } catch { }
+                hiddenParts.Remove(p.Pointer);
+            }
+            MelonLogger.Msg($"[DIP GG Fixes][MapGhosts] designer: renderers of part previews switched back on ({restored} so far)");
+        }   // seen as a ghost once; hidden only when still a ghost on the next check (a part being placed in the designer is not touched)
 
         internal static void Tick()
         {
@@ -33,6 +54,8 @@ namespace DipGgFixes
             {
                 bool battle = false; try { battle = GameManager.IsBattle; } catch { }
                 if (battle) return;
+                bool designer = false; try { designer = GameManager.IsConstructor || GameManager.IsSharedDesignConstructor || GameManager.IsLoadingAny; } catch { }
+                if (designer) { pending.Clear(); try { Restore(); } catch { } return; }   // 1.11.471
                 bool campaign = false; try { campaign = CampaignController.Instance != null && CampaignController.Instance.CampaignData != null; } catch { }
                 if (!campaign) return;
                 bool worldMap = false; try { worldMap = GameManager.IsWorldMap && !GameManager.IsConstructor && !GameManager.IsSharedDesignConstructor && !GameManager.IsLoadingAny; } catch { }
@@ -45,6 +68,7 @@ namespace DipGgFixes
                     Ship ship = null; try { ship = p.ship; } catch { }
                     Transform t = null; try { t = p.transform; } catch { }
                     if (t == null) continue;
+                    if (UnderPreview(t)) continue;   // 1.11.471: the designer's part previews
                     string why = null;
                     if (ship == null) why = "no ship";
                     else
@@ -83,6 +107,7 @@ namespace DipGgFixes
                         try { var vr = p.visualRenderers; if (vr != null && vr.Count > 0 && vr[0] != null && vr[0].sharedMaterial != null) mat = vr[0].sharedMaterial.name; } catch { }
                         MelonLogger.Msg($"[DIP GG Fixes][MapGhosts] {dn} ({why}; ship {sn}): pos {t.position}, scale {t.lossyScale}, parent {parent}, visual mode {mode}, shown {shown}, material {mat} - renderers switched off");
                     }
+                    hiddenParts.Add(p.Pointer);
                     try { var vr = p.visualRenderers; if (vr != null) for (int k = 0; k < vr.Count; k++) if (vr[k] != null && vr[k].enabled) { vr[k].enabled = false; hidden++; } } catch { }
                     try { var rs = t.GetComponentsInChildren<Renderer>(true); if (rs != null) for (int k = 0; k < rs.Length; k++) if (rs[k] != null && rs[k].enabled) { rs[k].enabled = false; hidden++; } } catch { }
                 }
