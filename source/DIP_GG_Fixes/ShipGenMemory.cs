@@ -78,7 +78,13 @@ namespace DipGgFixes
             {
                 limited.Add(p);
                 int now = MonthIndex();
-                if (now >= 0 && failed.TryGetValue(key, out int at) && now - at < Months.Value)
+                if (ShipGenSpeed.BudgetUsed() && total > 1)
+                {
+                    // 1.11.481: the generator's time of this turn is used up - one attempt only
+                    it._triesTotal_5__4 = 1; saved += total - 1;
+                    MelonLogger.Msg($"[DIP GG Fixes][ShipGen] {key.Replace("|", ": hull ")} - the generator's time of this turn is used up: 1 attempt instead of {total}");
+                }
+                else if (now >= 0 && failed.TryGetValue(key, out int at) && now - at < Months.Value)
                 {
                     int t = Math.Max(1, Math.Min(total, Tries.Value));
                     if (t < total)

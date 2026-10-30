@@ -312,6 +312,7 @@ namespace DipGgFixes
         static bool Pre_BuildNewShips(Player player)
         {
             try { if (IsWaiting(player)) { Once("build|" + Key(player) + "|" + Month(), $"{N(player)} builds no ships while it has no port"); return false; } } catch { }
+            try { if (ShipGenSpeed.HardStopNow(player)) return false; } catch { }   // 1.11.481: end-of-turn time limit
             return true;
         }
         static bool Pre_Finish(Player __0, CampaignController.FinishCampaignType __1)

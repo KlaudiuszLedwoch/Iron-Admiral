@@ -43,6 +43,7 @@ namespace DipGgFixes
             TrimMax = cat.CreateEntry("GeneratorOverweightMax", 0.12f, null, "Trimming: attempts overweight by more than this share of the tonnage are left to the game (0.12 = 12 %)");
             TrimState = cat.CreateEntry("ShipGenTrimState", 20, null, "Author's tool: coroutine state of the generator at which trimming runs - 20 is the state that checks the attempt, after the game's own weight reductions (state log of 25.10: 8 parts, 12 armour, 13 and 15 weight reduction, 20 check)");
             TurnBudget = cat.CreateEntry("ShipGenTurnBudget", 20f, null, "Campaign: seconds of AI ship generator work per turn - once used up, a design that fails an attempt gets at most one more instead of all its attempts (author 30.10: a turn of 2.5 min, 2 of them one Scandinavian battlecruiser failing 4 attempts of 30 s); 0 = no limit"); // 1.11.478
+            HardStop = cat.CreateEntry("ShipGenTurnHardStop", 45f, null, "Campaign: seconds after the AI's first ship design of a turn after which the AI nations that have not ordered ships yet skip shipbuilding for that month (they build next month) - keeps the end of a turn near a minute; 0 = no limit"); // 1.11.481
             Diag = cat.CreateEntry("ShipGenDiagnosis", false, null, "Author's tool: outside the campaign, every failed generator attempt is logged with its guns and tonnage, and when no main tower, secondary tower or funnel was placed, each tower/funnel part is checked with the game's own availability and placement tests"); // 1.11.245
         }
 
@@ -475,7 +476,21 @@ namespace DipGgFixes
         // 1.11.478 (author 30.10 21:47: "maybe a time limit for designs, so a turn takes no longer than 60 seconds"): the generator's
         // time is counted per turn (from its first attempt in that month); past ShipGenTurnBudget seconds a failed attempt is followed by
         // at most one more - the failure memory then keeps the nation/hull pair away on later turns
-        internal static MelonPreferences_Entry<float> TurnBudget;
+        internal static MelonPreferences_Entry<float> TurnBudget, HardStop;
+        internal static bool BudgetUsed() { return TurnBudget != null && TurnBudget.Value > 0f && budgetMonth == Economy.Month() && Time.realtimeSinceStartup - budgetStart > TurnBudget.Value; }
+        static readonly HashSet<string> stopLogged = new HashSet<string>();
+        internal static bool HardStopNow(Player p)
+        {
+            try
+            {
+                if (p == null || p.isMain || HardStop == null || HardStop.Value <= 0f || budgetMonth != Economy.Month()) return false;
+                float used = Time.realtimeSinceStartup - budgetStart; if (used <= HardStop.Value) return false;
+                string n = p.data != null ? p.data.name : "?";
+                if (stopLogged.Add(n + "|" + budgetMonth)) Log($"{n}: no shipbuilding this month - the AI's ship design work has taken {used:0} s of this turn (limit {HardStop.Value:0} s, ShipGenTurnHardStop); it builds next month");
+                return true;
+            }
+            catch { return false; }
+        }
         static int budgetMonth = -1; static float budgetStart; static int budgetCuts;
         internal static void Attempt(Ship._GenerateRandomShip_d__573 it, Ship ship, string key, bool running)
         {
