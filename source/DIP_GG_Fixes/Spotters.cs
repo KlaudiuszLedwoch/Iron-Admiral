@@ -115,6 +115,8 @@ namespace DipGgFixes
             {
                 if (!alive || Night()) { p.P = Ph.Gone; return; }
                 if (bt < p.LaunchAt) return;
+                // 1.11.429: a catapult seaplane is recovered by crane from the sea - not launched when it could not be got back
+                if (!AirWeather.CanRecoverSeaplane(out var wx)) { p.P = Ph.Gone; if (logged++ < 8) Log($"{s.name}: spotting aircraft stays on the catapult - {wx}"); return; }
                 p.Go = AirModels.Spawn(ModelFor(s), AirStrike.Scale != null ? AirStrike.Scale.Value : 1f, out p.Ctl);
                 if (p.Go == null) { p.P = Ph.Gone; if (logged++ < 4) Log("no aircraft model - spotting aircraft not drawn"); return; }
                 var f = s.transform.forward; f.y = 0f; f.Normalize();

@@ -245,8 +245,7 @@ namespace DipGgFixes
                 float ch0 = PresenceChance(p), ch = ch0 >= 1f ? 1f : Mathf.Min(0.9f, ch0 * (1f + BigBattleStep.Value / 100f * Math.Max(0, cap - 1))), r = UnityEngine.Random.value;
                 if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%): no air strike"); continue; }
                 Log($"campaign battle: {p.data.name} - the carrier is with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%)");
-                float vis = VisKm();
-                if (vis > 0f && vis < MinVisKm.Value) { Log($"campaign battle: {p.data.name} - visibility {vis:0} km, below {MinVisKm.Value:0} km: the carrier does not fly off its aircraft"); continue; }
+                if (!AirWeather.CanFly(y0Of(p), out var wx)) { Log($"campaign battle: {p.data.name} - {wx}: the carrier does not fly off its aircraft"); continue; }   // 1.11.429
                 int y = NavalAviation.StrikeYear(p);
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f };
                 sides.Add(c);
@@ -266,6 +265,7 @@ namespace DipGgFixes
             LandRadius = cat.CreateEntry("NavalAviationShoreRadiusKm", "120,250,400,600,750", null, "Campaign: reach (km from the nearest own port) of shore-based torpedo aircraft for shore aviation technology 1-5 (seaplane stations, airships, flying boats, long-range patrol, patrol aircraft with radar)");
             LandChance = cat.CreateEntry("NavalAviationShoreChance", 70f, null, "Campaign: chance (%) of a shore-based strike on a battle next to the port; it falls linearly to 0 at the edge of the reach");
         }
+        static int y0Of(Player p) { try { return NavalAviation.StrikeYear(p); } catch { return 1925; } }
         internal static int LandPerWave(Player p) { int r = 0; try { r = NavalAviation.ReconLevel(p); } catch { } return r >= 4 ? 6 : r >= 2 ? 4 : 2; }
         static string LandModel(int y) { if (y < 1930) return "short_184"; if (y < 1939) return "swordfish_i"; if (y < 1942) return "beaufort"; if (y < 1943) return "hampden_tb"; return "beaufighter_tf"; }
         static float PortKmOf(Player p)
@@ -296,9 +296,8 @@ namespace DipGgFixes
                 if (km >= R) { Log($"shore strike: {p.data.name} - the battle is {km:0} km from its nearest port, beyond the {R:0} km reach"); continue; }
                 float ch = BothTest != null && BothTest.Value ? 1f : Mathf.Clamp01(LandChance.Value / 100f * (1f - km / R)), r = UnityEngine.Random.value;
                 if (r >= ch) { Log($"shore strike: {p.data.name} - {km:0} km from port, no aircraft sent (chance {ch * 100f:0}%)"); continue; }
-                float vis = VisKm();
-                if (vis > 0f && vis < MinVisKm.Value) { Log($"shore strike: {p.data.name} - visibility {vis:0} km: the shore squadrons do not take off"); continue; }
                 int y = Fog.Year(); if (BothTest != null && BothTest.Value) { try { var b = BattleManager.Instance.CurrentBattle; for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null) { int yy = (int)s.GetYear(s); if (yy > 1900) { y = yy; break; } } } } catch { } }
+                if (!AirWeather.CanFly(y, out var wx)) { Log($"shore strike: {p.data.name} - {wx}: the shore squadrons do not take off"); continue; }   // 1.11.429
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = LandModel(y), Land = true, PortKm = km, WaveBase = 100 + sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f + 60f };
                 sides.Add(c);
                 Log($"shore strike: {p.data.name} - {LandModel(y)} from a port {km:0} km away (reach {R:0} km, chance {ch * 100f:0}%), up to {LandPerWave(p)} aircraft in 2 waves against the {(pl ? "enemy's" : "player's")} largest ship");
