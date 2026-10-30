@@ -78,7 +78,7 @@ namespace DipGgFixes
         static void Clear()
         {
             foreach (var p in planes) { try { if (p.Go != null) UnityEngine.Object.Destroy(p.Go); } catch { } }
-            FxClear(); foreach (var tr in tracers) { try { if (tr.L != null) UnityEngine.Object.Destroy(tr.L.gameObject); } catch { } } tracers.Clear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); lightGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
+            FxClear(); foreach (var tr in tracers) { try { if (tr.L != null) UnityEngine.Object.Destroy(tr.L.gameObject); } catch { } } tracers.Clear(); planes.Clear(); waveStats.Clear(); reported.Clear(); track.Clear(); shots = 0; aerial.Clear(); aerialPtr.Clear(); follow = Follow.None; PauseCam(false); radio.Clear(); said.Clear(); hitSaid.Clear(); aaGuns.Clear(); aaLogged = 0; lightGuns.Clear(); wavesSent = 0; battleT = 0f; nextWave = 0f;
         }
 
         internal static void Tick()
@@ -110,6 +110,8 @@ namespace DipGgFixes
                         else if (!NavalAviation.CanStrike(atkP, out var why)) { Log($"campaign battle: {atkP.data.name} - {why}: no air strike"); active = false; }
                         else Log($"campaign battle: {atkP.data.name} Naval Aviation - {NavalAviation.Summary(atkP)}");
                     }
+                    // 1.11.411 (test 30.10 00:52: "HMS Courageous" named in 1941 - the model and year were set only at the first wave)
+                    curYear = camp && atkP != null ? NavalAviation.StrikeYear(atkP) : (yr > 0 ? yr : 1925); curModel = ModelFor(curYear, 1);
                     if (atkIsPlayer) Log($"custom battle {yr}: our carrier ({CarrierName()}, {TypeName()}) is beyond the horizon - its waves attack the enemy's largest ship");
                     else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
                 }
@@ -938,10 +940,17 @@ namespace DipGgFixes
         // aircraft running in low, author 29.10 12:42: "when they flew low the heavy artillery tried to bring them down with water
         // splashes"; a 1922 Proceedings article quotes a claimed "heavy water barrage at from 2,000 to 3,000 yards" against torpedo
         // planes, unproven then; Yamato fired her 18 in guns at the attacking aircraft in April 1945)
+        static int aaLogged;
         static (int light, int heavy) Guns(Ship s)
         {
             if (aaGuns.TryGetValue(s.Pointer, out var n)) return n;
-            int l = 0, h = 0;
+            int l = 0, h = 0; bool dp = false, auto = false;
+            try
+            {
+                if (camp && s.player != null) { dp = NavalAviation.Has(s.player, "aa_3"); auto = NavalAviation.Has(s.player, "aa_5"); }
+                else { int y = (int)s.GetYear(s); dp = y >= 1930; auto = y >= 1937; }
+            }
+            catch { }
             try
             {
                 var parts = s.parts;
@@ -949,11 +958,18 @@ namespace DipGgFixes
                 {
                     var pd = parts[i] != null ? parts[i].data : null; if (pd == null || !pd.isGun) continue;
                     float cal = 99f; try { cal = G.GameData.GunData(pd).caliberInch; } catch { }
-                    if (cal >= 1.9f && cal <= 3.1f) l++; else if (cal > 3.1f) h++;
+                    if (cal >= 1.9f && cal <= 3.1f) l++; else if (cal > 3.1f) { h++; if (dp && cal <= 5.5f) l++; }
                 }
+                // 1.11.411 (test 30.10 00:52-00:56, 1941: 15 Swordfish/Albacore against Gneisenau, none shot down - her design had no
+                // guns of 2-3 in, and the game has no 20-40 mm mountings at all): from the high-angle director (1930; campaign aa_3)
+                // secondary guns up to 5.5 in fire as dual-purpose AA; from the 20-40 mm automatic guns (1937; campaign aa_5) every
+                // ship carries light AA mountings the game does not model - one per 4000 t, at most 12
+                if (auto) { float t = 0f; try { t = s.Tonnage(); } catch { } l += Math.Min(12, Math.Max(1, (int)(t / 4000f))); }
             }
             catch { }
-            n = (l, h); aaGuns[s.Pointer] = n; return n;
+            n = (l, h); aaGuns[s.Pointer] = n;
+            if (aaLogged++ < 6) Log($"{s.name}: anti-aircraft fire from {l} light gun(s){(dp ? " (dual-purpose secondaries included)" : "")}{(auto ? " (light automatic mountings included)" : "")}, {h} heavier gun(s) for the splash barrage");
+            return n;
         }
 
         static float YearF(Ship s)
