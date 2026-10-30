@@ -142,12 +142,14 @@ namespace DipGgFixes
             if (lv > 0 && spotLogged++ < 4) Log($"{s.name}: spotting aircraft from the catapult{(lv >= 2 ? " with air spotting procedures" : "")}");
             return lv;
         }
+        internal static int SpotLevelOf(Ship s) { if (Spotting == null || !Spotting.Value || s == null) return 0; return SpotLevel(s); }
         internal static float SpotF(Ship s, float d)
         {
             if (Spotting == null || !Spotting.Value || s == null || d <= 12000f) return 1f;
             bool night = false; try { night = BattleAi.IsNight(); } catch { }
             if (night) return 1f;
             int lv = SpotLevel(s); if (lv == 0) return 1f;
+            if (!Spotters.Airborne(s)) return 1f;   // 1.11.417: only while the drawn aircraft is up
             float full = lv >= 2 ? 1.25f : 1.10f;
             return 1f + (full - 1f) * Mathf.Clamp01((d - 12000f) / 6000f);
         }
