@@ -101,6 +101,20 @@ namespace DipGgFixes
                 GUI.Box(r, "");
                 GUI.Box(r, "");
                 GUI.Label(new Rect(r.x + 8f, r.y + 6f, w - 16f, h - 8f), text, style);
+                // 1.11.467: the naval aviation budget slider (0-200% of the historical upkeep)
+                if (AirBudget.Enabled)
+                {
+                    var p = Main(); int cl = 0, rl = 0; if (p != null) { try { cl = NavalAviation.CarrierLevel(p); rl = NavalAviation.ReconLevel(p); } catch { } }
+                    if (p != null && (cl > 0 || rl > 0))
+                    {
+                        var r2 = new Rect(r.x, r.y + h + 4f, w, 48f);
+                        GUI.Box(r2, ""); GUI.Box(r2, "");
+                        GUI.Label(new Rect(r2.x + 8f, r2.y + 5f, w - 16f, 18f), AirBudget.Line(p), style);
+                        float cur = AirBudget.Pct(p);
+                        float nv = GUI.HorizontalSlider(new Rect(r2.x + 8f, r2.y + 29f, w - 16f, 14f), cur, 0f, 200f);
+                        if (Math.Abs(nv - cur) >= 5f) { AirBudget.SetPct(p, nv); built = -100f; }
+                    }
+                }
             }
             catch (Exception e) { if (guiErrors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Economy] treasury panel draw failed: " + e); }
         }
@@ -123,7 +137,7 @@ namespace DipGgFixes
             if (b.Debt > 0f) sb.Append($"Debt: {M(b.Debt)}, interest {M(b.DebtInterest)} a month{(b.Erosion > 0f ? $", inflation erodes {M(b.Erosion)} of it" : "")}\n");
             if (st.LoanMonths > 0) sb.Append($"War loan: {M(st.LoanBalance)} left, {st.LoanMonths} months, repayment {M(b.LoanPayment)} a month\n");
             if (b.Savings > 0f) sb.Append($"Savings: {M(p.cash)} earn {b.SavingsRate:0.0}% a year = +{M(b.Savings)} a month\n");
-            if (b.Aviation > 0f) sb.Append($"Naval Aviation (carrier, aircraft, crews): {M(b.Aviation)} a month = {AirStrike.UpkeepPct(p):0.#}% of the fleet maintenance\n");
+            if (b.Aviation > 0f) sb.Append($"Naval Aviation (carrier, aircraft, crews): {M(b.Aviation)} a month = {AirStrike.UpkeepPct(p):0.#}% of the fleet maintenance{(AirBudget.Enabled ? $" (budget {AirBudget.Pct(p):0}%, slider below)" : "")}\n");
             int month = Economy.Month();
             if (st.BankruptUntil > month) sb.Append($"Bankruptcy on record until {st.BankruptUntil / 12} - credit costs more\n");
             if (st.CutsMonths > 0) sb.Append($"Fleet cuts: {st.CutsMonths} months left\n");

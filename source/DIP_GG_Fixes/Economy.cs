@@ -433,6 +433,7 @@ namespace DipGgFixes
         public float Inflation; public int LoanMonths; public float LoanBalance; public int CutsMonths;
         public int BankruptUntil; public int ExpandMonths; public float ExpandPp; public float ResearchPp;
         public float PrevCash, PrevIncome, PrevExpenses; public bool HavePrev; public int LastMonth; public int LastLog;
+        public float AirBudget = -1f, AirStock = -1f;   // 1.11.467: naval aviation budget (%) and aircraft strength (1 = standard), -1 = not set
         public bool Active { get { return LoanMonths > 0 || CutsMonths > 0; } }
         // transient, for the in-game panel and the monthly report (not saved)
         public float Spread = -1f; public float MonthStartInflation; public readonly List<string> Notes = new List<string>(); public readonly List<string> Events = new List<string>();
@@ -442,7 +443,7 @@ namespace DipGgFixes
             var c = CultureInfo.InvariantCulture;
             return string.Join("|", new string[] { key.Replace("|", "/"), Inflation.ToString("R", c), LoanMonths.ToString(c), LoanBalance.ToString("R", c), CutsMonths.ToString(c),
                 BankruptUntil.ToString(c), ExpandMonths.ToString(c), ExpandPp.ToString("R", c), PrevCash.ToString("R", c), PrevIncome.ToString("R", c), PrevExpenses.ToString("R", c),
-                HavePrev ? "1" : "0", LastMonth.ToString(c) });
+                HavePrev ? "1" : "0", LastMonth.ToString(c), AirBudget.ToString("R", c), AirStock.ToString("R", c) });
         }
         internal static bool Parse(string line, out string key, out EconState st)
         {
@@ -458,6 +459,7 @@ namespace DipGgFixes
                     BankruptUntil = int.Parse(a[5], c), ExpandMonths = int.Parse(a[6], c), ExpandPp = float.Parse(a[7], c), PrevCash = float.Parse(a[8], c),
                     PrevIncome = float.Parse(a[9], c), PrevExpenses = float.Parse(a[10], c), HavePrev = a[11] == "1", LastMonth = int.Parse(a[12], c)
                 };
+                if (a.Length >= 15) { float ab, ak; if (float.TryParse(a[13], NumberStyles.Float, c, out ab)) st.AirBudget = ab; if (float.TryParse(a[14], NumberStyles.Float, c, out ak)) st.AirStock = ak; }   // 1.11.467
                 return true;
             }
             catch { return false; }
@@ -720,6 +722,7 @@ namespace DipGgFixes
                         if (p.isDisabled) continue;
                         var st = Get(p); if (st == null || st.LastMonth == month) continue;
                         st.LastMonth = month;
+                        try { AirBudget.Month(p, st); } catch { }   // 1.11.467
                         float y = Gdp(p); if (y <= 0f) continue;
                         float before = st.Inflation;
                         st.MonthStartInflation = before; st.Notes.Clear(); st.Events.Clear();

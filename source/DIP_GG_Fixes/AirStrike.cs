@@ -204,7 +204,7 @@ namespace DipGgFixes
             var a = (UpkeepScale.Value ?? "").Split(',');
             float v = 0f; int k = Math.Min(lv, a.Length) - 1;
             if (k >= 0) float.TryParse(a[k].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v);
-            return Math.Max(0f, v);
+            return Math.Max(0f, v) * AirBudget.Pct(p) / 100f;   // 1.11.467: the naval aviation budget slider
         }
         internal static float Upkeep(Player p)
         {
@@ -249,6 +249,7 @@ namespace DipGgFixes
                 // visibility (no flying, no finding the enemy)
                 // 1.11.427 (author 30.10 09:31: "raise the probability for bigger battles"): a fleet with more capital ships is the
                 // main fleet more likely to have its carrier - +BigBattleStep per capital ship beyond the first, at most 90%
+                if (AirBudget.NoAircraft(p)) { Log($"campaign battle: {p.data.name} - no aircraft (naval aviation strength {AirBudget.Stock(p) * 100f:0}%): no air strike"); continue; }   // 1.11.467
                 int cap = pl ? capMine : capTheirs;
                 float ch0 = PresenceChance(p), ch = ch0 >= 1f ? 1f : Mathf.Min(0.9f, ch0 * (1f + BigBattleStep.Value / 100f * Math.Max(0, cap - 1))), r = UnityEngine.Random.value;
                 if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%): no air strike"); continue; }
@@ -296,13 +297,19 @@ namespace DipGgFixes
         // national tactics - Japan's combined strikes of several carriers, US squadrons one after another, British small strikes
         static string Nat(Player p) { try { return (p.data.name ?? "").ToLowerInvariant(); } catch { return ""; } }
         static int CLv(Player p) { int c = 0; try { c = NavalAviation.CarrierLevel(p); } catch { } if (Nat(p) == "france") c = Math.Min(c, 2); return Math.Max(1, Math.Min(4, c)); }
-        internal static int CarrierWaves(Player p)
+        // 1.11.467: the strike scales with the nation's aircraft strength (AirBudget); the *0 forms are the full standard air group
+        internal static int CarrierWaves(Player p) { return AirBudget.Waves(CarrierWaves0(p), p); }
+        internal static int CarrierPerWave(Player p) { return AirBudget.PerWave(CarrierPerWave0(p), p); }
+        internal static int LandWaves(Player p) { return AirBudget.Waves(LandWaves0(p), p); }
+        internal static int LandPerWave(Player p) { return AirBudget.PerWave(LandPerWave0(p), p); }
+        internal static int StrikeSize(Player p) { try { return CarrierWaves0(p) * CarrierPerWave0(p) + LandWaves0(p) * LandPerWave0(p); } catch { return 12; } }
+        internal static int CarrierWaves0(Player p)
         {
             int c = CLv(p); string n = Nat(p);
             if (c <= 2) return 1; if (c == 3) return 2;
             return n == "japan" ? 2 : 3;   // Japan: fewer, bigger combined waves; the US and Britain: squadrons one after another
         }
-        internal static int CarrierPerWave(Player p)
+        internal static int CarrierPerWave0(Player p)
         {
             int c = CLv(p); string n = Nat(p);
             switch (c)
@@ -314,8 +321,8 @@ namespace DipGgFixes
             }
         }
         static int RLv(Player p) { int r = 0; try { r = NavalAviation.ReconLevel(p); } catch { } return Math.Max(1, Math.Min(5, r)); }
-        internal static int LandWaves(Player p) { int r = RLv(p); return r == 1 ? 1 : r <= 3 ? 2 : r == 4 ? 3 : 4; }
-        internal static int LandPerWave(Player p)
+        internal static int LandWaves0(Player p) { int r = RLv(p); return r == 1 ? 1 : r <= 3 ? 2 : r == 4 ? 3 : 4; }
+        internal static int LandPerWave0(Player p)
         {
             int r = RLv(p); string n = Nat(p);
             switch (r)
@@ -354,7 +361,8 @@ namespace DipGgFixes
                 if (tl == 0 || rl == 0) { Log($"shore strike: {p.data.name} - {(tl == 0 ? "no aerial torpedo (at_1)" : "no shore aviation (av_recon_1)")}"); continue; }
                 float R = ScaleAt(LandRadius.Value, rl), km = PortKmOf(p);
                 if (km >= R) { Log($"shore strike: {p.data.name} - the battle is {km:0} km from its nearest port, beyond the {R:0} km reach"); continue; }
-                float ch = BothTest != null && BothTest.Value ? 1f : Mathf.Clamp01(LandChance.Value / 100f * (1f - km / R)), r = UnityEngine.Random.value;
+                if (AirBudget.NoAircraft(p)) { Log($"shore strike: {p.data.name} - no aircraft (naval aviation strength {AirBudget.Stock(p) * 100f:0}%)"); continue; }   // 1.11.467
+                float ch = BothTest != null && BothTest.Value ? 1f : Mathf.Clamp01(LandChance.Value / 100f * (1f - km / R) * AirBudget.ChanceF(p)), r = UnityEngine.Random.value;
                 if (r >= ch) { Log($"shore strike: {p.data.name} - {km:0} km from port, no aircraft sent (chance {ch * 100f:0}%)"); continue; }
                 int y = Fog.Year(); if (BothTest != null && BothTest.Value) { try { var b = BattleManager.Instance.CurrentBattle; for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null) { int yy = (int)s.GetYear(s); if (yy > 1900) { y = yy; break; } } } } catch { } }
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = LandModel(y), Land = true, PortKm = km, WaveBase = 100 + sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f + 60f };
@@ -1361,7 +1369,7 @@ namespace DipGgFixes
             {
                 // which fire brought it down: in proportion to the share of each in the total chance
                 float pl = 1f - missLight, pt = 1f - miss; bool splash = heavy > 0 && UnityEngine.Random.value * pt > pl;
-                p.P = Phase.Down; waveStats[p.Wave][2]++; if (splash) waveStats[p.Wave][3]++;
+                p.P = Phase.Down; waveStats[p.Wave][2]++; try { if (p.AP != null) AirBudget.Lost(p.AP, 1, StrikeSize(p.AP)); } catch { }   /* 1.11.467 */ if (splash) waveStats[p.Wave][3]++;
                 Shot($"wave{p.Wave}_shotdown", 1.2f, p);
                 Radio(p.Wave, null, atkIsPlayer ? (splash ? Pick("Christ - he flew into a splash! He's gone in!", "Heavy guns firing into the sea ahead of us - Number Four caught it!") : Pick("Number Three's hit - he's going down in flames!", "They've got Jenkins! Keep low, keep low!", "Flak's thick - lost one of ours!")) : Pick("Got one! Enemy plane down in the sea!", "Splash one torpedo plane!"));
                 if (waveStats[p.Wave][2] <= 4) Log($"wave {p.Wave}: aircraft shot down {(splash ? $"by the splash barrage of the heavy guns ({heavy} gun(s) firing into the sea ahead of it)" : $"by light anti-aircraft guns ({guns} gun(s) of 2-3 in in range)")}{(p.Dropped ? ", after its drop" : ", before its drop")}");

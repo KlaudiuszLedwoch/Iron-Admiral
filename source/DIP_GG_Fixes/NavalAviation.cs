@@ -172,7 +172,7 @@ namespace DipGgFixes
             int mon = ((m - 1) % 12 + 12) % 12 + 1; bool winter = mon == 11 || mon == 12 || mon == 1 || mon == 2;
             float bad = lv >= 5 ? 0.15f : winter ? 0.5f : 0.3f;
             if (Fog.Roll($"air|{m}|{cx}|{cz}") < bad) { why = $"air {what[lv]}: grounded by the weather"; return 0f; }
-            float q = (ReconQ != null ? ReconQ.Value : 0.30f) * Mathf.Clamp01(1f - portKm / range);
+            float q = (ReconQ != null ? ReconQ.Value : 0.30f) * Mathf.Clamp01(1f - portKm / range) * AirBudget.ReconF(obs);   // 1.11.467: aircraft strength
             why = $"air {what[lv]} +{q:0.00} ({portKm:0} of {range:0} km)";
             if (obs.isMain && logged++ < 10) Log($"{obs.data.name}: {why}");
             return q;
