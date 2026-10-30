@@ -338,7 +338,43 @@ namespace DipGgFixes
                     catch (Exception e) { if (secLogged++ < 10) Log("secondary tower swap: " + e.Message); try { if (part != null) ship.RemovePart(part, true, false); } catch { } try { gun.Mount(m, false); } catch { } }
                 }
             }
-            if (secLogged++ < 20) Log($"{key} - attempt without a secondary tower: {cand.Count} tower(s) available, no centre-line mount takes one ({mounts.Count} free, {taken.Count} with lighter guns)");
+            // 1.11.414 (test 30.10 04:39-04:51, Britain bb_4_britain_nelson: 266 free centre-line mounts, none takes a tower - towers on
+            // that hull are placed freely on the deck, not on mounts): free placement on the centre line, aft of the main tower first,
+            // in 2 m steps, on the deck found at that point (Ship.FindDeckAtPoint, Part.Place), the room checked with Part.CanPlace
+            Transform st = null; try { st = ship.transform; } catch { }
+            if (st != null)
+            {
+                foreach (var pd in cand)
+                {
+                    Part part = null;
+                    try
+                    {
+                        part = Part.Create(pd, ship, ship.partsCont, new Il2CppSystem.Nullable<int>(), true);
+                        if (part == null) continue;
+                        ship.AddPart(part);
+                        try { part.LoadModel(ship, true); } catch { }
+                        try { part.UpdateCollidersSize(ship); } catch { }
+                        for (int k = 1; k <= 60; k++)
+                        {
+                            float dz = (k % 2 == 1 ? -1f : 1f) * 2f * ((k + 1) / 2) * (k % 2 == 1 ? 1f : 0.6f);   // aft steps 2 m, forward 1.2 m
+                            var wp = st.TransformPoint(new Vector3(0f, tmy + 30f, tmz + dz));
+                            BoxCollider deck = null; try { deck = ship.FindDeckAtPoint(wp); } catch { }
+                            if (deck == null) continue;
+                            wp.y = deck.bounds.max.y;
+                            try { part.Place(wp, true); } catch { continue; }
+                            string why = null; bool ok = false; try { ok = part.CanPlace(out why); } catch { }
+                            if (ok || why == "available")
+                            {
+                                if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} placed on the deck {Math.Abs(dz):0} m {(dz < 0 ? "aft" : "forward")} of the main tower");
+                                return;
+                            }
+                        }
+                        ship.RemovePart(part, true, false);
+                    }
+                    catch (Exception e) { if (secLogged++ < 10) Log("secondary tower deck: " + e.Message); try { if (part != null) ship.RemovePart(part, true, false); } catch { } }
+                }
+            }
+            if (secLogged++ < 20) Log($"{key} - attempt without a secondary tower: {cand.Count} tower(s) available, no centre-line mount or deck place takes one ({mounts.Count} free mounts, {taken.Count} with lighter guns)");
         }
         static void Trim(Ship ship, bool early)
         {
