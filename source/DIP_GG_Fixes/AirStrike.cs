@@ -68,7 +68,8 @@ namespace DipGgFixes
             public float SlotOff, Seed, Roll;   // 1.11.391: own place in the attack (along the target), turbulence seed, bank angle
             public AirModels.Ctl Ctl; public float RollVis, Ail, Elev, Rud;   // 1.11.393: moving control surfaces of the model
             public float Spd = 55f;   // 1.11.399: speed of its type (m/s)
-            public bool Over; public float DropT = -1f; public int Track;   // 1.11.418: has hopped over its target; time of the drop (chase shots)
+            public bool Over; public float DropT = -1f; public int Track;
+            public AirPhysics.State Ph;   // 1.11.419: flight model (null = the old fixed speed)   // 1.11.418: has hopped over its target; time of the drop (chase shots)
         }
         static readonly List<Plane> planes = new List<Plane>();
         static IntPtr battle; static float battleT; static int wavesSent; static float nextWave;
@@ -189,7 +190,7 @@ namespace DipGgFixes
                 var start = tp + from * (startDist + slot * sp * 0.5f) + right * side * (800f + slot * sp) + Vector3.up * (Era(curYear).alt + slot * 25f);
                 var go = Build(curYear);
                 var pl = new Plane { Go = go, Ctl = lastCtl, Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
-                    SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f, Spd = spd };
+                    SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f, Spd = spd, Ph = AirPhysics.Start(curModel, true) };
                 planes.Add(pl);
             }
             try { Dispatch.Air(atkIsPlayer ? $"{CarrierName()}: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
@@ -505,8 +506,23 @@ namespace DipGgFixes
                     var d = goal - p.Pos; var nd = d.sqrMagnitude > 1f ? d.normalized : p.Dir;
                     var oldDir = p.Dir;
                     p.Dir = p.Dir.sqrMagnitude < 0.01f ? nd : Vector3.Slerp(p.Dir, nd, Mathf.Clamp01(dt * 1.5f)).normalized;
-                    if (p.P == Phase.Run) { if (p.Pos.y > 60f && p.Dir.y < -0.05f) v *= 1.25f; else v = Mathf.Min(v, 51f * WorldScale()); }   // 1.11.401
-                    p.Pos += p.Dir * v * dt;
+                    if (p.Ph != null)
+                    {
+                        // 1.11.419: flight model - the climb the excess power allows, the speed the pilot holds for the phase
+                        var ph = p.Ph; float maxUp = AirPhysics.MaxClimb(ph);
+                        if (p.Dir.y > maxUp) { var hz = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; p.Dir = (hz * Mathf.Sqrt(1f - maxUp * maxUp) + Vector3.up * Mathf.Max(0f, maxUp)).normalized; }
+                        float release = Mathf.Min(ph.T.Vmax, 51f);   // torpedo release no faster than ~100 kn
+                        float want = p.P == Phase.Run ? (p.Dropped ? ph.T.Vmax : release) : p.P == Phase.Away ? ph.T.Vmax : 0.8f * ph.T.Vmax;
+                        float hop0 = ph.Hop;
+                        AirPhysics.Step(ph, p.Dir.y, want, dt);
+                        v = ph.V * WorldScale();
+                        p.Pos += p.Dir * v * dt + Vector3.up * (ph.Hop - hop0);
+                    }
+                    else
+                    {
+                        if (p.P == Phase.Run) { if (p.Pos.y > 60f && p.Dir.y < -0.05f) v *= 1.25f; else v = Mathf.Min(v, 51f * WorldScale()); }   // 1.11.401
+                        p.Pos += p.Dir * v * dt;
+                    }
                     Pose(p, oldDir, dt);
                     // wing rocking over our own ships - the airmen's greeting to the sailors below: a few rolls of about 25 deg
                     if (p.P == Phase.Approach)
@@ -541,7 +557,7 @@ namespace DipGgFixes
             var right = Vector3.Cross(Vector3.up, fb.sqrMagnitude > 0.001f ? fb.normalized : Vector3.forward);
             var pos = p.Pos + Vector3.up * (N(0f, 0.55f) * 3.5f + N(7f, 2.1f) * 0.8f) * amp + right * N(13f, 0.35f) * 5f * amp;
             p.Go.transform.position = pos;
-            float pitch = N(21f, 0.9f) * 3f * amp, yaw = N(29f, 0.6f) * 2.5f * amp, roll = (N(37f, 0.8f) * 6f + N(43f, 3.0f) * 1.5f) * amp;
+            float pitch = N(21f, 0.9f) * 3f * amp - (p.Ph != null ? Mathf.Clamp(p.Ph.Vy * 4f, -6f, 14f) : 0f), yaw = N(29f, 0.6f) * 2.5f * amp, roll = (N(37f, 0.8f) * 6f + N(43f, 3.0f) * 1.5f) * amp;
             float rock = 0f;
             if (p.RockFrom >= 0f) { float a = Time.time - p.RockFrom; if (a < 3.2f) rock = 25f * Mathf.Sin(a * 6f) * (1f - a / 3.2f * 0.4f); }
             float rollVis = p.Roll + roll + rock;
@@ -956,6 +972,7 @@ namespace DipGgFixes
         static void Drop(Plane p)
         {
             if (p.Dropped) return; p.Dropped = true; p.DropT = Time.time;
+            if (p.Ph != null) { float v0 = p.Ph.V, m0 = p.Ph.Mass; AirPhysics.Release(p.Ph); if (drops < 6) Log($"wave {p.Wave}: torpedo away - {m0:0} kg -> {p.Ph.Mass:0} kg, lift excess {p.Ph.Lex:0} N, {v0 * 3.6f:0} km/h"); }
             try { if (p.Torp != null) p.Torp.SetActive(false); } catch { }
             try
             {
