@@ -127,12 +127,28 @@ namespace DipGgFixes
         }
 
         // last step of the damage path (OverPen.Deal), after the historical model and the pass-through rule
-        internal static IntPtr CurTorp;
+        internal static IntPtr CurTorp; static float aerialBase; static int zeroLogged;
         internal static void Apply(Ship ship, ref float damage, string kind)
         {
             // 1.11.385 (#85, author's custom battle 29.10 16:55: five torpedoes of the first wave of Camels sank the battleship Kaga, hits of
             // up to 17,500): a torpedo dropped by an aircraft hits with an aerial warhead - a share of the ship torpedo's damage by year
-            try { if (ship != null && damage > 0f && InTorpedo > 0 && AirStrike.IsAerial(CurTorp)) { damage *= AirStrike.WarheadFactor(ship); AirStrike.OnAerialHit(ship); } } catch { }
+            // 1.11.446 (#90, #96): an aerial torpedo whose data come from a ship of the target's own side hit with game damage 0 (the
+            // game treats it as a friendly torpedo); in a battle of aircraft alone every tube is on the target's side. Such a hit now
+            // takes the raw damage of the last aerial torpedo hit that the game did count in this battle, and is logged either way
+            try
+            {
+                if (ship != null && InTorpedo > 0 && AirStrike.IsAerial(CurTorp))
+                {
+                    if (damage > 0f) aerialBase = damage;
+                    else
+                    {
+                        if (zeroLogged++ < 10) MelonLogger.Msg($"[DIP GG Fixes][AirStrike] aerial torpedo hit on {ship.name} with game damage 0 (torpedo data from a ship of her own side){(aerialBase > 0f ? $" - counted as {aerialBase:0} before the warhead factor" : " - no counted hit yet to take the damage from")}");
+                        if (aerialBase > 0f) damage = aerialBase;
+                    }
+                    if (damage > 0f) { damage *= AirStrike.WarheadFactor(ship); AirStrike.OnAerialHit(ship); }
+                }
+            }
+            catch { }
             if (On == null || !On.Value || ship == null || !(damage > 0f)) return;
             try
             {
