@@ -32,12 +32,14 @@ namespace DipGgFixes
             var common = Common(w.TechBudgetSlider.transform, Common(w.TechBudgetValue.transform, w.TechBudgetTotalValue.transform));
             if (common == null || common.parent == null) { Log("Finances window: no common parent of the Tech Budget row"); return false; }
             // the row: the topmost ancestor below the layout that holds the Tech Budget controls and nothing of the other sliders
+            // the cell: the highest ancestor of the Tech Budget controls that does not also hold the Crew Training slider
             var rowSrc = common;
-            while (rowSrc.parent != null && w.CrewTrainigSlider != null && !w.CrewTrainigSlider.transform.IsChildOf(rowSrc.parent) && rowSrc.parent.GetComponent<CampaignFinancesWindow>() == null) rowSrc = rowSrc.parent;
-            if (rowSrc != common && rowSrc.GetComponentsInChildren<TMP_Text>(true).Length > 6) rowSrc = common;   // not a whole section
+            while (rowSrc.parent != null && rowSrc.parent.GetComponent<CampaignFinancesWindow>() == null && (w.CrewTrainigSlider == null || !w.CrewTrainigSlider.transform.IsChildOf(rowSrc.parent)) && (w.TransportCapacitySlider == null || !w.TransportCapacitySlider.transform.IsChildOf(rowSrc.parent))) rowSrc = rowSrc.parent;
+            if ((w.CrewTrainigSlider != null && w.CrewTrainigSlider.transform.IsChildOf(rowSrc)) || (w.TransportCapacitySlider != null && w.TransportCapacitySlider.transform.IsChildOf(rowSrc))) { Log("Finances window: the Tech Budget cell also holds the other sliders - no aviation slider"); return false; }
             string pSlider = PathFrom(rowSrc, w.TechBudgetSlider.transform), pPct = PathFrom(rowSrc, w.TechBudgetValue.transform), pCost = PathFrom(rowSrc, w.TechBudgetTotalValue.transform);
             row = UnityEngine.Object.Instantiate(rowSrc.gameObject, rowSrc.parent);
             row.name = "IA_NavalAviationRow";
+            Strip(row);
             row.transform.SetSiblingIndex(rowSrc.GetSiblingIndex() + 1);
             slider = pSlider.Length > 0 ? row.transform.Find(pSlider)?.GetComponent<Slider>() : row.GetComponent<Slider>();
             pctText = row.transform.Find(pPct)?.GetComponent<TMP_Text>();
@@ -57,7 +59,7 @@ namespace DipGgFixes
                 if (!single)
                 {
                     string pv = PathFrom(fr, w.Fuel.transform);
-                    costRow = UnityEngine.Object.Instantiate(fr.gameObject, fr.parent); costRow.name = "IA_NavalAviationCost";
+                    costRow = UnityEngine.Object.Instantiate(fr.gameObject, fr.parent); costRow.name = "IA_NavalAviationCost"; Strip(costRow);
                     costRow.transform.SetSiblingIndex(fr.GetSiblingIndex() + 1);
                     costValue = costRow.transform.Find(pv)?.GetComponent<TMP_Text>();
                     foreach (var t in costRow.GetComponentsInChildren<TMP_Text>(true)) if (t != costValue) { t.text = "Naval Aviation:"; break; }
@@ -67,6 +69,19 @@ namespace DipGgFixes
             return true;
         }
 
+        // keep only Unity's UI components on a copy (the game's own scripts - tooltips, events - point at the original window)
+        static void Strip(GameObject go)
+        {
+            int n = 0;
+            foreach (var c in go.GetComponentsInChildren<Component>(true))
+            {
+                if (c == null) continue;
+                string ns = ""; try { ns = c.GetIl2CppType().Namespace ?? ""; } catch { }
+                if (ns.StartsWith("UnityEngine") || ns.StartsWith("TMPro")) continue;
+                try { UnityEngine.Object.Destroy(c); n++; } catch { }
+            }
+            if (n > 0) Log($"Finances window: {n} game script(s) removed from the copied row");
+        }
         static void OnSlide(float v)
         {
             if (busy) return;
