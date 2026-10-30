@@ -273,6 +273,15 @@ namespace DipGgFixes
             Button(new Rect(r.x + 284f, y + 90f, 200f, 28f), "<b>Open GitHub issues</b>", sBtn, () => { try { Application.OpenURL(Diagnostics.GitHubIssues); } catch { } });
             GUI.Label(new Rect(r.x + 14f, y + 124f, w - 28f, 160f), Diagnostics.GitHubHowTo, sDesc);
             y += 296f;
+            // 1.11.445: screenshots and designs to share - packed by the mod, sent by the player
+            GUI.Label(new Rect(r.x + 14f, y, w - 28f, 22f), "<b>Share screenshots and designs</b>", sName);
+            GUI.Label(new Rect(r.x + 14f, y + 22f, w - 28f, 40f), "Puts a folder on your desktop with your newest screenshots (JPG) and a zip of your own shared designs, and opens the GitHub page for them. Nothing is sent - look at the files, delete what you do not want to share and drag the rest into a comment. The best go to the wiki gallery and the mod's designs, with your name.", sDesc);
+            Button(new Rect(r.x + 14f, y + 66f, 260f, 28f), "<b>Share screenshots and designs</b>", sBtn, () =>
+            {
+                int sh, de; string f = null; try { f = ShareFiles.Create(out sh, out de); status = "Folder " + System.IO.Path.GetFileName(f) + " on the desktop: " + sh + " screenshot(s), " + de + " design(s) - drag them into a comment on GitHub"; } catch (Exception e) { status = "Share failed: " + e.Message; }
+                statusUntil = Time.realtimeSinceStartup + 12f;
+            });
+            y += 104f;
             bool u = Diagnostics.Usage != null && Diagnostics.Usage.Value;
             GUI.Label(new Rect(r.x + 14f, y, w - 28f, 22f), "<b>Usage statistics</b>", sName);
             Button(new Rect(r.x + 14f, y + 24f, 64f, 24f), u ? "<color=#7CFC7C><b>ON</b></color>" : "<color=#FF8080><b>OFF</b></color>", sBtn, () =>

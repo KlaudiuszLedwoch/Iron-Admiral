@@ -43,6 +43,9 @@ namespace DipGgFixes
                 if (Shippack != null && Shippack.Value && Directory.Exists(sp)) files.AddRange(Directory.GetFiles(sp, "*.bindesign"));
                 string hp = Path.Combine(src, "Historical");   // historical classes (1.11.77)
                 if (Directory.Exists(hp)) files.AddRange(Directory.GetFiles(hp, "*.bindesign"));
+                // 1.11.445 (author 30.10 16:43: "all my designs are mine, so always add them - with every update"): the author's own
+                // designs (Author) and the players' designs accepted from GitHub (Community)
+                foreach (var sub in new[] { "Author", "Community" }) { string d = Path.Combine(src, sub); if (Directory.Exists(d)) files.AddRange(Directory.GetFiles(d, "*.bindesign")); }
                 int replaced = 0; string aside = null;
                 foreach (var f in files)
                 {
