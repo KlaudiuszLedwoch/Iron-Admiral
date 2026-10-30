@@ -45,7 +45,7 @@ namespace DipGgFixes
         {
             if (On == null || !On.Value) return;
             string dir = SavesDir; if (!Directory.Exists(dir)) { Log("saves folder not found: " + dir); return; }
-            var files = Directory.GetFiles(dir, "save_*.bin").Where(f => System.Text.RegularExpressions.Regex.IsMatch(Path.GetFileName(f), @"^save_\d+\.bin$")).ToList();
+            var files = Directory.GetFiles(dir, "save_*.bin").Where(f => { string n = Path.GetFileNameWithoutExtension(f); return n.Length > 5 && n.Substring(5).All(char.IsDigit); }).ToList();
             string settings = Path.Combine(dir, "settings.bin"); if (File.Exists(settings)) files.Add(settings);
             if (files.Count == 0) { Log("no campaign saves yet"); return; }
             string root = Path.Combine(dir, "IronAdmiral_backups"); Directory.CreateDirectory(root);
