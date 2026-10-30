@@ -66,8 +66,8 @@ namespace DipGgFixes
             if (north && lat >= 30f && lat <= 46f && lon >= -6f && lon <= 37f) { where = "Mediterranean"; return Mix(MedW, MedS, k); }
             if (north && lat >= 53f && lat <= 66f && lon > 12f && lon <= 31f) { where = "Baltic"; return Mix(HiNW, HiNS, k); }   // 1.11.454: the Gulf of Bothnia at 62-64 N is not the Arctic
             if (north && lat >= 5f && lat <= 25f && lon >= 50f && lon <= 100f && month >= 6 && month <= 9) { where = "Arabian Sea / Bay of Bengal, SW monsoon"; return Monsoon; }
-            if (a >= 60f) { where = north ? "Arctic seas" : "Antarctic waters"; return Mix(PolW, PolS, k); }
-            if (a >= 45f) { where = north ? "45-60 N" : "Southern Ocean"; return north ? Mix(HiNW, HiNS, k) : Mix(SoW, SoS, k); }
+            if (north ? lat >= 66f : a >= 60f) { where = north ? "Arctic seas" : "Antarctic waters"; return Mix(PolW, PolS, k); }   // 1.11.457: the Norwegian Sea off Trondheim (63-64 N) is not Arctic - from the Arctic Circle
+            if (a >= 45f) { where = north ? "45-66 N" : "Southern Ocean"; return north ? Mix(HiNW, HiNS, k) : Mix(SoW, SoS, k); }
             if (a >= 30f) { where = "30-45"; return Mix(MidW, MidS, k); }
             if (a >= 15f)
             {
