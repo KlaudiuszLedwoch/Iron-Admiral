@@ -69,7 +69,7 @@ namespace DipGgFixes
             public AirModels.Ctl Ctl; public float RollVis, Ail, Elev, Rud;   // 1.11.393: moving control surfaces of the model
             public float Spd = 55f;   // 1.11.399: speed of its type (m/s)
             public bool Over; public float DropT = -1f; public int Track;
-            public bool Pl; public Player AP; public int Year = 1925; public string Model = ""; public Part Tube;   // 1.11.426: its side's strike context
+            public bool Pl; public Player AP; public int Year = 1925; public string Model = ""; public Part Tube; public bool Land;   // 1.11.426: its side's strike context; 1.11.428 shore-based
             public AirPhysics.State Ph;   // 1.11.419: flight model (null = the old fixed speed)   // 1.11.418: has hopped over its target; time of the drop (chase shots)
         }
         static readonly List<Plane> planes = new List<Plane>();
@@ -119,7 +119,7 @@ namespace DipGgFixes
                     else if (car && custom) Log($"custom battle {yr}: no carrier - our carrier comes only in custom battles of {CarrierFrom.Value}-{CarrierTo.Value} (the aircraft model's years)");
                     sides.Clear();
                     bool both = BothTest != null && BothTest.Value;   // test: the campaign rules in a custom battle (techs of the battle year)
-                    if ((camp && campOn && !test) || both) { camp = true; CampaignSides(b.Ships); }
+                    if ((camp && campOn && !test) || both) { camp = true; CampaignSides(b.Ships); LandSides(); }
                     else if (active) sides.Add(new SideCtx { Pl = atkIsPlayer, AP = atkP, Next = FirstAfter.Value, Year = curYear, Model = curModel });
                     active = sides.Count > 0;
                 }
@@ -132,10 +132,10 @@ namespace DipGgFixes
                 {
                     var c = sides[si]; Use(c);
                     if (lastTube == null) lastTube = FindTube(b.Ships);
-                    int maxW = camp && atkP != null ? Math.Min(Waves.Value, NavalAviation.MaxWaves(atkP)) : Waves.Value;
+                    int maxW = camp && atkP != null ? Math.Min(Waves.Value, land ? 2 : NavalAviation.MaxWaves(atkP)) : Waves.Value;
                     if (wavesSent < maxW && battleT >= nextWave)
                     {
-                        nextWave = battleT + Interval.Value * (camp && atkP != null ? NavalAviation.IntervalF(atkP) : 1f);
+                        nextWave = battleT + Interval.Value * (camp && atkP != null && !land ? NavalAviation.IntervalF(atkP) : 1f);
                         bool night = false; try { night = BattleAi.IsNight(); } catch { }
                         if (night) { if (wavesSent == 0) Log("night - no air strike while it is dark"); }
                         else Launch(b.Ships);
@@ -162,12 +162,12 @@ namespace DipGgFixes
         static bool Defender(Ship s) { return atkIsPlayer ? !Player(s) : Player(s); }
 
         // 1.11.426 (#85 step 3): the strike context of one side; the code works on the statics, switched per side and per aircraft
-        class SideCtx { public bool Pl; public Player AP; public int Waves; public float Next; public int Year = 1925; public string Model = ""; public Part Tube; public int WaveBase; }
+        class SideCtx { public bool Pl; public Player AP; public int Waves; public float Next; public int Year = 1925; public string Model = ""; public Part Tube; public int WaveBase; public bool Land; public float PortKm; }
         static readonly List<SideCtx> sides = new List<SideCtx>();
-        static int waveBase;
-        static void Use(SideCtx c) { atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; }
+        static int waveBase; static bool land;
+        static void Use(SideCtx c) { atkIsPlayer = c.Pl; atkP = c.AP; wavesSent = c.Waves; nextWave = c.Next; curYear = c.Year; curModel = c.Model; lastTube = c.Tube; waveBase = c.WaveBase; land = c.Land; }
         static void Keep(SideCtx c) { c.Waves = wavesSent; c.Next = nextWave; c.Year = curYear; c.Model = curModel; c.Tube = lastTube; }
-        static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; }
+        static void Use(Plane p) { atkIsPlayer = p.Pl; atkP = p.AP; curYear = p.Year; curModel = p.Model; if (p.Tube != null) lastTube = p.Tube; land = p.Land; }
         internal static MelonPreferences_Entry<bool> CampOn, BothTest; internal static MelonPreferences_Entry<string> UpkeepScale, PresenceScale;
         internal static MelonPreferences_Entry<float> MinVisKm, BigBattleStep;
         static float ScaleAt(string sc, int lv)
@@ -253,6 +253,58 @@ namespace DipGgFixes
                 Log($"campaign battle: {p.data.name} Naval Aviation - {NavalAviation.Summary(p)}; its waves attack the {(pl ? "enemy's" : "player's")} largest ship");
             }
         }
+        // 1.11.428 (#85 step 5): shore-based torpedo aircraft. A side with the aerial torpedo (at_1) and shore aviation
+        // (av_recon_1, seaplane stations) strikes a battle within reach of its nearest own port - the radius grows with the shore
+        // aviation: seaplane stations 120 km (Short 184 from Mudros and Dunkirk 1915-17), flying boats and land torpedo
+        // squadrons 250-400 km, long-range types 600-750 km (Force Z, 10.12.1941: G3M/G4M from Saigon some 700 km away). The
+        // nearer the battle, the likelier the strike; no strike in poor visibility. Aircraft: Short 184 seaplanes to 1929,
+        // Swordfish shore squadrons 1930-38, Beaufort 1939-41, Hampden torpedo bombers 1942, Beaufighter TF from 1943.
+        internal static MelonPreferences_Entry<bool> LandOn; internal static MelonPreferences_Entry<string> LandRadius; internal static MelonPreferences_Entry<float> LandChance;
+        internal static void CreateLandPrefs(MelonPreferences_Category cat)
+        {
+            LandOn = cat.CreateEntry("NavalAviationShoreStrikes", true, null, "Campaign: shore-based torpedo aircraft strike a daylight battle within reach of the nation's nearest port - needs the aerial torpedo (at_1) and shore aviation (av_recon_1); the reach grows with the shore aviation technologies");
+            LandRadius = cat.CreateEntry("NavalAviationShoreRadiusKm", "120,250,400,600,750", null, "Campaign: reach (km from the nearest own port) of shore-based torpedo aircraft for shore aviation technology 1-5 (seaplane stations, airships, flying boats, long-range patrol, patrol aircraft with radar)");
+            LandChance = cat.CreateEntry("NavalAviationShoreChance", 70f, null, "Campaign: chance (%) of a shore-based strike on a battle next to the port; it falls linearly to 0 at the edge of the reach");
+        }
+        internal static int LandPerWave(Player p) { int r = 0; try { r = NavalAviation.ReconLevel(p); } catch { } return r >= 4 ? 6 : r >= 2 ? 4 : 2; }
+        static string LandModel(int y) { if (y < 1930) return "short_184"; if (y < 1939) return "swordfish_i"; if (y < 1942) return "beaufort"; if (y < 1943) return "hampden_tb"; return "beaufighter_tf"; }
+        static float PortKmOf(Player p)
+        {
+            if (BothTest != null && BothTest.Value) return 50f;   // the test: a battle off the coast
+            try
+            {
+                var b = BattleManager.Instance.CurrentBattle; if (b == null) return 99999f;
+                Vector3 pos = b.BattleWorldPos; float sqr = float.MaxValue;
+                var pt = CampaignMap.PortsDb.NearestPort(pos, out sqr, p, true);
+                float kpu = 1f; try { if (CampaignMap.UnityDistanceToWorldKmMultiplier > 0f) kpu = CampaignMap.UnityDistanceToWorldKmMultiplier; } catch { }
+                return pt != null && sqr < float.MaxValue ? Mathf.Sqrt(sqr) * kpu : 99999f;
+            }
+            catch { return 99999f; }
+        }
+        static void LandSides()
+        {
+            if (LandOn == null || !LandOn.Value) return;
+            Player mine = null, theirs = null;
+            try { var b = BattleManager.Instance.CurrentBattle; for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (!Alive(s)) continue; if (Player(s)) { if (mine == null) mine = s.player; } else if (theirs == null) theirs = s.player; } } catch { }
+            var cand = new List<(bool, Player)> { (true, mine), (false, theirs) };
+            foreach (var (pl, p) in cand)
+            {
+                if (p == null) continue;
+                int tl = 0, rl = 0; try { tl = NavalAviation.TorpLevel(p); rl = NavalAviation.ReconLevel(p); } catch { }
+                if (tl == 0 || rl == 0) { Log($"shore strike: {p.data.name} - {(tl == 0 ? "no aerial torpedo (at_1)" : "no shore aviation (av_recon_1)")}"); continue; }
+                float R = ScaleAt(LandRadius.Value, rl), km = PortKmOf(p);
+                if (km >= R) { Log($"shore strike: {p.data.name} - the battle is {km:0} km from its nearest port, beyond the {R:0} km reach"); continue; }
+                float ch = BothTest != null && BothTest.Value ? 1f : Mathf.Clamp01(LandChance.Value / 100f * (1f - km / R)), r = UnityEngine.Random.value;
+                if (r >= ch) { Log($"shore strike: {p.data.name} - {km:0} km from port, no aircraft sent (chance {ch * 100f:0}%)"); continue; }
+                float vis = VisKm();
+                if (vis > 0f && vis < MinVisKm.Value) { Log($"shore strike: {p.data.name} - visibility {vis:0} km: the shore squadrons do not take off"); continue; }
+                int y = Fog.Year(); if (BothTest != null && BothTest.Value) { try { var b = BattleManager.Instance.CurrentBattle; for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null) { int yy = (int)s.GetYear(s); if (yy > 1900) { y = yy; break; } } } } catch { } }
+                var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = LandModel(y), Land = true, PortKm = km, WaveBase = 100 + sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f + 60f };
+                sides.Add(c);
+                Log($"shore strike: {p.data.name} - {LandModel(y)} from a port {km:0} km away (reach {R:0} km, chance {ch * 100f:0}%), up to {LandPerWave(p)} aircraft in 2 waves against the {(pl ? "enemy's" : "player's")} largest ship");
+            }
+        }
+
         // 1.11.425 (#85): the strike aircraft in the air, for the reconnaissance (AirRecon)
         internal static void Eyes(Action<Player, Vector3> f)
         {
@@ -295,8 +347,8 @@ namespace DipGgFixes
             float startDist = 14000f;
             for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (!Alive(s) || Defender(s)) continue; var d = s.transform.position - tp; d.y = 0f; float along = Vector3.Dot(d, from); if (along + 8000f > startDist) startDist = along + 8000f; }
             int n = Math.Max(1, PerWave.Value);
-            if (camp && atkP != null) n = Math.Min(n, NavalAviation.MaxPerWave(atkP));
-            { int y0 = 1925; try { y0 = (int)target.GetYear(target); } catch { } if (camp && atkP != null) y0 = NavalAviation.StrikeYear(atkP); curYear = y0; curModel = ModelFor(y0, wave); }   // 1.11.399, 1.11.408
+            if (camp && atkP != null) n = Math.Min(n, land ? LandPerWave(atkP) : NavalAviation.MaxPerWave(atkP));
+            if (!land) { int y0 = 1925; try { y0 = (int)target.GetYear(target); } catch { } if (camp && atkP != null) y0 = NavalAviation.StrikeYear(atkP); curYear = y0; curModel = ModelFor(y0, wave); }   // 1.11.399, 1.11.408
             float spd = ModelSpeed(curModel);
             waveStats[wave] = new int[4]; waveStats[wave][0] = n;
             for (int k = 0; k < n; k++)
@@ -310,12 +362,12 @@ namespace DipGgFixes
                 var go = Build(curYear);
                 var pl = new Plane { Go = go, Ctl = lastCtl, Prop = lastProp, Torp = lastTorp, P = Phase.Approach, Pos = start, Target = target, Side = side, Wave = wave,
                     SlotOff = (slot - (perSide - 1) * 0.5f) * sp, Seed = UnityEngine.Random.value * 1000f, Spd = spd, Ph = AirPhysics.Start(curModel, true),
-                    Pl = atkIsPlayer, AP = atkP, Year = curYear, Model = curModel, Tube = tube };
+                    Pl = atkIsPlayer, AP = atkP, Year = curYear, Model = curModel, Tube = tube, Land = land };
                 planes.Add(pl);
             }
-            try { Dispatch.Air(atkIsPlayer ? $"{CarrierName()}: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
+            try { if (land) Dispatch.Air(atkIsPlayer ? $"Shore-based {TypeName()} squadron: {n} aircraft with torpedoes airborne, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} twin-engined aircraft low over the sea from the coast, heading for {Dispatch.Ship(target.name)}."); else Dispatch.Air(atkIsPlayer ? $"{CarrierName()}: {Flight(wave)} - {n} x {TypeName()} with torpedoes flown off, target {Dispatch.Ship(target.name)}." : $"Lookouts: {n} enemy aircraft low on the horizon, heading for {Dispatch.Ship(target.name)}."); } catch { }
             Log($"wave {wave}: start {startDist / 1000f:0.0} km from the target, behind the attacking fleet");
-            Log($"wave {wave}: {n} {(atkIsPlayer ? "of our" : "enemy")} torpedo aircraft from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
+            Log($"wave {wave}: {n} {(atkIsPlayer ? "of our" : "enemy")} {(land ? "shore-based " : "")}torpedo aircraft ({curModel}) from beyond the horizon against {target.name} ({best:0} t), attacking from both beams; torpedo data from {tube.ship?.name}");
         }
         static Part lastTube; static int tubeLogged;
         static Part FindTube(Il2CppSystem.Collections.Generic.List<Ship> ships)
