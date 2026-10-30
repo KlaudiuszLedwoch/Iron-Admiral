@@ -163,6 +163,7 @@ namespace DipGgFixes
         static bool Player(Ship s) { try { return s.player != null && s.player.isMain; } catch { return false; } }
         static bool atkIsPlayer, active, camp; static Player atkP;
         static bool Defender(Ship s) { return atkIsPlayer ? !Player(s) : Player(s); }
+        static Ship NextTarget(Il2CppSystem.Collections.Generic.List<Ship> ships) { Ship best = null; float bt = -1f; for (int i = 0; ships != null && i < ships.Count; i++) { var s = ships[i]; if (!Alive(s) || !Defender(s)) continue; float t = 0f; try { t = s.Tonnage(); } catch { } if (t > bt) { bt = t; best = s; } } return best; }
         // 1.11.431 (test 30.10 10:0x: the shore-based Beauforts held their torpedoes at 346 km/h and one wave dropped none): the
         // aerial torpedoes of the fast twin-engined types (British Mk XII with the air tail, 1941-) were dropped at up to ~150 kn
         static float ReleaseMs(AirPhysics.State ph) { return ph.T.Vmax > 85f ? 77f : Mathf.Min(ph.T.Vmax, 51f); }
@@ -663,7 +664,9 @@ namespace DipGgFixes
                         if (p.Pos.y <= 0f) { UnityEngine.Object.Destroy(p.Go); planes.RemoveAt(i); }
                         continue;
                     }
-                    if (!Alive(p.Target) && !p.Dropped) { p.P = Phase.Away; }
+                    // 1.11.435 (test 30.10 14:2x: 40 aircraft, 9 torpedoes - the target sank under the first sections and the rest flew
+                    // home with their torpedoes): a wave whose target is gone takes the next largest enemy ship still afloat
+                    if (!Alive(p.Target) && !p.Dropped) { var nt = NextTarget(ships); if (nt != null) { p.Target = nt; if (p.P == Phase.Run) p.P = Phase.Approach; } else p.P = Phase.Away; }
                     Vector3 goal;
                     if (p.P == Phase.Approach) { var era = Era(curYear); goal = RunPoint(p); goal.y = era.alt; if (Flat(goal - p.Pos) < era.diveAt) { p.P = Phase.Run; Shot($"wave{p.Wave}_runin", 1.5f, p); Radio(p.Wave, "runin", atkIsPlayer ? Pick($"Tally-ho! {Dispatch.Ship(p.Target.name)} dead ahead - split and go down to the deck!", $"There she is - {Dispatch.Ship(p.Target.name)}. Port section left, starboard section right. Down we go!", $"Target in sight. Going down - take her on both bows, chaps!") : Pick($"Enemy aircraft low on the water - coming in on {Dispatch.Ship(p.Target.name)}!", $"Torpedo planes! Both bows!")); } }
                     else if (p.P == Phase.Run)
