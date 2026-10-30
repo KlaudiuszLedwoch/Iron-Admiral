@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.448", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.449", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -894,13 +894,14 @@ namespace DipGgFixes
             var untyped = typed.Cast<Il2CppSystem.Collections.IEnumerator>();
             while (untyped.MoveNext()) { var s = typed.Current; if (s != null) designs.Add(s); }
 
-            int written = 0, skipped = 0;
+            int written = 0, skipped = 0; var sw = System.Diagnostics.Stopwatch.StartNew();
             foreach (var design in designs)
             {
                 if (design.IsSharedDesign || design.isRefitDesign) continue;
                 var hull = design.hull;
                 if (hull == null || hull.data == null) continue;
                 var allowed = hull.data.countriesx;
+                Ship.Store probe = null;   // 1.11.449: serialised once per design for the file check
 
                 foreach (var pd in majors)
                 {
@@ -908,8 +909,8 @@ namespace DipGgFixes
                     if (!DipGgFixesMod.AllNations.Value && !isOwn) continue;
                     if (allowed != null && allowed.Count > 0 && !allowed.Contains(pd)) continue;
 
-                    var store = design.ToStore(false);
-                    if (store == null) continue;
+                    if (probe == null) { probe = design.ToStore(false); if (probe == null) break; }
+                    var store = probe;
                     string origId = store.id.ToString();
                     string shortId = origId.Length >= 8 ? origId.Substring(0, 8) : origId;
                     string fileBase = $"{store.YearCreated} {pd.name} {store.vesselName} [{shortId}]";
@@ -921,6 +922,7 @@ namespace DipGgFixes
                     // this design (short id) for this nation instead (1.10.2; before that every
                     // turn wrote a new copy: 235 files for 10 designs).
                     if (AlreadyExported(path, pd.name, shortId)) { skipped++; continue; }
+                    store = design.ToStore(false); if (store == null) continue;   // a fresh copy for the file written
 
                     store.playerName = pd.name;
                     store.playerOriginal = pd.name;
@@ -934,6 +936,7 @@ namespace DipGgFixes
             }
             if (written > 0)
                 MelonLogger.Msg($"[DIP GG Fixes] Exported {written} shared design file(s) ({skipped} already existed). They load on the next game start.");
+            if (sw.ElapsedMilliseconds > 1000) MelonLogger.Msg($"[DIP GG Fixes] shared design export: {designs.Count} design(s), {written} written, {skipped} skipped in {sw.ElapsedMilliseconds} ms");
         }
 
         private static readonly Dictionary<string, HashSet<string>> ExistingCache = new Dictionary<string, HashSet<string>>();
