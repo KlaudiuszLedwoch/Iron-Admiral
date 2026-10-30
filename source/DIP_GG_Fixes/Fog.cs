@@ -760,7 +760,8 @@ namespace DipGgFixes
                             Changed(t, obsSide);
                             try { Dispatch.Sighted(SizeClass(st.reported), d, obsSide == SideOf(b, tacMain)); } catch { }
                         }
-                        string lbl = d <= idR * 1.6f ? "Probable " + FullName(st.reported) + "?" : "Unidentified ship (" + SizeClass(st.reported) + ")";
+                        float dk = d / 1000f; string dist = dk >= 10f ? $"{Mathf.Round(dk):0} km" : $"{Mathf.Round(dk * 2f) / 2f:0.0} km";   // 1.11.447 (author 30.10 17:16: "no distance for the unidentified ones") - rounded so the label changes rarely
+                        string lbl = (d <= idR * 1.6f ? "Probable " + FullName(st.reported) + "?" : "Unidentified ship (" + SizeClass(st.reported) + ")") + ", " + dist;
                         if (lbl != st.label) { st.label = lbl; Changed(t, obsSide); }
                         if (d <= idR)
                         {
