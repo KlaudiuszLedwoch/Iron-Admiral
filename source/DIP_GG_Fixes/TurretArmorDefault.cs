@@ -18,7 +18,32 @@ namespace DipGgFixes
         {
             On = cat.CreateEntry("TurretArmorDefault", true, null, "Ship designer: a newly added gun calibre gets turret armour at once - a 25 mm roof and walls as thick as the gun's calibre (within the designer's limits); casemates and the player's own values are left alone");
             Roof = cat.CreateEntry("TurretArmorDefaultRoofMm", 25f, null, "Ship designer: the default turret roof armour (mm) for a newly added gun calibre");
+            SmallOn = cat.CreateEntry("SmallGunShieldArmor", true, null, "Ship designer: small guns (2-4 in) for which the game allows no turret armour at all can have a light gun house or shield - walls up to SmallGunShieldSideMm, roof up to SmallGunShieldTopMm");
+            SmallSide = cat.CreateEntry("SmallGunShieldSideMm", 38f, null, "Ship designer: the most wall armour (mm) of a small gun's shield or gun house (1.5 in; historical shields and light gun houses were 1/2-2 in)");
+            SmallTop = cat.CreateEntry("SmallGunShieldTopMm", 25f, null, "Ship designer: the most roof armour (mm) of a small gun's shield or gun house");
         }
+        internal static MelonPreferences_Entry<bool> SmallOn; internal static MelonPreferences_Entry<float> SmallSide, SmallTop;
+        static int calls;
+        // 1.11.443 (author 30.10 16:15-16:31: "2 and 3 in guns - no armour can be set at all", "4 in too", "it shows 0 and nothing can be
+        // typed", "yes, I want to be able to add armour - it can be limited"): the game's limit for the turret armour of small guns is
+        // 0; where it is 0 the limit becomes a light gun house - walls up to 38 mm, roof up to 25 mm, never more than the calibre
+        [HarmonyPatch(typeof(Ship), "MaxArmorForZone", new Type[] { typeof(Ship.A), typeof(PartData) })]
+        static class PatchMax
+        {
+            static void Postfix(Ship.A __0, PartData __1, ref float __result)
+            {
+                try
+                {
+                    if (SmallOn == null || !SmallOn.Value || __1 == null || __result > 0.01f) return;
+                    if (__0 != Ship.A.TurretSide && __0 != Ship.A.TurretTop) return;
+                    float cal = __1.caliber; if (cal <= 0f || cal > 160f) return;
+                    __result = Mathf.Min(cal, __0 == Ship.A.TurretSide ? SmallSide.Value : SmallTop.Value);
+                    if (smallLogged++ < 6) Log($"{__1.name} ({cal:0} mm): the game allows no {(__0 == Ship.A.TurretSide ? "wall" : "roof")} armour - limit now {__result:0} mm (gun house / shield)");
+                }
+                catch { }
+            }
+        }
+        static int smallLogged;
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][TurretArmor] " + m); }
         static int logged, errors;
 
@@ -26,9 +51,9 @@ namespace DipGgFixes
         {
             if (On == null || !On.Value || ship == null || pd == null) return;
             bool cons = false; try { cons = GameManager.IsConstructor; } catch { }
-            if (!cons) return;
             bool mine = true; try { mine = ship.player == null || ship.player.isMain; } catch { }
-            if (!mine) return;
+            if (calls++ < 8) Log($"new calibre {pd.name}: designer {cons}, player's ship {mine}, turret armour entries {(ship.shipTurretArmor != null ? ship.shipTurretArmor.Count : -1)}");
+            if (!cons || !mine) return;
             var ta = ship.shipTurretArmor;
             for (int i = 0; ta != null && i < ta.Count; i++)
             {
