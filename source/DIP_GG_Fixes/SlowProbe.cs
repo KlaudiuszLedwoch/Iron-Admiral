@@ -3,7 +3,7 @@
 // methods whose names speak of designs, saving, refits or ship lists in PlayerController, CampaignController, Player, Ui and
 // GameData are timed (Harmony prefix and postfix; methods with ref, out or Nullable parameters are left alone - patching those
 // crashes Il2Cpp), and every call that takes more than 300 ms is logged with its time; at the end of a slow frame the slowest
-// methods of that frame are listed. Off by default; switch: SlowCallProbe.
+// methods of that frame are listed. Off by default; switch: SlowCallProbeV2.
 // 1.11.466: 1.11.465 timed 152 methods matched by words like Update, Check, Refresh and Ships - methods run every frame or from
 // worker threads - and the game crashed 3 s later. Now only methods named after designs, saving and refits are timed (no
 // Update/Refresh/Check/Ships/Fleet words), and methods with value-type (struct) parameters or results are left alone.
@@ -22,7 +22,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> On;
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("SlowCallProbe", false, null, "Diagnostics: time the game's design, save and refit methods and log every call over 300 ms (to find what makes saving a design and loading or refitting a ship slow)"); // 1.11.466: off again - on by default in 1.11.465 it crashed the game 3 s after start (author 30.10 20:19)
+            On = cat.CreateEntry("SlowCallProbeV2", false, null, "Diagnostics: time the game's design, save and refit methods and log every call over 300 ms (to find what makes saving a design and loading or refitting a ship slow)"); // 1.11.466: off again - on by default in 1.11.465 it crashed the game 3 s after start (author 30.10 20:19)
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][SlowProbe] " + m); }
         static readonly string[] Words = { "Design", "Save", "Refit", "Shared" };

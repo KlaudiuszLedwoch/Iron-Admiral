@@ -78,7 +78,7 @@ namespace DipGgFixes
             {"AirOnlyBattleChance","Campaign AI"},{"AirOnlyBattleTest","Tools"},{"TurretArmorDefault","Ship design"},{"TurretArmorDefaultRoofMm","Ship design"},{"PlayerAvoidTorpedoes","Battle AI"},
             {"PlayerKeepDivisionLeader","Battle AI"},{"FormationSpacing","Battle AI"},{"SmallGunShieldArmor","Ship design"},{"SmallGunShieldSideMm","Ship design"},
             {"SmallGunShieldTopMm","Ship design"},{"WarScoreReset","Diplomacy"},{"MoveUnbuildableDesigns","Ship design"},{"SeaRepair","Campaign AI"},{"SeaRepairPerTurn","Campaign AI"},
-            {"SeaRepairMaxShare","Campaign AI"},{"PenetrationReference","Logs"},{"SpectacularSinking","Display"},{"SlowCallProbe","Logs"},{"SkipRefitConfirm","Ship design"},
+            {"SeaRepairMaxShare","Campaign AI"},{"PenetrationReference","Logs"},{"SpectacularSinking","Display"},{"SlowCallProbeV2","Logs"},{"SkipRefitConfirm","Ship design"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -118,7 +118,7 @@ namespace DipGgFixes
             {"BattleClimateWeather",189},{"ScreenshotsToSteam",190},{"AirStrikeScreenshots",191},{"ScreenshotsJpg",192},{"TechLevelRelative",193},{"AirOnlyBattles",194},
             {"AirOnlyBattleChance",195},{"AirOnlyBattleTest",196},{"TurretArmorDefault",197},{"TurretArmorDefaultRoofMm",198},{"PlayerAvoidTorpedoes",199},{"PlayerKeepDivisionLeader",200},
             {"FormationSpacing",201},{"SmallGunShieldArmor",202},{"SmallGunShieldSideMm",203},{"SmallGunShieldTopMm",204},{"WarScoreReset",205},{"MoveUnbuildableDesigns",206},
-            {"SeaRepair",207},{"SeaRepairPerTurn",208},{"SeaRepairMaxShare",209},{"PenetrationReference",210},{"SpectacularSinking",211},{"SlowCallProbe",212},{"SkipRefitConfirm",213},
+            {"SeaRepair",207},{"SeaRepairPerTurn",208},{"SeaRepairMaxShare",209},{"PenetrationReference",210},{"SpectacularSinking",211},{"SlowCallProbeV2",212},{"SkipRefitConfirm",213},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
