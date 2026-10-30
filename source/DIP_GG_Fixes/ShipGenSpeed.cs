@@ -347,7 +347,7 @@ namespace DipGgFixes
             Transform st = null; Vector3 basePos = Vector3.zero, fwd = Vector3.forward;
             try { st = ship.transform; fwd = st.forward; fwd.y = 0f; fwd.Normalize(); } catch { }
             for (int i = 0; i < parts.Count; i++) { var d = parts[i] != null ? parts[i].data : null; if (d != null && (d.type ?? "") == "tower_main") { try { basePos = parts[i].transform.position; } catch { } break; } }
-            var refused = new Dictionary<string, int>(); int noDeck = 0;
+            var refused = new Dictionary<string, int>(); int noDeck = 0, removals = 0;
             if (st != null)
             {
                 foreach (var pd in cand)
@@ -360,20 +360,43 @@ namespace DipGgFixes
                         ship.AddPart(part);
                         try { part.LoadModel(ship, true); } catch { }
                         try { part.UpdateCollidersSize(ship); } catch { }
+                        // 1.11.416 (test 30.10 05:41-05:43: forward of the main tower the game refuses every place - "Secondary Tower
+                        // should not be placed in front of Main Tower" - and aft every place collided with a part): aft only, up to 120 m,
+                        // and where only lighter guns (not of the main calibre) are in the way, they give way
                         for (int k = 1; k <= 60; k++)
                         {
-                            float dz = (k % 2 == 1 ? -1f : 1f) * 2f * ((k + 1) / 2) * (k % 2 == 1 ? 1f : 0.6f);   // aft steps 2 m, forward 1.2 m
+                            float dz = -2f * k;
                             var wp = basePos + fwd * dz; wp.y = basePos.y + 30f;
                             BoxCollider deck = null; try { deck = ship.FindDeckAtPoint(wp); } catch { }
                             if (deck == null) { wp.y = basePos.y; try { deck = ship.FindDeckAtPoint(wp); } catch { } }
                             if (deck == null) { noDeck++; continue; }
                             wp.y = deck.bounds.max.y;
                             try { part.Place(wp, true); } catch (Exception e) { int c0; refused.TryGetValue("place: " + e.Message, out c0); refused["place: " + e.Message] = c0 + 1; continue; }
-                            string why = null; bool ok = false; try { ok = part.CanPlace(out why); } catch { }
+                            string why = null; bool ok = false; Il2CppSystem.Collections.Generic.List<Part> ovp = null; Il2CppSystem.Collections.Generic.List<Collider> ovb = null;
+                            try { ok = part.CanPlace(out why, out ovp, out ovb); } catch { try { ok = part.CanPlace(out why); } catch { } }
+                            int cleared = 0;
+                            if (!ok && why == "part" && ovp != null && ovp.Count > 0 && (ovb == null || ovb.Count == 0))
+                            {
+                                // only lighter guns in the way: they go
+                                bool onlyLight = true; var gone = new List<Part>();
+                                for (int q = 0; q < ovp.Count; q++)
+                                {
+                                    var op = ovp[q]; if (op == null || op.Pointer == part.Pointer) continue;
+                                    bool light = false; try { light = op.data != null && op.data.isGun && !ship.IsMainCal(op.data); } catch { }
+                                    if (!light) { onlyLight = false; break; }
+                                    gone.Add(op);
+                                }
+                                if (onlyLight && gone.Count > 0 && gone.Count <= 6 && removals < 2)
+                                {
+                                    removals++;   // at most two clearings per attempt, so a failed search cannot strip the ship
+                                    foreach (var gp in gone) { try { ship.RemovePart(gp, true, false); cleared++; } catch { } }
+                                    try { ok = part.CanPlace(out why); } catch { ok = false; }
+                                }
+                            }
                             if (!ok && why != "available") { string w2 = why ?? "(no reason)"; int c1; refused.TryGetValue(w2, out c1); refused[w2] = c1 + 1; }
                             if (ok || why == "available")
                             {
-                                if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} placed on the deck {Math.Abs(dz):0} m {(dz < 0 ? "aft" : "forward")} of the main tower");
+                                if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} placed on the deck {Math.Abs(dz):0} m aft of the main tower{(cleared > 0 ? $" ({cleared} lighter gun mount(s) removed to make room)" : "")}");
                                 return;
                             }
                         }
