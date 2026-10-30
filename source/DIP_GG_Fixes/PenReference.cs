@@ -63,6 +63,59 @@ namespace DipGgFixes
             pending.Clear();
         }
 
+        // one row of the reference: the gun 'pd' with the technologies of ship 's'
+        static bool Row(PartData pd, Ship s, int year, string nat, StringBuilder sb)
+        {
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            PhysGun.G g; try { g = PhysGun.Get(pd, s, Ship.ShellType.Ap); } catch { return false; }
+            if (!g.Ok || g.Kg <= 0f || g.Mv <= 0f) return false;
+            string key = $"{g.CalMm:0}|{g.Grade}|{year}|{g.Kg.ToString("0.#", ci)}|{g.Q.ToString("0.###", ci)}";
+            if (!keys.Add(key)) return false;
+            float cd = Ballistics.CdOf(s), elev = MountElevation.Elev(Math.Max(1, g.Grade));
+            var belt = new List<string>(); var deck = new List<string>();
+            foreach (int km in Km)
+            {
+                float vs, fall, tt; bool beyond;
+                Ballistics.Impact(g.Mv, g.CalMm / 25.4f, g.Kg, cd, km * 1000f, elev, out vs, out fall, out tt, out beyond);
+                belt.Add(beyond ? "" : PhysPen.BeltPen(g.Kg, vs, fall, g.Q, g.CalMm).ToString("0", ci));
+                if (km >= 5) deck.Add(beyond ? "" : PhysPen.DeckPen(g.Kg, g.CalMm, vs, fall).ToString("0", ci));
+            }
+            sb.Append($"{g.CalMm:0},{(g.CalMm / 25.4f).ToString("0.#", ci)},{g.Grade},{year},{nat},{pd.name},{g.Kg.ToString("0.#", ci)},{g.Mv.ToString("0", ci)},{g.Q.ToString("0.###", ci)},{string.Join(",", belt)},{string.Join(",", deck)},{cd.ToString("0.###", ci)}{Environment.NewLine}");
+            return true;
+        }
+        static void Append(StringBuilder sb, int n, string where)
+        {
+            if (n == 0) return;
+            Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+            if (!File.Exists(FilePath)) File.WriteAllText(FilePath, Header + Environment.NewLine);
+            File.AppendAllText(FilePath, sb.ToString());
+            Log($"{n} gun(s) added to the penetration reference from {where} ({keys.Count} in all)");
+        }
+        // 1.11.472 (author 30.10 21:03: "make that table on the wiki while you are at it"): the table should not wait for every gun to
+        // fight - in the designer every gun calibre is written once per nation and year with the technologies of the design open
+        // there (the same physics the gun window shows), so the reference covers all calibres of the years the player has played
+        static readonly HashSet<string> sweptFor = new HashSet<string>(); static float nextSweep;
+        static void Sweep()
+        {
+            if (Time.realtimeSinceStartup < nextSweep) return; nextSweep = Time.realtimeSinceStartup + 5f;
+            bool con = false; try { con = GameManager.IsConstructor || GameManager.IsSharedDesignConstructor; } catch { }
+            if (!con) return;
+            Ship s = null; try { s = G.ui != null ? G.ui.mainShip : null; } catch { }
+            if (s == null) return;
+            int year = 0; try { year = (int)s.GetYear(s); } catch { }
+            string nat = ""; try { nat = s.player != null && s.player.data != null ? s.player.data.name : ""; } catch { }
+            if (year <= 0 || !sweptFor.Add(nat + "|" + year)) return;
+            LoadKeys();
+            var sb = new StringBuilder(); int n = 0;
+            foreach (var kv in G.GameData.parts)
+            {
+                var pd = kv.Value; if (pd == null) continue;
+                bool gun = false; try { gun = pd.isGun; } catch { } if (!gun) continue;
+                try { if (Row(pd, s, year, nat, sb)) n++; } catch { }
+            }
+            Append(sb, n, $"the designer ({nat}, {year})");
+        }
+
         static void LoadKeys()
         {
             if (keys != null) return; keys = new HashSet<string>();
@@ -74,7 +127,7 @@ namespace DipGgFixes
             try
             {
                 bool b = false; try { b = GameManager.IsBattle; } catch { }
-                if (!b) { FlushHits(); battle = IntPtr.Zero; since = -1f; done = false; return; }
+                if (!b) { FlushHits(); battle = IntPtr.Zero; since = -1f; done = false; try { Sweep(); } catch (Exception e) { if (errors++ < 5) Log("designer: " + e.Message); } return; }
                 var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb == null || cb.Ships == null) return;
                 if (cb.Pointer != battle) { FlushHits(); battle = cb.Pointer; since = Time.realtimeSinceStartup; done = false; }
                 if (done || Time.realtimeSinceStartup - since < 10f) return;
@@ -89,28 +142,10 @@ namespace DipGgFixes
                     for (int k = 0; parts != null && k < parts.Count; k++)
                     {
                         var pd = parts[k] != null ? parts[k].data : null; if (pd == null || !pd.isGun || !seen.Add(pd.Pointer)) continue;
-                        PhysGun.G g; try { g = PhysGun.Get(pd, s, Ship.ShellType.Ap); } catch { continue; }
-                        if (!g.Ok || g.Kg <= 0f || g.Mv <= 0f) continue;
-                        string key = $"{g.CalMm:0}|{g.Grade}|{year}|{g.Kg.ToString("0.#", ci)}|{g.Q.ToString("0.###", ci)}";
-                        if (!keys.Add(key)) continue;
-                        float cd = Ballistics.CdOf(s), elev = MountElevation.Elev(Math.Max(1, g.Grade));
-                        var belt = new List<string>(); var deck = new List<string>();
-                        foreach (int km in Km)
-                        {
-                            float vs, fall, t; bool beyond;
-                            Ballistics.Impact(g.Mv, g.CalMm / 25.4f, g.Kg, cd, km * 1000f, elev, out vs, out fall, out t, out beyond);
-                            belt.Add(beyond ? "" : PhysPen.BeltPen(g.Kg, vs, fall, g.Q, g.CalMm).ToString("0", ci));
-                            if (km >= 5) deck.Add(beyond ? "" : PhysPen.DeckPen(g.Kg, g.CalMm, vs, fall).ToString("0", ci));
-                        }
-                        sb.Append($"{g.CalMm:0},{(g.CalMm / 25.4f).ToString("0.#", ci)},{g.Grade},{year},{nat},{pd.name},{g.Kg.ToString("0.#", ci)},{g.Mv.ToString("0", ci)},{g.Q.ToString("0.###", ci)},{string.Join(",", belt)},{string.Join(",", deck)},{cd.ToString("0.###", ci)}{Environment.NewLine}");
-                        n++;
+                        if (Row(pd, s, year, nat, sb)) n++;
                     }
                 }
-                if (n == 0) return;
-                Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
-                if (!File.Exists(FilePath)) File.WriteAllText(FilePath, Header + Environment.NewLine);
-                File.AppendAllText(FilePath, sb.ToString());
-                Log($"{n} gun(s) added to the penetration reference ({keys.Count} in all)");
+                Append(sb, n, "the battle");
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
         }
