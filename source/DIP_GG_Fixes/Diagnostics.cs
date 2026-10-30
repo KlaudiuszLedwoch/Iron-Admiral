@@ -169,9 +169,9 @@ namespace DipGgFixes
             "1. Sign in at github.com (a free account is enough).\n" +
             "2. Open " + GitHubIssues + " - pick the issue about your problem, or click 'New issue'.\n" +
             "3. Write what happened: nation, year, what you did and what you expected.\n" +
-            "4. Drag the zip from your desktop into the comment box (or click the attach line under it) and wait until the upload has finished - a link to the file appears in the text.\n" +
-            "5. Click 'Comment' (or 'Create' for a new issue).\n" +
-            "Files up to 25 MB can be attached; a zip or a Latest.log works as it is. Nexus and Steam do not take files - post the link or attach it on GitHub.";
+            "4. 'Create problem report' makes a folder on your desktop and opens it: drag Latest.log, the zip and the .jpg screenshots from it into the comment box (or click the attach line under it). GitHub shows the pictures in the text and the log and zip as links.\n" +
+            "5. Wait until every upload has finished, then click 'Comment' (or 'Create' for a new issue).\n" +
+            "GitHub limits: pictures (jpg, png, gif) up to 10 MB, videos (mp4, mov) up to 10 MB, other files (log, txt, zip) up to 25 MB. Your own screenshots (F12 in Steam) can be added the same way. Nexus and Steam do not take files - post the link or attach them on GitHub.";
         static void AddText(ZipArchive z, string name, string text)
         {
             var e = z.CreateEntry(name, CompressionLevel.Optimal);
@@ -184,7 +184,11 @@ namespace DipGgFixes
                 string game = MelonUtils.GameDirectory;
                 string desk = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 if (string.IsNullOrEmpty(desk) || !Directory.Exists(desk)) desk = game;
-                string file = Path.Combine(desk, "IronAdmiral_report_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".zip");
+                // 1.11.438: one folder on the desktop with the zip, Latest.log as a plain file and the newest JPG screenshots - each can be
+                // dragged into a GitHub comment as it is (a .log shows as a link, a .jpg as a picture)
+                string stamp = DateTime.Now.ToString("yyyyMMdd_HHmm");
+                string folder = Path.Combine(desk, "IronAdmiral_report_" + stamp); Directory.CreateDirectory(folder);
+                string file = Path.Combine(folder, "IronAdmiral_report_" + stamp + ".zip");
                 if (dirty) SaveStats();
                 string latest = Path.Combine(game, "MelonLoader", "Latest.log");
                 string log = File.Exists(latest) ? ReadShared(latest) : "(no Latest.log)";
@@ -219,8 +223,19 @@ namespace DipGgFixes
                     AddText(z, "error_summary.txt", ErrorSummary(log));
                     if (Collect && File.Exists(UsageFile)) AddText(z, "usage.txt", ReadShared(UsageFile));
                 }
+                try { File.WriteAllText(Path.Combine(folder, "Latest.log"), Anon(log), new UTF8Encoding(false)); } catch (Exception e) { Log("Latest.log copy: " + e.Message); }
+                int shots = 0;
+                try
+                {
+                    var jd = SteamShots.JpgDir;
+                    if (Directory.Exists(jd))
+                        foreach (var f in new DirectoryInfo(jd).GetFiles("*.jpg").Where(x => x.LastWriteTime > DateTime.Now.AddDays(-2) && x.Length < 10000000).OrderByDescending(x => x.LastWriteTimeUtc).Take(6))
+                        { f.CopyTo(Path.Combine(folder, f.Name), true); shots++; }
+                }
+                catch (Exception e) { Log("screenshots copy: " + e.Message); }
+                try { Application.OpenURL("file:///" + folder.Replace('\\', '/')); } catch { }
                 if (Collect) Add("problem_reports");
-                Log("problem report written: " + Anon(file));
+                Log("problem report written: " + Anon(folder) + " (zip, Latest.log, " + shots + " screenshots)");
                 LastReport = file;
                 return file;
             }

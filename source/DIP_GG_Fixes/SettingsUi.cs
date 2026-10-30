@@ -262,17 +262,17 @@ namespace DipGgFixes
         {
             float y = top;
             GUI.Label(new Rect(r.x + 14f, y, w - 28f, 22f), "<b>Problem report</b>", sName);
-            GUI.Label(new Rect(r.x + 14f, y + 22f, w - 28f, 64f), "Writes one zip file to your desktop with the game logs, the mod's settings, the version file, a list of your Mods folder, system info and an error summary" + (Diagnostics.Usage != null && Diagnostics.Usage.Value ? " plus your usage counters" : "") + ". Nothing is sent - attach the file yourself to a post on Nexus, Steam or GitHub and describe what happened. Your Windows user and PC names are replaced in the files.", sDesc);
+            GUI.Label(new Rect(r.x + 14f, y + 22f, w - 28f, 64f), "Writes a folder to your desktop - Latest.log, the newest JPG screenshots and one zip with the game logs, the mod's settings, the version file, a list of your Mods folder, system info and an error summary" + (Diagnostics.Usage != null && Diagnostics.Usage.Value ? " plus your usage counters" : "") + ". Nothing is sent - attach the file yourself to a post on Nexus, Steam or GitHub and describe what happened. Your Windows user and PC names are replaced in the files.", sDesc);
             Button(new Rect(r.x + 14f, y + 90f, 260f, 28f), "<b>Create problem report</b>", sBtn, () =>
             {
                 var f = Diagnostics.CreateReport();
-                status = f != null ? "Report written: " + System.IO.Path.GetFileName(f) + " (desktop) - add it on GitHub as below" : "Report failed - see Latest.log";
+                status = f != null ? "Report written: folder " + System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(f)) + " on the desktop (zip, Latest.log, screenshots) - drag the files into a GitHub comment as below" : "Report failed - see Latest.log";
                 statusUntil = Time.realtimeSinceStartup + 12f;
             });
             // 1.11.420: how to add the report on GitHub, with a button that opens the issues page
             Button(new Rect(r.x + 284f, y + 90f, 200f, 28f), "<b>Open GitHub issues</b>", sBtn, () => { try { Application.OpenURL(Diagnostics.GitHubIssues); } catch { } });
-            GUI.Label(new Rect(r.x + 14f, y + 124f, w - 28f, 120f), Diagnostics.GitHubHowTo, sDesc);
-            y += 256f;
+            GUI.Label(new Rect(r.x + 14f, y + 124f, w - 28f, 160f), Diagnostics.GitHubHowTo, sDesc);
+            y += 296f;
             bool u = Diagnostics.Usage != null && Diagnostics.Usage.Value;
             GUI.Label(new Rect(r.x + 14f, y, w - 28f, 22f), "<b>Usage statistics</b>", sName);
             Button(new Rect(r.x + 14f, y + 24f, 64f, 24f), u ? "<color=#7CFC7C><b>ON</b></color>" : "<color=#FF8080><b>OFF</b></color>", sBtn, () =>
