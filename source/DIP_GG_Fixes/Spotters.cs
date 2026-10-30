@@ -186,9 +186,11 @@ namespace DipGgFixes
             {
                 if (shotPlanes >= 2) { p.Shots = 9; return; }
                 shotPlanes++; p.Shots = 1;
-                var right = Vector3.Cross(Vector3.up, p.Dir).normalized;
-                var cam = p.Pos - p.Dir * 40f + right * 25f * -p.Side + Vector3.up * 14f;
-                AirStrike.ShotAt(cam, p.Pos + p.Dir * 20f, 55f, "spotter_catapult", Highlights.Active());
+                // 1.11.425 (tests 30.10 07:32-08:34: the camera behind the aircraft stood inside the superstructure): the camera
+                // is out over the water ahead of the aircraft, looking back at it leaving the catapult with the ship behind
+                var hd = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized;
+                var cam = p.Pos + hd * 85f + Vector3.up * 8f;
+                AirStrike.ShotAt(cam, p.Pos + Vector3.down * 4f, 50f, "spotter_catapult", Highlights.Active());
             }
             else if (p.Shots == 1 && p.P == Ph.Climb && p.T > 4f)
             {

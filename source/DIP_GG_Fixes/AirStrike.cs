@@ -527,8 +527,13 @@ namespace DipGgFixes
                         float want = p.P == Phase.Run ? (p.Dropped ? ph.T.Vmax : release) : p.P == Phase.Away ? ph.T.Vmax : 0.8f * ph.T.Vmax;
                         // 1.11.424 (test 30.10 07:35: one drop at 219 km/h): too fast on the run-in the pilot stops the glide and
                         // flies level with the throttle closed, so the drag takes the speed off before the release point
-                        if (p.P == Phase.Run && !p.Dropped && ph.V > release * 1.03f && p.Dir.y < -0.02f && p.Pos.y < 120f)
-                        { var hz2 = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; p.Dir = (hz2 * 0.9998f + Vector3.down * 0.02f).normalized; }
+                        // 1.11.425 (test 30.10 08:35: the first wave still dropped at 207-260 km/h - it comes down steeply from
+                        // higher up): too fast, the glide is held shallow (1 in 10) above 120 m and level below it
+                        if (p.P == Phase.Run && !p.Dropped && ph.V > release * 1.03f)
+                        {
+                            float minY = p.Pos.y < 120f ? -0.02f : -0.10f;
+                            if (p.Dir.y < minY) { var hz2 = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; p.Dir = (hz2 * Mathf.Sqrt(1f - minY * minY) + Vector3.up * minY).normalized; }
+                        }
                         float hop0 = ph.Hop;
                         AirPhysics.Step(ph, p.Dir.y, want, dt);
                         v = ph.V * WorldScale();
