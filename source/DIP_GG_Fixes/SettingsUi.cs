@@ -73,7 +73,7 @@ namespace DipGgFixes
             {"TransportSpeedByYear","Battle AI"},{"EnemyProfileLog","Campaign AI"},{"ThanksOnMainMenu","Display"},{"AirStrikeTest","Battle AI"},{"EnemyFitBuildMix","Campaign AI"},
             {"CustomBattleCarrier","Battle AI"},{"PlayerDesignsFirst","Ship design"},{"CustomBattleSaveDesigns","Ship design"},{"DesignStats","Ship design"},{"DesignStatsPreferBest","Ship design"},
             {"NavalAviationRecon","Fog of war"},{"NavalAviationSpotting","Battle AI"},{"ShipGenSecondaryTower","Other"},{"NavalAviationSpotterPlanes","Battle AI"},
-            {"NavalAviationAirRecon","Battle AI"},
+            {"NavalAviationAirRecon","Battle AI"},{"NavalAviationCampaignStrikes","Battle AI"},
         };
         // 1.11.329 (author 28.10: "number the settings buttons with tiny digits so one knows to use button 65"): the number shown in
         // small grey before the name of every switch - the same number as in the Help chapters "Settings #a-b: <tab>"; rows are
@@ -109,7 +109,7 @@ namespace DipGgFixes
             {"AiApproachSmoke",166},{"AiWithdrawLowAmmo",167},{"BattleDispatchPanel",168},{"PrizeScuttle",169},{"DivisionTorpedoSplit",170},{"StackedGunsPenalty",171},
             {"TransportSpeedByYear",172},{"EnemyProfileLog",173},{"ThanksOnMainMenu",174},{"AirStrikeTest",175},{"EnemyFitBuildMix",176},{"CustomBattleCarrier",177},
             {"PlayerDesignsFirst",178},{"CustomBattleSaveDesigns",179},{"DesignStats",180},{"DesignStatsPreferBest",181},{"NavalAviationRecon",182},{"NavalAviationSpotting",183},
-            {"ShipGenSecondaryTower",184},{"NavalAviationSpotterPlanes",185},{"NavalAviationAirRecon",186},
+            {"ShipGenSecondaryTower",184},{"NavalAviationSpotterPlanes",185},{"NavalAviationAirRecon",186},{"NavalAviationCampaignStrikes",187},
         };
         static readonly Dictionary<string, string> GroupOf = new Dictionary<string, string>
         {
