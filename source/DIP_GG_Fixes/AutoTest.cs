@@ -34,7 +34,7 @@ namespace DipGgFixes
                 if (t == null) { Log("screenshot: ScreenCapture not found"); return; }
                 var m = t.GetMethod("CaptureScreenshot", new[] { typeof(string) });
                 m.Invoke(null, new object[] { f });
-                Log("screenshot " + f);
+                Log("screenshot " + f); SteamShots.ToLibrary(f, Screen.width, Screen.height, 1.5f);
             }
             catch (Exception e) { Log("screenshot: " + e.Message); }
         }

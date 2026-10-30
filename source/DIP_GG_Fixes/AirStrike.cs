@@ -1057,7 +1057,7 @@ namespace DipGgFixes
             var dirOut = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "screens"); System.IO.Directory.CreateDirectory(dirOut);
             var file = System.IO.Path.Combine(dirOut, $"{DateTime.Now:yyyyMMdd_HHmmss}_{shots:00}_airstrike_{tag}.png");
             capture.Invoke(null, new object[] { file, 1 });
-            Log($"screenshot {file} ({Screen.width}x{Screen.height})");
+            Log($"screenshot {file} ({Screen.width}x{Screen.height})"); SteamShots.ToLibrary(file, Screen.width, Screen.height, 1.5f);
         }
         static int reshade = -1;
         static bool ReShadeOn()
@@ -1224,7 +1224,7 @@ namespace DipGgFixes
                 var dirOut = System.IO.Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "screens"); System.IO.Directory.CreateDirectory(dirOut);
                 var file = System.IO.Path.Combine(dirOut, $"{DateTime.Now:yyyyMMdd_HHmmss}_{shots:00}_airstrike_{tag}_{(bridge ? "bridge" : "observer")}.png");
                 System.IO.File.WriteAllBytes(file, bytes);
-                Log("screenshot " + file);
+                Log("screenshot " + file); SteamShots.ToLibrary(file, w, h);
                 return true;
             }
             catch (Exception e) { if (errors++ < 10) Log("screenshot view: " + e.Message); return false; }
