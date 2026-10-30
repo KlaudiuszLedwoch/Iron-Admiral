@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.436", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.437", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -125,7 +125,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> CruiserFactor;
         internal static MelonPreferences_Entry<float> MinorPortCapacityMult;
         internal static MelonPreferences_Entry<float> AttitudeMult;
-        internal static MelonPreferences_Entry<float> NegAttitudeMult;
+        internal static MelonPreferences_Entry<float> NegAttitudeMult, UnscaledFrom;
         internal static MelonPreferences_Entry<bool> FixStalledBuilding;
         internal static MelonPreferences_Entry<int> CollapseGraceMonths;
         internal static MelonPreferences_Entry<bool> FinancialCrisis;
@@ -398,6 +398,7 @@ namespace DipGgFixes
                 "Multiplier for positive diplomatic attitude changes (improvements; 1 = vanilla)");
             NegAttitudeMult = cat.CreateEntry("DiplomacyNegativeAttitudeMultiplier", 4.0f, null,
                 "Multiplier for negative diplomatic attitude changes (worsening, by the player and by the AI; 1 = vanilla)");
+            UnscaledFrom = cat.CreateEntry("DiplomacyUnscaledFrom", 20f, null, "Diplomatic changes of this size or more (event answers, one-off actions) are not multiplied by the attitude multipliers (0 = all are multiplied)");
             FixStalledBuilding = cat.CreateEntry("FixStalledConstruction", true, null,
                 "Advance AI ship construction for nations whose building ships were not advanced during a turn");
             CollapseGraceMonths = cat.CreateEntry("EconomicCollapseGraceMonths", 24, null,
@@ -1157,7 +1158,7 @@ namespace DipGgFixes
         // of nations without a relation record; the interop wrapper then throws a NullReferenceException that ends the caller's
         // loop (the remaining allies are skipped). A null relation is now skipped and logged; an exception thrown inside the
         // game's AdjustAttitude is logged with the pair and swallowed, so the caller goes on with the next nation.
-        static int nullLogged, errLogged;
+        static int nullLogged, errLogged, bigLogged;
         [ThreadStatic] static Relation current; [ThreadStatic] static string currentInfo; [ThreadStatic] static float currentDelta;
         private static bool Prefix(Relation relation, ref float attitudeDelta, bool init, string info, bool force)
         {
@@ -1171,6 +1172,10 @@ namespace DipGgFixes
             if (depth > 1 || init || force || TafPassThrough()) return true;
             var m = attitudeDelta < 0f ? DipGgFixesMod.NegAttitudeMult : DipGgFixesMod.AttitudeMult;
             if (m == null) return true;
+            // 1.11.437 (#98, A Simple Tako 30.10: refusing the alliance event, -50, took 99 straight to war - x4 made it -200): the
+            // multipliers are for the small month-to-month swings; a one-off change of DiplomacyUnscaledFrom or more (an event
+            // answer, a declaration) keeps its own size
+            var big = DipGgFixesMod.UnscaledFrom; if (big != null && big.Value > 0f && Math.Abs(attitudeDelta) >= big.Value) { if (bigLogged++ < 20) MelonLogger.Msg($"[DIP GG Fixes][Diplomacy] one-off change {attitudeDelta:F0} ('{info}') not multiplied"); return true; }
             attitudeDelta *= m.Value;
             return true;
         }
