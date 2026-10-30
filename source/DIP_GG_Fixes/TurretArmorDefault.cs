@@ -43,7 +43,34 @@ namespace DipGgFixes
                 catch { }
             }
         }
-        static int smallLogged;
+        static int smallLogged, setLogged;
+        // 1.11.448 (author 30.10 17:24, refit of CA Dessau: "still no armour can be made" - 76 mm guns stay at 0 mm; the 1.11.443 limit
+        // was never asked for): the designer's +/- and the typed value go through Ship.SetGunArmor(gun, zone, value); when the game
+        // keeps a small gun at 0 the value asked for is written into the gun's turret armour, within the shield limits
+        [HarmonyPatch(typeof(Ship), "SetGunArmor", new Type[] { typeof(PartData), typeof(Ship.A), typeof(float) })]
+        static class PatchSet
+        {
+            static void Postfix(Ship __instance, PartData __0, Ship.A __1, float __2)
+            {
+                try
+                {
+                    if (__instance == null || __0 == null) return;
+                    float cal = 0f; try { cal = __0.caliber; } catch { }
+                    TurretArmor t = null; var ta = __instance.shipTurretArmor;
+                    for (int i = 0; ta != null && i < ta.Count; i++) { var x = ta[i]; if (x != null && x.turretPartData != null && (x.turretPartData.Pointer == __0.Pointer || x.turretPartData.name == __0.name)) { t = x; break; } }
+                    float now = t == null ? -1f : __1 == Ship.A.TurretSide ? t.sideTurretArmor : __1 == Ship.A.TurretTop ? t.topTurretArmor : t.barbetteArmor;
+                    if (setLogged++ < 20) Log($"designer: {__0.name} ({cal:0} mm) {__1} asked {__2:0.#} mm -> {now:0.#} mm{(t == null ? " (no turret armour entry)" : t.isCasemateGun ? " (casemate)" : "")}");
+                    if (SmallOn == null || !SmallOn.Value || t == null || cal <= 0f || cal > 160f) return;
+                    if (__1 != Ship.A.TurretSide && __1 != Ship.A.TurretTop) return;
+                    if (now > 0.01f || __2 <= 0.01f) return;                      // the game took it, or nothing asked
+                    float cap = Mathf.Min(cal, __1 == Ship.A.TurretSide ? SmallSide.Value : SmallTop.Value);
+                    float v = Mathf.Min(__2, cap);
+                    if (__1 == Ship.A.TurretSide) t.sideTurretArmor = v; else t.topTurretArmor = v;
+                    if (setLogged < 30) Log($"designer: {__0.name} - the game kept 0 mm; {(__1 == Ship.A.TurretSide ? "walls" : "roof")} set to {v:0.#} mm (limit {cap:0} mm)");
+                }
+                catch (Exception e) { if (setLogged++ < 25) Log("set: " + e.Message); }
+            }
+        }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][TurretArmor] " + m); }
         static int logged, errors;
 
