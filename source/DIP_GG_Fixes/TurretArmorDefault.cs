@@ -39,8 +39,9 @@ namespace DipGgFixes
                 float cal = 0f; try { cal = pd.caliber; } catch { }
                 if (cal <= 0f) return;
                 float maxTop = 9999f, maxSide = 9999f;
-                try { float m = ship.MaxArmorForZone(Ship.A.TurretTop, pd); if (m > 0f) maxTop = m; } catch { }
-                try { float m = ship.MaxArmorForZone(Ship.A.TurretSide, pd); if (m > 0f) maxSide = m; } catch { }
+                try { maxTop = Mathf.Max(0f, ship.MaxArmorForZone(Ship.A.TurretTop, pd)); } catch { }   // 1.11.443: 0 = the designer allows no armour (small guns) - nothing is set
+                try { maxSide = Mathf.Max(0f, ship.MaxArmorForZone(Ship.A.TurretSide, pd)); } catch { }
+                if (logged < 30) Log($"{pd.name} ({cal:0} mm): designer limits - roof {maxTop:0} mm, walls {maxSide:0} mm");
                 t.topTurretArmor = Mathf.Min(Roof.Value, maxTop);
                 t.sideTurretArmor = Mathf.Min(cal, maxSide);
                 if (logged++ < 10) Log($"{pd.name}: new turret armour - roof {t.topTurretArmor:0} mm, walls {t.sideTurretArmor:0} mm (calibre {cal:0} mm)");
