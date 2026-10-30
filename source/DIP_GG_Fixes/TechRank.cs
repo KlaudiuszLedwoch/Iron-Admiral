@@ -22,7 +22,7 @@ namespace DipGgFixes
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][TechRank] " + m); }
         static readonly Dictionary<IntPtr, int> score = new Dictionary<IntPtr, int>();
         static readonly List<int> sorted = new List<int>();
-        static float mean, sd, at = -100f; static int logged, errors;
+        static float mean, sd, at = -100f; static int logged, errors; static string lastRanking;
 
         static int Count(Player p)
         {
@@ -51,6 +51,15 @@ namespace DipGgFixes
             sorted.Sort((a, b) => b.CompareTo(a));
             mean = 0f; foreach (var c in sorted) mean += c; mean /= Math.Max(1, sorted.Count);
             float v = 0f; foreach (var c in sorted) v += (c - mean) * (c - mean); sd = Mathf.Sqrt(v / Math.Max(1, sorted.Count));
+            try
+            {
+                var names = new List<KeyValuePair<string, int>>();
+                for (int i = 0; i < m.Count; i++) { var p = m[i]; if (p != null && score.TryGetValue(p.Pointer, out int c2)) names.Add(new KeyValuePair<string, int>(p.data.name, c2)); }
+                names.Sort((a, b) => b.Value.CompareTo(a.Value));
+                string line = string.Join(", ", names.ConvertAll(kv => kv.Key + " " + kv.Value));
+                if (line != lastRanking) { lastRanking = line; Log("ranking: " + line); }
+            }
+            catch { }
         }
         static string Label(float z)
         {
@@ -80,7 +89,7 @@ namespace DipGgFixes
                     float z = sd < 1.5f ? 0f : (c - mean) / sd;   // nearly equal nations: all average
                     int place = sorted.IndexOf(c) + 1;
                     string was = __result;
-                    __result = Label(z) + " (" + place + "/" + sorted.Count + ")";
+                    __result = Label(z) + " (" + place + "/" + sorted.Count + ", " + c + " tech.)";
                     if (logged++ < 10) Log($"{__0.data.name}: {c} technologies (majors: mean {mean:0.0}, sd {sd:0.0}, z {z:0.00}) - '{was}' -> '{__result}'");
                 }
                 catch (Exception e) { if (errors++ < 5) Log("label: " + e.Message); }

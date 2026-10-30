@@ -88,21 +88,26 @@ namespace DipGgFixes
                 bool all = Event.current != null && Event.current.shift;
                 if (all) { try { var ships = BattleManager.Instance.CurrentBattle.Ships; for (int i = 0; i < ships.Count; i++) { var o = ships[i]; if (!Mine(o)) continue; var od = o.division; if (od != null) mult[od.Pointer] = v; } } catch { } }
                 else mult[d.Pointer] = v;
+                Log($"spacing slider x{v:0.0} for {(all ? "all divisions" : "the division of " + s.name)}");
             }
             string word = v < 0.8f ? "closed up" : v <= 1.2f ? "normal" : v <= 2f ? "open" : "wide open";
             GUI.Label(new Rect(x + 356f, y + 4f, w - 360f, 18f), $"x{v:0.0} {word} <color=#C0C0C0>division; Shift = all divisions</color>", sT);
         }
 
-        [HarmonyPatch(typeof(Division), "FollowingDistance", new Type[] { typeof(Ship), typeof(Ship) })]
-        static class FollowPatch
+        // 1.11.457 (author 30.10 19:21: "the distance slider does not work"): the static FollowingDistance was not where the game took
+        // the distance; the division's GetDesiredFollowingDistance(ship, following ship) is multiplied now, and both are logged
+        static int applied, unchanged;
+        [HarmonyPatch(typeof(Division), "GetDesiredFollowingDistance", new Type[] { typeof(Ship), typeof(Ship) })]
+        static class DesiredPatch
         {
-            static void Postfix(Ship __0, ref float __result)
+            static void Postfix(Division __instance, Ship __0, ref float __result)
             {
                 try
                 {
                     if (!Mine(__0)) return;
-                    float m = Mult(__0.division);
-                    if (Math.Abs(m - 1f) > 0.001f) __result *= m;
+                    float m = Mult(__instance ?? __0.division);
+                    if (Math.Abs(m - 1f) > 0.001f) { float was = __result; __result *= m; if (applied++ < 6) Log($"spacing x{m:0.0}: {__0.name} keeps {__result:0} m behind the ship ahead (game {was:0} m)"); }
+                    else if (unchanged++ < 2) Log($"spacing x1.0: {__0.name} follows at the game's {__result:0} m");
                 }
                 catch { }
             }

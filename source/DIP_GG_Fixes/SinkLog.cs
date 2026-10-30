@@ -17,7 +17,7 @@ namespace DipGgFixes
     {
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Sinkings] " + m); }
         internal static string FilePath { get { return Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "sinkings.csv"); } }
-        const string Header = "date,battle,ship,class,type,tons,nation,sunk_by,by_class,by_nation,weapon,by_design_id";
+        const string Header = "date,battle,ship,class,type,tons,nation,sunk_by,by_class,by_nation,weapon,by_design_id,by_ship_id";
         class Hit { public Ship By; public float Dmg; public string Weapon; }
         static readonly Dictionary<IntPtr, Dictionary<IntPtr, Hit>> dealt = new Dictionary<IntPtr, Dictionary<IntPtr, Hit>>();
         static readonly Dictionary<IntPtr, Ship> torpOwner = new Dictionary<IntPtr, Ship>();
@@ -51,6 +51,7 @@ namespace DipGgFixes
                 if (!dealt.TryGetValue(target.Pointer, out var m)) { m = new Dictionary<IntPtr, Hit>(); dealt[target.Pointer] = m; }
                 if (!m.TryGetValue(key, out var h)) { h = new Hit { By = by, Weapon = weapon }; m[key] = h; }
                 h.Dmg += dmg; h.Weapon = weapon;
+                if (by != null) ShipStats.Dealt(by, dmg);   // 1.11.457
             }
             catch (Exception e) { if (errors++ < 5) Log("credit: " + e.Message); }
         }
@@ -80,7 +81,8 @@ namespace DipGgFixes
                 string by = best == null ? "unknown" : best.By != null ? Clean(best.By.name) : "aircraft";
                 string byClass = best != null && best.By != null ? ClassOf(best.By) : "", byNation = best != null && best.By != null ? Nation(best.By) : "";
                 string byId = ""; try { if (best != null && best.By != null) byId = DesignOf(best.By).id.ToString(); } catch { }
-                string line = $"{Date()},{(custom ? "custom" : "campaign")},{Clean(victim.name)},{ClassOf(victim)},{TypeOf(victim)},{tons:0},{Nation(victim)},{by},{byClass},{byNation},{(best != null ? best.Weapon : "")},{byId}";
+                string byShip = ""; try { if (best != null && best.By != null) byShip = best.By.id.ToString(); } catch { }
+                string line = $"{Date()},{(custom ? "custom" : "campaign")},{Clean(victim.name)},{ClassOf(victim)},{TypeOf(victim)},{tons:0},{Nation(victim)},{by},{byClass},{byNation},{(best != null ? best.Weapon : "")},{byId},{byShip}";
                 Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
                 if (!File.Exists(FilePath)) File.WriteAllText(FilePath, Header + Environment.NewLine);
                 File.AppendAllText(FilePath, line + Environment.NewLine);
@@ -91,7 +93,7 @@ namespace DipGgFixes
         }
 
         // the rows for the designer
-        internal class Row { public string Date, Ship, Class, Type, Nation, By, ByClass, Weapon, ById; public float Tons; }
+        internal class Row { public string Date, Ship, Class, Type, Nation, By, ByClass, Weapon, ById, ByShip = ""; public float Tons; }
         static List<Row> rows; static DateTime rowsAt;
         internal static List<Row> Rows()
         {
@@ -105,7 +107,7 @@ namespace DipGgFixes
                     {
                         var c = l.Split(','); if (c.Length < 12 || c[0] == "date") continue;
                         float.TryParse(c[5], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float tn);
-                        rows.Add(new Row { Date = c[0], Ship = c[2], Class = c[3], Type = c[4], Tons = tn, Nation = c[6], By = c[7], ByClass = c[8], Weapon = c[10], ById = c[11] });
+                        rows.Add(new Row { Date = c[0], Ship = c[2], Class = c[3], Type = c[4], Tons = tn, Nation = c[6], By = c[7], ByClass = c[8], Weapon = c[10], ById = c[11], ByShip = c.Length > 12 ? c[12] : "" });
                     }
             }
             catch { rows = rows ?? new List<Row>(); }
