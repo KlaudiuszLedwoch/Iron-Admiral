@@ -62,7 +62,8 @@ namespace DipGgFixes
                     {
                         try { if (d.autoChangeGroupLeader) { d.autoChangeGroupLeader = false; what += (what.Length > 0 ? ", " : "") + "leader change off"; } } catch (Exception e) { what += " leader: " + e.Message; }
                     }
-                    if (what.Length > 0 && logged++ < 12) Log($"division of {s.name}: {what}");
+                    bool av = false, ch = false; try { av = d.avoidTorpedoes; ch = d.autoChangeGroupLeader; } catch { }
+                    if (logged++ < 12) Log($"division of {s.name}: {(what.Length > 0 ? what : "nothing to change")} - now torpedo avoidance {(av ? "on" : "off")}, leader change {(ch ? "on" : "off")}");
                 }
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
