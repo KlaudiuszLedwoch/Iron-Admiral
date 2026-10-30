@@ -137,7 +137,10 @@ namespace DipGgFixes
                     {
                         nextWave = battleT + Interval.Value * (camp && atkP != null && !land ? NavalAviation.IntervalF(atkP) : 1f);
                         bool night = false; try { night = BattleAi.IsNight(); } catch { }
+                        string wx = null;
                         if (night) { if (wavesSent == 0) Log("night - no air strike while it is dark"); }
+                        // 1.11.429: the weather of the moment decides each wave (the climate sets the battle's weather at its start)
+                        else if (camp && !AirWeather.CanFly(curYear, out wx)) Log($"wave {waveBase + wavesSent + 1}: {(land ? "the shore squadrons do not take off" : "the carrier does not fly off its aircraft")} - {wx}");
                         else Launch(b.Ships);
                         wavesSent++;
                     }
@@ -245,7 +248,6 @@ namespace DipGgFixes
                 float ch0 = PresenceChance(p), ch = ch0 >= 1f ? 1f : Mathf.Min(0.9f, ch0 * (1f + BigBattleStep.Value / 100f * Math.Max(0, cap - 1))), r = UnityEngine.Random.value;
                 if (r >= ch) { Log($"campaign battle: {p.data.name} - no carrier with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%): no air strike"); continue; }
                 Log($"campaign battle: {p.data.name} - the carrier is with this fleet of {cap} capital ship(s) (chance {ch * 100f:0}%)");
-                if (!AirWeather.CanFly(y0Of(p), out var wx)) { Log($"campaign battle: {p.data.name} - {wx}: the carrier does not fly off its aircraft"); continue; }   // 1.11.429
                 int y = NavalAviation.StrikeYear(p);
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f };
                 sides.Add(c);
@@ -297,7 +299,6 @@ namespace DipGgFixes
                 float ch = BothTest != null && BothTest.Value ? 1f : Mathf.Clamp01(LandChance.Value / 100f * (1f - km / R)), r = UnityEngine.Random.value;
                 if (r >= ch) { Log($"shore strike: {p.data.name} - {km:0} km from port, no aircraft sent (chance {ch * 100f:0}%)"); continue; }
                 int y = Fog.Year(); if (BothTest != null && BothTest.Value) { try { var b = BattleManager.Instance.CurrentBattle; for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null) { int yy = (int)s.GetYear(s); if (yy > 1900) { y = yy; break; } } } } catch { } }
-                if (!AirWeather.CanFly(y, out var wx)) { Log($"shore strike: {p.data.name} - {wx}: the shore squadrons do not take off"); continue; }   // 1.11.429
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = LandModel(y), Land = true, PortKm = km, WaveBase = 100 + sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f + 60f };
                 sides.Add(c);
                 Log($"shore strike: {p.data.name} - {LandModel(y)} from a port {km:0} km away (reach {R:0} km, chance {ch * 100f:0}%), up to {LandPerWave(p)} aircraft in 2 waves against the {(pl ? "enemy's" : "player's")} largest ship");

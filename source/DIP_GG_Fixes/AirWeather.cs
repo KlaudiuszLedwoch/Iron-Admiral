@@ -22,12 +22,12 @@ namespace DipGgFixes
         static string Sub(AccuracyData a) { try { return a == null ? "" : ((a.subName ?? "") + " " + (a.nameUi ?? "") + " " + (a.type ?? "")).ToLowerInvariant(); } catch { return ""; } }
         static int WindBft(string w)
         {
-            if (w.Contains("strong")) return 9; if (w.Contains("gale")) return 8; if (w.Contains("moderate")) return 4;
+            if (w.Contains("stronggale")) return 9; if (w.Contains("gale")) return 8; if (w.Contains("moderate")) return 4;
             if (w.Contains("gentle")) return 3; if (w.Contains("light")) return 2; if (w.Contains("calm")) return 1; return -1;
         }
         static int WaveBft(string w)
         {
-            if (w.Contains("very")) return 7; if (w.Contains("rough")) return 6; if (w.Contains("moderate")) return 4;
+            if (w.Contains("veryrough")) return 7; if (w.Contains("rough")) return 6; if (w.Contains("moderate")) return 4;
             if (w.Contains("slight")) return 3; if (w.Contains("smooth")) return 2; if (w.Contains("calm")) return 1; return -1;
         }
         // the battle's Beaufort number (-1 = unknown), and whether it rains or storms
@@ -37,10 +37,12 @@ namespace DipGgFixes
             try
             {
                 var bm = BattleManager.Instance; if (bm == null) return -1;
-                string wi = Sub(bm.GetWindData()), wa = Sub(bm.GetWavesData()), we = Sub(bm.GetWeatherData());
-                raw = $"wind '{wi.Trim()}', sea '{wa.Trim()}', weather '{we.Trim()}'";
+                var dc = DayCycleAndWeather.Instance(); if (dc == null) return -1;
+                var wt = dc.GetWeatherType(); var wn = dc.GetWind(out float _p1); var wv = dc.GetWaves(out float _p2);
+                string wi = wn.ToString().ToLowerInvariant(), wa = wv.ToString().ToLowerInvariant(), we = wt.ToString().ToLowerInvariant();
+                raw = $"wind {wn}, sea {wv}, weather {wt}";
                 rain = we.Contains("rain"); storm = we.Contains("storm");
-                int b = Math.Max(WindBft(wi), WaveBft(wa));
+                int b = Math.Max(WindBft(wi.Replace("breeze", "")), WaveBft(wa));
                 if (storm) b = Math.Max(b, 10);
                 var cur = bm.CurrentBattle; IntPtr id = cur != null ? cur.Pointer : IntPtr.Zero;
                 if (id != logged) { logged = id; Log($"battle weather: {raw} -> Beaufort {b}{(rain ? ", rain" : "")}{(storm ? ", storm" : "")}"); }
