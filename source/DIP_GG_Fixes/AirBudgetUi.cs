@@ -14,7 +14,7 @@ namespace DipGgFixes
     internal static class AirBudgetUi
     {
         static CampaignFinancesWindow forWin; static GameObject row, costRow; static Slider slider; static TMP_Text pctText, costText, label, costValue;
-        static bool busy; static int errors, logs; static CampaignFinancesWindow failed;
+        static bool busy, tech; static int errors, logs; static CampaignFinancesWindow failed;
         static void Log(string m) { if (logs++ < 20) MelonLogger.Msg("[DIP GG Fixes][AirBudget] " + m); }
 
         // the child of 'root' on the path to 't', and the path below it
@@ -86,6 +86,14 @@ namespace DipGgFixes
         }
         static void Show(Player p)
         {
+            if (!tech)
+            {
+                busy = true; try { if (slider != null) slider.SetValueWithoutNotify(Mathf.Round(AirBudget.Pct(p) / 10f)); } finally { busy = false; }
+                if (pctText != null) pctText.text = "needs seaplane stations or a seaplane carrier (research)";
+                if (costText != null) costText.text = M(0f);
+                if (costValue != null) costValue.text = M(0f);
+                return;
+            }
             float pct = AirBudget.Pct(p), cost = AirStrike.Upkeep(p);
             busy = true; try { if (slider != null) slider.SetValueWithoutNotify(Mathf.Round(pct / 10f)); } finally { busy = false; }
             if (pctText != null) pctText.text = $"{pct:0}% ({AirBudget.Stock(p) * 100f:0}% strength)";
@@ -100,7 +108,7 @@ namespace DipGgFixes
             {
                 bool on = AirBudget.Enabled && p != null;
                 int cl = 0, rl = 0; if (on) { try { cl = NavalAviation.CarrierLevel(p); rl = NavalAviation.ReconLevel(p); } catch { } }
-                on = on && (cl > 0 || rl > 0);
+                tech = cl > 0 || rl > 0;   // 1.11.474: the row is shown without the technology too, locked
                 if (w != forWin || (on && row == null))
                 {
                     if (w != forWin) { row = null; costRow = null; slider = null; pctText = costText = label = costValue = null; forWin = w; }
@@ -109,7 +117,7 @@ namespace DipGgFixes
                 }
                 if (row != null && row.activeSelf != on) row.SetActive(on);
                 if (costRow != null && costRow.activeSelf != on) costRow.SetActive(on);
-                if (on) Show(p);
+                if (on) { if (slider != null && slider.interactable != tech) slider.interactable = tech; Show(p); }
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][AirBudget] Finances window: " + e); }
         }
