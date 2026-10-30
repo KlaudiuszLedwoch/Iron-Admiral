@@ -23,19 +23,20 @@ namespace DipGgFixes
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][PenRef] " + m); }
         static string FilePath { get { return Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "penetration_reference.csv"); } }
-        const string Header = "cal_mm,cal_in,mark,year,nation,gun,shell_kg,mv_ms,quality,belt_1,belt_5,belt_10,belt_15,belt_20,belt_25,belt_30,deck_5,deck_10,deck_15,deck_20,deck_25,deck_30";
+        const string Header = "cal_mm,cal_in,mark,year,nation,gun,shell_kg,mv_ms,quality,belt_1,belt_5,belt_10,belt_15,belt_20,belt_25,belt_30,deck_5,deck_10,deck_15,deck_20,deck_25,deck_30,drag";
         static readonly int[] Km = { 1, 5, 10, 15, 20, 25, 30 };
         static HashSet<string> keys; static IntPtr battle; static float since = -1f; static bool done; static int errors;
         // 1.11.460: hits of the battle, merged into penetration_hits.csv at its end
         static string HitsPath { get { return Path.Combine(MelonUtils.UserDataDirectory, "IronAdmiral", "penetration_hits.csv"); } }
-        const string HitsHeader = "cal_mm,mark,decade,range_km,hits,pen_sum,plate_sum,pierced,fall_sum";
+        const string HitsHeader = "cal_mm,mark,decade,range_km,shell_kg,quality,hits,pen_sum,plate_sum,pierced,fall_sum";
         static readonly Dictionary<string, double[]> pending = new Dictionary<string, double[]>();
         internal static void Hit(Ship shooter, PhysGun.G g, float range, float fall, float pen, float plate, string result)
         {
             if (On == null || !On.Value || g.CalMm <= 0f || plate <= 0.5f) return;   // a hit on no armour says nothing of penetration
             int year = 0; try { year = (int)shooter.GetYear(shooter); } catch { }
             int band = Math.Min(30, (int)(range / 5000f) * 5);
-            string key = $"{g.CalMm:0}|{g.Grade}|{year / 10 * 10}|{band}";
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            string key = $"{g.CalMm:0}|{g.Grade}|{year / 10 * 10}|{band}|{Math.Round(g.Kg).ToString("0", ci)}|{g.Q.ToString("0.##", ci)}";
             if (!pending.TryGetValue(key, out var a)) { a = new double[5]; pending[key] = a; }
             a[0]++; a[1] += Math.Max(0f, pen); a[2] += plate; if (result == "normal" || result == "over") a[3]++; a[4] += fall;
         }
@@ -48,9 +49,9 @@ namespace DipGgFixes
                 if (File.Exists(HitsPath))
                     foreach (var l in File.ReadAllLines(HitsPath))
                     {
-                        var c = l.Split(','); if (c.Length < 9 || c[0] == "cal_mm") continue;
-                        var v = new double[5]; for (int i = 0; i < 5; i++) double.TryParse(c[4 + i], System.Globalization.NumberStyles.Float, ci, out v[i]);
-                        all[c[0] + "|" + c[1] + "|" + c[2] + "|" + c[3]] = v;
+                        var c = l.Split(','); if (c.Length < 11 || c[0] == "cal_mm") continue;
+                        var v = new double[5]; for (int i = 0; i < 5; i++) double.TryParse(c[6 + i], System.Globalization.NumberStyles.Float, ci, out v[i]);
+                        all[c[0] + "|" + c[1] + "|" + c[2] + "|" + c[3] + "|" + c[4] + "|" + c[5]] = v;
                     }
                 int n = 0; foreach (var kv in pending) { if (!all.TryGetValue(kv.Key, out var v)) { v = new double[5]; all[kv.Key] = v; } for (int i = 0; i < 5; i++) v[i] += kv.Value[i]; n += (int)kv.Value[0]; }
                 var sb = new StringBuilder(HitsHeader + Environment.NewLine);
@@ -65,7 +66,7 @@ namespace DipGgFixes
         static void LoadKeys()
         {
             if (keys != null) return; keys = new HashSet<string>();
-            try { if (File.Exists(FilePath)) foreach (var l in File.ReadAllLines(FilePath)) { var c = l.Split(','); if (c.Length > 7 && c[0] != "cal_mm") keys.Add(c[0] + "|" + c[2] + "|" + c[3] + "|" + c[6]); } } catch { }
+            try { if (File.Exists(FilePath)) foreach (var l in File.ReadAllLines(FilePath)) { var c = l.Split(','); if (c.Length > 7 && c[0] != "cal_mm") keys.Add(c[0] + "|" + c[2] + "|" + c[3] + "|" + c[6] + "|" + c[8]); } } catch { }
         }
         internal static void Tick()
         {
@@ -90,7 +91,7 @@ namespace DipGgFixes
                         var pd = parts[k] != null ? parts[k].data : null; if (pd == null || !pd.isGun || !seen.Add(pd.Pointer)) continue;
                         PhysGun.G g; try { g = PhysGun.Get(pd, s, Ship.ShellType.Ap); } catch { continue; }
                         if (!g.Ok || g.Kg <= 0f || g.Mv <= 0f) continue;
-                        string key = $"{g.CalMm:0}|{g.Grade}|{year}|{g.Kg.ToString("0.#", ci)}";
+                        string key = $"{g.CalMm:0}|{g.Grade}|{year}|{g.Kg.ToString("0.#", ci)}|{g.Q.ToString("0.###", ci)}";
                         if (!keys.Add(key)) continue;
                         float cd = Ballistics.CdOf(s), elev = MountElevation.Elev(Math.Max(1, g.Grade));
                         var belt = new List<string>(); var deck = new List<string>();
@@ -101,7 +102,7 @@ namespace DipGgFixes
                             belt.Add(beyond ? "" : PhysPen.BeltPen(g.Kg, vs, fall, g.Q, g.CalMm).ToString("0", ci));
                             if (km >= 5) deck.Add(beyond ? "" : PhysPen.DeckPen(g.Kg, g.CalMm, vs, fall).ToString("0", ci));
                         }
-                        sb.Append($"{g.CalMm:0},{(g.CalMm / 25.4f).ToString("0.#", ci)},{g.Grade},{year},{nat},{pd.name},{g.Kg.ToString("0.#", ci)},{g.Mv.ToString("0", ci)},{g.Q.ToString("0.###", ci)},{string.Join(",", belt)},{string.Join(",", deck)}{Environment.NewLine}");
+                        sb.Append($"{g.CalMm:0},{(g.CalMm / 25.4f).ToString("0.#", ci)},{g.Grade},{year},{nat},{pd.name},{g.Kg.ToString("0.#", ci)},{g.Mv.ToString("0", ci)},{g.Q.ToString("0.###", ci)},{string.Join(",", belt)},{string.Join(",", deck)},{cd.ToString("0.###", ci)}{Environment.NewLine}");
                         n++;
                     }
                 }
