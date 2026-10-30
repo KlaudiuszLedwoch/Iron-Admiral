@@ -25,7 +25,7 @@ namespace DipGgFixes
             Spacing = cat.CreateEntry("FormationSpacing", 1f, null, "Battle: the default distance between the ships of the player's divisions, as a multiple of the game's (0.5 closed up - 3 wide open); the 'Spacing' slider under the gun orders changes it for a division during the battle");
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][Divisions] " + m); }
-        static readonly HashSet<IntPtr> done = new HashSet<IntPtr>();
+        static readonly HashSet<IntPtr> done = new HashSet<IntPtr>(); static readonly Dictionary<IntPtr, int> tries = new Dictionary<IntPtr, int>();
         static readonly Dictionary<IntPtr, float> mult = new Dictionary<IntPtr, float>();
         static float next; static bool inBattle; static int logged, errors;
 
@@ -40,7 +40,7 @@ namespace DipGgFixes
         internal static void Tick()
         {
             bool b = false; try { b = GameManager.IsBattle; } catch { }
-            if (!b) { if (inBattle) { inBattle = false; done.Clear(); mult.Clear(); logged = 0; } return; }
+            if (!b) { if (inBattle) { inBattle = false; done.Clear(); tries.Clear(); mult.Clear(); logged = 0; } return; }
             inBattle = true;
             if (Time.unscaledTime < next) return; next = Time.unscaledTime + 1f;
             try
@@ -56,7 +56,9 @@ namespace DipGgFixes
                     string what = "";
                     if (Avoid != null && Avoid.Value)
                     {
-                        try { bool can = true; try { can = d.CanAvoidTorpedoes(); } catch { } if (can && !d.avoidTorpedoes) { d.AvoidTorpedoes(true); what += "torpedo avoidance on"; } } catch (Exception e) { what += "avoid: " + e.Message; }
+                        bool can = true; try { can = d.CanAvoidTorpedoes(); } catch { }
+                        if (!can) { try { int n0; tries.TryGetValue(d.Pointer, out n0); if (!d.avoidTorpedoes && n0 < 60) { tries[d.Pointer] = n0 + 1; done.Remove(d.Pointer); continue; } } catch { } }   // 1.11.454: not possible yet (start of the battle) - try again next second
+                        try { if (can && !d.avoidTorpedoes) { d.AvoidTorpedoes(true); what += "torpedo avoidance on"; } } catch (Exception e) { what += "avoid: " + e.Message; }
                     }
                     if (KeepLeader != null && KeepLeader.Value)
                     {
