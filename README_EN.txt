@@ -328,5 +328,7 @@ CREDITS AND LICENSES (licenses folder)
   commercial use. Versions up to 1.2.47: Apache 2.0.
 - Ultimate Admiral's Shippack - Badkapp / MarineWerft (credit required,
   not for paid mods).
+- CV Barebone Modification (carrier ship type and air wing design
+  study) - ChonkE (MIT).
 - Ultimate Admiral: Dreadnoughts - Game-Labs. This is an unofficial fan
   modification; do not report issues with the modded game to Game-Labs.
