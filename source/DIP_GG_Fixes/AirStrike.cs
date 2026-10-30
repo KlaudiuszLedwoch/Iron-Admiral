@@ -516,6 +516,10 @@ namespace DipGgFixes
                         if (p.Dir.y > maxUp) { var hz = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; p.Dir = (hz * Mathf.Sqrt(1f - maxUp * maxUp) + Vector3.up * Mathf.Max(0f, maxUp)).normalized; }
                         float release = Mathf.Min(ph.T.Vmax, 51f);   // torpedo release no faster than ~100 kn
                         float want = p.P == Phase.Run ? (p.Dropped ? ph.T.Vmax : release) : p.P == Phase.Away ? ph.T.Vmax : 0.8f * ph.T.Vmax;
+                        // 1.11.424 (test 30.10 07:35: one drop at 219 km/h): too fast on the run-in the pilot stops the glide and
+                        // flies level with the throttle closed, so the drag takes the speed off before the release point
+                        if (p.P == Phase.Run && !p.Dropped && ph.V > release * 1.03f && p.Dir.y < -0.02f && p.Pos.y < 120f)
+                        { var hz2 = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; p.Dir = (hz2 * 0.9998f + Vector3.down * 0.02f).normalized; }
                         float hop0 = ph.Hop;
                         AirPhysics.Step(ph, p.Dir.y, want, dt);
                         v = ph.V * WorldScale();
@@ -1023,7 +1027,7 @@ namespace DipGgFixes
         static void Drop(Plane p)
         {
             if (p.Dropped) return; p.Dropped = true; p.DropT = Time.time;
-            if (p.Ph != null) { float v0 = p.Ph.V, m0 = p.Ph.Mass; AirPhysics.Release(p.Ph); if (drops < 6) Log($"wave {p.Wave}: torpedo away - {m0:0} kg -> {p.Ph.Mass:0} kg, lift excess {p.Ph.Lex:0} N, {v0 * 3.6f:0} km/h"); }
+            if (p.Ph != null) { float v0 = p.Ph.V, m0 = p.Ph.Mass; AirPhysics.Release(p.Ph); if (drops < 20) Log($"wave {p.Wave}: torpedo away - {m0:0} kg -> {p.Ph.Mass:0} kg, lift excess {p.Ph.Lex:0} N, {v0 * 3.6f:0} km/h"); }
             try { if (p.Torp != null) p.Torp.SetActive(false); } catch { }
             try
             {
