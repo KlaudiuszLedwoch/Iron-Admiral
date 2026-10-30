@@ -31,6 +31,9 @@ namespace DipGgFixes
             { "LilyzMod.dll", (2, "cheat: homing torpedoes for one nation (Lilyz TTS)") },
             { "TaskForceNames.dll", (0, "names for your task forces - no known conflict") },
             { "UADCarrierPrototype.dll", (1, "overlaps with Iron Admiral: economy, intelligence, fleet formations, auxiliary/logistics campaign, torpedoes - not tested together, double effects are possible") }, // 1.11.361
+            // 1.11.469 (author 30.10 20:51): ChonkE's CV Barebone Modification (MIT) - a second air strike system next to Iron Admiral's
+            // carrier and shore strikes, and its genarmordata.csv replaces all armour generation rules of TweaksAndFixes
+            { "CarrierMod.dll", (1, "CV Barebone Modification by ChonkE: carrier hulls with air wings - a second air strike system next to Iron Admiral's naval aviation (double strikes in one battle), and its genarmordata.csv replaces the armour generation rules; not tested together") },
         };
 
         internal static void CreatePrefs(MelonPreferences_Category cat)

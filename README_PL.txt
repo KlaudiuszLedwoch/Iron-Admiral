@@ -334,5 +334,7 @@ AUTORZY I LICENCJE (folder licenses)
   Wersje do 1.2.47: Apache 2.0.
 - Ultimate Admiral's Shippack - Badkapp / MarineWerft (z podaniem
   autora, nie w modach płatnych).
+- CV Barebone Modification (typ okrętu lotniskowiec i studium
+  skrzydła lotniczego) - ChonkE (MIT).
 - Ultimate Admiral: Dreadnoughts - Game-Labs. To nieoficjalna
   modyfikacja fanowska; problemów zmodowanej gry nie zgłaszaj Game-Labs.
