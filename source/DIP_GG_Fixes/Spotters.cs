@@ -180,19 +180,19 @@ namespace DipGgFixes
                 shotPlanes++; p.Shots = 1;
                 var right = Vector3.Cross(Vector3.up, p.Dir).normalized;
                 var cam = p.Pos - p.Dir * 40f + right * 25f * -p.Side + Vector3.up * 14f;
-                AirStrike.ShotAt(cam, p.Pos + p.Dir * 20f, 55f, "spotter_catapult");
+                AirStrike.ShotAt(cam, p.Pos + p.Dir * 20f, 55f, "spotter_catapult", Highlights.Active());
             }
             else if (p.Shots == 1 && p.P == Ph.Climb && p.T > 4f)
             {
                 p.Shots = 2; var f = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized;
-                AirStrike.ShotAt(p.Pos - f * 45f + Vector3.up * 10f, p.Pos + f * 60f, 55f, "spotter_climb");
+                AirStrike.ShotAt(p.Pos - f * 45f + Vector3.up * 10f, p.Pos + f * 60f, 55f, "spotter_climb", Highlights.Active());
             }
             else if (p.Shots == 2 && p.P == Ph.Spot && p.T > 25f)
             {
                 p.Shots = 3; var t = Target(p.S); var f = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized;
                 var look = t != null ? t.transform.position : p.Pos + f * 2000f + Vector3.down * 900f;
                 var to = (look - p.Pos); to.y = 0f; to.Normalize();
-                AirStrike.ShotAt(p.Pos - to * 40f + Vector3.up * 12f, look, 45f, "spotter_spotting");
+                AirStrike.ShotAt(p.Pos - to * 40f + Vector3.up * 12f, look, 45f, "spotter_spotting", Highlights.Active());
             }
         }
 

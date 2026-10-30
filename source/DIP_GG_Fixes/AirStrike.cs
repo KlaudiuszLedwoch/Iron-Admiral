@@ -783,7 +783,7 @@ namespace DipGgFixes
         static bool Chase(string tag) { return tag.EndsWith("fire") || tag.EndsWith("drop") || tag.EndsWith("track") || tag.EndsWith("over") || tag.EndsWith("hit"); }
         static void ChaseTick()
         {
-            if (Screens == null || !Screens.Value) return;
+            if (!Highlights.Active()) return;
             if (hitShot != null && Time.time >= hitShotAt) { var h = hitShot; hitShot = null; if (h.Go != null) Shot($"wave{h.Wave}_hit", 0.5f, h); }
             Plane low = null; foreach (var q in planes) if (q.P == Phase.Run && q.Pos.y < 80f && q.Go != null) { low = q; break; }
             if (low != null && tracers.Count >= 6 && tracers.Count >= fireMax) { fireMax = tracers.Count; Shot($"wave{low.Wave}_fire", 4f, low); }
@@ -797,7 +797,7 @@ namespace DipGgFixes
         }
         static void Shot(string tag, float gap, Plane p = null)
         {
-            if (Screens == null || !Screens.Value || shots >= 80) return;
+            if (!Highlights.Active() || shots >= 120) return;   // 1.11.422: in every test battle too
             bool ev = tag.EndsWith("drop") || tag.EndsWith("shotdown") || Chase(tag);
             if (ev) { if (Time.realtimeSinceStartup < nextDrop) return; nextDrop = Time.realtimeSinceStartup + gap; }
             else { if (Time.realtimeSinceStartup < nextShot) return; nextShot = Time.realtimeSinceStartup + gap; }
@@ -856,9 +856,9 @@ namespace DipGgFixes
         }
         // 1.11.421 (author 30.10 06:47: "I want to see what happens in the tests"): a shot from any pose (used for the spotting
         // aircraft), with the same screenshot switch and the same handling of the camera, time and interface
-        internal static void ShotAt(Vector3 cam, Vector3 look, float fov, string tag)
+        internal static void ShotAt(Vector3 cam, Vector3 look, float fov, string tag, bool force = false)
         {
-            if (Screens == null || !Screens.Value || busy || shots >= 80) return;
+            if ((!force && (Screens == null || !Screens.Value)) || busy || shots >= 120) return;
             shots++; MelonCoroutines.Start(ShotAtCo(cam, look, fov, tag));
         }
         static System.Collections.IEnumerator ShotAtCo(Vector3 cam, Vector3 look, float fov, string tag)

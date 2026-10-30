@@ -54,6 +54,7 @@ namespace DipGgFixes
                                || (heavy && (hitType == "normal" || hitType == "over" || hitType == "armor"))
                                || (calMm >= 150f && hitType == "normal" && loc != null && (loc.StartsWith("machinery") || loc.StartsWith("turret")));
                 if (!notable) return;
+                try { bool w0; Highlights.Hit(victim, calMm, PlaceKind(loc, out w0), fire, flood); } catch { }   // 1.11.422
                 float now = Time.realtimeSinceStartup;
                 if (now - lastAny < 6f) return;
                 if (lastShip.TryGetValue(victim.Pointer, out var t) && now - t < 25f) return;
