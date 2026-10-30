@@ -669,9 +669,17 @@ namespace DipGgFixes
             try { return p.Expenses(); } catch { return 0f; } finally { Raw = was; }
         }
 
+        // 1.11.444 (hurepoix 30.10: "I have agitation, but nowhere it is displayed why"): every unrest the mod adds is noted for the
+        // monthly economy report
+        internal static readonly Dictionary<IntPtr, List<string>> UnrestWhy = new Dictionary<IntPtr, List<string>>();
+        internal static void NoteUnrest(Player p, float v, string why)
+        {
+            try { if (p == null || v <= 0.01f) return; if (!UnrestWhy.TryGetValue(p.Pointer, out var l)) { l = new List<string>(); UnrestWhy[p.Pointer] = l; } if (l.Count < 12) l.Add($"+{v:0.0} {why}"); } catch { }
+        }
         internal static void AddUnrest(Player p, float v, string why)
         {
             if (v <= 0.01f) return;
+            NoteUnrest(p, v, why);
             try { p.AddUnrest(v); MelonLogger.Msg($"[DIP GG Fixes][Economy] {NameUi(p)}: unrest +{v:F1} ({why})"); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][Economy] AddUnrest: " + e.Message); }
         }
 
@@ -1100,7 +1108,7 @@ namespace DipGgFixes
                 {
                     var who = kv.Value; float u = burdenUnrest[kv.Key], share = burdenCost[kv.Key];
                     float money = Occupation.CostBase(who) * share; // 1.11.153: budget when the net income is zero or negative (cost was 0)
-                    try { if (u > 0f) who.AddUnrest(u); } catch { }
+                    try { if (u > 0f) { who.AddUnrest(u); Economy.NoteUnrest(who, u, $"occupation of {burdenCount[kv.Key]} foreign core province(s) (grant autonomy or give them back to lower it)"); } } catch { }
                     try { if (money > 0f) who.cash = who.cash - money; } catch { }
                     Occupation.Burden[who.Pointer] = new Occupation.BurdenInfo { Money = Math.Max(0f, money), Count = burdenCount[kv.Key] }; // 1.11.359 (#78)
                     MelonLogger.Msg($"[DIP GG Fixes][Independence] occupation of {burdenCount[kv.Key]} foreign core province(s) by {Economy.Name(who)}: unrest +{u:0.##}, garrison cost {money / 1e6f:0.0}M this month");

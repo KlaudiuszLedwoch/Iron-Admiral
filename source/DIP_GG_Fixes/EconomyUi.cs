@@ -188,6 +188,7 @@ namespace DipGgFixes
                 var b = Economy.PartsFor(p);
                 var sb = new StringBuilder();
                 if (st.Events.Count > 0) { foreach (var e in st.Events) sb.Append("! ").Append(e).Append('\n'); sb.Append('\n'); }
+                try { if (Economy.UnrestWhy.TryGetValue(p.Pointer, out var uw) && uw.Count > 0) { sb.Append("Unrest added this month: ").Append(string.Join("; ", uw.ToArray())).Append(".\n\n"); uw.Clear(); } } catch { }   // 1.11.444
                 if (report)
                 {
                     sb.Append($"Inflation {st.MonthStartInflation:0.0}% -> {st.Inflation:0.0}% a year.\n");
