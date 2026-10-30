@@ -198,7 +198,7 @@ namespace DipGgFixes
             if (st == 8) { try { DynamicCaps.Begin(ship, p); } catch { } }   // 1.11.248: limits for the displacement chosen
             if (st == 13) { try { TorpedoTubesMin.Apply(ship); } catch (Exception e) { if (trimLogged++ < 10) Log("torpedo tubes: " + e.Message); } } // 1.11.309 (#47)
             int want = TrimState != null ? TrimState.Value : 20;
-            if (st == want) { try { SecTower(p, ship); } catch (Exception e) { if (secLogged++ < 10) Log("secondary tower: " + e.Message); } } // 1.11.412
+            if (st == 13 || st == want) { try { SecTower(p, ship, st == 13); } catch (Exception e) { if (secLogged++ < 10) Log("secondary tower: " + e.Message); } } // 1.11.412, 1.11.413
             if (TrimOn != null && TrimOn.Value)
             {
                 // 1.11.247: first pass as the armour has just been generated and before the game cuts it (state 13) - only the light
@@ -219,7 +219,11 @@ namespace DipGgFixes
         // tower first, the room checked with Part.CanPlace. Switch: ShipGenSecondaryTower.
         internal static MelonPreferences_Entry<bool> SecTowerOn;
         static readonly HashSet<IntPtr> secMissing = new HashSet<IntPtr>(); static int secLogged;
-        static void SecTower(IntPtr p, Ship ship)
+        // 1.11.413 (test 30.10 04:12-04:29, Germany bb_5_bisko_compact): at the check the free mounts were all taken ("no free mount
+        // takes one" 13 of 16 attempts) and a tower put on a side mount made the attempt fail on instability_x 100. The tower now
+        // goes in as the parts are placed (state 13, before the game's weight reduction pays for it), only on centre-line mounts,
+        // and when none is free a lighter gun (not of the main calibre) on a centre-line mount that takes the tower gives way.
+        static void SecTower(IntPtr p, Ship ship, bool place)
         {
             if (SecTowerOn == null || !SecTowerOn.Value || ship == null) return;
             int tm = 0, ts = 0; float tmz = 0f; float tmy = 0f;
@@ -232,7 +236,8 @@ namespace DipGgFixes
                 else if (t == "tower_sec") ts++;
             }
             if (tm == 0 || ts > 0) return;
-            if (!secMissing.Contains(p)) { secMissing.Add(p); return; }   // the first attempt shows whether the hull needs one
+            if (!place) { secMissing.Add(p); return; }      // at the check: this design's attempts come out without one
+            if (!secMissing.Contains(p)) return;             // the first attempt shows whether the hull needs one
             string key = ""; try { key = ship.player.data.name + ": hull " + ship.hull.data.name; } catch { }
             // available secondary towers the hull takes, real secondary towers first, lightest first
             var cand = new List<PartData>();
@@ -252,21 +257,30 @@ namespace DipGgFixes
                 return a.weight.CompareTo(b.weight);
             });
             // free centre-line mounts, aft of the main tower first (nearest first), then forward
-            var mounts = new List<Mount>();
+            var mounts = new List<Mount>(); var taken = new List<(Mount m, Part gun)>();
             try
             {
                 var ms = ship.mounts;
                 for (int i = 0; ms != null && i < ms.Count; i++)
                 {
                     var m = ms[i]; if (m == null) continue;
+                    bool side = false; try { side = m.side || Math.Abs(m.transform.localPosition.x) > 0.3f; } catch { }
+                    if (side) continue;                                       // centre line only (instability_x)
                     Part occ = null; try { occ = m.employedPart; } catch { }
-                    if (occ != null) continue;
+                    if (occ != null)
+                    {
+                        bool light = false; try { light = occ.data != null && occ.data.isGun && !ship.IsMainCal(occ.data); } catch { }
+                        if (light) taken.Add((m, occ));
+                        continue;
+                    }
                     bool used = false; try { used = ship.mountsUsed.ContainsKey(m); } catch { }
                     if (used) continue;
                     mounts.Add(m);
                 }
             }
             catch { }
+            // lighter guns give way only when no free mount takes a tower: lightest first
+            taken.Sort((a, b) => a.gun.data.caliber.CompareTo(b.gun.data.caliber));
             mounts.Sort((a, b) =>
             {
                 float za = 0f, zb = 0f; try { za = a.transform.localPosition.z; zb = b.transform.localPosition.z; } catch { }
@@ -292,13 +306,39 @@ namespace DipGgFixes
                         part.Mount(m, true);
                         string why = null; bool ok = true; try { ok = part.CanPlace(out why); } catch { }
                         if (!ok && why != "available") { ship.RemovePart(part, true, false); continue; }
-                        if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} put on a free mount {(m.transform.localPosition.z < tmz ? "aft" : "forward")} of the main tower");
+                        if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} put on a free centre-line mount {(m.transform.localPosition.z < tmz ? "aft" : "forward")} of the main tower");
                         return;
                     }
                     catch (Exception e) { if (secLogged++ < 10) Log("secondary tower place: " + e.Message); try { if (part != null) ship.RemovePart(part, true, false); } catch { } }
                 }
             }
-            if (secLogged++ < 20) Log($"{key} - attempt without a secondary tower: {cand.Count} tower(s) available, no free mount takes one");
+            // no free mount: a lighter gun on a centre-line mount that takes a tower makes room
+            foreach (var (m, gun) in taken)
+            {
+                foreach (var pd in cand)
+                {
+                    bool fits = false; try { fits = m.Fits(pd, null, null); } catch { }
+                    if (!fits) continue;
+                    Part part = null; string gunName = gun.data.name;
+                    try
+                    {
+                        gun.Unmount(false);
+                        part = Part.Create(pd, ship, ship.partsCont, new Il2CppSystem.Nullable<int>(), true);
+                        if (part == null) { gun.Mount(m, false); continue; }
+                        ship.AddPart(part);
+                        try { part.LoadModel(ship, true); } catch { }
+                        try { part.UpdateCollidersSize(ship); } catch { }
+                        part.Mount(m, true);
+                        string why = null; bool ok = true; try { ok = part.CanPlace(out why); } catch { }
+                        if (!ok && why != "available") { ship.RemovePart(part, true, false); try { gun.Mount(m, false); } catch { } continue; }
+                        ship.RemovePart(gun, true, false);
+                        if (secLogged++ < 30) Log($"{key} - attempt without a secondary tower: {pd.name} put on the centre-line mount of {gunName} (gun removed)");
+                        return;
+                    }
+                    catch (Exception e) { if (secLogged++ < 10) Log("secondary tower swap: " + e.Message); try { if (part != null) ship.RemovePart(part, true, false); } catch { } try { gun.Mount(m, false); } catch { } }
+                }
+            }
+            if (secLogged++ < 20) Log($"{key} - attempt without a secondary tower: {cand.Count} tower(s) available, no centre-line mount takes one ({mounts.Count} free, {taken.Count} with lighter guns)");
         }
         static void Trim(Ship ship, bool early)
         {
