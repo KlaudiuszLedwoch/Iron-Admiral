@@ -166,12 +166,43 @@ namespace DipGgFixes
                         shownText = $"Service record of {r.Name}: {r.Battles} battle(s) - {r.Wins} won, {r.Draws} drawn, {r.Losses} lost; {r.Lost} ship(s) of the class sunk";
                 }
             }
-            if (shownText == null) return;
             float k = UiScale.F > 0.01f ? UiScale.F : 1f, W = Screen.width / k;
             if (sL == null) { sL = new GUIStyle(); sL.fontSize = 13; sL.alignment = TextAnchor.MiddleCenter; sL.normal.textColor = new Color(1f, 0.92f, 0.7f); }
             float w = 620f, x = (W - w) / 2f, y = 92f;
-            GUI.Box(new Rect(x, y, w, 24f), "");
-            GUI.Label(new Rect(x, y, w, 24f), shownText, sL);
+            if (shownText != null) { GUI.Box(new Rect(x, y, w, 24f), ""); GUI.Label(new Rect(x, y, w, 24f), shownText, sL); }
+            // 1.11.455: the ranking
+            if (GUI.Button(new Rect(x + w - 150f, y + 26f, 150f, 20f), rankOpen ? "Close ranking" : "Design ranking")) { rankOpen = !rankOpen; rankAt = -1f; }
+            if (!rankOpen) return;
+            string type = null; try { var s = PlayerController.Instance != null ? PlayerController.Instance.Ship : null; type = s != null && s.shipType != null ? s.shipType.name : null; } catch { }
+            if (Time.unscaledTime - rankAt > 2f) { rankAt = Time.unscaledTime; rankRows = Ranking(rankAll ? null : type); }
+            if (sR == null) { sR = new GUIStyle(); sR.fontSize = 12; sR.richText = true; sR.normal.textColor = new Color(0.92f, 0.92f, 0.92f); }
+            float rh = 18f, h = 52f + rh * Math.Max(1, rankRows.Count), ry = y + 50f;
+            GUI.Box(new Rect(x, ry, w, h), "");
+            GUI.Label(new Rect(x + 8f, ry + 4f, 400f, 20f), $"<b>Design ranking - {(rankAll || type == null ? "all types" : type.ToUpperInvariant())}</b> (score = share won, smoothed, less half the ships sunk)", sR);
+            if (type != null && GUI.Button(new Rect(x + w - 110f, ry + 4f, 100f, 18f), rankAll ? "This type" : "All types")) { rankAll = !rankAll; rankAt = -1f; }
+            GUI.Label(new Rect(x + 8f, ry + 26f, w - 16f, 20f), "<color=#C0C0C0>#   design                                   nation        type   battles   won / drawn / lost   sunk   score</color>", sR);
+            if (rankRows.Count == 0) GUI.Label(new Rect(x + 8f, ry + 46f, w - 16f, rh), "No design has a battle record yet.", sR);
+            for (int i = 0; i < rankRows.Count; i++)
+            {
+                var r = rankRows[i]; float yy = ry + 46f + i * rh;
+                GUI.Label(new Rect(x + 8f, yy, 24f, rh), (i + 1).ToString(), sR);
+                GUI.Label(new Rect(x + 32f, yy, 250f, rh), r.Name, sR);
+                GUI.Label(new Rect(x + 285f, yy, 90f, rh), r.Nation, sR);
+                GUI.Label(new Rect(x + 378f, yy, 40f, rh), r.Type.ToUpperInvariant(), sR);
+                GUI.Label(new Rect(x + 420f, yy, 40f, rh), r.Battles.ToString(), sR);
+                GUI.Label(new Rect(x + 462f, yy, 80f, rh), $"{r.Wins} / {r.Draws} / {r.Losses}", sR);
+                GUI.Label(new Rect(x + 545f, yy, 30f, rh), r.Lost.ToString(), sR);
+                GUI.Label(new Rect(x + 578f, yy, 40f, rh), Score(r.Id, out _).ToString("0.00"), sR);
+            }
+        }
+        static bool rankOpen, rankAll; static float rankAt = -1f; static List<Rec> rankRows = new List<Rec>(); static GUIStyle sR;
+        static List<Rec> Ranking(string type)
+        {
+            var l = new List<Rec>();
+            foreach (var r in All().Values) if (r.Battles > 0 && (type == null || string.Equals(r.Type, type, StringComparison.OrdinalIgnoreCase))) l.Add(r);
+            l.Sort((a, b) => { int c = Score(b.Id, out _).CompareTo(Score(a.Id, out _)); return c != 0 ? c : b.Battles.CompareTo(a.Battles); });
+            if (l.Count > 20) l.RemoveRange(20, l.Count - 20);
+            return l;
         }
     }
 }
