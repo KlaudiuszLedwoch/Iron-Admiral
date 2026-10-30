@@ -132,7 +132,7 @@ namespace DipGgFixes
                 {
                     var c = sides[si]; Use(c);
                     if (lastTube == null) lastTube = FindTube(b.Ships);
-                    int maxW = camp && atkP != null ? Math.Min(Waves.Value, land ? 2 : NavalAviation.MaxWaves(atkP)) : Waves.Value;
+                    int maxW = camp && atkP != null ? (land ? LandWaves(atkP) : CarrierWaves(atkP)) : Waves.Value;
                     if (wavesSent < maxW && battleT >= nextWave)
                     {
                         nextWave = battleT + Interval.Value * (camp && atkP != null && !land ? NavalAviation.IntervalF(atkP) : 1f);
@@ -254,7 +254,7 @@ namespace DipGgFixes
                 int y = NavalAviation.StrikeYear(p);
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = ModelFor(y, 1), WaveBase = sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f };
                 sides.Add(c);
-                Log($"campaign battle: {p.data.name} Naval Aviation - {NavalAviation.Summary(p)}; its waves attack the {(pl ? "enemy's" : "player's")} largest ship");
+                Log($"campaign battle: {p.data.name} Naval Aviation - {NavalAviation.Summary(p)}; strike by the air group and tactics: {CarrierWaves(p)} wave(s) of {CarrierPerWave(p)}; its waves attack the {(pl ? "enemy's" : "player's")} largest ship");
             }
         }
         // 1.11.428 (#85 step 5): shore-based torpedo aircraft. A side with the aerial torpedo (at_1) and shore aviation
@@ -271,7 +271,43 @@ namespace DipGgFixes
             LandChance = cat.CreateEntry("NavalAviationShoreChance", 70f, null, "Campaign: chance (%) of a shore-based strike on a battle next to the port; it falls linearly to 0 at the edge of the reach");
         }
         static int y0Of(Player p) { try { return NavalAviation.StrikeYear(p); } catch { return 1925; } }
-        internal static int LandPerWave(Player p) { int r = 0; try { r = NavalAviation.ReconLevel(p); } catch { } return r >= 4 ? 6 : r >= 2 ? 4 : 2; }
+        // 1.11.433 (#95, claude/grupy_lotnicze_fale_95.md - Taranto 12+9, Bismarck 9 and 15, Channel Dash 6, US torpedo squadrons
+        // 12-15 attacking one by one, Pearl Harbor 40, Coral Sea 15/18/22, Force Z 17+26 in 5 attacks, PQ 18 42, SM.79 flights of 5,
+        // RAF Beaufort squadrons 6-9): carrier level 1 seaplane carrier, 2 early carrier, 3 fleet carrier, 4 several carriers;
+        // national tactics - Japan's combined strikes of several carriers, US squadrons one after another, British small strikes
+        static string Nat(Player p) { try { return (p.data.name ?? "").ToLowerInvariant(); } catch { return ""; } }
+        static int CLv(Player p) { int c = 0; try { c = NavalAviation.CarrierLevel(p); } catch { } if (Nat(p) == "france") c = Math.Min(c, 2); return Math.Max(1, Math.Min(4, c)); }
+        internal static int CarrierWaves(Player p)
+        {
+            int c = CLv(p); string n = Nat(p);
+            if (c <= 2) return 1; if (c == 3) return 2;
+            return n == "japan" ? 2 : 3;   // Japan: fewer, bigger combined waves; the US and Britain: squadrons one after another
+        }
+        internal static int CarrierPerWave(Player p)
+        {
+            int c = CLv(p); string n = Nat(p);
+            switch (c)
+            {
+                case 1: return 2;
+                case 2: return 6;
+                case 3: return n == "japan" ? 24 : 12;
+                default: return n == "japan" ? 40 : n == "usa" ? 15 : n == "britain" ? 15 : 24;
+            }
+        }
+        static int RLv(Player p) { int r = 0; try { r = NavalAviation.ReconLevel(p); } catch { } return Math.Max(1, Math.Min(5, r)); }
+        internal static int LandWaves(Player p) { int r = RLv(p); return r == 1 ? 1 : r <= 3 ? 2 : r == 4 ? 3 : 4; }
+        internal static int LandPerWave(Player p)
+        {
+            int r = RLv(p); string n = Nat(p);
+            switch (r)
+            {
+                case 1: return 2;
+                case 2: return n == "italy" ? 5 : 4;
+                case 3: return 9;
+                case 4: return 20;
+                default: return n == "germany" || n == "japan" ? 40 : 30;
+            }
+        }
         static string LandModel(int y) { if (y < 1930) return "short_184"; if (y < 1939) return "swordfish_i"; if (y < 1942) return "beaufort"; if (y < 1943) return "hampden_tb"; return "beaufighter_tf"; }
         static float PortKmOf(Player p)
         {
@@ -304,7 +340,7 @@ namespace DipGgFixes
                 int y = Fog.Year(); if (BothTest != null && BothTest.Value) { try { var b = BattleManager.Instance.CurrentBattle; for (int i = 0; i < b.Ships.Count; i++) { var s = b.Ships[i]; if (s != null) { int yy = (int)s.GetYear(s); if (yy > 1900) { y = yy; break; } } } } catch { } }
                 var c = new SideCtx { Pl = pl, AP = p, Year = y, Model = LandModel(y), Land = true, PortKm = km, WaveBase = 100 + sides.Count * 50, Next = FirstAfter.Value + sides.Count * Interval.Value * 0.5f + 60f };
                 sides.Add(c);
-                Log($"shore strike: {p.data.name} - {LandModel(y)} from a port {km:0} km away (reach {R:0} km, chance {ch * 100f:0}%), up to {LandPerWave(p)} aircraft in 2 waves against the {(pl ? "enemy's" : "player's")} largest ship");
+                Log($"shore strike: {p.data.name} - {LandModel(y)} from a port {km:0} km away (reach {R:0} km, chance {ch * 100f:0}%), up to {LandPerWave(p)} aircraft in {LandWaves(p)} waves against the {(pl ? "enemy's" : "player's")} largest ship");
             }
         }
 
@@ -350,7 +386,7 @@ namespace DipGgFixes
             float startDist = 14000f;
             for (int i = 0; i < ships.Count; i++) { var s = ships[i]; if (!Alive(s) || Defender(s)) continue; var d = s.transform.position - tp; d.y = 0f; float along = Vector3.Dot(d, from); if (along + 8000f > startDist) startDist = along + 8000f; }
             int n = Math.Max(1, PerWave.Value);
-            if (camp && atkP != null) n = Math.Min(n, land ? LandPerWave(atkP) : NavalAviation.MaxPerWave(atkP));
+            if (camp && atkP != null) n = land ? LandPerWave(atkP) : CarrierPerWave(atkP);   // 1.11.433 (#95): the full number of the table
             if (!land) { int y0 = 1925; try { y0 = (int)target.GetYear(target); } catch { } if (camp && atkP != null) y0 = NavalAviation.StrikeYear(atkP); curYear = y0; curModel = ModelFor(y0, wave); }   // 1.11.399, 1.11.408
             float spd = ModelSpeed(curModel);
             waveStats[wave] = new int[4]; waveStats[wave][0] = n;
