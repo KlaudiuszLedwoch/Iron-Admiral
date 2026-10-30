@@ -25,7 +25,9 @@ namespace DipGgFixes
             On = cat.CreateEntry("SlowCallProbeV2", false, null, "Diagnostics: time the game's design, save and refit methods and log every call over 300 ms (to find what makes saving a design and loading or refitting a ship slow)"); // 1.11.466: off again - on by default in 1.11.465 it crashed the game 3 s after start (author 30.10 20:19)
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][SlowProbe] " + m); }
-        static readonly string[] Words = { "Design", "Save", "Refit", "Shared" };
+        // 1.11.473 (30.10 21:16: a design save took 22.3 s and none of the 25 timed methods of 1.11.466 went over 300 ms): also the ship's own
+        // store/clone methods, the game manager and the save storage; the timed methods are listed in the log once
+        static readonly string[] Words = { "Design", "Save", "Refit", "Shared", "ToStore", "FromStore", "Clone", "Serialize" };
         static readonly string[] Never = { "Update", "Refresh", "Check", "OnGUI", "Tick", "Get", "Is", "Can", "Has" };
         [ThreadStatic] static Stack<long> stack;
         static readonly Dictionary<string, long> frameTotals = new Dictionary<string, long>();
@@ -40,7 +42,8 @@ namespace DipGgFixes
         {
             var pre = new HarmonyMethod(typeof(SlowProbe).GetMethod(nameof(Pre), BindingFlags.Static | BindingFlags.NonPublic));
             var post = new HarmonyMethod(typeof(SlowProbe).GetMethod(nameof(Post), BindingFlags.Static | BindingFlags.NonPublic));
-            foreach (var t in new[] { typeof(PlayerController), typeof(CampaignController), typeof(Player), typeof(Ui), typeof(GameData) })
+            var names = new List<string>();
+            foreach (var t in new[] { typeof(PlayerController), typeof(CampaignController), typeof(Player), typeof(Ui), typeof(GameData), typeof(Ship), typeof(GameManager), typeof(Storage) })
             {
                 foreach (var m in t.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly))
                 {
@@ -54,12 +57,12 @@ namespace DipGgFixes
                         foreach (var p in m.GetParameters()) { var pt = p.ParameterType; if (pt.IsByRef || p.IsOut || (pt.IsValueType && !pt.IsPrimitive && !pt.IsEnum)) { bad = true; break; } }
                         var rt = m.ReturnType;
                         if (bad || rt.IsByRef || (rt.IsValueType && !rt.IsPrimitive && !rt.IsEnum && rt != typeof(void))) continue;
-                        h.Patch(m, pre, post); patched++;
+                        h.Patch(m, pre, post); patched++; names.Add(t.Name + "." + m.Name);
                     }
                     catch (Exception e) { if (logged++ < 10) Log($"{t.Name}.{m.Name}: not timed - {e.Message}"); }
                 }
             }
-            Log($"{patched} game method(s) timed - calls over 300 ms are logged");
+            Log($"{patched} game method(s) timed - calls over 300 ms are logged: {string.Join(", ", names)}");
         }
         static void Pre() { if (stack == null) stack = new Stack<long>(); stack.Push(Stopwatch.GetTimestamp()); }
         static void Post(MethodBase __originalMethod)
