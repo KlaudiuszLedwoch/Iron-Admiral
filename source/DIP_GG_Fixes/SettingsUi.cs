@@ -263,10 +263,13 @@ namespace DipGgFixes
             Button(new Rect(r.x + 14f, y + 90f, 260f, 28f), "<b>Create problem report</b>", sBtn, () =>
             {
                 var f = Diagnostics.CreateReport();
-                status = f != null ? "Report written: " + System.IO.Path.GetFileName(f) + " (desktop)" : "Report failed - see Latest.log";
+                status = f != null ? "Report written: " + System.IO.Path.GetFileName(f) + " (desktop) - add it on GitHub as below" : "Report failed - see Latest.log";
                 statusUntil = Time.realtimeSinceStartup + 12f;
             });
-            y += 136f;
+            // 1.11.420: how to add the report on GitHub, with a button that opens the issues page
+            Button(new Rect(r.x + 284f, y + 90f, 200f, 28f), "<b>Open GitHub issues</b>", sBtn, () => { try { Application.OpenURL(Diagnostics.GitHubIssues); } catch { } });
+            GUI.Label(new Rect(r.x + 14f, y + 124f, w - 28f, 120f), Diagnostics.GitHubHowTo, sDesc);
+            y += 256f;
             bool u = Diagnostics.Usage != null && Diagnostics.Usage.Value;
             GUI.Label(new Rect(r.x + 14f, y, w - 28f, 22f), "<b>Usage statistics</b>", sName);
             Button(new Rect(r.x + 14f, y + 24f, 64f, 24f), u ? "<color=#7CFC7C><b>ON</b></color>" : "<color=#FF8080><b>OFF</b></color>", sBtn, () =>

@@ -162,6 +162,16 @@ namespace DipGgFixes
             return s;
         }
         static string ReadShared(string path) { using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete)) using (var sr = new StreamReader(fs)) return sr.ReadToEnd(); }
+        // 1.11.420 (author 30.10 06:45: "add to the help and where the logs are made instructions how to add them on GitHub")
+        internal const string GitHubIssues = "https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues";
+        internal const string GitHubHowTo =
+            "How to add the report on GitHub:\n" +
+            "1. Sign in at github.com (a free account is enough).\n" +
+            "2. Open " + GitHubIssues + " - pick the issue about your problem, or click 'New issue'.\n" +
+            "3. Write what happened: nation, year, what you did and what you expected.\n" +
+            "4. Drag the zip from your desktop into the comment box (or click the attach line under it) and wait until the upload has finished - a link to the file appears in the text.\n" +
+            "5. Click 'Comment' (or 'Create' for a new issue).\n" +
+            "Files up to 25 MB can be attached; a zip or a Latest.log works as it is. Nexus and Steam do not take files - post the link or attach it on GitHub.";
         static void AddText(ZipArchive z, string name, string text)
         {
             var e = z.CreateEntry(name, CompressionLevel.Optimal);
@@ -183,7 +193,7 @@ namespace DipGgFixes
                 {
                     AddText(z, "README.txt", "Iron Admiral problem report, created " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " by the player from the F10 panel.\n" +
                         "Contents: MelonLoader logs, the mod's settings, version file, Mods folder listing, system info, error summary" + (Collect ? ", usage counters" : "") + ".\n" +
-                        "The Windows user name and PC name are replaced by <user>/<pc>. Please describe what happened when you send this file.\n");
+                        "The Windows user name and PC name are replaced by <user>/<pc>. Please describe what happened when you send this file.\n\n" + GitHubHowTo + "\n");
                     AddText(z, "Latest.log", log);
                     try
                     {
