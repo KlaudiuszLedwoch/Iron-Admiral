@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.461", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.462", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -250,7 +250,7 @@ namespace DipGgFixes
             SettingsUi.Tick();
             ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } try { Spectacle.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
@@ -281,7 +281,7 @@ namespace DipGgFixes
         public override void OnLateUpdate()
         {
             long t0 = Perf.Enabled ? Perf.T() : 0;
-            try { AirStrike.LateTick(); } catch { } try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } try { BarrelElevation.LateTick(); } catch { } // 1.11.209
+            try { AirStrike.LateTick(); } catch { } try { Spectacle.LateTick(); } catch { } try { Fog.LateTick(); } catch { } try { Narrative.LateTick(); } catch { } try { BarrelElevation.LateTick(); } catch { } // 1.11.209
             if (t0 != 0) Perf.Add(Perf.LATE, t0);
         }
 
@@ -639,6 +639,7 @@ namespace DipGgFixes
             DesignCleanup.CreatePrefs(cat); // 1.11.451
             SeaRepair.CreatePrefs(cat); // 1.11.453
             PenReference.CreatePrefs(cat); // 1.11.459
+            Spectacle.CreatePrefs(cat); // 1.11.462
             Diagnostics.CreatePrefs(cat, Info.Version);
             ModDesigns.CreatePrefs(cat);
             Narrative.CreatePrefs(cat);

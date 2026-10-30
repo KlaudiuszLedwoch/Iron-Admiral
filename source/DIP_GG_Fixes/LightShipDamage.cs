@@ -132,6 +132,7 @@ namespace DipGgFixes
         {
             // 1.11.385 (#85, author's custom battle 29.10 16:55: five torpedoes of the first wave of Camels sank the battleship Kaga, hits of
             // up to 17,500): a torpedo dropped by an aircraft hits with an aerial warhead - a share of the ship torpedo's damage by year
+            if (ship != null && InTorpedo > 0) Spectacle.Torpedo(ship, CurTorp);   // 1.11.462: the side of the torpedo hit (capsizing)
             // 1.11.446 (#90, #96): an aerial torpedo whose data come from a ship of the target's own side hit with game damage 0 (the
             // game treats it as a friendly torpedo); in a battle of aircraft alone every tube is on the target's side. Such a hit now
             // takes the raw damage of the last aerial torpedo hit that the game did count in this battle, and is logged either way

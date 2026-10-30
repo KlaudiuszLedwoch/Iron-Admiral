@@ -28,6 +28,7 @@ namespace DipGgFixes
         // a heavy hit (HitDispatch): grave hits by guns of 11 in and more, and every magazine hit
         internal static void Hit(Ship victim, float calMm, string kind, bool fire, bool flood)
         {
+            if (kind == "magazine") Spectacle.Magazine(victim);   // 1.11.462: she may blow up when she sinks
             if (victim == null || !Active()) return;
             bool big = calMm >= 280f && (fire || flood || kind == "magazine" || kind == "machinery" || kind == "turret");
             if (!big && kind != "magazine") return;
