@@ -163,6 +163,9 @@ namespace DipGgFixes
         static bool Player(Ship s) { try { return s.player != null && s.player.isMain; } catch { return false; } }
         static bool atkIsPlayer, active, camp; static Player atkP;
         static bool Defender(Ship s) { return atkIsPlayer ? !Player(s) : Player(s); }
+        // 1.11.431 (test 30.10 10:0x: the shore-based Beauforts held their torpedoes at 346 km/h and one wave dropped none): the
+        // aerial torpedoes of the fast twin-engined types (British Mk XII with the air tail, 1941-) were dropped at up to ~150 kn
+        static float ReleaseMs(AirPhysics.State ph) { return ph.T.Vmax > 85f ? 77f : Mathf.Min(ph.T.Vmax, 51f); }
 
         // 1.11.426 (#85 step 3): the strike context of one side; the code works on the statics, switched per side and per aircraft
         class SideCtx { public bool Pl; public Player AP; public int Waves; public float Next; public int Year = 1925; public string Model = ""; public Part Tube; public int WaveBase; public bool Land; public float PortKm; }
@@ -336,7 +339,7 @@ namespace DipGgFixes
             // data come from a tube found at the start of the battle; the aircraft fly from beyond the horizon, not from those ships
             tube = lastTube ?? FindTube(ships); if (tube != null) lastTube = tube;
             int wave = waveBase + wavesSent + 1;
-            if (target == null) { Log($"wave {wave}: no target of the player's side"); return; }
+            if (target == null) { Log($"wave {wave}: no target - no ship of the {(atkIsPlayer ? "enemy's" : "player's")} side afloat"); return; }
             if (tube == null) { Log($"wave {wave}: no ship of the attacking side carries torpedo tubes - torpedo data unavailable, wave not sent"); return; }
             var tp = target.transform.position; tp.y = 0f;
             // come in from the side of the attacking fleet, from beyond the horizon (14 km)
@@ -649,7 +652,7 @@ namespace DipGgFixes
                             fire = (dT <= era2.release && Vector3.Angle(hd, to) < 12f) || dT < era2.release * 0.45f;
                             // 1.11.423 (test 30.10 07:07: drops at 186-217 km/h): a torpedo released too fast breaks up - the pilot
                             // holds it until the speed is down to the release limit (about 100 kn) unless he is already very close
-                            if (fire && p.Ph != null && p.Ph.V > Mathf.Min(p.Ph.T.Vmax, 51f) * 1.08f && dT > era2.release * 0.45f) fire = false;
+                            if (fire && p.Ph != null && p.Ph.V > ReleaseMs(p.Ph) * 1.08f && dT > era2.release * 0.45f) fire = false;
                         }
                         Shot($"wave{p.Wave}_run", 3f, p);
                         if (fire) { Drop(p); p.P = Phase.Away; Shot($"wave{p.Wave}_drop", 1.2f, p); Radio(p.Wave, "drop", atkIsPlayer ? Pick("Fish away! Pulling up - hard right!", "Torpedo gone! Running true... get out of here!", "Released! Climbing away - watch the flak!") : "They have dropped - torpedoes in the water!"); }
@@ -687,7 +690,7 @@ namespace DipGgFixes
                         // 1.11.419: flight model - the climb the excess power allows, the speed the pilot holds for the phase
                         var ph = p.Ph; float maxUp = AirPhysics.MaxClimb(ph);
                         if (p.Dir.y > maxUp) { var hz = new Vector3(p.Dir.x, 0f, p.Dir.z).normalized; p.Dir = (hz * Mathf.Sqrt(1f - maxUp * maxUp) + Vector3.up * Mathf.Max(0f, maxUp)).normalized; }
-                        float release = Mathf.Min(ph.T.Vmax, 51f);   // torpedo release no faster than ~100 kn
+                        float release = ReleaseMs(ph);   // torpedo release no faster than ~100 kn (1.11.431: ~150 kn for the fast twin-engined types)
                         float want = p.P == Phase.Run ? (p.Dropped ? ph.T.Vmax : release) : p.P == Phase.Away ? ph.T.Vmax : 0.8f * ph.T.Vmax;
                         // 1.11.424 (test 30.10 07:35: one drop at 219 km/h): too fast on the run-in the pilot stops the glide and
                         // flies level with the throttle closed, so the drag takes the speed off before the release point
