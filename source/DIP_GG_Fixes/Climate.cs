@@ -99,7 +99,9 @@ namespace DipGgFixes
                 done = b.Pointer;
                 Vector3 pos = b.BattleWorldPos;
                 Vector3 ll = CampaignMap.Instance.UnityCoordsToLatitudeLongitude(pos);
-                float lat = ll.x, lon = ll.y;
+                // 1.11.452 (#102): the conversion returns (Mercator y in degrees, 0, longitude) - raw (71.5, 0, 3.2) for a North Sea battle,
+                // (80.1, 0, 17.3) in the Gulf of Bothnia, (84.5, 0, 43.6) in the White Sea; the latitude is the inverse Mercator of x
+                float lat = 2f * Mathf.Atan(Mathf.Exp(ll.x * Mathf.Deg2Rad)) * Mathf.Rad2Deg - 90f, lon = ll.z;
                 int month = 6; try { month = CampaignController.Instance.CurrentDate.AsDate().Month; } catch { }
                 var row = Pick(lat, lon, month, out var where);
                 int w = Draw(row.W), wi = Draw(row.Wi);
