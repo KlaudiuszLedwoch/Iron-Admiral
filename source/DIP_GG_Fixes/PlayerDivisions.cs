@@ -42,6 +42,7 @@ namespace DipGgFixes
             bool b = false; try { b = GameManager.IsBattle; } catch { }
             if (!b) { if (inBattle) { inBattle = false; done.Clear(); tries.Clear(); mult.Clear(); logged = 0; } return; }
             inBattle = true;
+            try { SingleEvasion(); } catch (Exception e) { if (errors++ < 5) Log("single-ship evasion: " + e.Message); }
             if (Time.unscaledTime < next) return; next = Time.unscaledTime + 1f;
             try
             {
@@ -69,6 +70,42 @@ namespace DipGgFixes
                 }
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
+        }
+
+        // 1.11.458: the mod's own torpedo evasion for the player's divisions the game will not let avoid (one ship)
+        class Ev { public BattleAi.DivState St; public bool On; public Vector3? To, Dir; }
+        static readonly Dictionary<IntPtr, Ev> ev = new Dictionary<IntPtr, Ev>();
+        static float nextEv; static int evLogged;
+        static void SingleEvasion()
+        {
+            if (Avoid == null || !Avoid.Value || Time.unscaledTime < nextEv) return; nextEv = Time.unscaledTime + 0.5f;
+            var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null || battle.Ships == null) return;
+            Player me = null; var seen = new HashSet<IntPtr>();
+            for (int i = 0; i < battle.Ships.Count; i++)
+            {
+                var s = battle.Ships[i]; if (!Mine(s)) continue; if (me == null) me = s.player;
+                Division d = null; try { d = s.division; } catch { }
+                if (d == null || !seen.Add(d.Pointer)) continue;
+                bool can = true; try { can = d.CanAvoidTorpedoes(); } catch { }
+                if (can) { ev.Remove(d.Pointer); continue; }                      // the game's own avoidance works here
+                Ship leader = null; try { leader = d.leader; } catch { } if (leader == null) leader = s;
+                bool dead = false; try { dead = leader.isSinking || leader.isDead; } catch { } if (dead) continue;
+                if (!ev.TryGetValue(d.Pointer, out var e)) { e = new Ev { St = new BattleAi.DivState { name = leader.name } }; ev[d.Pointer] = e; }
+                if (e.On)
+                {
+                    if (Time.time < e.St.evadeUntil) continue;
+                    e.On = false;                                                   // turn-away over: back to the course or point of before
+                    try { if (e.To.HasValue) d.MoveTo(e.To.Value); else if (e.Dir.HasValue) d.MoveDir(e.Dir.Value, false); } catch { }
+                    if (evLogged++ < 20) Log($"{leader.name}: torpedo turn-away over - back on her {(e.To.HasValue ? "way to her point" : e.Dir.HasValue ? "course" : "own")}");
+                    continue;
+                }
+                var enemies = battle.ShipsOf(battle.OppositePlayer(me), true); if (enemies == null) continue;
+                Vector3? to = null, dir = null;
+                try { var mp = d.MovingPosition(); if (mp.HasValue) to = mp.Value; } catch { }
+                try { if (!to.HasValue && d.IsMoving()) dir = d.MovingDirection(); } catch { }
+                bool turned = false; try { turned = BattleAi.TorpedoEvasion.Check(leader, d, e.St, me, battle, enemies); } catch { }
+                if (turned) { e.On = true; e.To = to; e.Dir = dir; if (evLogged++ < 20) Log($"{leader.name} (division of one): the game's torpedo avoidance does not work for her - the mod's evasion turns her away"); }
+            }
         }
 
         // the slider row under the gun orders
