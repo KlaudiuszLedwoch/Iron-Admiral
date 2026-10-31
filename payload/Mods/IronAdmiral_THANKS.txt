@@ -8,3 +8,5 @@ BABUT | 4 | ship data in battle, finishing off at range, ideas from other mods
 The Titan | 2 | questions for new players
 rhett73step | 1 | custom battles and the ship generator
 ChonkE (XxChonkExX) | 1 | author of the CV Barebone Modification (MIT): the carrier ship type, carrier hulls and air wing study that Iron Admiral's carriers and naval aviation are built on
+A Simple Tako | 1 | armoured cruiser penetration in the designer: led to historical AP shell technologies (#127)
+t.latzke(Ger) | 1 | early wars for weak nations: led to the diplomacy threat factor (#126)
