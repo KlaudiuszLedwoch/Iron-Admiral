@@ -24,6 +24,24 @@ namespace DipGgFixes
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][CampaignTest] " + m); }
         static bool started, running;
         static bool turnDone;
+        static readonly string[] Tabs = { "FLEET", "FINANCES", "POLITICS", "WORLD" };
+        // a top-bar button of the campaign screen found by its label (as the player sees it)
+        static bool TopTab(string label)
+        {
+            try
+            {
+                foreach (var b in UnityEngine.Object.FindObjectsOfType<Button>())
+                {
+                    if (b == null || !b.gameObject.activeInHierarchy || !b.interactable) continue;
+                    string txt = null;
+                    try { var tm = b.GetComponentInChildren<Il2CppTMPro.TMP_Text>(); if (tm != null) txt = tm.text; } catch { }
+                    if (txt == null) { try { var tx = b.GetComponentInChildren<Text>(); if (tx != null) txt = tx.text; } catch { } }
+                    if (txt != null && txt.Trim().ToUpperInvariant() == label) { b.onClick.Invoke(); Log("window " + label); return true; }
+                }
+            }
+            catch (Exception e) { Log("window " + label + ": " + e.Message); }
+            return false;
+        }
         static int Int(string spec, string key, int def) { foreach (var kv in spec.Split(';')) { var p = kv.Split('='); if (p.Length == 2 && p[0].Trim() == key && int.TryParse(p[1].Trim(), out var v)) return v; } return def; }
 
         internal static void Tick()
@@ -190,9 +208,24 @@ namespace DipGgFixes
             // 1.11.508 (#121): think=N waits N s on the map before each turn, as a player would, so the design pass on the map
             // (DesignAhead) can be compared with the end-of-turn times
             int think = Int(spec, "think", 0);
+            bool browse = Int(spec, "browse", 0) > 0;
             for (int t = 1; t <= turns; t++)
             {
-                if (think > 0) { Log($"turn {t}/{turns}: {think} s on the map"); for (float w = Time.realtimeSinceStartup + think; Time.realtimeSinceStartup < w;) { ConfirmBoxes(); yield return null; } }
+                if (think > 0)
+                {
+                    // 1.11.518 (author 31.10, 17:36 "test it yourself"): browse=1 plays the player during the waiting - every 6 s the
+                    // next top-bar window (Fleet, Finances, Politics, World) is opened; frames longer than 250 ms are counted (stutter)
+                    Log($"turn {t}/{turns}: {think} s on the map{(browse ? " (browsing the Fleet, Finances, Politics and World windows)" : "")}");
+                    int hitches = 0; float worst = 0f, nextClick = Time.realtimeSinceStartup + 6f; int tab = 0, clicks = 0;
+                    for (float w = Time.realtimeSinceStartup + think; Time.realtimeSinceStartup < w;)
+                    {
+                        ConfirmBoxes(); yield return null;
+                        float dt = Time.unscaledDeltaTime; if (dt > 0.25f) hitches++; if (dt > worst) worst = dt;
+                        if (browse && Time.realtimeSinceStartup >= nextClick) { nextClick = Time.realtimeSinceStartup + 6f; if (TopTab(Tabs[tab % Tabs.Length])) clicks++; tab++; }
+                    }
+                    if (browse) TopTab("WORLD");
+                    Log($"turn {t}/{turns}: on the map {think} s - {hitches} frame(s) over 250 ms, longest {worst * 1000f:0} ms{(browse ? $", {clicks} window(s) opened" : "")}");
+                }
                 Log($"turn {t}/{turns}: next turn");
                 // 1.11.515 (#121): NextTurn(null) threw NullReferenceException at the end of the turn (onDone is called), so the next
                 // turns stopped half-way and the times were wrong - the turn now gets a callback and is over when it is called

@@ -31,7 +31,8 @@ namespace DipGgFixes
                 int n = 0;
                 foreach (var t in typeof(CampaignController).GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
                 {
-                    if (!(t.Name.Contains("GenerateRandomDesigns") || t.Name.Contains("AiManageFleet") || t.Name.Contains("NextTurn"))) continue;
+                    // 1.11.520: the NextTurn coroutine is not patched any more - with the patch every end of turn stopped with NullReferenceException (tests 31.10, betas 137-146)
+                    if (!(t.Name.Contains("GenerateRandomDesigns") || t.Name.Contains("AiManageFleet"))) continue;
                     var m = t.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                     if (m == null) continue;
                     h.Patch(m, pre, post); n++;
