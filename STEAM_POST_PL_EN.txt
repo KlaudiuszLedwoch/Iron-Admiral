@@ -1,6 +1,6 @@
-[h1]Iron Admiral 1.2.75.1.3.2.1 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
+[h1]Iron Admiral 1.2.75.2.1.3.2.1 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.2.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
@@ -395,9 +395,9 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 ============================================================================
 
-[h1]Iron Admiral 1.2.75.1.3.2.1 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
+[h1]Iron Admiral 1.2.75.2.1.3.2.1 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.75.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.75.2.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
