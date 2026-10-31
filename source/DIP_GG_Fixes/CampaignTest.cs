@@ -23,6 +23,7 @@ namespace DipGgFixes
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][CampaignTest] " + m); }
         static bool started, running;
+        static bool turnDone;
         static int Int(string spec, string key, int def) { foreach (var kv in spec.Split(';')) { var p = kv.Split('='); if (p.Length == 2 && p[0].Trim() == key && int.TryParse(p[1].Trim(), out var v)) return v; } return def; }
 
         internal static void Tick()
@@ -193,7 +194,10 @@ namespace DipGgFixes
             {
                 if (think > 0) { Log($"turn {t}/{turns}: {think} s on the map"); for (float w = Time.realtimeSinceStartup + think; Time.realtimeSinceStartup < w;) { ConfirmBoxes(); yield return null; } }
                 Log($"turn {t}/{turns}: next turn");
-                try { var cc = CampaignController.Instance; GameManager.Instance.StartCoroutine(cc.NextTurn(null)); } catch (Exception e) { Log("NextTurn: " + e.Message); break; }
+                // 1.11.515 (#121): NextTurn(null) threw NullReferenceException at the end of the turn (onDone is called), so the next
+                // turns stopped half-way and the times were wrong - the turn now gets a callback and is over when it is called
+                turnDone = false; float tEnd = -1f;
+                try { var cc = CampaignController.Instance; GameManager.Instance.StartCoroutine(cc.NextTurn(UpdateCheck.Act(() => { turnDone = true; }))); } catch (Exception e) { Log("NextTurn: " + e.Message); break; }
                 float t0 = Time.realtimeSinceStartup; bool done = false;
                 while (!done && Time.realtimeSinceStartup < t0 + 1200f)
                 {
@@ -218,8 +222,8 @@ namespace DipGgFixes
                     }
                     ConfirmBoxes();
                     // 1.11.512: the turn is over when the game's turn steps have been quiet for 5 s (the map stays on screen meanwhile)
-                    bool quiet = DesignAheadTiming.LastTurnStep < 0 || Time.realtimeSinceStartup - DesignAheadTiming.LastTurnStep > 5f;
-                    if (WorldReady() && Time.realtimeSinceStartup > t0 + 20f && quiet && Popup() == null) { done = true; Log($"turn {t} ended after {Time.realtimeSinceStartup - t0:0.0} s"); }
+                    if (turnDone && tEnd < 0) { tEnd = Time.realtimeSinceStartup; Log($"turn {t}: the game's end of turn took {tEnd - t0:0.0} s"); }
+                    if (turnDone && WorldReady() && Popup() == null && Time.realtimeSinceStartup > tEnd + 3f) { done = true; Log($"turn {t} ended after {tEnd - t0:0.0} s"); }
                 }
                 try { date = CampaignController.Instance.CurrentDate.AsDate().ToString("yyyy-MM"); } catch { }
                 Log($"turn {t} done: {date}");
