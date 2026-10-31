@@ -79,7 +79,9 @@ namespace DipGgFixes
             {
                 if (it == null)
                 {
-                    if (now - lastInput < 2f) return;
+                    // 1.11.517 (author 31.10, 17:35: "let the designs ahead run also while the player clicks and gives orders on the
+                    // strategic map, and in the fleet, finances and diplomacy windows"): a pass no longer waits for the mouse to rest
+                    // (those windows are part of the world map; only the designer, a battle, loading and the end of turn stop it)
                     Next();
                     return;
                 }
