@@ -25,7 +25,7 @@ namespace DipGgFixes
             On = cat.CreateEntry("ImmuneZone", true, null, "Immune zone: the band of range in which the citadel (main belt and deck) defeats a gun - shown in the designer against a calibre you pick and in battle in the range tag of every identified enemy (our ship against his main battery)");
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][ImmuneZone] " + m); }
-        internal struct Z { public bool Ok, Any; public float Inner, Outer, Max; public bool ToMax; public float Belt, Deck; public int Grade; public float CalMm; public float BeltFrom = -1f, DeckTo = -1f; }
+        internal struct Z { public bool Ok, Any; public float Inner, Outer, Max; public bool ToMax; public float Belt, Deck; public int Grade; public float CalMm; public float BeltFrom, DeckTo; }
 
         static readonly float[] histF = { 0.40f, 0.50f, 0.60f, 0.80f, 1.00f, 1.03f, 1.05f, 1.07f, 1.08f, 1.10f, 1.12f };
         // armour quality relative to Krupp cemented from the ship's armour component (armor_0 .. armor_10 = armor_quality_1 .. 11)
@@ -48,7 +48,7 @@ namespace DipGgFixes
         // target: the ship whose citadel is checked; gun: the shooting gun with the technologies of 'shooter'
         internal static Z Compute(Ship target, PartData gun, Ship shooter, float targetAngleDeg)
         {
-            var z = new Z();
+            var z = new Z(); z.BeltFrom = -1f; z.DeckTo = -1f;
             if (target == null || gun == null || shooter == null) return z;
             PhysGun.G g; try { g = PhysGun.Get(gun, shooter, Ship.ShellType.Ap); } catch { return z; }
             if (!g.Ok || g.Kg <= 0f || g.Mv <= 0f) return z;
