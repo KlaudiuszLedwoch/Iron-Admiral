@@ -3,7 +3,7 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.2.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
@@ -414,7 +414,7 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.75.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.75.2.1.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
