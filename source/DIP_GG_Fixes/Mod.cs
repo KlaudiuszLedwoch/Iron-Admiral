@@ -4557,6 +4557,7 @@ try { Patch_AiTakeReparation.Install(HarmonyInstance); } catch { } // 1.11.483
         private static bool Prefix(CampaignController._GenerateRandomDesigns_d__202 __instance, ref bool __result)
         {
             // 1.11.196: newest-hulls filter active while the AI chooses hulls and generates its designs
+            try { if (__instance != null) ShipGenSpeed.SetPrewarm(__instance.prewarming); } catch { } // 1.11.491 (#124)
             try { var pa = __instance != null ? __instance.player : null; if (pa != null && pa.isAi && !__instance.prewarming) { ShipGenSpeed.Active = true; ShipGenSpeed.ActivePlayer = pa.Pointer; } } catch { }
             try
             {

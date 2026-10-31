@@ -477,7 +477,19 @@ namespace DipGgFixes
         // time is counted per turn (from its first attempt in that month); past ShipGenTurnBudget seconds a failed attempt is followed by
         // at most one more - the failure memory then keeps the nation/hull pair away on later turns
         internal static MelonPreferences_Entry<float> TurnBudget, HardStop;
-        internal static bool BudgetUsed() { return TurnBudget != null && TurnBudget.Value > 0f && budgetMonth == Economy.Month() && Time.realtimeSinceStartup - budgetStart > TurnBudget.Value; }
+        // 1.11.491 (#124): the start-fleet setup of a new campaign (the game's "prewarming" pass over the years before the start
+        // date) runs without a month change, so the turn clock ran over the whole setup and every AI nation after the first minute
+        // was refused shipbuilding - the start fleets were never built. Both turn limits are off while the game prewarms; the
+        // clock starts again with the first real turn.
+        internal static bool Prewarm; static bool prewarmLogged;
+        internal static void SetPrewarm(bool on)
+        {
+            if (on == Prewarm) return;
+            Prewarm = on;
+            if (on) { budgetMonth = -1; if (!prewarmLogged) { prewarmLogged = true; Log("campaign start-fleet setup: the turn time limits (ShipGenTurnBudget, ShipGenTurnHardStop) are off until the first turn"); } }
+            else { budgetMonth = -1; prewarmLogged = false; }
+        }
+        internal static bool BudgetUsed() { return !Prewarm && TurnBudget != null && TurnBudget.Value > 0f && budgetMonth == Economy.Month() && Time.realtimeSinceStartup - budgetStart > TurnBudget.Value; }
         static readonly HashSet<string> stopLogged = new HashSet<string>();
         // a nation skipped one month is never skipped the next month (the AI order of a turn is fixed - the same nations would always lose)
         static readonly Dictionary<string, int> skippedAt = new Dictionary<string, int>();
@@ -485,7 +497,7 @@ namespace DipGgFixes
         {
             try
             {
-                if (p == null || p.isMain || HardStop == null || HardStop.Value <= 0f || budgetMonth != Economy.Month()) return false;
+                if (Prewarm || p == null || p.isMain || HardStop == null || HardStop.Value <= 0f || budgetMonth != Economy.Month()) return false;
                 float used = Time.realtimeSinceStartup - budgetStart; if (used <= HardStop.Value) return false;
                 string n = p.data != null ? p.data.name : "?";
                 if (skippedAt.TryGetValue(n, out int last)) { if (last == budgetMonth) return true; if (budgetMonth - last == 1) return false; }
@@ -500,14 +512,15 @@ namespace DipGgFixes
         {
             var p = it.Pointer;
             if (!running) { lastTry.Remove(p); RestoreHull(p); return; }
-            int m0 = Economy.Month(); if (m0 != budgetMonth) { budgetMonth = m0; budgetStart = Time.realtimeSinceStartup; }
+            if (Prewarm) budgetMonth = -1; // #124: no turn clock during the start-fleet setup
+            else { int m0 = Economy.Month(); if (m0 != budgetMonth) { budgetMonth = m0; budgetStart = Time.realtimeSinceStartup; } }
             if (EarlyStop == null || !EarlyStop.Value) return;
             int tryN = it._tryN_5__5, total = it._triesTotal_5__4;
             int prev; if (!lastTry.TryGetValue(p, out prev)) prev = 0;
             if (tryN <= prev) return;
             lastTry[p] = tryN;
             float used = Time.realtimeSinceStartup - budgetStart;
-            if (TurnBudget != null && TurnBudget.Value > 0f && used > TurnBudget.Value && tryN + 1 < total)
+            if (!Prewarm && TurnBudget != null && TurnBudget.Value > 0f && used > TurnBudget.Value && tryN + 1 < total)
             {
                 it._triesTotal_5__4 = tryN + 1; ShipGenMemory.saved += total - tryN - 1; budgetCuts++;
                 try { Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed and the generator has used {used:0} s of its {TurnBudget.Value:0} s this turn - one more attempt instead of {total - tryN}"); } catch { }
@@ -764,6 +777,16 @@ namespace DipGgFixes
         {
             try { ShipGenSpeed.Filter(__instance, __0, ref __result); }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][ShipGen] hull filter: " + e.Message); }
+        }
+    }
+
+    // 1.11.491 (#124): the AI fleet step of the game tells whether it runs in the start-fleet setup (prewarming)
+    [HarmonyPatch(typeof(CampaignController._AiManageFleet_d__201), "MoveNext")]
+    internal static class Patch_AiManageFleet_Prewarm
+    {
+        private static void Prefix(CampaignController._AiManageFleet_d__201 __instance)
+        {
+            try { if (__instance != null) ShipGenSpeed.SetPrewarm(__instance.prewarming); } catch { }
         }
     }
 
