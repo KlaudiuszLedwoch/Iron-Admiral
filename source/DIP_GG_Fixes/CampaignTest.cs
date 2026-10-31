@@ -56,8 +56,12 @@ namespace DipGgFixes
             if (!WorldReady()) { Log("the campaign did not load in 15 min - quitting"); Application.Quit(); yield break; }
             string date = ""; try { date = CampaignController.Instance.CurrentDate.AsDate().ToString("yyyy-MM"); } catch { }
             Log($"campaign loaded: {date}");
+            // 1.11.508 (#121): think=N waits N s on the map before each turn, as a player would, so the design pass on the map
+            // (DesignAhead) can be compared with the end-of-turn times
+            int think = Int(spec, "think", 0);
             for (int t = 1; t <= turns; t++)
             {
+                if (think > 0) { Log($"turn {t}/{turns}: {think} s on the map"); for (float w = Time.realtimeSinceStartup + think; Time.realtimeSinceStartup < w;) yield return null; }
                 Log($"turn {t}/{turns}: next turn");
                 try { var cc = CampaignController.Instance; GameManager.Instance.StartCoroutine(cc.NextTurn(null)); } catch (Exception e) { Log("NextTurn: " + e.Message); break; }
                 float t0 = Time.realtimeSinceStartup; bool done = false;
