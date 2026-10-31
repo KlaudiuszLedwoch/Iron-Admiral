@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.501", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.502", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -646,7 +646,7 @@ namespace DipGgFixes
             SeaRepair.CreatePrefs(cat); // 1.11.453
             PenReference.CreatePrefs(cat); // 1.11.459
             TorpReference.CreatePrefs(cat); // 1.11.494
-            ImmuneZone.CreatePrefs(cat); // 1.11.496 (#117)
+            ImmuneZone.CreatePrefs(cat); // 1.11.496 (#117) BattleAi.CreateIzPrefs(cat); // 1.11.502
             Spectacle.CreatePrefs(cat); // 1.11.462
             SlowProbe.CreatePrefs(cat); // 1.11.463
 RefitConfirm.CreatePrefs(cat); // 1.11.464
@@ -2419,6 +2419,7 @@ try { Patch_AiTakeReparation.Install(HarmonyInstance); } catch { } // 1.11.483
             if (st.closing) { st.closing = false; st.closeResumeAt = ownR * (DipGgFixesMod.CloseInStopRange.Value + 0.15f); Log($"{st.name}: close-in ended at {bestD:0} m ({(noPen ? "still cannot penetrate" : "penetration ok")}, {(outranged ? "still outranged" : "range ok")}) - left to the game"); }
             // 1.11.86: while the own screen attacks, the capital ships move up and engage the enemies fighting it
             if (ScreenSupport(leader, div, st, doc, enemies)) return;
+            if (IzRange(leader, div, st, best, bestD, ownR)) return;   // 1.11.502 (#117)
             Why(st, "guns adequate - left to the game");
         }
 
