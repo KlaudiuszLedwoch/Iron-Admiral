@@ -148,6 +148,29 @@ namespace DipGgFixes
             return best;
         }
         static int keepLogs; static float keepLogAt = -100f;
+        // 1.11.497 (author's test 31.10, 10:24: three divisions on Keep range bunched together - they steered for points on the same
+        // line from the same enemy): the goal is pushed away from every other own division leader within 2.5 km (and from its goal
+        // under Keep range), so the divisions keep about 2 km apart
+        static Vector3 Apart(Division div, Ship leader, Vector3 goal)
+        {
+            try
+            {
+                var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null || leader.player == null) return goal;
+                var mine = battle.ShipsOf(leader.player, true); if (mine == null) return goal;
+                Vector3 me = P(leader), push = Vector3.zero;
+                for (int i = 0; i < mine.Count; i++)
+                {
+                    var s = mine[i]; if (s == null || s.isDead || s.isSinking || !s.isDivLeader) continue;
+                    var d2 = s.division; if (d2 == null || d2.Pointer == div.Pointer) continue;
+                    Vector3 other = P(s);
+                    if (orders.TryGetValue(d2.Pointer, out var oo) && oo.Order == DivOrder.Keep && oo.LastCmd > 0f) other = (other + oo.LastTarget) / 2f;
+                    Vector3 away = goal - other; away.y = 0f; float d = away.magnitude;
+                    if (d < 2500f) { if (d < 1f) away = me - P(s); away.y = 0f; if (away.sqrMagnitude < 1f) away = Vector3.right; push += away.normalized * (2500f - d); }
+                }
+                return goal + push;
+            }
+            catch { return goal; }
+        }
         static void KeepRange(Division div, OrderSt o, Ship leader, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
         {
             float R = KeepRangeOf(div); if (R <= 0f) { R = 12000f; keepRange[div.Pointer] = R; }
@@ -155,8 +178,11 @@ namespace DipGgFixes
             if (e == null)
             {
                 // nobody in sight: towards the last seen enemy until he is at the distance, else wait by the main body
-                if (o.Seen && (o.LastSeen - me).magnitude > R + 1000f) { Cmd(div, o, o.LastSeen - (o.LastSeen - me).normalized * R); OWhy(o, $"no enemy in sight - closing to {R / 1000f:0.#} km of his last position"); return; }
-                var st = home + toEnemy * 2500f; if ((me - st).magnitude > 800f && main != null) Cmd(div, o, st);
+                if (o.Seen && (o.LastSeen - me).magnitude > R + 1000f) { Cmd(div, o, Apart(div, leader, o.LastSeen - (o.LastSeen - me).normalized * R)); OWhy(o, $"no enemy in sight - closing to {R / 1000f:0.#} km of his last position"); return; }
+                // 1.11.497 (author's test 31.10, 10:24: "the ships bunch together"): with nobody in sight every division went to the same
+                // point by the main body - now it holds its own course, kept apart from the other divisions
+                Vector3 fw = leader.transform.forward; fw.y = 0f; if (fw.sqrMagnitude < 0.01f) fw = toEnemy; fw.Normalize();
+                Cmd(div, o, Apart(div, leader, me + fw * 3000f));
                 OWhy(o, $"no enemy in sight - keep range {R / 1000f:0.#} km"); return;
             }
             Vector3 ep = P(e), dir = me - ep; dir.y = 0f; float d = dir.magnitude; if (d < 1f) dir = -toEnemy; dir.Normalize();
@@ -181,7 +207,7 @@ namespace DipGgFixes
                 goal = ep + dir * R + tan * 3000f;
                 doing = Mathf.Abs(err) < 750f ? "holding the distance" : err > 0f ? "edging in" : "edging out";
             }
-            Cmd(div, o, goal);
+            Cmd(div, o, Apart(div, leader, goal));
             OWhy(o, $"keep {R / 1000f:0.#} km from {e.name} - {doing}");
             if (keepLogs++ < 200 && Time.time - keepLogAt > 20f) { keepLogAt = Time.time; Log($"{o.Name} [Keep range]: at {d / 1000f:0.0} km from {e.name} (wanted {R / 1000f:0.0} km)"); }
         }
