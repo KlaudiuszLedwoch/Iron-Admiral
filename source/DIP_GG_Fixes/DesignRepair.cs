@@ -120,6 +120,16 @@ namespace DipGgFixes
         // the same as the class design of her sisters (same base name, hull, displacement, armour and parts - a copy made when the game
         // lost or erased the design, or by the design repair above) is put back on the class design, so a refit takes the whole class.
         // Every player's ship and its design are logged once per load (design, ships on it) so a loose ship can be found in the log.
+        // the date the game writes into a refit design's name, "Oldenburg (Jun. 1926)" -> 1926*12+6; 0 when there is none
+        static readonly string[] Mon = { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
+        static int DateOf(string n)
+        {
+            if (string.IsNullOrEmpty(n)) return 0;
+            var m = System.Text.RegularExpressions.Regex.Match(n, @"\(([A-Za-z]{3})[a-z]*\.?\s+(\d{4})\)");
+            if (!m.Success) return 0;
+            int mo = Array.IndexOf(Mon, m.Groups[1].Value.ToLowerInvariant()); int y; if (mo < 0 || !int.TryParse(m.Groups[2].Value, out y)) return 0;
+            return y * 12 + mo + 1;
+        }
         static string BaseName(string n) { if (string.IsNullOrEmpty(n)) return ""; int i = n.IndexOf(" ("); return (i > 0 ? n.Substring(0, i) : n).Trim(); }
         static string Sig(Ship d)
         {
@@ -167,7 +177,17 @@ namespace DipGgFixes
                     if (d2 == null || d2.Pointer == kv.Key) continue;
                     if (BaseName(d2.name) != bn) continue;
                     bool same = Sig(d2) == sig, refit2 = false; try { refit2 = d2.isRefitDesign; } catch { }
-                    if (!same && ownRefit) { MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {kv.Value[0].name} on her own refit design {d.name}: class design {d2.name} differs - left as it is"); continue; }
+                    int n0 = byDesign.TryGetValue(d2.Pointer, out var on0) ? on0.Count : 0;
+                    // 1.11.506 (author 31.10, 11:52, BB Westfalen on Oldenburg (Oct. 1925) while her 3 sisters went to Oldenburg (Jun. 1926):
+                    // "it happens now and then - afterwards I cannot refit that ship as I should"): a ship left alone on an OLDER refit of
+                    // her class, while at least two sisters sail on a NEWER one, joins the newer class design (she keeps her own parts
+                    // until the next refit of the class). A lone ship on a newer refit than her class stays as she is.
+                    if (!same && ownRefit)
+                    {
+                        int myDate = DateOf(d.name), hisDate = DateOf(d2.name);
+                        if (refit2 && n0 >= 2 && myDate > 0 && hisDate > myDate) { if (bestRank < 3 || n0 > best) { bestRank = 3; best = n0; target = d2; } continue; }
+                        MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {kv.Value[0].name} on her own refit design {d.name}: class design {d2.name} differs - left as it is"); continue;
+                    }
                     int rank = same ? 2 : (!refit2 ? 1 : 0);
                     if (rank == 0) continue;   // never onto another refit design she was not refitted to
                     int n = byDesign.TryGetValue(d2.Pointer, out var on2) ? on2.Count : 0;
