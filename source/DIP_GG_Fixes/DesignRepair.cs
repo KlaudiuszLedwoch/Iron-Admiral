@@ -130,6 +130,7 @@ namespace DipGgFixes
             try { var names = new List<string>(); var parts = d.parts; for (int i = 0; parts != null && i < parts.Count; i++) { var p = parts[i]; if (p != null && p.data != null) names.Add(p.data.name); } names.Sort(); sb.Append(string.Join(",", names)); } catch { }
             return sb.ToString();
         }
+        static List<Ship> AllVisible(Player main) { var l = new List<Ship>(); try { var e = main.designs.GetEnumerator(); var u = e.Cast<Il2CppSystem.Collections.IEnumerator>(); while (u.MoveNext()) { var x = e.Current; if (x != null) { bool er = false; try { er = x.isErased; } catch { } if (!er) l.Add(x); } } } catch { } return l; }
         static void Rejoin(Player main, List<Ship> ships, HashSet<IntPtr> visible)
         {
             var byDesign = new Dictionary<IntPtr, List<Ship>>(); var designs = new Dictionary<IntPtr, Ship>();
@@ -162,7 +163,7 @@ namespace DipGgFixes
                 }
                 if (target == null) continue;
                 var s = kv.Value[0];
-                try { s.design = target; moved++; MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {s.name}: alone on design {d.name}, identical to the class design {target.name} of {best} sister(s) - put back on the class design"); }
+                try { s.design = target; moved++; MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {s.name}: alone on design {d.name}, identical to the class design {target.name} ({best} other ship(s) on it) - put back on the class design; her refit can now follow the class"); }
                 catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][DesignRepair] {s.name}: rejoin failed: " + e.Message); }
             }
             MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {main.data.name}: {moved} loose ship(s) put back on their class design");
