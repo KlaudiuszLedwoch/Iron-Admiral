@@ -160,10 +160,19 @@ namespace DipGgFixes
                 if (p != null) v = p.GetValue(o); else { var f = t.GetField(name); if (f == null) return "-"; v = f.GetValue(o); }
                 if (v == null) return "null";
                 if (v is Ship sh) return sh.name;
+                // Il2Cpp lists (refitDesignListID is a List<Guid>): the items, not the type name
+                var cnt = v.GetType().GetProperty("Count"); var item = v.GetType().GetProperty("Item");
+                if (cnt != null && item != null)
+                {
+                    int n = (int)cnt.GetValue(v); var items = new List<string>();
+                    for (int i = 0; i < n && i < 20; i++) { var x = item.GetValue(v, new object[] { i }); string xs = x != null ? x.ToString() : "null"; items.Add(xs.Length > 8 ? xs.Substring(0, 8) : xs); }
+                    return "[" + string.Join(" ", items) + "]";
+                }
                 return v.ToString();
             }
             catch { return "?"; }
         }
+        static string Short(string s) { return s != null && s.Length > 8 ? s.Substring(0, 8) : s; }
         static void Track(Player main, List<Ship> ships, bool report)
         {
             var ptr = CampaignController.Instance.CampaignData.Pointer;
@@ -197,7 +206,7 @@ namespace DipGgFixes
             {
                 var d = designs[kv.Key]; string t = "?"; try { t = d.shipType != null ? d.shipType.name : "?"; } catch { }
                 if (t == "bb" || t == "bc" || t == "ca" || t == "cl")
-                    MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] class {d.name} ({t}, refit design {Safe(() => d.isRefitDesign)}, visible {visible.Contains(d.Pointer)}, refitDesignName '{Prop(d, "refitDesignName")}', refitDesignListID {Prop(d, "refitDesignListID")}, dateCreatedRefit {Prop(d, "dateCreatedRefit")}, refitDesign '{Prop(d, "refitDesign")}'): {kv.Value.Count} ship(s) - {string.Join(", ", kv.Value.ConvertAll(x => x.name))}");
+                    MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] class {d.name} ({t}, refit design {Safe(() => d.isRefitDesign)}, visible {visible.Contains(d.Pointer)}, id {Short(Prop(d, "id"))}, refitDesignName '{Prop(d, "refitDesignName")}', refitDesignListID {Prop(d, "refitDesignListID")}, dateCreatedRefit {Prop(d, "dateCreatedRefit")}, refitDesign '{Prop(d, "refitDesign")}'): {kv.Value.Count} ship(s) - {string.Join(", ", kv.Value.ConvertAll(x => x.name))}");
             }
             Track(main, ships, true);
             int moved = 0;
@@ -238,7 +247,7 @@ namespace DipGgFixes
                 }
                 if (target == null) continue;
                 var s = kv.Value[0];
-                try { s.design = target; moved++; MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {s.name}: alone on design {d.name}, identical to the class design {target.name} ({best} other ship(s) on it) - put back on the class design; her refit can now follow the class"); }
+                try { s.design = target; moved++; MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {s.name}: alone on design {d.name}, {(bestRank == 2 ? "identical to" : bestRank == 3 ? "older refit than" : "differs from")} the class design {target.name} ({best} other ship(s) on it) - put back on the class design; her refit can now follow the class"); }
                 catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][DesignRepair] {s.name}: rejoin failed: " + e.Message); }
             }
             MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {main.data.name}: {moved} loose ship(s) put back on their class design");
