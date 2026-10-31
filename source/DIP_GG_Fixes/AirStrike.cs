@@ -1507,7 +1507,7 @@ namespace DipGgFixes
                 string n = Dispatch.Ship(hit.name);
                 if (!hitSaid.Add(wave + "|" + n + "|" + (int)(Time.unscaledTime / 3f))) return;
                 Radio(wave, null, atkIsPlayer
-                    ? Pick($"Hit! Right under her funnels - {n} is down by the head!", $"Fish running true... HIT! Big column of water on {n}!", $"That's one in {n}'s side - she's slowing!", $"Got her! {n} is listing to port!")
+                    ? Pick($"Hit! Right under her funnels - {n} is down by the head!", $"Fish running true... HIT! Big column of water on {n}!", $"That's one in {n}'s side - she's slowing!", $"Got her! {n} is listing hard!")
                     : Pick($"Torpedo hit on {n}!", $"{n} hit by an aerial torpedo - flooding forward!"));
             }
             catch { }

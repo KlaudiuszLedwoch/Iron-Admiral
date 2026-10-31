@@ -37,8 +37,14 @@ namespace DipGgFixes
             if (On == null || !On.Value || ship == null || torp == IntPtr.Zero) return;
             try
             {
-                var t = new Il2Cpp.Torpedo(torp); var d = t.transform.position - ship.transform.position;
-                if (Vector3.Dot(d, ship.transform.right) >= 0f) Of(ship).Stbd++; else Of(ship).Port++;
+                // 1.11.489 (author 31.10 06:54, charge test: "a ship takes torpedoes in the port side and lists to starboard"; log: Canada "port 0,
+                // starboard 2"): the torpedo's position at the moment of the hit is not a safe sign of the side - by then it may be past the
+                // hull's centre line. The side now comes from the torpedo's heading: running to the ship's starboard it struck the port side.
+                var t = new Il2Cpp.Torpedo(torp); var h = t.transform.forward; h.y = 0f;
+                bool port;
+                if (h.sqrMagnitude > 0.01f) port = Vector3.Dot(h, ship.transform.right) > 0f;
+                else { var d = t.transform.position - ship.transform.position; port = Vector3.Dot(d, ship.transform.right) < 0f; }
+                if (port) Of(ship).Port++; else Of(ship).Stbd++;
             }
             catch { }
         }
