@@ -14,7 +14,7 @@ namespace DipGgFixes
 {
     internal static class DesignAhead
     {
-        internal static MelonPreferences_Entry<bool> On;
+        internal static MelonPreferences_Entry<bool> On, IdleOn;
         internal static bool Driving;                 // true only while our MoveNext runs
         static Il2CppSystem.Collections.IEnumerator it;
         static readonly List<Il2CppSystem.Collections.IEnumerator> stack = new List<Il2CppSystem.Collections.IEnumerator>();
@@ -27,7 +27,9 @@ namespace DipGgFixes
 
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
-            On = cat.CreateEntry("DesignAhead", true, null, "Campaign AI: while you are on the world map in your turn, the AI great powers prepare their new ship designs in the background (one nation at a time, each at most once a month), so the end of turn is shorter");
+            On = cat.CreateEntry("DesignAhead", true, null, "Campaign AI: while you are on the world map in your turn (also while you click, give orders or look at the fleet, finances and diplomacy windows), the AI great powers prepare their new ship designs in the background, so the end of turn is shorter. A single design step can make the screen pause for 1-2 s");
+            // 1.11.519 (author 31.10, 17:39: "two F10 switches - one as I described, the other only while the mouse is still")
+            IdleOn = cat.CreateEntry("DesignAheadIdle", false, null, "Campaign AI: as DesignAhead, but the AI designs its ships in the background only while the mouse and keyboard rest for 2 s (used when DesignAhead is off)");
         }
 
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][DesignAhead] " + m); }
@@ -62,7 +64,8 @@ namespace DipGgFixes
 
         internal static void Tick()
         {
-            if (broken || On == null || !On.Value) { if (it != null) Abort("switched off"); return; }
+            bool any = On != null && On.Value, idleOnly = !any && IdleOn != null && IdleOn.Value;
+            if (broken || (!any && !idleOnly)) { if (it != null) Abort("switched off"); return; }
             float now = UnityEngine.Time.realtimeSinceStartup;
             if (!MapFree()) { mapSince = -1f; if (it != null) Abort("map left"); return; }
             if (mapSince < 0) mapSince = now;
@@ -77,6 +80,8 @@ namespace DipGgFixes
             if (now - mapSince < 10f) return;
             try
             {
+                // idle-only mode: nothing is started or stepped while the mouse moves or a key is held
+                if (idleOnly && now - lastInput < 2f) return;
                 if (it == null)
                 {
                     // 1.11.517 (author 31.10, 17:35: "let the designs ahead run also while the player clicks and gives orders on the
