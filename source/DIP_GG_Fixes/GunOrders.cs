@@ -182,7 +182,7 @@ namespace DipGgFixes
                 Row(s, o, true, x, y, w, h, sm);
                 Row(s, o, false, x, y + 26f, w, h, sm);
                 AimRow(s, o, x, y + 52f, w, h, sm);
-                try { PlayerDivisions.SpacingRow(s, x, y + 78f, w, h, sm); } catch { }   // 1.11.442: formation spacing slider
+                try { PlayerDivisions.SpacingRow(s, x, y + 78f, w, h, sm); } catch { } try { ImmuneZone.Row(s, x, y + 104f, w, h); } catch { } // 1.11.499 (#117)   // 1.11.442: formation spacing slider
                 if (GUI.Button(new Rect(x + w - 21f, y + 3f, 18f, 18f), "â–´", sm)) folded = true;
             }
             catch (Exception e) { if (gErr++ < 5) MelonLogger.Warning("[DIP GG Fixes][GunOrders] panel: " + e.Message); }
