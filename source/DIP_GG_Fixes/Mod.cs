@@ -250,7 +250,7 @@ namespace DipGgFixes
             SettingsUi.Tick();
             ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } try { TorpReference.Tick(); } catch { } try { OilProbe.Tick(); } catch { } try { Spectacle.Tick(); } catch { } try { SlowProbe.Tick(); } catch { } try { SaveBackup.Tick(); } catch { } try { EraMap.Tick(); } catch { } try { ArmorWeightProbe.Tick(); } catch { } try { Patch_AiTakeReparation.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } try { TorpReference.Tick(); } catch { } try { OilProbe.Tick(); } catch { } try { DesignAheadTiming.Tick(); } catch { } try { Spectacle.Tick(); } catch { } try { SlowProbe.Tick(); } catch { } try { SaveBackup.Tick(); } catch { } try { EraMap.Tick(); } catch { } try { ArmorWeightProbe.Tick(); } catch { } try { Patch_AiTakeReparation.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();
@@ -707,7 +707,7 @@ Reparations.CreatePrefs(cat); // 1.11.482
             LogShare.CreatePrefs(cat); // 1.11.139
             FleetOrders.CreatePrefs(cat); // 1.11.107
             Perf.CreatePrefs(cat); // 1.11.96 (after ArmorDiag: switches the diagnostics off once)
-            ArmorDiag.ApplyHooks(HarmonyInstance);
+            ArmorDiag.ApplyHooks(HarmonyInstance); try { DesignAheadTiming.ApplyHooks(HarmonyInstance); } catch { }
             Diagnostics.RepairPreferences();
             ModDesigns.Install();
             SettingsUi.CreatePrefs(cat);
