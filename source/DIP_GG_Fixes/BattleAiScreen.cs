@@ -179,6 +179,26 @@ namespace DipGgFixes
             return a * UnityEngine.Mathf.Lerp(1.2f, 0.8f, RelValue(leader));
         }
 
+        // 1.11.487 (thunderspirit2014's video 30.10, 18:18: a reloading destroyer steamed in circles - the game turns a ship round and round
+        // on a move point it has reached): at a safe distance the reloading flotilla steams legs of about 2.5 km square to the line to the
+        // nearest enemy, turning back each leg, so it keeps its distance and stays a moving target.
+        static void HoldLeg(Division div, Ship leader, Ship near, DivState st)
+        {
+            try
+            {
+                var p = leader.transform.position; var to = near != null ? near.transform.position - p : leader.transform.forward; to.y = 0f;
+                if (to.sqrMagnitude < 1f) to = leader.transform.forward; to.Normalize();
+                var beam = UnityEngine.Vector3.Cross(UnityEngine.Vector3.up, to) * st.holdSide; st.holdSide = -st.holdSide;
+                div.MoveTo(p + beam * 2500f);
+            }
+            catch { }
+        }
+        // 1.11.487: the division of this ship is in a torpedo charge (the torpedo settings keep it off the extreme-range setting)
+        internal static bool InCharge(Ship s)
+        {
+            try { var d = s.division; if (d != null && States.TryGetValue(d.Pointer, out var st)) return st.charging; } catch { }
+            return false;
+        }
         // ---- torpedo attack cycle; returns true when the cycle took over the division
         internal static bool ReloadCycle(Ship leader, Division div, DivState st, Il2CppSystem.Collections.Generic.List<Ship> enemies)
         {
@@ -203,7 +223,7 @@ namespace DipGgFixes
                     Log($"{st.name} ({leader.shipType.name}): tubes not reloaded after {now - st.reloadStart:0} s ({(lt < 0f ? "state unknown" : (lt * 100f).ToString("0") + "% loaded")}) - no reloads on board, the flotilla rejoins the fight");
                     return false;
                 }                if (near != null && nd < safe) { AwayFrom(div, leader, enemies, 4000f); TrySmoke(div, leader, st); st.holding = false; }
-                else if (!st.holding) { st.holding = true; try { div.MoveTo(leader.transform.position + leader.transform.forward * 300f); } catch { } } // 1.11.89: at a safe distance the flotilla waits (test: it ran 50 km away)
+                else if (!st.holding || now - st.holdAt > 40f) { st.holding = true; st.holdAt = now; HoldLeg(div, leader, near, st); } // 1.11.89: at a safe distance the flotilla waits (test: it ran 50 km away); 1.11.487: on slow legs, not on a point
                 Why(st, "reloading torpedoes");
                 return true;
             }
