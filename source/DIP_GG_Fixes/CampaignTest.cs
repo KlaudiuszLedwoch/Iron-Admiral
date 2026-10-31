@@ -113,8 +113,51 @@ namespace DipGgFixes
             try { info = $"nation {sel}, start year {w.GetStartingYear()}, difficulty {w.GetDifficulty()}, own fleet {w.GetCreateOwnFleet()}, historical AI {w.GetUseHistoricalAi()}, random AI {w.GetUseRandomAi()}, shared designs {w.GetSharedDesignsUsage()}, campaign designs {w.GetCampaignDesignsUsage()}, nations {n}"; } catch (Exception e) { info = "settings: " + e.Message; }
             Log("new campaign: " + info + (nation != null && sel != nation ? $" (wanted nation {nation} not found)" : "") + (year > 0 ? $" (wanted year {year})" : ""));
             if (!Click(w.StartCampaign, "Start campaign")) { Log("the Start button could not be pressed"); yield break; }
+            // 1.11.513: Start opens "Select slot to start a new campaign" (UISaveLoadWindow) with the first slot highlighted - only the
+            // row with slot index 2 is ever chosen (the window's own action for that row); nothing else in that window is pressed
+            UISaveLoadWindow sw = null;
+            for (float s0 = Time.realtimeSinceStartup; Time.realtimeSinceStartup < s0 + 60f;)
+            {
+                try { foreach (var x in UnityEngine.Object.FindObjectsOfType<UISaveLoadWindow>()) if (x != null && x.gameObject.activeInHierarchy) { sw = x; break; } } catch { }
+                if (sw != null || WorldReady()) break;
+                yield return null;
+            }
+            if (sw != null)
+            {
+                for (float d = Time.realtimeSinceStartup + 1f; Time.realtimeSinceStartup < d;) yield return null;
+                UISaveBattleSlot target = null; var rows = new System.Collections.Generic.List<string>();
+                try
+                {
+                    var slots = sw.SaveSlots;
+                    for (int i = 0; slots != null && i < slots.Count; i++)
+                    {
+                        var sl = slots[i]; if (sl == null) continue;
+                        string nm = "", dt = ""; try { nm = sl.SaveName != null ? sl.SaveName.text : ""; dt = sl.SaveDate != null ? sl.SaveDate.text : ""; } catch { }
+                        rows.Add($"{sl.SlotIndex}: {nm} {dt}");
+                        if (sl.SlotIndex == 2) target = sl;
+                    }
+                }
+                catch (Exception e) { Log("slot window: " + e.Message); }
+                Log("slot window: " + string.Join("; ", rows));
+                if (target == null) { Log("slot 2 is not in the slot window - new campaign refused"); try { sw.Close(); } catch { } yield break; }
+                try
+                {
+                    var slots = sw.SaveSlots; int pos = -1; for (int i = 0; i < slots.Count; i++) if (slots[i] != null && slots[i].Pointer == target.Pointer) pos = i;
+                    if (pos >= 0) sw.selectedSlotIndex = pos;
+                    for (int i = 0; i < slots.Count; i++) try { if (slots[i] != null) slots[i].Select(i == pos); } catch { }
+                    sw.DoAction(target); Log($"slot 2 chosen for the new campaign (row {pos})");
+                }
+                catch (Exception e) { Log("slot 2: " + e.Message); yield break; }
+            }
+            else Log("no slot window appeared");
             float t0 = Time.realtimeSinceStartup;
-            while (Time.realtimeSinceStartup < t0 + 2400f) { ConfirmBoxes(); if (WorldReady()) break; yield return null; }
+            // a confirmation is answered only while the game's campaign slot is 2; any other slot ends the test at once
+            while (Time.realtimeSinceStartup < t0 + 2400f)
+            {
+                int si = -1; try { si = GameManager.Instance.currentCampaignSlotIndex; } catch { }
+                if (si != 2) { Log($"campaign slot changed to {si} - test stopped without confirming anything"); Application.Quit(); yield break; }
+                ConfirmBoxes(); if (WorldReady()) break; yield return null;
+            }
             if (WorldReady())
             {
                 for (float d = Time.realtimeSinceStartup + 10f; Time.realtimeSinceStartup < d;) { ConfirmBoxes(); yield return null; }
