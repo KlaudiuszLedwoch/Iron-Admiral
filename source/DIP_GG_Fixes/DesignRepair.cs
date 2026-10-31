@@ -153,13 +153,16 @@ namespace DipGgFixes
                 if (kv.Value.Count != 1) continue;   // only a ship alone on her design
                 var d = designs[kv.Key]; string bn = BaseName(d.name), sig = Sig(d);
                 Ship target = null; int best = 0;
-                foreach (var kv2 in byDesign)
+                // 1.11.505 (author 31.10, 11:39: "meanwhile I refitted the other 3 ships"): the class design may have no ships left on it
+                // (the sisters moved to a refit design) - every visible design of the player counts, the one with the most ships first;
+                // back on the class design the ship can take the same refit as her sisters
+                foreach (var d2 in AllVisible(main))
                 {
-                    if (kv2.Key == kv.Key || kv2.Value.Count < 1) continue;
-                    var d2 = designs[kv2.Key];
-                    if (BaseName(d2.name) != bn || !visible.Contains(d2.Pointer)) continue;
-                    if (Sig(d2) != sig) { MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {kv.Value[0].name} on {d.name}: class {d2.name} has the same name but a different ship (hull, displacement, armour or parts) - left as it is"); continue; }
-                    if (kv2.Value.Count > best) { best = kv2.Value.Count; target = d2; }
+                    if (d2 == null || d2.Pointer == kv.Key) continue;
+                    if (BaseName(d2.name) != bn) continue;
+                    if (Sig(d2) != sig) { MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {kv.Value[0].name} on {d.name}: class design {d2.name} has the same name but a different ship (hull, displacement, armour or parts) - not this one"); continue; }
+                    int n = byDesign.TryGetValue(d2.Pointer, out var on2) ? on2.Count : 0;
+                    if (target == null || n > best) { best = n; target = d2; }
                 }
                 if (target == null) continue;
                 var s = kv.Value[0];
