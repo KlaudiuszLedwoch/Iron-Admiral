@@ -65,9 +65,10 @@ namespace DipGgFixes
                     Vector3 wp; try { wp = e.transform.position; } catch { continue; }
                     var p2 = wp; p2.y = 0f; float km = (p2 - fp).magnitude / 1000f;
                     var sp = cam.WorldToScreenPoint(wp + Vector3.up * 18f); if (sp.z <= 0f) continue;
-                    var r = new Rect(sp.x / UiScale.F - 40f, H - sp.y / UiScale.F - 30f, 80f, 14f); // 1.11.240 (author, 24.10): above the class label, not under it - under it is the ship
+                    var r = new Rect(sp.x / UiScale.F - 80f, H - sp.y / UiScale.F - 30f, 160f, 14f); /* 1.11.496: wider for the immune zone */ // 1.11.240 (author, 24.10): above the class label, not under it - under it is the ship
                     if (r.yMax < 0 || r.y > H || r.xMax < 0 || r.x > W) continue;
-                    GUI.Label(r, km >= 10f ? $"{km:0} km" : $"{km:0.0} km", sTag);
+                    string iz = ""; try { iz = ImmuneZone.Tag(from, e); } catch { } // 1.11.496 (#117): our ship's immune zone against his main battery
+                    GUI.Label(r, (km >= 10f ? $"{km:0} km" : $"{km:0.0} km") + iz, sTag);
                 }
             }
             catch (Exception e) { if (errors++ < 5) MelonLogger.Warning("[DIP GG Fixes][Battle] range tags: " + e.Message); }

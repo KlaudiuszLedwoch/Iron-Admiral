@@ -105,6 +105,25 @@ namespace DipGgFixes
             keepRange[div.Pointer] = Mathf.Clamp(r + step, 2000f, 30000f);
             var o = OrderOf(div, false); Log($"{(o != null ? o.Name : "division")}: keep range {keepRange[div.Pointer] / 1000f:0.0} km (panel)");
         }
+        // 1.11.496 (#117): the "IZ" button of Keep range - the distance is set to the middle of the leader's immune zone against the main
+        // battery of the enemy it keeps its distance from (beam-on); a zone that reaches to the enemy gun's maximum range is held 1.5 km
+        // inside its inner limit's far side, never at the edge of his reach
+        internal static void KeepRangeImmune(Division div)
+        {
+            if (div == null) return;
+            var o = OrderOf(div, false); string name = o != null ? o.Name : "division";
+            try
+            {
+                var l = div.leader; var e = l != null ? KeepTarget(l, null) : null;
+                if (e == null) { Log($"{name}: keep range IZ - no enemy in sight"); return; }
+                var z = ImmuneZone.Battle(l, e);
+                if (!z.Any) { Log($"{name}: keep range IZ - no immune zone against {e.name} ({ImmuneZone.Text(z)}); distance unchanged"); if (o != null) OWhy(o, $"no immune zone against {e.name} - distance unchanged"); return; }
+                float r = z.ToMax ? Mathf.Min(z.Outer, z.Inner + 1500f) : (z.Inner + z.Outer) / 2f;
+                keepRange[div.Pointer] = Mathf.Clamp(Mathf.Round(r / 500f) * 500f, 2000f, 30000f);
+                Log($"{name}: keep range {keepRange[div.Pointer] / 1000f:0.0} km - inside the immune zone {ImmuneZone.Text(z)} against {e.name}");
+            }
+            catch (Exception ex) { Log($"{name}: keep range IZ: {ex.Message}"); }
+        }
         // the enemy the division keeps its distance from: the nearest visible enemy warship (transports and unarmed ships do not count)
         static Ship KeepTarget(Ship leader, Ship main)
         {
@@ -694,6 +713,7 @@ namespace DipGgFixes
                         if (GUI.Button(new Rect(x + w - 282f, y + 3f, 38f, 18f), "-1 km")) KeepRangeStep(div, -1000f);
                         GUI.Label(new Rect(x + w - 242f, y + 4f, 40f, 18f), $"{kr / 1000f:0.#} km", oTitle);
                         if (GUI.Button(new Rect(x + w - 202f, y + 3f, 38f, 18f), "+1 km")) KeepRangeStep(div, 1000f);
+                        if (GUI.Button(new Rect(x + w - 322f, y + 3f, 36f, 18f), "IZ")) KeepRangeImmune(div); // 1.11.496 (#117)
                     }
                     finally { TorpedoSettings.EndSmall(); }
                 }

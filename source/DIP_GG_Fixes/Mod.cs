@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.495", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.496", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -305,6 +305,7 @@ namespace DipGgFixes
             try { Thanks.OnGUI(); } catch { } // 1.11.370
             try { AirStrike.OnGUI(); } catch { } // 1.11.385
             try { DesignStats.OnGUI(); } catch { } // 1.11.397
+            try { ImmuneZone.OnGUI(); } catch { } // 1.11.496 (#117)
             try { Narrative.OnGUI(); } catch { }
             SettingsUi.OnGUI();
             RevoltDecision.OnGUI(); Occupation.OnGUI(); BattleAi.OrdersOnGUI(); try { BattleHour.OnGUI(); } catch { } try { TorpedoSettings.OnGUI(); } catch { } try { TorpedoPriority.OnGUI(); } catch { } try { GunOrders.OnGUI(); } catch { } RangeTags.OnGUI(); OtherMods.OnGUI(); LogShare.OnGUI();
@@ -645,6 +646,7 @@ namespace DipGgFixes
             SeaRepair.CreatePrefs(cat); // 1.11.453
             PenReference.CreatePrefs(cat); // 1.11.459
             TorpReference.CreatePrefs(cat); // 1.11.494
+            ImmuneZone.CreatePrefs(cat); // 1.11.496 (#117)
             Spectacle.CreatePrefs(cat); // 1.11.462
             SlowProbe.CreatePrefs(cat); // 1.11.463
 RefitConfirm.CreatePrefs(cat); // 1.11.464
