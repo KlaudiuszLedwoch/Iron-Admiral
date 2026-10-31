@@ -112,6 +112,60 @@ namespace DipGgFixes
                 catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][DesignRepair] {s.name}: " + e.Message); }
             }
             MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {main.data.name}: {checkedN} ships checked, {fixedN} given a design in the list ({cloned.Count} design copies)");
+            try { Rejoin(main, ships, visible); } catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][DesignRepair] rejoin: " + e.Message); }
+        }
+
+        // 1.11.504 (author 31.10, 11:35: "BB Westfalen came loose from her class design - it happened once before with another ship;
+        // fix it so I can refit her together with the others"): a ship that sits alone on a design of its own while that design is
+        // the same as the class design of her sisters (same base name, hull, displacement, armour and parts - a copy made when the game
+        // lost or erased the design, or by the design repair above) is put back on the class design, so a refit takes the whole class.
+        // Every player's ship and its design are logged once per load (design, ships on it) so a loose ship can be found in the log.
+        static string BaseName(string n) { if (string.IsNullOrEmpty(n)) return ""; int i = n.IndexOf(" ("); return (i > 0 ? n.Substring(0, i) : n).Trim(); }
+        static string Sig(Ship d)
+        {
+            var sb = new System.Text.StringBuilder();
+            try { sb.Append(d.hull != null && d.hull.data != null ? d.hull.data.name : "?").Append('|').Append(Math.Round(d.Tonnage())).Append('|'); } catch { sb.Append("?|"); }
+            try { foreach (var kv in d.armor) sb.Append((int)kv.Key).Append('=').Append(Math.Round(kv.Value)).Append(','); } catch { }
+            sb.Append('|');
+            try { var names = new List<string>(); var parts = d.parts; for (int i = 0; parts != null && i < parts.Count; i++) { var p = parts[i]; if (p != null && p.data != null) names.Add(p.data.name); } names.Sort(); sb.Append(string.Join(",", names)); } catch { }
+            return sb.ToString();
+        }
+        static void Rejoin(Player main, List<Ship> ships, HashSet<IntPtr> visible)
+        {
+            var byDesign = new Dictionary<IntPtr, List<Ship>>(); var designs = new Dictionary<IntPtr, Ship>();
+            foreach (var s in ships)
+            {
+                Ship d = null; try { d = s.design; } catch { }
+                if (d == null) continue;
+                if (!byDesign.TryGetValue(d.Pointer, out var l)) { l = new List<Ship>(); byDesign[d.Pointer] = l; designs[d.Pointer] = d; }
+                l.Add(s);
+            }
+            foreach (var kv in byDesign)
+            {
+                var d = designs[kv.Key]; string t = "?"; try { t = d.shipType != null ? d.shipType.name : "?"; } catch { }
+                if (t == "bb" || t == "bc" || t == "ca" || t == "cl")
+                    MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] class {d.name} ({t}, refit design {Safe(() => d.isRefitDesign)}, visible {visible.Contains(d.Pointer)}): {kv.Value.Count} ship(s) - {string.Join(", ", kv.Value.ConvertAll(x => x.name))}");
+            }
+            int moved = 0;
+            foreach (var kv in byDesign)
+            {
+                if (kv.Value.Count != 1) continue;   // only a ship alone on her design
+                var d = designs[kv.Key]; string bn = BaseName(d.name), sig = Sig(d);
+                Ship target = null; int best = 0;
+                foreach (var kv2 in byDesign)
+                {
+                    if (kv2.Key == kv.Key || kv2.Value.Count < 1) continue;
+                    var d2 = designs[kv2.Key];
+                    if (BaseName(d2.name) != bn || !visible.Contains(d2.Pointer)) continue;
+                    if (Sig(d2) != sig) { MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {kv.Value[0].name} on {d.name}: class {d2.name} has the same name but a different ship (hull, displacement, armour or parts) - left as it is"); continue; }
+                    if (kv2.Value.Count > best) { best = kv2.Value.Count; target = d2; }
+                }
+                if (target == null) continue;
+                var s = kv.Value[0];
+                try { s.design = target; moved++; MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {s.name}: alone on design {d.name}, identical to the class design {target.name} of {best} sister(s) - put back on the class design"); }
+                catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][DesignRepair] {s.name}: rejoin failed: " + e.Message); }
+            }
+            MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {main.data.name}: {moved} loose ship(s) put back on their class design");
         }
     }
 }
