@@ -60,7 +60,7 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 - Zwrot od torped. Dywizje AI, które widzą nadpływające ślady torped,
   skręcają równolegle do nich.
 - Artyleria wg danych historycznych: pociski półprzeciwpancerne (SAPC),
-  szybkostrzelność wg NavWeaps, rykoszety wg Okuna, działa pomocnicze na
+  szybkostrzelność i rykoszety według danych historycznych, działa pomocnicze na
   niszczycielach.
 
 2. TWOJE OKRĘTY: MNIEJ MIKROZARZĄDZANIA, MNIEJ WŁASNYCH TORPED W BURCIE
@@ -141,11 +141,10 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 
 6. HISTORIA W LICZBACH
 ----------------------------------------------------------------------------
-- Przebijalność z fizyki, nie z suwaka: krzywe dla 21 kalibrów i 5 generacji
-  dział przebudowane formułą De Marre'a i skalibrowane na sześciu tabelach z
-  navweaps.com (błąd 0,5-13%), a kalibry 16-21" zakotwiczone na tabelach
-  Okuna. Małe działa nie rysują już pasa pancernego pancernika.
-- Masy luf z prawa potęgowego skalibrowanego na 16"/50 Mk 7, 15"/42 Mk I i
+- Przebijalność z fizyki, nie z suwaka: 21 kalibrów i 5 generacji dział
+  sprawdzonych z opublikowanymi danymi prawdziwych dział. Małe działa nie
+  rysują już pasa pancernego pancernika.
+- Masy luf dopasowane do 16"/50 Mk 7, 15"/42 Mk I i
   46 cm Type 94.
 - Traktaty morskie po raz pierwszy zamodelowane: 35 000 t od technologii
   kadłuba z 1919 r., 45 000 t od 1936 r., koniec ograniczeń w 1940 r.
@@ -237,8 +236,8 @@ Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce.
 8. HISTORIA WERSJI
 ----------------------------------------------------------------------------
 Iron Admiral 1.0 (październik 2026, na bazie DIP The Great Game 1.0.1)
-- Dane: przebijalność pancerza z fizyki (De Marre) dla 21 kalibrów i 5
-  generacji dział; masy luf z prawa potęgowego; traktaty morskie (35 000 / 45
+- Dane: przebijalność pancerza z fizyki dla 21 kalibrów i 5
+  generacji dział; masy luf według prawdziwych dział; traktaty morskie (35 000 / 45
   000 t) i limit 240 000 t dla superpancerników; naprawione kadłuby, których
   nie dało się zbudować (Modern Battleship, wcześniejsze pancerniki,
   niszczyciele); Long Lance +100%; radar działający nocą; tempo badań,
@@ -255,7 +254,7 @@ Iron Admiral 1.0 (październik 2026, na bazie DIP The Great Game 1.0.1)
   zamiast beznadziejnej ucieczki, odłączanie wolnych okrętów, narodowe
   doktryny bitewne (battleDoctrines.csv).
 - DIP_GG_Fixes 1.10.0: 24 miesiące karencji przed rozpadem gospodarczym;
-  osłona ładowania okrętów; przebijalność 16-21" oparta na tabelach Okuna.
+  osłona ładowania okrętów; przebijalność 16-21" według danych historycznych.
 
 Iron Admiral 1.1 (14 października 2026)
 - Przebudowa na DIP The Great Game 1.3.5 i TweaksAndFixes 3.21.1 przez
@@ -355,7 +354,7 @@ biblioteki tylko wtedy, gdy zmienia się biblioteka.
 - 1.11.17 / Iron Admiral 1.2.9: kryzys skarbu odpala też natychmiast, gdy dług
   przekracza 12 miesięcy budżetu morskiego (licznik miesięcy zerował się przy
   każdym restarcie, więc Brytania z -823 mln nie dostała pożyczki);
-  diagnostyka [Shipyard] dla mocarstw AI, które nic nie zamawiają (USA
+  diagnostyka w logu dla mocarstw AI, które nic nie zamawiają (USA
   siedziały na 1,2 mld bez okrętów i bez zamówień); linia startowa logu czyta
   prawdziwą wersję.
 - 1.11.18 / Iron Admiral 1.2.10: granty balance of power tylko dla nacji z
@@ -552,7 +551,7 @@ files cannot reach. One-click install, full uninstall, source code included.
 - Turning away from torpedoes. AI divisions that sight torpedo tracks coming
   at them turn to run parallel to them.
 - Gunnery after historical data: semi-armour-piercing (SAPC) shells, rates of
-  fire after NavWeaps, ricochets after Okun, secondary guns on destroyers.
+  fire and ricochets after historical data, secondary guns on destroyers.
 
 2. YOUR SHIPS: LESS MICROMANAGEMENT, FEWER OWN TORPEDOES IN YOUR OWN SIDE
 ----------------------------------------------------------------------------
@@ -631,11 +630,10 @@ files cannot reach. One-click install, full uninstall, source code included.
 
 6. HISTORY IN NUMBERS
 ----------------------------------------------------------------------------
-- Penetration from physics, not from a slider: curves for 21 calibres and 5
-  gun generations rebuilt with the De Marre formula and calibrated on six
-  navweaps.com tables (error 0.5-13%), the 16-21" calibres anchored on Okun's
-  tables. Small guns no longer scratch a battleship's belt.
-- Barrel weights from a power law calibrated on the 16"/50 Mk 7, 15"/42 Mk I
+- Penetration from physics, not from a slider: 21 calibres and 5 gun
+  generations checked against published data of real guns. Small guns no
+  longer scratch a battleship's belt.
+- Barrel weights matched to the 16"/50 Mk 7, 15"/42 Mk I
   and 46 cm Type 94.
 - The naval treaties modelled for the first time: 35,000 t from the 1919 hull
   tech, 45,000 t from 1936, limits lapse in 1940.
@@ -731,8 +729,8 @@ files cannot reach. One-click install, full uninstall, source code included.
 8. VERSION HISTORY
 ----------------------------------------------------------------------------
 Iron Admiral 1.0 (October 2026, based on DIP The Great Game 1.0.1)
-- Data: armour penetration rebuilt from physics (De Marre) for 21 calibres and
-  5 gun generations; barrel weights from a power law; naval treaties (35,000 /
+- Data: armour penetration rebuilt from physics for 21 calibres and
+  5 gun generations; barrel weights after real guns; naval treaties (35,000 /
   45,000 t) and a 240,000 t super-battleship ceiling; fixed hulls that could
   never be built (Modern Battleship, earlier BBs, destroyers); Long Lance
   +100%; radar that works at night; research pacing, economy and AI fleet-
@@ -748,7 +746,7 @@ Iron Admiral 1.0 (October 2026, based on DIP The Great Game 1.0.1)
   instead of a hopeless retreat, detaching slow ships, national battle
   doctrines (battleDoctrines.csv).
 - DIP_GG_Fixes 1.10.0: 24-month grace before an economic collapse; ship-
-  loading guard; 16-21" penetration anchored on Okun's tables.
+  loading guard; 16-21" penetration after historical data.
 
 Iron Admiral 1.1 (14 October 2026)
 - Rebuilt on DIP The Great Game 1.3.5 and TweaksAndFixes 3.21.1 by a three-way
@@ -847,7 +845,7 @@ when the DLL does.
   that failed in the autodesigner.
 - 1.11.17 / Iron Admiral 1.2.9: the treasury crisis also fires at once when
   the debt exceeds 12 months of naval budget (the month counter reset with
-  every restart, so Britain at -823M never got its loan); [Shipyard]
+  every restart, so Britain at -823M never got its loan); log
   diagnostics for AI powers that order nothing (the USA sat on 1.2 bn with no
   ships and no orders); start-up log line reads the real version.
 - 1.11.18 / Iron Admiral 1.2.10: balance-of-power grants only for nations with
