@@ -112,6 +112,28 @@ namespace DipGgFixes
         static int layerLogged;
         static readonly Dictionary<string, HitAgg> hitsCal = new Dictionary<string, HitAgg>(), hitsVictim = new Dictionary<string, HitAgg>();
         static string CalBand(float c) { return c >= 240f ? "heavy (>=9.4 in)" : c >= 150f ? "medium (6-9 in)" : c >= 100f ? "light (4-6 in)" : c > 0f ? "small (<4 in)" : "unknown gun"; }
+        // 1.11.500 (#116, author 31.10, 11:24: "do you take it from my games?"): the [Layers] lines were written only with ArmorDiagnostics
+        // switched on (off by default), so no battle logged them - they are now written from the hit the physical penetration always
+        // sees (PhysPen.Taken), at most 60 per battle, whatever the diagnostics switch
+        static IntPtr layerBattle;
+        internal static void LayersAlways(Ship victim, Part from, string hitType, float damage, float armor, float pen)
+        {
+            if (Active) return;   // RecordHit writes them
+            try
+            {
+                IntPtr b = IntPtr.Zero; try { var cb = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (cb != null) b = cb.Pointer; } catch { }
+                if (b != layerBattle) { layerBattle = b; layerLogged = 0; }
+                if (layerLogged >= 60 || victim == null || victim.armor == null) return;
+                float V(Ship.A z) { float x; return victim.armor.TryGetValue(z, out x) ? x : 0f; }
+                float ib1 = V(Ship.A.InnerBelt_1st), ib2 = V(Ship.A.InnerBelt_2nd), ib3 = V(Ship.A.InnerBelt_3rd), id1 = V(Ship.A.InnerDeck_1st), id2 = V(Ship.A.InnerDeck_2nd), id3 = V(Ship.A.InnerDeck_3rd);
+                if (ib1 + ib2 + ib3 + id1 + id2 + id3 <= 0f) return;
+                float cal = 0f; try { if (from != null && from.data != null) cal = from.data.caliber; } catch { }
+                string t = string.IsNullOrEmpty(hitType) ? "?" : hitType; if (t.Length > 40) t = t.Substring(0, 40);
+                layerLogged++;
+                MelonLogger.Msg($"[DIP GG Fixes][Layers] {victim.name}: hit '{t}' by {cal:0} mm - armour used by the game {armor:0} mm, penetration {pen:0} mm, damage {damage:0}; plates: belt {V(Ship.A.Belt):0} + inner {ib1:0}/{ib2:0}/{ib3:0} mm, deck {V(Ship.A.Deck):0} + inner {id1:0}/{id2:0}/{id3:0} mm");
+            }
+            catch { }
+        }
         internal static void RecordHit(Ship victim, Part from, string hitType, float damage, float armor, float pen)
         {
             if (!Active || !inBattle) return;

@@ -408,6 +408,7 @@ namespace DipGgFixes
         {
             // 1.11.282: the game registers the damage it computed before the mod's damage path changed it (historical model, pass-through rule) - the value actually dealt is taken from that path when it ran for this hit
             float gameDamage = damage; if (OverPen.LastFrame == Time.frameCount && Math.Abs(OverPen.LastNew - OverPen.LastRaw) > 0.05f) damage = OverPen.LastNew;
+            try { ArmorDiag.LayersAlways(victim, from, hitType, damage, armor, penetration); } catch { } // 1.11.500 (#116)
             try
             {
                 // runs inside the arriving shell's Update: its own physical flight (registered at Shell.Create) is known here
