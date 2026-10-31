@@ -203,7 +203,9 @@ namespace DipGgFixes
         {
             if (CampOn == null || !CampOn.Value || p == null) return 0f;
             int lv = 0; try { lv = NavalAviation.CarrierLevel(p); } catch { }
-            if (lv <= 0) return 0f;
+            // 1.11.495 (author 31.10, 09:59: Coastal Seaplane Stations researched, aviation slider at 200 %, cost $0): shore-based seaplanes
+            // without a carrier cost too - the RNAS of 1913 took about 0.7 % of the Navy Estimates (Hansard); NavalAviationStationUpkeep
+            if (lv <= 0) { int rl = 0; try { rl = NavalAviation.ReconLevel(p); } catch { } if (rl <= 0) return 0f; float sv = StationUpkeep != null ? StationUpkeep.Value : 0.7f; return Math.Max(0f, sv) * AirBudget.Pct(p) / 100f; }
             // 1.11.427 (author 30.10 09:14: "research how this cost relation looked historically"): naval aviation against the
             // naval budget - UK 1913 0.7% (RNAS), 1925 >= 2.1-2.5% (FAA), 1938 4.5% of the whole / 6.7% without new construction,
             // 1939 7.9% / ~13% of the fleet maintenance (Hansard, Navy Estimates debates); USA BuAer ~4% 1923, 9% 1930, 6% 1935,
@@ -213,6 +215,7 @@ namespace DipGgFixes
             if (k >= 0) float.TryParse(a[k].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v);
             return Math.Max(0f, v) * AirBudget.Pct(p) / 100f;   // 1.11.467: the naval aviation budget slider
         }
+        internal static MelonPreferences_Entry<float> StationUpkeep;
         internal static float Upkeep(Player p)
         {
             float pct = UpkeepPct(p); if (pct <= 0f) return 0f;
@@ -225,6 +228,7 @@ namespace DipGgFixes
             PresenceScale = cat.CreateEntry("NavalAviationCarrierPresence", "15,30,50,65", null, "Campaign: chance (%) that a fleet in a battle has a carrier with it, for carrier technology 1,2,3,4 - each side rolls separately");
             BigBattleStep = cat.CreateEntry("NavalAviationCarrierPresenceBigBattle", 20f, null, "Campaign: the carrier presence chance grows by this many percent (of itself) for each capital ship of the fleet beyond the first, at most 90%");
             MinVisKm = cat.CreateEntry("NavalAviationMinVisibilityKm", 8f, null, "Campaign: below this visibility (km) the carrier does not fly off its aircraft");
+            StationUpkeep = cat.CreateEntry("NavalAviationStationUpkeep", 0.7f, null, "Campaign: monthly upkeep (percent of the fleet maintenance) of naval aviation with seaplane stations only, before the seaplane carrier (RNAS 1913: about 0.7 % of the Navy Estimates)");
             UpkeepScale = cat.CreateEntry("NavalAviationUpkeepScale", "1.5,3.5,7,11.5", null, "Campaign: monthly upkeep of naval aviation in percent of the fleet maintenance for carrier technology 1,2,3,4 (seaplane carrier 1910s, first carriers 1920s, carrier fleet 1930s, large carrier force 1940s - from the Navy Estimates and US Navy budget shares of naval aviation)");
             CampOn = cat.CreateEntry("NavalAviationCampaignStrikes", true, null, "Campaign: in a daylight battle with battleships or cruisers each side whose nation has the seaplane carrier and the aerial torpedo researched sends torpedo aircraft from a carrier beyond the horizon - waves, aircraft and their type by its Naval Aviation technologies; the carrier costs a monthly upkeep");
         }

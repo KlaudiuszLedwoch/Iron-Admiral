@@ -294,6 +294,15 @@ namespace DipGgFixes
                 string v; try { v = Ui.MoneyDelta(-b.Surcharge); } catch { v = (-b.Surcharge / 1e6f).ToString("0") + "M"; }
                 Show(w.AnnualInflation, $"{st.Inflation:0.0}%");
                 Show(w.InflationLoses, v);
+                // 1.11.495 (author's screenshot 31.10, 09:57): the game's own label reads "Inflation Loses"
+                try
+                {
+                    var par = w.InflationLoses != null ? w.InflationLoses.transform.parent : null;
+                    for (int up = 0; par != null && up < 2; up++, par = par.parent)
+                        foreach (var t in par.GetComponentsInChildren<TMP_Text>(true))
+                            if (t != null && t.text != null && t.text.Contains("Inflation Loses")) t.text = t.text.Replace("Inflation Loses", "Inflation Losses");
+                }
+                catch { }
                 AirBudgetUi.Apply(w, p);   // 1.11.470: the naval aviation slider in the Finances window
                 if (!logged)
                 {
