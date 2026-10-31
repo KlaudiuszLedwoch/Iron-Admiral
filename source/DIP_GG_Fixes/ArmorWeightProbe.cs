@@ -15,14 +15,17 @@ namespace DipGgFixes
 {
     internal static class ArmorWeightProbe
     {
-        static readonly HashSet<IntPtr> done = new HashSet<IntPtr>();
+        static readonly Dictionary<IntPtr, string> done = new Dictionary<IntPtr, string>();   // 1.11.493: design -> armour it was measured with
+        static string lastSig; static float sigAt;
+        static string Sig(Ship s) { var sb = new StringBuilder(); foreach (var (z, n, k) in Zones) { float v; if (s.armor.TryGetValue(z, out v)) sb.Append((int)z).Append(':').Append(v.ToString("0.#")).Append(';'); } return sb.ToString(); }
         static IntPtr seen; static float seenAt; static int errors;
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][ArmorWeight] " + m); }
-        // zone, label, the game's own effective-thickness factor (designer tooltips: 1st inner belt 2.2x, 2nd 3x; others 1x)
+        // zone, label, the game's own effective-thickness factor (designer tooltips: 1st inner belt and 1st inner deck 2.2x, 2nd inner belt 3x;
+        // 2nd inner deck 3x - all four read from the tooltips 31.10; others 1x)
         static readonly (Ship.A z, string n, float k)[] Zones =
         {
             (Ship.A.Belt, "main belt", 1f), (Ship.A.InnerBelt_1st, "1st inner belt", 2.2f), (Ship.A.InnerBelt_2nd, "2nd inner belt", 3f), (Ship.A.InnerBelt_3rd, "3rd inner belt", 1f),
-            (Ship.A.Deck, "main deck", 1f), (Ship.A.InnerDeck_1st, "1st inner deck", 1f), (Ship.A.InnerDeck_2nd, "2nd inner deck", 1f), (Ship.A.InnerDeck_3rd, "3rd inner deck", 1f),
+            (Ship.A.Deck, "main deck", 1f), (Ship.A.InnerDeck_1st, "1st inner deck", 2.2f), (Ship.A.InnerDeck_2nd, "2nd inner deck", 3f), (Ship.A.InnerDeck_3rd, "3rd inner deck", 1f),
             (Ship.A.BeltBow, "fore belt", 1f), (Ship.A.BeltStern, "aft belt", 1f),
         };
 
@@ -36,8 +39,13 @@ namespace DipGgFixes
                 Ship s = null; try { s = G.ui != null ? G.ui.mainShip : null; } catch { }
                 if (s == null || s.armor == null) return;
                 if (s.Pointer != seen) { seen = s.Pointer; seenAt = Time.unscaledTime; return; }
-                if (Time.unscaledTime - seenAt < 3f || done.Contains(s.Pointer)) return;
-                done.Add(s.Pointer);
+                if (Time.unscaledTime - seenAt < 3f) return;
+                // 1.11.493 (author 31.10 08:52, changing the armour of the open design): measured again when the armour of the design changed
+                // and has stayed the same for 3 s
+                string sig = Sig(s); if (sig != lastSig) { lastSig = sig; sigAt = Time.unscaledTime; return; }
+                if (Time.unscaledTime - sigAt < 3f) return;
+                string was; if (done.TryGetValue(s.Pointer, out was) && was == sig) return;
+                done[s.Pointer] = sig;
                 Probe(s);
             }
             catch (Exception e) { if (errors++ < 5) Log("tick: " + e.Message); }
