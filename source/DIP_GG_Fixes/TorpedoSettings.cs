@@ -215,6 +215,14 @@ namespace DipGgFixes
             catch { return 1f; }
         }
         internal static int Available(Ship s) { try { return Enabled ? Get(s).P.N : 1; } catch { return 1; } }
+        // 1.11.494: the ship's settings for the torpedo reference (wiki table): propulsion generation, number of settings, range and
+        // speed ratios to the long-range setting, and the setting in use now
+        internal static bool Describe(Ship s, out int gen, out int n, out float[] r, out float[] v, out int cur)
+        {
+            gen = 0; n = 1; r = null; v = null; cur = LR;
+            if (!Enabled || s == null) return false;
+            try { var st = Get(s); gen = st.Gen; n = st.P.N; r = st.P.R; v = st.P.V; cur = n > 1 ? st.Cur : LR; return r != null && v != null; } catch { return false; }
+        }
         internal static int Current(Ship s) { try { var st = Get(s); return st.Pending >= 0 ? st.Pending : st.Cur; } catch { return LR; } }
         static bool Has(St st, int set) { return set == LR || (set == HS && st.P.N >= 2) || (set == ER && st.P.N >= 3); }
 

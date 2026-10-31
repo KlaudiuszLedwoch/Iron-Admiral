@@ -20,12 +20,19 @@ namespace DipGgFixes
 {
     internal static partial class BattleAi
     {
-        internal enum DivOrder { None, Screen, Scout, Torpedo, Free, Hunt, Finish }
+        // 1.11.494 (author 31.10, 09:27: "a button for keeping a set distance from the enemy"): Keep range - the division holds the
+        // distance chosen in the panel from the nearest enemy warship it can see: it steers round him on that circle (broadside on,
+        // the side it is already turning to), closes in when it is further out and opens the range when it is closer. The distance
+        // starts at the range to that enemy when the order is given (2-30 km, 0.5 km steps) and is changed with the panel's
+        // -1 km / +1 km buttons. Torpedo evasion and the damaged break-off work as under the other orders. Alt+8.
+        internal enum DivOrder { None, Screen, Scout, Torpedo, Free, Hunt, Finish, Keep }
         internal class OrderSt { public DivOrder Order; public bool FromVanilla; public bool Issued; public float NextThink; public string Name; public string Reason; public Vector3 LastSeen; public bool Seen; public Ship Leader; public float LastCmd; public Vector3 LastTarget; public bool ClosingUp; }
         static readonly Dictionary<IntPtr, OrderSt> orders = new Dictionary<IntPtr, OrderSt>();
         static IntPtr ordersBattle;
         internal static bool Issuing;   // our own commands - the Division.MoveTo/MoveDir patch ignores them
-        static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action", "Hunt", "Finish off" };
+        static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action", "Hunt", "Finish off", "Keep range" };
+        static readonly Dictionary<IntPtr, float> keepRange = new Dictionary<IntPtr, float>();   // division -> distance to hold (m)
+        internal static float KeepRangeOf(Division div) { return div != null && keepRange.TryGetValue(div.Pointer, out var r) ? r : 0f; }
 
         internal static MelonPreferences_Entry<bool> OrdersOn, OrdersVanilla;
         internal static MelonPreferences_Entry<float> Leash, BreakOff, ScoutSearch;
@@ -62,7 +69,7 @@ namespace DipGgFixes
         static void OrdersReset()
         {
             IntPtr bp = IntPtr.Zero; try { var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (b != null) bp = b.Pointer; } catch { }
-            if (bp != ordersBattle) { ordersBattle = bp; orders.Clear(); }
+            if (bp != ordersBattle) { ordersBattle = bp; orders.Clear(); keepRange.Clear(); }
         }
         static OrderSt OrderOf(Division div, bool create)
         {
@@ -82,6 +89,74 @@ namespace DipGgFixes
             Log($"{o.Name}: order {OrderNames[(int)ord]} ({how})");
             if (ord != DivOrder.Hunt) HuntShells(div, false, null); // 1.11.301: shells back after Hunt
             if (ord != DivOrder.None) try { Issuing = true; if (div.isRetreating || div.retreat) div.Retreat(false); } catch { } finally { Issuing = false; }
+            if (ord == DivOrder.Keep && !keepRange.ContainsKey(div.Pointer))
+            {
+                float r = 12000f;
+                try { var l = div.leader; var e = l != null ? KeepTarget(l, null) : null; if (e != null) r = (P(e) - P(l)).magnitude; } catch { }
+                keepRange[div.Pointer] = Mathf.Clamp(Mathf.Round(r / 500f) * 500f, 2000f, 30000f);
+                Log($"{o.Name}: keep range {keepRange[div.Pointer] / 1000f:0.0} km");
+            }
+        }
+        internal static void KeepRangeStep(Division div, float step)
+        {
+            if (div == null) return;
+            float r = KeepRangeOf(div); if (r <= 0f) r = 12000f;
+            keepRange[div.Pointer] = Mathf.Clamp(r + step, 2000f, 30000f);
+            var o = OrderOf(div, false); Log($"{(o != null ? o.Name : "division")}: keep range {keepRange[div.Pointer] / 1000f:0.0} km (panel)");
+        }
+        // the enemy the division keeps its distance from: the nearest visible enemy warship (transports and unarmed ships do not count)
+        static Ship KeepTarget(Ship leader, Ship main)
+        {
+            Ship best = null; float bd = float.MaxValue;
+            try
+            {
+                var battle = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (battle == null || leader.player == null) return null;
+                var enemies = battle.ShipsOf(battle.OppositePlayer(leader.player), true); if (enemies == null) return null;
+                Vector3 me = P(leader);
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    var e = enemies[i];
+                    if (e == null || e.isSinking || e.isDead || e.IsSurrendered) continue;
+                    bool vis = false; try { vis = e.IsVisibleFor(leader) || (main != null && e.IsVisibleFor(main)); } catch { }
+                    if (!vis) continue;
+                    bool unarmed = false; try { var stn = e.shipType != null ? e.shipType.name : ""; unarmed = stn == "tr" || stn == "amc" || GunRange(e) <= 0f; } catch { }
+                    if (unarmed) continue;
+                    float d = (P(e) - me).magnitude; if (d < bd) { bd = d; best = e; }
+                }
+            }
+            catch { }
+            return best;
+        }
+        static void KeepRange(Division div, OrderSt o, Ship leader, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
+        {
+            float R = KeepRangeOf(div); if (R <= 0f) { R = 12000f; keepRange[div.Pointer] = R; }
+            var e = KeepTarget(leader, main);
+            if (e == null)
+            {
+                // nobody in sight: towards the last seen enemy until he is at the distance, else wait by the main body
+                if (o.Seen && (o.LastSeen - me).magnitude > R + 1000f) { Cmd(div, o, o.LastSeen - (o.LastSeen - me).normalized * R); OWhy(o, $"no enemy in sight - closing to {R / 1000f:0.#} km of his last position"); return; }
+                var st = home + toEnemy * 2500f; if ((me - st).magnitude > 800f && main != null) Cmd(div, o, st);
+                OWhy(o, $"no enemy in sight - keep range {R / 1000f:0.#} km"); return;
+            }
+            Vector3 ep = P(e), dir = me - ep; dir.y = 0f; float d = dir.magnitude; if (d < 1f) dir = -toEnemy; dir.Normalize();
+            float err = d - R;
+            Vector3 goal; string doing;
+            if (Mathf.Abs(err) > 3000f)
+            {
+                goal = ep + dir * R;   // far off the circle: straight to the point on it
+                doing = err > 0f ? "closing in" : "opening the range";
+            }
+            else
+            {
+                // on the circle: steer round the enemy, broadside on, on the side the division is already turning to
+                Vector3 tan = new Vector3(-dir.z, 0f, dir.x);
+                Vector3 fwd = leader.transform.forward; fwd.y = 0f;
+                if (Vector3.Dot(fwd, tan) < 0f) tan = -tan;
+                goal = ep + dir * R + tan * 3000f;
+                doing = Mathf.Abs(err) < 750f ? "holding the distance" : err > 0f ? "edging in" : "edging out";
+            }
+            Cmd(div, o, goal);
+            OWhy(o, $"keep {R / 1000f:0.#} km from {e.name} - {doing}");
         }
         internal static DivOrder CurrentOrder(Division div) { var o = OrderOf(div, false); return o != null ? o.Order : DivOrder.None; }
         internal static string OrderLabel(DivOrder o) { return OrderNames[(int)o]; } // 1.11.216
@@ -218,6 +293,7 @@ namespace DipGgFixes
 
             if (o.Order == DivOrder.Hunt) { Hunt(div, o, leader, enemies, main, me, home, toEnemy); return true; }
             if (o.Order == DivOrder.Finish) { FinishOff(div, o, leader, enemies, main, me, home, toEnemy); return true; } // 1.11.285 (#1)
+            if (o.Order == DivOrder.Keep) { KeepRange(div, o, leader, main, me, home, toEnemy); return true; } // 1.11.494
 
             if (o.Order == DivOrder.Screen)
             {
@@ -528,7 +604,7 @@ namespace DipGgFixes
                 if (Input.GetKeyDown(panelKey)) oFolded = !oFolded; // 1.11.330 (#69)
                 if (!(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))) return;
                 int k = -1;
-                if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4; else if (Input.GetKeyDown(KeyCode.Alpha6)) k = 5; else if (Input.GetKeyDown(KeyCode.Alpha7)) k = 6;
+                if (Input.GetKeyDown(KeyCode.Alpha1)) k = 0; else if (Input.GetKeyDown(KeyCode.Alpha2)) k = 1; else if (Input.GetKeyDown(KeyCode.Alpha3)) k = 2; else if (Input.GetKeyDown(KeyCode.Alpha4)) k = 3; else if (Input.GetKeyDown(KeyCode.Alpha5)) k = 4; else if (Input.GetKeyDown(KeyCode.Alpha6)) k = 5; else if (Input.GetKeyDown(KeyCode.Alpha7)) k = 6; else if (Input.GetKeyDown(KeyCode.Alpha8)) k = 7;
                 if (k < 0) return;
                 var div = SelectedDivision(); if (div != null) SetOrder(div, (DivOrder)k, "Alt+" + (k + 1));
             }
@@ -588,7 +664,7 @@ namespace DipGgFixes
                 var o = OrderOf(div, false);
                 // 1.11.197 (author, 24.10): the panel sat over the sea in front of the ship cards - now a strip at the top of the
                 //          screen under the time controls, and it folds to a small tab (the Alt keys work either way)
-                float w = 800f, h = 44f; /* 1.11.285: 7 orders */ /* 1.11.266: smaller buttons (author 25.10, 15:02) */ float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
+                float w = 900f, h = 44f; /* 1.11.494: 8 orders */ /* 1.11.285: 7 orders */ /* 1.11.266: smaller buttons (author 25.10, 15:02) */ float x = (UiScale.W - w) / 2f, y = 54f; // 1.11.202: wider - "Torpedo attack" was cut off
                 if (oFolded)
                 {
                     var tab = new Rect(x + w - 190f, y, 190f, 20f);
@@ -598,7 +674,21 @@ namespace DipGgFixes
                 GUI.Box(new Rect(x, y, w, h), ""); BattleSel.Panel(new Rect(x, y, w, h));
                 string why = o != null && o.Order != DivOrder.None && o.Reason != null ? " - " + o.Reason : "";
                 if (why.Length > 60) why = why.Substring(0, 60) + "...";
-                GUI.Label(new Rect(x + 8f, y + 4f, w - 170f, 18f), $"<b>Division orders</b> (Alt+1..7, {panelKey} folds): {OrderNames[(int)cur]}{why}", oTitle);
+                bool keep = cur == DivOrder.Keep;
+                GUI.Label(new Rect(x + 8f, y + 4f, w - (keep ? 290f : 170f), 18f), $"<b>Division orders</b> (Alt+1..8, {panelKey} folds): {OrderNames[(int)cur]}{why}", oTitle);
+                // 1.11.494: the distance of the Keep range order, for this division
+                if (keep)
+                {
+                    TorpedoSettings.BeginSmall();
+                    try
+                    {
+                        float kr = KeepRangeOf(div);
+                        if (GUI.Button(new Rect(x + w - 282f, y + 3f, 38f, 18f), "-1 km")) KeepRangeStep(div, -1000f);
+                        GUI.Label(new Rect(x + w - 242f, y + 4f, 40f, 18f), $"{kr / 1000f:0.#} km", oTitle);
+                        if (GUI.Button(new Rect(x + w - 202f, y + 3f, 38f, 18f), "+1 km")) KeepRangeStep(div, 1000f);
+                    }
+                    finally { TorpedoSettings.EndSmall(); }
+                }
                 // 1.11.361 (author 29.10): split or not for the Torpedo attack order, for this division (default: F10 DivisionTorpedoSplit)
                 bool sw = SplitWanted(div);
                 TorpedoSettings.BeginSmall();
@@ -609,7 +699,7 @@ namespace DipGgFixes
                 }
                 finally { TorpedoSettings.EndSmall(); }
                 if (GUI.Button(new Rect(x + w - 26f, y + 4f, 20f, 18f), "▴")) oFolded = true;
-                float bw = (w - 16f - 4f * 6f) / 7f; TorpedoSettings.BeginSmall(); try {
+                int nOrd = OrderNames.Length; float bw = (w - 16f - 4f * (nOrd - 1)) / nOrd; TorpedoSettings.BeginSmall(); try {
                 for (int i = 0; i < OrderNames.Length; i++)
                 {
                     var r = new Rect(x + 8f + i * (bw + 4f), y + 22f, bw, 19f);
