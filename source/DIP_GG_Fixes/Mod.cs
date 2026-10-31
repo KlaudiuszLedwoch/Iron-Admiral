@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.491", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.492", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -250,7 +250,7 @@ namespace DipGgFixes
             SettingsUi.Tick();
             ResolutionFix.Tick(); RevoltDecision.Tick(); Occupation.Tick(); BattleAi.OrdersTick(); ReShadeSetup.Tick(); Ballistics.Tick(); HistoricalDamage.Tick(); ThinPlatingHE.Tick(); EraAccuracy.Tick(); HistoricalWeights.Tick(); OtherMods.Tick(); TorpedoLog.Tick(); LogShare.TickWindow(); LogShare.Tick();
             SaveCompat.Tick();
-            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } try { Spectacle.Tick(); } catch { } try { SlowProbe.Tick(); } catch { } try { SaveBackup.Tick(); } catch { } try { EraMap.Tick(); } catch { } try { Patch_AiTakeReparation.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
+            ArmorDiag.Tick(); ShipPartsCheck.Tick(); DesignRecorder.Tick(); FleetAgeReport.Tick(); TechDiffusion.Tick(); DivisionSpacing.Tick(); try { PlayerDivisions.Tick(); } catch { } try { WarScoreReset.Tick(); } catch { } try { SeaRepair.Tick(); } catch { } try { PenReference.Tick(); } catch { } try { Spectacle.Tick(); } catch { } try { SlowProbe.Tick(); } catch { } try { SaveBackup.Tick(); } catch { } try { EraMap.Tick(); } catch { } try { ArmorWeightProbe.Tick(); } catch { } try { Patch_AiTakeReparation.Tick(); } catch { } MapGhosts.Tick(); Irredenta.Tick(); BattleHour.Tick();
             Fog.Tick();
             Diagnostics.Tick();
             Scenarios.Tick();

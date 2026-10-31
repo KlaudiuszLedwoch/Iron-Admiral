@@ -109,6 +109,7 @@ namespace DipGgFixes
         internal static void RecordSideFwd(float deg) { if (Active && inBattle) sideFwd[Band(deg)]++; }
         internal static void RecordSideChance(float angle, float chance) { if (!Active || !inBattle) return; int b = Band(angle); sideChanceSum[b] += chance; sideChanceN[b]++; }
         class HitAgg { public int N; public double Dmg, Armor, Pen; }
+        static int layerLogged;
         static readonly Dictionary<string, HitAgg> hitsCal = new Dictionary<string, HitAgg>(), hitsVictim = new Dictionary<string, HitAgg>();
         static string CalBand(float c) { return c >= 240f ? "heavy (>=9.4 in)" : c >= 150f ? "medium (6-9 in)" : c >= 100f ? "light (4-6 in)" : c > 0f ? "small (<4 in)" : "unknown gun"; }
         internal static void RecordHit(Ship victim, Part from, string hitType, float damage, float armor, float pen)
@@ -120,6 +121,23 @@ namespace DipGgFixes
             string vt = "?"; try { vt = victim != null && victim.shipType != null ? victim.shipType.name : "?"; } catch { }
             Add(hitsCal, CalBand(cal) + " | " + t, damage, armor, pen);
             Add(hitsVictim, CalBand(cal) + " vs " + vt + " | " + t, damage, armor, pen);
+            // 1.11.492 (#116, author 31.10 08:27: one thick outer plate or thick inner layers?): how the game treats the citadel's inner
+            // layers - every hit on a ship with an inner belt or inner deck is logged with the plates and the armour the game used, so the
+            // log shows whether the game sums the layers, takes them one by one or ignores them
+            try
+            {
+                if (layerLogged < 60 && victim != null && victim.armor != null)
+                {
+                    float V(Ship.A z) { float x; return victim.armor.TryGetValue(z, out x) ? x : 0f; }
+                    float ib1 = V(Ship.A.InnerBelt_1st), ib2 = V(Ship.A.InnerBelt_2nd), ib3 = V(Ship.A.InnerBelt_3rd), id1 = V(Ship.A.InnerDeck_1st), id2 = V(Ship.A.InnerDeck_2nd), id3 = V(Ship.A.InnerDeck_3rd);
+                    if (ib1 + ib2 + ib3 + id1 + id2 + id3 > 0f)
+                    {
+                        layerLogged++;
+                        MelonLogger.Msg($"[DIP GG Fixes][Layers] {victim.name}: hit '{t}' by {cal:0} mm - armour used by the game {armor:0} mm, penetration {pen:0} mm, damage {damage:0}; plates: belt {V(Ship.A.Belt):0} + inner {ib1:0}/{ib2:0}/{ib3:0} mm, deck {V(Ship.A.Deck):0} + inner {id1:0}/{id2:0}/{id3:0} mm");
+                    }
+                }
+            }
+            catch { }
         }
         static void Add(Dictionary<string, HitAgg> d, string k, float dmg, float armor, float pen)
         {
