@@ -32,6 +32,7 @@ namespace DipGgFixes
         internal static bool Issuing;   // our own commands - the Division.MoveTo/MoveDir patch ignores them
         static readonly string[] OrderNames = { "Manual", "Screen", "Scout", "Torpedo attack", "Free action", "Hunt", "Finish off", "Keep range" };
         static readonly Dictionary<IntPtr, float> keepRange = new Dictionary<IntPtr, float>();   // division -> distance to hold (m)
+        static readonly HashSet<IntPtr> keepCircle = new HashSet<IntPtr>();   // divisions steering round the enemy on the circle (1.11.495)
         internal static float KeepRangeOf(Division div) { return div != null && keepRange.TryGetValue(div.Pointer, out var r) ? r : 0f; }
 
         internal static MelonPreferences_Entry<bool> OrdersOn, OrdersVanilla;
@@ -69,7 +70,7 @@ namespace DipGgFixes
         static void OrdersReset()
         {
             IntPtr bp = IntPtr.Zero; try { var b = BattleManager.Instance != null ? BattleManager.Instance.CurrentBattle : null; if (b != null) bp = b.Pointer; } catch { }
-            if (bp != ordersBattle) { ordersBattle = bp; orders.Clear(); keepRange.Clear(); }
+            if (bp != ordersBattle) { ordersBattle = bp; orders.Clear(); keepRange.Clear(); keepCircle.Clear(); }
         }
         static OrderSt OrderOf(Division div, bool create)
         {
@@ -127,6 +128,7 @@ namespace DipGgFixes
             catch { }
             return best;
         }
+        static int keepLogs; static float keepLogAt = -100f;
         static void KeepRange(Division div, OrderSt o, Ship leader, Ship main, Vector3 me, Vector3 home, Vector3 toEnemy)
         {
             float R = KeepRangeOf(div); if (R <= 0f) { R = 12000f; keepRange[div.Pointer] = R; }
@@ -141,7 +143,12 @@ namespace DipGgFixes
             Vector3 ep = P(e), dir = me - ep; dir.y = 0f; float d = dir.magnitude; if (d < 1f) dir = -toEnemy; dir.Normalize();
             float err = d - R;
             Vector3 goal; string doing;
-            if (Mathf.Abs(err) > 3000f)
+            // 1.11.495 (author's test 31.10, 09:48: "closing in" and "edging in" alternated every 2-3 s at about 3 km off the circle):
+            // hysteresis - the division takes the circle within 2.5 km of it and leaves it only beyond 4 km
+            bool onCircle = keepCircle.Contains(div.Pointer);
+            if (onCircle && Mathf.Abs(err) > 4000f) { keepCircle.Remove(div.Pointer); onCircle = false; }
+            else if (!onCircle && Mathf.Abs(err) < 2500f) { keepCircle.Add(div.Pointer); onCircle = true; }
+            if (!onCircle)
             {
                 goal = ep + dir * R;   // far off the circle: straight to the point on it
                 doing = err > 0f ? "closing in" : "opening the range";
@@ -157,6 +164,7 @@ namespace DipGgFixes
             }
             Cmd(div, o, goal);
             OWhy(o, $"keep {R / 1000f:0.#} km from {e.name} - {doing}");
+            if (keepLogs++ < 200 && Time.time - keepLogAt > 20f) { keepLogAt = Time.time; Log($"{o.Name} [Keep range]: at {d / 1000f:0.0} km from {e.name} (wanted {R / 1000f:0.0} km)"); }
         }
         internal static DivOrder CurrentOrder(Division div) { var o = OrderOf(div, false); return o != null ? o.Order : DivOrder.None; }
         internal static string OrderLabel(DivOrder o) { return OrderNames[(int)o]; } // 1.11.216
