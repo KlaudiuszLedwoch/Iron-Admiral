@@ -231,7 +231,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> MinorFleetToConqueror;
         internal static MelonPreferences_Entry<bool> NationalTech;
         internal static MelonPreferences_Entry<bool> CheckUpdates;
-        internal static MelonPreferences_Entry<bool> UpdateDownload;
+        internal static MelonPreferences_Entry<bool> UpdateDownload, UpdateAutoInstall;
         internal static MelonPreferences_Entry<float> NationalTechScale;
 
         public override void OnUpdate()
@@ -596,6 +596,9 @@ namespace DipGgFixes
                 "At game start fetch the VERSION file of the Iron Admiral GitHub repository (one HTTPS request to raw.githubusercontent.com) and show a message when a newer release exists (1.11.9)");
             UpdateDownload = cat.CreateEntry("UpdateDownloadButton", true, null,
                 "Show a Download button in the update message; the download starts only after the player clicks it (1.11.11). false = message with a link only");
+            // 1.11.486: automatic installation of updates (stable line too)
+            UpdateAutoInstall = cat.CreateEntry("UpdateAutoInstall", true, null,
+                "Install a newer Iron Admiral version automatically at game start (the Mods folder of the package, SHA-256 verified) - the game only asks for a restart afterwards; false = the message with the Download button");
             UpdateCheck.CreatePrefs(cat); // 1.11.108: stable / beta line
             EcoPrefs.Create(cat);
             EconomyUi.CreatePrefs(cat);
@@ -3649,6 +3652,14 @@ namespace DipGgFixes
                 var ui = G.ui; if (ui == null) return;
                 bool canDownload = DipGgFixesMod.UpdateDownload != null && DipGgFixesMod.UpdateDownload.Value && !string.IsNullOrEmpty(remoteZipUrl) && !string.IsNullOrEmpty(remoteSha);
                 string text = $"Iron Admiral {remote}{(BetaLine ? " (beta)" : "")} is available on GitHub (installed: {local}).\n{remoteDll}\n{Page}";
+                if (canDownload && DipGgFixesMod.UpdateAutoInstall != null && DipGgFixesMod.UpdateAutoInstall.Value)
+                {
+                    shown = true;
+                    MelonLogger.Msg("[DIP GG Fixes][Update] automatic installation (UpdateAutoInstall) of " + remote);
+                    StartDownload();
+                    ui.ReportMessage("Iron Admiral - update", text + "\n\nThe new version is being downloaded and installed now (SHA-256 verified). A message will tell you when it is done - then restart the game. Setting UpdateAutoInstall turns automatic installation off.", "OK", null, Act(() => { }), null);
+                    return;
+                }
                 if (canDownload)
                 {
                     text += "\n\nDownload installs the Mods folder of the new version (SHA-256 verified); the game must be restarted afterwards. Nothing is downloaded unless you click.";
