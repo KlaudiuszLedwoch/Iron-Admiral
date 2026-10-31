@@ -37,15 +37,27 @@ Without the author's prior written permission you may not:
 
 Permission can be asked for through the GitHub repository (issues) or the Nexus Mods page. Permission is given case by case and can be limited in scope.
 
-## 4. Contributions
+## 4. Text and data mining, machine learning and AI
+
+The author expressly reserves all rights of text and data mining in the Work, within the meaning of Article 4(3) of Directive (EU) 2019/790 and the national laws implementing it, and to the extent permitted by any other applicable law.
+
+Without the author's prior written permission, no one may:
+
+1. use the Work or any part of it (source code, compiled code, data files, documentation, wiki pages, changelogs, issues and comments) to train, fine-tune, evaluate or build any machine learning model or artificial intelligence system;
+2. feed the Work or any part of it into an artificial intelligence system or automated tool to analyse, summarise, explain, decompile, translate or reproduce its code, methods or mechanics, or to produce code or a mod based on it;
+3. collect the Work by scraping, crawling or other automated means for any of the purposes above.
+
+This reservation covers every copy of the Work, wherever it is published or obtained. It does not apply to tools used by the author or on the author's behalf.
+
+## 5. Contributions
 
 Contributions are welcome. By sending a contribution you agree to the terms in CONTRIBUTING.md, so that the author can include, change, license and relicense it as part of the Work.
 
-## 5. No warranty
+## 6. No warranty
 
 The Work is provided "as is", without warranty of any kind. The author is not liable for any damage, loss of data or saved games resulting from its use.
 
-## 6. Unofficial modification
+## 7. Unofficial modification
 
 Iron Admiral is an unofficial fan modification of Ultimate Admiral: Dreadnoughts. It is not affiliated with or endorsed by Game-Labs.
 
