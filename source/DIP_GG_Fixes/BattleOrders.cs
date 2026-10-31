@@ -116,11 +116,13 @@ namespace DipGgFixes
             {
                 var l = div.leader; var e = l != null ? KeepTarget(l, null) : null;
                 if (e == null) { Log($"{name}: keep range IZ - no enemy in sight"); return; }
+                // 1.11.498 (author 31.10, 11:10: "IZ knows the ship before I do"): no zone against a ship the player has not identified
+                if (Fog.PlayerLabel(e) != null) { Log($"{name}: keep range IZ - the enemy is not identified yet ({Seen(e)}); distance unchanged"); if (o != null) OWhy(o, $"{Seen(e)} not identified - immune zone unknown"); return; }
                 var z = ImmuneZone.Battle(l, e);
-                if (!z.Any) { Log($"{name}: keep range IZ - no immune zone against {e.name} ({ImmuneZone.Text(z)}); distance unchanged"); if (o != null) OWhy(o, $"no immune zone against {e.name} - distance unchanged"); return; }
+                if (!z.Any) { Log($"{name}: keep range IZ - no immune zone against {e.name} ({ImmuneZone.Text(z)}); distance unchanged"); if (o != null) OWhy(o, $"no immune zone against {Seen(e)} - distance unchanged"); return; }
                 float r = z.ToMax ? Mathf.Min(z.Outer, z.Inner + 1500f) : (z.Inner + z.Outer) / 2f;
                 keepRange[div.Pointer] = Mathf.Clamp(Mathf.Round(r / 500f) * 500f, 2000f, 30000f);
-                Log($"{name}: keep range {keepRange[div.Pointer] / 1000f:0.0} km - inside the immune zone {ImmuneZone.Text(z)} against {e.name}");
+                Log($"{name}: keep range {keepRange[div.Pointer] / 1000f:0.0} km - inside the immune zone {ImmuneZone.Text(z)} against {e.name}"); if (o != null) OWhy(o, $"keep {keepRange[div.Pointer] / 1000f:0.#} km - inside the immune zone {ImmuneZone.Text(z)} against {Seen(e)}");
             }
             catch (Exception ex) { Log($"{name}: keep range IZ: {ex.Message}"); }
         }
@@ -148,6 +150,9 @@ namespace DipGgFixes
             return best;
         }
         static int keepLogs; static float keepLogAt = -100f;
+        // 1.11.498 (author 31.10, 11:10): the order's status names the enemy only as the player knows him (fog of war label until identified)
+        static string SeenT(Ship e) { try { if (Fog.PlayerLabel(e) == null && e != null) return $"{e.name} ({e.shipType.name})"; } catch { } return Seen(e); }
+        static string Seen(Ship e) { try { var lb = Fog.PlayerLabel(e); if (lb != null) { int c = lb.IndexOf(','); return (c > 0 ? lb.Substring(0, c) : lb).Trim(); } } catch { } return e != null ? e.name : "the enemy"; }
         // 1.11.497 (author's test 31.10, 10:24: three divisions on Keep range bunched together - they steered for points on the same
         // line from the same enemy): the goal is pushed away from every other own division leader within 2.5 km (and from its goal
         // under Keep range), so the divisions keep about 2 km apart
@@ -208,8 +213,8 @@ namespace DipGgFixes
                 doing = Mathf.Abs(err) < 750f ? "holding the distance" : err > 0f ? "edging in" : "edging out";
             }
             Cmd(div, o, Apart(div, leader, goal));
-            OWhy(o, $"keep {R / 1000f:0.#} km from {e.name} - {doing}");
-            if (keepLogs++ < 200 && Time.time - keepLogAt > 20f) { keepLogAt = Time.time; Log($"{o.Name} [Keep range]: at {d / 1000f:0.0} km from {e.name} (wanted {R / 1000f:0.0} km)"); }
+            OWhy(o, $"keep {R / 1000f:0.#} km from {Seen(e)} - {doing}");
+            if (keepLogs++ < 200 && Time.time - keepLogAt > 20f) { keepLogAt = Time.time; Log($"{o.Name} [Keep range]: at {d / 1000f:0.0} km from {e.name} ({Seen(e)} to the player) (wanted {R / 1000f:0.0} km)"); }
         }
         internal static DivOrder CurrentOrder(Division div) { var o = OrderOf(div, false); return o != null ? o.Order : DivOrder.None; }
         internal static string OrderLabel(DivOrder o) { return OrderNames[(int)o]; } // 1.11.216
@@ -354,7 +359,7 @@ namespace DipGgFixes
                 float threatR = 9000f;
                 if (nearLight != null && dl <= threatR && (P(nearLight) - home).magnitude <= leash)
                 {
-                    Cmd(div, o, P(nearLight)); OWhy(o, $"intercepting {nearLight.name} ({nearLight.shipType.name}) coming at the main body"); return true; // 1.11.158: no distance in the reason (logged every 1.5 s)
+                    Cmd(div, o, P(nearLight)); OWhy(o, $"intercepting {SeenT(nearLight)} coming at the main body"); return true; // 1.11.158: no distance in the reason (logged every 1.5 s)
                 }
                 if (o.FromVanilla && !o.Issued) { OWhy(o, "on station (game's screen position)"); return true; }
                 // own station: between the main body and the enemy, closer in when enemy heavy guns reach it
@@ -377,7 +382,7 @@ namespace DipGgFixes
             { o.ClosingUp = true; Cmd(div, o, home + toEnemy * (leash * 0.6f)); OWhy(o, "too far from the main body - closing up"); return true; }
             o.ClosingUp = false;
             if (nearLight != null && (P(nearLight) - me).magnitude < 5000f && MainCaliber(nearLight) > MainCaliber(leader) * 1.2f && main != null)
-            { Cmd(div, o, home + toEnemy * 1500f); OWhy(o, $"stronger light force ({nearLight.name}) - falls back to the main body"); return true; }
+            { Cmd(div, o, home + toEnemy * 1500f); OWhy(o, $"stronger light force ({Seen(nearLight)}) - falls back to the main body"); return true; }
             // 1.11.256 (author 25.10, 12:40): smoke reported by the lookouts ("Smoke on the horizon", sighted, not identified) - while it
             //           shadows no enemy heavy ship, the scout heads for the nearest smoke within its search range and closes to just
             //           inside the identification range, so the ship can be made out (before: it kept sweeping its search legs)
@@ -396,9 +401,9 @@ namespace DipGgFixes
             {
                 float hr = GunRange(nearHeavy); float want = Mathf.Clamp(hr > 0f ? hr * 1.05f : 12000f, 7000f, 25000f);
                 Vector3 hp = P(nearHeavy); Vector3 away = me - hp; away.y = 0f; if (away.sqrMagnitude < 1f) away = -toEnemy; away.Normalize();
-                if (dh < want * 0.9f) { Cmd(div, o, me + away * 3000f); OWhy(o, $"keeping contact with {nearHeavy.name} - opening the range"); }
-                else if (dh > want * 1.35f) { Cmd(div, o, hp + away * want); OWhy(o, $"keeping contact with {nearHeavy.name} - closing to the edge of his gun range"); }
-                else { var side = Vector3.Cross(Vector3.up, away); Cmd(div, o, me + side * 2000f); OWhy(o, $"shadowing {nearHeavy.name} at the edge of his gun range"); }
+                if (dh < want * 0.9f) { Cmd(div, o, me + away * 3000f); OWhy(o, $"keeping contact with {Seen(nearHeavy)} - opening the range"); }
+                else if (dh > want * 1.35f) { Cmd(div, o, hp + away * want); OWhy(o, $"keeping contact with {Seen(nearHeavy)} - closing to the edge of his gun range"); }
+                else { var side = Vector3.Cross(Vector3.up, away); Cmd(div, o, me + side * 2000f); OWhy(o, $"shadowing {Seen(nearHeavy)} at the edge of his gun range"); }
                 return true;
             }
             if (o.FromVanilla && !o.Issued && !o.Seen) { OWhy(o, "searching (game's scout position)"); return true; }
@@ -443,7 +448,7 @@ namespace DipGgFixes
             foreach (var t in torpCraft) { if (t.Pointer == target.Pointer) continue; float tr2 = 0f; try { tr2 = TorpedoRange(t); } catch { } Vector3 tq = P(t); if ((goal - tq).magnitude < tr2 + 1500f) { Vector3 off = goal - tq; off.y = 0f; if (off.sqrMagnitude < 1f) off = away; goal = tq + off.normalized * (tr2 + 1500f); } }
             float dt = (tp - me).magnitude;
             if ((me - goal).magnitude > 700f) Cmd(div, o, goal);
-            OWhy(o, $"engaging {target.name} ({target.shipType.name}, {MainCaliber(target):0} mm) - {(dt > want * 1.3f ? "closing to gun range" : dt < want * 0.6f ? "opening to the fighting range" : "fighting at the chosen range")}");
+            OWhy(o, $"engaging {SeenT(target)}{(Fog.PlayerLabel(target) == null ? $", {MainCaliber(target):0} mm" : "")} - {(dt > want * 1.3f ? "closing to gun range" : dt < want * 0.6f ? "opening to the fighting range" : "fighting at the chosen range")}");
             return true;
         }
 
@@ -559,7 +564,7 @@ namespace DipGgFixes
             if (inside != null)
             {
                 Vector3 away = me - P(inside); away.y = 0f; if (away.sqrMagnitude < 1f) away = -toEnemy; away.Normalize();
-                Cmd(div, o, me + away * 4000f); OWhy(o, $"inside the reach of {inside.name} - opening the range"); huntHold[div.Pointer] = now + 30f; return;
+                Cmd(div, o, me + away * 4000f); OWhy(o, $"inside the reach of {Seen(inside)} - opening the range"); huntHold[div.Pointer] = now + 30f; return;
             }
             if (prey == null)
             {
@@ -586,11 +591,11 @@ namespace DipGgFixes
                 Vector3 aw = me - P(blocker); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize();
                 Vector3 safe = P(blocker) + aw * (Reach(blocker) + 3500f);
                 if ((me - safe).magnitude > 800f) Cmd(div, o, safe);
-                OWhy(o, $"{prey.name} is covered by {blocker.name} - holding outside his reach"); return;
+                OWhy(o, $"{Seen(prey)} is covered by {Seen(blocker)} - holding outside his reach"); return;
             }
             if ((me - goal).magnitude > 600f) Cmd(div, o, goal);
             float dp = (pp - me).magnitude;
-            OWhy(o, $"hunting {prey.name} ({prey.shipType.name}) - {(dp > want + 800f ? "closing in" : "engaging")}");
+            OWhy(o, $"hunting {SeenT(prey)} - {(dp > want + 800f ? "closing in" : "engaging")}");
         }
 
         // ---- 1.11.285 (#1): Finish off - the division goes for enemy ships that are already badly damaged (estimated damage at or above
@@ -623,7 +628,7 @@ namespace DipGgFixes
             if (target == null)
             {
                 var inside0 = danger(me);
-                if (inside0 != null) { Vector3 aw = me - P(inside0); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize(); Cmd(div, o, me + aw * 4000f); OWhy(o, $"no crippled enemy - inside the reach of {inside0.name}, opening the range"); return; }
+                if (inside0 != null) { Vector3 aw = me - P(inside0); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize(); Cmd(div, o, me + aw * 4000f); OWhy(o, $"no crippled enemy - inside the reach of {Seen(inside0)}, opening the range"); return; }
                 var st = home + toEnemy * 2500f; if (danger(st) != null) st = home;
                 if ((me - st).magnitude > 800f) Cmd(div, o, st);
                 OWhy(o, "no crippled enemy in sight - waiting by the main body"); return;
@@ -636,12 +641,12 @@ namespace DipGgFixes
             for (int k = 0; blocker != null && k < 8; k++) { goal = Vector3.Lerp(goal, me, 0.25f); blocker = danger(goal); }
             if (blocker != null)
             {
-                if (danger(me) != null) { Vector3 aw = me - P(blocker); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize(); Cmd(div, o, me + aw * 4000f); OWhy(o, $"{target.name} is covered by {blocker.name} - opening the range"); return; }
-                OWhy(o, $"{target.name} is covered by {blocker.name} - holding outside his reach"); return;
+                if (danger(me) != null) { Vector3 aw = me - P(blocker); aw.y = 0f; if (aw.sqrMagnitude < 1f) aw = -toEnemy; aw.Normalize(); Cmd(div, o, me + aw * 4000f); OWhy(o, $"{Seen(target)} is covered by {Seen(blocker)} - opening the range"); return; }
+                OWhy(o, $"{Seen(target)} is covered by {Seen(blocker)} - holding outside his reach"); return;
             }
             if ((me - goal).magnitude > 600f) Cmd(div, o, goal);
             float dt = (tp - me).magnitude;
-            OWhy(o, $"finishing off {target.name} ({target.shipType.name}, badly damaged) - {(dt > want + 800f ? "closing in" : useTorp ? "in torpedo reach" : "engaging")}{(useTorp ? " with torpedoes" : "")}");
+            OWhy(o, $"finishing off {SeenT(target)}, badly damaged - {(dt > want + 800f ? "closing in" : useTorp ? "in torpedo reach" : "engaging")}{(useTorp ? " with torpedoes" : "")}");
         }
 
 
