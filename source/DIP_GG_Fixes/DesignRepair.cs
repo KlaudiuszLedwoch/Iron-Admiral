@@ -143,6 +143,46 @@ namespace DipGgFixes
             return sb.ToString();
         }
         static List<Ship> AllVisible(Player main) { var l = new List<Ship>(); try { var e = main.designs.GetEnumerator(); var u = e.Cast<Il2CppSystem.Collections.IEnumerator>(); while (u.MoveNext()) { var x = e.Current; if (x != null) { bool er = false; try { er = x.isErased; } catch { } if (!er) l.Add(x); } } } catch { } return l; }
+        // 1.11.506 (author 31.10, 11:54: "this is a bug to track down"): the game decides which ships a refit design may take by
+        // something other than the name (Westfalen on Oldenburg (Oct. 1925) was refused for Oldenburg (Jun. 1926)). The refit fields
+        // of every class design are logged above, and every month each player ship's design is compared with the month before:
+        // a ship that changes design is logged with her state (refit, progress, status) and the sisters left on the old design,
+        // so the month and the cause of the next split can be read from the log. Our own rejoin is not reported as a change.
+        static readonly Dictionary<IntPtr, string> lastDesign = new Dictionary<IntPtr, string>();
+        static IntPtr trackSession;
+        static string Prop(object o, string name)
+        {
+            if (o == null) return "?";
+            try
+            {
+                var t = o.GetType();
+                var p = t.GetProperty(name); object v = null;
+                if (p != null) v = p.GetValue(o); else { var f = t.GetField(name); if (f == null) return "-"; v = f.GetValue(o); }
+                if (v == null) return "null";
+                if (v is Ship sh) return sh.name;
+                return v.ToString();
+            }
+            catch { return "?"; }
+        }
+        static void Track(Player main, List<Ship> ships, bool report)
+        {
+            var ptr = CampaignController.Instance.CampaignData.Pointer;
+            if (ptr != trackSession) { trackSession = ptr; lastDesign.Clear(); }
+            var byOld = new Dictionary<string, List<string>>();
+            if (report) foreach (var s in ships) { Ship d = null; try { d = s.design; } catch { } if (d == null) continue; if (!byOld.TryGetValue(d.name, out var l)) { l = new List<string>(); byOld[d.name] = l; } l.Add(s.name); }
+            foreach (var s in ships)
+            {
+                Ship d = null; try { d = s.design; } catch { }
+                if (d == null) continue;
+                string now = d.name;
+                if (report && lastDesign.TryGetValue(s.Pointer, out var was) && was != now)
+                {
+                    byOld.TryGetValue(was, out var left);
+                    MelonLogger.Msg($"[DIP GG Fixes][DesignTrack] {s.name}: design changed {was} -> {now} (isRefit {Prop(s, "isRefit")}, refitProgress {Prop(s, "refitProgress")}, isRefitSimple {Prop(s, "isRefitSimple")}, isRefitPaused {Prop(s, "isRefitPaused")}, status {Prop(s, "status")}); ships still on {was}: {(left == null ? "none" : string.Join(", ", left))}; new design refitDesignName '{Prop(d, "refitDesignName")}', refitDesign '{Prop(d, "refitDesign")}'");
+                }
+                lastDesign[s.Pointer] = now;
+            }
+        }
         static void Rejoin(Player main, List<Ship> ships, HashSet<IntPtr> visible)
         {
             var byDesign = new Dictionary<IntPtr, List<Ship>>(); var designs = new Dictionary<IntPtr, Ship>();
@@ -157,8 +197,9 @@ namespace DipGgFixes
             {
                 var d = designs[kv.Key]; string t = "?"; try { t = d.shipType != null ? d.shipType.name : "?"; } catch { }
                 if (t == "bb" || t == "bc" || t == "ca" || t == "cl")
-                    MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] class {d.name} ({t}, refit design {Safe(() => d.isRefitDesign)}, visible {visible.Contains(d.Pointer)}): {kv.Value.Count} ship(s) - {string.Join(", ", kv.Value.ConvertAll(x => x.name))}");
+                    MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] class {d.name} ({t}, refit design {Safe(() => d.isRefitDesign)}, visible {visible.Contains(d.Pointer)}, refitDesignName '{Prop(d, "refitDesignName")}', refitDesignListID {Prop(d, "refitDesignListID")}, dateCreatedRefit {Prop(d, "dateCreatedRefit")}, refitDesign '{Prop(d, "refitDesign")}'): {kv.Value.Count} ship(s) - {string.Join(", ", kv.Value.ConvertAll(x => x.name))}");
             }
+            Track(main, ships, true);
             int moved = 0;
             foreach (var kv in byDesign)
             {
@@ -201,6 +242,7 @@ namespace DipGgFixes
                 catch (Exception e) { MelonLogger.Warning($"[DIP GG Fixes][DesignRepair] {s.name}: rejoin failed: " + e.Message); }
             }
             MelonLogger.Msg($"[DIP GG Fixes][DesignRepair] {main.data.name}: {moved} loose ship(s) put back on their class design");
+            Track(main, ships, false);
         }
     }
 }
