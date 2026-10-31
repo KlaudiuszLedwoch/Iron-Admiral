@@ -41,6 +41,7 @@ namespace DipGgFixes
             TrimOn = cat.CreateEntry("ShipGenTrimOverweight", true, null, "Ship generator: an attempt that comes out overweight has guns below the main calibre removed, smallest first and in pairs, until the ship makes its tonnage - instead of the whole attempt being thrown away (the 25.10 tests: 26 of 27 failed attempts were overweight)"); // 1.11.246
             TrimMax = cat.CreateEntry("GeneratorOverweightMax", 0.12f, null, "Trimming: attempts overweight by more than this share of the tonnage are left to the game (0.12 = 12 %)");
             TrimState = cat.CreateEntry("ShipGenTrimState", 20, null, "Author's tool: coroutine state of the generator at which trimming runs - 20 is the state that checks the attempt, after the game's own weight reductions (state log of 25.10: 8 parts, 12 armour, 13 and 15 weight reduction, 20 check)");
+            TurnBudget = cat.CreateEntry("ShipGenTurnBudget", 20f, null, "Campaign: seconds of AI ship generator work per turn - once used up, a design that fails an attempt gets at most one more instead of all its attempts (author 30.10: a turn of 2.5 min, 2 of them one Scandinavian battlecruiser failing 4 attempts of 30 s); 0 = no limit"); // 1.11.478
             Diag = cat.CreateEntry("ShipGenDiagnosis", false, null, "Author's tool: outside the campaign, every failed generator attempt is logged with its guns and tonnage, and when no main tower, secondary tower or funnel was placed, each tower/funnel part is checked with the game's own availability and placement tests"); // 1.11.245
         }
 
@@ -271,15 +272,28 @@ namespace DipGgFixes
 
         // ---- 1. early stop ----
         static readonly Dictionary<IntPtr, int> lastTry = new Dictionary<IntPtr, int>();
+        // 1.11.478 (author 30.10 21:47: "maybe a time limit for designs, so a turn takes no longer than 60 seconds"): the generator's
+        // time is counted per turn (from its first attempt in that month); past ShipGenTurnBudget seconds a failed attempt is followed by
+        // at most one more - the failure memory then keeps the nation/hull pair away on later turns
+        internal static MelonPreferences_Entry<float> TurnBudget;
+        static int budgetMonth = -1; static float budgetStart; static int budgetCuts;
         internal static void Attempt(Ship._GenerateRandomShip_d__573 it, Ship ship, string key, bool running)
         {
             var p = it.Pointer;
             if (!running) { lastTry.Remove(p); RestoreHull(p); return; }
+            int m0 = Economy.Month(); if (m0 != budgetMonth) { budgetMonth = m0; budgetStart = Time.realtimeSinceStartup; }
             if (EarlyStop == null || !EarlyStop.Value) return;
             int tryN = it._tryN_5__5, total = it._triesTotal_5__4;
             int prev; if (!lastTry.TryGetValue(p, out prev)) prev = 0;
             if (tryN <= prev) return;
             lastTry[p] = tryN;
+            float used = Time.realtimeSinceStartup - budgetStart;
+            if (TurnBudget != null && TurnBudget.Value > 0f && used > TurnBudget.Value && tryN + 1 < total)
+            {
+                it._triesTotal_5__4 = tryN + 1; ShipGenMemory.saved += total - tryN - 1; budgetCuts++;
+                try { Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed and the generator has used {used:0} s of its {TurnBudget.Value:0} s this turn - one more attempt instead of {total - tryN}"); } catch { }
+                return;
+            }
             try { Log($"{key.Replace("|", ": hull ")} - attempt {tryN} of {total} failed: {Summary(ship)}"); } catch { } // 1.11.237: what the failed attempt carried
             if (tryN + 1 >= total) return; // one attempt left anyway
             string why; if (!Structural(ship, out why)) return;
