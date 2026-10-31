@@ -197,7 +197,15 @@ namespace DipGgFixes
         // 1.11.487: the division of this ship is in a torpedo charge (the torpedo settings keep it off the extreme-range setting)
         internal static bool InCharge(Ship s)
         {
-            try { var d = s.division; if (d != null && States.TryGetValue(d.Pointer, out var st)) return st.charging; } catch { }
+            // 1.11.488 (charge test 31.10 06:37, 1915: a destroyer between salvoes took Extreme Range at 8 km): the whole attack cycle counts -
+            // charging, reloading, returning to the attack - and a division under the Torpedo attack order
+            try
+            {
+                var d = s.division; if (d == null) return false;
+                if (States.TryGetValue(d.Pointer, out var st) && (st.charging || st.reloading || st.returnAttack)) return true;
+                if (CurrentOrder(d) == DivOrder.Torpedo) return true;
+            }
+            catch { }
             return false;
         }
         // ---- torpedo attack cycle; returns true when the cycle took over the division

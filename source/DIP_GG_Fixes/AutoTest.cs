@@ -64,9 +64,12 @@ namespace DipGgFixes
             Place = cat.CreateEntry("AutoTestPlace", "", null, "Author's tool: at the start of the unattended battle test place the AI ships abeam of the player's first ship, e.g. parallel:800 (800 m, same course); empty = the game's placement");
             StartWait = cat.CreateEntry("AutoTestStartWait", 600f, null, "Author's tool: in a screenshot run, how long (s) the test waits for the player to press Start Battle before it unpauses by itself");
             ShotEvery = cat.CreateEntry("AutoTestShotEvery", 120f, null, "Author's tool: in a screenshot run, seconds between overview screenshots");
+            // 1.11.488 (author 31.10 06:49, after stepping into the 1915 charge test: "the destroyers had no Torpedo attack, I gave the battleships Free"):
+            // the player's capital divisions can get an order of their own
+            CapOrders = cat.CreateEntry("AutoTestCapitalOrders", "", null, "Author's tool: division order given to the player's capital divisions (bb, bc) at the start of the unattended battle test, e.g. Free (empty = none, the ships stay manual)");
             Orders = cat.CreateEntry("AutoTestOrders", "", null, "Author's tool: division orders given to the player's light divisions at the start of the unattended battle test, in turn, e.g. Screen,Scout,Torpedo,Free (empty = none)");
         }
-        internal static MelonPreferences_Entry<string> Orders;
+        internal static MelonPreferences_Entry<string> Orders, CapOrders;
         // 1.11.283 (author 25.10, 20:24): forum report "1893, two light cruisers, parallel at under 1000 m" - the test can place the
         // AI ships abeam of the player's ships, wait less for "Start Battle" and take screenshots more often. Tools only.
         internal static MelonPreferences_Entry<string> Place;
@@ -143,6 +146,16 @@ namespace DipGgFixes
         // 1.11.157: the player's divisions get division orders (test of the autonomy) - light ships in turn, capital ships stay manual
         static void GiveOrders()
         {
+            try
+            {
+                BattleAi.DivOrder co; if (CapOrders != null && !string.IsNullOrEmpty(CapOrders.Value) && Enum.TryParse(CapOrders.Value.Trim(), true, out co) && co != BattleAi.DivOrder.None)
+                {
+                    var sh = BattleManager.Instance.CurrentBattle.Ships; int kc = 0;
+                    for (int i = 0; i < sh.Count; i++) { var s = sh[i]; if (s == null || s.player == null || !s.player.isMain || !s.isDivLeader || s.division == null || !BattleAi.IsCapital(s)) continue; BattleAi.SetOrder(s.division, co, "auto test"); kc++; }
+                    Log($"division order {co} given to {kc} capital division(s)");
+                }
+            }
+            catch (Exception e) { Log("capital orders: " + e.Message); }
             if (Orders == null || string.IsNullOrEmpty(Orders.Value)) return;
             try
             {
