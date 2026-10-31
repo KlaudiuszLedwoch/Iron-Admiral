@@ -196,8 +196,10 @@ namespace DipGgFixes
                 Log($"turn {t}/{turns}: next turn");
                 // 1.11.515 (#121): NextTurn(null) threw NullReferenceException at the end of the turn (onDone is called), so the next
                 // turns stopped half-way and the times were wrong - the turn now gets a callback and is over when it is called
-                turnDone = false; float tEnd = -1f;
-                try { var cc = CampaignController.Instance; GameManager.Instance.StartCoroutine(cc.NextTurn(UpdateCheck.Act(() => { turnDone = true; }))); } catch (Exception e) { Log("NextTurn: " + e.Message); break; }
+                // 1.11.516: a callback did not help (NullReferenceException again, the callback never came) - the turn is now started
+                // the way the player starts it, with the game's own Next Turn button, and is over when the game's turn coroutine is gone
+                turnDone = false; float tEnd = -1f; bool seenRunning = false;
+                try { G.ui.NextTurnButton.onClick.Invoke(); } catch (Exception e) { Log("Next Turn button: " + e.Message); break; }
                 float t0 = Time.realtimeSinceStartup; bool done = false;
                 while (!done && Time.realtimeSinceStartup < t0 + 1200f)
                 {
@@ -222,6 +224,9 @@ namespace DipGgFixes
                     }
                     ConfirmBoxes();
                     // 1.11.512: the turn is over when the game's turn steps have been quiet for 5 s (the map stays on screen meanwhile)
+                    bool runningNow = false; try { runningNow = G.ui.nextTurnCoroutine != null; } catch { }
+                    if (runningNow) seenRunning = true;
+                    else if (seenRunning || Time.realtimeSinceStartup > t0 + 30f) { bool quiet = DesignAheadTiming.LastTurnStep < 0 || Time.realtimeSinceStartup - DesignAheadTiming.LastTurnStep > 3f; if (quiet && WorldReady()) turnDone = true; }
                     if (turnDone && tEnd < 0) { tEnd = Time.realtimeSinceStartup; Log($"turn {t}: the game's end of turn took {tEnd - t0:0.0} s"); }
                     if (turnDone && WorldReady() && Popup() == null && Time.realtimeSinceStartup > tEnd + 3f) { done = true; Log($"turn {t} ended after {tEnd - t0:0.0} s"); }
                 }
