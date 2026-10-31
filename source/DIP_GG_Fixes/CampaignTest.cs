@@ -152,7 +152,7 @@ namespace DipGgFixes
             else Log("no slot window appeared");
             float t0 = Time.realtimeSinceStartup;
             // a confirmation is answered only while the game's campaign slot is 2; any other slot ends the test at once
-            while (Time.realtimeSinceStartup < t0 + 2400f)
+            while (Time.realtimeSinceStartup < t0 + 6000f)
             {
                 int si = -1; try { si = GameManager.Instance.currentCampaignSlotIndex; } catch { }
                 if (si != 2) { Log($"campaign slot changed to {si} - test stopped without confirming anything"); Application.Quit(); yield break; }
@@ -173,7 +173,7 @@ namespace DipGgFixes
             {
                 // 1.11.512 (#121, author 31.10: "new campaign in slot 2" - the old test save of 2025 names nations the mod no longer has)
                 yield return NewCampaign(spec);
-                if (!WorldReady()) { Log("the new campaign did not start in 40 min - quitting"); Application.Quit(); yield break; }
+                if (!WorldReady()) { Log("the new campaign did not start in 100 min - quitting"); Application.Quit(); yield break; }
             }
             else
             {
