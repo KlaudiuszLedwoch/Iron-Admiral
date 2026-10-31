@@ -39,7 +39,7 @@ namespace DipGgFixes
             if (v is double d) return d.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
             string s = v.ToString(); return s.Length > 60 ? s.Substring(0, 60) : s;
         }
-        // 1.11.503 (#120, author 31.10, 11:30: let the AI design the ships it plans to build while the player thinks on the map): the
+        // 1.11.503 (#121, author 31.10, 11:30: let the AI design the ships it plans to build while the player thinks on the map): the
         // signatures of the game's design generation, logged once, to see how a design pass can be started outside the end of turn
         static bool sigLogged;
         static void Signatures()
