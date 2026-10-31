@@ -1,6 +1,8 @@
-// 1.11.509 (#122): an older campaign save hung while loading - a saved minor alliance named a nation the game no longer knows and
-// MinorAlliance.FromStore stopped the whole load with KeyNotFoundException. Such an alliance is now skipped with a line in the log
-// (FromStore returns null), and every null left in the campaign's lists of minor alliances is removed once the map is shown.
+// 1.11.509/510 (#122): an older campaign save hung while loading - a saved minor alliance named a nation the game no longer knows
+// (test campaign: russia - chile) and MinorAlliance.FromStore stopped the whole load with KeyNotFoundException. Returning null from
+// FromStore is not enough (the loader uses the result at once - 1.11.509 test: NullReferenceException in LoadCampaign). Before every
+// step of the loading coroutine the saved data it holds is searched for lists of saved minor alliances, and an alliance whose
+// major or minor nation is unknown is removed from the list before the loader reads it, with a line in the log.
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -12,16 +14,19 @@ namespace DipGgFixes
 {
     internal static class LoadGuard
     {
-        static int skipped; static bool cleaned; static IntPtr session;
-
         internal static void ApplyHooks(HarmonyLib.Harmony h)
         {
             try
             {
-                var m = AccessTools.Method(typeof(MinorAlliance), "FromStore");
-                if (m == null) { MelonLogger.Msg("[DIP GG Fixes][LoadGuard] MinorAlliance.FromStore not found"); return; }
-                h.Patch(m, prefix: new HarmonyMethod(typeof(LoadGuard).GetMethod(nameof(Pre), BindingFlags.Static | BindingFlags.NonPublic)),
-                    finalizer: new HarmonyMethod(typeof(LoadGuard).GetMethod(nameof(Fin), BindingFlags.Static | BindingFlags.NonPublic)));
+                int n = 0;
+                foreach (var t in typeof(GameManager).GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
+                {
+                    if (!t.Name.Contains("LoadCampaign")) continue;
+                    var m = t.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (m == null) continue;
+                    h.Patch(m, prefix: new HarmonyMethod(typeof(LoadGuard).GetMethod(nameof(Pre), BindingFlags.Static | BindingFlags.NonPublic))); n++;
+                }
+                MelonLogger.Msg("[DIP GG Fixes][LoadGuard] campaign loading guarded (" + n + " method(s))");
             }
             catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][LoadGuard] " + e.Message); }
         }
@@ -32,54 +37,47 @@ namespace DipGgFixes
             try { return G.GameData.players.ContainsKey(key); } catch { return true; }
         }
 
-        static bool Pre(MinorAlliance.Store store, ref MinorAlliance __result)
+        static readonly HashSet<IntPtr> seen = new HashSet<IntPtr>();
+        static int Clean(Il2CppSystem.Collections.Generic.List<MinorAlliance.Store> list)
         {
-            try
-            {
-                if (store == null) { __result = null; skipped++; cleaned = false; return false; }
-                string a = store.Major, b = store.Minor;
-                if (Known(a) && Known(b)) return true;
-                __result = null; skipped++; cleaned = false;
-                MelonLogger.Msg($"[DIP GG Fixes][LoadGuard] saved minor alliance {a ?? "?"} - {b ?? "?"} skipped: {(Known(a) ? b : a) ?? "?"} is not a nation of this game");
-                return false;
-            }
-            catch { return true; }
-        }
-
-        static Exception Fin(Exception __exception, ref MinorAlliance __result)
-        {
-            if (__exception == null) return null;
-            skipped++; cleaned = false; __result = null;
-            MelonLogger.Msg("[DIP GG Fixes][LoadGuard] a saved minor alliance could not be read (" + __exception.GetType().Name + ") - skipped");
-            return null;
-        }
-
-        // removes the skipped (null) alliances from every list of minor alliances the campaign keeps
-        internal static void Tick()
-        {
-            if (skipped == 0 || cleaned) return;
-            bool map = false; try { map = GameManager.IsWorldMap; } catch { }
-            if (!map) return;
-            cleaned = true;
+            if (list == null || seen.Contains(list.Pointer)) return 0;
             int removed = 0;
-            try
+            for (int i = list.Count - 1; i >= 0; i--)
             {
-                var cc = CampaignController.Instance; if (cc == null) return;
-                foreach (var host in new object[] { cc, cc.CampaignData })
-                {
-                    if (host == null) continue;
-                    foreach (var p in host.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-                    {
-                        if (p.Name.IndexOf("inorAlliances", StringComparison.Ordinal) < 0 || p.GetIndexParameters().Length > 0) continue;
-                        object v = null; try { v = p.GetValue(host); } catch { }
-                        if (v is Il2CppSystem.Collections.Generic.List<MinorAlliance> list)
-                            for (int i = list.Count - 1; i >= 0; i--) if (list[i] == null) { list.RemoveAt(i); removed++; }
-                    }
-                }
+                var s = list[i]; string a = null, b = null;
+                try { if (s != null) { a = s.Major; b = s.Minor; } } catch { }
+                if (s != null && Known(a) && Known(b)) continue;
+                list.RemoveAt(i); removed++;
+                MelonLogger.Msg($"[DIP GG Fixes][LoadGuard] saved minor alliance {a ?? "?"} - {b ?? "?"} dropped: {(Known(a) ? b : a) ?? "?"} is not a nation of this game");
             }
-            catch (Exception e) { MelonLogger.Warning("[DIP GG Fixes][LoadGuard] cleanup: " + e.Message); }
-            MelonLogger.Msg($"[DIP GG Fixes][LoadGuard] {skipped} saved minor alliance(s) skipped while loading, {removed} empty entr(ies) removed");
-            skipped = 0;
+            seen.Add(list.Pointer);
+            return removed;
         }
+
+        // the loader's own fields and one level below them (the saved campaign object) are searched for List<MinorAlliance.Store>
+        static void Pre(object __instance) { try { Scan(__instance, 3); } catch { } }
+        // only the game's own store classes are followed (Il2Cpp namespace, names ending in "Store"/"Data"/"Save" or the loader itself)
+        static void Scan(object o, int depth)
+        {
+            if (o == null || depth < 0) return;
+            foreach (var p in o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
+            {
+                if (p.GetIndexParameters().Length > 0) continue;
+                var pt = p.PropertyType;
+                if (pt == typeof(Il2CppSystem.Collections.Generic.List<MinorAlliance.Store>))
+                {
+                    object w = null; try { w = p.GetValue(o); } catch { }
+                    Clean(w as Il2CppSystem.Collections.Generic.List<MinorAlliance.Store>); continue;
+                }
+                if (depth == 0 || pt.IsValueType || pt == typeof(string)) continue;
+                string n = pt.Name;
+                if (pt.Namespace == null || !pt.Namespace.StartsWith("Il2Cpp") || pt.Namespace.StartsWith("Il2CppSystem")) continue;
+                if (!(n.EndsWith("Store") || n.EndsWith("Data") || n.EndsWith("Save") || n.Contains("Campaign"))) continue;
+                object v = null; try { v = p.GetValue(o); } catch { }
+                Scan(v, depth - 1);
+            }
+        }
+
+        internal static void Tick() { }
     }
 }
