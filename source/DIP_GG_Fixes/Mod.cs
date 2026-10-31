@@ -108,7 +108,7 @@ using HarmonyLib;
 using MelonLoader;
 using Il2Cpp;
 
-[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.485", "DIP GG Extended")]
+[assembly: MelonInfo(typeof(DipGgFixes.DipGgFixesMod), "DIP GG Fixes", "1.11.487", "DIP GG Extended")]
 [assembly: MelonGame("Game Labs", "Ultimate Admiral Dreadnoughts")]
 [assembly: HarmonyDontPatchAll] // 1.11.134: patches are applied one class at a time (SafePatches)
 
@@ -231,7 +231,7 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<bool> MinorFleetToConqueror;
         internal static MelonPreferences_Entry<bool> NationalTech;
         internal static MelonPreferences_Entry<bool> CheckUpdates;
-        internal static MelonPreferences_Entry<bool> UpdateDownload;
+        internal static MelonPreferences_Entry<bool> UpdateDownload, UpdateAutoInstall;
         internal static MelonPreferences_Entry<float> NationalTechScale;
 
         public override void OnUpdate()
@@ -616,6 +616,10 @@ namespace DipGgFixes
                 "At game start fetch the VERSION file of the Iron Admiral GitHub repository (one HTTPS request to raw.githubusercontent.com) and show a message when a newer release exists (1.11.9)");
             UpdateDownload = cat.CreateEntry("UpdateDownloadButton", true, null,
                 "Show a Download button in the update message; the download starts only after the player clicks it (1.11.11). false = message with a link only");
+            // 1.11.487 (author 31.10 06:24: "the stable line needs automatic installation of updates too"; thunderspirit2014's log 30.10: the
+            // update was found and the message with the Download button shown, but never clicked)
+            UpdateAutoInstall = cat.CreateEntry("UpdateAutoInstall", true, null,
+                "Install a newer Iron Admiral version automatically at game start (the Mods folder of the package, SHA-256 verified) - the game only asks for a restart afterwards; false = the message with the Download button");
             UpdateCheck.CreatePrefs(cat); // 1.11.108: stable / beta line
             EcoPrefs.Create(cat);
             EconomyUi.CreatePrefs(cat);
@@ -1379,7 +1383,7 @@ try { Patch_AiTakeReparation.Install(HarmonyInstance); } catch { } // 1.11.483
 
         internal class DivState { public float nextThink; public float nextSightLog; public bool charging; public bool closing; public float closeResumeAt; public IntPtr target; public string name; public string reason; public bool fighting; public float nextDetach; public float nextLeg; public int legSign; public bool zigLogged; public bool reachLogged; public bool hopelessLogged; public float hopelessSince = -1f; public bool hopelessWaitLogged; public bool hopelessSoftLogged; public float evadeUntil; public UnityEngine.Vector3 evadeDir; public bool massLogged; public IntPtr ramTarget; public bool capEscape; public bool scatterLogged; public bool escapeLogged;
             // 1.11.86
-            public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public bool noReloads; public float approachDmg = -1f; public bool approachSmokeLogged; }
+            public IntPtr playerPtr; public UnityEngine.Vector3 pos; public float activeAt; public bool reloading; public float reloadStart; public float firstInRange; public bool returnAttack; public bool supporting; public IntPtr supportTarget; public float nextSmoke; public bool covering; public bool holding; public float holdAt; public int holdSide = 1; public bool noReloads; public float approachDmg = -1f; public bool approachSmokeLogged; }
         static void Why(DivState st, string r) { if (st.reason != r) { st.reason = r; Log($"{st.name}: {r}"); } }
         internal static readonly Dictionary<IntPtr, DivState> States = new Dictionary<IntPtr, DivState>();
         internal static int Errors;
@@ -3970,6 +3974,14 @@ try { Patch_AiTakeReparation.Install(HarmonyInstance); } catch { } // 1.11.483
                 var ui = G.ui; if (ui == null) return;
                 bool canDownload = DipGgFixesMod.UpdateDownload != null && DipGgFixesMod.UpdateDownload.Value && !string.IsNullOrEmpty(remoteZipUrl) && !string.IsNullOrEmpty(remoteSha);
                 string text = $"Iron Admiral {remote}{(BetaLine ? " (beta)" : "")} is available on GitHub (installed: {local}).\n{remoteDll}\n{Page}";
+                if (canDownload && DipGgFixesMod.UpdateAutoInstall != null && DipGgFixesMod.UpdateAutoInstall.Value)
+                {
+                    shown = true;
+                    MelonLogger.Msg("[DIP GG Fixes][Update] automatic installation (UpdateAutoInstall) of " + remote);
+                    StartDownload();
+                    ui.ReportMessage("Iron Admiral - update", text + "\n\nThe new version is being downloaded and installed now (SHA-256 verified). A message will tell you when it is done - then restart the game. Switch UpdateAutoInstall (F10) turns automatic installation off.", "OK", null, Act(() => { }), null);
+                    return;
+                }
                 if (canDownload)
                 {
                     text += "\n\nDownload installs the Mods folder of the new version (SHA-256 verified); the game must be restarted afterwards. Nothing is downloaded unless you click.";

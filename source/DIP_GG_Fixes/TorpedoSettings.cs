@@ -339,10 +339,16 @@ namespace DipGgFixes
             int want = -1; string why = null; float d = BattleAi.Dist(s, t);
             int[] order = { HS, LR, ER };
             bool line = false; try { line = BattleAi.IsCapital(t); } catch { }
+            // 1.11.487 (thunderspirit2014's video and log 30.10, 1916: a destroyer flotilla charging the German line took Extreme Range at
+            // 26 km, so the charge counted the target "in range" at 20 km and every salvo went from there - 24.6 kn torpedoes on a 500 s run,
+            // next to no hits): a division in a torpedo charge never takes the extreme-range setting - it closes to the reach of the normal
+            // (long range) or faster setting, as the destroyer attacks at Jutland went in to 6-9 km. Extreme range stays for ships firing
+            // from their line.
+            bool charge = false; try { charge = BattleAi.InCharge(s); } catch { }
             foreach (var set in order)
             {
                 if (!Has(st, set)) continue;
-                if (set == ER && !line) continue;   // extreme range only into a battle line (test 10:16, 1916: Extreme Range against a destroyer)
+                if (set == ER && (!line || charge)) continue;   // extreme range only into a battle line (test 10:16, 1916: Extreme Range against a destroyer)
                 float rng = lrRange * st.P.R[set];
                 float run = InterceptRun(s, t, World(ms * st.P.V[set]));
                 // hysteresis: the shorter setting than the present one must fit with a further 10 % to spare
@@ -351,7 +357,7 @@ namespace DipGgFixes
             }
             if (want < 0)
             {
-                want = Has(st, ER) && line ? ER : LR;
+                want = Has(st, ER) && line && !charge ? ER : LR;
                 why = $"{Dispatch.Ship(t.name)} at {d:0} m beyond the shorter settings{(want == ER ? " - a battle line, extreme range" : "")}";
             }
             // hysteresis the other way (test 10:16, 1905: Long Range <-> Extreme Range every 90 s around the limit): a slower setting
