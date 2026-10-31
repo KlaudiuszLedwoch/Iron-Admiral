@@ -22,7 +22,7 @@ namespace DipGgFixes
         internal static void CreatePrefs(MelonPreferences_Category cat)
         {
             On = cat.CreateEntry("EraMap", true, null, "Campaign: the campaign map looks like an atlas of the period - a map of each decade (1890, 1900 ... 1940) from Mods\\IronAdmiral_Maps replaces the game's map texture as the years pass (no map files = the game's own map)");
-            Dump = cat.CreateEntry("EraMapDump", true, null, "Campaign (once): write the campaign map's shader, texture properties and textures to UserData\\IronAdmiral\\mapdump - the reference for fitting the period maps (read only); switches itself off after the dump");
+            Dump = cat.CreateEntry("EraMapDumpTexture", true, null, "Campaign (once): write the campaign map's shader, texture properties and textures to UserData\\IronAdmiral\\mapdump - the reference for fitting the period maps (read only); switches itself off after the dump");
             Prop = cat.CreateEntry("EraMapTexture", "auto", null, "Campaign: texture property of the map material that the period map replaces (auto = the material's main texture)");
         }
         static void Log(string m) { MelonLogger.Msg("[DIP GG Fixes][EraMap] " + m); }
@@ -131,10 +131,11 @@ namespace DipGgFixes
                     if (tx == null) { lines.Add($"  {n}: none"); continue; }
                     Vector2 so = Vector2.one, of = Vector2.zero; try { so = m.GetTextureScale(n); of = m.GetTextureOffset(n); } catch { }
                     lines.Add($"  {n}: {tx.name} {tx.width}x{tx.height} {tx.GetType().Name} scale {so} offset {of}");
-                    if (encodePng == null || tx.width < 64 || tx.width > 8192 || tx.height > 8192) continue;
+                    if (encodePng == null || tx.width < 64) continue;
                     try
                     {
-                        int w = tx.width, h = tx.height;
+                        // 1.11.491: the game's map is 16384 x 16384 (world_map_16k) - written scaled to at most 8192 px a side (enough to fit the period map)
+                        float sc = Mathf.Min(1f, 8192f / Mathf.Max(tx.width, tx.height)); int w = Mathf.RoundToInt(tx.width * sc), h = Mathf.RoundToInt(tx.height * sc);
                         var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
                         var prev = RenderTexture.active;
                         Graphics.Blit(tx, rt); RenderTexture.active = rt;
