@@ -279,6 +279,8 @@ namespace DipGgFixes
         internal static MelonPreferences_Entry<float> TurnBudget, HardStop;
         internal static bool BudgetUsed() { return TurnBudget != null && TurnBudget.Value > 0f && budgetMonth == Economy.Month() && Time.realtimeSinceStartup - budgetStart > TurnBudget.Value; }
         static readonly HashSet<string> stopLogged = new HashSet<string>();
+        // a nation skipped one month is never skipped the next month (the AI order of a turn is fixed - the same nations would always lose)
+        static readonly Dictionary<string, int> skippedAt = new Dictionary<string, int>();
         internal static bool HardStopNow(Player p)
         {
             try
@@ -286,6 +288,8 @@ namespace DipGgFixes
                 if (p == null || p.isMain || HardStop == null || HardStop.Value <= 0f || budgetMonth != Economy.Month()) return false;
                 float used = Time.realtimeSinceStartup - budgetStart; if (used <= HardStop.Value) return false;
                 string n = p.data != null ? p.data.name : "?";
+                if (skippedAt.TryGetValue(n, out int last) && budgetMonth - last <= 1) return false;
+                skippedAt[n] = budgetMonth;
                 if (stopLogged.Add(n + "|" + budgetMonth)) Log($"{n}: no shipbuilding this month - the AI's ship design work has taken {used:0} s of this turn (limit {HardStop.Value:0} s, ShipGenTurnHardStop); it builds next month");
                 return true;
             }
