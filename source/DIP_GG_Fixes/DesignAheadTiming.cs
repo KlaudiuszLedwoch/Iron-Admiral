@@ -31,7 +31,7 @@ namespace DipGgFixes
                 int n = 0;
                 foreach (var t in typeof(CampaignController).GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic))
                 {
-                    if (!(t.Name.Contains("GenerateRandomDesigns") || t.Name.Contains("AiManageFleet"))) continue;
+                    if (!(t.Name.Contains("GenerateRandomDesigns") || t.Name.Contains("AiManageFleet") || t.Name.Contains("NextTurn"))) continue;
                     var m = t.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                     if (m == null) continue;
                     h.Patch(m, pre, post); n++;
@@ -48,11 +48,19 @@ namespace DipGgFixes
             var dt = m.DeclaringType != null ? m.DeclaringType.Name : "";
             if (dt.Contains("GenerateRandomDesigns")) return "GenerateRandomDesigns";
             if (dt.Contains("AiManageFleet")) return "AiManageFleet";
+            if (dt.Contains("NextTurn")) return "NextTurn";
             return m.Name;
         }
-        static void Pre(out long __state) { __state = Stopwatch.GetTimestamp(); }
+        // 1.11.507: the time of the last step of the end of turn (NextTurn / AiManageFleet), read by DesignAhead to stop at once
+        internal static float LastTurnStep = -1f;
+        static void Pre(out long __state, MethodBase __originalMethod)
+        {
+            __state = Stopwatch.GetTimestamp();
+            try { var dt = __originalMethod.DeclaringType != null ? __originalMethod.DeclaringType.Name : ""; if (dt.Contains("NextTurn") || dt.Contains("AiManageFleet") || __originalMethod.Name == "BuildNewShips") { LastTurnStep = UnityEngine.Time.realtimeSinceStartup; DesignAhead.Abort("end of turn"); } } catch { }
+        }
         static void Post(long __state, object __instance, MethodBase __originalMethod)
         {
+            if (DesignAhead.Driving) return;   // the design pass on the map logs its own time
             try
             {
                 double ms = (Stopwatch.GetTimestamp() - __state) * 1000.0 / Stopwatch.Frequency;
