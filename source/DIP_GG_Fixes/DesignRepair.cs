@@ -125,9 +125,11 @@ namespace DipGgFixes
         static int DateOf(string n)
         {
             if (string.IsNullOrEmpty(n)) return 0;
-            var m = System.Text.RegularExpressions.Regex.Match(n, @"\(([A-Za-z]{3})[a-z]*\.?\s+(\d{4})\)");
-            if (!m.Success) return 0;
-            int mo = Array.IndexOf(Mon, m.Groups[1].Value.ToLowerInvariant()); int y; if (mo < 0 || !int.TryParse(m.Groups[2].Value, out y)) return 0;
+            int a = n.IndexOf('('); if (a < 0) return 0; int b = n.IndexOf(')', a); if (b < 0) return 0;
+            string inside = n.Substring(a + 1, b - a - 1).Replace(".", " ").Trim();
+            var p = inside.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (p.Length < 2 || p[0].Length < 3) return 0;
+            int mo = Array.IndexOf(Mon, p[0].Substring(0, 3).ToLowerInvariant()); int y; if (mo < 0 || !int.TryParse(p[p.Length - 1], out y) || y < 1800) return 0;
             return y * 12 + mo + 1;
         }
         static string BaseName(string n) { if (string.IsNullOrEmpty(n)) return ""; int i = n.IndexOf(" ("); return (i > 0 ? n.Substring(0, i) : n).Trim(); }
