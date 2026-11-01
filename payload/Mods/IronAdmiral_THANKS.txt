@@ -1,0 +1,12 @@
+# Iron Admiral - thanks to the players who test, report and record.
+# One line per person: name | reports (forum posts and videos) | what they did. Ordered by the number and length of their reports.
+# Updated with the forum reviews; shown on the main menu and written to the log at start.
+thunderspirit2014 | 23 | test battles on every version, videos on YouTube (youtube.com/@UltimateAdmiralDreadnoughts1.7), test plans
+hurepoix | 28 | long campaigns 1890-1910, historical gunnery and penetration, prizes, occupation, conflicts, designs
+VodkaBear | 10 | torpedo boat damage, diplomacy and wars, pre-dreadnought damage
+BABUT | 4 | ship data in battle, finishing off at range, ideas from other mods
+The Titan | 2 | questions for new players
+rhett73step | 1 | custom battles and the ship generator
+ChonkE (XxChonkExX) | 1 | author of the CV Barebone Modification (MIT): the carrier ship type, carrier hulls and air wing study that Iron Admiral's carriers and naval aviation are built on
+A Simple Tako | 1 | armoured cruiser penetration in the designer: led to historical AP shell technologies (#127)
+t.latzke(Ger) | 1 | early wars for weak nations: led to the diplomacy threat factor (#126)

@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 28 October 2026. Latest version: Iron Admiral 1.2.75.2.1. Updated with every release._
+_Guide as of 28 October 2026. Latest version: Iron Admiral 1.2.75. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -209,6 +209,20 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 
 ---
 
+## 14. New in the 1.2.76 betas
+
+What the current beta adds to the campaign (each with its switch in the F10 panel):
+
+- **Naval aviation budget** - a slider in the Finances window; the number of aircraft follows the money month by month and decides the size of carrier and shore strikes and the air reconnaissance. See [Naval aviation](Naval-aviation).
+- **Technology level against the others** - the research screen shows your place among the great powers ("2/12, 420 tech.") instead of "Very Advanced" for everyone.
+- **A new war starts at zero** - war score left over from the previous war with the same enemy no longer counts (#205); the monthly treasury report explains where unrest came from.
+- **Ships repair slowly at sea** (experimental, off by default) - 3% a turn, at most half of the damage taken.
+- **Statistics** - in the designer: the design ranking (wins, losses, ships sunk by each design), the list of ships sunk with their names, and the service record of each ship.
+- **Designs that can never be built** by your nation are moved out of the shared designs folder to a dated folder next to it (nothing is deleted).
+- **Your divisions** dodge torpedoes by default (single ships too, and they return to their course), keep their leader, and have a spacing slider under the gun orders.
+- **Designer** - new turrets get armour by default (roof 25 mm, walls up to the calibre); 2-4 in guns may have a light gun house or shield; Refit enters refit mode without an extra question; the gun window shows the physical penetration, also published as the [penetration table](Penetration-table).
+- **Spectacular sinkings** - torpedoed on one side, big ships capsize; after a magazine hit they blow up; others break their back or settle burning.
+
 ### Guide history
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
 - **18 October 2026, Iron Admiral 1.2.16:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
@@ -245,7 +259,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **23 October 2026, Iron Admiral 1.2.66:** the battle AI no longer breaks off before it knows its target and fights on when clearly stronger; your ships use the full torpedo range; captured ships appear in the designer.
 - **25 October 2026, Iron Admiral 1.2.69:** the beta line of 23-25 October promoted to stable - ballistics from physics and technology, hit chance by fire-control technology, HE through thin plating, division orders in battle, occupied lands decided province by province, lost territory, technology diffusion, historical weights, an AI designer that limits its guns by displacement and trims overweight attempts, refits for the buyers of your ships, eight new Help chapters.
 - **25 October 2026, Iron Admiral 1.2.70:** damage model step 1 - armour quality measured against Krupp cemented armour (heavy shells pierce what they pierced historically), your target orders hold, AI battleships that cannot pierce your line keep fighting your lighter ships, no mod panels over the battle result windows.
-- **25 October 2026, Iron Admiral 1.2.71:** damage model step 2 - penetration from the physics of each shot (striking velocity and angle of fall; Okun's formulas for belts and decks); one physical gun for the gun window, the shells' flight, the range and the penetration; the gun window shows the battle values; a log line for every hit.
+- **25 October 2026, Iron Admiral 1.2.71:** damage model step 2 - penetration from the physics of each shot (the speed and angle at which the shell strikes, for belts and decks); one physical gun for the gun window, the shells' flight, the range and the penetration; the gun window shows the battle values; a log line for every hit.
 - **25 October 2026, Iron Admiral 1.2.72:** torpedo run settings by navy and torpedo technology chosen in battle and torpedo target priorities; damage of AP shells passing clean through (war damage reports); physical gun step 2b (shell of the bore as built, historical muzzle velocity with the technology bonus); battle AI: escort first, transports after; scouts head for smoke reported by the lookouts.
 - **25 October 2026, Iron Admiral 1.2.73:** belt penetration recalibrated for all calibres; AP pass-through damage by the place the shell went through; gun orders for the player's divisions; torpedo attack order goes in at once, holds off at launch distance and turns away opening the range; dispatches tell where hits struck; hit log for both sides.
 - **25 October 2026, Iron Admiral 1.2.74:** physical penetration in battle (the game's penetration table), historical damage model (bursting charge and place of burst), historical shell weights, deliberate aiming at close range, crews' voices in the dispatches; from this release the stable and beta lines are separate again.
@@ -253,6 +267,7 @@ Every rule can be switched off in the F10 panel (group Battle AI).
 - **27 October 2026, Iron Admiral 1.2.74.2:** a ship that surrendered in battle is taken as a prize again (the game had already moved her to the sunk list); resolution guard when the game's settings fail at start.
 - **27 October 2026, Iron Admiral 1.2.74.3:** corrected package - the prize fix of 1.2.74.2 is in it (a surrendered ship is taken as a prize again).
 - **28 October 2026, Iron Admiral 1.2.75:** ships sink by their size (damage by tonnage, sinking at 40 % structure damage - torpedo boats and destroyers no longer unkillable); impact angle from the shell's fall; AI torpedo tactics (cross attack, turning to fire the other side); division order "Finish off"; coalition wars with a balance of power; 7 in guns no longer slower than 8 in.
+- **30 October 2026, Iron Admiral 1.2.76-beta.110:** section 14 - what the 1.2.76 betas add: naval aviation budget, technology ranking, war score reset, sea repairs, statistics, unbuildable designs moved, division orders, designer armour defaults and penetration table, spectacular sinkings.
 
 ---
 

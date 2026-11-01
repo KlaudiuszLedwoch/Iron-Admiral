@@ -1,6 +1,6 @@
 # Iron Admiral — DIP The Great Game Extended
 
-_Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.2.1.3.2.1 (DIP_GG_Fixes 1.11.287)._
+_Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287)._
 
 **AI overhaul for Ultimate Admiral: Dreadnoughts, built on the Dreadnought Improvement Project (DIP) "The Great Game" 1.3.5, TweaksAndFixes 3.21.1 and MelonLoader 0.6.6.**
 
@@ -75,6 +75,7 @@ Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.74.1_Mods_onl
 - TweaksAndFixes — NathanKell, DukeDagor (MIT)
 - MelonLoader — LavaGang (Apache 2.0)
 - Ultimate Admiral's Shippack — Badkapp / MarineWerft (free use with credit, not for paid mods)
+- CV Barebone Modification (carrier ship type and air wing design study) - ChonkE (MIT)
 - Iron Admiral data changes, DIP_GG_Fixes add-on, installer, historical data and designs — Klaudiusz Ledwoch (Steam: Klod76)
 
 Licence: from version 1.2.48 the author's own work is covered by [LICENSE](LICENSE) - free to play, change for private use and make videos about; republishing, forks and reuse in other mods need the author's written permission; no commercial use. Versions up to 1.2.47 remain under Apache 2.0. Third-party parts keep their own licences, see [NOTICE.md](NOTICE.md). Contributions are welcome under [CONTRIBUTING.md](CONTRIBUTING.md).
