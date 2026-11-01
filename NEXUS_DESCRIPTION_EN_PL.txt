@@ -1,844 +1,101 @@
 Nexus Mods - main Description field (BBCode), bilingual: English first, Polish after the separator.
-Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: torpedo charges by range and speed, capital ships that close in, crews that matter (veterancy, panic, surrender), prizes, national doctrines, stronger minors, balance-of-power events. One-click install, full uninstall. Download: https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases
+Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights, naval aviation, fog of war, diplomacy by threat and a naval arms race, historical ballistics and ship classes. One-click install, every feature switchable in F10.
 
 ==========================================================================
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.76.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[size=5][b]Iron Admiral[/b][/size]
+[i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, with a navy simulation that thinks, fights and remembers.[/i]
 
-[b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
-[list]
-[*]Three battles, 6 min, ending with two surrendered destroyers taken as prizes: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
-[*]Two battles, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
-[*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
-[/list]
+[i]Description as of 1 November 2026. Stable: Iron Admiral 1.2.76 (DIP_GG_Fixes 1.11.543). Beta: 1.2.77-beta.2 (DIP_GG_Fixes 1.11.546).[/i]
 
-[b]What is new (1 November 2026) - Iron Admiral 1.2.76, DIP_GG_Fixes 1.11.543[/b]
+[b]Download (one-click installer and all packages): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - the files here on Nexus are the same build.
+[b]Guide for players: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]Iron Admiral wiki[/url][/b] | Bug reports and ideas: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]GitHub issues[/url] or the comments here.
+
+[b]Videos - the battle AI in action:[/b]
 [list]
-[*]Naval aviation: a new technology branch with its own budget, air reconnaissance from your ports, spotting aircraft and torpedo air strikes in campaign battles from carriers and from the shore - all following research. Custom battles 1915-1945 give you a carrier beyond the horizon.
-[*]Campaign map: reconnaissance and control circles around your task forces; the sea beyond your reconnaissance is delicately darkened.
-[*]Fog of war in battle: an enemy not yet identified is shown only by a grey reported class, e.g. CL?
-[*]Diplomacy by threat and a naval arms race: a real building programme alarms your rivals and they answer by building; a monthly report tells you who. Scrapping capital ships without growing their tonnage improves relations. A "Naval rivals" panel shows the rivalries.
-[*]Battles: choose the hour when your force is faster, night actions at short range, AI withdrawal and smoke, new orders (Smoke, Keep range, torpedo attack), no more ships outrunning their own torpedoes, one-sided battles no longer draws.
-[*]Designs: historical AP shells, new AI designs with the newest researched shell, a service record and ranking for every design, deleted designs stay deleted.
-[*]Much shorter end of turn: foreign navies design their ships while you plan your turn.
+[*][url=https://youtu.be/DjmOu0KVnwE]Three battles, ending with two surrendered destroyers taken as prizes[/url]
+[*][url=https://youtu.be/ZAPta33uJXE]Two battles[/url]
+[*][url=https://youtu.be/SZzuVT4X2qY]The first battle uncut[/url]
 [/list]
 
-[b]What is new (28 October 2026) - Iron Admiral 1.2.75, DIP_GG_Fixes 1.11.328[/b]
+[size=4][b]What is new in 1.2.76 (1 November 2026)[/b][/size]
 [list]
-[*]Ships sink by their size: a shell destroys the same amount of tonnage in any ship. Torpedo boats and destroyers are no longer "unkillable" - in test battles torpedo boats sink after 3-10 hits, destroyers after 12-45, battleships after 14-33 heavy hits, as in the historical record. A ship sinks at 40 % structure damage, as in vanilla.
-[*]Impact angle from the shell's fall: heavy AP shells that should pierce a belt now do; deck hits meet the deck plate.
-[*]AI torpedo tactics: attacks on large ships up to 90 % of the torpedo range, cross attacks from both bows, a division with one side's tubes empty turns to fire the other side; damaged light craft press the attack.
-[*]New division order "Finish off" (Alt+7): light divisions go for crippled enemies.
-[*]Campaign: coalition wars keep a balance of power, slower technology catch-up, shell research as in vanilla, broken AI designs retired.
-[*]7 in guns no longer fire slower than 8 in; battle dispatches in the navies' own languages; 33 more historical classes.
+[*][b]Naval aviation[/b] - a new technology branch with its own budget: air reconnaissance from your ports, spotting aircraft, and torpedo air strikes in campaign battles from carriers and from the shore - all following research. Custom battles 1915-1945 give you a carrier beyond the horizon.
+[*][b]Fog of war[/b] - the sea beyond your reconnaissance is delicately darkened on the campaign map; in battle an enemy not yet identified shows only a grey reported class, e.g. [i]CL?[/i].
+[*][b]Diplomacy and the naval arms race[/b] - a real building programme alarms your rivals and they answer by building; a monthly report tells you who. Scrapping capital ships without growing their tonnage improves relations. A "Naval rivals" panel shows who sees whom as a rival.
+[*][b]Battles[/b] - the faster force chooses the hour, night actions at short range, AI withdrawal and smoke, new orders (Smoke, Keep range, torpedo attack), no more ships outrunning their own torpedoes, one-sided battles no longer end as draws.
+[*][b]Designs[/b] - historical AP shells, new AI designs with the newest researched shell, a service record and ranking for every design, deleted designs stay deleted.
+[*][b]Much shorter end of turn[/b] - foreign navies design their ships while you plan your turn.
 [/list]
 
-[b]What is new (27 October 2026) - Iron Admiral 1.2.74.3, DIP_GG_Fixes 1.11.314[/b]
+[b]In the beta (1.2.77-beta.2):[/b] gun range and rate of fire consistent across calibres, no 30,000 t battleship hulls before 1912, air strike notices before and after a battle, the naval aviation of every great power.
+
+[size=4][b]What the mod does[/b][/size]
 [list]
-[*]Corrected package: the prize fix announced for 1.2.74.2 is in it - ships that strike their colours are taken as prizes again.
+[*][b]Battle AI that fights[/b] - torpedo attacks by range and speed, capital ships that close in or break off, divisions with orders, crews that matter (experience, panic, surrender), prizes taken from surrendered ships, national doctrines by period.
+[*][b]Ballistics and damage from history[/b] - penetration, shell weights and muzzle velocities after historical guns; ships sink by their size; armour quality and impact angle count.
+[*][b]A living campaign[/b] - treasury with loans and inflation, series production and shipyards, occupation, risings and garrisons, coalition wars against a dominant power, technology spread, stronger minor nations.
+[*][b]Fog of war[/b] - enemy fleets known only as well as your reconnaissance allows, misidentified ships, ageing contact reports.
+[*][b]Historical ship classes[/b] - hundreds of historical designs for the AI and for you, plus the Shippack designs.
+[*][b]Settings panel (F10)[/b] - every feature has its own switch, with help texts in the game.
 [/list]
 
-[b]What is new (27 October 2026) - Iron Admiral 1.2.74.2, DIP_GG_Fixes 1.11.313[/b]
-[list]
-[*]Ships that strike their colours are taken as prizes again. The game moves a surrendered ship to the battle's sunk list at once, and the prize check had looked only among the ships still afloat.
-[*]When the game's settings fail at start, the resolution is set to the current screen, so the interface of other mods keeps working.
-[/list]
-
-[b]What is new (26 October 2026) - Iron Admiral 1.2.74.1, DIP_GG_Fixes 1.11.287[/b]
-[list]
-[*]The gun window shows the physical penetration, velocities and shell weights in every language of the game (until now only in English).
-[*]The battle AI judges whether it can pierce a belt with the same physics as the hit, so it no longer turns away from fights it would win.
-[*]The AI judges with the largest gun on the ship, also when a main turret failed the mount check.
-[/list]
-
-[b]What is new (25 October 2026) - Iron Admiral 1.2.74, DIP_GG_Fixes 1.11.281[/b]
-[list]
-[*]Damage model: the penetration used in battle is the physical penetration of each gun - striking velocity, angle of fall, shell weight and shape.
-[*]A full penetration does damage from the shell's bursting charge and the place it burst.
-[*]Historical shell weights for every calibre and gun generation.
-[*]At close range the gunners aim at the waterline and the turrets.
-[*]Battle dispatches carry the voices of the crews.
-[*]From this release on the stable line gets bug fixes and features tested in the beta; new features go to the beta first.
-[/list]
-
-[b]Behind 1.2.74 - what the game was doing when nobody was watching[/b]
-Rebuilding the damage model turned up a small collection of surprises in the game itself:
-[list]
-[*][b]One gun, three guns:[/b] the gun window, the shells in flight and the armour check each used a different gun. Now they are one physical gun.
-[*][b]Armour quality counted twice:[/b] heavy shells pierced far less than they historically did.
-[*][b]A shell passing clean through did almost nothing;[/b] now it does damage by what it went through - upper works, turret, hull ends, citadel or machinery.
-[*][b]Damage from the margin, not from the shell:[/b] the game's damage grew with how far the penetration exceeded the plate; now it follows the bursting charge and the place of the burst.
-[*][b]Shells that are neither AP nor HE:[/b] many enemy shells fly with the type "Auto".
-[*][b]A navy without a shell nose:[/b] a 1921 battle fleet fired blunt 1890s shells because its technology list had no nose at all.
-[*][b]A torpedo attack that ended in ramming,[/b] and clicks on the battle panels that fell through to the sea and dropped the selected ship.
-[/list]
-The direct route - replacing the game's penetration function - crashed every battle at the start, deep in native code. The working route writes the physical values into the game's own penetration table, gun by gun. Most fixes went the same way: find what the game really does, prove it in the battle log, then work around it without breaking anything else.
-
-[b]What is new (25 October 2026) - Iron Admiral 1.2.73, DIP_GG_Fixes 1.11.270[/b]
-[list]
-[*]Damage model: belt penetration recalibrated for every calibre against published figures of AP guns from 5 to 16 inch.
-[*]AP shells passing clean through do damage by the place they went through - upper works, turret, hull ends, citadel, machinery.
-[*]Gun orders for your divisions: which classes the main and secondary guns go for first.
-[*]Torpedo attack order: goes in at once, holds off at launch distance instead of ramming, and turns away on the course that opens the range.
-[*]Battle dispatches tell where notable hits struck; the battle strips stay open after a click.
-[/list]
-
-[b]What is new (25 October 2026) - Iron Admiral 1.2.72, DIP_GG_Fixes 1.11.256[/b]
-[list]
-[*]Torpedo run settings by navy and torpedo technology, chosen in battle: short and fast, long and slow, and extreme range against a battle line.
-[*]Torpedo target priorities for your divisions: the classes the tubes go for first; a class the enemy lacks passes to the next one.
-[*]Damage model: AP shells that pass clean through a ship do damage taken from war damage reports.
-[*]Physical gun: the shell of the bore as built and the historical muzzle velocity with your technology bonus, shown in the gun window.
-[*]Battle AI: escort first, transports after.
-[*]Scouts head for smoke reported by the lookouts and close until the ship can be made out.
-[/list]
-
-[b]What is new (25 October 2026) - Iron Admiral 1.2.71, DIP_GG_Fixes 1.11.251[/b]
-[list]
-[*]Damage model, step 2: penetration from the physics of each shot - the striking velocity and angle of fall of the shell decide what it pierces (Okun's formulas for belts and decks, checked against published US 8-inch figures).
-[*]One physical gun: the gun window, the flight of the shells, the range and the penetration use the same calibre, shell weight and muzzle velocity; a heavier shell leaves slower at the same charge.
-[*]The gun window shows the penetration used in battle, with the striking velocity and angle of fall at each range.
-[*]A log line for every hit, for checking the damage model.
-[/list]
-
-[b]What is new (25 October 2026) - Iron Admiral 1.2.70, DIP_GG_Fixes 1.11.250[/b]
-[list]
-[*]Damage model, step 1: armour quality measured against Krupp cemented armour (iron 0.40 ... Krupp 1.00 ... 1.12) - the plates no longer count twice their strength, so heavy shells pierce what they pierced historically.
-[*]Your target orders hold until the target sinks or surrenders; twin and triple turrets of the main battery fire as one battery.
-[*]AI battleships that cannot pierce your line keep fighting your lighter ships instead of leaving the battle.
-[*]No mod panels over the battle result and "Play again?" windows; a guard for the custom battle setup screen after a battle.
-[/list]
-
-[b]What is new (23-25 October 2026) - Iron Admiral 1.2.67-1.2.69, DIP_GG_Fixes 1.11.142-1.11.249[/b]
-[list]
-[*]Ballistics from physics and technology: muzzle velocity, shell weight and shell shape from the real guns and your researched technologies, mount elevation by gun generation, range = what the shell reaches; barrels rise to the shot. Hit chance by fire-control technology.
-[*]Damage: HE through thin plating, heavier partial penetrations, capped shells by shell technology, hit types in the battle summary.
-[*]Division orders in battle: Screen, Scout, Torpedo, Free action, Hunt; tags above the divisions, range tags, torpedo evasion.
-[*]Occupied lands decided province by province, for you and for the AI; lost territory: every great power works to win back what it held.
-[*]Technology diffusion and catch-up; historical weights and parts; refits for the buyers of your ships.
-[*]AI ship designer: current hulls, kept designs, limits by displacement, overweight attempts trimmed, own randParts.csv - far fewer failed designs and shorter turns.
-[*]Shared designs load with unknown technologies skipped; ship parts out of place repaired; politics window exceptions caught; eight new Help chapters.
-[/list]
-
-[b]What is new (21-23 October 2026) - Iron Admiral 1.2.45-1.2.66, DIP_GG_Fixes 1.11.73-1.11.141[/b]
-[list]
-[*][b]Battle AI:[/b] ships that cannot pierce their target no longer turn away before they know what they face, and a clearly stronger side fights on.
-[*][b]Torpedoes:[/b] your own ships use the full reach of their torpedoes.
-[*][b]Captured ships:[/b] prizes appear in the designer and can be refitted.
-[*][b]Fixes:[/b] own ship panel after deselecting an unidentified enemy, secondary guns on the nearest enemy, Beta updates switch in F10.
-[*][b]Continuous map made safer:[/b] the experimental map without edges can no longer freeze the game after a battle.
-[*][b]Refits for every own ship:[/b] ships whose design was missing from your design list get it back, and the AI's memory of failed ship designs now survives a restart.
-[*][b]Dispatch bubbles sized for battle:[/b] the reports above the ships no longer cover half the screen on large monitors.
-[*][b]Readable panels on any screen:[/b] the mod's windows now scale with the game's own interface instead of shrinking on large screens.
-[*][b]Shorter end of turn:[/b] the AI stops wasting minutes on ship designs that have just failed, and ships may answer a closing torpedo attack with their own torpedoes.
-[*][b]Torpedo fixes and smoother battles:[/b] valid torpedo shots are no longer blocked by mistake, and large battles spend less time in the mod's own calculations.
-[*][b]Surrendered ships spared:[/b] no more torpedoes at a ship that has struck her colours, and a surrendered ship returned to the winning side is no longer lost on the way home.
-[*][b]No torpedoes into empty sea:[/b] a ship no longer fires torpedoes over the side where there is no enemy at all.
-[*][b]No hopeless torpedo shots:[/b] enemy ships keep their torpedoes while the target is out of reach, too small to be worth them or simply outrunning them, and fire when the shot has a real chance.
-[*][b]Main guns engage the close enemy:[/b] cruisers no longer fire at a distant light cruiser while an enemy cruiser closes in unanswered, and ships stop switching targets back and forth.
-[*][b]Missing towers restored:[/b] sixteen cruiser and secondary towers that the game refused to load are available again, and so are the shared designs that use them.
-[*][b]More navies with a doctrine:[/b] Japan before the Washington Treaty, France in the First World War, Imperial Russia after Tsushima and the Soviet navy, Spain, the Netherlands, Scandinavia and Greece now fight after their own historical habits.
-[*][b]Screenshots in the gallery:[/b] the mod page now shows the new features in game - dispatches above the ships, the fog of war in battle and on the map, the intelligence and trade windows, a historical class in the designer and the battle report.
-[*][b]Display fixes:[/b] long rows in the intelligence window (F7) no longer overlap, and the treasury panel (F8) has its background behind every line.
-[*][b]The battle line fights first:[/b] AI battleships no longer wait at extreme range while their destroyers are shot to pieces - they move up and engage, and the flotillas attack once the lines are in action, as the fleet battle instructions of the time prescribed. A clearly weaker side sends its torpedoes in first instead of running away.
-[*][b]Destroyers finish the attack:[/b] AI flotillas press home until the tubes are empty; ships carrying reload torpedoes turn away behind smoke, reload and come back, the others turn their guns on the enemy's light ships.
-[*][b]Cruisers with a job:[/b] they protect the battleships from enemy destroyers, follow their own destroyers into the attack, threaten the enemy line from the other flank and keep out of the battleships' concentrated fire.
-[*][b]Covering the retreat:[/b] when the attack fails against a stronger enemy, the most valuable ships withdraw and the cheaper ones cover them.
-[*][b]Night and spread fire:[/b] at night battleships keep their distance and destroyers break off when spotted too early; gunfire is spread over several targets instead of every ship firing at the same one.
-[*][b]Every navy fights its own way:[/b] doctrines by nation and period - for example the Grand Fleet turning away from torpedoes and avoiding night action, Japanese night torpedo attacks before the main battle, Austro-Hungarian hit-and-run raids, the torpedo boats of the French Jeune Ecole.
-[*][b]Dispatches above the ships:[/b] during battle a dispatch about a ship briefly appears above it - your own ships and identified enemies only.
-[*][b]Also included:[/b] the naval intelligence window (F7) on rival navies and fixes to ship trade; both still wait for confirmation in a campaign.
-[*][b]Battle dispatches:[/b] the log now tells each battle as reports from the men who fought it - lookouts calling out smoke on the horizon, captains ordering torpedo runs, gunnery officers watching their shells bounce off - one file per battle to read afterwards.
-[*][b]Old news on the map:[/b] a half-known enemy squadron now stays marked where it was last reported, with the age of the report and the course seen - when it moves on unseen, you are chasing a ghost.
-[*][b]Night gives you away:[/b] at night, gun flashes and fires reveal a ship from further off, and Japanese lookouts see further in the dark.
-[*][b]920 more ready-made designs:[/b] the mod now also installs "Ultimate Admiral's Shippack" by Badkapp (MarineWerft) - a design for almost every hull from 1890 to 1950 for the ten classic great powers, checked against Iron Admiral's data.
-[*][b]Angled armour finally matters:[/b] the game used to count every hit on the belt as if it struck square on - a battleship turned away presented the same armour as one broadside on. Now the belt grows thicker along the shell's path the more obliquely it is hit, capped shells lose their advantage at steep angles, and early uncapped shells suffer more. Angling your ships pays off, for you and for the AI.
-[*][b]Ship trade (F9):[/b] put old ships up for sale instead of scrapping them - buyers send offers over the following months, and a sale moves diplomacy; order ships from foreign yards without an alliance, with the builder's design or your own, at a premium and with the risk that the builder keeps the ship if relations turn hostile. AI great powers sell their obsolete ships too.
-[*][b]Historical classes:[/b] 147 historical classes built from historical data (battleships, battlecruisers and cruisers of eleven navies) join the shared designs (Dreadnought, Iron Duke, Von der Tann, Lord Nelson, Invincible and more), named after their class or first ship; the AI picks the historical classes of its own navy first. Cruisers and destroyers follow.
-[*][b]New licence:[/b] from this version the mod's own work is under author-controlled terms - playing, private changes and videos stay free; republishing and reuse in other mods need the author's permission. Versions up to 1.2.47 stay Apache 2.0.
-[*][b]Fixes from the first battle test:[/b] the ship trade window (F9) now lists your ships and the foreign designs with working buttons; the armour angle is measured the way the game itself does, so belts are no longer overrated on some hits. The historical classes grow to 48.
-[*][b]Battle report beside the result window:[/b] the short account of the battle now opens as its own panel at the left of the screen instead of stretching the result window - on long results that window used to run off the bottom of the screen. "X" closes the panel.
-[*][b]Shippack designs work now:[/b] the 920 ready-made designs added in 1.2.47 referred to research items that DIP does not have, so the game silently skipped all of them and fell back to random ships. They are corrected; older copies in your design folder are replaced at start (the old files are kept in a backup folder).
-[*][b]Custom battles with real ships:[/b] when a historical class of the nation exists for the year, a custom battle now uses it first. Where none fits yet, the game goes straight to the ship generator instead of trying the base game's ready-made designs, which cannot load in DIP - battles load faster and the log stays clean. The "Pregenerated" button is therefore off when the game starts; turn it on only if you installed predefined designs made for DIP yourself. A new Help chapter explains it.
-[/list]
-
-[b]20 October 2026 - Iron Admiral 1.2.31-1.2.44[/b]
-[list]
-[*][b]Fog of war on the strategic map:[/b] foreign fleets are seen only as well as your reconnaissance allows. Close to your ports, where your patrols and scouting cruisers and destroyers are, with better technology and a larger intelligence budget, you know where they are. Far out at sea they disappear, or show up in the wrong place with an unknown course.
-[*][b]Contact reports can be wrong:[/b] the battle window and the enemy group window show the enemy as reported - cruisers taken for battleships, ships missing from the report. Scouts in your own force make the report better, and a navy is only ever reported with ship types it actually has.
-[*][b]Seen is not identified:[/b] in battle an enemy ship is first only an "unidentified ship (large)" and then a "probable battlecruiser?" - no name, class, guns or armour - not even in the ship panel - until your ships close in. Night, bad weather and smoke shorten the range at which you can tell what you are fighting.
-[*][b]The enemy is in the same fog:[/b] the AI judges your strength by what it has seen and identified, and may attack or withdraw on a wrong picture.
-[*][b]Interceptions need intelligence:[/b] a force at sea that nobody has found cannot be intercepted - for you and for the AI.
-[*][b]Problem report in one click:[/b] F10 > Tools > "Create problem report" puts the logs, your mod settings and a check of your Mods folder into one zip on your desktop - attach it to your post and the problem can be found much faster. Nothing is sent by the mod. Optional usage counters stay on your PC; the mod asks once whether you want them.
-[*][b]Ready-made ship designs:[/b] 50 shared designs from the author's campaigns (1890-1941, several nations) now come with the mod and appear in the game's shared designs - your own designs are never overwritten.
-[*][b]Battle report:[/b] after a fought battle a panel beside the result window tells what happened - who charged, who broke off, whose crew panicked, who surrendered or sank, which ships were taken as prizes.
-[*][b]Cut off from the sea, not out of the war:[/b] a great power that loses all its ports is no longer erased - its fleet moves to allied ports, and it fights to regain its coast: through a rising, a land offensive, peace terms or an ally. This applies to your nation too.
-[*][b]Fixes:[/b] inexactly known fleets are now drawn near their real position and always at sea; a settings file damaged by an interrupted save is repaired automatically at start (re-check your F10 settings once).
-[/list]
-
-[b]18 October 2026 - Iron Admiral 1.2.14-1.2.21[/b]
-[list]
-[*][b]Series production is live:[/b] the first ship of a new design is an expensive prototype. Ships laid down after the prototype is in service get cheaper and faster the longer the series runs; ordering a class together pays off, and small ships that share the slips come out in a fraction of the time. Sister ships are cheaper to keep in service, an idle shipyard takes orders on better terms than an overloaded one, and refits follow the same rules - for you and for the AI.
-[*][b]How to order a new class:[/b] build one ship first and wait until it is commissioned, then order the rest together. From the test campaign: a destroyer that takes 7 months as a prototype - its 29 sisters, ordered together after the prototype entered service, were built in a fraction of that time and markedly cheaper. Ordered all at once, they would all have cost full price.
-[*][b]Inflation and credit:[/b] borrowing, printing money and sudden windfalls drive prices up - the larger compared with your economy, the stronger; spending cuts bring them down, and without new shocks prices settle back to normal. Loans cost inflation plus a margin set by your credit rating (debt, deficit, war, past bankruptcy), inflation eats into old debt, and a cash reserve keeps its value but will not make you rich. Runaway inflation stirs unrest.
-[*][b]Treasury information in the game:[/b] a treasury panel on the campaign map (F8) with inflation and its causes, credit rating, interest, growth, ships under construction and the other great powers; inflation back in the Finances window; a monthly treasury report (can be switched off) and warnings for important events.
-[*][b]In-game Help:[/b] new chapter "Iron Admiral - new mechanics". [b]Campaign guide:[/b] GUIDE_EN.md in the package and on GitHub, with examples from the test campaign and player reports.
-[*]Existing campaigns continue; ships already under construction switch to the new rules.
-[*][b]What inflation means:[/b] a surcharge on everything you pay for as long as it lasts, not a price level that keeps growing - when inflation falls, prices fall back, and budgets stay in today's money, so a bad spell never leaves the game's numbers out of scale.
-[*][b]AI expands its shipyards only when it can afford it:[/b] one good month is no longer enough - an AI power needs a steady surplus and cash in hand, or a surplus large enough to carry the expansion.
-[*][b]Fixes:[/b] refits ordered together pay the prototype price only once; no more stray ship parts on the world map after the refit screen; long-running classes no longer restart as prototypes.
-[*][b]Coalitions against the dominant power:[/b] grow too strong at sea and the powers that hate you gang up - one of them strikes first, the others follow. Works against AI empires too.
-[*][b]Leaner AI turns:[/b] AI nations stop drawing new ship designs while they cannot build them (no ports, no money or full yards).
-[*][b]Refits of ships above the treaty limits:[/b] battleships built before the naval treaties can be modernised again - a refit may add a limited amount of tonnage above the ship's current size, as the Washington Treaty allowed for anti-aircraft, anti-torpedo and deck protection; new construction keeps the treaty limit.
-[*][b]Smarter enemy approach in battle:[/b] AI torpedo craft charge only targets they can actually reach, AI cruisers no longer sail into your fire when their guns cannot hurt your belt anyway, and ships on the approach zigzag to throw off your gunnery - your shooting at a turning ship gets harder, theirs too, so they straighten up once their own guns matter.
-[/list]
-
-[b]Recent highlights (16-18 October 2026)[/b]
-[list]
-[*][b]Treasury crisis for the great powers:[/b] a power stuck in debt takes a war loan, prints money (inflation, unrest) or cuts its fleet - the AI chooses by its situation, you choose in a dialog.
-[*][b]Bankrupt AI powers build cheap ships:[/b] no battleships or battlecruisers while broke; cruisers, destroyers and torpedo boats instead.
-[*][b]AI that saves up for ships:[/b] research spending balanced against income, no shipyard expansion in deficit, balance-of-power grants only for solvent nations - AI powers actually order fleets again.
-[*][b]Prizes and conquests:[/b] surrendered ships are captured by the winner; a conquered nation's fleet passes to whoever takes the port.
-[*][b]Built-in updater:[/b] at game start the mod checks for a newer version and offers a Download button; nothing is downloaded without your click, the package is SHA-256 verified. Development is intensive - sometimes several versions a day - and save games are kept compatible wherever possible.
-[/list]
-
-[b]Coming next[/b]
-[list]
-[*]Balance of the new economy tuned on campaign feedback - reports and logs from your campaigns are welcome.
-[/list]
-
-[b]Download (one-click installer and all packages, always the current build): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
-
-Iron Admiral is an extended edition of the Dreadnought Improvement Project "The Great Game" 1.3.5: the same map, nations and data, plus the DIP_GG_Fixes add-on that changes how the AI fights and runs its campaign where CSV files cannot reach. One-click install, full uninstall, source code in the package. Current add-on: DIP_GG_Fixes 1.11.75.
-
-[h2]Battle: an enemy that fights like a navy[/h2]
-[list]
-[*][b]Torpedo charges that make sense.[/b] AI destroyers, torpedo boats and light cruisers go for your battleships and heavy cruisers to deliver torpedoes. The start distance follows from their torpedo range and speed advantage, not from a constant: a ship with 850 m torpedoes no longer charges from 9 km. Out of torpedoes or badly hit, it withdraws; slower than its pursuers, it fights to the end.
-[*][b]Capital ships charge too.[/b] An AI battleship or cruiser with torpedoes and a speed edge closes in; outranged or unable to penetrate your armour, it shortens the distance instead of dying at the edge of range.
-[*][b]No more free kills.[/b] Any AI division that cannot outrun your pursuit stops fleeing and turns to fight. A faster one keeps running, as it should.
-[*][b]Cripples don't slow the fleet.[/b] Slow, damaged ships are detached and retreat on their own; the healthy ones fight at full speed.
-[*][b]Target selection like a real bridge[/b] (AI and player, when no manual target is set): guns engage the most damaged enemy in range, battleship main batteries aim at the heaviest enemy calibre, secondaries watch the nearest torpedo threat. A manual order always takes precedence.
-[*][b]National battle doctrines[/b] (15 nations in an editable CSV): the Royal Navy keeps range and line, Japan charges with torpedoes from 16 km and accepts losses, Italy fights only with an advantage, Germany covers the turn-away with torpedo flotillas. Based on the Grand Fleet Battle Orders, the USN War Instructions and the Kaisen Yomurei literature.
-[/list]
-
-[h2]Your ships: less micromanagement[/h2]
-[list]
-[*]A TB/DD/CL division set as [b]Scout[/b] runs the torpedo charge itself, like the AI, and comes back when the torpedoes are gone or things get hot.
-[*][b]Torpedoes do not run into friendly ships:[/b] when a friendly hull is in the lane to the target, the salvo waits until the lane is clear. Your own torpedo-mode change takes precedence.
-[*]The automatic target selection above works for your ships as well.
-[/list]
-
-[h2]The crew matters[/h2]
-[list]
-[*][b]Experience really counts.[/b] The six training levels (cadets to veterans) are rescaled non-linearly: veterans up to +100% in accuracy, aiming and damage control with reload twice as fast; cadets down to -50% and reload twice as slow. Middle levels change little, the extremes a lot.
-[*][b]Surrender depends on training:[/b] a green crew gives up the ship at 70% crew strength, an elite one fights down to 40% (vanilla: 55% for everybody).
-[*][b]Panic.[/b] Inexperienced crews on badly damaged ships may break and leave the line - AI and player alike. A well-trained fleet is not only more accurate, it is a fleet that does not run.
-[*][b]Prizes.[/b] A ship that surrenders falls to the winner if the winner still has working ships on the field: it goes to repair with a green crew, and its design joins your design list. Like Nebogatov's squadron after Tsushima.
-[/list]
-
-[h2]Campaign: an AI that does not give up[/h2]
-[list]
-[*]An AI nation that cannot afford a battleship builds cruisers instead of keeping its yards empty.
-[*][b]Balance of power:[/b] when your fleet outgrows the strongest rival by half, AI nations receive emergency naval appropriations. Dominance has a price.
-[*]Construction watch: if the game skips a nation's construction progress in a turn, the add-on does it instead.
-[*]Your designs go automatically to the shared design pool, so the AI can build from them.
-[*][b]Fleets change hands.[/b] When a nation loses its last port, or is dissolved, its ships in the fallen ports pass to the new controller instead of vanishing on the scrap heap - take Port Arthur and you take the fleet inside it. Works for you and against you.
-[*]The post-war crisis hurts but no longer traps nations in an endless spiral: a nation at zero budget vanishes only after 24 months of crisis.
-[*][b]Ships are built in classes.[/b] Prototypes cost more, follow-on ships get cheaper and faster, idle yards bid lower - for every nation.
-[*][b]Money has a price.[/b] Inflation, credit ratings and interest follow loans, printing and windfalls; a treasury panel (F8) shows where your money goes.
-[*][b]Ship trade (F9)[/b]: used ships for sale with offers over several months and diplomatic effects; orders from foreign yards without an alliance, at a premium and with the risk of requisition; AI great powers sell obsolete ships.
-[*][b]Historical classes[/b] in the shared designs, chosen first by the AI of their own navy.
-[/list]
-
-[h2]A world that lives[/h2]
-[list]
-[*]Sovereign minor nations (Latin America, Persia, Siam, the Balkans, Scandinavia and more) get their territories back, form alliances, buy ships and take part in wars as in vanilla; in the original DIP most of them existed only on paper.
-[*]Minors have stronger province defence and doubled port capacity in the warship trade, so they order ships from you more often.
-[*]Diplomacy with consequences: improvements x1.5, worsening x4, for the player and the AI.
-[*]Revolts and internal instability more frequent, stronger and geographically varied.
-[/list]
-
-[h2]Fog of war[/h2]
-[list]
-[*]Enemy fleets on the strategic map are hidden or shown inexactly, depending on era, distance from your ports, your patrols and scouts nearby, technology and intelligence budget.
-[*]Contact reports before a battle can misidentify ship types and miss ships; scouts in your force make them better.
-[*]In battle, detected enemy ships stay unidentified until your ships close in - shorter at night, in bad weather and behind smoke. The AI fights in the same fog.
-[*]Every part can be switched off in the F10 panel ("Fog of war").
-[/list]
-
-[h2]History in numbers[/h2]
-[list]
-[*][b]Penetration from physics, not from a slider:[/b] curves for 21 calibres and 5 gun generations rebuilt with the De Marre formula and calibrated on six navweaps.com tables (error 0.5-13%), the 16-21" calibres anchored on Okun's tables. Small guns no longer scratch a battleship's belt.
-[*]Barrel weights from a power law calibrated on the 16"/50 Mk 7, 15"/42 Mk I and 46 cm Type 94.
-[*][b]The naval treaties modelled for the first time:[/b] 35,000 t from the 1919 hull tech, 45,000 t from 1936, limits lapse in 1940.
-[*]After the treaties, design freedom up to 240,000 t for the super-battleship tier (DIP: 78,500-130,000 t). The ship H-44 could not be is buildable here, by you and by the AI.
-[*]Hulls that could be researched but never built in DIP are fixed (29 Modern Battleship variants, 23 earlier battleships, 5 destroyers, a corrupted CSV row that blocked the unlocks).
-[*]Radar that works at night and in bad weather (three techs, 1935-1945). Long Lance: +100% range instead of +40%.
-[*]Long-range accuracy grows x2.6 between 1920 and 1945 through the stereo and radar rangefinders, following W.J. Jurens' data on US Navy battleship gunnery (range dispersion down ~66%).
-[*][b]National research profiles.[/b] Each great power researches at its own pace in its own fields, from the historical record: Germany in armour, optics and survivability, Britain in heavy guns, turbines and anti-submarine warfare, the USA in fire control, shells and shipbuilding, Japan in torpedoes and night fighting, Italy in speed, France in destroyers and quadruple turrets - and each pays for its historical weaknesses (Jutland shells, the Mk 14 torpedo, Richelieu's 380mm). -10% to +50% per category, visible in the research window, for you and for the AI.
-[*][b]Treasury crisis.[/b] A great power whose cash stays below zero for six months must act, as governments did between 1890 and 1945: a war loan (debt cleared and money at once, repaid over years with interest set by the credit rating), money printing (cash at once, then inflation and unrest) or fleet cuts (no new battleships for a while, cheaper upkeep). The AI chooses by its situation - loan at war, cuts in peace, printing when a loan did not help; you get the choice in a dialog. The state survives save and load. A bankrupt AI power orders no battleships at all and builds cruisers, destroyers and torpedo boats instead - Britain at -188M no longer wastes years on semi-dreadnoughts that never leave the drawing board.
-[*]Research 20% faster, technology cost x10, AI research priorities x1.5, a new profile for the Byzantine Empire (heavy armour, the biggest calibres, fast cruisers).
-[*][b]Angled armour:[/b] belt armour counts thicker along the shell's path at oblique hits; caps stop helping at steep angles; early uncapped shells suffer more (diagnosed first from battle logs).
-[/list]
-
-[h2]Stability and transparency[/h2]
-[list]
-[*][b]Problem report:[/b] F10 > Tools writes logs, settings and a Mods folder check to one zip on your desktop for bug reports; nothing is sent.
-[*]The add-on catches two bugs in the game's own code that aborted turn processing in DIP ("An item with the same key has already been added").
-[*][b]Update check and one-click update.[/b] At start the add-on compares the installed version with the GitHub repository and shows a message when a newer build exists - one HTTPS request, nothing sent. The message has a Download button: only after you click it the Mods package is fetched from the GitHub release, verified (SHA-256) and installed; restart the game afterwards. Switches: CheckForUpdates, UpdateDownloadButton.
-[*]Every add-on feature has a switch and values in UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doctrines in Mods\battleDoctrines.csv, research profiles in Mods\techBonuses.csv. Nothing is forced.
-[*]Every change is documented with reasoning, sources and test status in CHANGELOG_EN.txt (103 sections). Source code included. From 1.2.48 the author's own work is under the terms in LICENSE (versions up to 1.2.47: Apache 2.0). Extension by Klaudiusz Ledwoch (Steam: Klod76). Built on DIP (Brother Munro & team, Apache 2.0), TweaksAndFixes (NathanKell, MIT) and MelonLoader (LavaGang, Apache 2.0).
-[/list]
-
-[h2]Version history[/h2]
-[b]Iron Admiral 1.0 (October 2026, based on DIP The Great Game 1.0.1)[/b]
-[list]
-[*]Data: armour penetration rebuilt from physics (De Marre) for 21 calibres and 5 gun generations; barrel weights from a power law; naval treaties (35,000 / 45,000 t) and a 240,000 t super-battleship ceiling; fixed hulls that could never be built (Modern Battleship, earlier BBs, destroyers); Long Lance +100%; radar that works at night; research pacing, economy and AI fleet-building parameters; revolts; AI research priorities x1.5; a Byzantine profile.
-[*]World: sovereign minor nations get their territories back and are strengthened; the post-war crisis is softened.
-[*]DIP_GG_Fixes 1.0-1.6: guards for two game bugs that aborted turn processing; automatic export of player designs to the shared pool; cruisers when a battleship is unaffordable; doubled minor port capacity; balance-of-power events; diplomacy x1.5 / x4; construction watch for stalled AI shipyards.
-[*]DIP_GG_Fixes 1.7-1.9: battle AI - torpedo charges of light ships, fight instead of a hopeless retreat, detaching slow ships, national battle doctrines (battleDoctrines.csv).
-[*]DIP_GG_Fixes 1.10.0: 24-month grace before an economic collapse; ship-loading guard; 16-21" penetration anchored on Okun's tables.
-[/list]
-[b]Iron Admiral 1.1 (14 October 2026)[/b]
-[list]
-[*]Rebuilt on DIP The Great Game 1.3.5 and TweaksAndFixes 3.21.1 by a three-way merge of every CSV cell: DIP's new data (249 hulls, technologies, events, ballistics) adopted, all Iron Admiral changes re-applied. Second download: the Mods-only zip.
-[*]DIP_GG_Fixes 1.10.1-1.10.2: compatibility with TAF 3.21.1 (attitude pass-through), shared designs exported once instead of every turn, a migration tool for 1.0 campaign saves.
-[*]Post-release fixes: new campaigns start correctly again (predefined designs disabled), work on the AI ship generator (lower early battleship belt, relaxed Experimental Small Ironclad, generator diagnostics).
-[/list]
-[b]Numbering[/b]
-Two version numbers appear below. Iron Admiral X.Y.Z is the package - installer, zips and GitHub release: 1.0 on 10 October 2026, 1.1 on 14 October, and from 16 October every upload gets its own number starting at 1.2.0, so that the in-game update check can compare installed and published builds. DIP_GG_Fixes X.Y.Z is the add-on DLL inside the package; it keeps its own, older numbering (1.0 to 1.11.x) and is printed in the game log. The package number changes whenever anything in the package changes, the DLL number only when the DLL does.
-
-[b]15 October 2026 - DIP_GG_Fixes 1.11.0-1.11.3[/b]
-[list]
-[*]1.11.0: torpedo charges start by torpedo range and speed advantage; AI capital ships charge when faster and close in when outranged or unable to penetrate; player scout divisions charge; torpedoes held while a friendly ship is in the lane; target selection for all ships (most damaged, heaviest calibre for battleship main guns, torpedo threats for secondaries); non-linear veterancy (+100% / -50%); surrender threshold by training (70% - 40%); panic of green crews; surrendered ships captured as prizes.
-[*]1.11.1: log noise removed; penetration compared with the game's effective belt armour in the same units.
-[*]1.11.2: target selection through a mod-owned target lock, because the game re-selected targets every few hundred milliseconds and reset the aiming; a manual order of the player is never touched.
-[*]1.11.3: panic is driven by crew lost since the start of the battle instead of the crew percentage (AI ships begin at 70% and were panicking at once); belt penetration compared in the right units (the game returns cm, armour is in mm) and against the belt instead of the deck; the same target keeps its aiming progress; surrendered ships are removed from the sunk lists before the loss accounting and get a minimal prize crew, so they can appear in the victor's fleet.
-[/list]
-[b]16 October 2026 - DIP_GG_Fixes 1.11.4-1.11.15 / Iron Admiral 1.2.0-1.2.6 and data[/b]
-[list]
-[*]1.11.4: the fleet of a conquered or dissolved minor nation passes to the new controller of its ports instead of being scrapped; the balance-of-power budget message is now actually shown in-game.
-[*]1.11.5: the hand-over applies to the great powers too - ships flee to another own port when one exists (game behaviour) and pass to the conqueror only when none is left; a dissolved great power's fleet goes to the controllers of its ports.
-[*]1.11.6: a captured ship (battle prize or conquest) brings its design into the new owner's design list, so it can be refitted and its class built further.
-[*]1.11.7: national research profiles (techBonuses.csv) - 14 great powers, -10..+50% research speed per technology category, for the player and the AI alike.
-[*]1.11.8: belt penetration read in millimetres (the game returns mm, not cm - verified against penetration.csv), so ships that cannot penetrate now really close in; close-in hysteresis (restart only beyond 0.85 of own range).
-[*]1.11.9 / Iron Admiral 1.2.0: every publication now has its own package number (VERSION file, zips Iron_Admiral_X.Y.Z_*.zip, GitHub release vX.Y.Z); the add-on checks GitHub at start and tells you in-game when a newer build exists (switch: CheckForUpdates).
-[*]1.11.10 / Iron Admiral 1.2.1: the balance-of-power grant is logged only - the in-game report call threw inside the game for AI ships.
-[*]1.11.11 / Iron Admiral 1.2.2: the update message has a Download button - after the click the add-on fetches the Mods package from the GitHub release, verifies SHA-256 and installs it (DLL swapped by rename, restart required); nothing is downloaded without the click.
-[*]1.11.12 / Iron Admiral 1.2.3: update check waits up to 30 s and retries once (the first HTTPS request from the game took longer than 8 s).
-[*]1.11.13 / Iron Admiral 1.2.4: the update box waits for the main menu or the campaign map with no loading screen (it was being swallowed by the save-loading screen).
-[*]1.11.14 / Iron Admiral 1.2.5: the update installs file by file - unchanged files skipped, every loaded DLL (TweaksAndFixes.dll too) swapped by rename, a single failure no longer aborts the whole update; messages in English only (Download / Later).
-[*]1.11.15 / Iron Admiral 1.2.6: prizes and conquest hand-overs confirmed in a campaign (3 prizes to Germany, 4 Romanian ships to Russia); design duplicate check reads the owner's full design list (AI received three copies of one class).
-[*]Data: technologies.csv: accuracy_long in the rangefinder techs 1925/1935/1940/1945 raised from 27.5/15/20/30 to 45/90/160/260, so the 1920-1945 gain in long-range accuracy is x2.6 instead of x1.1 (Jurens); the aiming-speed bonuses are unchanged. Applies to player and AI.
-[/list]
-[b]17 October 2026 - DIP_GG_Fixes 1.11.16-1.11.21 / Iron Admiral 1.2.7-1.2.13[/b]
-[list]
-[*]1.11.16 / Iron Admiral 1.2.7: treasury crisis event for the great powers (war loan, money printing with inflation, fleet cuts; AI by situation, player by dialog; state stored in the save); a bankrupt or cutting AI power orders no bb/bc and favours ca/cl/dd/tb x1.6. Found in the 16 October autosave: Britain with no ships and -188M kept generating semi-dreadnoughts that failed in the autodesigner.
-[*]1.11.17 / Iron Admiral 1.2.9: the treasury crisis also fires at once when the debt exceeds 12 months of naval budget (the month counter reset with every restart, so Britain at -823M never got its loan); [Shipyard] diagnostics for AI powers that order nothing (the USA sat on 1.2 bn with no ships and no orders); start-up log line reads the real version.
-[*]1.11.18 / Iron Admiral 1.2.10: balance-of-power grants only for nations with a non-negative income, sized to lift them just over the AI's order threshold, at most once per 6 months - the diagnostics showed grants of 3 months of budget landing every turn or two on nations whose income then went deep negative (Britain -434M/month, USA -158M cash two turns after +1.1 bn) so nobody ever ordered a ship; expense breakdown for nations with negative income.
-[*]1.11.19 / Iron Admiral 1.2.11: an AI great power spends what it likes on research while its income is positive; with a deficit the research budget is cut by the deficit until the books balance (the USA ran 96% of the naval budget on research plus a shipyard expansion and never saved up for a ship); no new shipyard expansion with a deficit or when capacity already exceeds twice the fleet. Britain's war loan confirmed in-game (-1,059M -> 2,389M, 29.9M/month for 120 months) and she started ordering.
-[*]1.11.20 / Iron Admiral 1.2.12: a running treasury remedy no longer blocks the next one when the debt is deep again (Britain sat at -4.5 bn with a loan still running; blockade costs and reparations bypass the income figure) - at war with a loan running the AI prints money, inflation stacks; diagnostics show the loan, inflation, cuts and the unexplained 'other' expenses.
-[*]1.11.21 / Iron Admiral 1.2.13: the treasury state is guarded against outside changes (Britain and Portugal showed a phantom 63% inflation and ended at 99% after printing); printing on top of inflation adds 20 points instead of stacking to 99%.
-[/list]
-[b]22 October 2026 - Iron Admiral 1.2.53[/b]
-[list]
-[*]Iron Admiral 1.2.53: 147 historical classes in the package (was 48).
-[/list]
-[b]21 October 2026 - DIP_GG_Fixes 1.11.73-1.11.82 / Iron Admiral 1.2.45-1.2.52[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.73 / Iron Admiral 1.2.45: battle dispatches in the log.
-[*]DIP_GG_Fixes 1.11.74 / Iron Admiral 1.2.46: ageing contact reports on the map; gun flashes, fires and night optics in identification.
-[*]DIP_GG_Fixes 1.11.75 / Iron Admiral 1.2.47: 920 designs from Ultimate Admiral's Shippack by Badkapp (MarineWerft).
-[*]DIP_GG_Fixes 1.11.76-1.11.77 / Iron Admiral 1.2.48: armour obliquity; ship trade window (F9); first historical battleship classes and AI preference for them; settings repair writes the file back; new licence.
-[*]DIP_GG_Fixes 1.11.78-1.11.79 / Iron Admiral 1.2.49: trade window fixed; obliquity angle taken from the game's own impact call; 48 historical classes.
-[*]DIP_GG_Fixes 1.11.80 / Iron Admiral 1.2.50: battle report as a separate panel beside the result window.
-[*]DIP_GG_Fixes 1.11.81 / Iron Admiral 1.2.51: the 920 Shippack designs load again (technologies unknown to DIP removed).
-[*]DIP_GG_Fixes 1.11.82 / Iron Admiral 1.2.52: custom battles take historical classes first and skip the broken predefined-design step.
-[/list]
-
-[b]20 October 2026 - DIP_GG_Fixes 1.11.58-1.11.72 / Iron Admiral 1.2.31-1.2.44[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: fog of war - enemy fleets on the strategic map hidden or shown inexactly by reconnaissance, contact reports with possible misidentification, enemy ships in battle unidentified until your ships close in (night, weather, smoke), the AI in the same fog, interceptions depending on intelligence.
-[*]DIP_GG_Fixes 1.11.59 / Iron Admiral 1.2.32: misidentified ship types in reports are limited to types the enemy navy actually has.
-[*]DIP_GG_Fixes 1.11.60 / Iron Admiral 1.2.33: problem report from the F10 panel (logs, settings, Mods folder check in one zip, nothing sent) and optional local usage counters with a one-time question.
-[*]DIP_GG_Fixes 1.11.61 / Iron Admiral 1.2.34: groundwork for scenarios started from the F10 panel (log only, no gameplay change).
-[*]DIP_GG_Fixes 1.11.62 / Iron Admiral 1.2.35: identification range tied to the battle's visibility (corrected in 1.2.39).
-[*]DIP_GG_Fixes 1.11.63-1.11.64 / Iron Admiral 1.2.36: clicking an unidentified enemy ship no longer shows its guns and armour; inexact enemy fleet markers stay on their sea route instead of appearing over land.
-[*]DIP_GG_Fixes 1.11.65 / Iron Admiral 1.2.37: inexact enemy fleets - moving or at anchor - are shown off their true position, but always at sea.
-[*]DIP_GG_Fixes 1.11.66 / Iron Admiral 1.2.38: the panel of an unidentified enemy ship stays closed for the whole time it is selected.
-[*]DIP_GG_Fixes 1.11.67 / Iron Admiral 1.2.39: in daylight enemy ships are identified at realistic ranges again (more than ten kilometres for a battleship in clear weather), shorter in poor visibility.
-[*]DIP_GG_Fixes 1.11.68 / Iron Admiral 1.2.40: 50 shared ship designs from the author's campaigns come with the mod.
-[*]DIP_GG_Fixes 1.11.69 / Iron Admiral 1.2.41: battle report in the battle result window.
-[*]DIP_GG_Fixes 1.11.70 / Iron Admiral 1.2.42: smaller position error of reported fleets; automatic repair of a corrupted settings file.
-[*]DIP_GG_Fixes 1.11.71 / Iron Admiral 1.2.43: inexactly known fleets are no longer drawn on land.
-[*]DIP_GG_Fixes 1.11.72 / Iron Admiral 1.2.44: great powers that lose all their ports wait to regain them instead of disappearing.
-[/list]
-[b]19 October 2026 - DIP_GG_Fixes 1.11.41-1.11.57 / Iron Admiral 1.2.22-1.2.30[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: in-game settings panel (F10) - every feature on/off with its description, saved at once; the in-game Help points to it.
-[*]DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: massed torpedo attack when the enemy has more battleships; ramming by light ships out of torpedoes; battleships that cannot penetrate withdraw when they can survive; escape missions - run when faster, scatter when not; turning away from torpedo tracks; SAPC shells, rates of fire, ricochets and destroyer secondaries from historical data; the settings panel no longer throws errors on the campaign map; armour diagnostics in the log.
-[*]DIP_GG_Fixes 1.11.50 / Iron Admiral 1.2.24: enemy tactics by ship size instead of battleship counts (massed attack by fleet strength, torpedo runs at any clearly larger target, main ships of any class withdraw when helpless); surrendered ships go to the side that won the battle - your own come back when you win; ships scrapped before completion leave the series; series effects logged again after the turn.
-[*]DIP_GG_Fixes 1.11.51 / Iron Admiral 1.2.25: a massed torpedo attack only when there are enough torpedo craft for the targets - a handful of boats no longer charges a battle line from extreme range; an outmatched enemy that is fast enough withdraws.
-[*]DIP_GG_Fixes 1.11.52 / Iron Admiral 1.2.26: series production is correct from the first moment after loading a campaign (a running series no longer shows full prototype cost for a few seconds).
-[*]DIP_GG_Fixes 1.11.53 / Iron Admiral 1.2.27: a refit of a ship above the treaty limit can now be saved - the refit screen no longer checks it against the treaty limit for new construction.
-[*]DIP_GG_Fixes 1.11.54 / Iron Admiral 1.2.28: the refit save fix also works when the game reopens the refit screen with a new refit design.
-[*]DIP_GG_Fixes 1.11.56 / Iron Admiral 1.2.29: refits above the treaty limit can now really be saved - confirmed in the test campaign with a battleship far above the treaty limit.
-[*]DIP_GG_Fixes 1.11.57 / Iron Admiral 1.2.30: risings in occupied national core provinces after peace (stronger the larger the nation compared with the occupier), a decision to put them down or let them run, a conquered great power restored when its provinces break free.
-[/list]
-[b]18 October 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zips written with forward-slash paths (players reported the Mods_only and Nexus zips extracting flat, so MelonLoader loaded nothing); the installer checks the .NET 6 runtime and offers a winget install or the download link; readme troubleshooting section.
-[*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.15: one-file setup script Install-IronAdmiral.ps1 (.NET 6, VC++ Redistributable, MelonLoader 0.6.6 with SHA-256 check, latest Mods package with the checksum from the VERSION file, old Mods kept as a backup); manual MelonLoader installation guide with links in the readmes and descriptions; descriptions highlight the recent features and what is in testing.
-[*]DIP_GG_Fixes 1.11.31 / Iron Admiral 1.2.16: series production (prototype, learning curve, ordering together, idle and overloaded yards, cheaper sister ships; refits too); inflation relative to the economy with credit ratings, interest and debt erosion; treasury panel (F8), inflation in the Finances window, monthly treasury report; in-game Help chapter; campaign guide GUIDE_EN.md.
-[*]Iron Admiral 1.2.17: what inflation means explained in the Help, the guide and the descriptions - a surcharge while it lasts, not a growing price level; budgets stay in today's money.
-[*]DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: AI shipyard expansion only after a steady surplus with cash in hand, or with a surplus that carries the expansion (Britain had started one after a single positive month and fell straight back into deficit).
-[*]DIP_GG_Fixes 1.11.36 / Iron Admiral 1.2.19: refits ordered in the same month - one prototype, the rest at base; no ship parts left on the world map after the refit screen; series gap measured from the last completed sister; war diagnostics in the log.
-[*]DIP_GG_Fixes 1.11.38 / Iron Admiral 1.2.20: coalition wars against a dominant power (player or AI) when the hostile powers together are clearly stronger at sea; AI nations skip new ship designs while they cannot build.
-[*]DIP_GG_Fixes 1.11.40 / Iron Admiral 1.2.21: refits of ships above the treaty limits (limited extra tonnage, as the Washington Treaty allowed); AI torpedo charges only on reachable targets, no close-in when the guns cannot penetrate anyway, evasive zigzag on the approach.
-[/list]
-
-[h2]Download and install[/h2]
-[b]GitHub (releases): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
-[list]
-[*][b]Iron_Admiral_1.2.74.1_Nexus.zip[/b] - one-click installer, available on GitHub only (link above; Nexus hosts only the script-free packages below): unzip anywhere, run Install.bat (a readable PowerShell script, no exe). It backs up your current Mods folder (Uninstall.bat restores it), downloads the official MelonLoader 0.6.6 from the LavaGang GitHub release and verifies its SHA-256 (687b8260...3c0db) before extracting. Internet is needed during install and on the first launch, which takes a few minutes.
-[*][b]Iron_Admiral_1.2.74.1_Nexus_manual.zip[/b] (Nexus and GitHub) - Mods folder plus step-by-step instructions (INSTALL_MANUAL_EN_PL.txt), no scripts; follow the manual MelonLoader steps below.
-[*][b]Iron_Admiral_1.2.74.1_Mods_only.zip[/b] (Nexus and GitHub) - just the Mods folder, for those who already run MelonLoader 0.6.6 (replace your Mods folder with it).
-[*]Mods_only: extract it into the game folder so that you get <game folder>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll and the CSV files; MelonLoader 0.6.6 must already be installed.
-[*]Error about the .NET 6.0 runtime at game start: install the .NET Desktop Runtime 6.0 (Windows x64) from https://dotnet.microsoft.com/download/dotnet/6.0 - MelonLoader 0.6.6 runs on it. Back to the unmodded game: run Uninstall.bat from <game folder>\Iron_Admiral_backup, or delete version.dll, the MelonLoader folder and the Mods folder and let Steam verify the game files; campaigns saved with the mod are not meant for the unmodded game.
-[/list]
-[b]One-file setup:[/b] Install-IronAdmiral.ps1 (on GitHub: in the repository and in the installer zip) installs .NET 6, the VC++ Redistributable, MelonLoader 0.6.6 and the latest Iron Admiral - right-click > Run with PowerShell.
-[b]Installing MelonLoader by hand (Mods_only package, or when the installer cannot do it)[/b]
+[size=4][b]Installation[/b][/size]
 [list=1]
-[*]Close the game.
-[*]Install the .NET Desktop Runtime 6.0 (Windows x64): [url=https://dotnet.microsoft.com/download/dotnet/6.0]https://dotnet.microsoft.com/download/dotnet/6.0[/url] - under ".NET Desktop Runtime 6.0.x" pick Windows x64.
-[*]Install the Microsoft Visual C++ Redistributable (x64): [url=https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist]https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist[/url]
-[*]Download MelonLoader.x64.zip from the official MelonLoader 0.6.6 release: [url=https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6]https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6[/url] (Assets). Only 0.6.6 is tested - TweaksAndFixes 3.21.1 needs it.
-[*]Unzip it straight into the game folder (Steam: right-click the game > Manage > Browse local files), so that the MelonLoader folder, version.dll and dobby.dll sit next to "Ultimate Admiral Dreadnoughts.exe".
-[*]Start the game once - the first launch takes a few minutes and needs internet; a console window next to the game is normal. Close the game.
-[*]Unzip Iron_Admiral_Mods_only.zip into the game folder, so that <game folder>\Mods\TweaksAndFixes.dll exists, and start the game.
+[*]Download the installer zip from [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url] (or the Nexus file).
+[*]Unzip it and right-click [i]Install-IronAdmiral.ps1[/i] > Run with PowerShell. It installs .NET 6, the VC++ Redistributable, MelonLoader 0.6.6 and Iron Admiral.
+[*]Start the game. Updates are offered in the game; the beta line can be switched on in F10.
 [/list]
-Based on DIP The Great Game 1.3.5 with TweaksAndFixes 3.21.1. Source code (DIP_GG_Fixes, installer, merge scripts): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
-Start a new campaign; saves from 1.0 need the migration tool from the source folder (source/save_tools).
-Bug reports with MelonLoader\Latest.log attached are the fastest way to get something fixed. Post them in the Bugs tab.
+Manual installation and uninstallation are described on the wiki: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki/Installation]Installation[/url].
 
-[hr][/hr]
+[size=4][b]Credits[/b][/size]
+Built on DIP "The Great Game" and TweaksAndFixes - many thanks to their authors. Thanks to everyone who reports bugs and ideas; the players are named in the game's main menu and in the changelog.
 
-[b]Wersja polska[/b]
+[size=4][b]Coming next[/b][/size]
+Logistics: oil, supply and sea routes; carriers in the campaign; crew training and damage control; per-nation gun data; submarines after carriers.
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.76.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+==========================================================================
 
-[b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
+[size=5][b]Iron Admiral - wersja polska[/b][/size]
+[i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, z symulacją marynarki, która myśli, walczy i pamięta.[/i]
+
+[i]Stan opisu: 1 listopada 2026. Wersja stabilna: Iron Admiral 1.2.76 (DIP_GG_Fixes 1.11.543). Beta: 1.2.77-beta.2 (DIP_GG_Fixes 1.11.546).[/i]
+
+[b]Pobieranie (instalator i wszystkie paczki): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - pliki tutaj na Nexusie to ta sama wersja.
+[b]Poradnik dla graczy: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]wiki Iron Admiral[/url][/b] | Błędy i pomysły: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]zgłoszenia na GitHubie[/url] albo komentarze tutaj.
+
+[size=4][b]Co nowego w 1.2.76 (1 listopada 2026)[/b][/size]
 [list]
-[*]Trzy bitwy, 6 min, na końcu dwa poddane niszczyciele przejęte jako pryzy: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
-[*]Dwie bitwy, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
-[*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
-[/list]
-
-[b]Co nowego (1 listopada 2026) - Iron Admiral 1.2.76, DIP_GG_Fixes 1.11.543[/b]
-[list]
-[*]Lotnictwo morskie: nowa gałąź technologii z własnym budżetem, rozpoznanie lotnicze z portów, samoloty obserwacyjne i naloty torpedowe w bitwach kampanii z lotniskowców i z lądu - wszystko zależne od badań. W bitwach własnych 1915-1945 masz lotniskowiec za horyzontem.
-[*]Mapa kampanii: koła rozpoznania i kontroli wokół zespołów; morze poza rozpoznaniem jest delikatnie przyciemnione.
-[*]Mgła wojny w bitwie: nierozpoznany wróg ma tylko szarą meldowaną klasę, np. CL?
-[*]Dyplomacja wg zagrożenia i wyścig zbrojeń: prawdziwy program budowy niepokoi rywali, a oni odpowiadają budową; raport miesięczny mówi, kto. Złomowanie okrętów liniowych bez wzrostu ich tonażu poprawia stosunki. Panel "Naval rivals" pokazuje rywalizacje.
-[*]Bitwy: wybór pory bitwy, gdy Twój zespół jest szybszy, nocne starcia z bliska, odwrót i dym AI, nowe rozkazy (Smoke, Keep range, atak torpedowy), okręty nie wyprzedzają już własnych torped, bitwy jednostronne nie są już remisami.
-[*]Projekty: historyczne pociski AP, nowe projekty AI z najnowszym opracowanym pociskiem, historia służby i ranking każdego projektu, usunięte projekty nie wracają.
-[*]Znacznie krótszy koniec tury: obce floty projektują okręty, gdy planujesz turę.
+[*][b]Lotnictwo morskie[/b] - nowa gałąź technologii z własnym budżetem: rozpoznanie lotnicze z portów, samoloty obserwacyjne i naloty samolotów torpedowych w bitwach kampanii, z lotniskowców i z lądu - wszystko zależne od badań. W bitwach własnych 1915-1945 masz lotniskowiec za horyzontem.
+[*][b]Mgła wojny[/b] - morze poza Twoim rozpoznaniem jest na mapie kampanii delikatnie przyciemnione; w bitwie nierozpoznany wróg pokazuje tylko szarą meldowaną klasę, np. [i]CL?[/i].
+[*][b]Dyplomacja i wyścig zbrojeń[/b] - prawdziwy program budowy niepokoi rywali, a oni odpowiadają budową; miesięczny raport mówi, kto. Złomowanie okrętów liniowych bez wzrostu ich tonażu poprawia stosunki. Panel „Naval rivals” pokazuje rywalizacje.
+[*][b]Bitwy[/b] - szybszy zespół wybiera porę bitwy, nocne starcia z bliska, odwrót i dym AI, nowe rozkazy (Smoke, Keep range, atak torpedowy), okręty nie wyprzedzają już własnych torped, bitwy jednostronne nie kończą się remisem.
+[*][b]Projekty[/b] - historyczne pociski AP, nowe projekty AI z najnowszym opracowanym pociskiem, przebieg służby i ranking każdego projektu, usunięte projekty nie wracają.
+[*][b]Dużo krótszy koniec tury[/b] - obce marynarki projektują okręty, gdy Ty planujesz turę.
 [/list]
 
-[b]Co nowego (28 października 2026) - Iron Admiral 1.2.75, DIP_GG_Fixes 1.11.328[/b]
+[b]W becie (1.2.77-beta.2):[/b] spójny zasięg i szybkostrzelność dział dla wszystkich kalibrów, brak kadłubów pancerników 30 000 t przed 1912, zapowiedzi i raporty nalotów, lotnictwo morskie każdego mocarstwa.
+
+[size=4][b]Co robi mod[/b][/size]
 [list]
-[*]Okręty toną według swojej wielkości: pocisk niszczy tę samą ilość tonażu w każdym okręcie. Torpedowce i niszczyciele nie są już „nie do zatopienia” - w bitwach testowych torpedowce toną po 3-10 trafieniach, niszczyciele po 12-45, pancerniki po 14-33 ciężkich, jak w historii. Okręt tonie przy 40 % zniszczonej struktury, jak w vanilli.
-[*]Kąt uderzenia z opadania pocisku: ciężkie pociski AP, które powinny przebić pas, przebijają; trafienia w pokład spotykają płytę pokładu.
-[*]Taktyka torpedowa AI: ataki na duże okręty do 90 % zasięgu torped, atak krzyżowy z obu dziobów, dywizjon z pustymi wyrzutniami jednej burty obraca się, by strzelić drugą; uszkodzone lekkie okręty kontynuują atak.
-[*]Nowy rozkaz dywizjonu „Dobij” (Alt+7): lekkie dywizjony idą na uszkodzonych.
-[*]Kampania: wojny koalicyjne z równowagą sił, wolniejsze doganianie technologii, badania pocisków jak w vanilli, wadliwe projekty AI wycofywane.
-[*]Działa 7 cali już nie strzelają wolniej od 8 cali; meldunki z bitwy w językach flot; 33 nowe klasy historyczne.
+[*][b]AI bitewne, które walczy[/b] - ataki torpedowe wg zasięgu i prędkości, okręty liniowe, które podchodzą albo zrywają walkę, dywizje z rozkazami, załogi, które mają znaczenie (doświadczenie, panika, kapitulacja), pryzy z poddanych okrętów, doktryny narodowe wg epoki.
+[*][b]Balistyka i uszkodzenia z historii[/b] - przebicie, masy pocisków i prędkości początkowe wg historycznych dział; okręty toną wg swojej wielkości; liczy się jakość pancerza i kąt trafienia.
+[*][b]Żywa kampania[/b] - skarb z pożyczkami i inflacją, produkcja seryjna i stocznie, okupacja, powstania i garnizony, koalicje przeciw dominującemu mocarstwu, przenikanie technologii, silniejsze małe państwa.
+[*][b]Mgła wojny[/b] - wrogie floty znane tylko tak dobrze, jak pozwala rozpoznanie, błędne rozpoznania, starzejące się meldunki.
+[*][b]Historyczne klasy okrętów[/b] - setki historycznych projektów dla AI i dla Ciebie oraz projekty Shippack.
+[*][b]Panel ustawień (F10)[/b] - każda funkcja ma własny przełącznik i opis w grze.
 [/list]
 
-[b]Co nowego (27 października 2026) - Iron Admiral 1.2.74.3, DIP_GG_Fixes 1.11.314[/b]
-[list]
-[*]Poprawiona paczka: zawiera poprawkę pryzów zapowiedzianą w 1.2.74.2 - okręty, które opuszczą banderę, znów są przejmowane jako pryzy.
-[/list]
-
-[b]Co nowego (27 października 2026) - Iron Admiral 1.2.74.2, DIP_GG_Fixes 1.11.313[/b]
-[list]
-[*]Okręty, które opuszczą banderę, znów są przejmowane jako pryzy. Gra od razu przenosi poddany okręt na listę zatopionych, a sprawdzanie pryzów szukało go tylko wśród okrętów pływających.
-[*]Gdy ustawienia gry nie wczytają się przy starcie, rozdzielczość jest ustawiana na bieżący ekran, więc interfejs innych modów działa dalej.
-[/list]
-
-[b]Co nowego (26 października 2026) - Iron Admiral 1.2.74.1, DIP_GG_Fixes 1.11.287[/b]
-[list]
-[*]Okno działa pokazuje fizyczne przebicie, prędkości i masy pocisków w każdym języku gry (dotąd tylko po angielsku).
-[*]AI w bitwie ocenia, czy przebije pas, tą samą fizyką co trafienie, więc nie odwraca się od walk, które by wygrało.
-[*]AI ocenia największym działem okrętu, także gdy wieża główna nie przeszła kontroli osadzenia.
-[/list]
-
-[b]Co nowego (25 października 2026) - Iron Admiral 1.2.74, DIP_GG_Fixes 1.11.281[/b]
-[list]
-[*]Model obrażeń: penetracja używana w bitwie to fizyczna penetracja każdego działa - prędkość uderzenia, kąt upadku, masa i kształt pocisku.
-[*]Pełne przebicie zadaje obrażenia zależne od ładunku wybuchowego pocisku i miejsca wybuchu.
-[*]Historyczne masy pocisków dla każdego kalibru i generacji dział.
-[*]Z bliska artylerzyści celują w linię wodną i wieże.
-[*]Meldunki z bitwy mają głosy załóg.
-[*]Od tego wydania linia stabilna dostaje poprawki błędów i funkcje sprawdzone w becie; nowe funkcje trafiają najpierw do bety.
-[/list]
-
-[b]Za kulisami 1.2.74 - co gra robiła, gdy nikt nie patrzył[/b]
-Przebudowa modelu obrażeń odsłoniła w samej grze sporo niespodzianek:
-[list]
-[*][b]Jedno działo, trzy działa:[/b] okno działa, lecące pociski i sprawdzanie pancerza używały trzech różnych dział. Teraz to jedno działo fizyczne.
-[*][b]Jakość pancerza liczona podwójnie:[/b] ciężkie pociski przebijały znacznie mniej niż historycznie.
-[*][b]Pocisk przelatujący na wylot nie robił prawie nic;[/b] teraz zadaje obrażenia zależne od tego, przez co przeleciał - nadbudówka, wieża, końce kadłuba, cytadela albo maszynownia.
-[*][b]Obrażenia z nadwyżki, a nie z pocisku:[/b] obrażenia w grze rosły z tym, o ile przebicie przewyższało płytę; teraz zależą od ładunku wybuchowego i miejsca wybuchu.
-[*][b]Pociski ani AP, ani HE:[/b] wiele pocisków wroga leci z typem „Auto”.
-[*][b]Flota bez nosa pocisku:[/b] pancerniki z 1921 roku strzelały tępymi pociskami z lat 90. XIX wieku, bo na liście technologii floty nie było żadnego nosa.
-[*][b]Atak torpedowy kończący się taranowaniem[/b] i kliknięcia w panele bitwy, które przechodziły na morze i odznaczały wybrany okręt.
-[/list]
-Najprostsza droga - podmiana funkcji penetracji gry - wysypywała każdą bitwę na starcie, głęboko w kodzie natywnym. Działająca droga wpisuje wartości fizyczne do własnej tabeli penetracji gry, działo po dziale. Większość poprawek szła tak samo: ustalić, co gra naprawdę robi, potwierdzić to w logu bitwy, a potem obejść bez psucia czegokolwiek innego.
-
-[b]Co nowego (25 października 2026) - Iron Admiral 1.2.73, DIP_GG_Fixes 1.11.270[/b]
-[list]
-[*]Model obrażeń: penetracja pasa przeliczona dla każdego kalibru według opublikowanych danych dział AP od 5 do 16 cali.
-[*]Pocisk AP przelatujący na wylot zadaje obrażenia zależne od miejsca przelotu - nadbudówka, wieża, końce kadłuba, cytadela, maszynownia.
-[*]Rozkazy dla dział Twoich dywizjonów: które klasy artyleria główna i pomocnicza ostrzeliwuje najpierw.
-[*]Rozkaz ataku torpedowego: rusza od razu, trzyma odległość odpalenia zamiast taranować i odchodzi kursem oddalającym od wroga.
-[*]Meldunki z bitwy mówią, gdzie trafił pocisk; paski bitwy nie znikają po kliknięciu.
-[/list]
-
-[b]Co nowego (25 października 2026) - Iron Admiral 1.2.72, DIP_GG_Fixes 1.11.256[/b]
-[list]
-[*]Nastawy torped według floty i technologii torped, wybierane w bitwie: krótki i szybki, długi i wolny oraz skrajny zasięg przeciw linii bojowej.
-[*]Priorytety celów torpedowych dla Twoich dywizjonów: klasy, w które wyrzutnie celują najpierw; klasa, której wróg nie ma, przechodzi na następną.
-[*]Model obrażeń: pocisk AP przelatujący przez okręt na wylot zadaje obrażenia według raportów o uszkodzeniach wojennych.
-[*]Działo fizyczne: pocisk działa w faktycznym kalibrze i historyczna prędkość wylotowa z premią Twojej technologii, widoczne w oknie działa.
-[*]AI w bitwie: najpierw eskorta, potem transportowce.
-[*]Zwiad idzie w stronę dymu zgłoszonego przez obserwatorów i podchodzi, aż da się okręt rozpoznać.
-[/list]
-
-[b]Co nowego (25 października 2026) - Iron Admiral 1.2.71, DIP_GG_Fixes 1.11.251[/b]
-[list]
-[*]Model obrażeń, krok 2: penetracja z fizyki każdego strzału - o tym, co pocisk przebije, decydują prędkość uderzenia i kąt upadku (wzory Okuna dla pasa i pokładu, sprawdzone na opublikowanych danych amerykańskiego działa 8 cali).
-[*]Jedno działo fizyczne: okno działa, lot pocisków, zasięg i penetracja używają tego samego kalibru, masy pocisku i prędkości wylotowej; cięższy pocisk wylatuje wolniej przy tym samym ładunku.
-[*]Okno działa pokazuje penetrację używaną w bitwie, z prędkością uderzenia i kątem upadku na każdym dystansie.
-[*]Linia logu dla każdego trafienia - do sprawdzania modelu obrażeń.
-[/list]
-
-[b]Co nowego (25 października 2026) - Iron Admiral 1.2.70, DIP_GG_Fixes 1.11.250[/b]
-[list]
-[*]Model obrażeń, krok 1: jakość pancerza względem pancerza Kruppa nawęglanego (żelazo 0,40 ... Krupp 1,00 ... 1,12) - płyty nie liczą już podwójnie swojej wytrzymałości, ciężkie pociski przebijają to, co przebijały historycznie.
-[*]Twoje rozkazy celu obowiązują do zatonięcia lub kapitulacji celu; wieże podwójne i potrójne artylerii głównej strzelają jak jedna bateria.
-[*]Pancerniki AI, które nie przebijają twojej linii, walczą z twoimi lżejszymi okrętami zamiast opuszczać bitwę.
-[*]Bez paneli moda nad oknem wyniku bitwy i „Play again?"; zabezpieczenie ekranu ustawień bitwy własnej po bitwie.
-[/list]
-
-[b]Co nowego (23-25 października 2026) - Iron Admiral 1.2.67-1.2.69, DIP_GG_Fixes 1.11.142-1.11.249[/b]
-[list]
-[*]Balistyka z fizyki i technologii: prędkość wylotowa, masa i kształt pocisku z prawdziwych dział i zbadanych technologii, kąt stanowiska wg generacji działa, zasięg = droga pocisku; lufy podnoszą się do strzału. Celność wg technologii kierowania ogniem.
-[*]Obrażenia: HE przez cienkie poszycie, cięższe częściowe penetracje, pociski z czepcem wg technologii, rodzaje trafień w podsumowaniu bitwy.
-[*]Rozkazy dla dywizjonów w bitwie: Osłona, Rozpoznanie, Torpedy, Swoboda, Polowanie; etykiety nad dywizjonami, etykiety dystansu, unik torped.
-[*]Ziemie okupowane decydowane prowincja po prowincji, u gracza i AI; utracone terytorium: każde mocarstwo stara się odzyskać, co miało.
-[*]Dyfuzja technologii i nadrabianie; wagi i części historyczne; refity dla nabywców Twoich okrętów.
-[*]Projektant okrętów AI: aktualne kadłuby, zachowane projekty, limity wg wyporności, przycinanie przeciążonych prób, własny randParts.csv - dużo mniej nieudanych projektów i krótsze tury.
-[*]Projekty wspólne wczytywane z pominięciem nieznanych technologii; części okrętu nie na miejscu naprawiane; wyjątki okna polityki przechwycone; osiem nowych rozdziałów pomocy.
-[/list]
-
-[b]Co nowego (21-23 października 2026) - Iron Admiral 1.2.45-1.2.66, DIP_GG_Fixes 1.11.73-1.11.141[/b]
-[list]
-[*][b]AI w bitwie:[/b] okręty, które nie przebijają celu, nie zawracają, zanim wiedzą, z kim walczą, a wyraźnie silniejsza strona walczy dalej.
-[*][b]Torpedy:[/b] Twoje okręty wykorzystują pełny zasięg torped.
-[*][b]Zdobyte okręty:[/b] pryzy są widoczne w konstruktorze i można je modernizować.
-[*][b]Poprawki:[/b] panel własnego okrętu po odznaczeniu niezidentyfikowanego wroga, artyleria pomocnicza na najbliższego wroga, przełącznik Beta updates w F10.
-[*][b]Bezpieczniejsza ciągła mapa:[/b] eksperymentalna mapa bez krawędzi nie może już zawiesić gry po bitwie.
-[*][b]Przebudowa każdego własnego okrętu:[/b] okręty, których projektu brakowało na liście, odzyskują go, a pamięć AI o nieudanych projektach przetrwa restart gry.
-[*][b]Dymki meldunków dopasowane do bitwy:[/b] meldunki nad okrętami nie zasłaniają już pół ekranu na dużych monitorach.
-[*][b]Czytelne panele na każdym ekranie:[/b] okna moda skalują się razem z interfejsem gry zamiast maleć na dużych ekranach.
-[*][b]Krótszy koniec tury:[/b] AI nie traci już minut na projekty okrętów, które właśnie się nie udały, a okręty mogą odpowiedzieć torpedami na nadchodzący atak torpedowy.
-[*][b]Poprawki torped i płynniejsze bitwy:[/b] prawidłowe strzały torpedami nie są już omyłkowo blokowane, a duże bitwy spędzają mniej czasu we własnych obliczeniach moda.
-[*][b]Okręty poddane oszczędzone:[/b] koniec torped do okrętu, który opuścił banderę, a okręt poddany zwrócony stronie zwycięskiej nie przepada już w drodze do portu.
-[*][b]Koniec torped w puste morze:[/b] okręt nie odpala już torped z burty, po której nie ma żadnego wroga.
-[*][b]Koniec beznadziejnych strzałów torpedami:[/b] wrogie okręty zachowują torpedy, gdy cel jest poza zasięgiem, zbyt mały, by był ich wart, albo po prostu im ucieka, i odpalają je, gdy strzał ma realną szansę.
-[*][b]Artyleria główna bije w bliskiego wroga:[/b] krążowniki nie strzelają już do odległego lekkiego krążownika, gdy wrogi krążownik zbliża się bez odpowiedzi, a okręty przestają przerzucać ogień tam i z powrotem.
-[*][b]Brakujące wieże wróciły:[/b] szesnaście wież krążowników i wież rufowych, których gra nie chciała wczytać, jest znów dostępnych, a razem z nimi projekty współdzielone, które ich używają.
-[*][b]Więcej flot z doktryną:[/b] Japonia przed traktatem waszyngtońskim, Francja w I wojnie światowej, Rosja carska po Cuszimie i flota radziecka, Hiszpania, Holandia, Skandynawia i Grecja walczą teraz według własnych historycznych zwyczajów.
-[*][b]Zrzuty ekranu w galerii:[/b] strona moda pokazuje nowe funkcje w grze - meldunki nad okrętami, mgłę wojny w bitwie i na mapie, okna wywiadu i handlu, klasę historyczną w konstruktorze i raport z bitwy.
-[*][b]Poprawki wyświetlania:[/b] długie wiersze w oknie wywiadu (F7) już na siebie nie nachodzą, a panel skarbu (F8) ma tło pod każdym wierszem.
-[*][b]Najpierw walczy linia:[/b] pancerniki AI nie czekają już na skrajnym dystansie, gdy ich niszczyciele giną - podchodzą i wchodzą do walki, a flotylle atakują, gdy linie są już w ogniu, tak jak przewidywały regulaminy walki flot z epoki. Wyraźnie słabsza strona zamiast uciekać najpierw wysyła torpedy.
-[*][b]Niszczyciele kończą atak:[/b] flotylle AI atakują do opróżnienia wyrzutni; okręty z torpedami zapasowymi odchodzą za dymem, przeładowują i wracają, pozostałe kierują działa na lekkie okręty wroga.
-[*][b]Krążowniki z zadaniem:[/b] osłaniają pancerniki przed wrogimi niszczycielami, idą za własnymi niszczycielami do ataku, wiążą linię wroga z drugiego skrzydła i trzymają się poza skupionym ogniem pancerników.
-[*][b]Osłona odwrotu:[/b] gdy atak przeciw silniejszemu wrogowi zawiedzie, najcenniejsze okręty odchodzą, a tańsze je osłaniają.
-[*][b]Noc i rozdział ognia:[/b] w nocy pancerniki trzymają dystans, a niszczyciele zawracają, gdy zostaną wykryte zbyt wcześnie; ogień rozkłada się na kilka celów zamiast wszystkich okrętów strzelających do jednego.
-[*][b]Każda flota walczy po swojemu:[/b] doktryny według państw i okresów - np. zwrot Grand Fleet od torped i unikanie walki nocnej, japońskie nocne ataki torpedowe przed główną bitwą, austro-węgierskie rajdy „uderz i uciekaj”, torpedowce francuskiej Jeune École.
-[*][b]Meldunki nad okrętami:[/b] w czasie bitwy meldunek o okręcie pojawia się na chwilę nad nim - tylko nad własnymi okrętami i rozpoznanymi wrogami.
-[*][b]Ponadto:[/b] okno wywiadu morskiego (F7) o flotach rywali i poprawki handlu okrętami; oba czekają jeszcze na potwierdzenie w kampanii.
-[*][b]Meldunki z bitwy:[/b] log opowiada każdą bitwę meldunkami jej uczestników - obserwatorzy wypatrujący dymu na horyzoncie, dowódcy prowadzący okręty do ataku torpedowego, artylerzyści patrzący, jak pociski odbijają się od pancerza - jeden plik na bitwę do przeczytania po walce.
-[*][b]Stare wieści na mapie:[/b] połowicznie znana eskadra wroga zostaje zaznaczona tam, gdzie widziano ją ostatnio, z wiekiem meldunku i zaobserwowanym kursem - jeśli odpłynęła niezauważona, gonisz ducha.
-[*][b]Noc zdradza:[/b] w nocy błyski dział i pożary ujawniają okręt z większej odległości, a japońscy obserwatorzy widzą dalej w ciemności.
-[*][b]920 kolejnych gotowych projektów:[/b] mod instaluje też "Ultimate Admiral's Shippack" autorstwa Badkapp (MarineWerft) - projekt dla prawie każdego kadłuba od 1890 do 1950 r. dla dziesięciu klasycznych mocarstw, sprawdzony z danymi Iron Admiral.
-[*][b]Kąt trafienia w pancerz wreszcie się liczy:[/b] gra liczyła dotąd każde trafienie w pas jak prostopadłe - pancernik odwrócony skosem bronił się tak samo jak ustawiony burtą. Teraz pas jest tym grubszy na drodze pocisku, im bardziej skośnie zostanie trafiony, pociski z czepcem tracą przewagę przy dużych kątach, a wczesne pociski bez czepca tracą więcej. Ustawienie okrętu skosem się opłaca - tobie i AI.
-[*][b]Handel okrętami (F9):[/b] stare okręty można wystawić na sprzedaż zamiast złomować - kupcy składają oferty w kolejnych miesiącach, a sprzedaż wpływa na dyplomację; okręty można zamawiać w obcych stoczniach bez sojuszu, według projektu budowniczego albo własnego, drożej i z ryzykiem, że budowniczy zatrzyma okręt, gdy stosunki się zepsują. Mocarstwa AI też sprzedają przestarzałe okręty.
-[*][b]Klasy historyczne:[/b] 147 klas historycznych zbudowanych z danych historycznych (pancerniki, krążowniki liniowe i krążowniki jedenastu flot) trafia do projektów współdzielonych (Dreadnought, Iron Duke, Von der Tann, Lord Nelson, Invincible i inne), z nazwą klasy lub pierwszego okrętu; AI wybiera klasy historyczne własnej floty w pierwszej kolejności. Krążowniki i niszczyciele w kolejnych wersjach.
-[*][b]Nowa licencja:[/b] od tej wersji własna praca autora na warunkach pod jego kontrolą - granie, zmiany na własny użytek i filmy pozostają swobodne; ponowna publikacja i użycie w innych modach wymagają zgody autora. Wersje do 1.2.47 pozostają na Apache 2.0.
-[*][b]Poprawki po pierwszym teście w bitwie:[/b] okno handlu (F9) pokazuje listę okrętów i obce projekty z działającymi przyciskami; kąt trafienia w pancerz jest mierzony tak jak w samej grze, więc pas nie jest już przy części trafień zawyżany. Klas historycznych jest 48.
-[*][b]Raport z bitwy obok okna wyniku:[/b] krótka relacja z bitwy otwiera się teraz w osobnym panelu z lewej strony ekranu, zamiast rozciągać okno wyniku - przy długim wyniku to okno wychodziło poza dolną krawędź ekranu. „X” zamyka panel.
-[*][b]Projekty Shippack działają:[/b] 920 gotowych projektów dodanych w 1.2.47 odwoływało się do badań, których DIP nie ma, więc gra po cichu pomijała je wszystkie i sięgała po losowe okręty. Są poprawione; starsze kopie w folderze projektów są zastępowane przy starcie (stare pliki trafiają do folderu kopii).
-[*][b]Bitwy własne z prawdziwymi okrętami:[/b] gdy dla nacji i roku istnieje klasa historyczna, bitwa własna bierze ją w pierwszej kolejności. Gdzie żadna jeszcze nie pasuje, gra od razu używa generatora okrętów zamiast gotowych projektów gry podstawowej, które w DIP nie mogą się wczytać - bitwy wczytują się szybciej, a log zostaje czysty. Dlatego przycisk „Pregenerated” jest wyłączony po starcie gry; warto go włączyć tylko przy samodzielnie zainstalowanych projektach predefiniowanych przygotowanych dla DIP. Wyjaśnia to nowy rozdział pomocy w grze.
-[/list]
-
-[b]20 października 2026 - Iron Admiral 1.2.31-1.2.44[/b]
-[list]
-[*][b]Mgła wojny na mapie strategicznej:[/b] obce floty widać tylko tak dobrze, jak pozwala rozpoznanie. Blisko własnych portów, tam gdzie są twoje patrole i krążowniki oraz niszczyciele rozpoznawcze, przy lepszej technice i większym budżecie wywiadu wiesz, gdzie są. Daleko na morzu znikają albo pojawiają się w złym miejscu, z nieznanym kursem.
-[*][b]Meldunki o kontakcie bywają błędne:[/b] okno bitwy i okno wrogiego zespołu pokazują przeciwnika według meldunków - krążowniki wzięte za pancerniki, okręty pominięte w meldunku. Zwiad we własnym zespole poprawia meldunek, a flota bywa zgłaszana tylko z typami okrętów, które naprawdę ma.
-[*][b]Wykryty to nie rozpoznany:[/b] w bitwie okręt wroga to najpierw tylko "niezidentyfikowany okręt (duży)", potem "prawdopodobnie krążownik liniowy?" - bez nazwy, klasy, dział i pancerza - także w panelu okrętu - dopóki twoje okręty się nie zbliżą. Noc, zła pogoda i dym skracają dystans, z którego wiesz, z kim walczysz.
-[*][b]Przeciwnik w tej samej mgle:[/b] AI ocenia twoje siły według tego, co zobaczyło i rozpoznało, i może zaatakować albo się wycofać na podstawie błędnego obrazu.
-[*][b]Przechwycenie wymaga wywiadu:[/b] zespołu na morzu, którego nikt nie odnalazł, nie da się przechwycić - dotyczy ciebie i AI.
-[*][b]Raport problemu jednym kliknięciem:[/b] F10 > Tools > "Create problem report" zbiera logi, ustawienia moda i sprawdzenie folderu Mods do jednego zipa na pulpicie - dołącz go do posta, a problem da się znaleźć dużo szybciej. Mod niczego nie wysyła. Opcjonalne liczniki użycia zostają na twoim komputerze; mod raz pyta, czy ich chcesz.
-[*][b]Gotowe projekty okrętów:[/b] 50 współdzielonych projektów z kampanii autora (1890-1941, kilka nacji) jest teraz w paczce moda i pojawia się w projektach współdzielonych gry - twoje własne projekty nigdy nie są nadpisywane.
-[*][b]Raport z bitwy:[/b] po rozegranej bitwie panel obok okna wyniku opisuje, co się działo - kto szarżował, kto się wycofał, czyja załoga wpadła w panikę, kto skapitulował lub zatonął, które okręty przejęto jako pryzy.
-[*][b]Odcięte od morza, ale nie pokonane:[/b] mocarstwo, które straci wszystkie porty, nie znika - jego flota przechodzi do portów sojuszników, a ono walczy o odzyskanie wybrzeża: przez powstanie, ofensywę lądową, warunki pokoju albo dzięki sojusznikowi. Dotyczy to także twojego państwa.
-[*][b]Poprawki:[/b] niedokładnie znane floty są rysowane w pobliżu prawdziwej pozycji i zawsze na morzu; plik ustawień uszkodzony przerwanym zapisem jest naprawiany automatycznie przy starcie (raz sprawdź ustawienia w F10).
-[/list]
-
-[b]18 października 2026 - Iron Admiral 1.2.14-1.2.21[/b]
-[list]
-[*][b]Produkcja seryjna działa:[/b] pierwszy okręt nowego projektu to drogi prototyp. Okręty położone po wejściu prototypu do służby są tym tańsze i szybsze, im dłużej trwa seria; zamówienie klasy razem się opłaca, a małe okręty budowane obok siebie schodzą z pochylni w ułamku czasu. Okręty siostrzane są tańsze w utrzymaniu, stocznia bez zleceń bierze je na lepszych warunkach niż przeciążona, a refity działają tak samo - dla Ciebie i dla AI.
-[*][b]Jak zamawiać nową klasę:[/b] najpierw zbuduj jeden okręt i poczekaj, aż wejdzie do służby, potem zamów resztę razem. Z kampanii testowej: niszczyciel, który jako prototyp powstaje 7 miesięcy - jego 29 sióstr zamówionych razem po wejściu prototypu do służby powstało w ułamku tego czasu i wyraźnie taniej. Zamówione wszystkie naraz kosztowałyby pełną cenę.
-[*][b]Inflacja i kredyt:[/b] pożyczki, dodruk i nagłe przypływy gotówki podnoszą ceny - tym mocniej, im są większe względem gospodarki; cięcia wydatków je obniżają, a bez nowych wstrząsów ceny wracają do normy. Kredyt kosztuje inflację plus marżę zależną od ratingu (dług, deficyt, wojna, dawne bankructwo), inflacja zjada stary dług, a rezerwa gotówki zachowuje wartość, ale nie wzbogaci. Galopująca inflacja budzi niezadowolenie.
-[*][b]Informacje o skarbie w grze:[/b] panel skarbu na mapie kampanii (F8) z inflacją i jej przyczynami, ratingiem, odsetkami, wzrostem, okrętami w budowie i innymi mocarstwami; inflacja znowu w oknie Finanse; miesięczny raport skarbu (można wyłączyć) i ostrzeżenia o ważnych zdarzeniach.
-[*][b]Pomoc w grze:[/b] nowy rozdział "Iron Admiral - new mechanics". [b]Poradnik kampanii:[/b] GUIDE_EN.md (po angielsku) w paczce i na GitHubie, z przykładami z kampanii testowej i zgłoszeń graczy.
-[*]Trwające kampanie działają dalej; okręty już w budowie przechodzą na nowe zasady.
-[*][b]Czym jest inflacja:[/b] dopłatą do wszystkiego, za co płacisz, dopóki trwa, a nie stale rosnącym poziomem cen - gdy inflacja spada, ceny wracają, a budżety zostają w dzisiejszych pieniądzach, więc zły okres nigdy nie wypycha liczb w grze poza skalę.
-[*][b]AI rozbudowuje stocznie tylko, gdy je na to stać:[/b] jeden dobry miesiąc już nie wystarcza - mocarstwo AI potrzebuje stałej nadwyżki i gotówki albo nadwyżki na tyle dużej, by udźwignąć rozbudowę.
-[*][b]Poprawki:[/b] refity zlecone razem płacą cenę prototypu tylko raz; po ekranie refitu na mapie świata nie zostają już części okrętów; długo budowane klasy nie zaczynają się od nowa jako prototyp.
-[*][b]Koalicje przeciw dominującemu mocarstwu:[/b] gdy staniesz się zbyt silny na morzu, państwa, które Cię nienawidzą, łączą siły - jedno uderza pierwsze, reszta dołącza. Działa też przeciw imperiom AI.
-[*][b]Szybsze tury AI:[/b] państwa AI nie projektują nowych okrętów, gdy nie mogą ich zbudować (bez portów, bez pieniędzy albo przy pełnych stoczniach).
-[*][b]Refity okrętów ponad limitami traktatowymi:[/b] pancerniki zbudowane przed traktatami morskimi znów można modernizować - refit może dodać ograniczony tonaż ponad obecną wielkość okrętu, tak jak traktat waszyngtoński pozwalał na obronę przeciwlotniczą, przeciwtorpedową i pancerz pokładowy; nowe okręty dalej podlegają limitowi.
-[*][b]Mądrzejsze podejście przeciwnika w bitwie:[/b] torpedowe okręty AI szarżują tylko na cele, do których realnie dopłyną, krążowniki AI nie wpływają pod Twój ogień, gdy ich działa i tak nie przebiją Twojego pasa, a okręty w podejściu płyną zygzakiem, utrudniając celowanie - strzelanie do skręcającego okrętu jest trudniejsze, ale jego własne też, więc prostuje kurs, gdy jego działa zaczynają się liczyć.
-[/list]
-
-[b]Najważniejsze nowości ostatnich dni (16-18 października 2026)[/b]
-[list]
-[*][b]Kryzys skarbu mocarstw:[/b] zadłużone mocarstwo bierze pożyczkę wojenną, dodrukowuje pieniądze (inflacja, niezadowolenie) albo tnie flotę - AI wybiera według sytuacji, Ty w oknie dialogowym.
-[*][b]Zbankrutowane mocarstwa AI budują tanie okręty:[/b] bez pancerników i krążowników liniowych, w zamian krążowniki, niszczyciele i torpedowce.
-[*][b]AI, które odkłada na okręty:[/b] wydatki na badania równoważone z dochodem, bez rozbudowy stoczni przy deficycie, granty równowagi sił tylko dla wypłacalnych - mocarstwa AI znów zamawiają floty.
-[*][b]Pryzy i podboje:[/b] okręty, które się poddały, przejmuje zwycięzca; flota podbitego państwa przechodzi do tego, kto zajmie port.
-[*][b]Wbudowane aktualizacje:[/b] przy starcie gry mod sprawdza, czy jest nowsza wersja, i pokazuje przycisk Download; nic nie jest pobierane bez kliknięcia, paczka jest sprawdzana sumą SHA-256. Prace idą intensywnie - czasem kilka wersji dziennie - a zapisy gry pozostają zgodne wszędzie, gdzie to możliwe.
-[/list]
-
-[b]Wkrótce[/b]
-[list]
-[*]Strojenie nowej ekonomii na podstawie kampanii - zgłoszenia i logi z Waszych kampanii są mile widziane.
-[/list]
-
-[b]Pobieranie (instalator jednym kliknięciem i wszystkie paczki, zawsze aktualna wersja): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
-
-Iron Admiral to rozszerzona edycja Dreadnought Improvement Project "The Great Game" 1.3.5: ta sama mapa, nacje i dane, plus dodatek DIP_GG_Fixes, który zmienia zachowanie AI w bitwie i w kampanii tam, gdzie pliki CSV nie sięgają. Instalacja jednym kliknięciem, pełne odinstalowanie, kod źródłowy w paczce. Aktualny dodatek: DIP_GG_Fixes 1.11.75.
-
-[h2]Bitwa: przeciwnik, który walczy jak flota[/h2]
-[list]
-[*][b]Szarże torpedowe z sensem.[/b] Niszczyciele, kutry i lekkie krążowniki AI ruszają na Twoje pancerniki i ciężkie krążowniki, by odpalić torpedy. Dystans startu wynika z zasięgu ich torped i przewagi prędkości, nie ze stałej: okręt z torpedami o zasięgu 850 m nie rusza już z 9 km. Po wystrzelaniu lub przy ciężkich uszkodzeniach odchodzi; gdy jest wolniejszy od pościgu, walczy do końca.
-[*][b]Ciężkie okręty też szarżują.[/b] Pancernik lub krążownik AI z torpedami i przewagą prędkości idzie na zbliżenie; przestrzelony albo niezdolny przebić Twojego pancerza skraca dystans, zamiast ginąć na granicy zasięgu.
-[*][b]Koniec darmowych zestrzeleń.[/b] Dywizjon AI, który nie ucieknie pościgowi, przestaje uciekać i odwraca się do walki. Szybszy ucieka dalej, jak należy.
-[*][b]Uszkodzone okręty nie hamują floty.[/b] Wolne jednostki są odłączane i odchodzą same; zdrowe walczą z pełną prędkością.
-[*][b]Wybór celów jak na prawdziwym mostku[/b] (AI i gracz, gdy nie wskazano celu ręcznie): działa biją najbardziej uszkodzony okręt w zasięgu, działa główne pancerników celują w najcięższy kaliber przeciwnika, działa pomocnicze pilnują najbliższego zagrożenia torpedowego. Ręczny rozkaz ma zawsze pierwszeństwo.
-[*][b]Narodowe doktryny bitewne[/b] (15 nacji w edytowalnym CSV): Royal Navy trzyma dystans i linię, Japonia szarżuje torpedami z 16 km i godzi się na straty, Włochy walczą tylko z przewagą, Niemcy osłaniają zwrot flotyllami torpedowymi. Na podstawie Grand Fleet Battle Orders, USN War Instructions i literatury o Kaisen Yomurei.
-[/list]
-
-[h2]Twoje okręty: mniej mikrozarządzania[/h2]
-[list]
-[*]Dywizjon TB/DD/CL ustawiony jako [b]zwiad[/b] sam wykonuje szarżę torpedową jak AI i wraca, gdy skończą się torpedy albo zrobi się gorąco.
-[*][b]Torpedy nie idą w własne okręty:[/b] gdy w torze do celu stoi sojuszniczy kadłub, salwa czeka, aż tor będzie czysty. Własna zmiana trybu torped ma pierwszeństwo.
-[*]Automatyczny wybór celów opisany wyżej działa także dla Twoich okrętów.
-[/list]
-
-[h2]Załoga ma znaczenie[/h2]
-[list]
-[*][b]Doświadczenie liczy się naprawdę.[/b] Sześć poziomów wyszkolenia (od kadetów do weteranów) przeskalowano nieliniowo: weterani do +100% w celności, naprowadzaniu i kontroli uszkodzeń oraz dwukrotnie szybsze przeładowanie; kadeci do -50% i dwukrotnie wolniejsze przeładowanie. Poziomy pośrednie zmieniają się mało, skrajne dużo.
-[*][b]Kapitulacja zależna od wyszkolenia:[/b] zielona załoga poddaje okręt, gdy spadnie do 70% stanu, elitarna walczy do 40% (vanilla: 55% dla wszystkich).
-[*][b]Panika.[/b] Niedoświadczone załogi na ciężko uszkodzonych okrętach mogą się załamać i odejść z linii - dotyczy AI i gracza. Dobrze wyszkolona flota to nie tylko celniejsze salwy, to także flota, która nie ucieka.
-[*][b]Pryzy.[/b] Okręt, który się poddał, trafia w ręce zwycięzcy, jeśli ten ma jeszcze sprawne jednostki na polu bitwy: idzie do remontu, z zieloną załogą, a jego projekt trafia do Twojej listy projektów. Jak eskadra Niebogatowa po Cuszimie.
-[/list]
-
-[h2]Kampania: AI, które się nie poddaje[/h2]
-[list]
-[*]Nacja AI, której nie stać na pancernik, buduje krążowniki zamiast trzymać puste stocznie.
-[*][b]Równowaga sił:[/b] gdy Twoja flota przerasta najsilniejszego rywala o połowę, nacje AI dostają nadzwyczajne fundusze morskie. Dominacja kosztuje.
-[*]Nadzór nad budową: gdy gra pominie postęp budowy u jakiejś nacji, dodatek robi to za nią.
-[*]Twoje projekty trafiają automatycznie do puli projektów wspólnych, więc AI może budować według nich.
-[*][b]Floty zmieniają właściciela.[/b] Gdy nacja traci ostatni port albo zostaje rozwiązana, jej okręty w zajętych portach przechodzą do nowego kontrolera, zamiast znikać na złomie - zdobądź Port Artur i zdobywasz flotę, która w nim stoi. Działa na Twoją korzyść i przeciw Tobie.
-[*]Kryzys gospodarczy po przegranej wojnie boli, ale nie wciąga w spiralę bez wyjścia: nacja przy zerowym budżecie znika dopiero po 24 miesiącach kryzysu.
-[*][b]Okręty buduje się klasami.[/b] Prototyp kosztuje więcej, kolejne okręty są tańsze i szybsze, pusta stocznia liczy taniej - dla każdej nacji.
-[*][b]Pieniądz ma cenę.[/b] Inflacja, rating kredytowy i odsetki idą za pożyczkami, dodrukiem i nagłymi wpływami; panel skarbu (F8) pokazuje, dokąd idą pieniądze.
-[*][b]Handel okrętami (F9)[/b]: sprzedaż używanych okrętów z ofertami przez kilka miesięcy i skutkami dyplomatycznymi; zamówienia w obcych stoczniach bez sojuszu, drożej i z ryzykiem rekwizycji; mocarstwa AI sprzedają przestarzałe okręty.
-[*][b]Klasy historyczne[/b] w projektach współdzielonych, wybierane w pierwszej kolejności przez AI ich floty.
-[/list]
-
-[h2]Świat, który żyje[/h2]
-[list]
-[*]Suwerenne nacje mniejsze (Ameryka Łacińska, Persja, Syjam, Bałkany, Skandynawia i inne) odzyskały terytoria, zawierają sojusze, kupują okręty i biorą udział w wojnach jak w vanilla; w oryginalnym DIP większość istniała tylko na papierze.
-[*]Minory mają silniejszą obronę prowincji i dwukrotnie większą pojemność portów w handlu okrętami, więc częściej zamawiają u Ciebie.
-[*]Dyplomacja z konsekwencjami: poprawa stosunków x1,5, pogorszenie x4, dla gracza i AI.
-[*]Bunty i niestabilność wewnętrzna częstsze, silniejsze i bardziej zróżnicowane geograficznie.
-[/list]
-
-[h2]Mgła wojny[/h2]
-[list]
-[*]Wrogie floty na mapie strategicznej są ukryte albo pokazane niedokładnie - zależnie od epoki, odległości od twoich portów, patroli i zwiadu w pobliżu, techniki i budżetu wywiadu.
-[*]Meldunki przed bitwą mogą pomylić typy okrętów i pominąć część z nich; zwiad w twoim zespole je poprawia.
-[*]W bitwie wykryte okręty wroga pozostają nierozpoznane, dopóki twoje okręty się nie zbliżą - w nocy, przy złej pogodzie i za zasłoną dymną krócej. AI walczy w tej samej mgle.
-[*]Każdą część można wyłączyć w panelu F10 ("Fog of war").
-[/list]
-
-[h2]Historia w liczbach[/h2]
-[list]
-[*][b]Przebijalność z fizyki, nie z suwaka:[/b] krzywe dla 21 kalibrów i 5 generacji dział przebudowane formułą De Marre'a i skalibrowane na sześciu tabelach z navweaps.com (błąd 0,5-13%), kalibry 16-21" zakotwiczone na tabelach Okuna. Małe działa nie rysują już pasa pancernego pancernika.
-[*]Masy luf z prawa potęgowego skalibrowanego na 16"/50 Mk 7, 15"/42 Mk I i 46 cm Type 94.
-[*][b]Traktaty morskie po raz pierwszy zamodelowane:[/b] 35 000 t od technologii kadłuba z 1919 r., 45 000 t od 1936 r., koniec ograniczeń w 1940 r.
-[*]Po traktatach wolność projektowania do 240 000 t dla warstwy superpancerników (DIP: 78 500-130 000 t). Okręt, którym nie mógł być H-44, tu da się zbudować - Tobie i AI.
-[*]Naprawiono kadłuby, których w DIP nie dało się zbudować mimo zbadania (29 wariantów Modern Battleship, 23 wcześniejsze pancerniki, 5 niszczycieli, uszkodzony wiersz CSV blokujący odblokowania).
-[*]Radar, który działa nocą i w złej pogodzie (trzy technologie, 1935-1945). Long Lance: +100% zasięgu zamiast +40%.
-[*]Celność na dużym dystansie rośnie x2,6 między 1920 a 1945 przez dalmierze stereo i radarowe, wg danych W.J. Jurensa o artylerii pancerników US Navy (rozrzut w odległości mniejszy o ~66%).
-[*][b]Narodowe profile badań.[/b] Każde mocarstwo bada w swoim tempie w swoich dziedzinach, zgodnie z historią: Niemcy pancerz, optykę i odporność, Brytania ciężkie działa, turbiny i ZOP, USA kierowanie ogniem, pociski i stocznie, Japonia torpedy i walkę nocną, Włochy prędkość, Francja niszczyciele i wieże czterodziałowe - i każde płaci za swoje historyczne słabości (pociski spod Jutlandii, torpeda Mk 14, 380 mm Richelieu). Od -10% do +50% na kategorię, widoczne w oknie badań, dla Ciebie i dla AI.
-[*][b]Kryzys skarbu.[/b] Mocarstwo, którego kasa przez sześć miesięcy jest poniżej zera, musi działać tak, jak rządy w latach 1890-1945: pożyczka wojenna (dług skasowany i pieniądze od razu, spłata latami z odsetkami zależnymi od ratingu), dodruk pieniądza (gotówka od razu, potem inflacja i niepokoje) albo cięcia floty (przez pewien czas bez nowych pancerników, tańsze utrzymanie). AI wybiera według sytuacji - pożyczka w wojnie, cięcia w pokoju, dodruk gdy pożyczka nie pomogła; Ty wybierasz w oknie. Stan przeżywa zapis i wczytanie gry. Zbankrutowane mocarstwo AI nie zamawia w ogóle pancerników, tylko krążowniki, niszczyciele i torpedowce - Brytania z -188 mln nie traci już lat na półdrednoty, które nigdy nie schodzą z deski.
-[*]Badania o 20% szybsze, koszt technologii x10, priorytety badań AI x1,5, nowy profil Bizancjum (ciężki pancerz, największe kalibry, szybkie krążowniki).
-[*][b]Kąt trafienia w pancerz:[/b] pas liczy się grubiej na drodze pocisku przy trafieniach skośnych; czepiec przestaje pomagać przy dużych kątach; wczesne pociski bez czepca tracą więcej (najpierw zdiagnozowane w logach z bitew).
-[/list]
-
-[h2]Stabilność i przejrzystość[/h2]
-[list]
-[*][b]Raport problemu:[/b] F10 > Tools zapisuje logi, ustawienia i sprawdzenie folderu Mods do jednego zipa na pulpicie do zgłoszeń błędów; nic nie jest wysyłane.
-[*]Dodatek łapie dwa błędy w kodzie gry, które w DIP przerywały przeliczanie tury ("An item with the same key has already been added").
-[*][b]Sprawdzanie aktualizacji i aktualizacja jednym kliknięciem.[/b] Przy starcie dodatek porównuje zainstalowaną wersję z repozytorium GitHub i pokazuje komunikat, gdy jest nowsza - jedno żądanie HTTPS, nic nie jest wysyłane. Komunikat ma przycisk Pobierz: dopiero po kliknięciu paczka Mods jest pobierana z wydania GitHub, weryfikowana (SHA-256) i instalowana; potem restart gry. Wyłączniki: CheckForUpdates, UpdateDownloadButton.
-[*]Każda funkcja dodatku ma przełącznik i wartości w UserData\MelonPreferences.cfg [DIP_GG_Fixes]; doktryny w Mods\battleDoctrines.csv, profile badań w Mods\techBonuses.csv. Nic nie jest narzucone.
-[*]Każda zmiana jest opisana z uzasadnieniem, źródłami i statusem testów w CHANGELOG_PL.txt (103 sekcji). Kod źródłowy w paczce. Od 1.2.48 własna praca autora na warunkach z LICENSE (wersje do 1.2.47: Apache 2.0). Rozszerzenie: Klaudiusz Ledwoch (Steam: Klod76). Zbudowane na DIP (Brother Munro i zespół, Apache 2.0), TweaksAndFixes (NathanKell, MIT) i MelonLoaderze (LavaGang, Apache 2.0).
-[/list]
-
-[h2]Historia wersji[/h2]
-[b]Iron Admiral 1.0 (październik 2026, na bazie DIP The Great Game 1.0.1)[/b]
-[list]
-[*]Dane: przebijalność pancerza z fizyki (De Marre) dla 21 kalibrów i 5 generacji dział; masy luf z prawa potęgowego; traktaty morskie (35 000 / 45 000 t) i limit 240 000 t dla superpancerników; naprawione kadłuby, których nie dało się zbudować (Modern Battleship, wcześniejsze pancerniki, niszczyciele); Long Lance +100%; radar działający nocą; tempo badań, gospodarka i budowa floty przez AI; bunty; priorytety badań AI x1,5; profil Bizancjum.
-[*]Świat: suwerenne nacje mniejsze odzyskały terytoria i zostały wzmocnione; łagodniejszy kryzys powojenny.
-[*]DIP_GG_Fixes 1.0-1.6: osłony na dwa błędy gry przerywające przeliczanie tury; automatyczny eksport projektów gracza do puli wspólnej; krążowniki, gdy nie stać na pancernik; dwukrotnie większa pojemność portów minorów; wydarzenia równowagi sił; dyplomacja x1,5 / x4; nadzór nad zablokowaną budową w stoczniach AI.
-[*]DIP_GG_Fixes 1.7-1.9: AI bitewne - szarże torpedowe lekkich okrętów, walka zamiast beznadziejnej ucieczki, odłączanie wolnych okrętów, narodowe doktryny bitewne (battleDoctrines.csv).
-[*]DIP_GG_Fixes 1.10.0: 24 miesiące karencji przed rozpadem gospodarczym; osłona ładowania okrętów; przebijalność 16-21" oparta na tabelach Okuna.
-[/list]
-[b]Iron Admiral 1.1 (14 października 2026)[/b]
-[list]
-[*]Przebudowa na DIP The Great Game 1.3.5 i TweaksAndFixes 3.21.1 przez trójstronne scalenie każdej komórki CSV: przejęte nowe dane DIP (249 kadłubów, technologie, wydarzenia, balistyka), nałożone ponownie wszystkie zmiany Iron Admiral. Drugi plik do pobrania: zip z samym folderem Mods.
-[*]DIP_GG_Fixes 1.10.1-1.10.2: zgodność z TAF 3.21.1 (przepuszczanie zmian stosunków), projekty wspólne eksportowane raz, a nie co turę, narzędzie migracji zapisów kampanii z 1.0.
-[*]Poprawki po wydaniu: nowa kampania znów startuje poprawnie (wyłączone projekty predefiniowane), prace nad generatorem projektów AI (niższy pas wczesnych pancerników, złagodzony Experimental Small Ironclad, diagnostyka generatora).
-[/list]
-[b]Numeracja[/b]
-Poniżej występują dwa numery wersji. Iron Admiral X.Y.Z to paczka - instalator, zipy i wydanie GitHub: 1.0 z 10 października 2026, 1.1 z 14 października, a od 16 października każda publikacja ma własny numer, począwszy od 1.2.0, żeby sprawdzanie aktualizacji w grze mogło porównać wersję zainstalowaną z opublikowaną. DIP_GG_Fixes X.Y.Z to biblioteka dodatku w paczce; ma własną, starszą numerację (1.0 do 1.11.x) i jest wypisywana w logu gry. Numer paczki zmienia się, gdy zmienia się cokolwiek w paczce, numer biblioteki tylko wtedy, gdy zmienia się biblioteka.
-
-[b]15 października 2026 - DIP_GG_Fixes 1.11.0-1.11.3[/b]
-[list]
-[*]1.11.0: szarże torpedowe startują wg zasięgu torped i przewagi prędkości; ciężkie okręty AI szarżują, gdy są szybsze, i skracają dystans, gdy są przestrzelone albo nie przebijają pancerza; dywizjony zwiadu gracza szarżują; torpedy wstrzymane, gdy własny okręt stoi w torze; wybór celów dla wszystkich okrętów (najbardziej uszkodzony, najcięższy kaliber dla dział głównych pancerników, zagrożenia torpedowe dla dział pomocniczych); weterańskość nieliniowa (+100% / -50%); próg kapitulacji wg wyszkolenia (70% - 40%); panika zielonych załóg; poddane okręty przejmowane jako pryzy.
-[*]1.11.1: usunięty szum w logu; przebicie porównywane z efektywnym pancerzem pasa z gry w tych samych jednostkach.
-[*]1.11.2: wybór celów przez blokadę celu należącą do moda, bo gra co kilkaset milisekund wybierała cel na nowo i zerowała celowanie; ręczny rozkaz gracza jest nietykalny.
-[*]1.11.3: panika liczona od straty załogi względem początku bitwy zamiast od procentu załogi (okręty AI startują z 70% i panikowały od razu); przebicie pasa porównywane w tych samych jednostkach (gra zwraca cm, pancerz jest w mm) i z pasem, a nie pokładem; ten sam cel zachowuje postęp celowania; okręty poddane są usuwane z list zatopionych przed rozliczeniem strat i dostają minimalną załogę pryzową, więc mogą pojawić się we flocie zwycięzcy.
-[/list]
-[b]16 października 2026 - DIP_GG_Fixes 1.11.4-1.11.15 / Iron Admiral 1.2.0-1.2.6 i dane[/b]
-[list]
-[*]1.11.4: flota podbitego lub rozwiązanego minora przechodzi do nowego kontrolera jego portów zamiast na złom; komunikat o budżecie balance of power jest teraz faktycznie pokazywany w grze.
-[*]1.11.5: przekazanie dotyczy także mocarstw - okręty uciekają do innego własnego portu, gdy taki jest (zachowanie gry), a do zdobywcy trafiają tylko, gdy żadnego nie ma; flota rozwiązanego mocarstwa idzie do kontrolerów jego portów.
-[*]1.11.6: przejęty okręt (pryz bitewny lub podbój) przynosi projekt do listy projektów nowego właściciela, więc da się go przebudowywać i budować dalej jego klasę.
-[*]1.11.7: narodowe profile badań (techBonuses.csv) - 14 mocarstw, -10..+50% tempa badań per kategoria technologii, dla gracza i AI.
-[*]1.11.8: przebicie pasa czytane w milimetrach (gra zwraca mm, nie cm - zweryfikowane z penetration.csv), więc okręty, które nie przebijają, naprawdę skracają dystans; histereza skracania dystansu (ponowny start dopiero powyżej 0,85 zasięgu).
-[*]1.11.9 / Iron Admiral 1.2.0: każda publikacja ma własny numer paczki (plik VERSION, zipy Iron_Admiral_X.Y.Z_*.zip, wydanie GitHub vX.Y.Z); dodatek sprawdza GitHub przy starcie i informuje w grze, gdy jest nowsza wersja (wyłącznik: CheckForUpdates).
-[*]1.11.10 / Iron Admiral 1.2.1: grant balance of power tylko w logu - wywołanie raportu w grze rzucało wyjątek dla okrętów AI.
-[*]1.11.11 / Iron Admiral 1.2.2: komunikat o aktualizacji ma przycisk Pobierz - po kliknięciu dodatek pobiera paczkę Mods z wydania GitHub, sprawdza SHA-256 i instaluje (DLL podmieniany przez rename, wymagany restart); bez kliknięcia nic nie jest pobierane.
-[*]1.11.12 / Iron Admiral 1.2.3: sprawdzanie aktualizacji czeka do 30 s i powtarza raz (pierwsze żądanie HTTPS z gry trwało dłużej niż 8 s).
-[*]1.11.13 / Iron Admiral 1.2.4: okno aktualizacji czeka na menu główne albo mapę kampanii bez ekranu ładowania (pochłaniał je ekran wczytywania zapisu).
-[*]1.11.14 / Iron Admiral 1.2.5: aktualizacja instaluje plik po pliku - niezmienione pomijane, każda załadowana biblioteka (także TweaksAndFixes.dll) podmieniana przez rename, pojedynczy błąd nie przerywa całości; komunikaty tylko po angielsku (Download / Later).
-[*]1.11.15 / Iron Admiral 1.2.6: pryzy i przejęcia przy podboju potwierdzone w kampanii (3 pryzy dla Niemiec, 4 rumuńskie okręty dla Rosji); kontrola duplikatów projektów czyta pełną listę właściciela (AI dostawało trzy kopie jednej klasy).
-[*]Dane: technologies.csv: accuracy_long w technologiach dalmierzy 1925/1935/1940/1945 podniesione z 27,5/15/20/30 do 45/90/160/260, dzięki czemu wzrost celności na dużym dystansie 1920-1945 wynosi x2,6 zamiast x1,1 (Jurens); premie do szybkości namierzania bez zmian. Dotyczy gracza i AI.
-[/list]
-[b]17 października 2026 - DIP_GG_Fixes 1.11.16-1.11.21 / Iron Admiral 1.2.7-1.2.13[/b]
-[list]
-[*]1.11.16 / Iron Admiral 1.2.7: wydarzenie kryzysu skarbu dla mocarstw (pożyczka wojenna, dodruk z inflacją, cięcia floty; AI wg sytuacji, gracz w oknie; stan zapisywany w save); zbankrutowane lub tnące flotę mocarstwo AI nie zamawia BB/BC, a CA/CL/DD/TB dostają x1,6. W autozapisie z 16 października Brytania bez okrętów i z -188 mln generowała półdrednoty, które przepadały w autodesignerze.
-[*]1.11.17 / Iron Admiral 1.2.9: kryzys skarbu odpala też natychmiast, gdy dług przekracza 12 miesięcy budżetu morskiego (licznik miesięcy zerował się przy każdym restarcie, więc Brytania z -823 mln nie dostała pożyczki); diagnostyka [Shipyard] dla mocarstw AI, które nic nie zamawiają (USA siedziały na 1,2 mld bez okrętów i bez zamówień); linia startowa logu czyta prawdziwą wersję.
-[*]1.11.18 / Iron Admiral 1.2.10: granty balance of power tylko dla nacji z nieujemnym dochodem, w wysokości wynoszącej je tuż nad próg zamówień, najwyżej raz na 6 miesięcy - diagnostyka pokazała granty 3 miesięcy budżetu co turę lub dwie dla nacji, których dochód spadał potem głęboko pod zero (Brytania -434 mln/mies., USA -158 mln kasy dwie tury po +1,1 mld), więc nikt nie zamawiał okrętów; rozbicie wydatków dla nacji z ujemnym dochodem.
-[*]1.11.19 / Iron Admiral 1.2.11: mocarstwo AI wydaje na badania, ile chce, dopóki ma dodatni dochód; przy deficycie budżet badań jest cięty o deficyt do równowagi (USA wrzucały 96% budżetu morskiego w badania plus rozbudowę stoczni i nigdy nie odłożyły na okręt); bez nowej rozbudowy stoczni przy deficycie albo gdy pojemność przekracza już dwukrotność floty. Pożyczka wojenna Brytanii potwierdzona w grze (-1059 -> 2389 mln, 29,9 mln/mies. przez 120 mies.) - zaczęła zamawiać.
-[*]1.11.20 / Iron Admiral 1.2.12: trwający środek zaradczy nie blokuje następnego, gdy dług znów jest głęboki (Brytania siedziała na -4,5 mld z trwającą pożyczką; koszty blokady i reparacje omijają dochód) - w wojnie z pożyczką AI dodrukowuje pieniądze, inflacja się sumuje; diagnostyka pokazuje pożyczkę, inflację, cięcia i niewyjaśnione wydatki 'other'.
-[*]1.11.21 / Iron Admiral 1.2.13: stan kryzysu skarbu chroniony przed zmianami z zewnątrz (Brytania i Portugalia miały fantomowe 63% inflacji i po dodruku 99%); dodruk na istniejącą inflację dodaje 20 punktów zamiast sumować do 99%.
-[/list]
-[b]22 października 2026 - Iron Admiral 1.2.53[/b]
-[list]
-[*]Iron Admiral 1.2.53: 147 klas historycznych w paczce (było 48).
-[/list]
-[b]21 października 2026 - DIP_GG_Fixes 1.11.73-1.11.82 / Iron Admiral 1.2.45-1.2.52[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.73 / Iron Admiral 1.2.45: meldunki z bitwy w logu.
-[*]DIP_GG_Fixes 1.11.74 / Iron Admiral 1.2.46: starzejące się meldunki o kontaktach na mapie; błyski dział, pożary i optyka nocna w rozpoznaniu.
-[*]DIP_GG_Fixes 1.11.75 / Iron Admiral 1.2.47: 920 projektów z Ultimate Admiral's Shippack autorstwa Badkapp (MarineWerft).
-[*]DIP_GG_Fixes 1.11.76-1.11.77 / Iron Admiral 1.2.48: kąt trafienia w pancerz; okno handlu okrętami (F9); pierwsze historyczne klasy pancerników i preferencja AI dla nich; naprawa ustawień zapisuje plik; nowa licencja.
-[*]DIP_GG_Fixes 1.11.78-1.11.79 / Iron Admiral 1.2.49: naprawione okno handlu; kąt trafienia z obliczenia samej gry; 48 klas historycznych.
-[*]DIP_GG_Fixes 1.11.80 / Iron Admiral 1.2.50: raport z bitwy w osobnym panelu obok okna wyniku.
-[*]DIP_GG_Fixes 1.11.81 / Iron Admiral 1.2.51: 920 projektów Shippack znów się wczytuje (usunięte technologie nieznane DIP).
-[*]DIP_GG_Fixes 1.11.82 / Iron Admiral 1.2.52: bitwy własne biorą najpierw klasy historyczne i pomijają zepsuty krok projektów predefiniowanych.
-[/list]
-
-[b]20 października 2026 - DIP_GG_Fixes 1.11.58-1.11.72 / Iron Admiral 1.2.31-1.2.44[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.58 / Iron Admiral 1.2.31: mgła wojny - wrogie floty na mapie ukryte albo niedokładne zależnie od rozpoznania, meldunki o kontakcie z możliwymi pomyłkami, okręty wroga w bitwie nierozpoznane do zbliżenia (noc, pogoda, dym), AI w tej samej mgle, przechwycenia zależne od wywiadu.
-[*]DIP_GG_Fixes 1.11.59 / Iron Admiral 1.2.32: pomyłki co do typów w meldunkach ograniczone do typów, które flota przeciwnika naprawdę ma.
-[*]DIP_GG_Fixes 1.11.60 / Iron Admiral 1.2.33: raport problemu z panelu F10 (logi, ustawienia, sprawdzenie folderu Mods w jednym zipie, nic nie jest wysyłane) i opcjonalne lokalne liczniki użycia z jednorazowym pytaniem.
-[*]DIP_GG_Fixes 1.11.61 / Iron Admiral 1.2.34: przygotowanie scenariuszy uruchamianych z panelu F10 (tylko log, bez zmian w rozgrywce).
-[*]DIP_GG_Fixes 1.11.62 / Iron Admiral 1.2.35: zasięg rozpoznania powiązany z widocznością w bitwie (poprawione w 1.2.39).
-[*]DIP_GG_Fixes 1.11.63-1.11.64 / Iron Admiral 1.2.36: kliknięcie nierozpoznanego okrętu wroga nie pokazuje już jego dział i pancerza; niedokładne znaczniki wrogich flot zostają na ich trasie morskiej zamiast na lądzie.
-[*]DIP_GG_Fixes 1.11.65 / Iron Admiral 1.2.37: niedokładnie rozpoznane wrogie floty - w ruchu i na kotwicy - są pokazywane poza prawdziwym miejscem, ale zawsze na morzu.
-[*]DIP_GG_Fixes 1.11.66 / Iron Admiral 1.2.38: panel nierozpoznanego okrętu wroga pozostaje zamknięty przez cały czas, gdy okręt jest wybrany.
-[*]DIP_GG_Fixes 1.11.67 / Iron Admiral 1.2.39: w dzień okręty wroga znów są rozpoznawane z realistycznych odległości (pancernik przy dobrej pogodzie z kilkunastu kilometrów), przy słabej widoczności z bliższej.
-[*]DIP_GG_Fixes 1.11.68 / Iron Admiral 1.2.40: 50 współdzielonych projektów okrętów z kampanii autora w paczce moda.
-[*]DIP_GG_Fixes 1.11.69 / Iron Admiral 1.2.41: raport z bitwy w oknie wyniku bitwy.
-[*]DIP_GG_Fixes 1.11.70 / Iron Admiral 1.2.42: mniejszy błąd pozycji meldowanych flot; automatyczna naprawa uszkodzonego pliku ustawień.
-[*]DIP_GG_Fixes 1.11.71 / Iron Admiral 1.2.43: niedokładnie znane floty nie są już rysowane na lądzie.
-[*]DIP_GG_Fixes 1.11.72 / Iron Admiral 1.2.44: mocarstwa, które straciły wszystkie porty, czekają na ich odzyskanie zamiast znikać.
-[/list]
-[b]19 października 2026 - DIP_GG_Fixes 1.11.41-1.11.57 / Iron Admiral 1.2.22-1.2.30[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.41 / Iron Admiral 1.2.22: panel ustawień w grze (F10) - każda funkcja włącz/wyłącz z opisem, zapis od razu; pomoc w grze wskazuje na niego.
-[*]DIP_GG_Fixes 1.11.49 / Iron Admiral 1.2.23: zmasowany atak torpedowy, gdy wróg ma więcej pancerników; taranowanie przez lekkie okręty bez torped; pancerniki, które nie przebiją pancerza, wycofują się, gdy mogą przetrwać; misje ucieczki - ucieczka, gdy szybsi, rozproszenie, gdy nie; zwrot od śladów torped; pociski SAPC, szybkostrzelność, rykoszety i działa pomocnicze niszczycieli wg danych historycznych; panel ustawień nie rzuca już błędów na mapie kampanii; diagnostyka pancerza w logu.
-[*]DIP_GG_Fixes 1.11.50 / Iron Admiral 1.2.24: taktyka wroga wg wielkości okrętów zamiast liczby pancerników (zmasowany atak wg siły floty, szarże torpedowe na każdy wyraźnie większy cel, odwrót bezradnych głównych okrętów każdej klasy); poddane okręty trafiają do strony, która wygrała bitwę - twoje wracają, gdy wygrasz; okręty zezłomowane przed ukończeniem wypadają z serii; efekty serii logowane ponownie po turze.
-[*]DIP_GG_Fixes 1.11.51 / Iron Admiral 1.2.25: zmasowany atak torpedowy tylko przy dostatecznej liczbie okrętów torpedowych na cele - garstka okrętów nie szarżuje już na linię pancerników z ekstremalnego dystansu; przegrywający wróg, który jest dość szybki, wycofuje się.
-[*]DIP_GG_Fixes 1.11.52 / Iron Admiral 1.2.26: produkcja seryjna poprawna od pierwszej chwili po wczytaniu kampanii (trwająca seria nie pokazuje już przez kilka sekund pełnego kosztu prototypu).
-[*]DIP_GG_Fixes 1.11.53 / Iron Admiral 1.2.27: refit okrętu ponad limitem traktatowym da się teraz zapisać - ekran refitu nie sprawdza go już według limitu dla nowych okrętów.
-[*]DIP_GG_Fixes 1.11.54 / Iron Admiral 1.2.28: poprawka zapisu refitu działa też, gdy gra ponownie otwiera ekran refitu z nowym projektem.
-[*]DIP_GG_Fixes 1.11.56 / Iron Admiral 1.2.29: refity ponad limitem traktatowym naprawdę da się już zapisać - potwierdzone w kampanii testowej na pancerniku dużo większym niż limit traktatu.
-[*]DIP_GG_Fixes 1.11.57 / Iron Admiral 1.2.30: powstania w zajętych prowincjach rdzennych po zawarciu pokoju (silniejsze, im większy naród wobec okupanta), decyzja: stłumić albo pozwolić na bunt, odrodzenie podbitego mocarstwa, gdy jego prowincje się oderwą.
-[/list]
-[b]18 października 2026 - DIP_GG_Fixes 1.11.21-1.11.40 / Iron Admiral 1.2.14-1.2.21[/b]
-[list]
-[*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.14: zipy zapisywane ze ścieżkami z ukośnikiem / (gracze zgłosili, że zipy Mods_only i Nexus rozpakowują się płasko, więc MelonLoader nic nie ładował); instalator sprawdza środowisko .NET 6 i proponuje instalację przez winget albo podaje link; sekcja rozwiązywania problemów w readme.
-[*]DIP_GG_Fixes 1.11.21 / Iron Admiral 1.2.15: skrypt instalacyjny w jednym pliku Install-IronAdmiral.ps1 (.NET 6, VC++ Redistributable, MelonLoader 0.6.6 ze sprawdzeniem SHA-256, najnowsza paczka Mods z sumą kontrolną z pliku VERSION, stary Mods jako kopia); instrukcja ręcznej instalacji MelonLoadera z linkami w readme i opisach; opisy wyróżniają ostatnie nowości i to, co jest w testach.
-[*]DIP_GG_Fixes 1.11.31 / Iron Admiral 1.2.16: produkcja seryjna (prototyp, krzywa uczenia, zamawianie razem, puste i przeciążone stocznie, tańsze siostry; również refity); inflacja względem gospodarki z ratingiem kredytowym, odsetkami i zmniejszaniem długu; panel skarbu (F8), inflacja w oknie Finanse, miesięczny raport skarbu; rozdział w pomocy gry; poradnik kampanii GUIDE_EN.md.
-[*]Iron Admiral 1.2.17: wyjaśnienie inflacji w pomocy, poradniku i opisach - dopłata na czas jej trwania, nie rosnący poziom cen; budżety w dzisiejszych pieniądzach.
-[*]DIP_GG_Fixes 1.11.32 / Iron Admiral 1.2.18: rozbudowa stoczni AI tylko po okresie stałej nadwyżki z gotówką albo przy nadwyżce, która udźwignie rozbudowę (Brytania zaczęła ją po jednym dodatnim miesiącu i od razu wróciła do deficytu).
-[*]DIP_GG_Fixes 1.11.36 / Iron Admiral 1.2.19: refity zlecone w tym samym miesiącu - jeden prototyp, reszta po cenie bazowej; po ekranie refitu bez części okrętów na mapie świata; przerwa w serii liczona od ukończenia ostatniej siostry; diagnostyka wojen w logu.
-[*]DIP_GG_Fixes 1.11.38 / Iron Admiral 1.2.20: wojny koalicyjne przeciw dominującemu mocarstwu (gracz lub AI), gdy wrogowie razem są wyraźnie silniejsi na morzu; państwa AI nie projektują okrętów, gdy nie mogą ich budować.
-[*]DIP_GG_Fixes 1.11.40 / Iron Admiral 1.2.21: refity okrętów ponad limitami traktatowymi (ograniczony dodatkowy tonaż, jak w traktacie waszyngtońskim); szarże torpedowe AI tylko na osiągalne cele, bez skracania dystansu, gdy działa i tak nie przebiją pancerza, zygzak w podejściu.
-[/list]
-
-[h2]Pobieranie i instalacja[/h2]
-[b]GitHub (wydania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases]https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases[/url][/b]
-[list]
-[*][b]Iron_Admiral_1.2.74.1_Nexus.zip[/b] - instalator jednym kliknięciem, dostępny tylko na GitHubie (link wyżej; Nexus ma wyłącznie poniższe paczki bez skryptów): rozpakuj gdziekolwiek, uruchom Install.bat (czytelny skrypt PowerShell, bez exe). Obecny folder Mods trafia do kopii zapasowej (Uninstall.bat ją przywraca), MelonLoader 0.6.6 jest pobierany z oficjalnego wydania LavaGang i sprawdzany po SHA-256 (687b8260...3c0db) przed rozpakowaniem. Internet potrzebny podczas instalacji i przy pierwszym uruchomieniu, które trwa kilka minut.
-[*][b]Iron_Admiral_1.2.74.1_Nexus_manual.zip[/b] (Nexus i GitHub) - folder Mods z instrukcją krok po kroku (INSTALL_MANUAL_EN_PL.txt), bez skryptów; dalej według ręcznej instalacji MelonLoadera poniżej.
-[*][b]Iron_Admiral_1.2.74.1_Mods_only.zip[/b] (Nexus i GitHub) - sam folder Mods, dla osób z działającym MelonLoaderem 0.6.6 (podmień nim swój folder Mods).
-[*]Mods_only: rozpakuj do folderu gry tak, żeby powstało <folder gry>\Mods\TweaksAndFixes.dll, DIP_GG_Fixes.dll i pliki CSV; MelonLoader 0.6.6 musi być już zainstalowany.
-[*]Błąd ".NET 6.0 runtime" przy starcie gry: zainstaluj .NET Desktop Runtime 6.0 (Windows x64) ze strony https://dotnet.microsoft.com/download/dotnet/6.0 - na nim działa MelonLoader 0.6.6. Powrót do gry bez moda: Uninstall.bat z <folder gry>\Iron_Admiral_backup albo usuń version.dll, folder MelonLoader i folder Mods, a potem zweryfikuj pliki gry w Steam; kampanie zapisane z modem nie są przeznaczone dla gry bez moda.
-[/list]
-[b]Instalacja jednym plikiem:[/b] Install-IronAdmiral.ps1 (na GitHubie: w repozytorium i w zipie instalatora) instaluje .NET 6, VC++ Redistributable, MelonLoader 0.6.6 i najnowszego Iron Admirala - prawy klik > Uruchom za pomocą PowerShell.
-[b]Ręczna instalacja MelonLoadera (paczka Mods_only albo gdy instalator sobie nie radzi)[/b]
+[size=4][b]Instalacja[/b][/size]
 [list=1]
-[*]Zamknij grę.
-[*]Zainstaluj .NET Desktop Runtime 6.0 (Windows x64): [url=https://dotnet.microsoft.com/download/dotnet/6.0]https://dotnet.microsoft.com/download/dotnet/6.0[/url] - w sekcji ".NET Desktop Runtime 6.0.x" wybierz Windows x64.
-[*]Zainstaluj Microsoft Visual C++ Redistributable (x64): [url=https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist]https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist[/url]
-[*]Pobierz MelonLoader.x64.zip z oficjalnego wydania MelonLoader 0.6.6: [url=https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6]https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.6[/url] (sekcja Assets). Testowana jest tylko wersja 0.6.6 - wymaga jej TweaksAndFixes 3.21.1.
-[*]Rozpakuj go wprost do folderu gry (Steam: prawy klik na grze > Zarządzaj > Przeglądaj pliki lokalne), tak by folder MelonLoader, version.dll i dobby.dll leżały obok "Ultimate Admiral Dreadnoughts.exe".
-[*]Uruchom grę raz - pierwszy start trwa kilka minut i wymaga internetu; okno konsoli obok gry to normalne. Zamknij grę.
-[*]Rozpakuj Iron_Admiral_Mods_only.zip do folderu gry tak, by istniał <folder gry>\Mods\TweaksAndFixes.dll, i uruchom grę.
+[*]Pobierz zip z instalatorem z [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url] (albo plik z Nexusa).
+[*]Rozpakuj go i kliknij prawym przyciskiem [i]Install-IronAdmiral.ps1[/i] > Uruchom za pomocą PowerShell. Instalator doinstaluje .NET 6, VC++ Redistributable, MelonLoader 0.6.6 i Iron Admiral.
+[*]Uruchom grę. Aktualizacje gra proponuje sama; linię beta włącza się w F10.
 [/list]
-Baza: DIP The Great Game 1.3.5 z TweaksAndFixes 3.21.1. Kod źródłowy (DIP_GG_Fixes, instalator, skrypty scalania): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]https://github.com/KlaudiuszLedwoch/Iron-Admiral[/url]
-Zacznij nową kampanię; zapisy z 1.0 wymagają narzędzia migracji z folderu źródeł (source/save_tools).
-Zgłoszenia błędów z załączonym MelonLoader\Latest.log są najszybszą drogą do poprawki. Zakładka Bugs.
+Instalacja ręczna i odinstalowanie są opisane na wiki: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki/Installation]Installation[/url].
+
+[size=4][b]Podziękowania[/b][/size]
+Mod powstał na bazie DIP "The Great Game" i TweaksAndFixes - wielkie podziękowania dla ich autorów. Dziękuję wszystkim, którzy zgłaszają błędy i pomysły; gracze są wymienieni w menu głównym gry i w historii zmian.
+
+[size=4][b]Co dalej[/b][/size]
+Logistyka: ropa, zaopatrzenie i szlaki morskie; lotniskowce w kampanii; wyszkolenie załóg i kontrola uszkodzeń; dane dział osobno dla każdego państwa; okręty podwodne po lotniskowcach.
