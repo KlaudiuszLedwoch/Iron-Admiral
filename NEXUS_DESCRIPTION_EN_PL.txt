@@ -3,13 +3,24 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights: to
 
 ==========================================================================
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.76.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
 [*]Three battles, 6 min, ending with two surrendered destroyers taken as prizes: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Two battles, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]What is new (1 November 2026) - Iron Admiral 1.2.76, DIP_GG_Fixes 1.11.543[/b]
+[list]
+[*]Naval aviation: a new technology branch with its own budget, air reconnaissance from your ports, spotting aircraft and torpedo air strikes in campaign battles from carriers and from the shore - all following research. Custom battles 1915-1945 give you a carrier beyond the horizon.
+[*]Campaign map: reconnaissance and control circles around your task forces; the sea beyond your reconnaissance is delicately darkened.
+[*]Fog of war in battle: an enemy not yet identified is shown only by a grey reported class, e.g. CL?
+[*]Diplomacy by threat and a naval arms race: a real building programme alarms your rivals and they answer by building; a monthly report tells you who. Scrapping capital ships without growing their tonnage improves relations. A "Naval rivals" panel shows the rivalries.
+[*]Battles: choose the hour when your force is faster, night actions at short range, AI withdrawal and smoke, new orders (Smoke, Keep range, torpedo attack), no more ships outrunning their own torpedoes, one-sided battles no longer draws.
+[*]Designs: historical AP shells, new AI designs with the newest researched shell, a service record and ranking for every design, deleted designs stay deleted.
+[*]Much shorter end of turn: foreign navies design their ships while you plan your turn.
 [/list]
 
 [b]What is new (28 October 2026) - Iron Admiral 1.2.75, DIP_GG_Fixes 1.11.328[/b]
@@ -414,13 +425,24 @@ Bug reports with MelonLoader\Latest.log attached are the fastest way to get some
 
 [b]Wersja polska[/b]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.75.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.76.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
 [*]Trzy bitwy, 6 min, na końcu dwa poddane niszczyciele przejęte jako pryzy: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Dwie bitwy, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]Co nowego (1 listopada 2026) - Iron Admiral 1.2.76, DIP_GG_Fixes 1.11.543[/b]
+[list]
+[*]Lotnictwo morskie: nowa gałąź technologii z własnym budżetem, rozpoznanie lotnicze z portów, samoloty obserwacyjne i naloty torpedowe w bitwach kampanii z lotniskowców i z lądu - wszystko zależne od badań. W bitwach własnych 1915-1945 masz lotniskowiec za horyzontem.
+[*]Mapa kampanii: koła rozpoznania i kontroli wokół zespołów; morze poza rozpoznaniem jest delikatnie przyciemnione.
+[*]Mgła wojny w bitwie: nierozpoznany wróg ma tylko szarą meldowaną klasę, np. CL?
+[*]Dyplomacja wg zagrożenia i wyścig zbrojeń: prawdziwy program budowy niepokoi rywali, a oni odpowiadają budową; raport miesięczny mówi, kto. Złomowanie okrętów liniowych bez wzrostu ich tonażu poprawia stosunki. Panel "Naval rivals" pokazuje rywalizacje.
+[*]Bitwy: wybór pory bitwy, gdy Twój zespół jest szybszy, nocne starcia z bliska, odwrót i dym AI, nowe rozkazy (Smoke, Keep range, atak torpedowy), okręty nie wyprzedzają już własnych torped, bitwy jednostronne nie są już remisami.
+[*]Projekty: historyczne pociski AP, nowe projekty AI z najnowszym opracowanym pociskiem, historia służby i ranking każdego projektu, usunięte projekty nie wracają.
+[*]Znacznie krótszy koniec tury: obce floty projektują okręty, gdy planujesz turę.
 [/list]
 
 [b]Co nowego (28 października 2026) - Iron Admiral 1.2.75, DIP_GG_Fixes 1.11.328[/b]

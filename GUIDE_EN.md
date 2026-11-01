@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 28 October 2026. Latest version: Iron Admiral 1.2.75. Updated with every release._
+_Guide as of 1 November 2026. Latest version: Iron Admiral 1.2.76. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -267,6 +267,7 @@ What the current beta adds to the campaign (each with its switch in the F10 pane
 - **27 October 2026, Iron Admiral 1.2.74.2:** a ship that surrendered in battle is taken as a prize again (the game had already moved her to the sunk list); resolution guard when the game's settings fail at start.
 - **27 October 2026, Iron Admiral 1.2.74.3:** corrected package - the prize fix of 1.2.74.2 is in it (a surrendered ship is taken as a prize again).
 - **28 October 2026, Iron Admiral 1.2.75:** ships sink by their size (damage by tonnage, sinking at 40 % structure damage - torpedo boats and destroyers no longer unkillable); impact angle from the shell's fall; AI torpedo tactics (cross attack, turning to fire the other side); division order "Finish off"; coalition wars with a balance of power; 7 in guns no longer slower than 8 in.
+- **1 November 2026, Iron Admiral 1.2.76:** naval aviation (technology branch, reconnaissance, spotting aircraft, campaign air strikes); reconnaissance circles and darkened unscouted sea on the map; fog of war in battle; diplomacy by threat and a naval arms race with reports; battle hour, withdrawal, smoke and night range; historical AP shells; much shorter end of turn.
 - **30 October 2026, Iron Admiral 1.2.76-beta.110:** section 14 - what the 1.2.76 betas add: naval aviation budget, technology ranking, war score reset, sea repairs, statistics, unbuildable designs moved, division orders, designer armour defaults and penetration table, spectacular sinkings.
 
 ---
