@@ -223,7 +223,47 @@ What the current beta adds to the campaign (each with its switch in the F10 pane
 - **Designer** - new turrets get armour by default (roof 25 mm, walls up to the calibre); 2-4 in guns may have a light gun house or shield; Refit enters refit mode without an extra question; the gun window shows the physical penetration, also published as the [penetration table](Penetration-table).
 - **Spectacular sinkings** - torpedoed on one side, big ships capsize; after a magazine hit they blow up; others break their back or settle burning.
 
+## 15. War and peace, invasions and torpedoes (1.2.77 betas)
+
+What the 1.2.77 betas add (each with its switch in the F10 panel):
+
+**Ending wars**
+- **War weariness** - a nation that has lost a large share of the fleet it had when the war began (30%), clearly more than its enemy, and is not ahead on victory points asks for peace. Fighting on several fronts brings that point sooner. The fleets at the start of each war are kept across saves.
+- **Losing a jewel** - a great power that loses one of its richest colonies (India and the like) to the enemy and is not winning asks for peace.
+- **Peace treaties** last five years. Democracies and constitutional monarchies keep them; an absolute monarchy breaks one only with a fleet twice the enemy's, a nationalist or communist government with 1.3 times. The player may break a treaty at a cost in unrest and relations with every great power.
+- **The loser of a war** (fewer victory points at the peace) may not lay down battleships or battlecruisers while the treaty lasts.
+
+**Starting wars and finding friends**
+- **No fight with everyone** - an AI nation already at war with two countries does not declare a third war itself; it can still be attacked.
+- **Allies against a common enemy** - a great power at war with two or more countries draws closer each month to a great power fighting the same enemy; once their attitude is high enough, they become allies.
+- **Calming a dangerous neighbour** - a great power at war on three or more fronts improves its relations with the strongest hostile great power it is not yet fighting (this can be you).
+
+**Naval treaties**
+- From February 1922 (Washington) every great power builds battleships and battlecruisers of at most 35,000 t with 16 in guns, cruisers of 10,000 t with 8 in guns and carriers of 27,000 t; from April 1930 (London) destroyers of 1,850 t with 5.1 in guns. From 1937 the Second London treaty: 14 in, then 16 in under the escalator clause.
+- Until the end of 1936 each great power also has a total of capital ship and carrier tonnage (Britain and the USA 525,000 t, Japan 315,000 t, France and Italy 175,000 t; the others in proportion to their fleets). A new battleship waits until an old one goes.
+- A window asks you to sign or refuse. Refusing frees your yards but every great power regards you with suspicion; you can also withdraw later (NavalTreatyWithdraw in F10) - the treaties then end for everyone two years on.
+- Ships already built are not affected; refits keep the 3,000 t modernisation allowance.
+
+**Invasions**
+- The shipping an invasion needs follows the army that defends the province: four soldiers carried for every defender, one ton per soldier.
+- It grows with the length of the sea route from your nearest own port (no change up to 1,500 km, three times at 8,000 km).
+- A minor nation's defender counts as a quarter of a great power's soldier; a great power's richest colonies need one and a half times the shipping.
+
+**Battle**
+- **Torpedo aiming error** - every torpedo leaves with a small course error that grows with the run to the target, the sea state and at night: close attacks hit, long-range salvoes mostly miss. Aerial torpedoes too.
+- **Wakes** are seen farther in a calm sea and closer in a rough one.
+
+**Crews**
+- Ships at sea (patrols, sea control, escorts, invasions) gain crew training each month, up to Trained; only battle makes a crew Regular or better.
+- Each October the yearly draft costs every crew part of a level; battle-hardened crews lose less.
+
+**Ship design**
+- A design up to 8% over its displacement can still be built, as many ships of the period were completed overweight.
+- The tonnage bonus from beam and draught is held within +30% of the hull's limit, so a refit can no longer lift a hull far beyond it.
+
 ### Guide history
+- **2 November 2026, Iron Admiral 1.2.77-beta.33:** naval treaties (limits, totals, signing and withdrawal); alliances against a common enemy.
+- **2 November 2026, Iron Admiral 1.2.77-beta.29:** war and peace (war weariness, treaties, alliances, war limit), invasions by army, distance and target, torpedo aiming error, crew training at sea and the yearly draft, refits within the hull's limit.
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
 - **18 October 2026, Iron Admiral 1.2.16:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
 - **19 October 2026, Iron Admiral 1.2.22:** in-game settings panel (F10) and how to play with only the battle AI, crews and prizes.
