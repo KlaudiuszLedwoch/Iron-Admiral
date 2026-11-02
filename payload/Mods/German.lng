@@ -450,7 +450,7 @@ $IA_Tip_79;Iron Admiral: Every switch in F10 has a help text. Most features can 
 $IA_Tip_80;Iron Admiral: The tonnage an invasion needs is measured along the sea route from your nearest own port, not in a straight line across the map.
 $IA_Tip_81;Iron Admiral: Invading a minor nation takes far less shipping than invading a great power: a minor's defender counts as a quarter of a great power's soldier.
 $IA_Tip_82;Iron Admiral: A forward port shortens every invasion launched from it. Taking a harbour close to the enemy is often the first step of a long war.
-$IA_Tip_83;Iron Admiral: A nation that loses a large share of the fleet it had when the war began, and is not ahead on victory points, asks for peace.
+$IA_Tip_83;Iron Admiral: A nation that loses a large share of the fleet it had when the war began, and is not ahead on victory points, asks for peace. Fighting on several fronts brings that point sooner.
 $IA_Tip_84;Iron Admiral: War weariness counts ships lost against the fleet a nation started the war with, so a small navy feels every loss.
 $IA_Tip_85;Iron Admiral: A peace treaty lasts five years. During that time neither side can declare war on the other without breaking it.
 $IA_Tip_86;Iron Admiral: Democracies and constitutional monarchies keep their treaties. The player may still break one, at a heavy cost in unrest and relations.
@@ -485,3 +485,12 @@ $IA_Tip_114;Iron Admiral: Destroyers without an escort are pulled back instead o
 $IA_Tip_115;Iron Admiral: Heavy shells against a destroyer often pass straight through. Secondary guns with high explosive do more harm.
 $IA_Tip_116;Iron Admiral: The service record of a design follows it from game to game: battles, victories and ships lost.
 $IA_Tip_117;Iron Admiral: Nations exchange older warships. A ship bought from abroad comes with the design and armament of its builder.
+$IA_Tip_118;Iron Admiral: A nation already at war with two countries does not look for a third fight - but it can still be attacked.
+$IA_Tip_119;Iron Admiral: Two great powers fighting the same enemy draw closer every month and may become allies.
+$IA_Tip_120;Iron Admiral: A great power at war on many fronts tries to calm its most dangerous neighbour before it joins the war.
+$IA_Tip_121;Iron Admiral: The richest colonies, such as India, are held by strong garrisons: invading one takes half as much shipping again.
+$IA_Tip_122;Iron Admiral: Losing one of its richest colonies makes a nation that is not winning the war ask for peace.
+$IA_Tip_123;Iron Admiral: Torpedoes are aimed at where the target will be. The longer the run, the more a small error in its course and speed throws the salvo off.
+$IA_Tip_124;Iron Admiral: A long-range torpedo salvo rarely hits; a close attack at night is the classic way to use torpedoes.
+$IA_Tip_125;Iron Admiral: In a calm sea torpedo wakes are seen from far off; in rough weather they come almost unseen.
+$IA_Tip_126;Iron Admiral: Beam and draught can add some displacement to a hull, but a refit cannot lift a hull far beyond its limit.
