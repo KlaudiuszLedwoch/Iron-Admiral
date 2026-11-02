@@ -404,120 +404,120 @@ $IA_Help_title_ia_65;Settings #154-158: Info & updates (1/2)
 $IA_Help_desc_ia_65;Update check, beta channel, problem reports and save compatibility. The tab has 10 switches.\n\n*#154 BetaUpdates* (default OFF - applies after a game restart)\n[ON] Beta updates (for testers - needs Share logs on): the update check offers beta versions (new features under test), off = stable versions, also back from a beta to the latest stable. Takes effect at the next start.\n[OFF] The update check offers stable versions only.\n\n*#155 CheckForUpdates* (default ON - applies after a game restart)\n[ON] At game start fetch the VERSION file of the Iron Admiral GitHub repository (one HTTPS request to raw.githubusercontent.com) and show a message when a newer release exists (1.11.9)\n[OFF] No update check at start.\n\n*#156 CheckOtherMods* (default ON)\n[ON] At start, list other mods installed next to Iron Admiral and offer to move them to a backup folder.\n[OFF] Other mods are not listed at start.\n\n*#157 SaveCompatibilityFix* (default ON)\n[ON] While a save loads, ship designs and nations are checked against the installed game data, parts, components, technologies or turret calibres that no longer exist are removed so the save loads (backup of the saves before the first change). Missing hulls are only reported.\n[OFF] A save with parts or technologies that no longer exist may fail to load.\n\n*#158 ShareLogs* (default OFF)\n[ON] Share logs with the author: battle logs, errors and the session log are sent to help fix and balance the mod (the Windows user name is removed). Required for Beta updates.\n[OFF] Nothing is sent (default).
 $IA_Help_title_ia_66;Settings #159-160, #218-219, #227: Info & updates (2/2)
 $IA_Help_desc_ia_66;Continued from the previous chapter.\n\n*#159 UpdateDownloadButton* (default ON - applies after a game restart)\n[ON] Show a Download button in the update message, the download starts only after the player clicks it (1.11.11). false = message with a link only.\n[OFF] The update message has a link only.\n\n*#160 UsageStatistics* (default OFF)\n[ON] Keep anonymous usage counters on this PC (sessions, turns, battles, nation and year) and add them to a problem report - nothing is ever sent, you send the report yourself.\n[OFF] No usage counters are kept (default).\n\n*#218 SaveBackup* (default ON)\n[ON] At every start of the game the campaign saves are copied to IronAdmiral_backups next to them (a copy only when they changed, the newest 30 kept)\n[OFF] No copies of the campaign saves are made.\n\n*#219 SaveBackupKeep* (default OFF)\n[ON] How many backups of the campaign saves are kept.\n[OFF] Used only when SaveBackup is on.\n\n*#227 UpdateAutoInstall* (default ON)\n[ON] Install a newer Iron Admiral version automatically at game start (the Mods folder of the package, SHA-256 verified) - the game only asks for a restart afterwards, false = the message with the Download button.\n[OFF] A message with the Download button, nothing is downloaded unless clicked.
-$IA_Tip_1;In campaign battles the faster force chooses the hour of the battle. A slower fleet can be caught at dusk or at night, and night actions open at short range.
-$IA_Tip_2;Penetration follows historical guns: shell weight and muzzle velocity by calibre and period. Armour quality and the angle of impact decide whether a shell gets through.
-$IA_Tip_3;Hits at long range are rare. Battleships and cruisers with a catapult launch a spotting aircraft in daylight, which improves the hit chance beyond 12 km.
-$IA_Tip_4;Divisions can be ordered to lay smoke. AI ships that are clearly outmatched withdraw behind their own smoke.
-$IA_Tip_5;Flooding on one side gives a ship a list. Guns firing to the low side lose range, and enough flooding can capsize a ship of poor stability.
-$IA_Tip_6;Crews can panic and surrender. A surrendered ship can be taken as a prize and brought home.
-$IA_Tip_7;Ships out of ammunition or badly damaged leave the line. Destroyers without escort pull back instead of charging alone.
-$IA_Tip_8;Torpedo attacks are made by range and speed. A ship faster than its own torpedoes at their range setting holds back so it does not overrun them.
-$IA_Tip_9;Maintenance depends on the ship type: a battleship costs about 6% of its price a year, a cruiser about 11%, a destroyer about 9%, a carrier about 14%. Ships in reserve cost much less.
-$IA_Tip_10;Building a class in series is cheaper: each further ship costs less and takes less time, and sister ships in service lower each other's maintenance.
-$IA_Tip_11;A large building programme worries your rivals, and they answer by building. Scrapping capital ships without growing your battle fleet improves relations.
-$IA_Tip_12;Enemy fleets are known only as well as your reconnaissance allows. An enemy ship not yet identified in battle shows only a reported class, such as CL?.
-$IA_Tip_13;Naval aviation has its own research branch and budget (Finances). Seaplane stations, airships and flying boats patrol from your ports and find enemy forces within their range.
-$IA_Tip_14;Torpedo aircraft attack in waves from both bows. Light guns fire at them, and heavy guns fire into the sea ahead of aircraft running in low.
-$IA_Tip_15;A naval invasion needs ship tonnage for four soldiers for every defender of the province, and more the farther it is from your nearest port. A strongly held province needs a large fleet.
-$IA_Tip_16;A peace treaty binds the former enemies for five years. A nation that has lost a large part of its fleet and is not winning on land asks for peace.
-$IA_Tip_17;Your campaign saves are copied at every start of the game to IronAdmiral_backups next to them. To restore one, copy it back with the game closed.
-$IA_Tip_18;Every Iron Admiral feature has its own switch, with a help text, in the settings panel on F10.
-$IA_Tip_19;Every design keeps a service record across games: battles, victories and ships lost. Designs with a good record are preferred when a nation picks a shared design.
-$IA_Tip_20;New AI designs and refits get the newest armour-piercing shell their nation has researched; ships not refitted keep the shell they were built with.
-$IA_Tip_21;The treasury follows the economy: loans, interest and inflation. A navy in debt for too long faces a financial crisis and has to cut the fleet.
-$IA_Tip_22;Holding another great power's home provinces in peacetime costs garrisons every turn and raises unrest there.
-$IA_Tip_23;Foreign navies design their next ships while you plan your turn, so the end of the turn is shorter. Their designs are finished by the time they are needed.
-$IA_Tip_24;The AI builds from hundreds of historical ship classes as well as its own designs, so its fleets look like those of the period.
-$IA_Tip_25;When one great power grows too strong, the others may form a coalition and go to war against it together.
-$IA_Tip_26;Technologies spread: once other navies have a technology, it becomes cheaper and faster for you to research it.
-$IA_Tip_27;Minor nations keep their navies up and defend their coasts; a small navy is not an easy prize.
-$IA_Tip_28;Contact reports age. The last known position of an enemy force becomes less certain every turn it is not seen again.
-$IA_Tip_29;Reconnaissance can mistake ship types: a cruiser may be reported as a battleship, a destroyer as a cruiser. Air reports from airships and seaplanes are the least reliable.
-$IA_Tip_30;At night the enemy is seen late and close. Night actions are fought at short range, where torpedoes count most.
-$IA_Tip_31;AI capital ships close to effective gun range when they are not outmatched, and break off when the enemy line is clearly stronger.
-$IA_Tip_32;Divisions can be ordered to keep a set range from the enemy. They turn away when the enemy closes and come back when it opens the range.
-$IA_Tip_33;A torpedo attack order sends a division of light ships against a chosen target, with a run-in, a salvo and a turn away.
-$IA_Tip_34;AI navies fight by the doctrine of their nation and period: some favour long-range gunnery, others torpedo attacks at night.
-$IA_Tip_35;Crew experience matters: trained crews shoot better, keep their nerve longer and take longer to panic.
-$IA_Tip_36;Armour quality follows its period: compound, Harvey and Krupp cemented plates resist the same shell differently.
-$IA_Tip_37;Ships sink according to their size: a destroyer goes down after a few heavy hits, a battleship can take many.
-$IA_Tip_38;Heavy armour-piercing shells often pass through light ships without bursting. High explosive does more harm to an unarmoured destroyer.
-$IA_Tip_39;Gun barrels are raised to the elevation of the shot computed from the ballistics, so long-range fire looks as it was.
-$IA_Tip_40;Small and distant shell splashes are hidden by the game. Switch AlwaysShowSplashes in F10 shows them all.
-$IA_Tip_41;In custom battles of 1915 to 1945 you can have a carrier beyond the horizon whose torpedo aircraft attack in waves. Set it on the right of the battle setup screen.
-$IA_Tip_42;Before a campaign battle you are told if enemy aircraft can reach it, and after it you get a report of the air strike.
-$IA_Tip_43;Bad weather grounds aircraft: air reconnaissance and air strikes depend on the weather of the sea area.
-$IA_Tip_44;The sea beyond your reconnaissance is darkened on the campaign map, so you can see where your information ends.
-$IA_Tip_45;The Naval rivals panel shows which great powers regard each other as rivals at sea.
-$IA_Tip_46;A monthly report tells you which navies answer your building programme with programmes of their own.
-$IA_Tip_47;A weak and distant navy is less of a threat to others; its building worries its neighbours more than far-away powers.
-$IA_Tip_48;The AI does not join a hopeless war to take back lost territory: it needs a land route or a fleet clearly stronger than the holder's.
-$IA_Tip_49;Holding foreign home provinces in peacetime brings an event every turn: pay for garrisons, grant autonomy or rule with a hard hand.
-$IA_Tip_50;The Finances window shows the treasury: income, expenses, debt, interest and inflation.
-$IA_Tip_51;A navy short of money can take a loan, print money at the cost of inflation, or cut the fleet for some months.
-$IA_Tip_52;Nations sell older warships to each other. You may be offered ships, and you can sell your own.
-$IA_Tip_53;Captured ships of one class are brought under one design, so a class can be refitted together.
-$IA_Tip_54;A design you delete stays deleted; it does not come back at the next turn.
-$IA_Tip_55;A saved design up to 8% over its displacement can still be built, as many ships of the period were completed overweight.
-$IA_Tip_56;A refit brings an older ship up to the technology you have now; the AI refits its ships as well.
-$IA_Tip_57;New AI designs get the newest researched armour-piercing shell; existing ships keep their shell until they are refitted.
-$IA_Tip_58;Spotting aircraft are flown: they circle on your side of the target and land in the wake of their ship at dusk.
-$IA_Tip_59;In a campaign, the splash barrage of heavy guns against low-flying torpedo aircraft needs its own technology.
-$IA_Tip_60;Aerial torpedoes carry a smaller warhead than ship torpedoes: about half before 1930, more later.
-$IA_Tip_61;From 1930 secondary guns up to 5.5 in also fire at aircraft; from 1937 light automatic anti-aircraft guns are added.
-$IA_Tip_62;A torpedo wave whose target has sunk turns on the next largest enemy ship still afloat.
-$IA_Tip_63;During an air strike the camera buttons Aircraft, Torpedo and Free camera follow a plane or its torpedo.
-$IA_Tip_64;The dispatch log (F6) keeps the radio talk and reports of the battle, air strikes included.
-$IA_Tip_65;An aircraft shot down bursts in the air, falls burning and splashes into the sea.
-$IA_Tip_66;Torpedo boats and destroyers on escape missions either run for it together or scatter, depending on the enemy.
-$IA_Tip_67;A battleship with no chance in a fight tries to withdraw instead of fighting to the end.
-$IA_Tip_68;Ships can ram a damaged enemy at close range, but a ship running a torpedo attack keeps clear of its target.
-$IA_Tip_69;Semi-armour-piercing shells sit between AP and HE: less penetration, a bigger burst behind thin armour.
-$IA_Tip_70;An outmatched AI force may send its light ships in a torpedo charge to cover the withdrawal of its main ships.
-$IA_Tip_71;Every ship type has its own maintenance. Ships in reserve cost much less, but take time to bring back into service.
-$IA_Tip_72;The AI follows the difficulty level of DIP The Great Game: on Normal it has only a small economic bonus.
-$IA_Tip_73;Iron Admiral checks for updates at the start. The beta line, with new features under test, can be switched on in F10.
-$IA_Tip_74;Bug reports and ideas are welcome on the Iron Admiral GitHub page, the Steam forum or Nexus. The log is MelonLoader\Latest.log in the game folder.
-$IA_Tip_75;If a save is ever written empty, Iron Admiral puts the previous one back at once and keeps the broken file aside.
-$IA_Tip_76;Invasion targets are listed by sea area, but the tonnage an invasion needs follows the army that defends the province and the length of the sea route to it.
-$IA_Tip_77;A peace treaty does not stop relations from improving; only their worsening is held back during its term.
-$IA_Tip_78;Spotting matters more than numbers at long range: a fleet that sees first and is seen last chooses the fight.
-$IA_Tip_79;Every switch in F10 has a help text. Most features can be switched off separately if you prefer the game's own behaviour.
-$IA_Tip_80;The tonnage an invasion needs is measured along the sea route from your nearest own port, not in a straight line across the map.
-$IA_Tip_81;Invading a minor nation takes far less shipping than invading a great power: a minor's defender counts as a quarter of a great power's soldier.
-$IA_Tip_82;A forward port shortens every invasion launched from it. Taking a harbour close to the enemy is often the first step of a long war.
-$IA_Tip_83;A nation that loses a large share of the fleet it had when the war began, and is not ahead on victory points, asks for peace.
-$IA_Tip_84;War weariness counts ships lost against the fleet a nation started the war with, so a small navy feels every loss.
-$IA_Tip_85;A peace treaty lasts five years. During that time neither side can declare war on the other without breaking it.
-$IA_Tip_86;Democracies and constitutional monarchies keep their treaties. The player may still break one, at a heavy cost in unrest and relations.
-$IA_Tip_87;An absolute monarchy breaks a treaty only with a fleet twice the size of its enemy's; a nationalist or communist government needs less.
-$IA_Tip_88;Breaking a peace treaty worsens relations with every great power, not only with the former enemy.
-$IA_Tip_89;The loser of a war - the side with fewer victory points at the peace - may not lay down battleships or battlecruisers while the treaty lasts.
-$IA_Tip_90;A battleship costs about half as much to keep up per ton as a cruiser, so a fleet of many small ships is dearer than it looks.
-$IA_Tip_91;Ships away from a home port cost more to keep up. Bring them home when they are not needed abroad.
-$IA_Tip_92;Putting older ships in reserve saves most of their upkeep. They need time and money to be manned again.
-$IA_Tip_93;Large building programmes take years. A battleship laid down today may enter service in a different naval world.
-$IA_Tip_94;Your navy's budget follows the economy of the nation. A long war and a weak economy will bring the navy into debt.
-$IA_Tip_95;Inflation eats into a navy's funds. Printing money pays for one programme and makes the next one dearer.
-$IA_Tip_96;The difficulty level changes the AI's income, aggression and research speed, as in DIP The Great Game 1.3.5.
-$IA_Tip_97;A design within 8% of its displacement limit can be built; anything heavier must be redesigned.
-$IA_Tip_98;Shell weights are taken from the guns of the period. If a gun is missing from the tables, the nearest calibre is used and noted in the log.
-$IA_Tip_99;Long-range hits are rare without fire control. Early ships rely on short range; later rangefinders and directors push the battle line apart.
-$IA_Tip_100;A spotting aircraft is only launched in daylight and fair weather. At night and in a gale your guns are on their own.
-$IA_Tip_101;Aircraft do not fly in a storm. A rough sea grounds the reconnaissance planes of both sides.
-$IA_Tip_102;Torpedo aircraft attack from both bows at once, so that any turn away exposes the ship to one of the waves.
-$IA_Tip_103;Light anti-aircraft guns are most useful at close range; heavy guns can only throw splashes in front of low-flying torpedo aircraft.
-$IA_Tip_104;Airships and seaplanes see far, but their reports of ship types are the least reliable.
-$IA_Tip_105;Reconnaissance reports report a class with a question mark until a ship has been seen closely enough to identify.
-$IA_Tip_106;The campaign map darkens the sea that your reconnaissance does not cover. An enemy fleet can wait there unseen.
-$IA_Tip_107;Every save of the campaign is backed up when the game starts. The copies are kept in IronAdmiral_backups next to your saves.
-$IA_Tip_108;If the game ever writes a save empty, Iron Admiral restores the previous one and keeps the broken file aside for a bug report.
-$IA_Tip_109;The log of the game (MelonLoader\Latest.log) records invasions, peace terms, air strikes and costs. It is the best help for a bug report.
-$IA_Tip_110;Most Iron Admiral changes have a switch in F10 with a help text, so a feature you do not like can be turned off.
-$IA_Tip_111;A ship that floods heavily on one side lists, and her guns on the low side lose range.
-$IA_Tip_112;A crew that panics may abandon a ship that could still have been saved. Experienced crews hold on longer.
-$IA_Tip_113;Ships that have taken heavy damage leave the line on their own. They can still be sunk while they limp away.
-$IA_Tip_114;Destroyers without an escort are pulled back instead of charging a battle line alone.
-$IA_Tip_115;Heavy shells against a destroyer often pass straight through. Secondary guns with high explosive do more harm.
-$IA_Tip_116;The service record of a design follows it from game to game: battles, victories and ships lost.
-$IA_Tip_117;Nations exchange older warships. A ship bought from abroad comes with the design and armament of its builder.
+$IA_Tip_1;Iron Admiral: In campaign battles the faster force chooses the hour of the battle. A slower fleet can be caught at dusk or at night, and night actions open at short range.
+$IA_Tip_2;Iron Admiral: Penetration follows historical guns: shell weight and muzzle velocity by calibre and period. Armour quality and the angle of impact decide whether a shell gets through.
+$IA_Tip_3;Iron Admiral: Hits at long range are rare. Battleships and cruisers with a catapult launch a spotting aircraft in daylight, which improves the hit chance beyond 12 km.
+$IA_Tip_4;Iron Admiral: Divisions can be ordered to lay smoke. AI ships that are clearly outmatched withdraw behind their own smoke.
+$IA_Tip_5;Iron Admiral: Flooding on one side gives a ship a list. Guns firing to the low side lose range, and enough flooding can capsize a ship of poor stability.
+$IA_Tip_6;Iron Admiral: Crews can panic and surrender. A surrendered ship can be taken as a prize and brought home.
+$IA_Tip_7;Iron Admiral: Ships out of ammunition or badly damaged leave the line. Destroyers without escort pull back instead of charging alone.
+$IA_Tip_8;Iron Admiral: Torpedo attacks are made by range and speed. A ship faster than its own torpedoes at their range setting holds back so it does not overrun them.
+$IA_Tip_9;Iron Admiral: Maintenance depends on the ship type: a battleship costs about 6% of its price a year, a cruiser about 11%, a destroyer about 9%, a carrier about 14%. Ships in reserve cost much less.
+$IA_Tip_10;Iron Admiral: Building a class in series is cheaper: each further ship costs less and takes less time, and sister ships in service lower each other's maintenance.
+$IA_Tip_11;Iron Admiral: A large building programme worries your rivals, and they answer by building. Scrapping capital ships without growing your battle fleet improves relations.
+$IA_Tip_12;Iron Admiral: Enemy fleets are known only as well as your reconnaissance allows. An enemy ship not yet identified in battle shows only a reported class, such as CL?.
+$IA_Tip_13;Iron Admiral: Naval aviation has its own research branch and budget (Finances). Seaplane stations, airships and flying boats patrol from your ports and find enemy forces within their range.
+$IA_Tip_14;Iron Admiral: Torpedo aircraft attack in waves from both bows. Light guns fire at them, and heavy guns fire into the sea ahead of aircraft running in low.
+$IA_Tip_15;Iron Admiral: A naval invasion needs ship tonnage for four soldiers for every defender of the province, and more the farther it is from your nearest port. A strongly held province needs a large fleet.
+$IA_Tip_16;Iron Admiral: A peace treaty binds the former enemies for five years. A nation that has lost a large part of its fleet and is not winning on land asks for peace.
+$IA_Tip_17;Iron Admiral: Your campaign saves are copied at every start of the game to IronAdmiral_backups next to them. To restore one, copy it back with the game closed.
+$IA_Tip_18;Iron Admiral: Every Iron Admiral feature has its own switch, with a help text, in the settings panel on F10.
+$IA_Tip_19;Iron Admiral: Every design keeps a service record across games: battles, victories and ships lost. Designs with a good record are preferred when a nation picks a shared design.
+$IA_Tip_20;Iron Admiral: New AI designs and refits get the newest armour-piercing shell their nation has researched; ships not refitted keep the shell they were built with.
+$IA_Tip_21;Iron Admiral: The treasury follows the economy: loans, interest and inflation. A navy in debt for too long faces a financial crisis and has to cut the fleet.
+$IA_Tip_22;Iron Admiral: Holding another great power's home provinces in peacetime costs garrisons every turn and raises unrest there.
+$IA_Tip_23;Iron Admiral: Foreign navies design their next ships while you plan your turn, so the end of the turn is shorter. Their designs are finished by the time they are needed.
+$IA_Tip_24;Iron Admiral: The AI builds from hundreds of historical ship classes as well as its own designs, so its fleets look like those of the period.
+$IA_Tip_25;Iron Admiral: When one great power grows too strong, the others may form a coalition and go to war against it together.
+$IA_Tip_26;Iron Admiral: Technologies spread: once other navies have a technology, it becomes cheaper and faster for you to research it.
+$IA_Tip_27;Iron Admiral: Minor nations keep their navies up and defend their coasts; a small navy is not an easy prize.
+$IA_Tip_28;Iron Admiral: Contact reports age. The last known position of an enemy force becomes less certain every turn it is not seen again.
+$IA_Tip_29;Iron Admiral: Reconnaissance can mistake ship types: a cruiser may be reported as a battleship, a destroyer as a cruiser. Air reports from airships and seaplanes are the least reliable.
+$IA_Tip_30;Iron Admiral: At night the enemy is seen late and close. Night actions are fought at short range, where torpedoes count most.
+$IA_Tip_31;Iron Admiral: AI capital ships close to effective gun range when they are not outmatched, and break off when the enemy line is clearly stronger.
+$IA_Tip_32;Iron Admiral: Divisions can be ordered to keep a set range from the enemy. They turn away when the enemy closes and come back when it opens the range.
+$IA_Tip_33;Iron Admiral: A torpedo attack order sends a division of light ships against a chosen target, with a run-in, a salvo and a turn away.
+$IA_Tip_34;Iron Admiral: AI navies fight by the doctrine of their nation and period: some favour long-range gunnery, others torpedo attacks at night.
+$IA_Tip_35;Iron Admiral: Crew experience matters: trained crews shoot better, keep their nerve longer and take longer to panic.
+$IA_Tip_36;Iron Admiral: Armour quality follows its period: compound, Harvey and Krupp cemented plates resist the same shell differently.
+$IA_Tip_37;Iron Admiral: Ships sink according to their size: a destroyer goes down after a few heavy hits, a battleship can take many.
+$IA_Tip_38;Iron Admiral: Heavy armour-piercing shells often pass through light ships without bursting. High explosive does more harm to an unarmoured destroyer.
+$IA_Tip_39;Iron Admiral: Gun barrels are raised to the elevation of the shot computed from the ballistics, so long-range fire looks as it was.
+$IA_Tip_40;Iron Admiral: Small and distant shell splashes are hidden by the game. Switch AlwaysShowSplashes in F10 shows them all.
+$IA_Tip_41;Iron Admiral: In custom battles of 1915 to 1945 you can have a carrier beyond the horizon whose torpedo aircraft attack in waves. Set it on the right of the battle setup screen.
+$IA_Tip_42;Iron Admiral: Before a campaign battle you are told if enemy aircraft can reach it, and after it you get a report of the air strike.
+$IA_Tip_43;Iron Admiral: Bad weather grounds aircraft: air reconnaissance and air strikes depend on the weather of the sea area.
+$IA_Tip_44;Iron Admiral: The sea beyond your reconnaissance is darkened on the campaign map, so you can see where your information ends.
+$IA_Tip_45;Iron Admiral: The Naval rivals panel shows which great powers regard each other as rivals at sea.
+$IA_Tip_46;Iron Admiral: A monthly report tells you which navies answer your building programme with programmes of their own.
+$IA_Tip_47;Iron Admiral: A weak and distant navy is less of a threat to others; its building worries its neighbours more than far-away powers.
+$IA_Tip_48;Iron Admiral: The AI does not join a hopeless war to take back lost territory: it needs a land route or a fleet clearly stronger than the holder's.
+$IA_Tip_49;Iron Admiral: Holding foreign home provinces in peacetime brings an event every turn: pay for garrisons, grant autonomy or rule with a hard hand.
+$IA_Tip_50;Iron Admiral: The Finances window shows the treasury: income, expenses, debt, interest and inflation.
+$IA_Tip_51;Iron Admiral: A navy short of money can take a loan, print money at the cost of inflation, or cut the fleet for some months.
+$IA_Tip_52;Iron Admiral: Nations sell older warships to each other. You may be offered ships, and you can sell your own.
+$IA_Tip_53;Iron Admiral: Captured ships of one class are brought under one design, so a class can be refitted together.
+$IA_Tip_54;Iron Admiral: A design you delete stays deleted; it does not come back at the next turn.
+$IA_Tip_55;Iron Admiral: A saved design up to 8% over its displacement can still be built, as many ships of the period were completed overweight.
+$IA_Tip_56;Iron Admiral: A refit brings an older ship up to the technology you have now; the AI refits its ships as well.
+$IA_Tip_57;Iron Admiral: New AI designs get the newest researched armour-piercing shell; existing ships keep their shell until they are refitted.
+$IA_Tip_58;Iron Admiral: Spotting aircraft are flown: they circle on your side of the target and land in the wake of their ship at dusk.
+$IA_Tip_59;Iron Admiral: In a campaign, the splash barrage of heavy guns against low-flying torpedo aircraft needs its own technology.
+$IA_Tip_60;Iron Admiral: Aerial torpedoes carry a smaller warhead than ship torpedoes: about half before 1930, more later.
+$IA_Tip_61;Iron Admiral: From 1930 secondary guns up to 5.5 in also fire at aircraft; from 1937 light automatic anti-aircraft guns are added.
+$IA_Tip_62;Iron Admiral: A torpedo wave whose target has sunk turns on the next largest enemy ship still afloat.
+$IA_Tip_63;Iron Admiral: During an air strike the camera buttons Aircraft, Torpedo and Free camera follow a plane or its torpedo.
+$IA_Tip_64;Iron Admiral: The dispatch log (F6) keeps the radio talk and reports of the battle, air strikes included.
+$IA_Tip_65;Iron Admiral: An aircraft shot down bursts in the air, falls burning and splashes into the sea.
+$IA_Tip_66;Iron Admiral: Torpedo boats and destroyers on escape missions either run for it together or scatter, depending on the enemy.
+$IA_Tip_67;Iron Admiral: A battleship with no chance in a fight tries to withdraw instead of fighting to the end.
+$IA_Tip_68;Iron Admiral: Ships can ram a damaged enemy at close range, but a ship running a torpedo attack keeps clear of its target.
+$IA_Tip_69;Iron Admiral: Semi-armour-piercing shells sit between AP and HE: less penetration, a bigger burst behind thin armour.
+$IA_Tip_70;Iron Admiral: An outmatched AI force may send its light ships in a torpedo charge to cover the withdrawal of its main ships.
+$IA_Tip_71;Iron Admiral: Every ship type has its own maintenance. Ships in reserve cost much less, but take time to bring back into service.
+$IA_Tip_72;Iron Admiral: The AI follows the difficulty level of DIP The Great Game: on Normal it has only a small economic bonus.
+$IA_Tip_73;Iron Admiral: Iron Admiral checks for updates at the start. The beta line, with new features under test, can be switched on in F10.
+$IA_Tip_74;Iron Admiral: Bug reports and ideas are welcome on the Iron Admiral GitHub page, the Steam forum or Nexus. The log is MelonLoader\Latest.log in the game folder.
+$IA_Tip_75;Iron Admiral: If a save is ever written empty, Iron Admiral puts the previous one back at once and keeps the broken file aside.
+$IA_Tip_76;Iron Admiral: Invasion targets are listed by sea area, but the tonnage an invasion needs follows the army that defends the province and the length of the sea route to it.
+$IA_Tip_77;Iron Admiral: A peace treaty does not stop relations from improving; only their worsening is held back during its term.
+$IA_Tip_78;Iron Admiral: Spotting matters more than numbers at long range: a fleet that sees first and is seen last chooses the fight.
+$IA_Tip_79;Iron Admiral: Every switch in F10 has a help text. Most features can be switched off separately if you prefer the game's own behaviour.
+$IA_Tip_80;Iron Admiral: The tonnage an invasion needs is measured along the sea route from your nearest own port, not in a straight line across the map.
+$IA_Tip_81;Iron Admiral: Invading a minor nation takes far less shipping than invading a great power: a minor's defender counts as a quarter of a great power's soldier.
+$IA_Tip_82;Iron Admiral: A forward port shortens every invasion launched from it. Taking a harbour close to the enemy is often the first step of a long war.
+$IA_Tip_83;Iron Admiral: A nation that loses a large share of the fleet it had when the war began, and is not ahead on victory points, asks for peace.
+$IA_Tip_84;Iron Admiral: War weariness counts ships lost against the fleet a nation started the war with, so a small navy feels every loss.
+$IA_Tip_85;Iron Admiral: A peace treaty lasts five years. During that time neither side can declare war on the other without breaking it.
+$IA_Tip_86;Iron Admiral: Democracies and constitutional monarchies keep their treaties. The player may still break one, at a heavy cost in unrest and relations.
+$IA_Tip_87;Iron Admiral: An absolute monarchy breaks a treaty only with a fleet twice the size of its enemy's; a nationalist or communist government needs less.
+$IA_Tip_88;Iron Admiral: Breaking a peace treaty worsens relations with every great power, not only with the former enemy.
+$IA_Tip_89;Iron Admiral: The loser of a war - the side with fewer victory points at the peace - may not lay down battleships or battlecruisers while the treaty lasts.
+$IA_Tip_90;Iron Admiral: A battleship costs about half as much to keep up per ton as a cruiser, so a fleet of many small ships is dearer than it looks.
+$IA_Tip_91;Iron Admiral: Ships away from a home port cost more to keep up. Bring them home when they are not needed abroad.
+$IA_Tip_92;Iron Admiral: Putting older ships in reserve saves most of their upkeep. They need time and money to be manned again.
+$IA_Tip_93;Iron Admiral: Large building programmes take years. A battleship laid down today may enter service in a different naval world.
+$IA_Tip_94;Iron Admiral: Your navy's budget follows the economy of the nation. A long war and a weak economy will bring the navy into debt.
+$IA_Tip_95;Iron Admiral: Inflation eats into a navy's funds. Printing money pays for one programme and makes the next one dearer.
+$IA_Tip_96;Iron Admiral: The difficulty level changes the AI's income, aggression and research speed, as in DIP The Great Game 1.3.5.
+$IA_Tip_97;Iron Admiral: A design within 8% of its displacement limit can be built; anything heavier must be redesigned.
+$IA_Tip_98;Iron Admiral: Shell weights are taken from the guns of the period. If a gun is missing from the tables, the nearest calibre is used and noted in the log.
+$IA_Tip_99;Iron Admiral: Long-range hits are rare without fire control. Early ships rely on short range; later rangefinders and directors push the battle line apart.
+$IA_Tip_100;Iron Admiral: A spotting aircraft is only launched in daylight and fair weather. At night and in a gale your guns are on their own.
+$IA_Tip_101;Iron Admiral: Aircraft do not fly in a storm. A rough sea grounds the reconnaissance planes of both sides.
+$IA_Tip_102;Iron Admiral: Torpedo aircraft attack from both bows at once, so that any turn away exposes the ship to one of the waves.
+$IA_Tip_103;Iron Admiral: Light anti-aircraft guns are most useful at close range; heavy guns can only throw splashes in front of low-flying torpedo aircraft.
+$IA_Tip_104;Iron Admiral: Airships and seaplanes see far, but their reports of ship types are the least reliable.
+$IA_Tip_105;Iron Admiral: Reconnaissance reports report a class with a question mark until a ship has been seen closely enough to identify.
+$IA_Tip_106;Iron Admiral: The campaign map darkens the sea that your reconnaissance does not cover. An enemy fleet can wait there unseen.
+$IA_Tip_107;Iron Admiral: Every save of the campaign is backed up when the game starts. The copies are kept in IronAdmiral_backups next to your saves.
+$IA_Tip_108;Iron Admiral: If the game ever writes a save empty, Iron Admiral restores the previous one and keeps the broken file aside for a bug report.
+$IA_Tip_109;Iron Admiral: The log of the game (MelonLoader\Latest.log) records invasions, peace terms, air strikes and costs. It is the best help for a bug report.
+$IA_Tip_110;Iron Admiral: Most Iron Admiral changes have a switch in F10 with a help text, so a feature you do not like can be turned off.
+$IA_Tip_111;Iron Admiral: A ship that floods heavily on one side lists, and her guns on the low side lose range.
+$IA_Tip_112;Iron Admiral: A crew that panics may abandon a ship that could still have been saved. Experienced crews hold on longer.
+$IA_Tip_113;Iron Admiral: Ships that have taken heavy damage leave the line on their own. They can still be sunk while they limp away.
+$IA_Tip_114;Iron Admiral: Destroyers without an escort are pulled back instead of charging a battle line alone.
+$IA_Tip_115;Iron Admiral: Heavy shells against a destroyer often pass straight through. Secondary guns with high explosive do more harm.
+$IA_Tip_116;Iron Admiral: The service record of a design follows it from game to game: battles, victories and ships lost.
+$IA_Tip_117;Iron Admiral: Nations exchange older warships. A ship bought from abroad comes with the design and armament of its builder.
