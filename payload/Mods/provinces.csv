@@ -180,7 +180,7 @@ nicaragua,Nicaragua,caribbean,nicaragua,nicaragua,nicaragua,nicaragua,nicaragua,
 niger,Niger,w_africa,france,france,france,france,france,france,france,niger,0,colony,3,0,-1,-1,0,0,0,7,0.0125000002,2,"southern_algeria, french_sudan, upper_volta, dahomey, nigeria, chad, fezzan-ghadames"
 nigeria,Nigeria,w_africa,britain,britain,britain,britain,britain,britain,britain,nigeria,0,colony,7,36000,-1,1927,5,1550,1500,7,0.0125000002,2,"dahomey, cameroon, chad, niger"
 north_borneo,North Borneo,se_asia,britain,britain,britain,britain,britain,britain,britain,malaysia,0,colony,3,1500,-1,1925,10,600,500,2.5,0.0125000002,2,"brunei, sarawak, borneo"
-north_brazil,Northern Brazil,c_atlantic,portugal,portugal,portugal,portugal,portugal,portugal,portugal,brazil,1,colony,7.5,45000,-1,1930,5,800,300,2.45,0.0299999993,2,"french_guiana, suriname, british_guiana, venezuela, southern_colombia, peru, bolivia, south_brazil"
+north_brazil,Northern Brazil,c_atlantic,portugal,portugal,portugal,portugal,portugal,portugal,portugal,brazil,0,colony,7.5,45000,-1,1930,5,800,300,2.45,0.0299999993,2,"french_guiana, suriname, british_guiana, venezuela, southern_colombia, peru, bolivia, south_brazil"
 north_east_england,Northeast England,n_sea,britain,britain,britain,britain,britain,britain,britain,britain,1,home,30,120000,-1,1890,100,300,300,2.45,0.0299999993,2,"scotland, north_west_england, eastern_england"
 north_egypt,Northern Egypt,medit,britain,britain,britain,britain,britain,britain,britain,egypt,0,colony,12,45000,-1,1890,100,950,1000,15,0.0299999993,1.5,"palestine, cyrenaica, south_egypt"
 north_hokkaido,North Hokkaido,japan_sea,japan,japan,japan,japan,japan,japan,japan,japan,1,home,2,45000,-1,-1,0,0,0,2.45,0.0125000002,3,south_hokkaido
@@ -250,7 +250,7 @@ singapore,Singapore,se_asia,britain,britain,britain,britain,britain,britain,brit
 slovenia,Slovenia,adriatic,austria,austria,austria,austria,austria,austria,austria,slovenia,1,home,4.5,0,-1,-1,0,0,0,2.45,0.0500000007,2,"northeast_italy, austria, hungary, croatia"
 solomon_islands,Solomon Islands,oceania_north,germany,germany,britain,britain,britain,britain,britain,solomon_islands,0,colony,2.5,25000,-1,-1,0,0,0,2.5,0.0125000002,2,
 south_africa,South Africa,s_atlantic,britain,britain,britain,britain,britain,britain,britain,south_africa,0,colony,6,15000,-1,-1,0,0,0,7,0.0125000002,2,"southwest_africa, bechuanaland, orange_free_state, transvaal, mozambique, swaziland, basutoland"
-south_brazil,Southern Brazil,s_am_east,portugal,portugal,portugal,portugal,portugal,portugal,portugal,brazil,1,colony,9.5,45000,-1,1930,5,800,300,2.45,0.0299999993,2,"uruguay, paraguay, argentina, bolivia, north_brazil"
+south_brazil,Southern Brazil,s_am_east,portugal,portugal,portugal,portugal,portugal,portugal,portugal,brazil,0,colony,9.5,45000,-1,1930,5,800,300,2.45,0.0299999993,2,"uruguay, paraguay, argentina, bolivia, north_brazil"
 south_egypt,Southern Egypt,red_sea,britain,britain,britain,britain,britain,britain,britain,egypt,0,colony,8,25000,-1,1912,10,450,1000,15,0.0299999993,1.5,"cyrenaica, sudan, north_egypt"
 south_hokkaido,South Hokkaido,ne_asia,japan,japan,japan,japan,japan,japan,japan,japan,1,home,3,45000,-1,-1,0,0,0,2.45,0.0125000002,3,north_hokkaido
 south_honshu,South Honshu,ne_asia,japan,japan,japan,japan,japan,japan,japan,japan,1,home,13,145000,-1,-1,0,0,0,2.45,0.0125000002,3,"north_honshu, kyushu"
