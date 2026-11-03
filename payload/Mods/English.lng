@@ -548,3 +548,6 @@ $IA_Tip_141;Iron Admiral: Torpedoes are aimed by eye: the error grows with range
 $IA_Tip_142;Iron Admiral: Losing the jewel of an empire - a rich colony - pushes the loser towards peace far more than losing a remote outpost.
 $IA_Tip_143;Iron Admiral: A great power already fighting two wars does not look for a third. It can still be attacked.
 $IA_Tip_144;Iron Admiral: A great power facing three wars at once tries to calm the strongest of its hostile rivals - sometimes even you.
+$component_name_short_ap_7;Capped - Post-Jutland
+$technology_name_projectile_shell_ia_greenboy;Post-Jutland APC Shells
+$technology_desc_projectile_shell_ia_greenboy;After Jutland showed that capped shells often broke up or burst on the armour face at oblique angles, navies introduced new AP shells with harder bodies and caps, stable fillers and reliable delay fuzes (the British "Greenboy" shells of 1918 and their counterparts). They penetrate thicker armour at steeper angles and burst inside the ship.

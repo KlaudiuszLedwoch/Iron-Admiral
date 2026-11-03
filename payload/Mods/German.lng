@@ -512,3 +512,6 @@ $IA_Tip_141;Iron Admiral: Torpedoes are aimed by eye: the error grows with range
 $IA_Tip_142;Iron Admiral: Losing the jewel of an empire - a rich colony - pushes the loser towards peace far more than losing a remote outpost.
 $IA_Tip_143;Iron Admiral: A great power already fighting two wars does not look for a third. It can still be attacked.
 $IA_Tip_144;Iron Admiral: A great power facing three wars at once tries to calm the strongest of its hostile rivals - sometimes even you.
+$component_name_short_ap_7;Kappe - nach Skagerrak
+$technology_name_projectile_shell_ia_greenboy;Panzergranaten nach Skagerrak
+$technology_desc_projectile_shell_ia_greenboy;Nach der Skagerrakschlacht, in der Kappengeschosse bei schrägem Auftreffen oft zerbrachen oder an der Panzeroberfläche detonierten, führten die Marinen neue Panzergranaten mit härterem Körper und härterer Kappe, stabiler Füllung und zuverlässigem Verzögerungszünder ein (die britischen "Greenboy"-Granaten von 1918 und ihre Gegenstücke). Sie durchschlagen dickere Panzerung unter steileren Winkeln und detonieren im Schiffsinneren.
