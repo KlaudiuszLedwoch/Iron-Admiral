@@ -218,7 +218,7 @@ oman,Oman,arabian_sea,oman,oman,oman,oman,oman,oman,oman,oman,0,country,3,2000,-
 orange_free_state,Orange Free State,indian_west,boer,boer,boer,britain,britain,britain,britain,boer,0,country,2.9000001,0,-1,-1,0,0,0,35,0.0075,3,"south_africa, basutoland, transvaal"
 pakistan,Pakistan,arabian_sea,britain,britain,britain,britain,britain,britain,britain,pakistan,0,colony,6.5,80000,-1,1930,5,400,30,2.5,0.01875,3,"western_india, northern_india, afghanistan, kashmir, persia"
 palestine,Palestine,medit,greece,greece,greece,greece,britain,britain,britain,palestine,0,colony,4,40000,-1,-1,0,0,0,12,0.00999999978,3,"north_egypt, transjordania, lebanon, syria"
-panama,Panama,caribbean,usa,usa,usa,usa,usa,usa,usa,panama,0,colony,3,30000,-1,-1,0,0,0,2.5,0.0125000002,2,"costa_rica, southern_colombia"
+panama,Panama,caribbean,usa,colombia,colombia,usa,usa,usa,usa,panama,0,colony,3,30000,-1,-1,0,0,0,2.5,0.0125000002,2,"costa_rica, southern_colombia"
 paraguay,Paraguay,s_am_west,paraguay,paraguay,paraguay,paraguay,paraguay,paraguay,paraguay,paraguay,0,country,3,0,-1,-1,0,0,0,7,0.01875,3,"south_brazil, bolivia, argentina"
 penghu,Penghu,east_asia,china,china,japan,japan,japan,japan,japan,china,1,colony,3,35000,-1,1925,2,300,100,2.45,0.0250000004,2,
 persia,Persia,persian_gulf,persia,persia,persia,persia,persia,persia,persia,persia,0,country,10,25000,-1,1905,15,4600,2000,7,0.01875,3,"turkmenistan, afghanistan, pakistan, iraq, eastern_turkey, armenia, azerbaijan"
