@@ -261,7 +261,49 @@ What the 1.2.77 betas add (each with its switch in the F10 panel):
 - A design up to 8% over its displacement can still be built, as many ships of the period were completed overweight.
 - The tonnage bonus from beam and draught is held within +30% of the hull's limit, so a refit can no longer lift a hull far beyond it.
 
+## 16. Economy, armies, nations and fleets (1.2.77 betas 34-78)
+
+What the later 1.2.77 betas add (each with its switch in the F10 panel).
+
+**Nations and the map**
+- **Denmark replaces Scandinavia** as a great power (Denmark, Iceland, the Faroes, Greenland). Sweden is a minor nation; Norway belongs to Sweden in the 1890 and 1900 starts. Older saves are converted when loaded. Denmark makes no claim on Swedish or Norwegian provinces.
+- **The Ottoman Empire** takes the place of DIP's Byzantine Empire.
+- **Panama** belongs to Colombia in the 1890 and 1900 starts (until 1903).
+- **Starting fleets for every great power** - the starting crew pool follows the naval budget, so Britain, Spain, the Netherlands and Portugal no longer start 1890 without ships.
+- **Oil** - Romania and Galicia have their historical oil from 1890. Optional **random oil** (RandomOil): the deposits still to be discovered are dealt out to random provinces, also in a running campaign, and kept in the save.
+
+**Army and economy**
+- **Armies follow the economy** - a great power's army is capped by what its economy can pay and equip (budget per head), not only by its population, and it is weaker the farther it fights over land from its home provinces (down to half).
+- **Army budget** - the game's hidden army budget is yours to set: a slider in the Finances window (or ArmyBudgetPct in F10), 50-200 %. A cut moves money to the navy month by month and raises growth; the army shrinks at once. A raise does the opposite, and the army grows only six months later.
+- **Garrisons** of occupied provinces are paid from the army budget, not from the naval funds. Their cost is shown next to the army budget slider and in the monthly report.
+- **Industrial fund** - each month a share of the revenue (3 % by default, IndustryFundShare) goes to the shipbuilding industry; when it covers the next step, your largest dock grows by itself.
+- **AI help by difficulty** - the mod's help for the AI great powers (emergency appropriations, debt tolerance) grows with the difficulty level.
+- **Faster start of later campaigns** - before a start after 1890 the AI takes ready historical designs and makes one generator attempt per design (a 1910 start in about 49 minutes instead of 90).
+
+**Diplomacy**
+- **Why relations change** - the monthly report lists, for each nation, the net change of relations with you and its largest causes (arms race, occupied provinces, events, appeasement and so on).
+- Wars: an AI nation already at war with two countries declares no new war itself. Wars that allies join through alliance rules are not limited.
+
+**Shipbuilding and ports**
+- **Historical build times** - cruisers and capital ships take at least as long as historical yards needed: light cruisers about two years (20 months from 1900), heavy cruisers and battleships 30 months, battleships from 1930 36 months; a quarter less in wartime. The total cost stays the same.
+- **Building port large enough** - a ship can be laid down only in a port whose capacity covers her tonnage.
+- **Ports a force fits into** - when you select a task force on the map, your ports are ringed green where it fits and red where it does not.
+- **Best AP shell for the AI** - new AI designs get the researched AP shell that penetrates best; a new **Post-Jutland APC** shell (about 1918) sits between Improved APBC and SAPC.
+- **94 more historical classes** for the AI.
+
+**Fleets and battle**
+- **Command limit of an admiral** - 12 ships until 1909, 16 from 1910, 24 from 1930. In battle the ships beyond the limit (the smallest first) shoot 10 % less accurately and carry out orders after a delay of up to 18 s; well-trained crews halve both. Player and AI alike.
+- **Control zone by speed and range** - the amber circle around a task force (its control zone) grows with the top speed of the slowest ship and the shortest operating range in the force, up to 300 km (the game: 20-100 km by tonnage).
+- **AI battle lines** keep to the middle of their immune zone and, pierced at any range by a stronger enemy, close in, withdraw or weigh the odds.
+- **Prizes** - a surrendered ship is judged by her real damage, so lightly damaged ships are taken as prizes, not reported as wrecks.
+
+**Interface**
+- The technology rank reads as your place among the great powers and the number of technologies researched.
+- Loading-screen and turn tips explain Iron Admiral's mechanics.
+- Every new switch has its number and its ON/OFF description in the in-game Help (chapters "Settings ...").
+
 ### Guide history
+- **4 November 2026, Iron Admiral 1.2.77-beta.78:** section 16 - Denmark, the Ottoman Empire, starting fleets, oil, armies by economy and supply, army budget and garrisons, industrial fund, why relations change, historical build times, building ports and port fit on the map, command limit, control zone by speed and range, prizes.
 - **2 November 2026, Iron Admiral 1.2.77-beta.33:** naval treaties (limits, totals, signing and withdrawal); alliances against a common enemy.
 - **2 November 2026, Iron Admiral 1.2.77-beta.29:** war and peace (war weariness, treaties, alliances, war limit), invasions by army, distance and target, torpedo aiming error, crew training at sea and the yearly draft, refits within the hull's limit.
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
