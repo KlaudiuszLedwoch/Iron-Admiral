@@ -2,3 +2,4 @@ Iron Admiral - shared designs by players (Mods/IronAdmiralDesigns/Community)
 Thank you to everyone who shared their designs.
 
 2026-11-05 - de7f29cb4e574394: 6 design(s): 1886 france Lübeck [abbf5b0a]; 1886 germany Lübeck [abbf5b0a]; 1886 netherlands Lübeck [abbf5b0a]; 1886 portugal Lübeck [abbf5b0a]; 1886 russia Lübeck [abbf5b0a]; 1887 germany Irene [89441cbb]
+2026-11-05 - a41bd759debc4d6c: 5 design(s): 1886 austria S-1 [bab29add]; 1886 germany S-1 [bab29add]; 1886 greece S-1 [bab29add]; 1886 italy S-1 [bab29add]; 1886 portugal S-1 [bab29add]
