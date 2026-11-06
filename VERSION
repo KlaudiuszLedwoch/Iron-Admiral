@@ -1,5 +1,6 @@
-1.2.77-beta.184
-DIP_GG_Fixes 1.11.768
-2026-11-06 09:30
-sha256_mods_only 746a135f9e8f6dcbe59f450629ece74e6afbf53c30a862a301e6ff8092716581
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.184/Iron_Admiral_1.2.77-beta.184_Mods_only.zip
+1.2.77-beta.185
+DIP_GG_Fixes 1.11.769
+2026-11-06 09:50
+sha256_mods_only c13aaab24c367539133b97f90ac34333c4838fe3501435c43b080c0a7604eea5
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.185/Iron_Admiral_1.2.77-beta.185_Mods_only.zip
+fixes beta 183 broke building ships from designs - withdrawn in 184; this message now lists the fixes of each new version
