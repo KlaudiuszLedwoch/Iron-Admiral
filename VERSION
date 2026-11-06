@@ -1,6 +1,6 @@
-1.2.77-beta.204
-DIP_GG_Fixes 1.11.790
-2026-11-06 19:25
-sha256_mods_only 1270c7996046fda39166be8f868f7e2bbb5c2c2b553575560e368ef4f06c0191
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.204/Iron_Admiral_1.2.77-beta.204_Mods_only.zip
-fixes Campaign: less stutter on the map (AI design polling)
+1.2.77-beta.205
+DIP_GG_Fixes 1.11.791
+2026-11-06 19:35
+sha256_mods_only f23eb48ee006b430125a54b977aa1783611dc303cc868efeddb502c2e4b18067
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.205/Iron_Admiral_1.2.77-beta.205_Mods_only.zip
+fixes Log measurements of gun barrels and ship generator time (no gameplay change)
