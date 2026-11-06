@@ -1,6 +1,6 @@
-1.2.77-beta.200
-DIP_GG_Fixes 1.11.785
-2026-11-06 18:25
-sha256_mods_only 8c6e1224d35fbd4279eb064236663c3005a0d5dce10bb0ec4c1cf4bcb623c06a
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.200/Iron_Admiral_1.2.77-beta.200_Mods_only.zip
-fixes Battle: when the frame rate falls the 3D picture is drawn down to 1920x1080 on larger screens
+1.2.77-beta.201
+DIP_GG_Fixes 1.11.786
+2026-11-06 18:51
+sha256_mods_only 2577879815befb3b80597152a5b9eec4ee33946634b8ba65083d7e629358e770
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.201/Iron_Admiral_1.2.77-beta.201_Mods_only.zip
+fixes Battle: own ship panel no longer stays hidden; one more quality step (3D at 1280x720)
