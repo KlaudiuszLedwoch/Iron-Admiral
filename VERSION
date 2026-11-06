@@ -1,6 +1,6 @@
-1.2.77-beta.198
-DIP_GG_Fixes 1.11.783
-2026-11-06 18:16
-sha256_mods_only 51442d9778c04962154272c0947eb93cdf030c7a2c868d6acfababdc17bf2b5b
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.198/Iron_Admiral_1.2.77-beta.198_Mods_only.zip
-fixes Air strike camera buttons moved to the top; they no longer cover the order bar
+1.2.77-beta.199
+DIP_GG_Fixes 1.11.784
+2026-11-06 18:19
+sha256_mods_only 022ae45db605e3dceedbb6640a79f4670bb341a0e40f132aa91993be6994df1c
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.199/Iron_Admiral_1.2.77-beta.199_Mods_only.zip
+fixes Battle: orders no longer delayed and accuracy no longer cut by the command limit in small battles (only ships in the battle count)
