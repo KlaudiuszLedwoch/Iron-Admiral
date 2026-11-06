@@ -1,6 +1,6 @@
-1.2.77-beta.189
-DIP_GG_Fixes 1.11.774
-2026-11-06 14:43
-sha256_mods_only 06fa47fb5b4396c1915237603acf7615877ff14aabddc3e89f0cfeb95805bce4
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.189/Iron_Admiral_1.2.77-beta.189_Mods_only.zip
-fixes Air strikes: carrier waves limited by the aircraft of the era (6 aircraft without aircraft-type technologies, 9 with the first)
+1.2.77-beta.190
+DIP_GG_Fixes 1.11.775
+2026-11-06 14:46
+sha256_mods_only c0bb74595bb5b581edd3b3233645c7144307994e94d71584b845bf6f75213658
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.190/Iron_Admiral_1.2.77-beta.190_Mods_only.zip
+fixes Battle orders: an ordered Torpedo attack heads for its target at once (it waited in daylight like the AI's massed attacks)
