@@ -1,6 +1,6 @@
-1.2.77-beta.191
-DIP_GG_Fixes 1.11.776
-2026-11-06 14:58
-sha256_mods_only 08b96725a417d3e76eab28d2f98212782a58534938c9e5169efb03ae0c184d6a
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.191/Iron_Admiral_1.2.77-beta.191_Mods_only.zip
-fixes Aircraft: vics of three, banked turns, low escape home after the drop, shore aircraft from their port, catapult launch at the ship's speed
+1.2.77-beta.192
+DIP_GG_Fixes 1.11.777
+2026-11-06 15:20
+sha256_mods_only e02aff2e86f84fd6ae79bc0fb63de8fb504c1d1e91ddafc8daaf8c415cfe5234
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.192/Iron_Admiral_1.2.77-beta.192_Mods_only.zip
+fixes Air strikes: smaller flight labels; pilots' talk shows only the newest line for 4 s
