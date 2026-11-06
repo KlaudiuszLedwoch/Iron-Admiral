@@ -1,6 +1,6 @@
-1.2.77-beta.199
-DIP_GG_Fixes 1.11.784
-2026-11-06 18:19
-sha256_mods_only 022ae45db605e3dceedbb6640a79f4670bb341a0e40f132aa91993be6994df1c
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.199/Iron_Admiral_1.2.77-beta.199_Mods_only.zip
-fixes Battle: orders no longer delayed and accuracy no longer cut by the command limit in small battles (only ships in the battle count)
+1.2.77-beta.200
+DIP_GG_Fixes 1.11.785
+2026-11-06 18:25
+sha256_mods_only 8c6e1224d35fbd4279eb064236663c3005a0d5dce10bb0ec4c1cf4bcb623c06a
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.200/Iron_Admiral_1.2.77-beta.200_Mods_only.zip
+fixes Battle: when the frame rate falls the 3D picture is drawn down to 1920x1080 on larger screens
