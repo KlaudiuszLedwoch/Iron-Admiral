@@ -1,6 +1,6 @@
-1.2.77-beta.185
-DIP_GG_Fixes 1.11.769
-2026-11-06 09:50
-sha256_mods_only c13aaab24c367539133b97f90ac34333c4838fe3501435c43b080c0a7604eea5
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.185/Iron_Admiral_1.2.77-beta.185_Mods_only.zip
-fixes beta 183 broke building ships from designs - withdrawn in 184; this message now lists the fixes of each new version
+1.2.77-beta.186
+DIP_GG_Fixes 1.11.770
+2026-11-06 10:20
+sha256_mods_only f98b01dbe8b8b001259cd8ad4c421c74830309662c84f22367eecb0f8488f040
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.186/Iron_Admiral_1.2.77-beta.186_Mods_only.zip
+fixes shared designer: a design naming a technology the game no longer has (e.g. submarine_exp_1) caused an error every frame - such designs are cleaned again at start-up
