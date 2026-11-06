@@ -1,6 +1,6 @@
-1.2.77-beta.196
-DIP_GG_Fixes 1.11.781
-2026-11-06 18:07
-sha256_mods_only b207da05e5af61ef1c65f901394f0efaf9e1bb51bfd26e475c9b071ad1b9af1f
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.196/Iron_Admiral_1.2.77-beta.196_Mods_only.zip
-fixes Spotting aircraft only on ships designed from 1922 and of at least 10,000 t
+1.2.77-beta.197
+DIP_GG_Fixes 1.11.782
+2026-11-06 18:14
+sha256_mods_only fc5d2dabc688e0e7993aafe9319e70dad244dc4fee70d417c25e1c5df31a55eb
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.197/Iron_Admiral_1.2.77-beta.197_Mods_only.zip
+fixes Battle: clicks on the sea (new course) no longer miss after the automatic quality reduction
