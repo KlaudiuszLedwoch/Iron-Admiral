@@ -1,6 +1,6 @@
-1.2.77-beta.194
-DIP_GG_Fixes 1.11.779
-2026-11-06 15:56
-sha256_mods_only 46ae2b7ab2c9a40e832d74bfbe4407aa664a2e12bc88d8ee2ae989932cfd2dea
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.194/Iron_Admiral_1.2.77-beta.194_Mods_only.zip
-fixes Aircraft markings now drawn; torpedo aircraft break away right after the drop
+1.2.77-beta.195
+DIP_GG_Fixes 1.11.780
+2026-11-06 16:19
+sha256_mods_only fe7e2f2ae8be30732278901b4689fb40ba0fd670c371c1aea18a33a40d870fb7
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.195/Iron_Admiral_1.2.77-beta.195_Mods_only.zip
+fixes Custom battles: the ship generator no longer takes 20+ minutes before a battle (4 attempts per hull)
