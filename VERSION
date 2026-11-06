@@ -1,6 +1,6 @@
-1.2.77-beta.202
-DIP_GG_Fixes 1.11.787
-2026-11-06 19:03
-sha256_mods_only 6618a28732b51a73e26f8829ff6f5cd85e07b6257073558bea465132e69e01a4
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.202/Iron_Admiral_1.2.77-beta.202_Mods_only.zip
-fixes Battle: barrels pivot at the breech; air camera in the orders panel head; aircraft markings of their own side; beta note in the version text
+1.2.77-beta.203
+DIP_GG_Fixes 1.11.789
+2026-11-06 19:19
+sha256_mods_only 68effe63215ae39317d61c0842e82b1b2b62bfbe04c2d92a76c74974917991de
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.203/Iron_Admiral_1.2.77-beta.203_Mods_only.zip
+fixes Campaign: AI fleets keep out of enemy shore-based torpedo aircraft reach in war; update button shows the changes
