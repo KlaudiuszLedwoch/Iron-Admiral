@@ -14,3 +14,4 @@ Thank you to everyone who shared their designs.
 2026-11-06 - 75102d6d5703418c: 1 design(s): 1890 greece Pallas [53411ecc]
 2026-11-06 - 75102d6d5703418c: 1 design(s): 1890 japan Empress of India [d2c7755b]
 2026-11-06 - 0d09c497ddf7422d: 14 design(s): 1890 britain Hogi [b439f8b7]; 1890 britain Izumi [03540c18]; 1890 china Izumi [03540c18]; 1890 France BB Valeureuse; 1890 france São Simão [c1518e2f]; 1890 greece Izumi [03540c18]; 1890 italy Izumi [03540c18]; 1890 japan Hogi [b439f8b7]; 1890 japan Izumi [03540c18]; 1890 portugal São Simão [c1518e2f]; 1890 spain Izumi [03540c18]; 1890 usa Izumi [03540c18]; 1895 Empire of Japan CA MHMW Kasa; 1895 Spanish Empire CA MHMW San Pedro
+2026-11-06 - f7f37bd1c5184ba6: 1 design(s): 1900 greece Holland [394e8890]
