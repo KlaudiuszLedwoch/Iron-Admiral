@@ -1,6 +1,6 @@
-1.2.77-beta.193
-DIP_GG_Fixes 1.11.778
-2026-11-06 15:24
-sha256_mods_only dbf0c45d92047bd5a17dbc2bbec2c7222a0f4f955d58dbbb2b526244da6196f2
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.193/Iron_Admiral_1.2.77-beta.193_Mods_only.zip
-fixes Aircraft: each with its own shade and national markings on the wings
+1.2.77-beta.194
+DIP_GG_Fixes 1.11.779
+2026-11-06 15:56
+sha256_mods_only 46ae2b7ab2c9a40e832d74bfbe4407aa664a2e12bc88d8ee2ae989932cfd2dea
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.194/Iron_Admiral_1.2.77-beta.194_Mods_only.zip
+fixes Aircraft markings now drawn; torpedo aircraft break away right after the drop
