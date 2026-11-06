@@ -1,6 +1,6 @@
-1.2.77-beta.195
-DIP_GG_Fixes 1.11.780
-2026-11-06 16:19
-sha256_mods_only fe7e2f2ae8be30732278901b4689fb40ba0fd670c371c1aea18a33a40d870fb7
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.195/Iron_Admiral_1.2.77-beta.195_Mods_only.zip
-fixes Custom battles: the ship generator no longer takes 20+ minutes before a battle (4 attempts per hull)
+1.2.77-beta.196
+DIP_GG_Fixes 1.11.781
+2026-11-06 18:07
+sha256_mods_only b207da05e5af61ef1c65f901394f0efaf9e1bb51bfd26e475c9b071ad1b9af1f
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.196/Iron_Admiral_1.2.77-beta.196_Mods_only.zip
+fixes Spotting aircraft only on ships designed from 1922 and of at least 10,000 t
