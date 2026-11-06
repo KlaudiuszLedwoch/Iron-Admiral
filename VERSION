@@ -1,6 +1,6 @@
-1.2.77-beta.192
-DIP_GG_Fixes 1.11.777
-2026-11-06 15:20
-sha256_mods_only e02aff2e86f84fd6ae79bc0fb63de8fb504c1d1e91ddafc8daaf8c415cfe5234
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.192/Iron_Admiral_1.2.77-beta.192_Mods_only.zip
-fixes Air strikes: smaller flight labels; pilots' talk shows only the newest line for 4 s
+1.2.77-beta.193
+DIP_GG_Fixes 1.11.778
+2026-11-06 15:24
+sha256_mods_only dbf0c45d92047bd5a17dbc2bbec2c7222a0f4f955d58dbbb2b526244da6196f2
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.193/Iron_Admiral_1.2.77-beta.193_Mods_only.zip
+fixes Aircraft: each with its own shade and national markings on the wings
