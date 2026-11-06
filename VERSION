@@ -1,6 +1,6 @@
-1.2.77-beta.187
-DIP_GG_Fixes 1.11.771
-2026-11-06 11:40
-sha256_mods_only 759867ea4be69d234a45877506b584a587731189ad59daca0e703cdb7b2c75f4
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.187/Iron_Admiral_1.2.77-beta.187_Mods_only.zip
-fixes no new fixes - a monthly log line shows how often the AI builds from designs with a good battle record
+1.2.77-beta.188
+DIP_GG_Fixes 1.11.772
+2026-11-06 13:56
+sha256_mods_only 1f4aea5956aec0582e52268a46b1de656b2ebb83fcb640120380b7eeaa487acf
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.188/Iron_Admiral_1.2.77-beta.188_Mods_only.zip
+fixes Air strikes: a test switch left on brought both sides' carriers and shore aircraft to every campaign battle - now custom battles only; test switches reset on update
