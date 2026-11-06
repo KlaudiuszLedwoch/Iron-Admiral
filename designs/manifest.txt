@@ -117,6 +117,7 @@ Community/1890 greece Nagara [b8750053].bindesign	8741bb158f089fd1943c5f4e16e75b
 Community/1890 greece Nanjing [08770c90].bindesign	3e7896b6d46f721bbc8dc0af07b287375b426f4e99014f070be3b958ab078531	2404
 Community/1890 greece Newark [95942385].bindesign	0bf7d0cb71efa95dae8a224637fbaf5bafe11f7cba40d05246f427581d165dce	2198
 Community/1890 greece Niitaka [94853ad3].bindesign	271575c95dc728617160c2d0b623430bdedec242a30e6c54559469a6d7934a8f	2602
+Community/1890 greece Pallas [53411ecc].bindesign	7de7961e6dbb792560cd7bcfd4c12c47379f2b88381449eee703c84344995a2a	2060
 Community/1890 greece Qishan [9eaeabc0].bindesign	c451732417fe823c5dd28c8055f8139213af6de50783f97e9e274e7e3c4f1f8e	2608
 Community/1890 greece S-1 [75ac1d49].bindesign	23e47706bde6d66465964447e151e510bf37f1c5bd69196ed14563bf9e72dfba	1568
 Community/1890 greece S-1 [c735d6de].bindesign	7d8ae8d68d9d223e3f9d5d5c702febf23bb4dfcfb5387be41ab9f431149a5391	1562
@@ -150,6 +151,7 @@ Community/1890 italy Ōyodo [8a9663f5].bindesign	759ace98a1596d9983189a830e6c027
 Community/1890 japan Akitsushima [ae3d4952].bindesign	2be75fefbcf5dabc774ab991e04ac67a2976f3310c7e5e16b420bf2e0945a1fb	1892
 Community/1890 japan Cleveland [9df7f11b].bindesign	5998fad42ef818f8948f83c3db294fa73ca8ff8220c0c58c46cb199853595c83	2499
 Community/1890 japan Daoguang [46990d7f].bindesign	cf2b42b7f43d4f1eeef1fb6ac8060c11dc28c3acbb23bbe309286c92672202a4	3297
+Community/1890 japan Empress of India [d2c7755b].bindesign	ed8928328377a7bdd8adcfa13626a528988c8b4b654774c54e0956347e1b4efb	1492
 Community/1890 japan Etorofu [0c1a5141].bindesign	54ada6e13a739823512452b77d8349a166a42e144eeada1f7bfcd5dedb26ab21	1481
 Community/1890 japan Etorofu [fab23598].bindesign	7911ea0a5539cfa32272bb098e8ed1af352f3b44d1701247aa792f9050f0e15c	1598
 Community/1890 japan Fort Hindman [a5de7c27].bindesign	36a8f15e2d1239052b41b1a0efcada47f435cb86f270c835c79d602dd73a5ae2	1518
@@ -246,5 +248,5 @@ Community/1890 usa Soya [ff6e5477].bindesign	49261659091343cfb5212d23f5449a4e168
 Community/1890 usa Suzuya [267a410f].bindesign	c953cc728aa8684cfdf7a07df0c4997cd2658ae1d44ec5725997eac094a243d4	2533
 Community/1890 usa Tengu [74997108].bindesign	add49b341a452c5d2e75f9015b9f5ab7da0151c10b0c4b6fba2e4120df2d6ff0	3387
 Community/1890 usa Toba [d2a5066d].bindesign	7b7460c253a1a648fda3e0683c569fe7d1a09f77f372a2294b6020f79d45bf1e	1576
-design_authors.csv	74ad26c78afe7e388e8fd11a2bad0aaf94370c172e9023bbc26bd202f0e22189	124573
+design_authors.csv	31179fcdfa57b5fd48f01967da484d5dd8ab7fae237f6746c1749d2cc996ba99	124701
 design_stats_pool.csv	6998d21f6924842f3cd06121e127ece0a3c9a6042cfcbba0c09284f5180a79e7	414
