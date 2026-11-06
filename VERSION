@@ -1,6 +1,6 @@
-1.2.77-beta.188
-DIP_GG_Fixes 1.11.772
-2026-11-06 13:56
-sha256_mods_only 1f4aea5956aec0582e52268a46b1de656b2ebb83fcb640120380b7eeaa487acf
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.188/Iron_Admiral_1.2.77-beta.188_Mods_only.zip
-fixes Air strikes: a test switch left on brought both sides' carriers and shore aircraft to every campaign battle - now custom battles only; test switches reset on update
+1.2.77-beta.189
+DIP_GG_Fixes 1.11.774
+2026-11-06 14:43
+sha256_mods_only 06fa47fb5b4396c1915237603acf7615877ff14aabddc3e89f0cfeb95805bce4
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.189/Iron_Admiral_1.2.77-beta.189_Mods_only.zip
+fixes Air strikes: carrier waves limited by the aircraft of the era (6 aircraft without aircraft-type technologies, 9 with the first)
