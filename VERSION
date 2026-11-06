@@ -1,6 +1,6 @@
-1.2.77-beta.207
-DIP_GG_Fixes 1.11.793
-2026-11-06 20:02
-sha256_mods_only b8e0861dda66b94a304335629f331a2ba06e5d031f2698f324ede9d6d4a31bdc
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.207/Iron_Admiral_1.2.77-beta.207_Mods_only.zip
-fixes Custom battles: overweight ships worked out, not tried out
+1.2.77-beta.208
+DIP_GG_Fixes 1.11.794
+2026-11-06 20:38
+sha256_mods_only 083da91a12d893c1edaec39dce8236708f65f33b5da5bdade54009bb2f05a696
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.208/Iron_Admiral_1.2.77-beta.208_Mods_only.zip
+fixes Barrel elevation: the shot elevation is the whole barrel angle, no longer added to the game angle
