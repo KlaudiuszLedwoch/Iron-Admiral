@@ -1,6 +1,6 @@
-1.2.77-beta.197
-DIP_GG_Fixes 1.11.782
-2026-11-06 18:14
-sha256_mods_only fc5d2dabc688e0e7993aafe9319e70dad244dc4fee70d417c25e1c5df31a55eb
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.197/Iron_Admiral_1.2.77-beta.197_Mods_only.zip
-fixes Battle: clicks on the sea (new course) no longer miss after the automatic quality reduction
+1.2.77-beta.198
+DIP_GG_Fixes 1.11.783
+2026-11-06 18:16
+sha256_mods_only 51442d9778c04962154272c0947eb93cdf030c7a2c868d6acfababdc17bf2b5b
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.198/Iron_Admiral_1.2.77-beta.198_Mods_only.zip
+fixes Air strike camera buttons moved to the top; they no longer cover the order bar
