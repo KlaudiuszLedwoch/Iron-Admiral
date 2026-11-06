@@ -1,6 +1,6 @@
-1.2.77-beta.206
-DIP_GG_Fixes 1.11.792
-2026-11-06 19:38
-sha256_mods_only 2f8a2d96b6b8825d82245d83014dd31cc249b31e0868bcef2a7b77462f3750b6
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.206/Iron_Admiral_1.2.77-beta.206_Mods_only.zip
-fixes Gun barrels pivot at the turret front
+1.2.77-beta.207
+DIP_GG_Fixes 1.11.793
+2026-11-06 20:02
+sha256_mods_only b8e0861dda66b94a304335629f331a2ba06e5d031f2698f324ede9d6d4a31bdc
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.207/Iron_Admiral_1.2.77-beta.207_Mods_only.zip
+fixes Custom battles: overweight ships worked out, not tried out

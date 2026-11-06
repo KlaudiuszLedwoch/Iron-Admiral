@@ -1,4 +1,4 @@
-1.2.77-beta.206
-DIP_GG_Fixes 1.11.792
-2026-11-06 19:38
-Gun barrels pivot at the turret front
+1.2.77-beta.207
+DIP_GG_Fixes 1.11.793
+2026-11-06 20:02
+Custom battles: overweight ships worked out, not tried out
