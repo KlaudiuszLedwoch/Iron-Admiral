@@ -1,6 +1,6 @@
-1.2.77-beta.205
-DIP_GG_Fixes 1.11.791
-2026-11-06 19:35
-sha256_mods_only f23eb48ee006b430125a54b977aa1783611dc303cc868efeddb502c2e4b18067
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.205/Iron_Admiral_1.2.77-beta.205_Mods_only.zip
-fixes Log measurements of gun barrels and ship generator time (no gameplay change)
+1.2.77-beta.206
+DIP_GG_Fixes 1.11.792
+2026-11-06 19:38
+sha256_mods_only 2f8a2d96b6b8825d82245d83014dd31cc249b31e0868bcef2a7b77462f3750b6
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.206/Iron_Admiral_1.2.77-beta.206_Mods_only.zip
+fixes Gun barrels pivot at the turret front

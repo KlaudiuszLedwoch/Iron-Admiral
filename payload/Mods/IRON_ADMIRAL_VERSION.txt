@@ -1,4 +1,4 @@
-1.2.77-beta.205
-DIP_GG_Fixes 1.11.791
-2026-11-06 19:35
-Log measurements: gun barrels, ship generator time
+1.2.77-beta.206
+DIP_GG_Fixes 1.11.792
+2026-11-06 19:38
+Gun barrels pivot at the turret front
