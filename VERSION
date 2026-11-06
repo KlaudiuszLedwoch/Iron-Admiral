@@ -1,6 +1,6 @@
-1.2.77-beta.203
-DIP_GG_Fixes 1.11.789
-2026-11-06 19:19
-sha256_mods_only 68effe63215ae39317d61c0842e82b1b2b62bfbe04c2d92a76c74974917991de
-url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.203/Iron_Admiral_1.2.77-beta.203_Mods_only.zip
-fixes Campaign: AI fleets keep out of enemy shore-based torpedo aircraft reach in war; update button shows the changes
+1.2.77-beta.204
+DIP_GG_Fixes 1.11.790
+2026-11-06 19:25
+sha256_mods_only 1270c7996046fda39166be8f868f7e2bbb5c2c2b553575560e368ef4f06c0191
+url_mods_only https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases/download/v1.2.77-beta.204/Iron_Admiral_1.2.77-beta.204_Mods_only.zip
+fixes Campaign: less stutter on the map (AI design polling)
