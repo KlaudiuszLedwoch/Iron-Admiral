@@ -1,8 +1,8 @@
-# Iron Admiral — DIP The Great Game Extended
+# Iron Admiral - mod for Ultimate Admiral: Dreadnoughts (UAD), built on DIP The Great Game
 
-_Description as of 22 October 2026. Latest version: Iron Admiral 1.2.76.3.2.1 (DIP_GG_Fixes 1.11.287)._
+_Description as of 6 November 2026. Stable: Iron Admiral 1.2.76. Betas: see the releases page._
 
-**AI overhaul for Ultimate Admiral: Dreadnoughts, built on the Dreadnought Improvement Project (DIP) "The Great Game" 1.3.5, TweaksAndFixes 3.21.1 and MelonLoader 0.6.6.**
+**Iron Admiral is a free mod for Ultimate Admiral: Dreadnoughts (UAD): a battle and campaign AI that fights back, historical ballistics and armour penetration, naval aviation, fog of war, diplomacy, shared ship designs and a switch in the F10 panel for every feature. Built on the Dreadnought Improvement Project (DIP) "The Great Game" 1.3.5, TweaksAndFixes 3.21.1 and MelonLoader 0.6.6.**
 
 Download / Nexus page: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66
 Discord: https://discord.gg/csNEsn4ct7
