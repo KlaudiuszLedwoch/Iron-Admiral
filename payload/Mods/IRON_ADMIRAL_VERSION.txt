@@ -1,4 +1,4 @@
-1.2.77-beta.225
-DIP_GG_Fixes 1.11.814
-2026-11-07 21:48
-Compact order menu with OK/Cancel, radius ring, order tags, always visible ta...
+1.2.77-beta.226
+DIP_GG_Fixes 1.11.815
+2026-11-07 21:50
+Orders tab is an information page
