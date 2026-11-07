@@ -1,4 +1,4 @@
-1.2.77-beta.214
-DIP_GG_Fixes 1.11.800
-2026-11-07 09:38
-Magazine hit needs a penetration (#251)
+1.2.77-beta.215
+DIP_GG_Fixes 1.11.801
+2026-11-07 09:57
+Technology log: technologies ahead of the calendar (#258)
