@@ -1,4 +1,4 @@
-1.2.77-beta.218
-DIP_GG_Fixes 1.11.804
-2026-11-07 11:06
-Designer: part placement fixed, part window text size (#262, #255, #241)
+1.2.77-beta.219
+DIP_GG_Fixes 1.11.805
+2026-11-07 12:10
+Designer: part window text size (#262, #255, #241)
