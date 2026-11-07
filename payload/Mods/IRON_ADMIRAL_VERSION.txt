@@ -1,4 +1,4 @@
-1.2.77-beta.224
-DIP_GG_Fixes 1.11.813
-2026-11-07 21:36
-Task force orders, order menu on the map, map panel with Hide (P)
+1.2.77-beta.225
+DIP_GG_Fixes 1.11.814
+2026-11-07 21:48
+Compact order menu with OK/Cancel, radius ring, order tags, always visible ta...
