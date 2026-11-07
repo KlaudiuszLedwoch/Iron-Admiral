@@ -1,4 +1,4 @@
-1.2.77-beta.217
-DIP_GG_Fixes 1.11.803
-2026-11-07 10:09
-Designer: placement check removed (#262, #255, #241)
+1.2.77-beta.218
+DIP_GG_Fixes 1.11.804
+2026-11-07 11:06
+Designer: part placement fixed, part window text size (#262, #255, #241)
