@@ -1,4 +1,4 @@
-1.2.77-beta.226
-DIP_GG_Fixes 1.11.815
-2026-11-07 21:50
-Orders tab is an information page
+1.2.77-beta.227
+DIP_GG_Fixes 1.11.819
+2026-11-07 22:02
+Order menu opens from tags, Clear button, mouse hook, dotted radius ring
