@@ -1,4 +1,4 @@
-1.2.77-beta.216
-DIP_GG_Fixes 1.11.802
-2026-11-07 10:03
-Battle AI: division leader stays, torpedo craft without a battle line (#260, ...
+1.2.77-beta.217
+DIP_GG_Fixes 1.11.803
+2026-11-07 10:09
+Designer: placement check removed (#262, #255, #241)
