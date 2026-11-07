@@ -1,4 +1,4 @@
-1.2.77-beta.211
-DIP_GG_Fixes 1.11.797
-2026-11-07 07:32
-Denmark label, map-edge log
+1.2.77-beta.212
+DIP_GG_Fixes 1.11.798
+2026-11-07 07:42
+Campaign map aids: TAB, one-turn reach, why-no-battle bubble
