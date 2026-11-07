@@ -1,4 +1,4 @@
-1.2.77-beta.220
-DIP_GG_Fixes 1.11.806
-2026-11-07 13:33
-Invasion window: only provinces you can invade (#230)
+1.2.77-beta.221
+DIP_GG_Fixes 1.11.807
+2026-11-07 19:11
+Ship generator time limit per hull, industrial fund off by default (#198)
