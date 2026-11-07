@@ -1,4 +1,4 @@
-1.2.77-beta.213
-DIP_GG_Fixes 1.11.799
-2026-11-07 08:38
-Designer log: background design context
+1.2.77-beta.214
+DIP_GG_Fixes 1.11.800
+2026-11-07 09:38
+Magazine hit needs a penetration (#251)
