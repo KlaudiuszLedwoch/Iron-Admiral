@@ -1,4 +1,4 @@
-1.2.77-beta.222
-DIP_GG_Fixes 1.11.808
-2026-11-07 20:58
-One map panel with tabs (key P), next idle force button (Tab)
+1.2.77-beta.223
+DIP_GG_Fixes 1.11.809
+2026-11-07 21:03
+Campaign map performance: Finances window refresh limited (#264)
