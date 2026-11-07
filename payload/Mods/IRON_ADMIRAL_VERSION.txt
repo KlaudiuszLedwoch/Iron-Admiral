@@ -1,4 +1,4 @@
-1.2.77-beta.209
-DIP_GG_Fixes 1.11.795
-2026-11-06 21:44
-Gun barrel elevation up to 4 degrees lower
+1.2.77-beta.210
+DIP_GG_Fixes 1.11.796
+2026-11-07 07:21
+No crash at the year change
