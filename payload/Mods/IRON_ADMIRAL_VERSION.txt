@@ -1,4 +1,4 @@
-1.2.77-beta.221
-DIP_GG_Fixes 1.11.807
-2026-11-07 19:11
-Ship generator time limit per hull, industrial fund off by default (#198)
+1.2.77-beta.222
+DIP_GG_Fixes 1.11.808
+2026-11-07 20:58
+One map panel with tabs (key P), next idle force button (Tab)
