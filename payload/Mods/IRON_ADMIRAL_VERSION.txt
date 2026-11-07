@@ -1,4 +1,4 @@
-1.2.77-beta.231
-DIP_GG_Fixes 1.11.823
-2026-11-07 22:57
-Order bar: lower cost on the campaign map
+1.2.77-beta.232
+DIP_GG_Fixes 1.11.824
+2026-11-07 23:07
+Unscouted areas: recomputed only on change - lower cost on the map
