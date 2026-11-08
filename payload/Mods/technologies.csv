@@ -790,10 +790,10 @@ at_4,naval_aviation,,$technology_name_at_4,1937,1,380,"recon(1)",,,$technology_d
 at_5,naval_aviation,,$technology_name_at_5,1941,1,440,"recon(1)",,,$technology_desc_at_5,,,#85 naval aviation
 at_6,naval_aviation,,$technology_name_at_6,1943,1,480,"recon(1)",,,$technology_desc_at_6,,,#85 naval aviation
 at_7,naval_aviation,,$technology_name_at_7,1944,1,520,"recon(1)",,,$technology_desc_at_7,,,#85 naval aviation
-av_carrier_1,naval_aviation,,$technology_name_av_carrier_1,1914,1,220,"recon(1)",,,$technology_desc_av_carrier_1,,,#85 naval aviation
+av_carrier_1,naval_aviation,,$technology_name_av_carrier_1,1914,1,220,"recon(1), unlock(cv_1_langley_ca)",,,$technology_desc_av_carrier_1,,,#85 naval aviation
 av_carrier_2,naval_aviation,,$technology_name_av_carrier_2,1917,1,260,"recon(1)",,,$technology_desc_av_carrier_2,,,#85 naval aviation
-av_carrier_3,naval_aviation,,$technology_name_av_carrier_3,1918,1,300,"recon(1)",,,$technology_desc_av_carrier_3,,,#85 naval aviation
-av_carrier_4,naval_aviation,,$technology_name_av_carrier_4,1925,1,320,"recon(1)",,,$technology_desc_av_carrier_4,,,#85 naval aviation
+av_carrier_3,naval_aviation,,$technology_name_av_carrier_3,1918,1,300,"recon(1), unlock(cv_2_yorktown_ca)",,,$technology_desc_av_carrier_3,,,#85 naval aviation
+av_carrier_4,naval_aviation,,$technology_name_av_carrier_4,1925,1,320,"recon(1), unlock(cv_3_essex_ca)",,,$technology_desc_av_carrier_4,,,#85 naval aviation
 av_types_1,naval_aviation,,$technology_name_av_types_1,1934,1,360,"recon(1)",,,$technology_desc_av_types_1,,,#85 naval aviation
 av_types_2,naval_aviation,,$technology_name_av_types_2,1940,1,420,"recon(1)",,,$technology_desc_av_types_2,,,#85 naval aviation
 av_types_3,naval_aviation,,$technology_name_av_types_3,1942,1,460,"recon(1)",,,$technology_desc_av_types_3,,,#85 naval aviation
