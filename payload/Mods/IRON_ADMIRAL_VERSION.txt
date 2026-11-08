@@ -1,4 +1,4 @@
-1.2.77-beta.238
-DIP_GG_Fixes 1.11.837
-2026-11-08 08:33
-Ready carrier designs added to your designs when the hull is available
+1.2.77-beta.239
+DIP_GG_Fixes 1.11.839
+2026-11-08 10:21
+Ready carrier designs per nation and era
