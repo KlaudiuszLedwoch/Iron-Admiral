@@ -1,4 +1,4 @@
-1.2.77-beta.252
-DIP_GG_Fixes 1.11.854
-2026-11-08 15:13
-Clean loading screen, tips fit
+1.2.77-beta.253
+DIP_GG_Fixes 1.11.855
+2026-11-08 15:17
+Right-click and Tab open the orders palette again
