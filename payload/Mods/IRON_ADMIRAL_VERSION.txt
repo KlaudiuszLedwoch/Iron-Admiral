@@ -1,4 +1,4 @@
-1.2.77-beta.248
+1.2.77-beta.249
 DIP_GG_Fixes 1.11.851
-2026-11-08 14:55
-Ship info panel in battle shown again
+2026-11-08 14:58
+Loading-screen tips on carriers and orders
