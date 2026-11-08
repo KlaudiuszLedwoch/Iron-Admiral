@@ -1,4 +1,4 @@
-1.2.77-beta.257
-DIP_GG_Fixes 1.11.857
-2026-11-08 16:45
-Lighter torpedo launchers (3x DIP)
+1.2.77-beta.258
+DIP_GG_Fixes 1.11.858
+2026-11-08 17:16
+Designer placement after a stopped AI design pass
