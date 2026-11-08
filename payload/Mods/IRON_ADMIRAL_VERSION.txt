@@ -1,4 +1,4 @@
-1.2.77.1
+1.2.78-beta.1
 DIP_GG_Fixes 1.11.860
-2026-11-08 18:47
-Stable fix from 1.2.78-beta.1: designer placement after a carrier was shown (...
+2026-11-08 18:43
+Designer placement after a carrier was shown
