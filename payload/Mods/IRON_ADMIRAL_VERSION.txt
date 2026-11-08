@@ -1,4 +1,4 @@
-1.2.77-beta.258
-DIP_GG_Fixes 1.11.858
-2026-11-08 17:16
-Designer placement after a stopped AI design pass
+1.2.77-beta.259
+DIP_GG_Fixes 1.11.859
+2026-11-08 18:25
+Beta updates on by default
