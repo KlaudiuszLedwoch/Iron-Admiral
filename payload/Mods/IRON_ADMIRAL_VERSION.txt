@@ -1,4 +1,4 @@
-1.2.77-beta.245
-DIP_GG_Fixes 1.11.847
-2026-11-08 14:44
-Convoy defence: escort attacks, convoy scatters
+1.2.77-beta.246
+DIP_GG_Fixes 1.11.848
+2026-11-08 14:48
+Orders palette on right-click, map overlay fixes
