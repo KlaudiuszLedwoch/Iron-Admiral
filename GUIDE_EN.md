@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 8 November 2026. Latest stable version: Iron Admiral 1.2.77.2.1; latest beta: 1.2.77-beta.259. Updated with every release._
+_Guide as of 8 November 2026. Latest stable version: Iron Admiral 1.2.77.2; latest beta: 1.2.78-beta.3. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
