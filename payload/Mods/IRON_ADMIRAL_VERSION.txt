@@ -1,4 +1,4 @@
-1.2.77-beta.247
-DIP_GG_Fixes 1.11.850
-2026-11-08 14:51
-Map notes on the escaped force, no AI carrier generator
+1.2.77-beta.248
+DIP_GG_Fixes 1.11.851
+2026-11-08 14:55
+Ship info panel in battle shown again
