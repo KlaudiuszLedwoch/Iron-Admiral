@@ -1,4 +1,4 @@
-1.2.77-beta.234
-DIP_GG_Fixes 1.11.829
-2026-11-08 07:12
-Ottoman historical growth, fleet rebuild to pre-war strength after a lost war...
+1.2.77-beta.235
+DIP_GG_Fixes 1.11.830
+2026-11-08 07:16
+Your name for shared designs typed in F10 (Share logs row, Name button)
