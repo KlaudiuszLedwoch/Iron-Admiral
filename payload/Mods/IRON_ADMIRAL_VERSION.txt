@@ -1,4 +1,4 @@
-1.2.77-beta.233
-DIP_GG_Fixes 1.11.827
-2026-11-08 06:49
-Carrier hulls in the designer, GDP correction kept after reload, peace ban on...
+1.2.77-beta.234
+DIP_GG_Fixes 1.11.829
+2026-11-08 07:12
+Ottoman historical growth, fleet rebuild to pre-war strength after a lost war...
