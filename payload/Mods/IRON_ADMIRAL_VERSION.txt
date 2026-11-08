@@ -1,4 +1,4 @@
-1.2.77-beta.242
-DIP_GG_Fixes 1.11.844
-2026-11-08 13:55
-Carrier air support, reconnaissance, carriers avoid gun combat
+1.2.77-beta.243
+DIP_GG_Fixes 1.11.845
+2026-11-08 14:09
+Carrier aircraft losses refilled in port
