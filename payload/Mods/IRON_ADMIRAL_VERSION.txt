@@ -1,4 +1,4 @@
-1.2.77-beta.244
-DIP_GG_Fixes 1.11.846
-2026-11-08 14:21
-Carrier aircraft replaced like ammunition
+1.2.77-beta.245
+DIP_GG_Fixes 1.11.847
+2026-11-08 14:44
+Convoy defence: escort attacks, convoy scatters
