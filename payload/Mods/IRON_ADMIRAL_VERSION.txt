@@ -1,4 +1,4 @@
-1.2.77-beta.249
-DIP_GG_Fixes 1.11.851
-2026-11-08 14:58
-Loading-screen tips on carriers and orders
+1.2.77-beta.250
+DIP_GG_Fixes 1.11.852
+2026-11-08 15:06
+Tab and right-click keep the ship icon
