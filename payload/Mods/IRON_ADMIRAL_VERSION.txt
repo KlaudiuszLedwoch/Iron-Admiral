@@ -1,4 +1,4 @@
-1.2.77
+1.2.77-beta.259
 DIP_GG_Fixes 1.11.859
-2026-11-08 18:28
-Published from 1.2.77-beta.259: aircraft carriers, task force orders, war wea...
+2026-11-08 18:25
+Beta updates on by default
