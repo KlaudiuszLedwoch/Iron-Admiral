@@ -1,4 +1,4 @@
-1.2.77.2
-DIP_GG_Fixes 1.11.862
-2026-11-08 21:10
-Stable fix from 1.2.78-beta.3: port window with a carrier, TAF buttons error ...
+1.2.78-beta.4
+DIP_GG_Fixes 1.11.863
+2026-11-08 22:33
+Leaving a battle with carriers, kept AI designs
