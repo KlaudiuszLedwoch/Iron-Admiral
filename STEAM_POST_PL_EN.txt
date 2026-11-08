@@ -1,12 +1,22 @@
-[h1]Iron Admiral 1.2.76.3.2.1 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
+[h1]Iron Admiral 1.2.77.3.2.1 - DIP The Great Game Extended (AI overhaul, one-click install)[/h1]
 
-[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.76.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Description as of 22 October 2026. Latest version: Iron Admiral 1.2.77.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Videos - the battle AI in action, every caption from the mod's own battle log:[/b]
 [list]
 [*]Three battles, 6 min, ending with two surrendered destroyers taken as prizes: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Two battles, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]The first battle uncut, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]What is new (8 November 2026) - Iron Admiral 1.2.77, DIP_GG_Fixes 1.11.859[/b]
+[list]
+[*]Aircraft carriers: own ship type CV and ready historical designs. In the campaign a carrier supports battles within its aircraft's reach (225 km in 1929 to 300 km in 1942), reveals enemy forces within 370 km and replaces lost aircraft like ammunition. In battle it keeps out of gun range and fights with its aircraft.
+[*]Task force orders on the campaign map: Patrol, Raid, Shadow, Intercept, Bombard, Blockade - from the tags, the tab strip or a right-click. Convoy escorts attack the pursuer while the convoy scatters.
+[*]Diplomacy: war weariness, peace treaties that bind, peace returns conquests, naval treaties, at most two wars, the Ottoman Empire with its own flag and names.
+[*]Economy and armies: historical growth, true balance, army budget, armies follow the economy and supply lines, invasions sized by historical armies, coal and oil.
+[*]Ships: 94 new historical classes, historical build times and refits, crews learn at sea, flooding lists and capsizes ships.
+[*]Shared designs with their battle record and a design ranking; F10 as ministries; loading-screen tips; beta updates on by default.
 [/list]
 
 [b]What is new (1 November 2026) - Iron Admiral 1.2.76, DIP_GG_Fixes 1.11.543[/b]
@@ -406,15 +416,25 @@ Feedback and logs (MelonLoader\Latest.log) welcome in this thread.
 
 ============================================================================
 
-[h1]Iron Admiral 1.2.76.3.2.1 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
+[h1]Iron Admiral 1.2.77.3.2.1 - DIP The Great Game Extended (AI overhaul, instalacja jednym kliknięciem)[/h1]
 
-[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.76.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
+[i]Opis z dnia 22 października 2026. Najnowsza wersja: Iron Admiral 1.2.77.3.2.1 (DIP_GG_Fixes 1.11.287).[/i]
 
 [b]Filmy - AI bitewne w akcji, każdy napis z dziennika bitwy moda:[/b]
 [list]
 [*]Trzy bitwy, 6 min, na końcu dwa poddane niszczyciele przejęte jako pryzy: [url=https://youtu.be/DjmOu0KVnwE]https://youtu.be/DjmOu0KVnwE[/url]
 [*]Dwie bitwy, 4 min: [url=https://youtu.be/ZAPta33uJXE]https://youtu.be/ZAPta33uJXE[/url]
 [*]Pierwsza bitwa w całości, 5 min: [url=https://youtu.be/SZzuVT4X2qY]https://youtu.be/SZzuVT4X2qY[/url]
+[/list]
+
+[b]Co nowego (8 listopada 2026) - Iron Admiral 1.2.77, DIP_GG_Fixes 1.11.859[/b]
+[list]
+[*]Lotniskowce: własny typ CV i gotowe historyczne projekty. W kampanii lotniskowiec wspiera bitwy w zasięgu swoich samolotów (225 km w 1929 do 300 km w 1942), odsłania wrogie zespoły w promieniu 370 km i uzupełnia stracone samoloty jak amunicję. W bitwie trzyma się poza zasięgiem dział i walczy samolotami.
+[*]Rozkazy zespołów na mapie kampanii: Patrol, Raid, Shadow, Intercept, Bombard, Blockade - z etykiet, zakładek albo prawym przyciskiem. Eskorta konwoju atakuje ścigającego, a konwój się rozprasza.
+[*]Dyplomacja: zmęczenie wojną, wiążące traktaty pokojowe, pokój zwraca zdobycze, traktaty morskie, najwyżej dwie wojny, Imperium Osmańskie z własną flagą i nazwami.
+[*]Gospodarka i armie: historyczny wzrost, prawdziwe saldo, budżet armii, armie zależne od gospodarki i zaopatrzenia, inwazje według historycznych armii, węgiel i ropa.
+[*]Okręty: 94 nowe klasy historyczne, historyczne czasy budowy i przebudowy, załogi uczą się na morzu, zalanie przechyla i wywraca okręty.
+[*]Wymiana projektów z zapisem bitew i rankingiem; F10 jako ministerstwa; porady na ekranie ładowania; aktualizacje beta domyślnie włączone.
 [/list]
 
 [b]Co nowego (1 listopada 2026) - Iron Admiral 1.2.76, DIP_GG_Fixes 1.11.543[/b]

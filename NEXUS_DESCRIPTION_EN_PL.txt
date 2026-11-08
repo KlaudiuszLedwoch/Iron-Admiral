@@ -1,12 +1,12 @@
 Nexus Mods - main Description field (BBCode), bilingual: English first, Polish after the separator.
-Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights, naval aviation, fog of war, diplomacy by threat and a naval arms race, historical ballistics and ship classes. One-click install, every feature switchable in F10.
+Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights, aircraft carriers and naval aviation, task force orders, war weariness and treaties, historical economy, ballistics and ship classes. One-click install, every feature switchable in F10.
 
 ==========================================================================
 
 [size=5][b]Iron Admiral[/b][/size]
 [i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, with a navy simulation that thinks, fights and remembers.[/i]
 
-[i]Description as of 1 November 2026. Stable: Iron Admiral 1.2.76 (DIP_GG_Fixes 1.11.543). Beta: 1.2.77-beta.2 (DIP_GG_Fixes 1.11.546).[/i]
+[i]Description as of 8 November 2026. Stable: Iron Admiral 1.2.77 (DIP_GG_Fixes 1.11.859). Betas follow on GitHub and through the in-game update (F10, Beta updates - on by default).[/i]
 
 [b]Download (one-click installer and all packages): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - the files here on Nexus are the same build.
 [b]Guide for players: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]Iron Admiral wiki[/url][/b] | Bug reports and ideas: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]GitHub issues[/url] or the comments here.
@@ -16,6 +16,16 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights, na
 [*][url=https://youtu.be/DjmOu0KVnwE]Three battles, ending with two surrendered destroyers taken as prizes[/url]
 [*][url=https://youtu.be/ZAPta33uJXE]Two battles[/url]
 [*][url=https://youtu.be/SZzuVT4X2qY]The first battle uncut[/url]
+[/list]
+
+[size=4][b]What is new in 1.2.77 (8 November 2026)[/b][/size]
+[list]
+[*][b]Aircraft carriers[/b] - own ship type CV and ready historical designs for every nation and era. In the campaign a carrier at sea supports battles within its aircraft's reach (225 km in 1929 to 300 km in 1942), reveals enemy forces within 370 km, and replaces lost aircraft like ammunition. In battle it keeps out of gun range and fights with its aircraft.
+[*][b]Task force orders[/b] - Patrol, Raid, Shadow, Intercept, Bombard, Blockade on the campaign map, from the tags, the tab strip or a right-click. Convoy escorts attack the pursuer while the convoy scatters.
+[*][b]Diplomacy[/b] - war weariness, peace treaties that bind for 5 years, peace returns the war's conquests, naval treaties to sign or refuse, at most two wars, the Ottoman Empire with its own flag and ship names.
+[*][b]Economy and armies[/b] - historical economic growth, true monthly balance, army budget, armies follow the economy and their supply lines, invasions sized by historical armies, coal and oil deposits.
+[*][b]Ships[/b] - 94 new historical classes, historical build times and refits, crews learn at sea, flooding lists and capsizes ships, lighter torpedo launchers.
+[*][b]Shared designs[/b] with their battle record and a design ranking; F10 laid out as ministries; loading-screen tips; beta updates on by default (F10).
 [/list]
 
 [size=4][b]What is new in 1.2.76 (1 November 2026)[/b][/size]
@@ -59,10 +69,20 @@ Logistics: oil, supply and sea routes; carriers in the campaign; crew training a
 [size=5][b]Iron Admiral - wersja polska[/b][/size]
 [i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, z symulacją marynarki, która myśli, walczy i pamięta.[/i]
 
-[i]Stan opisu: 1 listopada 2026. Wersja stabilna: Iron Admiral 1.2.76 (DIP_GG_Fixes 1.11.543). Beta: 1.2.77-beta.2 (DIP_GG_Fixes 1.11.546).[/i]
+[i]Stan opisu: 8 listopada 2026. Wersja stabilna: Iron Admiral 1.2.77 (DIP_GG_Fixes 1.11.859). Bety na GitHubie i przez aktualizację w grze (F10, Beta updates - domyślnie włączone).[/i]
 
 [b]Pobieranie (instalator i wszystkie paczki): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - pliki tutaj na Nexusie to ta sama wersja.
 [b]Poradnik dla graczy: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]wiki Iron Admiral[/url][/b] | Błędy i pomysły: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]zgłoszenia na GitHubie[/url] albo komentarze tutaj.
+
+[size=4][b]Co nowego w 1.2.77 (8 listopada 2026)[/b][/size]
+[list]
+[*][b]Lotniskowce[/b] - własny typ okrętu CV i gotowe historyczne projekty dla każdego państwa i epoki. W kampanii lotniskowiec na morzu wspiera bitwy w zasięgu swoich samolotów (225 km w 1929 do 300 km w 1942), odsłania wrogie zespoły w promieniu 370 km i uzupełnia stracone samoloty jak amunicję. W bitwie trzyma się poza zasięgiem dział i walczy samolotami.
+[*][b]Rozkazy zespołów[/b] - Patrol, Raid, Shadow, Intercept, Bombard, Blockade na mapie kampanii, z etykiet, zakładek albo prawym przyciskiem. Eskorta konwoju atakuje ścigającego, a konwój się rozprasza.
+[*][b]Dyplomacja[/b] - zmęczenie wojną, traktaty pokojowe wiążące na 5 lat, pokój zwraca zdobycze wojny, traktaty morskie do podpisania lub odrzucenia, najwyżej dwie wojny, Imperium Osmańskie z własną flagą i nazwami okrętów.
+[*][b]Gospodarka i armie[/b] - historyczny wzrost gospodarki, prawdziwe saldo miesięczne, budżet armii, armie zależne od gospodarki i linii zaopatrzenia, inwazje według historycznych armii, złoża węgla i ropy.
+[*][b]Okręty[/b] - 94 nowe klasy historyczne, historyczne czasy budowy i przebudowy, załogi uczą się na morzu, zalanie przechyla i wywraca okręty, lżejsze wyrzutnie torped.
+[*][b]Wymiana projektów[/b] z zapisem bitew i rankingiem; F10 jako ministerstwa; porady na ekranie ładowania; aktualizacje beta domyślnie włączone (F10).
+[/list]
 
 [size=4][b]Co nowego w 1.2.76 (1 listopada 2026)[/b][/size]
 [list]
