@@ -1,4 +1,4 @@
-1.2.77-beta.240
-DIP_GG_Fixes 1.11.842
-2026-11-08 11:33
-Carrier ship type, click blocker, Scout + torpedo order
+1.2.77-beta.241
+DIP_GG_Fixes 1.11.843
+2026-11-08 13:37
+Carrier designs 1914-1939 as ship type CV
