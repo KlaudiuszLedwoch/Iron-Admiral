@@ -1,4 +1,4 @@
-1.2.78-beta.1
-DIP_GG_Fixes 1.11.860
-2026-11-08 18:43
-Designer placement after a carrier was shown
+1.2.78-beta.2
+DIP_GG_Fixes 1.11.861
+2026-11-08 20:55
+Shared designs: TAF ship type buttons error caught
