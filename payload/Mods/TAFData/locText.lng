@@ -27,10 +27,10 @@ $TAF_Ui_BatchShipGenerator_Nations;Nations
 $TAF_Ui_BatchShipGenerator_Types;Types
 $TAF_Ui_BatchShipGenerator_NumShips;Num Ships Per
 $TAF_Ui_War_WhitePeace;The War has been very quiet...\n{0} {1} asks you if we should ask for a white peace.
-$TAF_Ui_NavalInvasion_InsufficientTonnage;In order to launch a naval invasion, you require at least [{0}] tonnes of naval assets in the sea region of the province you want to invade.
-$TAF_Ui_NavalInvasion_SufficientTonnage;You have naval assets over [{0}] tonnes in a sea region containing enemy ports. Ensure you have enough tonnage to secure the province you invade!
+$TAF_Ui_NavalInvasion_InsufficientTonnage;To launch a naval invasion you need enough naval tonnage in the sea region of the province. Next to each province: tonnage present / tonnage required.
+$TAF_Ui_NavalInvasion_SufficientTonnage;Next to each province: tonnage present in its sea region / tonnage its invasion requires. Provinces in red lack tonnage.
 $TAF_Ui_NavalInvasion_ChangeNavalInvasionTarget;You have set [{0}] as your naval invasion target this month.\nWould you like to change your invasion target?
-$TAF_Ui_NavalInvasion_ConfirmInvasion;You have naval assets of over [{0}] tonnes in the sea region around [{1}]. \nDo you want to launch a naval invasion next month?
+$TAF_Ui_NavalInvasion_ConfirmInvasion;You have enough naval tonnage in the sea region around [{1}]. \nDo you want to launch a naval invasion next month?
 $TAF_Ui_NavalInvasion_ProvinceListCatagories_New;New:
 $TAF_Ui_NavalInvasion_ProvinceListCatagories_Ongoing;Ongoing:
 $TAF_Ui_NavalInvasion_ProvinceListCatagories_Options;Options:

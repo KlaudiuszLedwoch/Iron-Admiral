@@ -113,7 +113,7 @@ scandinavia,tactics_mines,30,mine barrages in the Baltic approaches and the Norw
 scandinavia,torpedo_tubes,10,Norwegian and Swedish motor torpedo boats
 scandinavia,hull_strength,-10,coastal defence ships instead of dreadnoughts
 scandinavia,hull_cruiser,-10,almost no cruiser construction
-greece,gun_main,40,heavy calibres as the defining feature of the Byzantine naval profile
+greece,gun_main,40,heavy calibres as the defining feature of the Ottoman naval profile
 greece,armor_quality,40,heavy armour as the second defining feature
 greece,armor_forging,30,heavy plate production
 greece,hull_cruiser,30,fast cruisers

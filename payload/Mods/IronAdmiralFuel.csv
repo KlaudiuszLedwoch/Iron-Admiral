@@ -1,0 +1,76 @@
+# Iron Admiral #197/#118: production of each deposit in million metric tonnes a year, 1913 and 1938 (coal = hard coal; lignite left out)
+# rules (author 5.11 15:55): data for the province/coalfield; else the national total split by the game number (oilCapacity); else the game number x median, limited to 0.25-4 x the median output
+#province,kind,game_number,coal_1913,coal_1938,oil_1913,oil_1938,source_coal_1913,source_coal_1938,source_oil_1913,source_oil_1938
+albania,oil,100,,,0.069,0.198,,,game number x median 0.69 kt/unit; limited to 0.25-4 x median 0.25 Mt,game number x median 1.57 kt/unit; limited to 0.25-4 x median 0.79 Mt
+arabia,oil,10000,,,0.995,0.067,,,game number x median 0.69 kt/unit; limited to 0.25-4 x median 0.25 Mt,national Saudi 0.067 Mt split by game number
+argentina,oil,600,,,0.019,2.440,,,national Argentina 0.019 Mt split by game number,national Argentina 2.44 Mt split by game number
+azerbaijan,oil,200,,,7.670,24.078,,,data: Baku 1913,data: Baku 1940 22.2 Mt scaled x1.08 to the 1938 national total (assumption)
+bahrain,oil,1250,,,0.864,1.139,,,game number x median 0.69 kt/unit; limited to 0.25-4 x median 0.25 Mt,national Bahrain 1.139 Mt split by game number
+borneo,oil,900,,,0.742,3.600,,,national DEI 1.526 Mt split by game number,national DEI 7.399 Mt split by game number
+brunei,oil,600,,,0.415,0.454,,,game number x median 0.69 kt/unit; limited to 0.25-4 x median 0.25 Mt,national Sarawak 0.907 Mt split by game number
+bulgaria,coal,150,0.011,0.145,,,national Bulgaria 0.011 Mt split by game number,national Bulgaria 0.145 Mt split by game number,,
+burma,oil,900,,,0.622,0.778,,,national India 1.089 Mt split by game number,national India 1.362 Mt split by game number
+canadian_prairies,both,550,0.758,2.777,0.006,0.189,game number x median 2.76 kt/unit; limited to 0.25-4 x median 1.51 Mt,game number x median 10.10 kt/unit; limited to 0.25-4 x median 5.86 Mt,national Canada 0.029 Mt split by game number,national Canada 0.876 Mt split by game number
+central_russia,both,2500,3.332,12.624,0.624,1.959,national USSR 35.17 Mt minus fields split by game number,national USSR 112.9 Mt minus fields split by game number,national USSR 9.193 Mt minus fields split by game number,national USSR 28.859 Mt minus fields split by game number
+central_usa,both,1000,265.159,182.205,4.281,20.623,national USA 517.06 Mt split by game number,national USA 355.3 Mt split by game number,national USA 34.03 Mt split by game number,national USA 163.953 Mt split by game number
+chile,coal,200,1.283,2.044,,,national Chile 1.283 Mt split by game number,national Chile 2.044 Mt split by game number,,
+eastern_australia,coal,525,6.305,5.935,,,national Australia 12.61 Mt split by game number,national Australia 11.87 Mt split by game number,,
+eastern_england,coal,550,74.117,71.994,,,data: Hansard 1930 (Yorks/Notts/Derby),data: Hansard 1939,,
+eastern_germany,coal,500,76.110,59.180,,,national Germany 190.11 Mt minus fields split by game number,national Germany 186.18 Mt minus fields split by game number,,
+eastern_india,both,550,16.470,25.620,0.190,0.238,national India 16.47 Mt split by game number,national India 25.62 Mt split by game number,national India 1.089 Mt split by game number,national India 1.362 Mt split by game number
+eastern_mexico,oil,900,,,3.838,5.797,,,national Mexico 3.838 Mt split by game number,national Mexico 5.797 Mt split by game number
+eastern_siberia,coal,1000,0.370,5.862,,,data: Narkhoz (Cheremkhovo 1913),data: Narkhoz 1940 9.2 Mt scaled x0.64 to the 1938 national total (assumption),,
+eastern_usa,both,950,251.901,173.095,4.066,19.592,national USA 517.06 Mt split by game number,national USA 355.3 Mt split by game number,national USA 34.03 Mt split by game number,national USA 163.953 Mt split by game number
+ecuador,oil,300,,,0.000,0.297,,,national Ecuador: no production,national Ecuador 0.297 Mt split by game number
+galicia,oil,100,,,1.187,0.507,,,national Galicia 1.187 Mt split by game number,national Galicia 0.507 Mt split by game number
+georgia,coal,100,0.267,1.010,,,national USSR 35.17 Mt minus fields split by game number,national USSR 112.9 Mt minus fields split by game number,,
+gulf_coast,oil,1750,,,14.982,72.181,,,national USA 34.03 Mt split by game number,national USA 163.953 Mt split by game number
+iraq,oil,3500,,,0.000,4.272,,,national Iraq: no production,national Iraq 4.272 Mt split by game number
+java,oil,500,,,0.412,2.000,,,national DEI 1.526 Mt split by game number,national DEI 7.399 Mt split by game number
+kazakhstan,both,650,0.866,3.282,0.162,0.509,national USSR 35.17 Mt minus fields split by game number,national USSR 112.9 Mt minus fields split by game number,national USSR 9.193 Mt minus fields split by game number,national USSR 28.859 Mt minus fields split by game number
+kyrgyzstan,both,200,0.267,1.010,0.050,0.157,national USSR 35.17 Mt minus fields split by game number,national USSR 112.9 Mt minus fields split by game number,national USSR 9.193 Mt minus fields split by game number,national USSR 28.859 Mt minus fields split by game number
+malaya,coal,300,0.000,0.486,,,national Malaya: no production,national Malaya 0.486 Mt split by game number,,
+manchuria,coal,2000,1.159,9.500,,,national Manchuria 2.317 Mt split by game number,data: Fushun 1935-37,,
+moluccas,oil,200,,,0.165,0.800,,,national DEI 1.526 Mt split by game number,national DEI 7.399 Mt split by game number
+morocco,coal,325,0.896,0.141,,,game number x median 2.76 kt/unit; limited to 0.25-4 x median 1.51 Mt,national Morocco 0.141 Mt split by game number,,
+new_zealand,coal,250,1.182,0.993,,,national NZ 1.182 Mt split by game number,national NZ 0.993 Mt split by game number,,
+nigeria,coal,1550,0.000,0.368,,,national Nigeria: no production,national Nigeria 0.368 Mt split by game number,,
+north_east_england,coal,300,57.252,45.446,,,data: Hansard 1930 (1913; Durham+Northumberland),data: Hansard 1939 (1938),,
+north_egypt,oil,950,,,0.009,0.153,,,national Egypt 0.014 Mt split by game number,national Egypt 0.226 Mt split by game number
+north_sakhalin,oil,400,,,0.002,0.220,,,national NSakhalin 0.002 Mt split by game number,national NSakhalin 0.22 Mt split by game number
+north_west_england,coal,200,31.720,16.104,,,data: Hansard 1930,data: Hansard 1939,,
+northeast_china,coal,2000,1.159,8.190,,,national Manchuria 2.317 Mt split by game number,national Manchuria 17.69 Mt (1939 value) minus fields split by game number,,
+northeast_mexico,coal,800,0.890,1.093,,,national Mexico 0.89 Mt split by game number,national Mexico 1.093 Mt split by game number,,
+northern_canada,oil,1000,,,0.023,0.687,,,national Canada 0.029 Mt split by game number,national Canada 0.876 Mt split by game number
+northern_china,coal,1500,1.690,19.840,,,data: Kaiping 1912/13,national China 19.84 Mt (1939 value) split by game number,,
+northern_colombia,oil,700,,,0.000,2.973,,,national Colombia: no production,national Colombia 2.973 Mt split by game number
+northern_france,coal,400,40.050,46.500,,,national France 40.05 Mt split by game number,national France 46.5 Mt split by game number,,
+northern_russia,coal,1000,2.666,10.099,,,national USSR 35.17 Mt minus fields split by game number,national USSR 112.9 Mt minus fields split by game number,,
+northern_spain,coal,400,4.016,5.650,,,national Spain 4.016 Mt split by game number,national Spain 5.65 Mt split by game number,,
+northern_turkey,coal,150,0.413,1.294,,,national Turkey 0.827 Mt split by game number,national Turkey 2.589 Mt split by game number,,
+pakistan,oil,400,,,0.277,0.346,,,national India 1.089 Mt split by game number,national India 1.362 Mt split by game number
+persia,oil,4600,,,0.248,10.358,,,national Persia 0.248 Mt split by game number,national Persia 10.358 Mt split by game number
+peru,oil,140,,,0.276,2.084,,,national Peru 0.276 Mt split by game number,national Peru 2.084 Mt split by game number
+romania,oil,100,,,1.848,6.603,,,national Romania 1.848 Mt split by game number,national Romania 6.603 Mt split by game number
+russian_far_east,coal,500,1.333,4.588,,,national USSR 35.17 Mt minus fields split by game number,data: Narkhoz 1940 7.2 Mt scaled x0.64 to the 1938 national total (assumption),,
+sarawak,oil,600,,,0.415,0.454,,,game number x median 0.69 kt/unit; limited to 0.25-4 x median 0.25 Mt,national Sarawak 0.907 Mt split by game number
+siberian_russia,coal,4000,0.770,14.337,,,data: Narkhoz (Kuzbas 1913),data: Narkhoz 1940 22.5 Mt scaled x0.64 to the 1938 national total (assumption),,
+south_egypt,oil,450,,,0.004,0.073,,,national Egypt 0.014 Mt split by game number,national Egypt 0.226 Mt split by game number
+south_sakhalin,coal,400,1.103,4.040,,,game number x median 2.76 kt/unit; limited to 0.25-4 x median 1.51 Mt,game number x median 10.10 kt/unit; limited to 0.25-4 x median 5.86 Mt,,
+southern_alaska,both,950,1.309,4.797,0.328,0.745,game number x median 2.76 kt/unit; limited to 0.25-4 x median 1.51 Mt,game number x median 10.10 kt/unit; limited to 0.25-4 x median 5.86 Mt,game number x median 0.69 kt/unit; limited to 0.25-4 x median 0.25 Mt,game number x median 1.57 kt/unit; limited to 0.25-4 x median 0.79 Mt
+southern_algeria,coal,300,0.827,0.013,,,game number x median 2.76 kt/unit; limited to 0.25-4 x median 1.51 Mt,national Algeria 0.013 Mt split by game number,,
+southern_england,coal,750,2.067,3.993,,,game number x median 2.76 kt/unit; limited to 0.25-4 x median 1.51 Mt,data: Hansard 1939 (Kent+Somerset+Forest of Dean),,
+southern_russia,oil,500,,,0.250,0.784,,,national USSR 9.193 Mt minus fields split by game number,national USSR 28.859 Mt minus fields split by game number
+sumatra,both,500,0.568,1.434,0.206,1.000,national DEI 0.568 Mt split by game number,national DEI 1.434 Mt split by game number,national DEI 1.526 Mt split by game number,national DEI 7.399 Mt split by game number
+tajikistan,oil,75,,,0.037,0.118,,,national USSR 9.193 Mt minus fields split by game number,national USSR 28.859 Mt minus fields split by game number
+tonkin,coal,200,0.509,2.354,,,national Indochina 0.509 Mt split by game number,national Indochina 2.354 Mt split by game number,,
+turkmenistan,oil,400,,,0.200,0.627,,,national USSR 9.193 Mt minus fields split by game number,national USSR 28.859 Mt minus fields split by game number
+ukraine,coal,900,25.300,60.088,,,data: Narkhoz 1958 (Donbas 1913),data: Narkhoz 1940 94.3 Mt scaled x0.64 to the 1938 national total (assumption),,
+uzbekistan,oil,400,,,0.200,0.627,,,national USSR 9.193 Mt minus fields split by game number,national USSR 28.859 Mt minus fields split by game number
+venezuela,oil,4500,,,0.000,27.554,,,national Venezuela: no production,national Venezuela 27.554 Mt split by game number
+west_greenland,coal,900,2.481,9.089,,,game number x median 2.76 kt/unit; limited to 0.25-4 x median 1.51 Mt,game number x median 10.10 kt/unit; limited to 0.25-4 x median 5.86 Mt,,
+western_australia,coal,525,6.305,5.935,,,national Australia 12.61 Mt split by game number,national Australia 11.87 Mt split by game number,,
+western_germany,coal,800,114.000,127.000,,,data: Ruhr 1913,data: Ruhr 1937,,
+western_turkey,coal,150,0.413,1.294,,,national Turkey 0.827 Mt split by game number,national Turkey 2.589 Mt split by game number,,
+western_usa,oil,1250,,,10.701,51.558,,,national USA 34.03 Mt split by game number,national USA 163.953 Mt split by game number
+xinjiang,oil,3500,,,0.995,0.000,,,game number x median 0.69 kt/unit; limited to 0.25-4 x median 0.25 Mt,national China: no production

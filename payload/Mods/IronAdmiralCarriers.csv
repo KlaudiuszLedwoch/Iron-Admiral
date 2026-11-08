@@ -1,0 +1,31 @@
+# Iron Admiral - air group of the ready carrier designs (#104, author 8.11.2026 07:45-07:46: aircraft are the carrier's main armament)
+# name = design name from historical_specs.csv; nation = game nation id ("*" = every nation using a stand-in design "Carrier MkN")
+# aircraft = historical aircraft carried by the reference class (Wikipedia infobox unless stated); source = reference article
+name,nation,aircraft,reference,source
+Ark Royal 1914,britain,8,HMS Ark Royal (1914),https://en.wikipedia.org/wiki/HMS_Ark_Royal_(1914)
+Foudre,france,4,Foudre (after conversion),https://en.wikipedia.org/wiki/French_seaplane_carrier_Foudre
+Santa Elena,germany,4,FS II Santa Elena (3 in 1914; 4 from 1915),https://navypedia.org/ships/germany/ger_cv_wwi.htm
+Almaz,russia,4,Almaz,https://naval-encyclopedia.com/?p=37584
+Wakamiya,japan,4,Wakamiya,https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Carrier Mk1,*,4,Wakamiya (weakest of the era),https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Argus,britain,18,HMS Argus (15-18),https://en.wikipedia.org/wiki/HMS_Argus_(I49)
+Hosho,japan,15,Hosho,https://en.wikipedia.org/wiki/Japanese_aircraft_carrier_H%C5%8Dsh%C5%8D
+Langley,usa,36,USS Langley (infobox 36; text: designed for up to 34),https://en.wikipedia.org/wiki/USS_Langley_(CV-1)
+Carrier Mk2,*,36,Langley (weakest of the era),https://en.wikipedia.org/wiki/USS_Langley_(CV-1)
+Lexington,usa,90,Lexington class,https://en.wikipedia.org/wiki/Lexington-class_aircraft_carrier
+Courageous,britain,48,Courageous class (Courageous/Glorious),https://en.wikipedia.org/wiki/Courageous-class_aircraft_carrier
+Akagi,japan,60,Akagi as completed 1927,https://en.wikipedia.org/wiki/Japanese_aircraft_carrier_Akagi
+Bearn,france,32,Bearn,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Carrier Mk3,*,32,Bearn (weakest of the era),https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Ranger,usa,76,Ranger (76 normal; 86 max),https://en.wikipedia.org/wiki/Ranger-class_aircraft_carrier
+Ark Royal,britain,72,HMS Ark Royal (1937) (72 designed; 50-60 actual),https://en.wikipedia.org/wiki/HMS_Ark_Royal_(91)
+Soryu,japan,63,Soryu (Dec 1941; + 9 reserve),https://en.wikipedia.org/wiki/Japanese_aircraft_carrier_S%C5%8Dry%C5%AB
+Graf Zeppelin,germany,42,Graf Zeppelin (text: 42 designed; infobox 44),https://en.wikipedia.org/wiki/German_aircraft_carrier_Graf_Zeppelin
+Joffre,france,40,Joffre class (not completed),https://en.wikipedia.org/wiki/Joffre-class_aircraft_carrier
+Carrier Mk4,*,30,Zuiho (weakest of the era),https://en.wikipedia.org/wiki/Zuih%C5%8D-class_aircraft_carrier
+Essex,usa,100,Essex class (90-100),https://en.wikipedia.org/wiki/Essex-class_aircraft_carrier
+Implacable,britain,81,Implacable class,https://en.wikipedia.org/wiki/Implacable-class_aircraft_carrier
+Shokaku,japan,72,Shokaku class (+ 12 spares),https://en.wikipedia.org/wiki/Sh%C5%8Dkaku-class_aircraft_carrier
+Aquila,italy,51,Aquila (not completed),https://en.wikipedia.org/wiki/Italian_aircraft_carrier_Aquila
+Jade,germany,24,Jade class (planned 12 Bf 109 + 12 Ju 87),https://en.wikipedia.org/wiki/Jade-class_aircraft_carrier
+Carrier Mk5,*,33,Unicorn (weakest of the era),https://en.wikipedia.org/wiki/HMS_Unicorn_(I72)
