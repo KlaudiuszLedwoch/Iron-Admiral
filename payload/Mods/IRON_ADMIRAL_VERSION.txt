@@ -1,4 +1,4 @@
-1.2.77-beta.239
-DIP_GG_Fixes 1.11.839
-2026-11-08 10:21
-Ready carrier designs per nation and era
+1.2.77-beta.240
+DIP_GG_Fixes 1.11.842
+2026-11-08 11:33
+Carrier ship type, click blocker, Scout + torpedo order
