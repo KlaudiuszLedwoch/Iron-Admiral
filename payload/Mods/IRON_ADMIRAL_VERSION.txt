@@ -1,4 +1,4 @@
-1.2.78-beta.3
+1.2.77.2
 DIP_GG_Fixes 1.11.862
-2026-11-08 21:00
-Port window with a carrier
+2026-11-08 21:10
+Stable fix from 1.2.78-beta.3: port window with a carrier, TAF buttons error ...
