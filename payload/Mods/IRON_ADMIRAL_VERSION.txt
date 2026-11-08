@@ -1,4 +1,4 @@
-1.2.78-beta.2
-DIP_GG_Fixes 1.11.861
-2026-11-08 20:55
-Shared designs: TAF ship type buttons error caught
+1.2.78-beta.3
+DIP_GG_Fixes 1.11.862
+2026-11-08 21:00
+Port window with a carrier
