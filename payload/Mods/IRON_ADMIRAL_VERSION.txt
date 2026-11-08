@@ -1,4 +1,4 @@
-1.2.77-beta.232
-DIP_GG_Fixes 1.11.824
-2026-11-07 23:07
-Unscouted areas: recomputed only on change - lower cost on the map
+1.2.77-beta.233
+DIP_GG_Fixes 1.11.827
+2026-11-08 06:49
+Carrier hulls in the designer, GDP correction kept after reload, peace ban on...
