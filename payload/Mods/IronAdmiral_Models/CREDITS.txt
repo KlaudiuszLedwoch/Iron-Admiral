@@ -23,3 +23,8 @@ Bristol Beaufighter TF.X (beaufighter_tf) - all by mgg8 on Sketchfab (https://sk
   Changes: simplified (about 36,000-46,000 triangles), textures reduced to 512 px, ailerons, elevators, rudders and propellers
   cut out of the mesh and hinged; the Swordfish's torpedo separated so that it can be released.
 
+uss_langley.iam (carrier hulls, ships on cv_ hulls)
+  "USS Langley" by kriss50 (https://sketchfab.com/kriss50)
+  Source: https://sketchfab.com/3d-models/uss-langley-0419518f2a544499acece4bb223fe8e9
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified (about 79,000 triangles with back faces) and converted for Iron Admiral; drawn in place of the carrier hulls.
