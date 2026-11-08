@@ -23,3 +23,22 @@ Bristol Beaufighter TF.X (beaufighter_tf) - all by mgg8 on Sketchfab (https://sk
   Changes: simplified (about 36,000-46,000 triangles), textures reduced to 512 px, ailerons, elevators, rudders and propellers
   cut out of the mesh and hinged; the Swordfish's torpedo separated so that it can be released.
 
+uss_langley.iam (carrier hulls, ships on cv_ hulls)
+  "USS Langley" by kriss50 (https://sketchfab.com/kriss50)
+  Source: https://sketchfab.com/3d-models/uss-langley-0419518f2a544499acece4bb223fe8e9
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified (about 79,000 triangles with back faces) and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+uss_hornet.iam (Fleet Carrier hull) - "USS Hornet (CV-8)" by kriss50 (https://sketchfab.com/kriss50)
+  Source: https://sketchfab.com/3d-models/uss-hornet-cv-8-017d579686344e8b889ad4861cfdc972 - CC BY 4.0. Changes: simplified and converted.
+
+uss_essex.iam (Heavy Fleet Carrier hull) - "USS Essex (CV-9)" by kriss50 (https://sketchfab.com/kriss50)
+  Source: https://sketchfab.com/3d-models/uss-essex-cv-9-a0e0ed780fe6489188622efa8e4bacad - CC BY 4.0. Changes: simplified and converted.
+
+ijn_akagi.iam + ijn_akagi_t*.png (Japanese Fleet and Heavy Fleet Carrier hulls) - "IJN Aircraft Carrier Akagi (1942)" by lxyun_2 (https://sketchfab.com/lxyun_2)
+  Source: https://sketchfab.com/3d-models/ijn-aircraft-carrier-akagi-1942-ee55fa5447e54b85874cd341da494e3d
+  License: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/) - non-commercial use only. These converted files (simplified, textures reduced to 512 px)
+  are shared under the same CC BY-NC-SA 4.0 licence. The rest of Iron Admiral keeps its own licence.
+
+foxhole_carrier.iam + foxhole_carrier_t*.png (first carrier hull of nations without historical carriers) - "Foxhole - Converted frigate carrier" by Jegen (https://sketchfab.com/nhnls3005)
+  Source: https://sketchfab.com/3d-models/foxhole-converted-frigate-carrier-9d91d93b721f434581eb2c8d52b67177 - CC BY 4.0. Fictional ship. Changes: simplified and converted.

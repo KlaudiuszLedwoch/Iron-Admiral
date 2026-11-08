@@ -1,0 +1,77 @@
+name: Discord
+
+on:
+  release:
+    types: [published]
+  issues:
+    types: [opened, closed, reopened]
+  schedule:
+    - cron: '0 21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  release:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post release
+        env:
+          HOOK: ${{ secrets.DISCORD_RELEASES }}
+          NAME: ${{ github.event.release.name }}
+          URL: ${{ github.event.release.html_url }}
+          PRE: ${{ github.event.release.prerelease }}
+          BODY: ${{ github.event.release.body }}
+        run: |
+          [ -z "$HOOK" ] && { echo "no webhook set"; exit 0; }
+          if [ "$PRE" = "true" ]; then KIND="Beta"; C=15105570; else KIND="Stable release"; C=3066993; fi
+          TEXT=$(printf '%s' "$BODY" | head -c 3500)
+          jq -n --arg t "$KIND: $NAME" --arg u "$URL" --arg d "$TEXT" --argjson c $C \
+            '{username:"Iron Admiral", embeds:[{title:$t, url:$u, description:$d, color:$c}]}' \
+            | curl -sf -H 'Content-Type: application/json' -d @- "$HOOK"
+
+  issue:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post issue
+        env:
+          BUGS: ${{ secrets.DISCORD_BUGS }}
+          ACT: ${{ secrets.DISCORD_ACTIVITY }}
+          ACTION: ${{ github.event.action }}
+          NUM: ${{ github.event.issue.number }}
+          TITLE: ${{ github.event.issue.title }}
+          URL: ${{ github.event.issue.html_url }}
+          WHO: ${{ github.event.issue.user.login }}
+          LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
+        run: |
+          HOOK="$ACT"; case ",$LABELS," in *bug*) [ -n "$BUGS" ] && HOOK="$BUGS";; esac
+          [ -z "$HOOK" ] && { echo "no webhook set"; exit 0; }
+          case "$ACTION" in opened) C=3447003; V="New issue";; closed) C=10070709; V="Closed";; *) C=15844367; V="Reopened";; esac
+          jq -n --arg t "$V #$NUM: $TITLE" --arg u "$URL" --arg d "by $WHO${LABELS:+ - $LABELS}" --argjson c $C \
+            '{username:"Iron Admiral", embeds:[{title:$t, url:$u, description:$d, color:$c}]}' \
+            | curl -sf -H 'Content-Type: application/json' -d @- "$HOOK"
+
+  daily:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Daily summary
+        env:
+          HOOK: ${{ secrets.DISCORD_RELEASES }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          [ -z "$HOOK" ] && { echo "no webhook set"; exit 0; }
+          SINCE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+          REL=$(gh api "repos/$REPO/releases?per_page=30" --jq "[.[] | select(.published_at > \"$SINCE\") | .tag_name] | join(\", \")")
+          OPENED=$(gh api "search/issues?q=repo:$REPO+is:issue+created:>$SINCE" --jq '.total_count')
+          CLOSED=$(gh api "search/issues?q=repo:$REPO+is:issue+closed:>$SINCE" --jq '.total_count')
+          if [ -z "$REL" ] && [ "$OPENED" = "0" ] && [ "$CLOSED" = "0" ]; then echo "quiet day"; exit 0; fi
+          D=$(printf 'Releases: %s\nIssues opened: %s, closed: %s' "${REL:-none}" "$OPENED" "$CLOSED")
+          jq -n --arg d "$D" --arg u "https://github.com/$REPO" \
+            '{username:"Iron Admiral", embeds:[{title:"Iron Admiral - last 24 hours", url:$u, description:$d, color:9807270}]}' \
+            | curl -sf -H 'Content-Type: application/json' -d @- "$HOOK"

@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 1 November 2026. Latest version: Iron Admiral 1.2.76. Updated with every release._
+_Guide as of 4 November 2026. Latest stable version: Iron Admiral 1.2.76; latest beta: 1.2.77-beta.78. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -223,7 +223,89 @@ What the current beta adds to the campaign (each with its switch in the F10 pane
 - **Designer** - new turrets get armour by default (roof 25 mm, walls up to the calibre); 2-4 in guns may have a light gun house or shield; Refit enters refit mode without an extra question; the gun window shows the physical penetration, also published as the [penetration table](Penetration-table).
 - **Spectacular sinkings** - torpedoed on one side, big ships capsize; after a magazine hit they blow up; others break their back or settle burning.
 
+## 15. War and peace, invasions and torpedoes (1.2.77 betas)
+
+What the 1.2.77 betas add (each with its switch in the F10 panel):
+
+**Ending wars**
+- **War weariness** - a nation that has lost a large share of the fleet it had when the war began (30%), clearly more than its enemy, and is not ahead on victory points asks for peace. Fighting on several fronts brings that point sooner. The fleets at the start of each war are kept across saves.
+- **Losing a jewel** - a great power that loses one of its richest colonies (India and the like) to the enemy and is not winning asks for peace.
+- **Peace treaties** last five years. Democracies and constitutional monarchies keep them; an absolute monarchy breaks one only with a fleet twice the enemy's, a nationalist or communist government with 1.3 times. The player may break a treaty at a cost in unrest and relations with every great power.
+- **The loser of a war** (fewer victory points at the peace) may not lay down battleships or battlecruisers while the treaty lasts.
+
+**Starting wars and finding friends**
+- **No fight with everyone** - an AI nation already at war with two countries does not declare a third war itself; it can still be attacked.
+- **Allies against a common enemy** - a great power at war with two or more countries draws closer each month to a great power fighting the same enemy; once their attitude is high enough, they become allies.
+- **Calming a dangerous neighbour** - a great power at war on three or more fronts improves its relations with the strongest hostile great power it is not yet fighting (this can be you).
+
+**Naval treaties**
+- From February 1922 (Washington) every great power builds battleships and battlecruisers of at most 35,000 t with 16 in guns, cruisers of 10,000 t with 8 in guns and carriers of 27,000 t; from April 1930 (London) destroyers of 1,850 t with 5.1 in guns. From 1937 the Second London treaty: 14 in, then 16 in under the escalator clause.
+- Until the end of 1936 each great power also has a total of capital ship and carrier tonnage (Britain and the USA 525,000 t, Japan 315,000 t, France and Italy 175,000 t; the others in proportion to their fleets). A new battleship waits until an old one goes.
+- A window asks you to sign or refuse. Refusing frees your yards but every great power regards you with suspicion; you can also withdraw later (NavalTreatyWithdraw in F10) - the treaties then end for everyone two years on.
+- Ships already built are not affected; refits keep the 3,000 t modernisation allowance.
+
+**Invasions**
+- The shipping an invasion needs follows the army that defends the province: four soldiers carried for every defender, one ton per soldier.
+- It grows with the length of the sea route from your nearest own port (no change up to 1,500 km, three times at 8,000 km).
+- A minor nation's defender counts as a quarter of a great power's soldier; a great power's richest colonies need one and a half times the shipping.
+
+**Battle**
+- **Torpedo aiming error** - every torpedo leaves with a small course error that grows with the run to the target, the sea state and at night: close attacks hit, long-range salvoes mostly miss. Aerial torpedoes too.
+- **Wakes** are seen farther in a calm sea and closer in a rough one.
+
+**Crews**
+- Ships at sea (patrols, sea control, escorts, invasions) gain crew training each month, up to Trained; only battle makes a crew Regular or better.
+- Each October the yearly draft costs every crew part of a level; battle-hardened crews lose less.
+
+**Ship design**
+- A design up to 8% over its displacement can still be built, as many ships of the period were completed overweight.
+- The tonnage bonus from beam and draught is held within +30% of the hull's limit, so a refit can no longer lift a hull far beyond it.
+
+## 16. Economy, armies, nations and fleets (1.2.77 betas 34-78)
+
+What the later 1.2.77 betas add (each with its switch in the F10 panel).
+
+**Nations and the map**
+- **Denmark replaces Scandinavia** as a great power (Denmark, Iceland, the Faroes, Greenland). Sweden is a minor nation; Norway belongs to Sweden in the 1890 and 1900 starts. Older saves are converted when loaded. Denmark makes no claim on Swedish or Norwegian provinces.
+- **The Ottoman Empire** takes the place of DIP's Byzantine Empire.
+- **Panama** belongs to Colombia in the 1890 and 1900 starts (until 1903).
+- **Starting fleets for every great power** - the starting crew pool follows the naval budget, so Britain, Spain, the Netherlands and Portugal no longer start 1890 without ships.
+- **Oil** - Romania and Galicia have their historical oil from 1890. Optional **random oil** (RandomOil): the deposits still to be discovered are dealt out to random provinces, also in a running campaign, and kept in the save.
+
+**Army and economy**
+- **Armies follow the economy** - a great power's army is capped by what its economy can pay and equip (budget per head), not only by its population, and it is weaker the farther it fights over land from its home provinces (down to half).
+- **Army budget** - the game's hidden army budget is yours to set: a slider in the Finances window (or ArmyBudgetPct in F10), 50-200 %. A cut moves money to the navy month by month and raises growth; the army shrinks at once. A raise does the opposite, and the army grows only six months later.
+- **Garrisons** of occupied provinces are paid from the army budget, not from the naval funds. Their cost is shown next to the army budget slider and in the monthly report.
+- **Industrial fund** - each month a share of the revenue (3 % by default, IndustryFundShare) goes to the shipbuilding industry; when it covers the next step, your largest dock grows by itself.
+- **AI help by difficulty** - the mod's help for the AI great powers (emergency appropriations, debt tolerance) grows with the difficulty level.
+- **Faster start of later campaigns** - before a start after 1890 the AI takes ready historical designs and makes one generator attempt per design (a 1910 start in about 49 minutes instead of 90).
+
+**Diplomacy**
+- **Why relations change** - the monthly report lists, for each nation, the net change of relations with you and its largest causes (arms race, occupied provinces, events, appeasement and so on).
+- Wars: an AI nation already at war with two countries declares no new war itself. Wars that allies join through alliance rules are not limited.
+
+**Shipbuilding and ports**
+- **Historical build times** - cruisers and capital ships take at least as long as historical yards needed: light cruisers about two years (20 months from 1900), heavy cruisers and battleships 30 months, battleships from 1930 36 months; a quarter less in wartime. The total cost stays the same.
+- **Building port large enough** - a ship can be laid down only in a port whose capacity covers her tonnage.
+- **Ports a force fits into** - when you select a task force on the map, your ports are ringed green where it fits and red where it does not.
+- **Best AP shell for the AI** - new AI designs get the researched AP shell that penetrates best; a new **Post-Jutland APC** shell (about 1918) sits between Improved APBC and SAPC.
+- **94 more historical classes** for the AI.
+
+**Fleets and battle**
+- **Command limit of an admiral** - 12 ships until 1909, 16 from 1910, 24 from 1930. In battle the ships beyond the limit (the smallest first) shoot 10 % less accurately and carry out orders after a delay of up to 18 s; well-trained crews halve both. Player and AI alike.
+- **Control zone by speed and range** - the amber circle around a task force (its control zone) grows with the top speed of the slowest ship and the shortest operating range in the force, up to 300 km (the game: 20-100 km by tonnage).
+- **AI battle lines** keep to the middle of their immune zone and, pierced at any range by a stronger enemy, close in, withdraw or weigh the odds.
+- **Prizes** - a surrendered ship is judged by her real damage, so lightly damaged ships are taken as prizes, not reported as wrecks.
+
+**Interface**
+- The technology rank reads as your place among the great powers and the number of technologies researched.
+- Loading-screen and turn tips explain Iron Admiral's mechanics.
+- Every new switch has its number and its ON/OFF description in the in-game Help (chapters "Settings ...").
+
 ### Guide history
+- **4 November 2026, Iron Admiral 1.2.77-beta.78:** section 16 - Denmark, the Ottoman Empire, starting fleets, oil, armies by economy and supply, army budget and garrisons, industrial fund, why relations change, historical build times, building ports and port fit on the map, command limit, control zone by speed and range, prizes.
+- **2 November 2026, Iron Admiral 1.2.77-beta.33:** naval treaties (limits, totals, signing and withdrawal); alliances against a common enemy.
+- **2 November 2026, Iron Admiral 1.2.77-beta.29:** war and peace (war weariness, treaties, alliances, war limit), invasions by army, distance and target, torpedo aiming error, crew training at sea and the yearly draft, refits within the hull's limit.
 - **18 October 2026:** first edition – battles, crews and prizes, series production, AI budgets, treasury crisis, inflation and credit, diplomacy.
 - **18 October 2026, Iron Admiral 1.2.16:** series production and the economy are live – real result of the 30-destroyer example, ships on the slips, treasury panel, Finances window and monthly report, savings that keep value rather than make money, inflation returning to normal, Britain's inflation and loan in 1911.
 - **19 October 2026, Iron Admiral 1.2.22:** in-game settings panel (F10) and how to play with only the battle AI, crews and prizes.

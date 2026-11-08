@@ -1,0 +1,18 @@
+# Iron Admiral - carrier aircraft reach by year (CarrierSupport). A row applies from its year until the next row; years before the first row use the first row.
+# radius_km = strike/support radius; recon_km = reconnaissance (search) radius.
+# Author 8.11 14:05: strike radius linear from 225 km in 1929 to 300 km in 1942 (anchored on Fleet Problem IX 1929, 140 mi - NHHC; 1942 rounded up from Midway 155 nmi / 287 km). Recon 370 km: Coral Sea 1942 SBD search to 200 nmi, used for all eras (no earlier source).
+year,radius_km,recon_km,source
+1929,225,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1930,231,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1931,237,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1932,242,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1933,248,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1934,254,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1935,260,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1936,265,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1937,271,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1938,277,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1939,283,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1940,288,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1941,294,370,"linear 225 km (1929) - 300 km (1942), author 8.11"
+1942,300,370,"linear 225 km (1929) - 300 km (1942), author 8.11"

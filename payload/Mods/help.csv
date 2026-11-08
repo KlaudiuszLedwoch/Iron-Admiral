@@ -28,6 +28,7 @@ ia_21,,,$IA_Help_title_ia_21,,$IA_Help_desc_ia_21
 ia_22,,,$IA_Help_title_ia_22,,$IA_Help_desc_ia_22
 ia_23,,,$IA_Help_title_ia_23,,$IA_Help_desc_ia_23
 ia_24,,,$IA_Help_title_ia_24,,$IA_Help_desc_ia_24
+ia_71,,,$IA_Help_title_ia_71,,$IA_Help_desc_ia_71
 ia_25,,,$IA_Help_title_ia_25,,$IA_Help_desc_ia_25
 ia_26,,,$IA_Help_title_ia_26,,$IA_Help_desc_ia_26
 ia_27,,,$IA_Help_title_ia_27,,$IA_Help_desc_ia_27
@@ -66,6 +67,14 @@ ia_59,,,$IA_Help_title_ia_59,,$IA_Help_desc_ia_59
 ia_60,,,$IA_Help_title_ia_60,,$IA_Help_desc_ia_60
 ia_61,,,$IA_Help_title_ia_61,,$IA_Help_desc_ia_61
 ia_62,,,$IA_Help_title_ia_62,,$IA_Help_desc_ia_62
+ia_63,,,$IA_Help_title_ia_63,,$IA_Help_desc_ia_63
+ia_64,,,$IA_Help_title_ia_64,,$IA_Help_desc_ia_64
+ia_65,,,$IA_Help_title_ia_65,,$IA_Help_desc_ia_65
+ia_66,,,$IA_Help_title_ia_66,,$IA_Help_desc_ia_66
+ia_67,,,$IA_Help_title_ia_67,,$IA_Help_desc_ia_67
+ia_68,,,$IA_Help_title_ia_68,,$IA_Help_desc_ia_68
+ia_69,,,$IA_Help_title_ia_69,,$IA_Help_desc_ia_69
+ia_70,,,$IA_Help_title_ia_70,,$IA_Help_desc_ia_70
 ship_types,,header,$Help_title_ship_types,-,
 7,,,$Help_title_7,Bayern_class_battleship,$LoadingScreens_Text_39
 8,,,$Help_title_8,HMS_Invincible,$LoadingScreens_Text_40
