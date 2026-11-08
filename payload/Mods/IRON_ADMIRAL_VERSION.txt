@@ -1,4 +1,4 @@
-1.2.77-beta.256
+1.2.77-beta.257
 DIP_GG_Fixes 1.11.857
-2026-11-08 15:49
-Aerial torpedoes hit again
+2026-11-08 16:45
+Lighter torpedo launchers (3x DIP)
