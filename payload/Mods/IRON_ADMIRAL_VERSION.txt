@@ -1,4 +1,4 @@
-1.2.77-beta.235
-DIP_GG_Fixes 1.11.830
-2026-11-08 07:16
-Your name for shared designs typed in F10 (Share logs row, Name button)
+1.2.77-beta.236
+DIP_GG_Fixes 1.11.831
+2026-11-08 07:35
+Carrier hulls drawn with a carrier model (USS Langley, kriss50, CC BY 4.0)
