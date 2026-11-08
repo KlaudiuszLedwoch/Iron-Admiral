@@ -1,4 +1,4 @@
-1.2.77-beta.250
-DIP_GG_Fixes 1.11.852
-2026-11-08 15:06
-Tab and right-click keep the ship icon
+1.2.77-beta.251
+DIP_GG_Fixes 1.11.853
+2026-11-08 15:09
+Mod notes hide behind game windows
