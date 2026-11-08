@@ -1,4 +1,4 @@
-1.2.77-beta.236
-DIP_GG_Fixes 1.11.831
-2026-11-08 07:35
-Carrier hulls drawn with a carrier model (USS Langley, kriss50, CC BY 4.0)
+1.2.77-beta.237
+DIP_GG_Fixes 1.11.836
+2026-11-08 08:02
+Carrier models by era (frigate, Langley, Akagi, Hornet, Essex), historical ai...
