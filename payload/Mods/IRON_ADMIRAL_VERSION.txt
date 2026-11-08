@@ -1,4 +1,4 @@
-1.2.78-beta.3
-DIP_GG_Fixes 1.11.862
-2026-11-08 21:00
-Port window with a carrier
+1.2.78-beta.4
+DIP_GG_Fixes 1.11.863
+2026-11-08 22:33
+Leaving a battle with carriers, kept AI designs
