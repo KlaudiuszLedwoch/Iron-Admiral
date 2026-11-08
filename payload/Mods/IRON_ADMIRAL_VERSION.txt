@@ -1,4 +1,4 @@
-1.2.77-beta.251
-DIP_GG_Fixes 1.11.853
-2026-11-08 15:09
-Mod notes hide behind game windows
+1.2.77-beta.252
+DIP_GG_Fixes 1.11.854
+2026-11-08 15:13
+Clean loading screen, tips fit
