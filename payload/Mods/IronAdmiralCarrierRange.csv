@@ -1,0 +1,8 @@
+# Iron Admiral - carrier aircraft reach by year (CarrierSupport, 1.11.844). A row applies from its year until the next row; years before the first row use the first row.
+# radius_km = strike/support radius (distance from which a carrier historically launched a strike); recon_km = reconnaissance (search) radius.
+# Only sourced figures: a recon value not sourced for its era repeats the nearest sourced era (1942) and says so.
+year,radius_km,recon_km,source
+1929,225,370,"Fleet Problem IX (Jan 1929): Saratoga closed to within 140 miles of the canal and launched a 70-plane strike - NHHC, history.navy.mil/browse-by-topic/heritage/usn-lessons-learned/fleet-problem-ix.html; recon not sourced for this era - 1942 value"
+1938,161,370,"Fleet Problem XIX (1938): Saratoga's surprise air attack on Pearl Harbor from a point 100 miles off Oahu - DANFS Saratoga V (CV-3), history.navy.mil; recon not sourced for this era - 1942 value"
+1940,274,370,"Taranto (11 Nov 1940): Illustrious was 170 mi (270 km) from Taranto before the Swordfish took off - en.wikipedia.org/wiki/Battle_of_Taranto; recon not sourced for this era - 1942 value"
+1942,287,370,"Midway (4 Jun 1942): US carriers launched about 155 nmi (287 km) from the Japanese fleet - en.wikipedia.org/wiki/Battle_of_Midway; recon: Coral Sea (8 May 1942) TF 17 SBDs 360-degree search out to 200 nmi (370 km) - en.wikipedia.org/wiki/Battle_of_the_Coral_Sea"
