@@ -530,9 +530,18 @@ $IA_Tip_146;Iron Admiral: Denmark guards the gates of the Baltic. Sweden and Nor
 $IA_Tip_147;Iron Admiral: On harder difficulty levels the AI great powers get larger emergency naval appropriations and carry debt longer before a treasury crisis.
 $IA_Tip_148;Iron Admiral: Every great power starts with a crew pool that follows its naval budget, so even a colonial empire can man its first battleships.
 $IA_Tip_149;Iron Admiral: The shared designs that come with the mod carry their battle record from other games. Open "Design ranking" in the designer to see which classes proved themselves.
-$IA_Tip_150;Iron Admiral: Want your designs in the mod? F10 > Ministry of Spanners > "Share screenshots and designs" packs them with their battle record - post the zip on GitHub and they can join the shared designs with your name.
+$IA_Tip_150;Iron Admiral: Want your designs in the mod? F10 > Tools > "Share screenshots and designs" packs them with their battle record - post the zip on GitHub and they can join the shared designs with your name.
 $IA_Tip_151;Iron Admiral: Even a torpedo boat in a long series takes at least six months from laying down to commissioning; cruisers and battleships follow the historical minimum build times of their era.
 $IA_Tip_152;Iron Admiral: A campaign that starts after 1890 first replays the years before your start. Iron Admiral fills those years with ready historical classes and shared designs, so the world map opens much sooner.
 $IA_Tip_153;Iron Admiral: Your treasury ends the month below the game's forecast? Press F8: the treasury panel lists what Iron Admiral takes at the turn change - the industrial fund, the army budget and garrisons.
 $IA_Tip_154;Iron Admiral: Planning a naval invasion? The invasion window shows next to every province the tonnage you have in its sea region and the tonnage the invasion needs - red provinces need more ships first.
 $IA_Tip_155;Iron Admiral: Your destroyers hold their torpedoes? Press Fire! in the torpedo targets row or Shift+T: every loaded tube of the division that bears on the target launches at once (Shift+click: this ship only).
+$IA_Tip_156;Iron Admiral: Carriers are their own ship type (CV). Their armament is the air group - the historical number of aircraft of the class; guns and armour are light.
+$IA_Tip_157;Iron Admiral: When your nation can build a carrier hull, the ready carrier design of your nation for that era appears in your designs (at most 12 years old).
+$IA_Tip_158;Iron Admiral: A carrier at sea supports battles of your nation within the strike radius of its aircraft (225 km in 1929, 300 km in 1942) - the nearer the battle, the more aircraft.
+$IA_Tip_159;Iron Admiral: A carrier at sea shows enemy forces within 370 km exactly on the map - aircraft scouting.
+$IA_Tip_160;Iron Admiral: Aircraft shot down are missing from the carrier until they are replaced at the rate ammunition is refilled - faster in port. Aircraft sent to support return the next turn.
+$IA_Tip_161;Iron Admiral: In battle a carrier keeps beyond the gun range of the nearest enemy and turns away when one closes in - it fights with its aircraft, not its guns.
+$IA_Tip_162;Iron Admiral: Campaign map: right-click your task force to select it and open its orders palette; right-click the sea to move it. Tab jumps to the next idle force.
+$IA_Tip_163;Iron Admiral: Task force orders (P, Orders): Readiness, Shadow, Escort, Patrol, Intercept, Raid, Bombard, Blockade - the force carries them out every turn until you change them.
+$IA_Tip_164;Iron Admiral: Battle orders (Alt+1..9): Manual, Screen, Scout, Torpedo attack, Free action, Hunt, Finish off, Keep range, Scout + torpedo attack. Plain Scout only scouts and reports.

@@ -267,7 +267,7 @@ crew_percents_surrender_threshold,0.55,minimum crew to operate ship during comba
 min_crew_threshold,0.7,minimum crew to operate ship in campaign,,,,,,,
 hull_crew_base_factor,1,multiplier for crew modification according to hull weight,,,,,,,
 #,,Loading Screens,,,,,,,
-loading_chance_hint,75,chance of showing hint relating to history info,25,,,,,,
+loading_chance_hint,74,chance of showing hint relating to history info,25,,,,,,
 #,,CampaingMap,,,,,,,
 scale_mult_indicator_oil_rebellion,0.35,Multiplier for the scale size of the Oil and Rebellion icons,25,,,,,,
 #,,Events,,,,,,,
