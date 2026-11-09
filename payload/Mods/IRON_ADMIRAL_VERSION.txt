@@ -1,4 +1,4 @@
-1.2.78-beta.27
-DIP_GG_Fixes 1.11.887
-2026-11-09 15:49
-8 new playable nations from DIP Extended
+1.2.78-beta.28
+DIP_GG_Fixes 1.11.889
+2026-11-09 16:00
+Long-range hits along the whole hull (#273)
