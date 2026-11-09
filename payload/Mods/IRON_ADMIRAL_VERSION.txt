@@ -1,4 +1,4 @@
-1.2.78-beta.35
-DIP_GG_Fixes 1.11.903
-2026-11-09 18:57
-Carrier model textures
+1.2.78-beta.36
+DIP_GG_Fixes 1.11.904
+2026-11-09 19:04
+Truce reminder, design nation and year, what's new
