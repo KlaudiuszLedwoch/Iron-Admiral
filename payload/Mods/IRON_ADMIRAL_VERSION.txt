@@ -1,4 +1,4 @@
-1.2.78-beta.13
-DIP_GG_Fixes 1.11.873
-2026-11-09 08:33
-Turret jam, Thach weave, torpedo planes first
+1.2.78-beta.14
+DIP_GG_Fixes 1.11.874
+2026-11-09 08:38
+Air combat: forward guns, deflection shots, lighter on the CPU
