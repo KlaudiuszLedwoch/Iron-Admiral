@@ -1,4 +1,4 @@
-1.2.78-beta.15
-DIP_GG_Fixes 1.11.875
-2026-11-09 08:54
-Air combat: firing range and debris
+1.2.78-beta.16
+DIP_GG_Fixes 1.11.876
+2026-11-09 08:57
+Fighter ammunition and rearming
