@@ -1,4 +1,4 @@
-1.2.78-beta.7
-DIP_GG_Fixes 1.11.866
-2026-11-09 07:24
-Carrier models in navy grey, carrier design rules
+1.2.78-beta.8
+DIP_GG_Fixes 1.11.867
+2026-11-09 07:31
+Carrier launch, form-up and landing
