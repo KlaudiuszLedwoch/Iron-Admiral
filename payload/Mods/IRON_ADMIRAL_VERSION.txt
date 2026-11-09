@@ -1,4 +1,4 @@
-1.2.78-beta.26
-DIP_GG_Fixes 1.11.884
-2026-11-09 15:02
-No friendly flak on own fighters
+1.2.78-beta.27
+DIP_GG_Fixes 1.11.887
+2026-11-09 15:49
+8 new playable nations from DIP Extended
