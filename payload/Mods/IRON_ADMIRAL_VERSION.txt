@@ -1,4 +1,4 @@
-1.2.78-beta.34
-DIP_GG_Fixes 1.11.902
-2026-11-09 18:30
-Carrier models: cruiser hull hidden, 9 new models
+1.2.78-beta.35
+DIP_GG_Fixes 1.11.903
+2026-11-09 18:57
+Carrier model textures
