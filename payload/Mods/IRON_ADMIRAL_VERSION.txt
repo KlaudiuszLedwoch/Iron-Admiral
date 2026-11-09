@@ -1,4 +1,4 @@
-1.2.78-beta.33
-DIP_GG_Fixes 1.11.900
-2026-11-09 18:02
-Long-range hits along the whole hull (#273), new carrier models
+1.2.78-beta.34
+DIP_GG_Fixes 1.11.902
+2026-11-09 18:30
+Carrier models: cruiser hull hidden, 9 new models
