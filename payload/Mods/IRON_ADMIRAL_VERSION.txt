@@ -1,4 +1,4 @@
-1.2.77.5
-DIP_GG_Fixes 1.11.865
-2026-11-09 07:21
-Stable fix from 1.2.78-beta.6: community designs restored, built only with re...
+1.2.77.6
+DIP_GG_Fixes 1.11.8651
+2026-11-09 18:25
+Stable fix 1.2.77.6: no map lag with a fleet selected, battle start distance ...
