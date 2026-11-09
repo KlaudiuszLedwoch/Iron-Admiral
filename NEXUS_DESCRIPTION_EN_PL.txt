@@ -6,7 +6,7 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights, ai
 [size=5][b]Iron Admiral[/b][/size]
 [i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, with a navy simulation that thinks, fights and remembers.[/i]
 
-[i]Description as of 8 November 2026. Stable: Iron Admiral 1.2.77.3 (DIP_GG_Fixes 1.11.863). Betas follow on GitHub and through the in-game update (F10, Beta updates - on by default).[/i]
+[i]Description as of 8 November 2026. Stable: Iron Admiral 1.2.77.4 (DIP_GG_Fixes 1.11.864). Betas follow on GitHub and through the in-game update (F10, Beta updates - on by default).[/i]
 
 [b]Download (one-click installer and all packages): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - the files here on Nexus are the same build.
 [b]Guide for players: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]Iron Admiral wiki[/url][/b] | Bug reports and ideas: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]GitHub issues[/url] or the comments here.
@@ -69,7 +69,7 @@ Logistics: oil, supply and sea routes; carriers in the campaign; crew training a
 [size=5][b]Iron Admiral - wersja polska[/b][/size]
 [i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, z symulacją marynarki, która myśli, walczy i pamięta.[/i]
 
-[i]Stan opisu: 8 listopada 2026. Wersja stabilna: Iron Admiral 1.2.77.3 (DIP_GG_Fixes 1.11.863). Bety na GitHubie i przez aktualizację w grze (F10, Beta updates - domyślnie włączone).[/i]
+[i]Stan opisu: 8 listopada 2026. Wersja stabilna: Iron Admiral 1.2.77.4 (DIP_GG_Fixes 1.11.864). Bety na GitHubie i przez aktualizację w grze (F10, Beta updates - domyślnie włączone).[/i]
 
 [b]Pobieranie (instalator i wszystkie paczki): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - pliki tutaj na Nexusie to ta sama wersja.
 [b]Poradnik dla graczy: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]wiki Iron Admiral[/url][/b] | Błędy i pomysły: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]zgłoszenia na GitHubie[/url] albo komentarze tutaj.

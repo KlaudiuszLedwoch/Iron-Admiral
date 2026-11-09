@@ -1,4 +1,4 @@
-1.2.78-beta.5
+1.2.77.4
 DIP_GG_Fixes 1.11.864
-2026-11-09 07:11
-Anachronistic community designs withdrawn
+2026-11-09 07:13
+Stable fix from 1.2.78-beta.5: anachronistic community designs withdrawn (#277)
