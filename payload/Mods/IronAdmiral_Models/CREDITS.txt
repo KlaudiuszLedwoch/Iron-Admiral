@@ -42,3 +42,18 @@ ijn_akagi.iam + ijn_akagi_t*.png (Japanese Fleet and Heavy Fleet Carrier hulls) 
 
 foxhole_carrier.iam + foxhole_carrier_t*.png (first carrier hull of nations without historical carriers) - "Foxhole - Converted frigate carrier" by Jegen (https://sketchfab.com/nhnls3005)
   Source: https://sketchfab.com/3d-models/foxhole-converted-frigate-carrier-9d91d93b721f434581eb2c8d52b67177 - CC BY 4.0. Fictional ship. Changes: simplified and converted.
+
+hms_illustrious.iam + hms_illustrious_t*.png (British carriers from 1937) - "HMS Illustrious (87)" by SB-129 (hrd4588, https://sketchfab.com/hrd4588)
+  Source: https://sketchfab.com/3d-models/hms-illustrious-87-7fb7b077473e48d1801c3c789d169ae9
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+ijn_soryu.iam + ijn_soryu_t*.png (Japanese carriers from 1935) - "IJN Soryu" by 42manako (https://sketchfab.com/42manako)
+  Source: https://sketchfab.com/3d-models/ijn-soryu-433e0828a4ee4fb68e744e36a8828e3b
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+kms_graf_zeppelin.iam + kms_graf_zeppelin_t*.png (German carriers from 1934) - "German Aircraft Carrier Graf Zeppelin (low poly)" by GĂ¶tz von Berlichingen (vonBerlichingen, https://sketchfab.com/vonBerlichingen)
+  Source: https://sketchfab.com/3d-models/german-aircraft-carrier-graf-zeppelin-low-poly-826d09ed54ab425a83ba09e82f082c70
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
