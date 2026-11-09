@@ -1,4 +1,4 @@
-1.2.78-beta.22
-DIP_GG_Fixes 1.11.880
-2026-11-09 13:33
-Last 8 ready carrier designs
+1.2.78-beta.23
+DIP_GG_Fixes 1.11.881
+2026-11-09 13:47
+Air strike video frames (test tool)
