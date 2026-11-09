@@ -1,4 +1,4 @@
-1.2.78-beta.19
-DIP_GG_Fixes 1.11.878
-2026-11-09 09:33
-12 new ready carrier designs
+1.2.78-beta.20
+DIP_GG_Fixes 1.11.879
+2026-11-09 09:35
+Ready carrier designs: one island funnel
