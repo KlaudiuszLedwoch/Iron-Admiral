@@ -1,4 +1,4 @@
-1.2.78-beta.17
-DIP_GG_Fixes 1.11.877
-2026-11-09 09:20
-Ready carrier design given once
+1.2.78-beta.18
+DIP_GG_Fixes 1.11.878
+2026-11-09 09:25
+CV tab, ready carrier design always back
