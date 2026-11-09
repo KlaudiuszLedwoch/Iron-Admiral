@@ -1,4 +1,4 @@
-1.2.78-beta.37
-DIP_GG_Fixes 1.11.906
-2026-11-09 19:11
-Crew pool for nations that lost their homeland
+1.2.78-beta.38
+DIP_GG_Fixes 1.11.907
+2026-11-09 19:28
+Carrier models no longer broken
