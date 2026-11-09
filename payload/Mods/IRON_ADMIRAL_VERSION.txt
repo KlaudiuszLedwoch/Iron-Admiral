@@ -1,4 +1,4 @@
-1.2.78-beta.20
-DIP_GG_Fixes 1.11.879
-2026-11-09 09:35
-Ready carrier designs: one island funnel
+1.2.78-beta.21
+DIP_GG_Fixes 1.11.880
+2026-11-09 12:57
+Carrier aviation switches in F10, guide chapter
