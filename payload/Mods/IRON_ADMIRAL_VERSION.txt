@@ -1,4 +1,4 @@
-1.2.78-beta.10
-DIP_GG_Fixes 1.11.870
-2026-11-09 08:22
-Air combat: fighter targets, passes, models, national colours
+1.2.78-beta.11
+DIP_GG_Fixes 1.11.871
+2026-11-09 08:25
+Historical bombs and fighter armament
