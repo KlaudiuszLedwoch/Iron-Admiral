@@ -1,4 +1,4 @@
-1.2.78-beta.30
-DIP_GG_Fixes 1.11.893
-2026-11-09 17:09
-Long-range aim back to beta 27 (#273)
+1.2.78-beta.31
+DIP_GG_Fixes 1.11.894
+2026-11-09 17:12
+#273 second try (test switch, off)
