@@ -1,4 +1,4 @@
-1.2.77.5
+1.2.78-beta.6
 DIP_GG_Fixes 1.11.865
-2026-11-09 07:21
-Stable fix from 1.2.78-beta.6: community designs restored, built only with re...
+2026-11-09 07:19
+Community designs restored, built only with researched technology
