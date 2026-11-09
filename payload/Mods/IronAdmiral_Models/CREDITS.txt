@@ -57,3 +57,48 @@ kms_graf_zeppelin.iam + kms_graf_zeppelin_t*.png (German carriers from 1934) - "
   Source: https://sketchfab.com/3d-models/german-aircraft-carrier-graf-zeppelin-low-poly-826d09ed54ab425a83ba09e82f082c70
   License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
   Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+hms_colossus.iam + hms_colossus_t*.png (British light carriers from 1940 and British carriers before 1930) - "Colossus Aircraft Carrier" by Mixmamo.studio (https://sketchfab.com/mixmamo.studio)
+  Source: https://sketchfab.com/3d-models/colossus-aircraft-carrier-64123a442db046f7b1ca7306f278d748
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+hms_implacable.iam + hms_implacable_t*.png (British carriers from 1944) - "HMS Implacable Aircraft Carrier" by Mixmamo.studio (https://sketchfab.com/mixmamo.studio)
+  Source: https://sketchfab.com/3d-models/hms-implacable-aircraft-carrier-ebc19c0a84b14243a9ce9c89cbb29f85
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+ijn_hosho.iam + ijn_hosho_t*.png (Japanese carriers before 1927) - "Japanese Aircraft Carrier Hosho" by kriss50 (https://sketchfab.com/kriss50)
+  Source: https://sketchfab.com/3d-models/japanese-aircraft-carrier-hosho-86d7cfdf955a44ebb033d4b5188f2f22
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+ijn_shinano.iam + ijn_shinano_t*.png (Japanese carriers from 1944) - "IJN Shinano" by xNotDumb (https://sketchfab.com/xNotDumb)
+  Source: https://sketchfab.com/3d-models/ijn-shinano-23b3cfa42dd04e388da866b58dbf76b3
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+ijn_zuiho.iam + ijn_zuiho_t*.png (Japanese light carriers from 1935) - "IJN Zuiho" by 42manako (https://sketchfab.com/42manako)
+  Source: https://sketchfab.com/3d-models/ijn-zuiho-096f5e0b3b3a4969a9b26fac3554007f
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+uss_lexington.iam + uss_lexington_t*.png (US carriers 1927-1936) - "USS Lexington" by kriss50 (https://sketchfab.com/kriss50)
+  Source: https://sketchfab.com/3d-models/uss-lexington-cc7d287ba3a34c219aa41b7890adbbd7
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+uss_midway.iam + uss_midway_t*.png (US carriers from 1945) - "USS Midway" by Battle_Dude (https://sketchfab.com/1546809)
+  Source: https://sketchfab.com/3d-models/uss-midway-bf2527cf2db040878ce6e28ec3e695a3
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+it_impero.iam + it_impero_t*.png (Italian carriers from 1936) - "Italian Aircraft Carrier IMPERO/Littorio-class" by lxyun_2 (https://sketchfab.com/lxyun_2)
+  Source: https://sketchfab.com/3d-models/italian-aircraft-carrier-imperolittorio-class-0df0587d0b0045358205d77c24d890de
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+cn_haihung.iam + cn_haihung_t*.png (Chinese carriers from 1918) - "Chinese Beiyang Navy Aircraft Carrier HAIHUNG" by lxyun_2 (https://sketchfab.com/lxyun_2)
+  Source: https://sketchfab.com/3d-models/chinese-beiyang-navy-aircraft-carrier-haihung-9ed2983c3e0e4c47a274fb2c5a499068
+  License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
+  Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
