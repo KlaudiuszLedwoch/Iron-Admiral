@@ -1,4 +1,4 @@
-1.2.78-beta.21
+1.2.78-beta.22
 DIP_GG_Fixes 1.11.880
-2026-11-09 12:57
-Carrier aviation switches in F10, guide chapter
+2026-11-09 13:33
+Last 8 ready carrier designs
