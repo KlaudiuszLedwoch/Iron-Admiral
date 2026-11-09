@@ -1,4 +1,4 @@
-1.2.78-beta.39
-DIP_GG_Fixes 1.11.908
-2026-11-09 19:43
-Fix: What's new window blocked the main menu
+1.2.78-beta.40
+DIP_GG_Fixes 1.11.910
+2026-11-09 19:50
+Battle weather by the right latitude, What's new closes
