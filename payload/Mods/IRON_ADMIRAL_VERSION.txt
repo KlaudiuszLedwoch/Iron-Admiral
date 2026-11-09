@@ -1,4 +1,4 @@
-1.2.78-beta.41
-DIP_GG_Fixes 1.11.911
-2026-11-09 20:11
-Submarines and mines, first step (off by default)
+1.2.78-beta.42
+DIP_GG_Fixes 1.11.912
+2026-11-09 20:43
+Crew pool rules for major nations only
