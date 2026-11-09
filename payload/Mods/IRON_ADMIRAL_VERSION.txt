@@ -1,4 +1,4 @@
-1.2.78-beta.32
-DIP_GG_Fixes 1.11.898
-2026-11-09 17:54
-Map lag, battle start distance, double sale, garrisons, carrier model
+1.2.78-beta.33
+DIP_GG_Fixes 1.11.900
+2026-11-09 18:02
+Long-range hits along the whole hull (#273), new carrier models
