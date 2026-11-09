@@ -29,8 +29,8 @@ uss_langley.iam (carrier hulls, ships on cv_ hulls)
   License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
   Changes: simplified (about 79,000 triangles with back faces) and converted for Iron Admiral; drawn in place of the carrier hulls.
 
-uss_hornet.iam (Fleet Carrier hull) - "USS Hornet (CV-8)" by kriss50 (https://sketchfab.com/kriss50)
-  Source: https://sketchfab.com/3d-models/uss-hornet-cv-8-017d579686344e8b889ad4861cfdc972 - CC BY 4.0. Changes: simplified and converted.
+uss_hornet.iam + uss_hornet_t*.png (Fleet Carrier hull) - "U.S. Navy Aircraft Carrier USS Hornet(CV-8)" by lxyun_2 (https://sketchfab.com/lxyun_2)
+  Source: https://sketchfab.com/3d-models/us-navy-aircraft-carrier-uss-hornetcv-8-858bbf73170b47ccb26407ee86d7fa81 - CC BY 4.0. Changes: B-25 aircraft removed, simplified, textures reduced, converted.
 
 uss_essex.iam (Heavy Fleet Carrier hull) - "USS Essex (CV-9)" by kriss50 (https://sketchfab.com/kriss50)
   Source: https://sketchfab.com/3d-models/uss-essex-cv-9-a0e0ed780fe6489188622efa8e4bacad - CC BY 4.0. Changes: simplified and converted.
