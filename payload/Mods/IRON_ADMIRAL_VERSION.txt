@@ -1,4 +1,4 @@
-1.2.78-beta.12
-DIP_GG_Fixes 1.11.872
-2026-11-09 08:31
-Hangar fires, splinters, smoke stages, turning dogfights
+1.2.78-beta.13
+DIP_GG_Fixes 1.11.873
+2026-11-09 08:33
+Turret jam, Thach weave, torpedo planes first
