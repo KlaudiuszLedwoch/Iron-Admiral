@@ -1,4 +1,4 @@
-1.2.78-beta.28
-DIP_GG_Fixes 1.11.889
-2026-11-09 16:00
-Long-range hits along the whole hull (#273)
+1.2.78-beta.29
+DIP_GG_Fixes 1.11.890
+2026-11-09 16:23
+Fix: game did not load on betas 27-28
