@@ -1,6 +1,6 @@
 # Iron Admiral – Campaign Guide
 
-_Guide as of 8 November 2026. Latest stable version: Iron Admiral 1.2.77.5; latest beta: 1.2.78-beta.3. Updated with every release._
+_Guide as of 9 November 2026. Latest stable version: Iron Admiral 1.2.77.5; latest beta: 1.2.78-beta.20. Updated with every release._
 
 > **Iron Admiral** is a free mod for Ultimate Admiral: Dreadnoughts, built on DIP The Great Game: a battle and campaign AI that fights back, a deeper economy and historical data. Download, source code and full changelog: **https://github.com/KlaudiuszLedwoch/Iron-Admiral** (latest packages in [releases](https://github.com/KlaudiuszLedwoch/Iron-Admiral/tree/main/releases)).
 
@@ -302,6 +302,21 @@ What the later 1.2.77 betas add (each with its switch in the F10 panel).
 - Loading-screen and turn tips explain Iron Admiral's mechanics.
 - Every new switch has its number and its ON/OFF description in the in-game Help (chapters "Settings ...").
 
+## 17. Carrier aviation (1.2.78 betas)
+
+**The CV tab.** Press P on the campaign map and open the CV tab. It lists your carriers with their air group, aircraft lost and still being replaced, whether each ship is at sea or in port, and how far its aircraft can reach to support a battle. The tab also has a button that restores the ready carrier design and a short summary of the rules.
+
+**Ready designs.** When your nation researches the carrier technologies, a ready carrier design of your nation and period appears in your designs. Build your carriers from it. Designing your own carrier in the designer does not work well yet. If you delete the ready design, it comes back at the next monthly check, or at once with the button in the CV tab. You always have exactly one copy.
+
+**Air group.** A carrier carries the historical number of aircraft of its class. Aircraft lost in battle are replaced over time, like ammunition, and faster in port.
+
+**Support and reconnaissance.** A carrier at sea sends aircraft to battles within its strike radius. The radius grows from the late 1920s to the early 1940s, and nearer battles get more aircraft. The carrier's scouts also report enemy forces in a wide circle around it.
+
+**In battle.** The carrier stays out of gun range. Its aircraft take off one after another, form up, and fly out in waves. When their work is done they come back, circle and land. Torpedo planes attack low from both bows. Dive bombers come in steeply and can start fires and wreck guns. Fighters escort the strike and defend their own carrier, and they go for the bombers first.
+
+**Fighters and ammunition.** Fighters carry only a few seconds of fire, and cannon run dry long before machine guns. A fighter out of ammunition breaks off. Escorts stay with their strike and fly home with it. Patrolling fighters land, rearm on deck and take off again while the battle lasts.
+
+All of this can be switched or tuned in the F10 panel (Battle AI tab: carrier dive bombers, carrier fighters, and the time between take-offs).
 ### Guide history
 - **4 November 2026, Iron Admiral 1.2.77-beta.78:** section 16 - Denmark, the Ottoman Empire, starting fleets, oil, armies by economy and supply, army budget and garrisons, industrial fund, why relations change, historical build times, building ports and port fit on the map, command limit, control zone by speed and range, prizes.
 - **2 November 2026, Iron Admiral 1.2.77-beta.33:** naval treaties (limits, totals, signing and withdrawal); alliances against a common enemy.
