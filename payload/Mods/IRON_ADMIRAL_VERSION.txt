@@ -1,4 +1,4 @@
-1.2.78-beta.36
-DIP_GG_Fixes 1.11.904
-2026-11-09 19:04
-Truce reminder, design nation and year, what's new
+1.2.78-beta.37
+DIP_GG_Fixes 1.11.906
+2026-11-09 19:11
+Crew pool for nations that lost their homeland
