@@ -1,4 +1,4 @@
-1.2.78-beta.4
-DIP_GG_Fixes 1.11.863
-2026-11-08 22:33
-Leaving a battle with carriers, kept AI designs
+1.2.78-beta.5
+DIP_GG_Fixes 1.11.864
+2026-11-09 07:11
+Anachronistic community designs withdrawn
