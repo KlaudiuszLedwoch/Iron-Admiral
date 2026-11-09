@@ -1,4 +1,4 @@
-1.2.78-beta.24
-DIP_GG_Fixes 1.11.882
-2026-11-09 14:36
-Convoy names kept after hits
+1.2.78-beta.25
+DIP_GG_Fixes 1.11.883
+2026-11-09 14:43
+Fighters: head-on passes, escorts rejoin next strike
