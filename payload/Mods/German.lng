@@ -545,3 +545,4 @@ $IA_Tip_161;Iron Admiral: In battle a carrier keeps beyond the gun range of the 
 $IA_Tip_162;Iron Admiral: Campaign map: right-click your task force to select it and open its orders palette; right-click the sea to move it. Tab jumps to the next idle force.
 $IA_Tip_163;Iron Admiral: Task force orders (P, Orders): Readiness, Shadow, Escort, Patrol, Intercept, Raid, Bombard, Blockade - the force carries them out every turn until you change them.
 $IA_Tip_164;Iron Admiral: Battle orders (Alt+1..9): Manual, Screen, Scout, Torpedo attack, Free action, Hunt, Finish off, Keep range, Scout + torpedo attack. Plain Scout only scouts and reports.
+$IA_Tip_165;Iron Admiral: Carriers have their own tab: press P and open CV. There you restore the ready carrier design, see your air groups, losses and support radius, and read how carriers work.

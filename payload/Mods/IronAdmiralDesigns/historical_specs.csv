@@ -1,0 +1,696 @@
+name,cls,nation,year,type,hull,tonnage,disp_hist,speed_kn,main_count,main_mm,main_in,main_turrets,main_per_turret,sec_count,sec_in,sec_mm,belt,deck,ct,turret,barbette,torpedo,source
+Kaiser Franz Joseph I,Kaiser Franz Joseph I,austria,1890,cl,cl_2_rambow,3967,3967.0,20.0,2,240.0,9,0,0,6,6,150.0,57,38,90,90,,4 x 450 mm,https://en.wikipedia.org/wiki/Kaiser_Franz_Joseph_I-class_cruiser
+Planet,Planet,austria,1890,tb,tb_highbow,480,480.0,19.6,2,66.0,3,0,0,8,2,47.0,,,,,,"2 x 450 mm (1 bow, 1 single)",https://navypedia.org/ships/austrohungary/ah_dd_planet.htm
+Trabant,Trabant,austria,1890,tb,tb_highbow,490,490.0,20.1,2,66.0,3,0,0,8,2,47.0,,,,,,"2 x 450 mm (1 bow, 1 single)",https://navypedia.org/ships/austrohungary/ah_dd_trabant.htm
+Satellit,Satellit,austria,1893,tb,tb_highbow,500,540.0,23.0,1,66.0,3,0,0,6,2,47.0,,,,,,"2 x 450 mm (1 bow, 1 single)",https://navypedia.org/ships/austrohungary/ah_dd_satellit.htm
+Kaiserin und Königin Maria Theresia,Kaiserin und Königin Maria Theresia,austria,1894,ca,ca_austria_monarch,5420,5420.0,19.35,2,240.0,9,0,0,8,6,150.0,100,57,50,100,150,4 x 450 mm,https://en.wikipedia.org/wiki/SMS_Kaiserin_und_K%C3%B6nigin_Maria_Theresia
+Magnet,Magnet,austria,1896,tb,tb_highbow,485,485.0,26.0,6,47.0,2,0,0,0,0,0,,,,,,2 x 450 mm,https://navypedia.org/ships/austrohungary/ah_dd_magnet.htm
+Zenta,Zenta,austria,1899,cl,cl_2_rambow,2500,2350.0,20.0,8,120.0,5,0,0,0,0,0,,50,50,,,2 x 450 mm,https://en.wikipedia.org/wiki/Zenta-class_cruiser
+Kaiser Karl VI,Kaiser Karl VI,austria,1900,ca,ca_austria_monarch,6265,6265.0,20.83,2,240.0,9,0,0,8,6,150.0,220,64,,200,205,2 x 450 mm,https://en.wikipedia.org/wiki/SMS_Kaiser_Karl_VI
+Habsburg,Habsburg,austria,1902,bb,b_1_austria,8232,8232.0,19.0,3,240.0,9,0,0,12,6,150.0,220,40,150,280,183,2 x 450 mm,https://en.wikipedia.org/wiki/Habsburg-class_battleship
+Erzherzog Karl,Erzherzog Karl,austria,1906,bb,b_1_austria,10472,10472.0,20.5,4,240.0,9,0,0,12,7,190.0,210,55,220,240,,2 x 450 mm,https://en.wikipedia.org/wiki/Erzherzog_Karl-class_battleship
+Erzherzog Franz Ferdinand,Radetzky,austria,1910,bb,bb_1_austrian_early,14508,14508.0,20.5,4,305.0,12,0,0,8,9,240.0,230,48,250,250,,3 x 450 mm,https://en.wikipedia.org/wiki/Radetzky-class_battleship
+Admiral Spaun,Admiral Spaun,austria,1910,cl,cl_3_britain,3500,3500.0,27.07,7,100.0,4,0,0,0,0,0,60,20,50,,,"2 x 450 mm (1910-16); 4 x 533 mm (2x2, 1916-18)",https://en.wikipedia.org/wiki/SMS_Admiral_Spaun
+Viribus Unitis,Tegetthoff,austria,1912,bb,bb_1_austria,21000,20000.0,20.0,12,305.0,12,4,3,12,6,150.0,280,48,,280,,4 x 533 mm,https://en.wikipedia.org/wiki/Tegetthoff-class_battleship
+Tátra,Tátra,austria,1913,dd,dd_1_austria_large,950,870.0,32.5,2,100.0,4,0,0,6,3,66.0,,,,,,4 x 450 mm (2x2),https://navypedia.org/ships/austrohungary/ah_dd_tatra.htm
+Saida,Novara,austria,1914,cl,cl_3_britain,3500,3500.0,27.0,9,100.0,4,0,0,0,0,0,60,20,50,40,,6 x 533 mm (twin),https://en.wikipedia.org/wiki/Novara-class_cruiser
+Triglav (2nd),Triglav,austria,1917,dd,dd_1_austria_large,950,890.0,32.5,2,100.0,4,0,0,4,3,66.0,,,,,,4 x 450 mm (2x2),https://navypedia.org/ships/austrohungary/ah_dd_triglav.htm
+Barracouta,Barracouta class,britain,1890,cl,cl_1_straightbow_early,1580,1580.0,16.5,6,119.0,5,0,0,0,0,0,,51,,51,,2 x 356 mm (underwater),https://en.wikipedia.org/wiki/Barracouta-class_cruiser
+Barham,Barham class,britain,1890,cl,cl_1_straightbow_early,1800,1800.0,19.0,6,119.0,5,0,0,0,0,0,,51,,51,,2 x 356 mm (underwater),https://en.wikipedia.org/wiki/Barham-class_cruiser
+Pallas,Pearl class,britain,1890,cl,cl_1_straightbow,2575,2575.0,19.0,8,119.0,5,0,0,0,0,0,,,,,,2 x 356 mm,https://en.wikipedia.org/wiki/Pearl-class_cruiser
+Blake,Blake class,britain,1891,cl,cl_5_britain_adv_treaty,9150,9150.0,22.0,2,234.0,9,0,0,10,6,152.0,,152,305,114,,4 x 356 mm,https://en.wikipedia.org/wiki/Blake-class_cruiser
+Edgar,Edgar class,britain,1893,cl,cl_2_straightbow,7000,7700.0,20.0,2,234.0,9,0,0,10,6,152.0,,127,254,76,,4 x 450 mm,https://en.wikipedia.org/wiki/Edgar-class_cruiser
+Jason,Alarm,britain,1893,tb,tb_gunboat,810,810.0,18.7,2,119.0,5,0,0,0,0,0,,,,,,5 x 356 mm (14 in) (first 5 ships) or 3 x 457 mm (18 in) (later 6),https://en.wikipedia.org/wiki/Alarm-class_torpedo_gunboat
+Astraea,Astraea class,britain,1894,cl,cl_2_straightbow,4360,4360.0,19.5,2,152.0,6,0,0,8,5,119.0,,51,152,114,,4 x 450 mm,https://en.wikipedia.org/wiki/Astraea-class_cruiser
+Dryad,Dryad,britain,1894,tb,tb_gunboat,1000,1070.0,18.2,2,119.0,5,0,0,0,0,0,,,,,,5 x 457 mm (18 in),https://en.wikipedia.org/wiki/Dryad-class_torpedo_gunboat
+Pactolus,Pelorus class,britain,1896,cl,cl_1_straightbow,2135,2135.0,20.0,8,102.0,4,0,0,0,0,0,,51,76,,,2 x 450 mm,https://en.wikipedia.org/wiki/Pelorus-class_cruiser
+Renown,Renown,britain,1897,bb,b_1,12865,12865.0,19.0,4,254.0,10,2,2,10,6,152.0,203,76,229,152,254,5 x 450 mm,https://en.wikipedia.org/wiki/HMS_Renown_(1895)
+Eclipse,Eclipse class,britain,1897,cl,cl_1_medium,5600,5600.0,18.5,5,152.0,6,0,0,6,5,119.0,,76,152,76,,3 x 450 mm,https://en.wikipedia.org/wiki/Eclipse-class_cruiser
+Diadem,Diadem class,britain,1898,cl,cl_5_britain_adv_treaty,11000,11000.0,20.75,16,152.0,6,0,0,14,3,76.0,,102,305,114,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Diadem-class_cruiser
+Arrogant,Arrogant class,britain,1898,cl,cl_1_medium,5750,5750.0,19.0,4,152.0,6,0,0,6,5,119.0,,76,229,,,3 x 450 mm (submerged),https://en.wikipedia.org/wiki/Arrogant-class_cruiser
+Canopus,Canopus,britain,1899,bb,b_2,14300,14300.0,18.0,4,305.0,12,2,2,12,6,152.0,152,51,305,203,305,4 x 457 mm,https://en.wikipedia.org/wiki/Canopus-class_battleship
+Highflyer,Highflyer class,britain,1899,cl,cl_1_medium,5600,5600.0,20.0,11,152.0,6,0,0,0,0,0,,76,152,76,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Highflyer-class_cruiser
+Formidable,Formidable,britain,1901,bb,b_2,15930,15930.0,18.0,4,305.0,12,2,2,12,6,152.0,229,76,356,254,305,4 x 457 mm (submerged),https://en.wikipedia.org/wiki/Formidable-class_battleship
+Cressy,Cressy class,britain,1901,ca,ca_3,12000,12000.0,21.0,2,234.0,9,0,0,12,6,152.0,152,76,305,152,152,2 x 450 mm,https://en.wikipedia.org/wiki/Cressy-class_cruiser
+London,London,britain,1902,bb,b_2,15700,15700.0,18.0,4,305.0,12,2,2,12,6,152.0,229,64,356,254,305,4 x 457 mm (submerged),https://en.wikipedia.org/wiki/London-class_battleship
+Drake,Drake class,britain,1902,ca,ca_3_warrior,14150,14150.0,23.0,2,234.0,9,0,0,16,6,152.0,152,64,305,152,152,2 x 450 mm,https://en.wikipedia.org/wiki/Drake-class_cruiser
+Duncan,Duncan,britain,1903,bb,b_2,15200,15200.0,19.0,4,305.0,12,2,2,12,6,152.0,178,51,305,254,279,4 x 457 mm (submerged),https://en.wikipedia.org/wiki/Duncan-class_battleship
+Monmouth,Monmouth class,britain,1903,ca,ca_2,9800,9800.0,23.0,14,152.0,6,0,0,0,0,0,102,51,254,102,102,2 x 450 mm,https://en.wikipedia.org/wiki/Monmouth-class_cruiser
+Swiftsure (ex-Constitucion),Swiftsure,britain,1904,bb,b_2,13840,13840.0,19.0,4,254.0,10,2,2,14,8,191.0,178,76,279,254,254,2 x 450 mm,https://en.wikipedia.org/wiki/Swiftsure-class_battleship
+Topaze,Topaze class,britain,1904,cl,cl_3_britain,3500,3000.0,22.0,12,102.0,4,0,0,0,0,0,,51,76,25,,2 x 450 mm (above water),https://en.wikipedia.org/wiki/Topaze-class_cruiser
+Challenger,Challenger class,britain,1904,cl,cl_3_britain,5880,5880.0,21.0,11,152.0,6,0,0,0,0,0,,76,152,76,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Challenger-class_cruiser
+King Edward VII,King Edward VII,britain,1905,bb,b_2,16500,17290.0,18.5,4,305.0,12,2,2,10,6,152.0,229,64,305,305,305,4 x 457 mm (submerged),https://en.wikipedia.org/wiki/King_Edward_VII-class_battleship
+Antrim,Devonshire class,britain,1905,ca,ca_2,10850,10850.0,22.0,4,191.0,8,0,0,6,6,152.0,152,51,305,127,152,2 x 450 mm,https://en.wikipedia.org/wiki/Devonshire-class_cruiser_(1903)
+Sentinel,Sentinel class,britain,1905,cl,cl_2_straightbow,2895,2895.0,25.0,10,76.0,3,0,0,0,0,0,,38,76,,,2 x 450 mm,https://en.wikipedia.org/wiki/Sentinel-class_cruiser
+Forward,Forward class,britain,1905,cl,cl_2_straightbow,2850,2850.0,25.0,10,76.0,3,0,0,0,0,0,51,29,76,,,2 x 450 mm,https://en.wikipedia.org/wiki/Forward-class_cruiser
+Pathfinder,Pathfinder class,britain,1905,cl,cl_2_straightbow,2940,2940.0,25.0,10,76.0,3,0,0,0,0,0,51,38,76,,,2 x 450 mm,https://en.wikipedia.org/wiki/Pathfinder-class_cruiser
+Adventure,Adventure class,britain,1905,cl,cl_2_straightbow,2670,2670.0,25.0,10,76.0,3,0,0,0,0,0,,51,76,,,2 x 450 mm,https://en.wikipedia.org/wiki/Adventure-class_cruiser
+Dreadnought,Dreadnought,britain,1906,bb,bb_1,20730,20730.0,21.0,10,305.0,12,5,2,27,3,76.0,279,76,279,305,279,5 x 450 mm,https://en.wikipedia.org/wiki/HMS_Dreadnought_(1906)
+Duke of Edinburgh,Duke of Edinburgh class,britain,1906,ca,ca_3,12590,12590.0,23.0,6,234.0,9,0,0,10,6,152.0,152,38,254,190,152,3 x 450 mm (submerged),https://en.wikipedia.org/wiki/Duke_of_Edinburgh-class_cruiser
+Warrior,Warrior class,britain,1907,ca,ca_3_warrior,13550,13550.0,23.0,6,234.0,9,0,0,4,8,191.0,152,38,254,190,152,3 x 450 mm (submerged),https://en.wikipedia.org/wiki/Warrior-class_cruiser
+Lord Nelson,Lord Nelson,britain,1908,bb,b_2,16500,17820.0,18.0,4,305.0,12,2,2,24,3,76.0,305,102,305,305,305,5 x 450 mm,https://en.wikipedia.org/wiki/Lord_Nelson-class_battleship
+Invincible,Invincible,britain,1908,bc,bc_1_britain_var,20420,20420.0,25.0,8,305.0,12,4,2,16,4,102.0,152,64,254,178,178,5 x 450 mm,https://en.wikipedia.org/wiki/Invincible-class_battlecruiser
+Minotaur,Minotaur class,britain,1908,ca,ca_3,14600,14600.0,23.0,4,234.0,9,0,0,10,8,191.0,152,51,254,203,178,5 x 450 mm (submerged),https://en.wikipedia.org/wiki/Minotaur-class_cruiser_(1906)
+Afridi,Tribal,britain,1908,dd,dd_1,940,940.0,33.0,2,102.0,4,0,0,0,0,0,,,,,,2 x 457 mm (18 in),https://en.wikipedia.org/wiki/Tribal-class_destroyer_(1905)
+Boadicea,Boadicea class,britain,1909,cl,cl_3_britain,3500,3350.0,25.0,6,102.0,4,0,0,0,0,0,,25,102,,,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Boadicea-class_cruiser
+Blonde,Blonde class,britain,1910,cl,cl_3_britain,3500,3350.0,25.0,10,102.0,4,0,0,0,0,0,,25,102,,,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Blonde-class_cruiser
+Bristol,Town class - Bristol group,britain,1910,cl,cl_3_britain,4800,4800.0,25.0,2,152.0,6,0,0,10,4,102.0,,51,152,76,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Town-class_cruiser_(1910)
+Beagle,Beagle,britain,1910,dd,dd_1,945,945.0,27.0,1,102.0,4,0,0,3,3,76.0,,,,,,2 x 533 mm (21 in),https://en.wikipedia.org/wiki/Beagle-class_destroyer
+Acorn,Acorn,britain,1910,dd,dd_1,760,760.0,27.0,2,102.0,4,0,0,2,3,76.0,,,,,,2 x 533 mm (21 in),https://en.wikipedia.org/wiki/Acorn-class_destroyer
+Indefatigable,Indefatigable,britain,1911,bc,bc_1_britain_var,22130,22130.0,25.8,8,305.0,12,4,2,16,4,102.0,152,64,254,178,178,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Indefatigable-class_battlecruiser
+Active,Active class,britain,1911,cl,cl_3_britain,3500,3340.0,25.0,10,102.0,4,0,0,0,0,0,,25,102,,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Active-class_cruiser
+Weymouth,Town class - Weymouth group,britain,1911,cl,cl_3_britain,5250,5250.0,25.0,8,152.0,6,0,0,0,0,0,,51,,,,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Town-class_cruiser_(1910)
+Acheron,Acheron,britain,1911,dd,dd_1,790,790.0,27.0,2,102.0,4,0,0,2,3,76.0,,,,,,2 x 533 mm (21 in),https://en.wikipedia.org/wiki/Acheron-class_destroyer
+King George V,King George V,britain,1912,bb,bb_2_britain_alt3,27120,27120.0,21.0,10,343.0,14,5,2,16,4,102.0,305,102,279,279,254,3 x 533 mm,https://en.wikipedia.org/wiki/King_George_V-class_battleship_(1911)
+Lion,Lion,britain,1912,bc,bc_3_britain,30820,30820.0,27.5,8,343.0,14,4,2,16,4,102.0,229,64,254,229,229,2 x 533 mm,https://en.wikipedia.org/wiki/Lion-class_battlecruiser
+Chatham,Town class - Chatham group,britain,1912,cl,cl_3_britain,5400,5400.0,25.0,8,152.0,6,0,0,0,0,0,76,38,102,102,,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Town-class_cruiser_(1910)
+Acasta,Acasta,britain,1912,dd,dd_1,984,984.0,32.0,3,102.0,4,0,0,0,0,0,,,,,,2 x 533 mm (21 in),https://en.wikipedia.org/wiki/Acasta-class_destroyer
+Queen Mary,Queen Mary,britain,1913,bc,bc_3_britain,31650,31650.0,28.0,8,343.0,14,4,2,16,4,102.0,229,64,254,229,229,2 x 533 mm,https://en.wikipedia.org/wiki/HMS_Queen_Mary
+HMAS Australia,Australia,britain,1913,bc,bc_1_britain_var,22490,22490.0,25.0,8,305.0,12,4,2,16,4,102.0,152,64,,178,178,2 x 457 mm,https://en.wikipedia.org/wiki/HMAS_Australia_(1911)
+Llewellyn,Laforey,britain,1913,dd,dd_1,1010,1010.0,29.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Laforey-class_destroyer_(1913)
+Iron Duke,Iron Duke,britain,1914,bb,bb_2_britain_alt4,29500,29500.0,21.25,10,343.0,14,5,2,12,6,152.0,305,64,,279,254,4 x 533 mm,https://en.wikipedia.org/wiki/Iron_Duke-class_battleship
+Agincourt (ex-Rio de Janeiro / Sultan Osman I),Agincourt,britain,1914,bb,bb_2_britain_alt2,30860,30860.0,22.0,14,305.0,12,7,2,20,6,152.0,229,64,305,305,229,3 x 533 mm,https://en.wikipedia.org/wiki/HMS_Agincourt_(1913)
+Erin (ex-Resadiye),Erin,britain,1914,bb,bb_2_britain_alt,25250,25250.0,21.0,10,343.0,14,5,2,16,6,152.0,305,76,,279,254,4 x 533 mm,https://en.wikipedia.org/wiki/HMS_Erin
+Queen Elizabeth,Queen Elizabeth,britain,1914,bb,bb_2_britain_alt2,33260,33260.0,24.0,8,381.0,15,4,2,16,6,152.0,330,76,330,330,254,4 x 533 mm,https://en.wikipedia.org/wiki/Queen_Elizabeth-class_battleship
+Birmingham,Town class - Birmingham group,britain,1914,cl,cl_3_britain,5440,5440.0,25.5,9,152.0,6,0,0,0,0,0,,,,,,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Town-class_cruiser_(1910)
+Arethusa,Arethusa class,britain,1914,cl,cl_3_britain,3512,3512.0,28.5,2,152.0,6,0,0,6,4,102.0,76,25,,,,4 x 533 mm (2x2),https://en.wikipedia.org/wiki/Arethusa-class_cruiser_(1913)
+Caroline,C class - Caroline group,britain,1914,cl,cl_3_britain,4219,4219.0,28.5,2,152.0,6,0,0,8,4,102.0,76,25,152,,,"4 x 533 mm (2x2, deck)",https://en.wikipedia.org/wiki/C-class_cruiser
+Admiralty M,Admiralty M,britain,1914,dd,dd_1,900,900.0,34.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Admiralty_M-class_destroyer
+Miranda,Yarrow M,britain,1914,dd,dd_1,930,930.0,36.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Yarrow_M-class_destroyer
+Meteor,Thornycroft M,britain,1914,dd,dd_2,1100,1070.0,35.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Thornycroft_M-class_destroyer
+Faulknor,Faulknor,britain,1914,dd,dd_3,1610,1610.0,31.0,6,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm,https://www.navypedia.org/ships/uk/brit_dd_faulknor.htm
+Canada (ex-Almirante Latorre),Canada,britain,1915,bb,bb_2_britain_alt4,28100,28100.0,22.75,10,356.0,14,0,0,16,6,152.0,229,102,279,254,254,4 x 533 mm (submerged),https://en.wikipedia.org/wiki/Almirante_Latorre-class_battleship
+Birkenhead,Town class - Birkenhead group,britain,1915,cl,cl_5_britain_scout,5185,5185.0,26.5,10,140.0,6,0,0,0,0,0,76,,,,,2 x 533 mm,https://en.wikipedia.org/wiki/Town-class_cruiser_(1910)
+Calliope,C class - Calliope group,britain,1915,cl,cl_3_britain,3750,3750.0,28.5,4,152.0,6,0,0,0,0,0,102,25,,,,2 x 533 mm (4 more added 1919),https://en.wikipedia.org/wiki/C-class_cruiser
+Cambrian,C class - Cambrian group,britain,1915,cl,cl_3_britain,4320,4320.0,28.5,3,152.0,6,0,0,6,4,102.0,76,25,152,,,2 x 533 mm,https://en.wikipedia.org/wiki/C-class_cruiser
+Mentor,Hawthorn M,britain,1915,dd,dd_2,1100,1057.0,35.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Hawthorn_M-class_destroyer
+Medea (ex-Kriti),Medea,britain,1915,dd,dd_2,1100,1040.0,32.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Medea-class_destroyer
+Lightfoot,Marksman,britain,1915,dd,dd_3,1600,1600.0,34.0,4,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Marksman-class_flotilla_leader
+Revenge,Revenge,britain,1916,bb,bb_2_britain_alt2,32820,32820.0,21.0,8,381.0,15,4,2,14,6,152.0,330,102,279,330,254,4 x 533 mm,https://en.wikipedia.org/wiki/Revenge-class_battleship
+Courageous,Courageous,britain,1916,bc,bc_large_light_cruiser,21000,22560.0,32.0,4,381.0,15,2,2,18,4,102.0,76,76,254,229,178,2 x 533 mm,https://en.wikipedia.org/wiki/Courageous-class_battlecruiser
+Centaur,C class - Centaur group,britain,1916,cl,cl_3_britain,3750,3750.0,28.5,5,152.0,6,0,0,2,3,76.0,76,25,,,,2 x 533 mm,https://en.wikipedia.org/wiki/C-class_cruiser
+Talisman,Talisman,britain,1916,dd,dd_2,1100,1098.0,32.0,5,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Talisman-class_destroyer
+Parker,Parker,britain,1916,dd,dd_3,1670,1670.0,34.0,4,102.0,4,0,0,1,3,76.0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/Parker-class_flotilla_leader
+R class,R class,britain,1916,dd,dd_2,1100,975.0,36.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (2x2),https://en.wikipedia.org/wiki/R-class_destroyer_(1916)
+Caledon,C class - Caledon group,britain,1917,cl,cl_5_britain_scout,4500,4180.0,29.0,5,152.0,6,0,0,0,0,0,76,25,152,,,8 x 533 mm (4x2),https://en.wikipedia.org/wiki/C-class_cruiser
+Cardiff,C class - Ceres group,britain,1917,cl,cl_5_britain_scout,4500,4190.0,29.5,5,152.0,6,0,0,0,0,0,76,25,,,,8 x 533 mm,https://en.wikipedia.org/wiki/C-class_cruiser
+Valkyrie,V class leaders,britain,1917,dd,dd_2,1188,1188.0,34.0,4,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (2x2) (Vampire 2x3),https://www.navypedia.org/ships/uk/brit_dd_v_leader.htm
+V class,V class,britain,1917,dd,dd_2,1100,1095.0,34.0,4,102.0,4,0,0,1,3,76.0,,,,,,4 x 533 mm (2x2),https://www.navypedia.org/ships/uk/brit_dd_admiralty_v.htm
+W class,W class,britain,1917,dd,dd_2,1100,1100.0,34.0,4,102.0,4,0,0,1,3,76.0,,,,,,6 x 533 mm (2x3),https://www.navypedia.org/ships/uk/brit_dd_admiralty_w.htm
+Shakespeare,Thornycroft type leader,britain,1917,dd,dd_3,1500,1480.0,36.0,5,120.0,5,0,0,1,3,76.0,,,,,,6 x 533 mm (21 in) (2x3),https://en.wikipedia.org/wiki/Thornycroft_type_destroyer_leader
+Town,Town,britain,1917,dd,dd_2,1190,1190.0,28.5,4,102.0,4,0,0,1,3,76.0,,,,,,12 x 533 mm (4x3),https://en.wikipedia.org/wiki/Town-class_destroyer
+Hawkins,Hawkins class,britain,1918,ca,ca_3,10000,9860.0,31.0,7,191.0,8,0,0,6,3,76.0,76,38,76,25,,6 x 533 mm,https://en.wikipedia.org/wiki/Hawkins-class_cruiser
+Danae,Danae class,britain,1918,cl,cl_5_britain_scout,4850,4850.0,29.0,6,152.0,6,0,0,0,0,0,76,25,,25,,12 x 533 mm (4x3),https://en.wikipedia.org/wiki/Danae-class_cruiser
+Cairo,C class - Carlisle group,britain,1918,cl,cl_5_britain_scout,4500,4290.0,29.0,5,152.0,6,0,0,0,0,0,76,25,,,,8 x 533 mm,https://en.wikipedia.org/wiki/C-class_cruiser
+Scott,Admiralty type leader,britain,1918,dd,dd_3,1580,1580.0,36.5,5,120.0,5,0,0,1,3,76.0,,,,,,6 x 533 mm (21 in) (2x3),https://en.wikipedia.org/wiki/Admiralty_type_flotilla_leader
+HMAS Adelaide,Town class,britain,1922,cl,cl_5_britain_scout,5550,5550.0,25.5,9,152.0,6,0,0,0,0,0,,,,,,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Town-class_cruiser_(1910)
+Emerald,Emerald class,britain,1926,cl,cl_5_britain_C_class,7580,7580.0,33.0,7,152.0,6,0,0,3,4,102.0,76,25,,,,16 x 533 mm (4x4),https://en.wikipedia.org/wiki/Emerald-class_cruiser
+Adventure,Adventure class,britain,1926,cl,cl_5_britain_scout,6740,6740.0,27.75,4,119.0,5,0,0,0,0,0,,,,,,,https://en.wikipedia.org/wiki/HMS_Adventure_(M23)
+Nelson,Nelson,britain,1927,bb,bb_4_britain_nelson,33300,33300.0,23.0,9,406.0,16,3,3,12,6,152.0,356,159,356,406,381,2 x 622 mm,https://en.wikipedia.org/wiki/Nelson-class_battleship
+Ambuscade,Ambuscade,britain,1927,dd,tb_sloop,1173,1173.0,37.0,4,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (21 in) (2x3),https://en.wikipedia.org/wiki/HMS_Ambuscade_(D38)
+Amazon,Amazon,britain,1927,dd,tb_sloop,1350,1350.0,37.0,4,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (21 in) (2x3),https://en.wikipedia.org/wiki/HMS_Amazon_(D39)
+Berwick,County class - Kent group,britain,1928,ca,ca_5_british,10400,10400.0,31.5,8,203.0,8,0,0,4,4,102.0,114,38,,25,25,8 x 533 mm (2x4; removed from 1935),https://en.wikipedia.org/wiki/County-class_cruiser
+London,County class - London group,britain,1929,ca,ca_5_british_small,9840,9840.0,32.25,8,203.0,8,0,0,8,4,102.0,,38,,25,25,8 x 533 mm (2x4),https://en.wikipedia.org/wiki/County-class_cruiser
+Norfolk,County class - Norfolk group,britain,1930,ca,ca_5_british,10400,10400.0,32.25,8,203.0,8,0,0,8,4,102.0,89,,,,,8 x 533 mm,https://en.wikipedia.org/wiki/County-class_cruiser
+York,York class,britain,1930,ca,ca_5_british_small,8250,8250.0,32.25,6,203.0,8,0,0,6,4,102.0,76,38,,25,25,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/York-class_cruiser
+Codrington (leader),A class,britain,1930,dd,tb_sloop,1360,1360.0,35.0,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/A-_and_B-class_destroyer
+Saguenay,Saguenay,britain,1931,dd,tb_sloop,1337,1337.0,35.0,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/A-_and_B-class_destroyer
+Keith (leader),B class,britain,1931,dd,tb_sloop,1360,1360.0,35.0,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/A-_and_B-class_destroyer
+Kempenfelt (leader),C class,britain,1932,dd,tb_sloop_large,1375,1375.0,36.0,4,120.0,5,0,0,1,3,76.0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/C_and_D-class_destroyer
+Duncan (leader),D class,britain,1932,dd,tb_sloop_large,1375,1375.0,36.0,4,120.0,5,0,0,1,3,76.0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/C_and_D-class_destroyer
+Leander,Leander class,britain,1933,cl,cl_5_dido,6985,6985.0,32.5,8,152.0,6,0,0,4,4,102.0,76,51,,25,25,8 x 533 mm (2x4),https://navypedia.org/ships/new_zealand/nz_cr_achilles.htm
+Exmouth (leader),E class,britain,1934,dd,tb_sloop_large,1405,1405.0,35.5,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/E_and_F-class_destroyer
+Faulknor (leader),F class,britain,1934,dd,tb_sloop_large,1405,1405.0,35.5,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/E_and_F-class_destroyer
+Phaeton (HMAS Sydney),Leander class,britain,1935,cl,cl_4_Modern_Generic_2,6900,6830.0,32.5,8,152.0,6,0,0,8,4,102.0,89,51,,25,25,8 x 533 mm (2x4),https://navypedia.org/ships/australia/aus_cr_sydney.htm
+Grenville (leader),G class,britain,1936,dd,tb_sloop,1350,1350.0,35.5,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/G_and_H-class_destroyer
+Hardy (leader),H class,britain,1936,dd,tb_sloop,1350,1350.0,35.5,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/G_and_H-class_destroyer
+Southampton,Town class - Southampton group,britain,1937,cl,cl_4_Modern_Generic_2,8940,8940.0,32.0,12,152.0,6,0,0,8,4,102.0,114,,,25,,6 x 533 mm (2x3),https://naval-encyclopedia.com/ww2/uk/town-class-cruisers-1936.php
+Icarus,I class,britain,1937,dd,tb_sloop_large,1370,1370.0,36.0,4,120.0,5,0,0,0,0,0,,,,,,10 x 533 mm (21 in) (2x5),https://en.wikipedia.org/wiki/I-class_destroyer
+Manchester,Town class - Gloucester group,britain,1938,cl,cl_4_Modern_Generic_2,9100,9100.0,32.5,12,152.0,6,0,0,8,4,102.0,114,,,102,,6 x 533 mm (2x3),https://naval-encyclopedia.com/ww2/uk/town-class-cruisers-1936.php
+RN: Gurkha,Tribal,britain,1938,dd,dd_5_nose_small_usa,1854,1854.0,36.0,8,120.0,5,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (1x4),https://en.wikipedia.org/wiki/Tribal-class_destroyer_(1936)
+Lion,Lion,britain,1939,bb,bb_5_kgeorg_compact,40550,40550.0,30.0,9,406.0,16,3,3,16,5,133.0,373,152,114,381,381,,https://en.wikipedia.org/wiki/Lion-class_battleship
+Edinburgh,Town class - Edinburgh group,britain,1939,cl,cl_6_dido,9400,9400.0,32.5,12,152.0,6,0,0,8,4,102.0,114,76,,102,,6 x 533 mm (2x3),https://naval-encyclopedia.com/ww2/uk/town-class-cruisers-1936.php
+Jervis,J class,britain,1939,dd,tb_sloop_large,1690,1690.0,36.0,6,120.0,5,0,0,0,0,0,,,,,,10 x 533 mm (21 in) (2x5),"https://en.wikipedia.org/wiki/J-,_K-_and_N-class_destroyer"
+Kelly,K class,britain,1939,dd,tb_sloop_large,1690,1690.0,36.0,6,120.0,5,0,0,0,0,0,,,,,,10 x 533 mm (21 in) (2x5),"https://en.wikipedia.org/wiki/J-,_K-_and_N-class_destroyer"
+King George V,King George V,britain,1940,bb,bb_5_kgeorg_compact,40000,40000.0,28.0,10,356.0,14,2,4,16,5,133.0,373,149,102,324,324,,https://en.wikipedia.org/wiki/King_George_V-class_battleship_(1939)
+Fiji,Fiji class,britain,1940,cl,cl_4_Modern_Generic_2,8530,8530.0,31.5,12,152.0,6,0,0,8,4,102.0,89,51,,51,,6 x 533 mm (2x3),https://naval-encyclopedia.com/ww2/uk/fiji-class-cruisers.php
+Laforey (leader),L and M class,britain,1940,dd,dd_5_nose_small_usa,1920,1920.0,36.0,6,120.0,5,0,0,1,4,102.0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/L_and_M-class_destroyer
+Hunt Type I,Hunt Type I,britain,1940,dd,tb_sloop,1000,1000.0,28.0,4,102.0,4,0,0,0,0,0,,,,,,,https://www.navypedia.org/ships/uk/brit_de_hunt_1.htm
+Onslow,O class,britain,1941,dd,tb_sloop_large,1610,1610.0,36.75,4,120.0,5,0,0,1,4,102.0,,,,,,4 x 533 mm (21 in) (1x4) / 8 (2x4) in 4 in group,https://en.wikipedia.org/wiki/O_and_P-class_destroyer
+Pakenham,P class,britain,1941,dd,tb_sloop_large,1690,1690.0,36.75,5,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (1x4),https://en.wikipedia.org/wiki/O_and_P-class_destroyer
+Hunt Type II,Hunt Type II,britain,1941,dd,tb_sloop,1050,1050.0,27.0,6,102.0,4,0,0,0,0,0,,,,,,,https://www.navypedia.org/ships/uk/brit_de_hunt_2.htm
+Hunt Type III,Hunt Type III,britain,1941,dd,tb_sloop,1050,1050.0,27.0,4,102.0,4,0,0,0,0,0,,,,,,2 x 533 mm (1x2),https://www.navypedia.org/ships/uk/brit_de_hunt_3.htm
+Queenborough,Q class,britain,1942,dd,tb_sloop_large,1692,1692.0,36.0,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/Q_and_R-class_destroyer
+Brecon,Hunt Type IV,britain,1942,dd,tb_sloop,1175,1175.0,26.0,6,102.0,4,0,0,0,0,0,,,,,,3 x 533 mm (1x3),https://www.navypedia.org/ships/uk/brit_de_hunt_4.htm
+Bellona,Dido class - Bellona group,britain,1943,cl,cl_4_Modern_Generic_2,6900,5950.0,32.25,8,133.0,5,0,0,0,0,0,76,51,,38,,6 x 533 mm (2x3),https://naval-encyclopedia.com/ww2/uk/bellona-class-cruisers.php
+Ceylon,Fiji class - Ceylon group,britain,1943,cl,cl_4_Modern_Generic_2,8530,8530.0,31.5,9,152.0,6,0,0,8,4,102.0,89,51,,51,25,6 x 533 mm (2x3),https://navypedia.org/ships/canada/can_cr_uganda.htm
+Saumarez,S class,britain,1943,dd,tb_sloop_large,1730,1730.0,36.75,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/S_and_T-class_destroyer
+Teazer,T class,britain,1943,dd,tb_sloop_large,1730,1730.0,36.75,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/S_and_T-class_destroyer
+Grenville (leader),U class,britain,1943,dd,tb_sloop_large,1777,1777.0,36.75,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/U_and_V-class_destroyer
+Hardy (leader),V class,britain,1943,dd,tb_sloop_large,1777,1777.0,36.75,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/U_and_V-class_destroyer
+Swiftsure,Minotaur class - Swiftsure group,britain,1944,cl,cl_4_Modern_Generic_2,8800,8800.0,31.5,9,152.0,6,0,0,10,4,102.0,89,51,,51,25,6 x 533 mm (2x3),https://navypedia.org/ships/uk/brit_cr_swiftsure.htm
+Caprice,C class Ca group,britain,1944,dd,tb_sloop_large,1710,1710.0,36.0,4,114.0,4,0,0,0,0,0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/C-class_destroyer_(1943)
+Barfleur,Battle,britain,1944,dd,dd_5_nose_medium_usa,2315,2315.0,34.0,4,114.0,4,0,0,1,4,102.0,,,,,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/Battle-class_destroyer
+Superb,Minotaur class - Superb,britain,1945,cl,cl_4_Modern_Generic_2,8885,8885.0,31.5,9,152.0,6,0,0,10,4,102.0,89,51,,51,25,6 x 533 mm (2x3),https://navypedia.org/ships/uk/brit_cr_tiger.htm
+Chaplet,"C class Ch, Co, Cr groups",britain,1945,dd,dd_5_nose_small_usa,1900,1900.0,36.0,4,114.0,4,0,0,0,0,0,,,,,,4 x 533 mm (21 in) (1x4),https://en.wikipedia.org/wiki/C-class_destroyer_(1943)
+Vanguard,Vanguard,britain,1946,bb,bb_5_kgeorge,44500,44500.0,30.0,8,381.0,15,4,2,16,5,133.0,356,152,76,330,330,,https://en.wikipedia.org/wiki/HMS_Vanguard_(23)
+Agincourt,Battle,britain,1947,dd,dd_5_nose_large_britain,2480,2480.0,35.75,5,114.0,4,2,2,0,0,0,,,,,,10 x 533 mm (21 in) (2x5),https://en.wikipedia.org/wiki/Battle-class_destroyer
+Battleaxe,Weapon,britain,1947,dd,dd_5_nose_small_usa,1980,1980.0,31.0,4,102.0,4,0,0,0,0,0,,,,,,10 x 533 mm (21 in) (2x5),https://en.wikipedia.org/wiki/Weapon-class_destroyer
+Fei Ting (ex-Sea Serpent),Fei Ting,china,1895,tb,tb_lowbow,349,349.0,21.2,2,95.0,4,0,0,4,2,47.0,,,45,,,"5 x 356 mm (1 bow, 2x2)",https://www.navypedia.org/ships/china/ch_dd_fei_ting.htm
+Tung Chi (ex-Chien Chung),Tung Chi,china,1896,cl,cl_1_straightbow,2000,1900.0,11.6,2,152.0,6,0,0,5,5,120.0,,,,,,,https://navypedia.org/ships/china/ch_cr_tung_chi.htm
+Fei Ying,Fei Ying,china,1896,tb,tb_gunboat,850,850.0,22.0,2,105.0,4,0,0,6,2,57.0,,25,,,,"3 x 356 mm (1 bow, 2x1)",https://www.navypedia.org/ships/china/ch_dd_fei_ying.htm
+Fu An,Fu An,china,1897,cl,cl_1_straightbow,2000,1700.0,10.0,2,57.0,2,0,0,0,0,0,,,,,,,https://navypedia.org/ships/china/ch_cr_fu_an.htm
+Hai Yung,Hai Yung,china,1898,cl,cl_1_straightbow,2680,2680.0,19.5,3,149.0,6,0,0,8,4,105.0,,70,37,,,"3 x 356 mm (1 bow, 2 beam)",https://navypedia.org/ships/china/ch_cr_hai_yung.htm
+Hai Chi,Hai Chi,china,1899,cl,cl_2_straightbow,4300,4300.0,24.0,2,203.0,8,0,0,10,5,120.0,,127,152,114,,"5 x 450 mm (1 bow, 4 beam)",https://navypedia.org/ships/china/ch_cr_hai_chi.htm
+Chien Wei (Tze Kiang),Chien Wei,china,1903,tb,tb_gunboat,871,871.0,20.5,1,100.0,4,0,0,3,3,65.0,25,25,,,,2 x 356 mm (2x1),https://www.navypedia.org/ships/china/ch_dd_chien_wei.htm
+Ying Swei,Ying Swei,china,1911,cl,cl_2_straightbow,2500,2460.0,20.0,2,152.0,6,0,0,4,4,102.0,,37,76,,,2 x 450 mm,https://navypedia.org/ships/china/ch_cr_ying_swei.htm
+Chao Ho,Chao Ho,china,1912,cl,cl_2_straightbow,2725,2725.0,20.0,2,152.0,6,0,0,4,4,102.0,,51,76,,,2 x 450 mm,https://navypedia.org/ships/china/ch_cr_chao_ho.htm
+Amiral Cécille,Amiral Cécille,france,1890,cl,cl_1_rambow_3mast_early,5200,5790.3,19.0,8,164.7,6,0,0,10,5,138.6,,102,89,,,4 x 356 mm,https://en.wikipedia.org/wiki/French_cruiser_Amiral_Cécille
+Davout,Davout,france,1890,cl,cl_1_rambow_3mast_early,3330,3330.0,20.7,6,164.0,6,0,0,4,3,65.0,,102,71,,,6 x 350 mm,https://en.wikipedia.org/wiki/French_cruiser_Davout
+Hoche,Hoche,france,1891,bb,b1_massena_var1,10820,10820.0,16.5,2,340.0,13,0,0,18,5,138.0,457,79,64,406,406,5 x 380 mm,https://en.wikipedia.org/wiki/French_ironclad_Hoche
+Marceau,Marceau,france,1891,bb,b1_massena_var1,10810,10810.0,16.0,4,340.0,13,0,0,16,5,138.0,457,80,150,,406,3-6 x 380 mm,https://en.wikipedia.org/wiki/Marceau-class_ironclad
+Troude,Troude,france,1891,cl,cl_1_rambow_early,1877,1877.0,20.5,4,138.6,5,0,0,0,0,0,,40,40,,,4 x 356 mm,https://en.wikipedia.org/wiki/Troude-class_cruiser
+Léger,Lévrier,france,1891,tb,tb_standard,500,503.0,18.7,1,65.0,3,0,0,3,2,47.0,,,,,,3 x 450 mm,https://navypedia.org/ships/france/fr_dd_levrier.htm
+Wattignies,Wattignies,france,1892,cl,cl_1_rambow_boat,1297,1297.0,18.0,5,100.0,4,0,0,0,0,0,,40,,,,4 x 356 mm,https://en.wikipedia.org/wiki/Wattignies-class_cruiser
+Alger,Alger,france,1892,cl,cl_1_rambow_france,4123,4123.0,19.0,4,164.7,6,0,0,6,5,138.6,,90,70,,,5 x 356 mm,https://en.wikipedia.org/wiki/French_cruiser_Alger
+Jean Bart,Jean Bart,france,1893,cl,cl_1_rambow_france,4165,4165.0,19.0,4,164.7,6,0,0,6,5,138.6,,90,120,,,5 x 356 mm,https://en.wikipedia.org/wiki/Alger-class_cruiser
+Suchet,Suchet,france,1894,cl,cl_1_rambow_3mast_early,3440,3440.0,20.0,6,164.7,6,0,0,4,4,100.0,,82,40,,,7 x 356 mm,https://en.wikipedia.org/wiki/French_cruiser_Suchet
+D'Iberville,D'Iberville,france,1894,cl,cl_1_rambow_boat,967,967.0,22.0,1,100.0,4,0,0,0,0,0,,40,40,,,6 x 450 mm (D'Iberville); 3 (others),https://en.wikipedia.org/wiki/D%27Iberville-class_cruiser
+D'Iberville,D'Iberville,france,1894,tb,tb_gunboat,970,970.0,22.0,1,100.0,4,0,0,3,3,65.0,20,40,40,,,6 x 450 mm (D'Iberville); 3 x 450 mm (others),https://navypedia.org/ships/france/fr_dd_diberville.htm
+Dupuy de Lôme,Dupuy de Lôme,france,1895,ca,ca_1_rambow_france,6301,6301.0,20.0,2,194.0,8,2,1,6,6,164.0,100,30,125,100,,4 x 450 mm,https://en.wikipedia.org/wiki/French_cruiser_Dupuy_de_Lôme
+Amiral Charner,Amiral Charner,france,1895,ca,ca_1_rambow_france,4748,4748.0,17.0,2,194.0,8,2,1,6,5,138.0,92,50,92,92,,4 x 450 mm,https://en.wikipedia.org/wiki/Amiral_Charner-class_cruiser
+Friant,Friant,france,1895,cl,cl_1_rambow_3mast_early,3771,3771.0,18.5,6,164.0,6,0,0,4,4,100.0,,80,75,,,2 x 350 mm,https://en.wikipedia.org/wiki/Friant-class_cruiser
+Linois,Linois,france,1895,cl,cl_1_rambow,2355,2355.0,20.5,4,138.6,5,0,0,2,4,100.0,,40,138,,,4 x 450 mm,https://en.wikipedia.org/wiki/Linois-class_cruiser
+Brennus,Brennus,france,1896,bb,b1_tsesarevich_france,11370,11370.0,17.0,3,340.0,13,0,0,10,6,164.7,400,60,120,455,455,4 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_Brennus
+Descartes,Descartes,france,1896,cl,cl_1_rambow_france,4005,4005.0,19.0,4,164.7,6,0,0,10,4,100.0,,40,80,,,2 x 356 mm,https://en.wikipedia.org/wiki/Descartes-class_cruiser
+Charles Martel,Charles Martel,france,1897,bb,b1_tsesarevich_france,11839,11839.0,18.0,2,305.0,12,0,0,8,5,138.0,450,100,230,370,320,4 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_Charles_Martel
+Carnot,Carnot,france,1897,bb,b1_tsesarevich_france,11954,11954.0,17.8,2,305.0,12,0,0,8,5,138.0,460,90,230,380,,"4 x 450 mm (2 submerged, 2 deck)",https://en.wikipedia.org/wiki/French_battleship_Carnot
+Jauréguiberry,Jauréguiberry,france,1897,bb,b1_tsesarevich_france,11818,11818.0,17.5,2,305.0,12,2,1,8,5,138.0,400,90,250,370,,6 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_Jaur%C3%A9guiberry
+Pothuau,Pothuau,france,1897,ca,ca_1_rambow_france,5460,5460.0,19.0,2,194.0,8,2,1,10,5,138.0,80,105,240,180,,4 x 450 mm,https://en.wikipedia.org/wiki/French_cruiser_Pothuau
+D'Assas,D'Assas,france,1897,cl,cl_1_rambow_france,3957,3957.1,20.0,6,164.0,6,0,0,4,4,100.0,,80,80,,,2 x 356 mm,https://en.wikipedia.org/wiki/D%27Assas-class_cruiser
+Catinat,Catinat,france,1897,cl,cl_1_rambow_france,4184,4183.55,19.0,4,164.0,6,0,0,10,4,100.0,,40,80,,,2 x 356 mm,https://en.wikipedia.org/wiki/Catinat-class_cruiser
+Masséna,Masséna,france,1898,bb,b1_tsesarevich_france,11735,11735.0,17.0,2,305.0,12,0,0,8,5,138.0,450,69,350,400,,4 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_Mass%C3%A9na
+Bouvet,Bouvet,france,1898,bb,b1_tsesarevich_france,12200,12200.0,18.0,2,305.0,12,0,0,8,5,138.0,400,70,320,370,310,4 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_Bouvet
+Lansquenet,Lansquenet,france,1898,tb,tb_gunboat,200,197.0,22.0,2,37.0,1,0,0,0,0,0,,,,,,2 x 450 mm,https://navypedia.org/ships/france/fr_dd_lansquenet.htm
+Dunois,Dunois,france,1898,tb,tb_gunboat,889,889.0,22.0,6,65.0,3,0,0,6,2,47.0,25,10,50,,,,https://navypedia.org/ships/france/fr_dd_dunois.htm
+Charlemagne,Charlemagne,france,1899,bb,b1_tsesarevich_france,11275,11275.0,18.0,4,305.0,12,2,2,10,5,138.6,400,90,326,320,270,4 x 450 mm,https://en.wikipedia.org/wiki/Charlemagne-class_battleship
+D'Estrées,D'Estrées,france,1899,cl,cl_1_rambow,2467,2467.0,20.5,2,138.0,5,0,0,4,4,100.0,,43,,,,,https://en.wikipedia.org/wiki/D%27Estr%C3%A9es-class_cruiser
+Guichen,Guichen,france,1900,cl,cl_3_france,8282,8282.0,23.5,2,164.0,6,0,0,6,5,138.0,,100,160,,,2 x 450 mm,https://en.wikipedia.org/wiki/French_cruiser_Guichen_(1897)
+Jurien de la Gravière,Jurien de la Gravière,france,1901,cl,cl_3_france,6168,6167.55,22.88,8,164.0,6,0,0,0,0,0,,45,100,,,2 x 450 mm,https://en.wikipedia.org/wiki/French_cruiser_Jurien_de_la_Gravière
+Iéna,Iéna,france,1902,bb,b1_tsesarevich_france,11688,11688.0,18.0,4,305.0,12,2,2,8,6,164.7,320,65,298,290,250,4 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_I%C3%A9na
+Gueydon,Gueydon,france,1902,ca,ca_2_rambow_france,9516,9516.0,21.4,2,194.0,8,2,1,8,6,164.0,150,56,160,176,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Gueydon-class_cruiser
+Châteaurenault,Châteaurenault,france,1902,cl,cl_3_france,8025,8025.0,24.0,2,164.0,6,0,0,6,5,138.6,,100,160,,,,https://en.wikipedia.org/wiki/French_cruiser_Ch%C3%A2teaurenault_(1898)
+Henri IV,Henri IV,france,1903,bb,b1_massena_var2,8807,8807.0,17.0,2,274.0,11,2,1,7,5,138.6,280,60,,270,,2 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_Henri_IV
+Jeanne d'Arc,Jeanne d'Arc,france,1903,ca,ca_3_rambow_france,11264,11264.0,21.0,2,194.0,8,0,0,14,5,138.6,150,55,138,161,140,2 x 450 mm,https://en.wikipedia.org/wiki/French_cruiser_Jeanne_d%27Arc_(1899)
+Dupleix,Dupleix,france,1903,ca,ca_2_rambow_france,7800,7700.0,21.0,8,164.7,6,4,2,4,4,100.0,102,70,120,110,120,2 x 450 mm,https://en.wikipedia.org/wiki/Dupleix-class_cruiser
+Gloire,Gloire,france,1903,ca,ca_2_rambow_france,9996,9996.0,21.0,2,194.0,8,0,0,8,6,164.7,150,25,174,161,174,5 x 450 mm,https://en.wikipedia.org/wiki/Gloire-class_cruiser
+Suffren,Suffren,france,1904,bb,b1_tsesarevich_france,12432,12432.0,17.0,4,305.0,12,2,2,10,6,164.7,300,60,274,290,250,4 x 450 mm,https://en.wikipedia.org/wiki/French_battleship_Suffren
+Léon Gambetta,Léon Gambetta,france,1905,ca,ca_4_rambow_france,12550,12550.0,22.0,4,194.0,8,2,2,16,6,164.0,150,65,174,138,,5 x 450 mm (Léon Gambetta); 2 (sisters),https://en.wikipedia.org/wiki/Léon_Gambetta-class_cruiser
+République,République,france,1907,bb,b1_bouvet2,14870,14870.0,18.0,4,305.0,12,0,0,18,6,164.0,280,54,266,360,246,2 x 450 mm,https://en.wikipedia.org/wiki/R%C3%A9publique-class_battleship
+Liberté,Liberté,france,1908,bb,b1_bouvet2,14900,14900.0,18.0,4,305.0,12,0,0,10,8,194.0,280,54,266,360,246,2 x 450 mm,https://en.wikipedia.org/wiki/Libert%C3%A9-class_battleship
+Jules Michelet,Jules Michelet,france,1908,ca,ca_4_rambow_france,13105,13105.0,22.5,4,194.0,8,2,2,12,6,164.0,152,,200,200,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/French_cruiser_Jules_Michelet
+Ernest Renan,Ernest Renan,france,1909,ca,ca_4_rambow_france,13644,13644.0,23.0,4,194.0,8,2,2,12,6,164.0,152,71,203,203,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/French_cruiser_Ernest_Renan
+Danton,Danton,france,1911,bb,b2_danton,18754,18754.0,19.25,4,305.0,12,2,2,12,9,240.0,250,,266,340,246,2 x 450 mm,https://en.wikipedia.org/wiki/Danton-class_battleship
+Edgar Quinet,Edgar Quinet,france,1911,ca,ca_4_rambow_france,14220,14220.0,23.0,14,194.0,8,0,0,20,3,65.0,150,65,200,200,200,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Edgar_Quinet-class_cruiser
+Courbet,Courbet,france,1913,bb,bb_1_french,23475,23475.0,21.0,12,305.0,12,6,2,22,5,138.0,250,70,266,250,280,4 x 450 mm,https://en.wikipedia.org/wiki/Courbet-class_battleship
+Normandie,Normandie,france,1913,bb,bb_2_france,25250,25250.0,21.0,12,340.0,13,3,4,24,5,138.6,300,80,266,300,250,6 x 450 mm,https://en.wikipedia.org/wiki/Normandie-class_battleship
+Opiniâtre (ex-La Rioja),Aventurier,france,1914,dd,dd_2_france,1300,1250.0,32.0,4,100.0,4,0,0,0,0,0,,,,,,4 x 450 mm,https://en.wikipedia.org/wiki/Aventurier-class_destroyer
+Bretagne,Bretagne,france,1916,bb,bb_1_large,23936,23936.0,20.0,10,340.0,13,5,2,22,5,138.6,270,40,314,340,248,4 x 450 mm,https://en.wikipedia.org/wiki/Bretagne-class_battleship
+Pierre Durand (ex-V79),Pierre Durand,france,1920,dd,tb_sloop,924,924.0,34.0,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1)",https://navypedia.org/ships/france/fr_dd_pierre_durand.htm
+Matelot Leblanc (ex-Dukla),Matelot Leblanc,france,1920,dd,tb_sloop,880,880.0,32.6,2,100.0,4,0,0,6,3,66.0,,,,,,4 x 450 mm (2x2),https://navypedia.org/ships/france/fr_dd_matelot_leblanc.htm
+Buino (ex-V130),Buino,france,1920,dd,tb_sloop,924,924.0,34.0,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1)",https://navypedia.org/ships/france/fr_dd_buino.htm
+Duguay-Trouin,Duguay-Trouin,france,1926,cl,cl_4_france_improved,7365,7365.0,30.0,8,155.0,6,4,2,4,3,75.0,,20,30,30,,12 x 550 mm (4x3),https://en.wikipedia.org/wiki/Duguay-Trouin-class_cruiser
+Chacal,Chacal,france,1926,dd,tb_sloop_france,2126,2126.0,35.5,5,130.0,5,5,1,2,3,75.0,,,,,,6 x 550 mm (2x3),https://en.wikipedia.org/wiki/Chacal-class_destroyer
+Bourrasque,Bourrasque,france,1926,dd,tb_sloop,1319,1319.0,33.0,4,130.0,5,0,0,0,0,0,,,,,,6 x 550 mm (2x3),https://en.wikipedia.org/wiki/Bourrasque-class_destroyer
+L'Adroit,L'Adroit,france,1928,dd,tb_sloop,1378,1378.0,33.0,4,130.0,5,0,0,1,3,75.0,,,,,,6 x 550 mm,https://en.wikipedia.org/wiki/Adroit-class_destroyer
+Duquesne,Duquesne,france,1929,ca,ca_5_generic_early,10160,10160.0,34.0,8,203.0,8,4,2,8,3,75.0,,30,30,30,,6 x 550 mm (2x3),https://en.wikipedia.org/wiki/Duquesne-class_cruiser
+Guépard,Guépard,france,1929,dd,tb_sloop_france,2436,2436.0,35.5,5,138.0,5,0,0,0,0,0,,,,,,6 x 550 mm (2x3),https://en.wikipedia.org/wiki/Guépard-class_destroyer
+Suffren,Suffren,france,1930,ca,ca_5_generic_early,10160,10160.0,32.0,8,203.0,8,4,2,8,3,75.0,50,60,30,30,,6 x 550 mm (2x3),https://en.wikipedia.org/wiki/Suffren-class_cruiser
+Jeanne d'Arc,Jeanne d'Arc,france,1931,cl,cl_4_Modern_Generic,6600,6600.0,25.0,8,155.0,6,4,2,4,3,75.0,,,30,30,,2 x 550 mm (2x1),https://en.wikipedia.org/wiki/French_cruiser_Jeanne_d%27Arc_(1930)
+Aigle,Aigle,france,1931,dd,tb_sloop_france,2480,2480.0,36.0,5,138.6,5,5,1,1,3,75.0,,,,,,6 x 550 mm (2x3),https://en.wikipedia.org/wiki/Aigle-class_destroyer
+Vauquelin,Vauquelin,france,1932,dd,tb_sloop_france,2441,2441.0,36.0,5,138.6,5,0,0,0,0,0,,,,,,"7 x 550 mm (1x3, 2x2)",https://en.wikipedia.org/wiki/Vauquelin-class_destroyer
+Algérie,Algérie,france,1934,ca,ca_5_generic_early,10160,10160.0,31.0,8,203.0,8,4,2,12,4,100.0,110,80,100,100,,6 x 550 mm (3x2),https://en.wikipedia.org/wiki/French_cruiser_Alg%C3%A9rie
+Émile Bertin,Émile Bertin,france,1935,cl,cl_4_Modern_Generic,6500,5886.0,34.0,9,152.0,6,3,3,4,4,90.0,,25,20,,,6 x 550 mm (2x3),https://en.wikipedia.org/wiki/French_cruiser_%C3%89mile_Bertin
+Le Malin,Le Fantasque,france,1935,dd,tb_sloop_france,2569,2569.0,37.0,5,138.6,5,5,1,0,0,0,,,,,,9 x 550 mm (3x3),https://en.wikipedia.org/wiki/Fantasque-class_destroyer
+Dunkerque,Dunkerque,france,1936,bb,b2_danton_var,24500,26500.0,29.5,8,330.0,13,2,4,16,5,130.0,225,115,270,330,340,,https://en.wikipedia.org/wiki/Dunkerque-class_battleship
+La Galissonnière,La Galissonnière,france,1936,cl,cl_4_Modern_Generic,7600,7600.0,31.0,9,152.0,6,3,3,8,4,90.0,105,38,95,100,,4 x 550 mm (2x2),https://en.wikipedia.org/wiki/La_Galissonni%C3%A8re-class_cruiser
+Mogador,Mogador,france,1939,dd,dd_5_nose_large_france,3000,2997.0,39.0,8,138.6,5,4,2,0,0,0,,,,,,"10 x 550 mm (2x2, 2x3)",https://en.wikipedia.org/wiki/Mogador-class_destroyer
+Richelieu,Richelieu,france,1940,bb,bb_5_richelieu,37250,37250.0,32.0,8,380.0,15,2,4,9,6,152.0,327,170,340,430,405,,https://en.wikipedia.org/wiki/Richelieu-class_battleship
+Le Hardi,Le Hardi,france,1940,dd,tb_sloop_france,1800,1800.0,37.0,6,130.0,5,3,2,0,0,0,,,,,,"7 x 550 mm (1x3, 2x2)",https://en.wikipedia.org/wiki/Hardi-class_destroyer
+Bussard,Bussard,germany,1890,cl,cl_1_rambow_early,1559,1559.0,15.5,8,105.0,4,0,0,0,0,0,,,,,,2 x 350 mm,https://en.wikipedia.org/wiki/Bussard-class_cruiser
+Kaiserin Augusta,Kaiserin Augusta,germany,1892,cl,cl_1_medium_germany,6056,6056.0,21.0,4,150.0,6,0,0,8,4,105.0,,70,50,,,5 x 350 mm,https://en.wikipedia.org/wiki/SMS_Kaiserin_Augusta
+Brandenburg,Brandenburg,germany,1893,bb,b1_germany,10013,10013.0,16.5,6,280.0,11,0,0,6,4,105.0,400,60,300,120,300,6 x 450 mm,https://en.wikipedia.org/wiki/Brandenburg-class_battleship
+Gefion,Gefion,germany,1895,cl,cl_2_rambow,3746,3746.0,19.5,10,105.0,4,0,0,6,2,50.0,,25,,,,2 x 450 mm,https://en.wikipedia.org/wiki/SMS_Gefion
+Kaiser Friedrich III,Kaiser Friedrich III,germany,1898,bb,b1_germany,11097,11097.0,17.5,4,240.0,9,0,0,18,6,150.0,300,65,250,250,,6 x 450 mm,https://en.wikipedia.org/wiki/Kaiser_Friedrich_III-class_battleship
+Victoria Louise,Victoria Louise,germany,1898,cl,cl_1_medium_germany,5885,5885.0,19.5,2,210.0,8,2,1,8,6,150.0,,100,150,100,,3 x 450 mm,https://en.wikipedia.org/wiki/Victoria_Louise-class_cruiser
+Fürst Bismarck,Fürst Bismarck,germany,1900,ca,ca_3_friedrich,10700,10690.0,18.7,4,240.0,9,2,2,12,6,150.0,200,30,200,200,,6 x 450 mm,https://en.wikipedia.org/wiki/SMS_F%C3%BCrst_Bismarck
+Gazelle,Gazelle,germany,1900,cl,cl_2_emden,3000,2706.0,21.5,10,105.0,4,0,0,0,0,0,50,25,80,50,,2 x 450 mm,https://en.wikipedia.org/wiki/Gazelle-class_cruiser
+Wittelsbach,Wittelsbach,germany,1902,bb,b2_germany,11774,11774.0,18.0,4,240.0,9,0,0,18,6,150.0,225,50,250,250,,6 x 450 mm,https://en.wikipedia.org/wiki/Wittelsbach-class_battleship
+Prinz Heinrich,Prinz Heinrich,germany,1902,ca,ca_2_friedrich,8887,8887.0,20.0,2,240.0,9,2,1,10,6,150.0,100,40,150,150,150,4 x 450 mm,https://en.wikipedia.org/wiki/SMS_Prinz_Heinrich
+Prinz Adalbert,Prinz Adalbert,germany,1903,ca,ca_2_friedrich,9087,9087.0,20.0,4,210.0,8,2,2,10,6,150.0,100,80,150,150,,4 x 450 mm,https://en.wikipedia.org/wiki/Prinz_Adalbert-class_cruiser
+Braunschweig,Braunschweig,germany,1904,bb,b2_germany,13208,13208.0,18.0,4,280.0,11,2,2,14,7,170.0,225,40,300,250,,6 x 450 mm,https://en.wikipedia.org/wiki/Braunschweig-class_battleship
+Bremen,Bremen,germany,1904,cl,cl_2_emden,3278,3278.0,22.0,10,105.0,4,0,0,0,0,0,50,80,100,50,,2 x 450 mm (submerged),https://en.wikipedia.org/wiki/Bremen-class_cruiser
+Roon,Roon,germany,1905,ca,ca_2_friedrich,9533,9533.0,21.1,4,210.0,8,2,2,10,6,150.0,100,60,,150,,4 x 450 mm,https://en.wikipedia.org/wiki/Roon-class_cruiser
+Deutschland,Deutschland,germany,1906,bb,b2_germany,13191,13191.0,19.1,4,280.0,11,0,0,14,7,170.0,240,40,300,280,250,6 x 450 mm,https://en.wikipedia.org/wiki/Deutschland-class_battleship
+Scharnhorst,Scharnhorst,germany,1907,ca,ca_3_friedrich,12985,12985.0,22.5,8,210.0,8,2,2,6,6,150.0,150,60,200,170,140,4 x 450 mm,https://en.wikipedia.org/wiki/Scharnhorst-class_cruiser
+Königsberg,Königsberg,germany,1907,cl,cl_2_emden,3390,3390.0,23.0,10,105.0,4,0,0,0,0,0,45,80,100,50,,2 x 450 mm,https://en.wikipedia.org/wiki/K%C3%B6nigsberg-class_cruiser_(1905)
+G137,G137,germany,1907,dd,dd_1_german,600,580.0,30.0,1,88.0,3,0,0,3,2,52.0,,,,,,3 x 450 mm (5 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_g137.htm
+S138-S149,S138,germany,1907,dd,dd_1_german,600,533.0,30.3,1,88.0,3,0,0,3,2,52.0,,,,,,3 x 450 mm (4 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_s138.htm
+V150-V160,V150,germany,1907,dd,dd_1_german,600,558.0,30.0,2,88.0,3,0,0,0,0,0,,,,,,3 x 450 mm (4 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_v151.htm
+Dresden,Dresden,germany,1908,cl,cl_2_emden,3664,3664.0,24.0,10,105.0,4,0,0,8,2,52.0,50,80,100,50,,2 x 450 mm,https://en.wikipedia.org/wiki/Dresden-class_cruiser
+V161,V161,germany,1908,dd,dd_1_german,600,596.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,3 x 450 mm (4 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_v161.htm
+Nassau,Nassau,germany,1909,bb,bb_1_german_early,18873,18873.0,19.0,12,280.0,11,0,0,12,6,150.0,300,38,400,280,,6 x 450 mm,https://en.wikipedia.org/wiki/Nassau-class_battleship
+Blücher,Blücher,germany,1909,ca,ca_4_blucher,15842,15842.0,25.4,12,210.0,8,6,2,8,6,150.0,180,70,250,180,180,4 x 450 mm,https://en.wikipedia.org/wiki/SMS_Bl%C3%BCcher
+Kolberg,Kolberg,germany,1909,cl,cl_2_emden,4362,4362.0,25.5,12,105.0,4,0,0,0,0,0,,40,100,50,,2 x 450 mm,https://en.wikipedia.org/wiki/Kolberg-class_cruiser
+V162,V162,germany,1909,dd,dd_1_german,639,639.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,3 x 450 mm (4 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_v162.htm
+Von der Tann,Von der Tann,germany,1910,bc,bc_1_vondertann,19370,19370.0,24.8,8,280.0,11,0,0,10,6,150.0,250,,250,230,,4 x 450 mm,https://en.wikipedia.org/wiki/SMS_Von_der_Tann
+S165,S165,germany,1910,dd,dd_1_german,665,665.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,3 x 450 mm (4 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_s165_1.htm
+S176-S179,S176,germany,1910,dd,dd_1_german,600,566.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,4 x 500 mm (5 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_s176.htm
+Helgoland,Helgoland,germany,1911,bb,bb_1_german_helgoland,23500,22808.0,20.5,12,305.0,12,0,0,14,6,150.0,300,63,,300,300,6 x 500 mm,https://en.wikipedia.org/wiki/Helgoland-class_battleship
+Moltke,Moltke,germany,1911,bc,bc_1_vondertann,22979,22979.0,25.5,10,280.0,11,0,0,12,6,150.0,280,76,350,230,230,4 x 500 mm,https://en.wikipedia.org/wiki/Moltke-class_battlecruiser
+G192-G197,G192,germany,1911,dd,dd_1_german,660,660.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,4 x 500 mm (5 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_g192.htm
+S165-S168 (replacement boats),S165,germany,1911,dd,dd_1_german,665,665.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,3 x 450 mm (4 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_s165.htm
+Kaiser,Kaiser,germany,1912,bb,bb_1_german_helgoland,24724,24724.0,21.0,10,305.0,12,0,0,14,6,150.0,350,120,350,300,305,5 x 500 mm,https://en.wikipedia.org/wiki/Kaiser-class_battleship
+Magdeburg,Magdeburg,germany,1912,cl,cl_2_emden,4570,4570.0,27.5,12,105.0,4,0,0,0,0,0,60,40,100,50,,2 x 500 mm,https://en.wikipedia.org/wiki/Magdeburg-class_cruiser
+V1,V1,germany,1912,dd,dd_1_german,600,569.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,4 x 500 mm (5 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_v1.htm
+G7-G12,G7,germany,1912,dd,dd_1_german,600,573.0,32.0,2,88.0,3,0,0,0,0,0,,,,,,4 x 500 mm (5 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_g7.htm
+S13-S24,S13,germany,1912,dd,dd_1_german,600,568.0,32.5,2,88.0,3,0,0,0,0,0,,,,,,4 x 500 mm (5 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_s13.htm
+Seydlitz,Seydlitz,germany,1913,bc,bc_2_german,24988,24988.0,26.5,10,280.0,11,5,2,12,6,150.0,300,80,350,250,,4 x 500 mm,https://en.wikipedia.org/wiki/SMS_Seydlitz
+König,König,germany,1914,bb,bb_1_german_helgoland,25796,25796.0,21.0,10,305.0,12,0,0,14,6,150.0,350,100,300,300,,5 x 500 mm,https://en.wikipedia.org/wiki/K%C3%B6nig-class_battleship
+Derfflinger,Derfflinger,germany,1914,bc,bc_3_german_derf,27400,26600.0,26.5,8,305.0,12,0,0,12,6,150.0,300,,300,270,,4 x 500 mm,https://en.wikipedia.org/wiki/Derfflinger-class_battlecruiser
+Karlsruhe,Karlsruhe,germany,1914,cl,cl_2_emden,4900,4900.0,29.3,12,105.0,4,0,0,0,0,0,60,60,100,,,2 x 500 mm,https://en.wikipedia.org/wiki/Karlsruhe-class_cruiser
+Graudenz,Graudenz,germany,1914,cl,cl_2_emden,4912,4912.0,27.5,12,105.0,4,0,0,0,0,0,60,60,100,50,,2 x 500 mm,https://en.wikipedia.org/wiki/Graudenz-class_cruiser
+Pillau,Pillau,germany,1914,cl,cl_2_emden,4390,4390.0,27.5,8,150.0,6,0,0,0,0,0,,80,75,50,,2 x 500 mm,https://en.wikipedia.org/wiki/Pillau-class_cruiser
+V25-V30,V25,germany,1914,dd,dd_1_german_large,812,812.0,33.5,3,88.0,3,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_v25.htm
+S31-S36,S31,germany,1914,dd,dd_1_german_large,802,802.0,33.5,3,88.0,3,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_s31.htm
+Mackensen,Mackensen,germany,1915,bc,bc_3_german_derf,31000,31000.0,28.0,8,350.0,14,0,0,14,6,150.0,300,80,300,270,,5 x 600 mm,https://en.wikipedia.org/wiki/Mackensen-class_battlecruiser
+Wiesbaden,Wiesbaden,germany,1915,cl,cl_5_german_treaty_fk,5180,5180.0,27.5,8,150.0,6,0,0,0,0,0,60,60,100,50,,4 x 500 mm,https://en.wikipedia.org/wiki/Wiesbaden-class_cruiser
+S49-S66,S49,germany,1915,dd,dd_2_german,1074,1074.0,34.0,3,88.0,3,0,0,0,0,0,,,,,,6 x 500 mm,https://en.wikipedia.org/wiki/SMS_S49_(1915)
+G85-G95,G85,germany,1915,dd,dd_2_german,1000,960.0,33.5,3,88.0,3,0,0,3,4,105.0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_g85.htm
+B97,B97,germany,1915,dd,dd_2_german,1374,1374.0,36.5,4,88.0,3,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_b97.htm
+V99,V99,germany,1915,dd,dd_2_german,1350,1350.0,36.5,4,88.0,3,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_v99.htm
+G101 (ex-Santiago),G101,germany,1915,dd,dd_2_german,1116,1116.0,33.5,4,88.0,3,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_g101.htm
+Bayern,Bayern,germany,1916,bb,bb_2_german,28530,28530.0,21.0,8,380.0,15,4,2,16,6,150.0,350,100,400,350,,5 x 600 mm (submerged),https://en.wikipedia.org/wiki/Bayern-class_battleship
+Ersatz Yorck (laid down),Ersatz Yorck,germany,1916,bc,bc_3_german_derf,33500,33500.0,27.3,8,380.0,15,0,0,12,6,150.0,300,80,,270,,3 x 600 mm,https://en.wikipedia.org/wiki/Ersatz_Yorck-class_battlecruiser
+Königsberg,Königsberg,germany,1916,cl,cl_5_german_treaty_fk,5440,5440.0,27.5,8,150.0,6,0,0,0,0,0,60,60,100,50,,4 x 500 mm,https://en.wikipedia.org/wiki/K%C3%B6nigsberg-class_cruiser_(1915)
+Brummer,Brummer,germany,1916,cl,cl_5_german_treaty_fk,4500,4385.0,28.0,4,150.0,6,0,0,0,0,0,40,15,100,50,,2 x 500 mm,https://en.wikipedia.org/wiki/Brummer-class_cruiser
+G96,G96,germany,1916,dd,dd_2_german,1000,990.0,32.0,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_g96.htm
+G119,G119,germany,1916,dd,dd_5_nose_small_german,2060,2060.0,34.5,4,150.0,6,0,0,0,0,0,,,,,,4 x 600 mm (2x2; 8 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_g119.htm
+B122,B122,germany,1916,dd,dd_5_nose_small_german,2040,2040.0,34.5,4,150.0,6,0,0,0,0,0,,,,,,4 x 600 mm (2x2; 8 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_b122.htm
+V125-V130,V125,germany,1917,dd,dd_2_german,1000,924.0,34.0,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_v125.htm
+S131-S139,S131,germany,1917,dd,dd_2_german,1000,919.0,32.0,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_s131.htm
+G148,G148,germany,1917,dd,dd_2_german,1020,1020.0,32.5,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_g148.htm
+S152-S157 (not completed),S152,germany,1917,dd,dd_2_german,1020,1020.0,32.5,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_s152.htm
+V158-V165 (not completed),V158,germany,1917,dd,dd_2_german,1030,1030.0,32.5,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_v158.htm
+H166-H169 (not completed),H166,germany,1917,dd,dd_2_german,1061,1061.0,32.5,3,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1; 8 torpedoes)",https://www.navypedia.org/ships/germany/ger_dd_h166.htm
+Cöln,Cöln,germany,1918,cl,cl_5_german_treaty_fk,5620,5620.0,27.5,8,150.0,6,0,0,0,0,0,60,60,100,50,,4 x 600 mm,https://en.wikipedia.org/wiki/C%C3%B6ln-class_cruiser
+V116 (V117,V116,germany,1918,dd,dd_5_nose_small_german,2060,2060.0,34.5,4,150.0,6,0,0,0,0,0,,,,,,4 x 600 mm (2x2; 8 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_v116.htm
+S113 (S114,S113,germany,1919,dd,dd_5_nose_small_german,2060,2060.0,34.5,4,150.0,6,0,0,0,0,0,,,,,,4 x 600 mm (2x2; 8 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_s113.htm
+Emden,Emden,germany,1925,cl,cl_5_german_treaty_fk,5400,5400.0,29.5,8,150.0,6,0,0,0,0,0,50,40,100,,,4 x 500 mm,https://en.wikipedia.org/wiki/German_cruiser_Emden
+Königsberg,Königsberg,germany,1929,cl,cl_4_Modern_Generic,6500,6100.0,32.0,9,150.0,6,0,0,0,0,0,50,40,100,30,,12 x 500 mm (4x3),https://en.wikipedia.org/wiki/K%C3%B6nigsberg-class_cruiser_(1927)
+Leipzig,Leipzig,germany,1931,cl,cl_4_Modern_Generic,8100,8100.0,32.0,9,150.0,6,0,0,0,0,0,50,30,100,80,60,12 x 500 mm,https://en.wikipedia.org/wiki/Leipzig-class_cruiser
+Deutschland (Lützow),Deutschland,germany,1933,bb,b1_germany_mission,10600,10600.0,26.0,6,280.0,11,2,3,8,6,150.0,80,45,,140,,8 x 533 mm,https://en.wikipedia.org/wiki/Deutschland-class_cruiser
+Nürnberg,Leipzig,germany,1935,cl,cl_4_Modern_Generic,9040,9040.0,32.0,9,150.0,6,0,0,8,3,88.0,50,30,100,80,60,12 x 533 mm,https://en.wikipedia.org/wiki/Leipzig-class_cruiser
+Z1 Leberecht Maass,Type 1934,germany,1937,dd,dd_5_nose_small_german,2232,2232.0,38.2,5,128.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2x4; 16 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_1934.htm
+Scharnhorst,Scharnhorst,germany,1938,bb,bb_5_bismarck_extrasmall,32100,32100.0,31.0,9,280.0,11,0,0,12,6,150.0,320,95,350,360,350,"6 x 533 mm (2x3, added 1941)",https://en.wikipedia.org/wiki/Scharnhorst-class_battleship
+M,M class,germany,1938,cl,cl_4_Modern_Generic,8500,8500.0,35.5,8,150.0,6,4,2,4,3,88.0,51,25,100,25,,8 x 533 mm,https://en.wikipedia.org/wiki/M-class_cruiser
+Z17 Diether von Roeder,Type 1936,germany,1938,dd,dd_5_nose_small_german,2411,2411.0,38.5,5,128.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2x4; 16 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_1936.htm
+H,H-39,germany,1939,bb,bb_7_bismarck,53400,53400.0,30.0,8,406.0,16,4,2,12,6,150.0,300,150,350,385,365,"6 x 533 mm (submerged, bow)",https://en.wikipedia.org/wiki/H-class_battleship_proposals
+Admiral Hipper,Admiral Hipper,germany,1939,ca,ca_4_ersatz,16170,16170.0,32.0,8,203.0,8,0,0,12,4,105.0,80,50,150,105,,12 x 533 mm (4x3),https://en.wikipedia.org/wiki/Admiral_Hipper-class_cruiser
+Bismarck,Bismarck,germany,1940,bb,bb_5_bisko_compact,41700,41700.0,30.0,8,380.0,15,4,2,12,6,150.0,320,120,350,360,,"Tirpitz only: 8 x 533 mm (2x4, fitted 1941-42)",https://en.wikipedia.org/wiki/Bismarck-class_battleship
+Z31,Type 1936A,germany,1942,dd,dd_5_nose_large_usa,2657,2657.0,36.0,5,150.0,6,0,0,0,0,0,,,,,,8 x 533 mm (2x4),https://www.navypedia.org/ships/germany/ger_dd_1936a_mob.htm
+Z35,Type 1936B,germany,1943,dd,dd_5_nose_large_usa,2600,2519.0,36.0,5,128.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2x4),https://www.navypedia.org/ships/germany/ger_dd_1936b.htm
+Z46,Type 1936C,germany,1943,dd,dd_5_nose_large_german,3071,3071.0,37.5,6,128.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2x4),https://www.navypedia.org/ships/germany/ger_dd_1936c.htm
+Z51 (not completed),Type 1942,germany,1943,dd,dd_5_nose_small_german,2330,2330.0,36.0,4,128.0,5,0,0,0,0,0,,,,,,6 x 533 mm (2x3; 18 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_1942.htm
+Z52-Z56 (not launched),Type 1944,germany,1943,dd,dd_5_nose_large_german,3170,3170.0,37.5,6,128.0,5,0,0,3,2,55.0,,,,,,8 x 533 mm (2x4; 16 torpedoes),https://www.navypedia.org/ships/germany/ger_dd_1944.htm
+Georgios Averof,Georgios Averof,greece,1911,ca,ca_1_3mast_russia,9958,9958.0,22.5,4,234.0,9,2,2,8,7,190.0,200,50,180,140,190,"3 x 450 mm (1 bow, 2 beam)",https://navypedia.org/ships/greece/gr_cr_averof.htm
+Aetos (ex-San Luis),Aetos,greece,1912,dd,dd_1_russia,980,980.0,32.0,4,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm,https://www.navypedia.org/ships/greece/gr_dd_aetos.htm
+Kilkis (ex-USS Mississippi),Kilkis,greece,1914,bb,bb_1,17000,14697.0,17.0,4,305.0,12,2,2,8,8,203.0,229,,,305,,2 x 533 mm,https://en.wikipedia.org/wiki/Mississippi-class_battleship
+Vasilefs Konstantinos,Vasilefs Konstantinos,greece,1914,bb,bb_2_britain_alt,25000,25000.0,20.0,10,340.0,13,5,2,22,5,139.0,250,45,300,400,270,4 x 450 mm (submerged),https://navypedia.org/ships/greece/gr_bb_vasilefs_constantinos.htm
+Elli (ex-Fei Hung),Elli,greece,1914,cl,cl_2_straightbow,2600,2600.0,20.0,2,152.0,6,0,0,4,4,102.0,,51,50,,,2 x 450 mm,https://navypedia.org/ships/greece/gr_cr_elli.htm
+Chios,Kriti,greece,1915,dd,dd_2_russia,1200,1040.0,32.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (2x2),https://www.navypedia.org/ships/greece/gr_dd_kriti.htm
+Kountouriotis,Kountouriotis,greece,1932,dd,tb_sloop_large,1389,1389.0,38.0,4,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (2x3),https://www.navypedia.org/ships/greece/gr_dd_hydra.htm
+Vasilefs Georgios I,Vasilefs Georgios,greece,1938,dd,tb_sloop,1350,1350.0,36.0,4,128.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2x4),https://www.navypedia.org/ships/greece/gr_dd_vasilefs_georgios.htm
+Re Umberto,Re Umberto,italy,1893,bb,b1_russiaold,13673,13673.0,18.5,4,343.0,14,0,0,8,6,152.0,102,76,300,102,349,5 x 450 mm,https://en.wikipedia.org/wiki/Re_Umberto-class_ironclad
+Umbria,Regioni,italy,1893,cl,cl_1_straightbow,2732,2732.0,20.0,4,150.0,6,0,0,6,5,120.0,,50,50,,,2 x 450 mm,https://en.wikipedia.org/wiki/Regioni-class_cruiser
+Marco Polo,Marco Polo,italy,1894,ca,ca_1_small,4583,4583.0,17.0,6,152.0,6,0,0,10,5,120.0,102,25,51,,,5 x 450 mm,https://en.wikipedia.org/wiki/Italian_cruiser_Marco_Polo
+Calabria,Calabria,italy,1897,cl,cl_1_straightbow,2492,2492.0,16.4,4,150.0,6,0,0,4,5,120.0,,50,50,,,2 x 450 mm,https://en.wikipedia.org/wiki/Italian_cruiser_Calabria
+Vettor Pisani,Vettor Pisani,italy,1898,ca,ca_1_italian_exp_small_3mast,6614,6614.0,18.0,12,152.0,6,12,1,6,5,120.0,150,37,150,,,4 x 450 mm,https://en.wikipedia.org/wiki/Vettor_Pisani-class_cruiser
+Ammiraglio di Saint Bon,Ammiraglio di Saint Bon,italy,1901,bb,b_1_italian_3mast,10082,10082.0,18.3,4,254.0,10,0,0,8,6,152.0,249,70,249,249,,4 x 450 mm,https://en.wikipedia.org/wiki/Ammiraglio_di_Saint_Bon-class_battleship
+Giuseppe Garibaldi,Giuseppe Garibaldi,italy,1901,ca,ca_1_italian_exp_3mast,7700,7700.0,20.0,1,254.0,10,0,0,14,6,152.0,150,40,150,,150,4 x 450 mm,https://en.wikipedia.org/wiki/Giuseppe_Garibaldi-class_cruiser
+Regina Margherita,Regina Margherita,italy,1904,bb,b_1_italian_Large_3mast,13215,13215.0,20.0,4,305.0,12,0,0,4,8,203.0,152,79,152,203,,4 x 450 mm,https://en.wikipedia.org/wiki/Regina_Margherita-class_battleship
+Sirio,Sirio,italy,1905,tb,tb_gunboat,210,210.0,25.0,3,47.0,2,0,0,0,0,0,,,,,,3 x 450 mm,https://en.wikipedia.org/wiki/Sirio-class_torpedo_boat
+Perseo,Pegaso,italy,1906,tb,tb_gunboat,216,216.5,25.0,2,57.0,2,0,0,1,2,47.0,,,,,,3 x 450 mm,https://en.wikipedia.org/wiki/Pegaso-class_torpedo_boat
+Regina Elena,Regina Elena,italy,1907,bb,b1_russiaold,12658,12658.0,22.0,2,305.0,12,0,0,12,8,203.0,250,38,254,203,,2 x 450 mm,https://en.wikipedia.org/wiki/Regina_Elena-class_battleship
+Olimpia,Orione,italy,1907,tb,tb_gunboat,220,220.0,25.0,3,47.0,2,0,0,0,0,0,,,,,,3 x 450 mm,https://navypedia.org/ships/italy/it_dd_orione.htm
+Pisa,Pisa,italy,1909,ca,ca_3_warrior_pisa,9832,9832.0,23.0,4,254.0,10,2,2,8,7,190.0,200,51,180,160,,3 x 450 mm (submerged),https://en.wikipedia.org/wiki/Pisa-class_cruiser
+San Giorgio,San Giorgio,italy,1910,ca,ca_3_averof_mod,10969,10969.0,23.0,4,254.0,10,2,2,8,7,190.0,200,50,254,200,,3 x 450 mm (submerged),https://en.wikipedia.org/wiki/San_Giorgio-class_cruiser
+Dante Alighieri,Dante Alighieri,italy,1913,bb,bb_1_italy_small,19552,19552.0,22.0,12,305.0,12,4,3,20,5,120.0,254,38,305,254,,3 x 450 mm,https://en.wikipedia.org/wiki/Italian_battleship_Dante_Alighieri
+Quarto,Quarto,italy,1913,cl,cl_3_britain,3500,3323.0,28.0,6,120.0,5,0,0,6,3,76.0,,38,100,,,2 x 450 mm,https://en.wikipedia.org/wiki/Italian_cruiser_Quarto
+Libia,Libia,italy,1913,cl,cl_3_britain,3820,3820.0,22.9,2,152.0,6,0,0,8,5,120.0,,100,100,,,4 x 450 mm,https://en.wikipedia.org/wiki/Italian_cruiser_Libia
+Conte di Cavour,Conte di Cavour,italy,1914,bb,bb_1_italy_medium,23088,23088.0,21.5,13,305.0,12,3,3,18,5,120.0,250,40,280,280,230,3 x 450 mm,https://en.wikipedia.org/wiki/Conte_di_Cavour-class_battleship
+Francesco Caracciolo,Francesco Caracciolo,italy,1914,bb,bb_2_Italy,31400,31400.0,28.0,8,381.0,15,4,2,12,6,152.0,303,50,400,400,,8 x 450 or 533 mm,https://en.wikipedia.org/wiki/Francesco_Caracciolo-class_battleship
+Nino Bixio,Nino Bixio,italy,1914,cl,cl_3_britain,3632,3632.0,29.0,6,120.0,5,0,0,6,3,76.0,,38,100,,,2 x 450 mm,https://en.wikipedia.org/wiki/Nino_Bixio-class_cruiser
+Andrea Doria,Andrea Doria,italy,1915,bb,bb_1_italy_medium,22956,22956.0,21.0,13,305.0,12,0,0,16,6,152.0,254,98,320,280,230,3 x 450 mm,https://en.wikipedia.org/wiki/Andrea_Doria-class_battleship
+Carlo Mirabello,Mirabello,italy,1916,dd,dd_3,1784,1784.0,35.0,8,102.0,4,0,0,2,3,76.0,,,,,,4 x 450 mm (2x2),https://en.wikipedia.org/wiki/Mirabello-class_destroyer
+Aquila,Aquila,italy,1917,dd,dd_3,1620,1620.0,34.0,3,152.0,6,2,2,4,3,76.0,,,,,,4 x 457 mm (2x2),https://en.wikipedia.org/wiki/Aquila-class_cruiser
+Premuda (ex-V116),Premuda,italy,1920,dd,tb_sloop_france,2060,2060.0,34.5,4,149.0,6,0,0,0,0,0,,,,,,4 x 600 mm (2x2),https://navypedia.org/ships/italy/it_dd_premuda.htm
+Leone,Leone,italy,1924,dd,tb_sloop_france,2230,2230.0,33.0,8,120.0,5,4,2,2,3,76.0,,,,,,6 x 450 mm (2x3),https://en.wikipedia.org/wiki/Leone-class_destroyer
+Cesare Rossarol (ex-B97),Cesare Rossarol,italy,1924,dd,tb_sloop_france,1374,1374.0,36.5,4,105.0,4,0,0,0,0,0,,,,,,"6 x 500 mm (2x2, 2x1)",https://navypedia.org/ships/italy/it_dd_rossarol.htm
+Cesare Battisti,Sauro,italy,1926,dd,tb_sloop_france,1200,1058.0,31.0,4,120.0,5,2,2,0,0,0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Sauro-class_destroyer
+Aquilone,Turbine,italy,1927,dd,tb_sloop_france,1200,1090.0,33.0,4,120.0,5,2,2,0,0,0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Turbine-class_destroyer
+Trento,Trento,italy,1928,ca,ca_5_italy_early_2,10510,10510.0,31.0,8,203.0,8,4,2,16,4,100.0,70,50,100,100,70,8 x 533 mm (4x2),https://en.wikipedia.org/wiki/Trento-class_cruiser
+Alvise Da Mosto,Navigatori,italy,1929,dd,tb_sloop_france,1930,1930.0,32.0,6,120.0,5,3,2,0,0,0,,,,,,6 x 533 mm,https://en.wikipedia.org/wiki/Navigatori-class_destroyer
+Zara,Zara,italy,1931,ca,ca_5_italy_early_2,11712,11712.0,32.0,8,203.0,8,4,2,16,4,100.0,150,70,150,150,150,,https://en.wikipedia.org/wiki/Zara-class_cruiser
+Alberico da Barbiano,Alberto di Giussano,italy,1931,cl,cl_4_Modern_Trento,6600,6570.0,37.0,8,152.0,6,4,2,6,4,100.0,24,20,40,23,,4 x 533 mm,https://en.wikipedia.org/wiki/Giussano-class_cruiser
+Freccia,Freccia,italy,1931,dd,tb_sloop_france,1225,1225.0,30.0,4,120.0,5,2,2,0,0,0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Freccia-class_destroyer
+Folgore,Folgore,italy,1932,dd,tb_sloop_france,1240,1240.0,30.0,4,120.0,5,2,2,0,0,0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Folgore-class_destroyer
+Bolzano,Bolzano,italy,1933,ca,ca_5_italy_early_2,11060,11060.0,36.0,8,203.0,8,4,2,16,4,100.0,70,50,100,100,70,8 x 533 mm (4x2),https://en.wikipedia.org/wiki/Italian_cruiser_Bolzano
+Luigi Cadorna,Luigi Cadorna,italy,1933,cl,dd_8_hybrid_cruiser_italy,5323,5323.0,37.0,8,152.0,6,4,2,6,4,100.0,24,20,,23,,4 x 533 mm,https://en.wikipedia.org/wiki/Italian_cruiser_Luigi_Cadorna
+Maestrale,Maestrale,italy,1934,dd,tb_sloop_france,1640,1640.0,33.0,4,120.0,5,2,2,2,5,120.0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Maestrale-class_destroyer
+Raimondo Montecuccoli,Raimondo Montecuccoli,italy,1935,cl,cl_4_Modern_Trento,7523,7523.0,37.0,8,152.0,6,4,2,6,4,100.0,60,30,100,70,,4 x 533 mm (2x2),https://en.wikipedia.org/wiki/Italian_cruiser_Raimondo_Montecuccoli
+Emanuele Filiberto Duca d'Aosta,Duca d'Aosta,italy,1935,cl,cl_4_Modern_Trento,8450,8450.0,36.5,8,152.0,6,4,2,6,4,100.0,70,35,100,90,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Italian_cruiser_Emanuele_Filiberto_Duca_d%27Aosta
+Luigi di Savoia Duca degli Abruzzi,Duca degli Abruzzi,italy,1937,cl,cl_6_monte_large,11350,11350.0,34.0,10,152.0,6,0,0,8,4,100.0,100,40,140,135,100,6 x 533 mm,https://en.wikipedia.org/wiki/Italian_cruiser_Luigi_di_Savoia_Duca_degli_Abruzzi
+Alfredo Oriani,Oriani,italy,1937,dd,tb_sloop_france,1780,1780.0,33.0,4,120.0,5,2,2,2,5,120.0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Oriani-class_destroyer
+Alpino,Soldati,italy,1938,dd,tb_sloop_france,1880,1880.0,35.0,4,120.0,5,2,2,1,5,120.0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Soldati-class_destroyer
+Etna (ex-Taksin),Etna,italy,1939,cl,dd_8_hybrid_cruiser_italy,6000,6000.0,28.0,6,135.0,5,3,2,10,3,65.0,60,35,,,,,https://en.wikipedia.org/wiki/Etna-class_cruiser_(1941)
+Littorio (Italia),Littorio,italy,1940,bb,bb_5_littorio_compact,40724,40724.0,30.0,9,381.0,15,3,3,12,6,152.0,280,150,255,380,350,,https://en.wikipedia.org/wiki/Littorio-class_battleship
+Attilio Regolo,Capitani Romani,italy,1942,cl,dd_6_nose_large_italian,3745,3745.0,41.0,8,135.0,5,4,2,0,0,0,,,15,20,,8 x 533 mm (2x4),https://en.wikipedia.org/wiki/Capitani_Romani-class_cruiser
+Comandante Toscano,Comandanti Medaglie d'Oro,italy,1942,dd,tb_sloop_france,2067,2067.0,35.0,4,135.0,5,4,1,0,0,0,,,,,,6 x 533 mm (2x3),https://navypedia.org/ships/italy/it_dd_comandanti.htm
+Matsushima,Matsushima,japan,1891,cl,cl_1_3mast_armored,4278,4278.0,16.5,1,320.0,13,0,0,0,0,0,,50,,300,,4 x 356 mm,https://en.wikipedia.org/wiki/Matsushima-class_cruiser
+Chiyoda,Chiyoda,japan,1891,cl,cl_1_3mast_armored,2750,2439.0,19.0,10,119.0,5,0,0,0,0,0,92,35,30,,,3 x 356 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Chiyoda
+Yoshino,Yoshino,japan,1893,cl,cl_1_3mast_armored,4150,4150.0,23.0,4,152.0,6,0,0,8,5,119.0,,115,,,,5 x 356 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Yoshino
+Akitsushima,Akitsushima,japan,1894,cl,cl_1_straightbow,3100,3100.0,19.0,4,152.0,6,0,0,6,5,119.0,,75,,,,4 x 356 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Akitsushima
+Suma,Suma,japan,1896,cl,cl_1_straightbow,2657,2657.0,20.0,2,152.0,6,0,0,6,5,119.0,,50,,,,2 x 380 mm (body: 356 mm),https://en.wikipedia.org/wiki/Suma-class_cruiser
+Fuji,Fuji,japan,1897,bb,b_1,12533,12533.0,18.25,4,305.0,12,2,2,10,6,152.0,457,64,356,152,356,5 x 457 mm (18 in),https://en.wikipedia.org/wiki/Fuji-class_battleship
+Kasagi,Kasagi,japan,1898,cl,cl_2_straightbow,4979,4979.0,22.5,2,203.0,8,0,0,10,5,119.0,,112,115,,,5 x 356 mm (body: 4),https://en.wikipedia.org/wiki/Kasagi-class_cruiser
+Takasago,Takasago,japan,1898,cl,cl_2_straightbow,4160,4160.0,23.5,2,203.0,8,0,0,10,5,120.0,,114,114,,,5 x 457 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Takasago
+Miyako,Miyako,japan,1899,cl,cl_1_straightbow,2000,1772.0,20.0,2,119.0,5,0,0,0,0,0,,,,,,2 x 460 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Miyako
+Shikishima,Shikishima,japan,1900,bb,b_2,15000,15000.0,18.0,4,305.0,12,2,2,14,6,152.0,229,102,356,254,356,4 x 450 mm (18 in),https://en.wikipedia.org/wiki/Shikishima-class_battleship
+Asahi,Asahi,japan,1900,bb,b_2,15200,15200.0,18.0,4,305.0,12,2,2,14,6,152.0,229,102,356,152,356,4 x 450 mm (18 in),https://en.wikipedia.org/wiki/Japanese_battleship_Asahi
+Yakumo,Yakumo,japan,1900,ca,ca_2,9646,9646.0,20.0,4,203.0,8,2,2,12,6,152.0,178,63,356,160,152,5 x 457 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Yakumo
+Azuma,Azuma,japan,1900,ca,ca_1,9278,9278.0,21.0,4,203.0,8,2,2,12,6,152.0,178,63,356,160,152,5 x 457 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Azuma
+Mikasa,Mikasa,japan,1902,bb,b_2,15140,15140.0,18.0,4,305.0,12,2,2,14,6,152.0,229,76,356,254,356,4 x 450 mm (18 in),https://en.wikipedia.org/wiki/Japanese_battleship_Mikasa
+Niitaka,Niitaka,japan,1904,cl,cl_2_straightbow,3366,3366.0,20.0,6,152.0,6,0,0,0,0,0,,76,100,,,,https://en.wikipedia.org/wiki/Niitaka-class_cruiser
+Otowa,Otowa,japan,1904,cl,cl_2_straightbow,3000,3000.0,21.0,2,152.0,6,0,0,6,5,119.0,,75,100,,,,https://en.wikipedia.org/wiki/Japanese_cruiser_Otowa
+Katori,Katori,japan,1906,bb,b_2,16383,16383.0,18.0,4,305.0,12,2,2,4,10,254.0,229,76,229,229,305,5 x 457 mm (18 in),https://en.wikipedia.org/wiki/Katori-class_battleship
+Tsukuba,Tsukuba,japan,1907,ca,ca_3,13750,13750.0,20.5,4,305.0,12,2,2,12,6,152.0,178,51,203,244,178,3 submerged,https://en.wikipedia.org/wiki/Tsukuba-class_battlecruiser
+Ibuki,Ibuki,japan,1909,ca,ca_3,14636,14636.0,22.5,4,305.0,12,2,2,8,8,203.0,178,51,203,229,178,3 x 457 mm submerged (infobox 450 mm),https://en.wikipedia.org/wiki/Ibuki-class_battlecruiser
+Satsuma,Satsuma,japan,1910,bb,bb_1_japan,20100,20100.0,20.0,4,305.0,12,2,2,12,10,254.0,229,76,152,241,,5 x 457 mm (18 in) submerged,https://en.wikipedia.org/wiki/Satsuma-class_battleship
+Tone,Tone,japan,1910,cl,cl_2_straightbow,4113,4113.0,23.0,2,152.0,6,0,0,10,5,119.0,,67,100,,,3 x 457 mm,https://en.wikipedia.org/wiki/Japanese_cruiser_Tone_(1907)
+Umikaze,Umikaze,japan,1911,dd,dd_1_japan,1030,1030.0,33.0,2,120.0,5,0,0,5,3,80.0,,,,,,2 x 450 mm (initially 3),https://en.wikipedia.org/wiki/Umikaze-class_destroyer
+Kawachi,Kawachi,japan,1912,bb,bb_1_japan,21443,21443.0,21.0,12,305.0,12,6,2,10,6,152.0,305,30,254,279,279,5 x 457 mm (18 in) submerged,https://en.wikipedia.org/wiki/Kawachi-class_battleship
+Chikuma,Chikuma,japan,1912,cl,cl_2_straightbow,5000,5000.0,26.0,8,152.0,6,0,0,0,0,0,,57,102,,,3 x 457 mm,https://en.wikipedia.org/wiki/Chikuma-class_cruiser
+Kongo,Kongo,japan,1913,bc,bc_3,26952,26952.0,27.5,8,356.0,14,4,2,16,6,152.0,203,25,229,254,254,8 x 533 mm,https://en.wikipedia.org/wiki/Kong%C5%8D-class_battlecruiser
+Fuso,Fuso,japan,1915,bb,bb_3_japan,29326,29326.0,23.0,12,356.0,14,6,2,16,6,152.0,305,51,351,279,305,6 x 533 mm,https://en.wikipedia.org/wiki/Fus%C5%8D-class_battleship
+Ise,Ise,japan,1917,bb,bb_3_japan,31260,31260.0,23.0,12,356.0,14,6,2,20,6,140.0,299,85,305,254,305,6 x 533 mm,https://en.wikipedia.org/wiki/Ise-class_battleship
+Isokaze,Isokaze,japan,1917,dd,dd_2_japan,1227,1227.0,34.0,4,120.0,5,0,0,0,0,0,,,,,,6 x 450 mm (3 x 2; text says 533 mm),https://en.wikipedia.org/wiki/Isokaze-class_destroyer
+Kawakaze,Kawakaze,japan,1918,dd,dd_3_japan,1300,1300.0,37.5,3,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (2 x 3; text says 3 x 2),https://en.wikipedia.org/wiki/Kawakaze-class_destroyer
+Tenryu,Tenryu,japan,1919,cl,cl_3_japan,4100,3948.0,33.0,4,140.0,6,4,1,1,3,80.0,63,25,51,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Tenry%C5%AB-class_cruiser
+Momi,Momi,japan,1919,dd,tb_sloop_jap,950,864.0,36.0,3,120.0,5,0,0,0,0,0,,,,,,4 x 533 mm (2 x 2),https://en.wikipedia.org/wiki/Momi-class_destroyer
+Nagato,Nagato,japan,1920,bb,bb_3_japan,32720,32720.0,26.5,8,410.0,16,4,2,20,6,140.0,305,144,369,305,305,8 x 533 mm,https://en.wikipedia.org/wiki/Nagato-class_battleship
+Tosa,Tosa,japan,1920,bb,bb_3,39300,39300.0,26.5,10,410.0,16,5,2,20,6,140.0,280,102,356,305,305,"8 x 610 mm (4 above, 4 below water)",https://en.wikipedia.org/wiki/Tosa-class_battleship
+Amagi,Amagi,japan,1920,bc,bc_4_kongo,40566,40566.0,30.0,10,410.0,16,5,2,16,6,140.0,250,95,360,,280,8 x 610 mm above water,https://en.wikipedia.org/wiki/Amagi-class_battlecruiser
+Kuma,Kuma,japan,1920,cl,cl_3_japan,5500,5500.0,36.0,7,140.0,6,0,0,2,3,80.0,60,30,,,,8 x 533 mm (4x2),https://en.wikipedia.org/wiki/Kuma-class_cruiser
+Minekaze,Minekaze,japan,1920,dd,tb_sloop_jap,1345,1345.0,39.0,4,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (3 x 2),https://en.wikipedia.org/wiki/Minekaze-class_destroyer
+Nagara,Nagara,japan,1922,cl,cl_3_japan,5570,5570.0,36.0,7,140.0,6,0,0,2,3,80.0,60,30,,,,8 x 610 mm (4x2),https://en.wikipedia.org/wiki/Nagara-class_cruiser
+Wakatake,Wakatake,japan,1922,dd,tb_sloop_jap,950,900.0,36.0,3,120.0,5,0,0,0,0,0,,,,,,4 x 533 mm (2 x 2),https://en.wikipedia.org/wiki/Wakatake-class_destroyer
+Kamikaze,Kamikaze,japan,1922,dd,tb_sloop_jap,1400,1400.0,37.25,4,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (3 x 2),https://en.wikipedia.org/wiki/Kamikaze-class_destroyer_(1922)
+Yubari,Yubari,japan,1923,cl,cl_3_japan,4100,3560.0,34.8,6,140.0,6,2,2,1,3,76.0,38,25,,25,,4 x 610 mm (2x2),https://en.wikipedia.org/wiki/Japanese_cruiser_Y%C5%ABbari
+Sendai,Sendai,japan,1924,cl,cl_3_japan,5195,5195.0,35.25,7,140.0,6,0,0,2,3,80.0,64,29,,,,8 x 610 mm (4x2),https://en.wikipedia.org/wiki/Sendai-class_cruiser
+Mutsuki,Mutsuki,japan,1925,dd,tb_sloop_jap,1315,1315.0,37.25,4,120.0,5,0,0,0,0,0,,,,,,"6 x 610 mm (2 x 3, Type 12)",https://en.wikipedia.org/wiki/Mutsuki-class_destroyer
+Furutaka,Furutaka,japan,1926,ca,ca_5_japan_exp_early,7400,7100.0,34.5,6,200.0,8,6,1,4,3,76.2,76,48,,25,,12 x 610 mm (6x2),https://en.wikipedia.org/wiki/Furutaka-class_cruiser
+Aoba,Aoba,japan,1927,ca,ca_5_japan_exp_early,7400,7100.0,34.0,6,200.0,8,3,2,4,5,120.0,76,48,,25,,12 x 610 mm (6x2),https://en.wikipedia.org/wiki/Aoba-class_cruiser
+Myoko,Myoko,japan,1928,ca,ca_5_japan_scout,11633,11633.0,35.5,10,200.0,8,5,2,6,5,120.0,102,35,,25,76,"12 x 610 mm (fixed, in hull)",https://en.wikipedia.org/wiki/My%C5%8Dk%C5%8D-class_cruiser
+Fubuki,Fubuki,japan,1928,dd,tb_sloop_jap,1650,1750.0,38.0,6,127.0,5,3,2,0,0,0,,,,,,9 x 610 mm (3 x 3),https://en.wikipedia.org/wiki/Fubuki-class_destroyer
+Akatsuki,Akatsuki,japan,1932,dd,tb_sloop_jap,1650,1750.0,38.0,6,127.0,5,3,2,0,0,0,,,,,,9 x 610 mm (3 x 3),https://en.wikipedia.org/wiki/Akatsuki-class_destroyer_(1931)
+Hatsuharu,Hatsuharu,japan,1933,dd,tb_sloop_jap,1530,1530.0,36.0,5,127.0,5,2,2,0,0,0,,,,,,6 x 610 mm (2 x 3),https://en.wikipedia.org/wiki/Hatsuharu-class_destroyer
+Mogami,Mogami,japan,1935,cl,cl_5_japan,9000,8500.0,37.0,15,155.0,6,5,3,8,5,127.0,140,35,,25,,12 x 610 mm (4x3),https://en.wikipedia.org/wiki/Mogami-class_cruiser
+Shiratsuyu,Shiratsuyu,japan,1936,dd,tb_sloop_jap,1650,1685.0,34.0,5,127.0,5,2,2,0,0,0,,,,,,8 x 610 mm (2 x 4),https://en.wikipedia.org/wiki/Shiratsuyu-class_destroyer
+Tone,Tone,japan,1938,ca,ca_6_japan,11213,11213.0,35.0,8,203.0,8,4,2,8,5,127.0,145,65,,,,12 x 610 mm (4x3),https://en.wikipedia.org/wiki/Tone-class_cruiser
+Kagero,Kagero,japan,1939,dd,dd_5_akizuki_nose_short,2000,2000.0,35.5,6,127.0,5,3,2,0,0,0,,,,,,"8 x 610 mm (2 x 4, Type 92)",https://en.wikipedia.org/wiki/Kager%C5%8D-class_destroyer
+Katori,Katori,japan,1940,cl,cl_4_Modern_Japan,6900,5890.0,18.0,4,140.0,6,2,2,2,5,127.0,,,10,10,,4 x 533 mm (2x2),https://en.wikipedia.org/wiki/Katori-class_cruiser
+Yamato,Yamato,japan,1941,bb,bb_5,71659,71659.0,27.0,9,460.0,18,3,3,12,6,155.0,410,230,,650,,,https://en.wikipedia.org/wiki/Yamato-class_battleship
+Yugumo,Yugumo,japan,1941,dd,dd_5_akizuki_nose_short,2077,2077.0,35.5,6,127.0,5,3,2,0,0,0,,,,,,"8 x 610 mm (2 x 4, Type 92)",https://en.wikipedia.org/wiki/Y%C5%ABgumo-class_destroyer
+Ibuki,Ibuki,japan,1942,ca,ca_6_japan,12220,12220.0,35.0,10,200.0,8,5,2,8,5,127.0,140,60,100,25,100,16 x 610 mm (4x4),https://en.wikipedia.org/wiki/Ibuki-class_cruiser
+Agano,Agano,japan,1942,cl,cl_4_Modern_Japan,6900,6652.0,35.0,6,152.0,6,3,2,4,3,80.0,60,20,,,,8 x 610 mm (2x4),https://en.wikipedia.org/wiki/Agano-class_cruiser
+Akizuki,Akizuki,japan,1942,dd,dd_5_akizuki_nose_cave_middle,2700,2700.0,33.0,8,100.0,4,4,2,0,0,0,,,,,,4 x 610 mm (1 x 4),https://en.wikipedia.org/wiki/Akizuki-class_destroyer_(1942)
+Oyodo,Oyodo,japan,1943,cl,casemate_test3,8164,8164.0,35.0,6,155.0,6,2,3,8,4,100.0,60,50,40,30,30,,https://en.wikipedia.org/wiki/Japanese_cruiser_%C5%8Cyodo
+Shimakaze,Shimakaze,japan,1943,dd,dd_5_akizuki_nose_cave_middle,2570,2570.0,40.9,6,127.0,5,3,2,0,0,0,,,,,,15 x 610 mm (3 x 5),https://en.wikipedia.org/wiki/Japanese_destroyer_Shimakaze_(1942)
+Matsu,Matsu,japan,1944,dd,tb_sloop_jap,1260,1260.0,27.8,3,127.0,5,1,2,0,0,0,,,,,,"4 x 610 mm (1 x 4, Type 92)",https://en.wikipedia.org/wiki/Matsu-class_destroyer
+Sumatra,Sumatra,netherlands,1891,cl,cl_1_austria_small,1750,1693.0,17.0,1,209.0,8,0,0,1,6,149.0,,38,150,,,2 x 356 mm (beam),https://navypedia.org/ships/netherlands/nl_cr_sumatra.htm
+Koningin Wilhelmina der Nederlanden,Koningin Wilhelmina der Nederlanden,netherlands,1894,cl,cl_2_rambow,4530,4530.0,15.8,1,283.0,11,0,0,1,8,209.0,,75,,280,280,"4 x 356 mm (1 bow, 2 beam, 1 stern)",https://navypedia.org/ships/netherlands/nl_cr_koningin_wilhelmina_der_niderlanden.htm
+Holland,Holland,netherlands,1898,cl,cl_2_rambow,3970,3970.0,20.0,2,149.0,6,0,0,6,5,120.0,,57,102,152,,"2 x 450 mm (1 bow, 1 stern)",https://navypedia.org/ships/netherlands/nl_cr_holland.htm
+Wolf,Wolf,netherlands,1911,dd,dd_1_german,600,510.0,30.0,4,75.0,3,0,0,0,0,0,,,,,,2 x 450 mm (2x1),https://en.wikipedia.org/wiki/Wolf-class_destroyer
+Java,Java,netherlands,1925,cl,cl_5_britain_scout,6670,6670.0,30.0,10,149.0,6,0,0,4,3,75.0,75,50,125,100,,,https://navypedia.org/ships/netherlands/nl_cr_java.htm
+Van Ghent (ex-De Ruyter),Admiralen,netherlands,1928,dd,tb_sloop,1337,1337.0,36.0,4,120.0,5,4,1,2,3,75.0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Admiralen-class_destroyer
+De Ruyter,De Ruyter,netherlands,1936,cl,cl_5_deruyter,6900,6442.0,32.0,7,149.0,6,3,2,0,0,0,50,30,30,100,50,,https://navypedia.org/ships/netherlands/nl_cr_de_ruyter.htm
+Gerard Callenburgh,Gerard Callenburgh,netherlands,1941,dd,tb_sloop_large,1604,1604.0,37.5,5,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2x4),https://en.wikipedia.org/wiki/Gerard_Callenburgh-class_destroyer
+Adamastor,Adamastor,portugal,1897,cl,cl_1_rambow,2000,1729.0,18.0,2,149.0,6,0,0,4,4,105.0,,30,65,,,"3 x 356 mm (1 bow, 2 beam)",https://navypedia.org/ships/portugal/pr_cr_adamastor.htm
+Dom Carlos I (Cândido Reis 1910,Dom Carlos I,portugal,1898,cl,cl_1_3mast_armored,4186,4186.0,22.0,4,152.0,6,0,0,8,5,120.0,,110,102,,,"5 x 356 mm (1 stern, 4 beam)",https://navypedia.org/ships/portugal/pr_cr_dom_carlos_i.htm
+São Gabriel,São Gabriel,portugal,1899,cl,cl_1_rambow,2000,1771.0,17.5,2,149.0,6,0,0,4,5,120.0,,20,60,,,1 x 356 mm (bow),https://navypedia.org/ships/portugal/pr_cr_sao_gabriel.htm
+Tejo,Tejo,portugal,1904,dd,dd_1_austria,550,522.0,25.0,1,100.0,4,0,0,1,3,65.0,,,,,,2 x 356 mm,https://www.navypedia.org/ships/portugal/pr_dd_tejo.htm
+Douro,Guadiana,portugal,1913,dd,dd_1_austria,550,515.0,27.0,1,100.0,4,0,0,2,3,76.0,,,,,,4 x 450 mm (2x2),https://www.navypedia.org/ships/portugal/pr_dd_guadina.htm
+Dão,Douro,portugal,1933,dd,tb_sloop,1219,1219.0,36.0,4,120.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2x4),https://www.navypedia.org/ships/portugal/pr_dd_douro.htm
+Pamiat Azova,Pamiat Azova,russia,1890,ca,ca_maine_threemast,6674,6674.0,17.0,2,203.0,8,0,0,13,6,152.0,152,64,38,,,3 x 381 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Pamiat_Azova
+Kazarskiy,Kazarskiy,russia,1890,tb,tb_lowbow,400,400.0,22.5,6,47.0,2,0,0,3,1,37.0,,,,,,"2 x 381 mm (1 bow, 1 training on deck)",https://www.navypedia.org/ships/russia/ru_dd_kazarskiy.htm
+Imperator Aleksandr II,Imperator Aleksandr II,russia,1891,bb,b1_tsesarevich_russia,9600,9244.0,15.27,2,305.0,12,1,2,4,9,229.0,356,64,203,,254,5 x 381 mm (15 in),https://en.wikipedia.org/wiki/Imperator_Aleksandr_II-class_battleship
+Dvenadsat Apostolov,Dvenadsat Apostolov,russia,1892,bb,b1_tsesarevich_russia,9600,8710.0,14.5,4,305.0,12,2,2,4,6,152.0,356,76,203,,305,6 x 381 mm (15 in),https://en.wikipedia.org/wiki/Russian_battleship_Dvenadsat_Apostolov
+Rurik,Rurik,russia,1895,ca,ca_2,10950,10950.0,18.0,4,203.0,8,0,0,16,6,152.0,305,76,152,,,6 x 381 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Rurik_(1892)
+Navarin,Navarin,russia,1896,bb,b1_tsesarevich_russia,10206,10206.0,15.0,4,305.0,12,2,2,8,6,152.0,406,51,254,305,,6 x 381 mm (15 in) above water,https://en.wikipedia.org/wiki/Russian_battleship_Navarin
+Tri Sviatitelia,Tri Sviatitelia,russia,1896,bb,b1_tsesarevich_russia,13318,13318.0,16.5,4,305.0,12,2,2,8,6,152.0,457,76,305,406,,6 x 381 mm (15 in),https://en.wikipedia.org/wiki/Russian_battleship_Tri_Sviatitelia
+Sissoi Veliky,Sissoi Veliky,russia,1896,bb,b1_tsesarevich_russia,10400,10400.0,15.7,4,305.0,12,2,2,6,6,152.0,356,76,229,305,254,6 x 381 mm (15 in),https://en.wikipedia.org/wiki/Russian_battleship_Sissoi_Veliky
+Rossia,Rossia,russia,1896,ca,ca_3_russia,12195,12195.0,19.0,4,203.0,8,0,0,16,6,152.0,203,76,305,,,5 x 381 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Rossia
+Abrek,Abrek,russia,1897,tb,tb_gunboat,535,535.0,21.2,2,75.0,3,0,0,4,2,47.0,,,,,,2 x 450 mm (1 + 1 x 1),https://www.navypedia.org/ships/russia/ru_dd_abrek.htm
+Petropavlovsk,Petropavlovsk,russia,1899,bb,b1_tsesarevich_russia,11842,11842.0,16.0,4,305.0,12,2,2,12,6,152.0,406,76,229,254,,4 x 381 mm (15 in); 2 x 457 mm (18 in),https://en.wikipedia.org/wiki/Petropavlovsk-class_battleship
+Gromoboi,Gromoboi,russia,1899,ca,ca_3_russia,12455,12455.0,19.0,4,203.0,8,0,0,16,6,152.0,152,76,305,,,4 x 381 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Gromoboi
+Svetlana,Svetlana,russia,1899,cl,cl_novik,3862,3862.0,21.0,6,152.0,6,0,0,0,0,0,,51,102,,,2 x 381 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Svetlana_(1896)
+Rostislav,Rostislav,russia,1900,bb,b1_tsesarevich_russia,10520,10520.0,15.0,4,254.0,10,2,2,8,6,152.0,368,76,152,254,,6 x 381 mm (15 in),https://en.wikipedia.org/wiki/Russian_battleship_Rostislav
+Peresvet,Peresvet,russia,1901,bb,b_2_borodino,14408,14408.0,18.0,4,254.0,10,2,2,11,6,152.0,229,76,229,229,203,5 x 381 mm (15 in),https://en.wikipedia.org/wiki/Peresvet-class_battleship
+Varyag,Varyag,russia,1901,cl,cl_3_russia,6500,6500.0,23.0,12,152.0,6,0,0,12,3,75.0,,76,150,,,6 x 381 mm above water,https://en.wikipedia.org/wiki/Russian_cruiser_Varyag_(1899)
+Novik,Novik,russia,1901,cl,cl_novik,3200,3000.0,25.0,6,120.0,5,0,0,0,0,0,,51,30,,,5 x 381 mm (above water),https://navypedia.org/ships/russia/ru_cr_novik.htm
+Retvizan,Retvizan,russia,1902,bb,b1_tsesarevich_russia,12780,12780.0,18.0,4,305.0,12,2,2,12,6,152.0,229,76,254,229,203,6 x 381 mm (15 in),https://en.wikipedia.org/wiki/Russian_battleship_Retvizan
+Bayan,Bayan,russia,1902,ca,ca_1_3mast_russia,7802,7802.0,21.0,2,203.0,8,0,0,8,6,152.0,200,50,160,160,170,2 x 380 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Bayan_(1900)
+Askold,Askold,russia,1902,cl,cl_3_russia,5910,5910.0,23.8,12,152.0,6,0,0,12,3,75.0,,102,152,,,6 x 381 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Askold
+Bogatyr,Bogatyr,russia,1902,cl,cl_3_russia,6645,6645.0,23.0,12,152.0,6,2,2,12,3,75.0,,80,140,127,,2 x 380 mm,https://en.wikipedia.org/wiki/Bogatyr-class_cruiser
+Knyaz Potemkin Tavricheskiy,Potemkin,russia,1903,bb,b1_tsesarevich_russia,12900,12900.0,16.0,4,305.0,12,2,2,16,6,152.0,229,76,229,254,254,5 x 381 mm (15 in),https://en.wikipedia.org/wiki/Russian_battleship_Potemkin
+Tsesarevich (Grazhdanin from 1917),Tsesarevich,russia,1903,bb,b1_tsesarevich_russia,13105,13105.0,18.0,4,305.0,12,2,2,12,6,152.0,250,50,254,250,250,4 x 381 mm (15 in),https://en.wikipedia.org/wiki/Russian_battleship_Tsesarevich
+Izumrud,Izumrud,russia,1903,cl,cl_3_russia,3300,3103.0,24.0,6,120.0,5,0,0,0,0,0,,,,,,3 x 381 mm (text: 356 mm),https://en.wikipedia.org/wiki/Izumrud-class_cruiser
+Almaz,Almaz,russia,1903,cl,cl_3_russia,3300,3285.0,19.0,4,75.0,3,0,0,0,0,0,,,,,,,https://navypedia.org/ships/russia/ru_cr_almaz.htm
+Borodino,Borodino,russia,1904,bb,b_2_borodino,14415,14415.0,18.0,4,305.0,12,2,2,12,6,152.0,194,51,,254,,4 x 381 mm (15 in),https://en.wikipedia.org/wiki/Borodino-class_battleship
+Ukraina,Ukraina,russia,1905,dd,dd_1_russia,750,730.0,26.0,2,75.0,3,0,0,4,2,57.0,,,,,,3 x 381 mm (1 x 2 + 1 x 1) in first three; 2 x 450 mm in others,https://www.navypedia.org/ships/russia/ru_dd_ukraina.htm
+Emir Bukharskiy,Emir Bukharskiy,russia,1905,dd,dd_1_russia,750,660.0,25.0,2,75.0,3,0,0,6,2,57.0,,,,,,3 x 450 mm,https://www.navypedia.org/ships/russia/ru_dd_emir_bukharskiy.htm
+Vsadnik,Vsadnik,russia,1906,dd,dd_1_russia,750,710.0,25.0,2,75.0,3,0,0,6,2,57.0,,,,,,3 x 450 mm,https://www.navypedia.org/ships/russia/ru_dd_vsadnik.htm
+General Kondratenko,General Kondratenko,russia,1906,dd,dd_1_russia,750,750.0,25.5,2,75.0,3,0,0,6,2,57.0,,,,,,3 x 450 mm,https://www.navypedia.org/ships/russia/ru_dd_general_kondratenko.htm
+Admiral Makarov,Bayan,russia,1908,ca,ca_1_3mast_russia,7750,7750.0,21.0,2,203.0,8,0,0,8,6,152.0,175,50,136,132,,2 x 457 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Admiral_Makarov
+Rurik,Rurik,russia,1908,ca,ca_4_generic_large_russia,15190,15190.0,21.0,4,254.0,10,0,0,8,8,203.0,152,38,203,203,180,2 x 457 mm,https://en.wikipedia.org/wiki/Russian_cruiser_Rurik_(1906)
+Andrei Pervozvanny,Andrei Pervozvanny,russia,1911,bb,hull_bb_dreadnought_1_expo,19000,17320.0,18.5,4,305.0,12,2,2,14,8,203.0,216,38,203,203,127,2 x 450 mm,https://en.wikipedia.org/wiki/Andrei_Pervozvanny-class_battleship
+Izmail,Izmail,russia,1912,bc,bc_3_izmail,32500,32500.0,26.5,12,356.0,14,4,3,24,5,130.0,238,75,400,300,248,6 x 450 mm,https://en.wikipedia.org/wiki/Borodino-class_battlecruiser
+Muraviev Amurskiy,Muraviev Amurskiy,russia,1913,cl,cl_3_russia,4390,4390.0,27.5,8,130.0,5,0,0,4,2,63.0,,80,75,,,,https://en.wikipedia.org/wiki/Pillau-class_cruiser
+Novik (Yakov Sverdlov from 1926),Novik,russia,1913,dd,dd_2_russia,1280,1280.0,36.0,4,102.0,4,0,0,0,0,0,,,,,,8 x 450 mm (4 x 2),https://www.navypedia.org/ships/russia/ru_dd_novik.htm
+Gangut (Oktyabrskaya Revolyutsiya),Gangut,russia,1914,bb,bb_1_russia_gangut,24400,24400.0,24.1,12,305.0,12,4,3,16,5,120.0,225,50,254,203,150,4 x 450 mm submerged,https://en.wikipedia.org/wiki/Gangut-class_battleship
+Bespokoynyy,Bespokoynyy,russia,1914,dd,dd_1_russia,1100,1100.0,34.0,3,102.0,4,0,0,0,0,0,,,,,,10 x 450 mm (5 x 2),https://www.navypedia.org/ships/russia/ru_dd_bespokoyny.htm
+Imperatritsa Mariya,Imperatritsa Mariya,russia,1915,bb,bb_1_russia_gangut,23413,23413.0,21.0,12,305.0,12,4,3,20,5,130.0,263,50,300,250,250,4 x 450 mm submerged (2x2),https://en.wikipedia.org/wiki/Imperatritsa_Mariya-class_battleship
+Imperator Nikolai I,Imperator Nikolai I,russia,1915,bb,hull_bb_dreadnought_2_expo,27390,27390.0,21.0,12,305.0,12,4,3,20,5,130.0,270,63,400,300,300,4 x 450 mm,https://en.wikipedia.org/wiki/Russian_battleship_Imperator_Nikolai_I_(1916)
+Schastlivyy,Schastlivyy,russia,1915,dd,dd_2_russia,1200,1110.0,34.0,3,102.0,4,0,0,0,0,0,,,,,,10 x 450 mm (5 x 2),https://www.navypedia.org/ships/russia/ru_dd_schastlivyy.htm
+Pobeditel (Volodarskiy),Pobeditel,russia,1915,dd,dd_2_russia,1260,1260.0,35.0,4,102.0,4,0,0,0,0,0,,,,,,9-12 x 450 mm (3-4 x 3),https://www.navypedia.org/ships/russia/ru_dd_pobeditel.htm
+Kapitan Izylmetyev (Lenin),Kapitan Izylmetyev,russia,1916,dd,dd_2_russia,1260,1260.0,34.0,4,102.0,4,0,0,1,2,40.0,,,,,,9 x 450 mm (3 x 3),https://www.navypedia.org/ships/russia/ru_dd_kapitan_izylmetyev.htm
+Gavriil,Gavriil,russia,1916,dd,dd_2_russia,1260,1260.0,34.0,4,102.0,4,0,0,1,3,76.0,,,,,,9 x 450 mm (3 x 3),https://www.navypedia.org/ships/russia/ru_dd_gavriil.htm
+Izyaslav (Karl Marx),Izyaslav,russia,1917,dd,dd_2_russia,1350,1350.0,35.0,5,102.0,4,0,0,1,3,76.0,,,,,,9 x 450 mm (3 x 3),https://www.navypedia.org/ships/russia/ru_dd_izyaslav.htm
+Fidonisi,Fidonisi,russia,1917,dd,dd_2_russia,1326,1326.0,33.0,4,102.0,4,0,0,1,2,40.0,,,,,,12 x 450 mm (4 x 3),https://www.navypedia.org/ships/russia/ru_dd_fidonisi.htm
+Admiral Nakhimov (Chervona Ukraina),Admiral Nakhimov,russia,1927,cl,cl_5_armored_exp,7600,7600.0,29.5,15,130.0,5,0,0,4,2,63.0,76,38,76,,,2 x 457 mm submerged,https://en.wikipedia.org/wiki/Admiral_Nakhimov-class_cruiser
+Svetlana (Profintern,Svetlana,russia,1928,cl,cl_3_russia_var,6860,6860.0,29.5,15,130.0,5,0,0,4,2,63.3,76,20,76,,,"2 x 450 mm (later 6 x 533 mm, 2x3)",https://en.wikipedia.org/wiki/Svetlana-class_cruiser
+Krasny Kavkaz (ex-Admiral Lazarev),Krasny Kavkaz,russia,1932,cl,cl_4_russia_kirov,8000,7560.0,29.0,4,180.0,7,4,1,8,4,100.0,76,20,76,76,,12 x 533 mm (4x3),https://en.wikipedia.org/wiki/Soviet_cruiser_Krasny_Kavkaz
+Leningrad,Leningrad,russia,1936,dd,dd_5_stern_small_russia,2350,2350.0,40.0,5,130.0,5,5,1,0,0,0,,,,,,8 x 533 mm (2 x 4),https://en.wikipedia.org/wiki/Leningrad-class_destroyer
+Petropavlovsk (Tallinn),Petropavlovsk,russia,1937,ca,ca_5_russia,17500,17600.0,32.0,8,203.0,8,0,0,12,4,105.0,80,50,,105,,12 x 533 mm,https://en.wikipedia.org/wiki/German_cruiser_L%C3%BCtzow_(1939)
+Tashkent,Tashkent,russia,1937,dd,dd_5_stern_large_russia,2840,2840.0,42.5,3,130.0,5,3,1,0,0,0,,,,,,9 x 533 mm (3 x 3),https://en.wikipedia.org/wiki/Soviet_destroyer_Tashkent
+Sovetsky Soyuz,Sovetsky Soyuz,russia,1938,bb,bb_6_soyuz,59150,59150.0,28.0,9,406.0,16,3,3,12,6,152.0,420,155,425,495,425,,https://en.wikipedia.org/wiki/Sovetsky_Soyuz-class_battleship
+Kirov,Kirov,russia,1938,cl,cl_4_russia_kirov,8000,7890.0,36.0,9,180.0,7,3,3,6,4,100.0,50,50,150,50,50,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Kirov-class_cruiser
+Gnevny,Gnevny,russia,1938,dd,dd_5_stern_small_russia,1750,1612.0,38.3,4,130.0,5,4,1,0,0,0,,,,,,6 x 533 mm (2 x 3),https://en.wikipedia.org/wiki/Gnevny-class_destroyer
+Kronshtadt,Kronshtadt,russia,1939,bc,bc_5_russia2,39660,39660.0,32.0,6,380.0,15,3,2,8,6,152.0,230,90,330,305,330,,https://en.wikipedia.org/wiki/Kronshtadt-class_battlecruiser
+Chapayev,Chapayev,russia,1939,cl,cl_6_russian_exp2,11900,10620.0,35.6,12,152.0,6,4,3,8,4,100.0,100,50,130,175,,6 x 533 mm,https://en.wikipedia.org/wiki/Chapayev-class_cruiser
+Maxim Gorky,Kirov,russia,1940,cl,cl_4_russia_kirov,8177,8177.0,36.72,9,180.0,7,3,3,0,0,0,70,,,70,70,,https://en.wikipedia.org/wiki/Kirov-class_cruiser
+Storozhevoy,Storozhevoy,russia,1940,dd,dd_5_stern_small_russia,1750,1727.0,40.3,4,130.0,5,0,0,0,0,0,,,,,,6 x 533 mm (2 x 3),https://en.wikipedia.org/wiki/Storozhevoy-class_destroyer
+Kalinin,Kirov,russia,1942,cl,cl_4_russia_kirov,8400,8400.0,36.0,9,180.0,7,3,3,8,3,85.0,,,,,,,https://en.wikipedia.org/wiki/Kirov-class_cruiser
+Ognevoy,Ognevoy,russia,1945,dd,dd_5_stern_small_russia,2125,2125.0,36.5,4,130.0,5,2,2,0,0,0,,,,,,6 x 533 mm (2 x 3; text says 2 quadruple),https://en.wikipedia.org/wiki/Ognevoy-class_destroyer
+Porazhayushchiy (ex-T107,Porazhayushchiy,russia,1946,dd,tb_sloop_rus,772,772.0,30.0,1,105.0,4,0,0,0,0,0,,,,,,"3 x 500 mm (1 x 2, 1 x 1)",https://www.navypedia.org/ships/russia/ru_dd_porazhayushchiy.htm
+Pronzitelnyy (ex-T196,Pronzitelnyy,russia,1946,dd,tb_sloop_rus,660,660.0,32.0,2,105.0,4,0,0,0,0,0,,,,,,,https://www.navypedia.org/ships/russia/ru_dd_pronzitelnyy.htm
+Prozorlivyy (ex-T158,Prozorlivyy,russia,1946,dd,tb_sloop_rus,558,558.0,30.0,1,88.0,3,0,0,0,0,0,,,,,,,https://www.navypedia.org/ships/russia/ru_dd_prozorlivyy.htm
+Chapayev,Chapayev,russia,1950,cl,cl_6_russian_exp2,11900,11130.0,33.5,12,152.0,6,4,3,8,4,100.0,100,50,150,175,,,https://en.wikipedia.org/wiki/Chapayev-class_cruiser
+Valkyrien,Valkyrien,scandinavia,1890,cl,cl_1_austrian,2972,2972.0,17.0,2,209.0,8,0,0,6,6,149.0,,65,,,,"5 x 381 mm (2 bow, 2 beam, 1 stern)",https://navypedia.org/ships/denmark/dk_cr_valkyrien.htm
+Hekla,Hekla,scandinavia,1891,cl,cl_1_rambow_boat,1300,1300.0,17.0,2,149.0,6,0,0,4,2,57.0,,43,,,,"4 x 381 mm (1 bow, 2 beam, 1 stern)",https://navypedia.org/ships/denmark/dk_cr_hekla.htm
+Viking,Viking,scandinavia,1891,cl,cl_1_rambow_boat,1120,1120.0,15.0,2,149.0,6,0,0,4,3,65.0,,35,35,,,1 x 356 mm (bow),https://navypedia.org/ships/norway/no_cr_viking.htm
+Gejser,Gejser,scandinavia,1893,cl,cl_1_rambow_boat,1320,1320.0,17.0,2,120.0,5,0,0,4,3,87.0,,50,,,,"1 x 450 mm (bow); 3 x 381 mm (2 beam, 1 stern)",https://navypedia.org/ships/denmark/dk_cr_gejser.htm
+Frithjof,Frithjof,scandinavia,1896,cl,cl_1_rambow_boat,1360,1360.0,15.0,2,120.0,5,0,0,4,3,76.0,,30,,,,1 x 450 mm (bow),https://navypedia.org/ships/norway/no_cr_frithjof.htm
+Örnen,Örnen,scandinavia,1897,tb,tb_gunboat,846,846.0,20.0,2,120.0,5,0,0,4,2,57.0,,19,,,,1 x 380 mm (bow),https://www.navypedia.org/ships/sweden/sw_dd_ornen.htm
+Fylgia,Fylgia,scandinavia,1907,ca,ca_inflex_china,4310,4310.0,22.0,8,152.0,6,4,2,14,2,57.0,100,50,,130,,"2 x 457 mm (submerged, forward)",https://naval-encyclopedia.com/ww1/sweden/hswms-fylgia.php
+Tumleren,Tumleren,scandinavia,1911,tb,tb_gunboat,249,249.0,27.5,2,75.0,3,0,0,0,0,0,,,,,,"5 x 450 mm (1 bow, 4x1)",https://www.navypedia.org/ships/denmark/dk_dd_tumleren.htm
+Søridderen,Søridderen,scandinavia,1911,tb,tb_gunboat,240,240.0,27.5,2,75.0,3,0,0,0,0,0,,,,,,"5 x 450 mm (1 bow, 4x1)",https://www.navypedia.org/ships/denmark/dk_dd_soridderen.htm
+Ehrensköld,Ehrensköld,scandinavia,1927,dd,tb_sloop_jap,990,990.0,36.0,3,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Ehrensköld-class_destroyer
+Klas Horn,Klas Horn,scandinavia,1932,dd,tb_sloop_jap,1004,1004.0,37.0,3,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (2x3),https://www.navypedia.org/ships/sweden/sw_dd_klas_horn.htm
+Gotland,Gotland,scandinavia,1934,cl,dd_8_hybrid_cruiser_gen,4750,4600.0,27.5,6,152.0,6,2,2,4,3,75.0,24,25,19,25,,6 x 533 mm (2x3),https://naval-encyclopedia.com/ww2/sweden/hswms-gotland.php
+Göteborg,Göteborg,scandinavia,1936,dd,tb_sloop_jap,1060,1060.0,39.0,3,120.0,5,3,1,0,0,0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Göteborg-class_destroyer
+Sleipner,Sleipner,scandinavia,1937,dd,tb_sloop_rus,597,597.0,30.0,3,100.0,4,0,0,0,0,0,,,,,,2 x 533 mm (1x2; Gyller 2x2),https://www.navypedia.org/ships/norway/no_dd_sleipner.htm
+Odin,Odin,scandinavia,1939,dd,tb_sloop_rus,632,632.0,30.0,2,100.0,4,0,0,0,0,0,,,,,,2 x 533 mm (1x2),https://www.navypedia.org/ships/norway/no_dd_odin.htm
+Ålesund (ZN4),Ålesund,scandinavia,1939,dd,tb_sloop_jap,1220,1220.0,34.0,4,120.0,5,0,0,0,0,0,,,,,,4 x 533 mm (2x2),https://www.navypedia.org/ships/norway/no_dd_aalesund.htm
+Mode,Mode,scandinavia,1942,dd,tb_sloop_rus,750,750.0,30.0,3,105.0,4,0,0,0,0,0,,,,,,3 x 533 mm (1x3),https://en.wikipedia.org/wiki/Mode-class_destroyer
+Visby,Visby,scandinavia,1943,dd,tb_sloop_jap,1153,1153.0,39.0,3,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm,https://en.wikipedia.org/wiki/Visby-class_destroyer
+Tre Kronor,Tre Kronor,scandinavia,1947,cl,cl_4_Modern_Trento,7519,7519.0,33.0,7,152.0,6,0,0,0,0,0,70,60,127,127,,6,https://en.wikipedia.org/wiki/HSwMS_Tre_Kronor
+Öland,Öland,scandinavia,1947,dd,dd_5_stern_small_russia,1880,1880.0,35.0,4,120.0,5,0,0,0,0,0,,,,,,6 x 533 mm (2x3),https://www.navypedia.org/ships/sweden/sw_dd_oland.htm
+Alfonso XII,Alfonso XII,spain,1890,cl,cl_1_rambow_3mast_early,3042,3042.0,17.0,6,160.0,6,0,0,8,2,57.0,,,,,,"5 x 356 mm (2 bow, 2 beam, 1 aft)",https://navypedia.org/ships/spain/sp_cr_alfonso_xii.htm
+Temerario,Temerario,spain,1891,tb,tb_standard,500,562.0,19.0,2,120.0,5,0,0,4,2,57.0,,13,,,,2 x 356 mm (2x1),https://www.navypedia.org/ships/spain/sp_dd_temerario.htm
+Infanta María Teresa,Infanta María Teresa,spain,1893,ca,ca_maine_threemast,6890,6890.0,20.2,2,280.0,11,0,0,10,6,140.0,305,76,305,,229,8 (2 submerged),https://en.wikipedia.org/wiki/Infanta_Maria_Teresa-class_cruiser
+Filipinas,Filipinas,spain,1895,tb,tb_gunboat,747,747.0,20.0,2,120.0,5,0,0,4,2,42.0,,,,,,"4 x 356 mm (1 bow, 3x1)",https://www.navypedia.org/ships/spain/sp_dd_filipinas.htm
+Emperador Carlos V,Emperador Carlos V,spain,1897,ca,ca_1_spain,9090,9090.0,20.0,2,280.0,11,0,0,8,6,140.0,50,165,300,100,250,6 x 356 mm (beam),https://navypedia.org/ships/spain/sp_cr_emperador_carlos_v.htm
+Cristóbal Colón,Cristóbal Colón,spain,1897,ca,ca_maine_threemast,6840,6840.0,20.02,2,254.0,10,0,0,10,6,152.0,150,38,150,150,,4 x 450 mm,https://en.wikipedia.org/wiki/Spanish_cruiser_Crist%C3%B3bal_Col%C3%B3n
+María de Molina,María de Molina,spain,1898,tb,tb_gunboat,830,830.0,19.5,2,120.0,5,0,0,4,2,42.0,,,152,,,"3 x 356 mm (1 bow, 2x1)",https://www.navypedia.org/ships/spain/sp_dd_maria_de_molina.htm
+Princesa de Asturias,Princesa de Asturias,spain,1903,ca,ca_1_spain,7500,6888.0,20.0,2,240.0,9,0,0,8,6,140.0,300,57,200,100,200,"5 x 450 mm (1 bow, 4 beam)",https://navypedia.org/ships/spain/sp_cr_princesa_de_asturias.htm
+Reina Regente,Reina Regente,spain,1910,cl,cl_3_britain,5287,5287.0,19.5,10,150.0,6,2,2,12,2,57.0,,120,90,,,,https://navypedia.org/ships/spain/sp_cr_reina_regente.htm
+España,España,spain,1913,bb,bb_1_spain,16450,16450.0,19.5,8,305.0,12,4,2,20,4,102.0,203,38,254,203,254,,https://en.wikipedia.org/wiki/España-class_battleship
+Reina Victoria Eugenia (República 1931,Reina Victoria Eugenia,spain,1923,cl,cl_5_navarra_adv_small,5590,5590.0,25.0,9,152.0,6,0,0,1,3,76.0,50,38,152,,,4 x 533 mm (2x2),https://navypedia.org/ships/spain/sp_cr_reina_victoria_eugenia.htm
+Méndez Núñez,Blas de Lezo,spain,1924,cl,cl_5_scout_var1,4780,4780.0,29.0,6,152.0,6,0,0,1,3,76.0,76,25,150,,,12 x 533 mm (4x3),https://navypedia.org/ships/spain/sp_cr_mendez_nunes.htm
+Alsedo,Alsedo,spain,1924,dd,tb_sloop_france,1200,1061.0,34.0,3,102.0,4,0,0,0,0,0,,,,,,4 x 533 mm (2x2),https://en.wikipedia.org/wiki/Alsedo-class_destroyer
+Príncipe Alfonso (Libertad 1931,Almirante Cervera,spain,1925,cl,cl_5_navarra_adv,7475,7475.0,33.0,8,152.0,6,3,2,4,4,102.0,76,50,150,,,12 x 533 mm (4x3),https://navypedia.org/ships/spain/sp_cr_principe_alfonso.htm
+Churruca (i),Churruca,spain,1927,dd,tb_sloop_france,1676,1676.0,36.0,5,120.0,5,0,0,1,3,76.0,,,,,,6 x 533 mm (2x3),https://en.wikipedia.org/wiki/Churruca-class_destroyer_(1927)
+Canarias,Canarias,spain,1936,ca,ca_5_canarias,12500,10670.0,33.0,8,203.0,8,4,2,8,5,120.0,51,37,25,25,,"12 x 533 mm designed, never installed",https://navypedia.org/ships/spain/sp_cr_canarias.htm
+Baltimore,Baltimore,usa,1890,cl,cl_1_3mast_usa,4413,4413.0,19.0,4,203.0,8,0,0,6,6,152.0,,102,76,114,,,https://en.wikipedia.org/wiki/USS_Baltimore_(C-3)
+Philadelphia,Philadelphia,usa,1890,cl,cl_1_3mast_usa,4324,4324.0,19.0,12,152.0,6,0,0,0,0,0,,102,76,76,,,https://en.wikipedia.org/wiki/USS_Philadelphia_(C-4)
+San Francisco,San Francisco,usa,1890,cl,cl_1_3mast_usa,4088,4088.0,19.0,12,152.0,6,0,0,0,0,0,,76,76,51,,,https://en.wikipedia.org/wiki/USS_San_Francisco_(C-5)
+Vesuvius,Vesuvius,usa,1890,cl,cl_1_straightbow_early,1000,930.0,21.0,3,381.0,15,0,0,0,0,0,,,,,,3 x 450 mm (18 in); 1 x 533 mm (21 in) (after conversion),https://en.wikipedia.org/wiki/USS_Vesuvius_(1888)
+Newark,Newark,usa,1891,cl,cl_2_straightbow,4083,4083.0,18.0,12,152.0,6,0,0,0,0,0,,76,76,51,,,https://en.wikipedia.org/wiki/USS_Newark_(C-1)
+New York,New York,usa,1893,ca,ca_1,8150,8150.0,20.0,6,203.0,8,2,2,12,4,102.0,102,152,191,140,254,3 x 356 mm (14 in),https://en.wikipedia.org/wiki/USS_New_York_(ACR-2)
+Montgomery,Montgomery,usa,1893,cl,cl_1_straightbow,2000,2000.0,18.0,2,152.0,6,0,0,8,5,127.0,,11,51,,,3 x 450 mm (18 in),https://en.wikipedia.org/wiki/Montgomery-class_cruiser
+Cincinnati,Cincinnati,usa,1894,cl,cl_1_straightbow,3183,3183.0,19.0,1,152.0,6,0,0,10,5,127.0,,64,51,,,4 x 450 mm (18 in) (removed in refits),https://en.wikipedia.org/wiki/Cincinnati-class_cruiser
+Columbia,Columbia,usa,1894,cl,cl_2_straightbow,7000,7375.0,22.5,1,203.0,8,0,0,2,6,152.0,,102,127,102,,"4 x 356 mm (14 in, Columbia) or 450 mm (18 in, Minneapolis) (removed by 1904)",https://en.wikipedia.org/wiki/Columbia-class_cruiser
+Texas,Texas,usa,1895,bb,b1_maine,6316,6316.0,17.8,2,305.0,12,2,1,6,6,152.0,305,76,229,76,,4 x 356 mm,https://en.wikipedia.org/wiki/USS_Texas_(1892)
+Maine,Maine,usa,1895,bb,b1_maine,6682,6682.0,16.45,4,254.0,10,2,2,6,6,152.0,305,76,254,203,305,4 x 450 mm,https://en.wikipedia.org/wiki/USS_Maine_(1889)
+Indiana (BB-1),Indiana,usa,1895,bb,b_1_usa_var,10288,10288.0,15.0,4,330.0,13,2,2,8,8,203.0,457,,229,381,432,6 x 450 mm,https://en.wikipedia.org/wiki/Indiana-class_battleship
+Maine,Maine,usa,1895,ca,ca_1_small,6682,6682.0,16.45,4,254.0,10,2,2,6,6,152.0,305,76,254,203,305,4 x 457 mm (18 in) above water,https://en.wikipedia.org/wiki/USS_Maine_(ACR-1)
+Olympia,Olympia,usa,1895,cl,cl_1_medium,5586,5586.0,21.7,4,203.0,8,2,2,10,5,127.0,,121,127,89,114,6 x 450 mm (17.7 in) above water,https://en.wikipedia.org/wiki/USS_Olympia_(C-6)
+Brooklyn,Brooklyn,usa,1896,ca,ca_1,9215,9215.0,20.0,8,203.0,8,4,2,12,5,127.0,76,152,216,140,203,5 x 450 mm (18 in),https://en.wikipedia.org/wiki/USS_Brooklyn_(ACR-3)
+Iowa (BB-4),Iowa,usa,1897,bb,b_1_usa_var_exp1,11410,11410.0,16.0,4,305.0,12,2,2,8,8,203.0,356,76,254,432,381,2 x 356 mm,https://en.wikipedia.org/wiki/USS_Iowa_(BB-4)
+New Orleans,New Orleans,usa,1898,cl,cl_2_straightbow,3769,3769.0,20.5,6,152.0,6,0,0,4,5,119.0,,89,102,102,,3 x 457 mm (18 in) (removed 1903),https://en.wikipedia.org/wiki/New_Orleans-class_cruiser_(1896)
+Rowan (TB-8),Rowan,usa,1899,tb,tb_gunboat,200,182.0,26.0,4,37.0,1,0,0,0,0,0,,,,,,3 x 450 mm (3 x 1),https://www.navypedia.org/ships/usa/us_dd_rowan.htm
+Farragut (TB-11),Farragut,usa,1899,tb,tb_standard,279,279.0,30.0,4,57.0,2,0,0,0,0,0,,,,,,2 x 450 mm (2 x 1),https://www.navypedia.org/ships/usa/us_dd_farragut99.htm
+Kearsarge (BB-5),Kearsarge,usa,1900,bb,b_1_usa_var_exp1,11540,11540.0,16.0,4,330.0,13,2,2,4,8,203.0,419,127,254,432,381,4 x 457 mm,https://en.wikipedia.org/wiki/Kearsarge-class_battleship
+Illinois (BB-7),Illinois,usa,1900,bb,b_1_usa_var_exp1,11565,11565.0,16.0,4,330.0,13,2,2,14,6,152.0,419,127,254,356,381,4 x 457 mm,https://en.wikipedia.org/wiki/Illinois-class_battleship
+Shubrick (TB-31),Shubrick,usa,1901,tb,tb_gunboat,200,200.0,26.0,3,37.0,1,0,0,0,0,0,,,,,,3 x 450 mm (3 x 1),https://www.navypedia.org/ships/usa/us_dd_shubrick.htm
+Bailey (TB-21),Bailey,usa,1901,tb,tb_gunboat,235,235.0,30.0,4,57.0,2,0,0,0,0,0,,,,,,2 x 450 mm (2 x 1),https://www.navypedia.org/ships/usa/us_dd_bailey.htm
+Maine (BB-10),Maine,usa,1902,bb,b_1_usa_var_exp2,12846,12846.0,18.0,4,305.0,12,2,2,16,6,152.0,279,102,254,305,305,2 x 457 mm,https://en.wikipedia.org/wiki/Maine-class_battleship
+Blakely (TB-27),Blakely,usa,1902,tb,tb_gunboat,200,196.0,26.0,3,37.0,1,0,0,0,0,0,,,,,,3 x 450 mm (3 x 1),https://www.navypedia.org/ships/usa/us_dd_blakely.htm
+Wilkes (TB-35),Wilkes,usa,1902,tb,tb_gunboat,200,175.0,27.0,3,37.0,1,0,0,0,0,0,,,,,,3 x 450 mm (3 x 1),https://www.navypedia.org/ships/usa/us_dd_wilkes.htm
+Denver,Denver,usa,1903,cl,cl_2_straightbow,3200,3200.0,16.41,10,127.0,5,0,0,0,0,0,,64,,,,,https://en.wikipedia.org/wiki/Denver-class_cruiser
+Pennsylvania (Pittsburgh),Pennsylvania,usa,1905,ca,ca_5_usa_large1,13680,13680.0,22.0,4,203.0,8,2,2,14,6,152.0,152,102,229,165,,2 x 450 mm (18 in),https://en.wikipedia.org/wiki/Pennsylvania-class_cruiser
+St. Louis,St. Louis,usa,1905,cl,cl_2_medium,9700,9700.0,22.0,14,152.0,6,0,0,18,3,76.0,102,76,127,,,none,https://en.wikipedia.org/wiki/St._Louis-class_cruiser
+Nicholson (TB-29),Nicholson,usa,1905,tb,tb_gunboat,220,220.0,25.0,3,37.0,1,0,0,0,0,0,,,,,,3 x 450 mm (3 x 1),https://www.navypedia.org/ships/usa/us_dd_nicholson.htm
+Stringham (TB-19),Stringham,usa,1905,tb,tb_standard,340,340.0,25.0,4,57.0,2,0,0,0,0,0,,,,,,2 x 450 mm (2 x 1),https://www.navypedia.org/ships/usa/us_dd_stringham.htm
+Virginia (BB-13),Virginia,usa,1906,bb,b_2_usa_semi,14948,14948.0,19.0,4,305.0,12,2,2,8,8,203.0,279,,229,305,254,4 x 533 mm,https://en.wikipedia.org/wiki/Virginia-class_battleship
+Connecticut (BB-18),Connecticut,usa,1906,bb,b_1_usa_var_exp3,16000,16000.0,18.0,4,305.0,12,2,2,8,8,203.0,279,76,229,305,254,4 x 533 mm,https://en.wikipedia.org/wiki/Connecticut-class_battleship
+Tennessee (Memphis),Tennessee,usa,1906,ca,ca_5_usa_large1,14500,14500.0,22.0,4,254.0,10,2,2,16,6,152.0,127,102,229,229,178,4 x 533 mm (21 in),https://en.wikipedia.org/wiki/Tennessee-class_cruiser
+Mississippi (BB-23),Mississippi,usa,1908,bb,b_1_usa,13000,13000.0,17.0,4,305.0,12,2,2,8,8,203.0,229,,,305,,2 x 533 mm,https://en.wikipedia.org/wiki/Mississippi-class_battleship
+Chester,Chester,usa,1908,cl,cl_2_straightbow,3750,3750.0,24.0,2,127.0,5,0,0,6,3,76.0,51,25,,,,2 x 533 mm (21 in),https://en.wikipedia.org/wiki/Chester-class_cruiser
+Goldsborough (TB-20),Goldsborough,usa,1908,tb,tb_gunboat,255,255.0,27.0,4,57.0,2,0,0,0,0,0,,,,,,2 x 450 mm (2 x 1),https://www.navypedia.org/ships/usa/us_dd_goldsborough.htm
+Smith,Smith,usa,1909,dd,dd_1,700,700.0,28.0,5,76.0,3,0,0,0,0,0,,,,,,3 x 450 mm (18 in); twin mounts from 1916,https://en.wikipedia.org/wiki/Smith-class_destroyer
+South Carolina (BB-26),South Carolina,usa,1910,bb,bb_1_usa,17500,16000.0,18.5,8,305.0,12,4,2,22,3,76.0,305,64,305,305,254,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/South_Carolina-class_battleship
+Delaware (BB-28),Delaware,usa,1910,bb,bb_1_usa,20380,20380.0,21.0,10,305.0,12,5,2,14,5,127.0,279,51,292,305,254,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Delaware-class_battleship
+Paulding,Paulding,usa,1910,dd,dd_1,742,742.0,29.5,5,76.0,3,0,0,0,0,0,,,,,,6 x 450 mm (3 x 2),https://en.wikipedia.org/wiki/Paulding-class_destroyer
+Florida (BB-30),Florida,usa,1911,bb,bb_1_usa,21825,21825.0,21.0,10,305.0,12,5,2,16,5,127.0,279,38,292,305,254,2 x 533 mm,https://en.wikipedia.org/wiki/Florida-class_battleship
+Wyoming (BB-32),Wyoming,usa,1912,bb,bb_2_usa_texas_base,26000,26000.0,20.5,12,305.0,12,6,2,21,5,127.0,279,64,292,305,279,2 x 533 mm (submerged),https://en.wikipedia.org/wiki/Wyoming-class_battleship
+Cassin,Cassin,usa,1913,dd,dd_1,1020,1020.0,29.0,4,102.0,4,0,0,0,0,0,,,,,,8 x 450 mm (4 x 2),https://en.wikipedia.org/wiki/Cassin-class_destroyer
+Aylwin,Aylwin,usa,1913,dd,dd_1,1036,1036.0,29.6,4,102.0,4,0,0,0,0,0,,,,,,8 x 450 mm (4 x 2),https://en.wikipedia.org/wiki/Aylwin-class_destroyer
+New York (BB-34),New York,usa,1914,bb,bb_2_usa_texas_base,27000,27000.0,21.0,10,356.0,14,5,2,21,5,127.0,305,51,305,356,305,4 x 533 mm,https://en.wikipedia.org/wiki/New_York-class_battleship
+O'Brien,O'Brien,usa,1914,dd,dd_2,1100,1050.0,29.0,4,102.0,4,0,0,0,0,0,,,,,,8 x 533 mm (4 x 2),https://en.wikipedia.org/wiki/O%27Brien-class_destroyer
+Tucker,Tucker,usa,1915,dd,dd_2,1100,1090.0,29.5,4,102.0,4,0,0,0,0,0,,,,,,8 x 533 mm (4 x 2),https://en.wikipedia.org/wiki/Tucker-class_destroyer
+Nevada (BB-36),Nevada,usa,1916,bb,bb_2_usa_newyork_var2,27500,27500.0,20.5,10,356.0,14,0,0,21,5,127.0,343,159,406,457,330,2 x 533 mm,https://en.wikipedia.org/wiki/Nevada-class_battleship
+Pennsylvania (BB-38),Pennsylvania,usa,1916,bb,bb_2_usa_newyork_var2,29158,29158.0,21.38,12,356.0,14,4,3,22,5,127.0,343,76,406,457,330,2 x 533 mm,https://en.wikipedia.org/wiki/Pennsylvania-class_battleship
+Sampson,Sampson,usa,1916,dd,dd_2,1111,1111.0,29.5,4,102.0,4,0,0,0,0,0,,,,,,12 x 533 mm (4 x 3),https://en.wikipedia.org/wiki/Sampson-class_destroyer
+New Mexico (BB-40),New Mexico,usa,1917,bb,bb_2_usa_arizona,32000,32000.0,21.0,12,356.0,14,4,3,14,5,127.0,343,89,292,457,,2 x 533 mm,https://en.wikipedia.org/wiki/New_Mexico-class_battleship
+Caldwell,Caldwell,usa,1917,dd,dd_2,1100,1020.0,32.0,4,102.0,4,0,0,0,0,0,,,,,,12 x 533 mm (4 x 3),https://en.wikipedia.org/wiki/Caldwell-class_destroyer
+Clemson,Clemson,usa,1919,dd,tb_sloop,1215,1215.0,35.5,4,102.0,4,0,0,0,0,0,,,,,,12 x 533 mm (4 x 3),https://en.wikipedia.org/wiki/Clemson-class_destroyer
+Tennessee (BB-43),Tennessee,usa,1920,bb,bb_2_usa_arizona,32300,32300.0,21.0,12,356.0,14,4,3,14,5,127.0,343,89,406,457,330,2 x 533 mm,https://en.wikipedia.org/wiki/Tennessee-class_battleship
+South Dakota (BB-49),South Dakota,usa,1920,bb,bb_2_usa_newyork_wide,43200,43200.0,23.0,12,406.0,16,4,3,16,6,152.0,343,152,406,457,343,2 x 533 mm,https://en.wikipedia.org/wiki/South_Dakota-class_battleship_(1920)
+Colorado (BB-45),Colorado,usa,1921,bb,bb_2_usa_arizona,32600,32600.0,21.0,8,406.0,16,4,2,14,5,127.0,343,89,406,457,330,2 x 533 mm,https://en.wikipedia.org/wiki/Colorado-class_battleship
+Omaha,Omaha,usa,1923,cl,cl_3_usa_exp,8000,7050.0,35.0,12,152.0,6,2,2,0,0,0,76,38,38,,,"10 x 533 mm (21 in) (2x3, 2x2)",https://en.wikipedia.org/wiki/Omaha-class_cruiser
+Pensacola,Pensacola,usa,1929,ca,casemate_test2,10000,9100.0,32.5,10,203.0,8,2,2,4,5,127.0,102,44,32,64,19,6 x 533 mm (21 in) (removed by 1936),https://en.wikipedia.org/wiki/Pensacola-class_cruiser
+Northampton,Northampton,usa,1930,ca,ca_4_pensacola,10500,9050.0,32.5,9,203.0,8,3,3,4,5,127.0,95,,32,64,38,6 x 533 mm (21 in) (removed by 1936),https://en.wikipedia.org/wiki/Northampton-class_cruiser
+Portland,Portland,usa,1932,ca,ca_5_generic_4_alt,11000,9950.0,32.7,9,203.0,8,3,3,8,5,127.0,127,64,32,64,38,"none (in original design, not fitted)",https://en.wikipedia.org/wiki/Portland-class_cruiser
+New Orleans,New Orleans,usa,1934,ca,ca_5_wichita,11500,9950.0,32.7,9,203.0,8,3,3,8,5,127.0,127,57,127,203,165,,https://en.wikipedia.org/wiki/New_Orleans-class_cruiser
+Farragut,Farragut,usa,1934,dd,tb_sloop_large,1365,1365.0,37.0,5,127.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2 x 4),https://en.wikipedia.org/wiki/Farragut-class_destroyer_(1934)
+Porter,Porter,usa,1936,dd,dd_5_nose_small_usa,1850,1850.0,37.0,8,127.0,5,0,0,0,0,0,,,,,,8 x 533 mm (2 x 4),https://en.wikipedia.org/wiki/Porter-class_destroyer
+Mahan,Mahan,usa,1936,dd,tb_sloop_large,1500,1500.0,37.0,5,127.0,5,0,0,0,0,0,,,,,,12 x 533 mm (3 x 4),https://en.wikipedia.org/wiki/Mahan-class_destroyer
+Brooklyn,Brooklyn,usa,1937,cl,cl_5_brooklyn,9900,9767.0,32.5,15,152.0,6,5,3,8,5,127.0,127,51,127,165,152,,https://en.wikipedia.org/wiki/Brooklyn-class_cruiser
+Gridley,Gridley,usa,1937,dd,tb_sloop_large,1590,1590.0,38.5,4,127.0,5,0,0,0,0,0,,,,,,16 x 533 mm (4 x 4),https://en.wikipedia.org/wiki/Gridley-class_destroyer
+Bagley,Bagley,usa,1937,dd,tb_sloop_large,1624,1624.0,36.8,4,127.0,5,0,0,0,0,0,,,,,,16 x 533 mm (4 x 4),https://en.wikipedia.org/wiki/Bagley-class_destroyer
+Somers,Somers,usa,1937,dd,dd_5_nose_small_usa,1840,1840.0,36.0,8,127.0,5,0,0,0,0,0,,,,,,12 x 533 mm (3 x 4),https://en.wikipedia.org/wiki/Somers-class_destroyer
+Wichita,Wichita,usa,1939,ca,ca_5_wichita,11500,10589.0,33.0,9,203.0,8,3,3,8,5,127.0,163,57,152,203,178,,https://en.wikipedia.org/wiki/USS_Wichita_(CA-45)
+St. Louis,St. Louis,usa,1939,cl,cl_5_brooklyn,9900,9767.0,32.5,15,152.0,6,5,3,8,5,127.0,127,51,127,165,152,,https://en.wikipedia.org/wiki/Brooklyn-class_cruiser
+Benham,Benham,usa,1939,dd,tb_sloop_large,1656,1656.0,37.9,4,127.0,5,0,0,0,0,0,,,,,,16 x 533 mm (4 x 4),https://en.wikipedia.org/wiki/Benham-class_destroyer
+Sims,Sims,usa,1939,dd,tb_sloop_large,1570,1570.0,37.0,5,127.0,5,0,0,0,0,0,,,,,,12 x 533 mm (3 x 4); 8 by 1944,https://en.wikipedia.org/wiki/Sims-class_destroyer
+Benson,Benson,usa,1940,dd,tb_sloop_large,1620,1620.0,37.5,5,127.0,5,0,0,0,0,0,,,,,,10 x 533 mm (2 x 5); 5 (1 x 5) from DD-459,https://en.wikipedia.org/wiki/Benson-class_destroyer
+Gleaves,Gleaves,usa,1940,dd,tb_sloop_large,1630,1630.0,37.4,5,127.0,5,0,0,0,0,0,,,,,,10 x 533 mm (2 x 5); 5 from DD-453,https://en.wikipedia.org/wiki/Gleaves-class_destroyer
+North Carolina (BB-55),North Carolina,usa,1941,bb,bb_usa_north_carolina_large,36600,36600.0,28.0,9,406.0,16,3,3,20,5,127.0,305,127,305,406,406,,https://en.wikipedia.org/wiki/North_Carolina-class_battleship
+Atlanta,Atlanta,usa,1941,cl,cl_5_atlanta,6718,6718.0,32.5,16,127.0,5,8,2,0,0,0,95,32,64,32,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/Atlanta-class_cruiser
+South Dakota (BB-57),South Dakota,usa,1942,bb,bb_5_iowa_compact,35412,35412.0,27.5,9,406.0,16,3,3,20,5,127.0,310,154,406,457,439,,https://en.wikipedia.org/wiki/South_Dakota-class_battleship_(1939)
+Cleveland,Cleveland,usa,1942,cl,cl_6_cleveland,11744,11744.0,32.5,12,152.0,6,4,3,12,5,127.0,127,51,127,165,152,,https://en.wikipedia.org/wiki/Cleveland-class_cruiser
+Fletcher,Fletcher,usa,1942,dd,dd_5_nose_medium_usa,2050,2050.0,36.5,5,127.0,5,0,0,0,0,0,,,,,,10 x 533 mm (2 x 5),https://en.wikipedia.org/wiki/Fletcher-class_destroyer
+Iowa (BB-61),Iowa,usa,1943,bb,bb_5_iowa_small,48110,48110.0,33.0,9,406.0,16,3,3,20,5,127.0,307,152,439,495,439,,https://en.wikipedia.org/wiki/Iowa-class_battleship
+Baltimore,Baltimore,usa,1943,ca,ca_5_wichita,13600,13600.0,33.0,9,203.0,8,3,3,12,5,127.0,152,64,165,203,160,,https://en.wikipedia.org/wiki/Baltimore-class_cruiser
+Oakland,Atlanta,usa,1943,cl,cl_5_atlanta,6718,6718.0,32.5,12,127.0,5,6,2,0,0,0,95,32,64,32,,8 x 533 mm (21 in) (2x4),https://en.wikipedia.org/wiki/Atlanta-class_cruiser
+Alaska (CB-1),Alaska,usa,1944,bc,hull_bc_compact_usa,29771,29771.0,33.0,9,305.0,12,3,3,12,5,127.0,229,102,269,325,330,,https://en.wikipedia.org/wiki/Alaska-class_cruiser
+Allen M. Sumner,Allen M. Sumner,usa,1944,dd,dd_5_nose_medium_usa,2220,2220.0,34.0,6,127.0,5,0,0,0,0,0,,,,,,10 x 533 mm (2 x 5),https://en.wikipedia.org/wiki/Allen_M._Sumner-class_destroyer
+Fargo,Fargo,usa,1945,cl,cl_5_brooklyn,11744,11744.0,32.5,12,152.0,6,4,3,12,5,127.0,127,76,127,127,152,,https://en.wikipedia.org/wiki/Fargo-class_cruiser
+Gearing,Gearing,usa,1945,dd,dd_7_fletcher_style_small,2616,2616.0,36.8,6,127.0,5,0,0,0,0,0,,,,,,10 x 533 mm,https://en.wikipedia.org/wiki/Gearing-class_destroyer
+Oregon City,Oregon City,usa,1946,ca,ca_5_wichita,13260,13260.0,32.4,9,203.0,8,3,3,12,5,127.0,152,,,,,,https://en.wikipedia.org/wiki/Oregon_City-class_cruiser
+Juneau,Juneau,usa,1946,cl,cl_5_atlanta,6500,6500.0,32.7,12,127.0,5,6,2,0,0,0,95,32,64,32,,none,https://en.wikipedia.org/wiki/Juneau-class_cruiser
+Des Moines,Des Moines,usa,1948,ca,ca_6_desmoines1,17255,17255.0,33.0,9,203.0,8,3,3,12,5,127.0,152,89,165,203,160,,https://en.wikipedia.org/wiki/Des_Moines-class_cruiser
+Worcester,Worcester,usa,1948,cl,cl_6_cleveland,14700,14700.0,33.0,12,152.0,6,6,2,0,0,0,127,89,114,165,127,,https://en.wikipedia.org/wiki/Worcester-class_cruiser
+Ark Royal 1914,Ark Royal 1914,britain,1914,cv,cv_1_langley_ca,9000,7080.0,11.0,4,76.0,3,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/HMS_Ark_Royal_(1914)
+Foudre,Foudre,france,1914,cv,cv_1_langley_ca,9000,6090.0,19.0,8,100.0,3.9,0,0,0,,,,117,,,,,https://en.wikipedia.org/wiki/La_Foudre
+Santa Elena,Santa Elena,germany,1914,cv,cv_1_langley_ca,13900,13900.0,11.5,2,88.0,3.5,0,0,0,,,,,,,,,https://navypedia.org/ships/germany/ger_cv_wwi.htm
+Carrier Mk1,Carrier Mk1,usa,1914,cv,cv_1_langley_ca,9000,7720.0,10.0,2,79.0,3.1,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Almaz,Almaz,russia,1915,cv,cv_1_langley_ca,9000,3285.0,19.0,7,120.0,4.7,0,0,0,,,,,,,,,https://naval-encyclopedia.com/?p=37584
+Carrier Mk1,Carrier Mk1,italy,1914,cv,cv_1_langley_ca,9000,7720.0,10.0,2,79.0,3.1,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Carrier Mk1,Carrier Mk1,austria,1914,cv,cv_1_langley_ca,9000,7720.0,10.0,2,79.0,3.1,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Wakamiya,Wakamiya,japan,1914,cv,cv_1_langley_ca,9000,7720.0,10.0,2,79.0,3.1,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Carrier Mk1,Carrier Mk1,spain,1914,cv,cv_1_langley_ca,9000,7720.0,10.0,2,79.0,3.1,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Carrier Mk1,Carrier Mk1,china,1914,cv,cv_1_langley_ca,9000,7720.0,10.0,2,79.0,3.1,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Japanese_seaplane_carrier_Wakamiya
+Argus,Argus,britain,1918,cv,cv_2_yorktown_ca,14450,14450.0,20.0,6,102.0,4,0,0,0,,,,51,,,,,https://en.wikipedia.org/wiki/HMS_Argus_(I49)
+Carrier Mk2,Carrier Mk2,france,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Carrier Mk2,Carrier Mk2,germany,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Langley,Langley,usa,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Carrier Mk2,Carrier Mk2,russia,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Carrier Mk2,Carrier Mk2,italy,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Carrier Mk2,Carrier Mk2,austria,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Hosho,Hosho,japan,1922,cv,cv_1_langley_ca,9000,7470.0,25.0,4,140.0,5.5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Japanese_aircraft_carrier_H%C5%8Dsh%C5%8D
+Carrier Mk2,Carrier Mk2,spain,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Carrier Mk2,Carrier Mk2,china,1922,cv,cv_1_langley_ca,9000,0.0,14.0,4,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Langley-class_aircraft_carrier
+Courageous,Courageous,britain,1925,cv,cv_3_essex_ca,24210,24210.0,30.0,16,120.0,4.7,0,0,0,,,76,25,,,,,https://en.wikipedia.org/wiki/Courageous-class_aircraft_carrier
+Bearn,Bearn,france,1927,cv,cv_3_essex_ca,22146,22146.0,21.5,8,155.0,6.1,0,0,6,3,75,83,24,,,,,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Carrier Mk3,Carrier Mk3,germany,1927,cv,cv_3_essex_ca,22146,22146.0,21.5,8,155.0,6.1,0,0,6,3,75,83,24,,,,,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Lexington,Lexington,usa,1927,cv,cv_3_essex_ca,36000,36000.0,33.0,8,127.0,5,4,2,0,,,127,51,,,,,https://en.wikipedia.org/wiki/Lexington-class_aircraft_carrier
+Carrier Mk3,Carrier Mk3,russia,1927,cv,cv_3_essex_ca,22146,22146.0,21.5,8,155.0,6.1,0,0,6,3,75,83,24,,,,,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Carrier Mk3,Carrier Mk3,italy,1927,cv,cv_3_essex_ca,22146,22146.0,21.5,8,155.0,6.1,0,0,6,3,75,83,24,,,,,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Carrier Mk3,Carrier Mk3,austria,1927,cv,cv_3_essex_ca,22146,22146.0,21.5,8,155.0,6.1,0,0,6,3,75,83,24,,,,,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Akagi,Akagi,japan,1927,cv,cv_3_essex_ca,26900,26900.0,32.5,10,200.0,7.9,0,0,12,4.7,120,152,79,,,,,https://en.wikipedia.org/wiki/Japanese_aircraft_carrier_Akagi
+Carrier Mk3,Carrier Mk3,spain,1927,cv,cv_3_essex_ca,22146,22146.0,21.5,8,155.0,6.1,0,0,6,3,75,83,24,,,,,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Carrier Mk3,Carrier Mk3,china,1927,cv,cv_3_essex_ca,22146,22146.0,21.5,8,155.0,6.1,0,0,6,3,75,83,24,,,,,https://en.wikipedia.org/wiki/French_aircraft_carrier_B%C3%A9arn
+Ark Royal,Ark Royal,britain,1938,cv,cv_3_essex_ca,22000,22000.0,31.0,16,114.0,4.5,0,0,0,,,114,89,,,,,https://en.wikipedia.org/wiki/HMS_Ark_Royal_(91)
+Joffre,Joffre,france,1938,cv,cv_2_yorktown_ca,18000,18000.0,33.5,0,0,0,0,0,0,,,105,70,,,,,https://en.wikipedia.org/wiki/Joffre-class_aircraft_carrier
+Graf Zeppelin,Graf Zeppelin,germany,1936,cv,cv_3_essex_ca,33550,33550.0,33.8,16,150.0,5.9,0,0,12,4.1,105,100,45,,,,,https://en.wikipedia.org/wiki/Graf_Zeppelin-class_aircraft_carrier
+Ranger,Ranger,usa,1934,cv,cv_2_yorktown_ca,14576,14576.0,30.4,8,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Ranger-class_aircraft_carrier
+Carrier Mk4,Carrier Mk4,russia,1939,cv,cv_1_langley_ca,11443,11443.0,28.0,8,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Zuih%C5%8D-class_aircraft_carrier
+Carrier Mk4,Carrier Mk4,italy,1939,cv,cv_1_langley_ca,11443,11443.0,28.0,8,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Zuih%C5%8D-class_aircraft_carrier
+Carrier Mk4,Carrier Mk4,austria,1939,cv,cv_1_langley_ca,11443,11443.0,28.0,8,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Zuih%C5%8D-class_aircraft_carrier
+Soryu,Soryu,japan,1937,cv,cv_2_yorktown_ca,16200,16200.0,34.0,12,127.0,5,0,0,0,,,41,55,,,,,https://en.wikipedia.org/wiki/Japanese_aircraft_carrier_S%C5%8Dry%C5%AB
+Carrier Mk4,Carrier Mk4,spain,1939,cv,cv_1_langley_ca,11443,11443.0,28.0,8,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Zuih%C5%8D-class_aircraft_carrier
+Carrier Mk4,Carrier Mk4,china,1939,cv,cv_1_langley_ca,11443,11443.0,28.0,8,127.0,5,0,0,0,,,,,,,,,https://en.wikipedia.org/wiki/Zuih%C5%8D-class_aircraft_carrier
+Implacable,Implacable,britain,1944,cv,cv_3_essex_ca,32110,32110.0,32.5,8,114.0,4.5,4,2,0,,,114,76,,,,,https://en.wikipedia.org/wiki/Implacable-class_aircraft_carrier
+Carrier Mk5,Carrier Mk5,france,1943,cv,cv_2_yorktown_ca,16510,16510.0,24.0,0,0,0,0,0,0,,,,51,,,,,https://en.wikipedia.org/wiki/HMS_Unicorn_(I72)
+Jade,Jade,germany,1942,cv,cv_2_yorktown_ca,18160,18160.0,21.0,8,105.0,4.1,0,0,0,,,51,,,,,,https://en.wikipedia.org/wiki/Jade-class_aircraft_carrier
+Essex,Essex,usa,1942,cv,cv_3_essex_ca,27066,27066.0,33.0,12,127.0,5,0,0,0,,,102,64,,,,,https://en.wikipedia.org/wiki/Essex-class_aircraft_carrier
+Carrier Mk5,Carrier Mk5,russia,1943,cv,cv_2_yorktown_ca,16510,16510.0,24.0,8,102.0,4,0,0,0,,,,51,,,,,https://en.wikipedia.org/wiki/HMS_Unicorn_(I72)
+Aquila,Aquila,italy,1941,cv,cv_3_essex_ca,23500,23500.0,30.0,8,135.0,5.3,0,0,12,2.6,65,,80,,,,,https://en.wikipedia.org/wiki/Italian_aircraft_carrier_Aquila
+Carrier Mk5,Carrier Mk5,austria,1943,cv,cv_2_yorktown_ca,16510,16510.0,24.0,8,102.0,4,0,0,0,,,,51,,,,,https://en.wikipedia.org/wiki/HMS_Unicorn_(I72)
+Shokaku,Shokaku,japan,1941,cv,cv_3_essex_ca,32105,32105.0,34.5,16,127.0,5,0,0,0,,,165,132,,,,,https://en.wikipedia.org/wiki/Sh%C5%8Dkaku-class_aircraft_carrier
+Carrier Mk5,Carrier Mk5,spain,1943,cv,cv_2_yorktown_ca,16510,16510.0,24.0,8,102.0,4,0,0,0,,,,51,,,,,https://en.wikipedia.org/wiki/HMS_Unicorn_(I72)
+Carrier Mk5,Carrier Mk5,china,1943,cv,cv_2_yorktown_ca,16510,16510.0,24.0,8,102.0,4,0,0,0,,,,51,,,,,https://en.wikipedia.org/wiki/HMS_Unicorn_(I72)
