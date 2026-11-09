@@ -1,4 +1,4 @@
-1.2.78-beta.29
-DIP_GG_Fixes 1.11.890
-2026-11-09 16:23
-Fix: game did not load on betas 27-28
+1.2.78-beta.30
+DIP_GG_Fixes 1.11.893
+2026-11-09 17:09
+Long-range aim back to beta 27 (#273)
