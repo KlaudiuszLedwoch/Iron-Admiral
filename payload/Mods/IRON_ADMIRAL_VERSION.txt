@@ -1,4 +1,4 @@
-1.2.78-beta.72
-DIP_GG_Fixes 1.11.945
-2026-11-10 20:05
-Event error for promoted great powers
+1.2.78-beta.73
+DIP_GG_Fixes 1.11.946
+2026-11-10 20:09
+Ship maintenance error
