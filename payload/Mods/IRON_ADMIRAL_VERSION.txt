@@ -1,4 +1,4 @@
-1.2.78-beta.55
-DIP_GG_Fixes 1.11.927
-2026-11-10 09:07
-Fighters lead their target, full bomb damage
+1.2.78-beta.56
+DIP_GG_Fixes 1.11.928
+2026-11-10 10:29
+The enemy carrier is the main target
