@@ -1,4 +1,4 @@
-1.2.78-beta.61
-DIP_GG_Fixes 1.11.934
-2026-11-10 16:38
-Physical penetration table also in cm and inches (#247)
+1.2.78-beta.62
+DIP_GG_Fixes 1.11.935
+2026-11-10 17:04
+Historical submarine and ASW data (test, off)
