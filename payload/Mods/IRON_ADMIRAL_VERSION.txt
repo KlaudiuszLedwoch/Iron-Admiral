@@ -1,4 +1,4 @@
-1.2.78-beta.53
-DIP_GG_Fixes 1.11.924
-2026-11-10 07:40
-Fighters fire at the right range, Soryu and Graf Zeppelin textures
+1.2.78-beta.54
+DIP_GG_Fixes 1.11.925
+2026-11-10 07:57
+Battle window names the enemy nation
