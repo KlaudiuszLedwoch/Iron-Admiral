@@ -1,4 +1,4 @@
-1.2.78-beta.79
-DIP_GG_Fixes 1.11.952
-2026-11-10 21:32
-Test close-ups after the battle starts
+1.2.78-beta.80
+DIP_GG_Fixes 1.11.953
+2026-11-10 21:47
+No error reports for known, handled errors
