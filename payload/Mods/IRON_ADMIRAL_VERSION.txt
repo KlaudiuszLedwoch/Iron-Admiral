@@ -1,4 +1,4 @@
-1.2.78-beta.56
-DIP_GG_Fixes 1.11.928
-2026-11-10 10:29
-The enemy carrier is the main target
+1.2.78-beta.57
+DIP_GG_Fixes 1.11.929
+2026-11-10 12:37
+Automated battle tests with named designs
