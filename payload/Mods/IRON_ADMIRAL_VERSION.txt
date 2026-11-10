@@ -1,4 +1,4 @@
-1.2.78-beta.75
-DIP_GG_Fixes 1.11.948
-2026-11-10 20:48
-Floating superstructures: visible hull only (test)
+1.2.78-beta.76
+DIP_GG_Fixes 1.11.949
+2026-11-10 21:09
+Close-up shots of ships with unmounted parts (tests)
