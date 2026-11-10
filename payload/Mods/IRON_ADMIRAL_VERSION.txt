@@ -1,4 +1,4 @@
-1.2.78-beta.74
-DIP_GG_Fixes 1.11.947
-2026-11-10 20:35
-Floating superstructures (test)
+1.2.78-beta.75
+DIP_GG_Fixes 1.11.948
+2026-11-10 20:48
+Floating superstructures: visible hull only (test)
