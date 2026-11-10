@@ -1,4 +1,4 @@
-1.2.78-beta.78
-DIP_GG_Fixes 1.11.951
-2026-11-10 21:28
-861 ship names restored
+1.2.78-beta.79
+DIP_GG_Fixes 1.11.952
+2026-11-10 21:32
+Test close-ups after the battle starts
