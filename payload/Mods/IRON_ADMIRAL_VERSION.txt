@@ -1,4 +1,4 @@
-1.2.78-beta.70
-DIP_GG_Fixes 1.11.943
-2026-11-10 19:32
-Player's submarine 3 km ahead of the enemy fleet (test)
+1.2.78-beta.71
+DIP_GG_Fixes 1.11.944
+2026-11-10 19:46
+Torpedo tubes in the intelligence report
