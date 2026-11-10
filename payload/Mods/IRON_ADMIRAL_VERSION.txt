@@ -1,4 +1,4 @@
-1.2.78-beta.48
-DIP_GG_Fixes 1.11.919
-2026-11-10 06:22
-AI nation with no fleet builds again (#289)
+1.2.78-beta.49
+DIP_GG_Fixes 1.11.920
+2026-11-10 06:26
+Fighters search wider, escort stays with its wave, looser formation
