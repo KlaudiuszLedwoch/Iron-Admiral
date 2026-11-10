@@ -1,4 +1,4 @@
-1.2.78-beta.86
-DIP_GG_Fixes 1.11.959
-2026-11-10 23:56
-Air group mix: one more dive bomber
+1.2.78-beta.87
+DIP_GG_Fixes 1.11.960
+2026-11-10 23:59
+The real reason when a design cannot be saved (#301)
