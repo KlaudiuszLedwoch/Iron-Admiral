@@ -1,4 +1,4 @@
-1.2.78-beta.59
-DIP_GG_Fixes 1.11.932
-2026-11-10 15:02
-15in/42 velocity, submarines in battle (test, off)
+1.2.78-beta.60
+DIP_GG_Fixes 1.11.933
+2026-11-10 15:08
+No more dawn haze from the AI, Zuiho textures
