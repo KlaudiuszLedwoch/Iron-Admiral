@@ -1,4 +1,4 @@
-1.2.78-beta.45
-DIP_GG_Fixes 1.11.916
-2026-11-10 01:32
-Flak calibration, proximity fuze, hangar fires
+1.2.78-beta.46
+DIP_GG_Fixes 1.11.917
+2026-11-10 02:03
+Flak saturation off
