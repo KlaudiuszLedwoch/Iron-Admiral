@@ -1,4 +1,4 @@
-1.2.78-beta.71
-DIP_GG_Fixes 1.11.944
-2026-11-10 19:46
-Torpedo tubes in the intelligence report
+1.2.78-beta.72
+DIP_GG_Fixes 1.11.945
+2026-11-10 20:05
+Event error for promoted great powers
