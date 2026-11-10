@@ -1,4 +1,4 @@
-1.2.78-beta.69
-DIP_GG_Fixes 1.11.942
-2026-11-10 19:24
-Player's submarine marker and orders (test)
+1.2.78-beta.70
+DIP_GG_Fixes 1.11.943
+2026-11-10 19:32
+Player's submarine 3 km ahead of the enemy fleet (test)
