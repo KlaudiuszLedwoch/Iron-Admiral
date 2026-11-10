@@ -1,4 +1,4 @@
-1.2.78-beta.44
-DIP_GG_Fixes 1.11.915
-2026-11-09 23:50
-Carrier aircraft by nation, bomb log, fighter fixes
+1.2.78-beta.45
+DIP_GG_Fixes 1.11.916
+2026-11-10 01:32
+Flak calibration, proximity fuze, hangar fires
