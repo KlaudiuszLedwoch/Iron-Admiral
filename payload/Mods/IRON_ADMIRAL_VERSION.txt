@@ -1,4 +1,4 @@
-1.2.78-beta.51
-DIP_GG_Fixes 1.11.922
-2026-11-10 06:58
-Real flight data for US and Japanese aircraft, light AA restored, textured ca...
+1.2.78-beta.52
+DIP_GG_Fixes 1.11.923
+2026-11-10 07:03
+Heavy/light AA boundary at 3 inch
