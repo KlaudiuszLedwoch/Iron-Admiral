@@ -1,4 +1,4 @@
-1.2.78-beta.49
-DIP_GG_Fixes 1.11.920
-2026-11-10 06:26
-Fighters search wider, escort stays with its wave, looser formation
+1.2.78-beta.50
+DIP_GG_Fixes 1.11.921
+2026-11-10 06:50
+Fighters shoot down attackers, no more 0 mm shell
