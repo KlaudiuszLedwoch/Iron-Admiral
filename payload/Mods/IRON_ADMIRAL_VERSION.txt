@@ -1,4 +1,4 @@
-1.2.78-beta.67
-DIP_GG_Fixes 1.11.940
-2026-11-10 18:57
-Carrier build time 24/36 months, war x0.75 for all classes
+1.2.78-beta.68
+DIP_GG_Fixes 1.11.941
+2026-11-10 19:09
+Historical carrier air groups by nation and year
