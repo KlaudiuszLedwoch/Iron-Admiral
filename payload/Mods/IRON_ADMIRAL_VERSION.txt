@@ -1,4 +1,4 @@
-1.2.78-beta.54
-DIP_GG_Fixes 1.11.925
-2026-11-10 07:57
-Battle window names the enemy nation
+1.2.78-beta.55
+DIP_GG_Fixes 1.11.927
+2026-11-10 09:07
+Fighters lead their target, full bomb damage
