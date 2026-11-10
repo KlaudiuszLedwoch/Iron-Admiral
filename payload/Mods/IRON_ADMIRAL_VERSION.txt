@@ -1,4 +1,4 @@
-1.2.78-beta.81
-DIP_GG_Fixes 1.11.954
-2026-11-10 22:06
-Updater retries a release still being published
+1.2.78-beta.82
+DIP_GG_Fixes 1.11.955
+2026-11-10 22:26
+Iron Admiral texts in other game languages
