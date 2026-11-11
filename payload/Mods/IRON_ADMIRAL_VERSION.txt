@@ -1,4 +1,4 @@
-1.2.78-beta.98
-DIP_GG_Fixes 1.11.971
-2026-11-11 08:32
-Smaller download: carrier model textures
+1.2.78-beta.99
+DIP_GG_Fixes 1.11.972
+2026-11-11 08:39
+Designer: invisible towers and funnels after a carrier was loaded (#262)
