@@ -1,4 +1,4 @@
-1.2.78-beta.97
-DIP_GG_Fixes 1.11.970
-2026-11-11 08:19
-Lighter carrier aircraft models
+1.2.78-beta.98
+DIP_GG_Fixes 1.11.971
+2026-11-11 08:32
+Smaller download: carrier model textures
