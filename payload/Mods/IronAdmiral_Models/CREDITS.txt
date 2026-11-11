@@ -102,3 +102,11 @@ cn_haihung.iam + cn_haihung_t*.png (Chinese carriers from 1918) - "Chinese Beiya
   Source: https://sketchfab.com/3d-models/chinese-beiyang-navy-aircraft-carrier-haihung-9ed2983c3e0e4c47a274fb2c5a499068
   License: Creative Commons Attribution 4.0 International (CC BY 4.0) - https://creativecommons.org/licenses/by/4.0/
   Changes: simplified and converted for Iron Admiral; drawn in place of the carrier hulls.
+
+Carrier aircraft (1.11.966), all CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/), modified (reoriented, scaled, decimated, textures downsized) for Iron Admiral:
+- a6m: "A6m3" by manilov.ap - https://sketchfab.com/3d-models/a6m3-5db42f9a1fda4c5492561b61f87a9058
+- d3a: "D3a" by manilov.ap - https://sketchfab.com/3d-models/d3a-7645bea900a44402814f70e3d317ef52
+- f6f: "F6f" by manilov.ap - https://sketchfab.com/3d-models/f6f-d64f29e7f1c144e6a0712ea12d83a91e
+- sbd: "Douglas SBD-3" by PaintedTarget - https://sketchfab.com/3d-models/douglas-sbd-3-685c95ec16a94c1b8d500615e5d3ec0f
+- f4f: "F4F Wildcat" by Billy_HSN - https://sketchfab.com/3d-models/f4f-wildcat-259a1c141cce4122b042561745ca866a
+- b5n: "Nakajima B5N Kate" by helijah - https://sketchfab.com/3d-models/nakajima-b5n-kate-030b98bbffd6481ebc86f6133e42ebcd
