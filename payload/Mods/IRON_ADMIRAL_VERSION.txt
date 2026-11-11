@@ -1,4 +1,4 @@
-1.2.78-beta.112
-DIP_GG_Fixes 1.11.985
-2026-11-11 18:45
-Battle orders panel lower; fleet window after deleting a design (#318)
+1.2.78-beta.113
+DIP_GG_Fixes 1.11.986
+2026-11-11 18:52
+HE shells blow through thinner plating (1/8 of the calibre)
