@@ -1,4 +1,4 @@
-1.2.78-beta.122
-DIP_GG_Fixes 1.11.995
-2026-11-11 21:55
-Engine-room hits are not magazine hits (#248)
+1.2.78-beta.123
+DIP_GG_Fixes 1.11.996
+2026-11-11 22:12
+Diagnostics: task forces that never arrive (#306)
