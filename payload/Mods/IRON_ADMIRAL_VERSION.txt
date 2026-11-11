@@ -1,4 +1,4 @@
-1.2.78-beta.121
-DIP_GG_Fixes 1.11.994
-2026-11-11 21:51
-Diagnostics: monthly GDP line (#322)
+1.2.78-beta.122
+DIP_GG_Fixes 1.11.995
+2026-11-11 21:55
+Engine-room hits are not magazine hits (#248)
