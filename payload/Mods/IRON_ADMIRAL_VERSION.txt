@@ -1,4 +1,4 @@
-1.2.78-beta.109
-DIP_GG_Fixes 1.11.982
-2026-11-11 11:19
-Start of turn: unused designs clean-up redone; port fleet line counts CV
+1.2.78-beta.110
+DIP_GG_Fixes 1.11.983
+2026-11-11 17:16
+Treasury report shows the same monthly balance as the map; carrier aircraft t...
