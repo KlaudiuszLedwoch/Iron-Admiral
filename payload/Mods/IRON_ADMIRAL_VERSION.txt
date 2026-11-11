@@ -1,4 +1,4 @@
-1.2.78-beta.119
-DIP_GG_Fixes 1.11.992
-2026-11-11 21:09
-No instant sinking from own aerial torpedoes
+1.2.78-beta.120
+DIP_GG_Fixes 1.11.993
+2026-11-11 21:26
+Bombs damage AI ships
