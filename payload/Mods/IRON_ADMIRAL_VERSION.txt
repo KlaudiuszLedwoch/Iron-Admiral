@@ -1,4 +1,4 @@
-1.2.78-beta.100
-DIP_GG_Fixes 1.11.973
-2026-11-11 08:57
-Designer: carrier models in battles only (#262)
+1.2.78-beta.101
+DIP_GG_Fixes 1.11.974
+2026-11-11 09:11
+Carriers: player design and refit switched off for now
