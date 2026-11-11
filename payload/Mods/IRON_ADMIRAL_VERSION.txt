@@ -1,4 +1,4 @@
-1.2.78-beta.105
-DIP_GG_Fixes 1.11.978
-2026-11-11 10:21
-Port window: carriers labelled CV
+1.2.78-beta.106
+DIP_GG_Fixes 1.11.979
+2026-11-11 10:33
+Shared designs: an AI nation names a foreign class from its own list
