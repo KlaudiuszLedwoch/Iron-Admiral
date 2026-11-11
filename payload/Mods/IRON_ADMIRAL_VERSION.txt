@@ -1,4 +1,4 @@
-1.2.78-beta.96
-DIP_GG_Fixes 1.11.969
-2026-11-11 08:09
-Designer: parts place again with a carrier in the fleet (#262)
+1.2.78-beta.97
+DIP_GG_Fixes 1.11.970
+2026-11-11 08:19
+Lighter carrier aircraft models
