@@ -1,4 +1,4 @@
-1.2.78-beta.102
-DIP_GG_Fixes 1.11.975
-2026-11-11 09:35
-Battle: air camera hands the camera back, carrier's own name
+1.2.78-beta.103
+DIP_GG_Fixes 1.11.976
+2026-11-11 09:39
+Naval invasion in a war: the tonnage shown is the tonnage used
