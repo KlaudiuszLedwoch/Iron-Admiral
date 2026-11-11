@@ -1,4 +1,4 @@
-1.2.78-beta.118
-DIP_GG_Fixes 1.11.991
-2026-11-11 20:54
-Diagnostics: bomb and aerial torpedo damage
+1.2.78-beta.119
+DIP_GG_Fixes 1.11.992
+2026-11-11 21:09
+No instant sinking from own aerial torpedoes
