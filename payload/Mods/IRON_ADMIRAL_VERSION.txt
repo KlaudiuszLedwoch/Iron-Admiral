@@ -1,4 +1,4 @@
-1.2.78-beta.113
-DIP_GG_Fixes 1.11.986
-2026-11-11 18:52
-HE shells blow through thinner plating (1/8 of the calibre)
+1.2.78-beta.114
+DIP_GG_Fixes 1.11.987
+2026-11-11 19:34
+Carriers without escorts launch their strikes (#290)
