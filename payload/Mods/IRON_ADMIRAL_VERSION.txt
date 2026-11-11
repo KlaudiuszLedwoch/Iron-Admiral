@@ -1,4 +1,4 @@
-1.2.78-beta.88
-DIP_GG_Fixes 1.11.961
-2026-11-11 00:59
-Refusal reason in the designer line (#301)
+1.2.78-beta.89
+DIP_GG_Fixes 1.11.962
+2026-11-11 03:27
+Incomplete TAFData folder no longer stops start-up
