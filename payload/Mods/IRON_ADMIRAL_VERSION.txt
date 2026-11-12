@@ -1,4 +1,4 @@
-1.2.78-beta.156
-DIP_GG_Fixes 1.11.1034
-2026-11-12 23:12
-Test tool only: UI steps in the campaign test
+1.2.78-beta.157
+DIP_GG_Fixes 1.11.1035
+2026-11-12 23:24
+Submarine designer: no main gun required
