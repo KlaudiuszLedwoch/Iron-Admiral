@@ -1,4 +1,4 @@
-1.2.78-beta.150
-DIP_GG_Fixes 1.11.1028
-2026-11-12 21:06
-Army losses -2147483648 and army logistics NaN: guard (#334)
+1.2.78-beta.151
+DIP_GG_Fixes 1.11.1029
+2026-11-12 21:31
+Correction to beta.150: no fuel guard
