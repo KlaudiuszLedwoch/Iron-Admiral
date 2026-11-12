@@ -1,4 +1,4 @@
-1.2.78-beta.158
-DIP_GG_Fixes 1.11.1036
-2026-11-12 23:31
-Submarine textures shown
+1.2.78-beta.159
+DIP_GG_Fixes 1.11.1037
+2026-11-12 23:41
+Submarines step 2: your design gives the numbers (experimental)
