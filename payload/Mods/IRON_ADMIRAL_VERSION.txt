@@ -1,4 +1,4 @@
-1.2.78-beta.155
-DIP_GG_Fixes 1.11.1033
-2026-11-12 22:05
+1.2.78-beta.156
+DIP_GG_Fixes 1.11.1034
+2026-11-12 23:12
 Test tool only: UI steps in the campaign test
