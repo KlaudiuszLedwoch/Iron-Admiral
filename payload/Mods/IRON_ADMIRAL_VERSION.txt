@@ -1,4 +1,4 @@
-1.2.78-beta.123
-DIP_GG_Fixes 1.11.996
-2026-11-11 22:12
-Diagnostics: task forces that never arrive (#306)
+1.2.78-beta.124
+DIP_GG_Fixes 1.11.997
+2026-11-12 03:56
+Diagnostics: state budget parts (#322)
