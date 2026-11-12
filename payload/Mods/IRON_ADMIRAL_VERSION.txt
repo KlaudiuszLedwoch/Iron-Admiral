@@ -1,4 +1,4 @@
-1.2.78-beta.131
-DIP_GG_Fixes 1.11.1004
-2026-11-12 12:36
-Space pauses the battle, auto-resolve win chance
+1.2.78-beta.132
+DIP_GG_Fixes 1.11.1005
+2026-11-12 13:52
+Return to port button
