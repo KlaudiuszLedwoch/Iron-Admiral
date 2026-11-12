@@ -1,4 +1,4 @@
-1.2.78-beta.144
-DIP_GG_Fixes 1.11.1020
-2026-11-12 19:22
-Carrier island with its funnel
+1.2.78-beta.145
+DIP_GG_Fixes 1.11.1022
+2026-11-12 19:33
+Carrier designer: only carrier parts, island placeable in refit
