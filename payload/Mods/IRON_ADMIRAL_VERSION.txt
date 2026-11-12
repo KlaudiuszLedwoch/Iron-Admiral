@@ -1,4 +1,4 @@
-1.2.78-beta.126
-DIP_GG_Fixes 1.11.999
-2026-11-12 07:50
-Aerial torpedo charge of the right nation
+1.2.78-beta.127
+DIP_GG_Fixes 1.11.1000
+2026-11-12 09:46
+Test tool: shell type in test battles
