@@ -1,4 +1,4 @@
-1.2.78-beta.129
-DIP_GG_Fixes 1.11.1002
-2026-11-12 10:40
-Base game gun models
+1.2.78-beta.130
+DIP_GG_Fixes 1.11.1003
+2026-11-12 12:19
+Fleet orders no longer vanish after one turn (#327)
