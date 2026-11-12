@@ -1,4 +1,4 @@
-1.2.77.8
-DIP_GG_Fixes 1.11.8653
-2026-11-10 16:49
-Stable fix 1.2.77.8: penetration table in cm and inches (#247), peace offer a...
+1.2.77.9
+DIP_GG_Fixes 1.11.8654
+2026-11-12 17:00
+Stable fix 1.2.77.9: end of turn no longer stops on a ship with unset stats (...
