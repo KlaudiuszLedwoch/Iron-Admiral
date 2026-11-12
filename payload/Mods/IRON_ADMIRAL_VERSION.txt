@@ -1,4 +1,4 @@
-1.2.78-beta.137
-DIP_GG_Fixes 1.11.1013
-2026-11-12 17:28
-Task force names
+1.2.78-beta.138
+DIP_GG_Fixes 1.11.1014
+2026-11-12 17:38
+Design your own carriers (#104), battle start fix (#331)
