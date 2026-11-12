@@ -76,6 +76,7 @@ Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.77.8_Mods_onl
 - TweaksAndFixes — NathanKell, DukeDagor (MIT)
 - MelonLoader — LavaGang (Apache 2.0)
 - Ultimate Admiral's Shippack — Badkapp / MarineWerft (free use with credit, not for paid mods)
+- UAD Vanilla Plus - xxfivebyfivexx (GitHub: gregorymostizky): continuous campaign map approach and other ideas, reimplemented (borrowing allowed by the author with credit)
 - CV Barebone Modification (carrier ship type and air wing design study) - ChonkE (MIT)
 - Iron Admiral data changes, DIP_GG_Fixes add-on, installer, historical data and designs — Klaudiusz Ledwoch (Steam: Klod76)
 
