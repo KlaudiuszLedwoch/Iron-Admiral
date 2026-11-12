@@ -1,4 +1,4 @@
-1.2.78-beta.145
-DIP_GG_Fixes 1.11.1022
-2026-11-12 19:33
-Carrier designer: only carrier parts, island placeable in refit
+1.2.78-beta.146
+DIP_GG_Fixes 1.11.1024
+2026-11-12 19:47
+Aircraft: falling bombs and torpedoes, longer low run, German and Italian types
