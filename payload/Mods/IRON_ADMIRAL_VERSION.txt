@@ -1,4 +1,4 @@
-1.2.78-beta.151
-DIP_GG_Fixes 1.11.1029
-2026-11-12 21:31
-Correction to beta.150: no fuel guard
+1.2.78-beta.152
+DIP_GG_Fixes 1.11.1030
+2026-11-12 21:45
+Test tool only: UI steps in the campaign test
