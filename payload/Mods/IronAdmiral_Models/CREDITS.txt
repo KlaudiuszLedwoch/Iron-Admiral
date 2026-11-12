@@ -122,3 +122,13 @@ German aircraft (1.11.1025), all CC BY 4.0, modified (reoriented, scaled, decima
 - ju87c: "Junkers Ju 87 Stuka" by scorpion81 - https://sketchfab.com/3d-models/junkers-ju-87-stuka-80fe9909938a44159d1906a81092c006
 - he51: "He51" by manilov.ap - https://sketchfab.com/3d-models/he51-b899d72d3647475aa114dbfc64546c9b
 Carrier hull and island variants (*_hull.iam, *_island.iam, 1.11.1025) are cut from the carrier models credited above.
+Submarines (1.11.1026), all CC BY 4.0, modified (reoriented, scaled, decimated, textures downsized) for Iron Admiral:
+- ss_gymnote: "Gymnote 1888" by martyn169 - https://sketchfab.com/3d-models/gymnote-1888-f80d47612fe7471b96d6cc53cd107856
+- ss_nordenfelt: "Abdulhamit Submarine (Nordenfelt)" by Yasirovski - https://sketchfab.com/3d-models/abdulhamit-submarine-nordenfelt-d7a34e6f6e694821a0a5a25f7f3eb91e
+- ss_u65: "U-65 Uboat" by martyn169 - https://sketchfab.com/3d-models/u-65-uboat-acc0695e00d445cc9f9bec6cccbd193f
+- ss_type7: "Type VII D U-boat" by martyn169 - https://sketchfab.com/3d-models/type-vii-d-u-boat-da8cc9fafbb7440d9b9203349302eb35
+- ss_p50: "Project 50 U-boat" by martyn169 - https://sketchfab.com/3d-models/project-50-u-boat-71ccedc6bafc4ebbb74e58b1af5978aa
+- ss_surcouf: "French Submarine Cruiser Surcouf" by martyn169 - https://sketchfab.com/3d-models/french-submarine-cruiser-surcouf-eb728c76b39f462683fa8987f55da59a
+- ss_k1: "K-1" by mamont nikita - https://sketchfab.com/3d-models/k-1-869dc3ba99924568b3d2d1d6662c20ae
+- ss_fleet: "WWII Submarine" by Anex - https://sketchfab.com/3d-models/wwii-submarine-5b1417d8eb3e408581e0ad7b87c37f5d
+- ss_type21: "Low poly Type XXI Submarine" by SIpriv - https://sketchfab.com/3d-models/low-poly-type-xxi-submarine-0ff124b1141b470998f83319801fe1dd
