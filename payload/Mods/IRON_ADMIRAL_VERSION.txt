@@ -1,4 +1,4 @@
-1.2.78-beta.124
-DIP_GG_Fixes 1.11.997
-2026-11-12 03:56
-Diagnostics: state budget parts (#322)
+1.2.78-beta.125
+DIP_GG_Fixes 1.11.998
+2026-11-12 07:00
+HE, aerial torpedoes, raiding, war economy, reload
