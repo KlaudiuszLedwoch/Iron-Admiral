@@ -1,4 +1,4 @@
-1.2.78-beta.133
-DIP_GG_Fixes 1.11.1006
-2026-11-12 14:06
-Return to port in the fleet orders
+1.2.78-beta.134
+DIP_GG_Fixes 1.11.1007
+2026-11-12 14:18
+AI task forces gather before they attack
