@@ -1,4 +1,4 @@
-1.2.78-beta.141
-DIP_GG_Fixes 1.11.1017
-2026-11-12 18:28
-Own carrier designs: bare hull and deck model
+1.2.78-beta.142
+DIP_GG_Fixes 1.11.1018
+2026-11-12 18:41
+Carrier island as a part
