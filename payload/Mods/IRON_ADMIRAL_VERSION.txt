@@ -1,4 +1,4 @@
-1.2.78-beta.139
-DIP_GG_Fixes 1.11.1015
-2026-11-12 17:57
-Carrier model in the designer
+1.2.78-beta.140
+DIP_GG_Fixes 1.11.1016
+2026-11-12 18:16
+Carrier air group in the designer
