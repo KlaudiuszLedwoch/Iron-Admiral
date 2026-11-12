@@ -117,3 +117,8 @@ Fleet Air Arm aircraft (1.11.967), modified (reoriented, scaled, decimated, text
 Stand-in models for naval types without a model of their own (1.11.968), modified for Iron Admiral:
 - fulmar (drawn as a Fairey Battle): "Fairey Battle Mk I" by mgg8 - CC0 1.0 - https://sketchfab.com/3d-models/fairey-battle-mk-i-9547572320174583853294499fa6aaf9
 - seafire (drawn as a Spitfire): "Supermarine Spitfire" by Aidan McTaggart - CC BY 4.0 - https://sketchfab.com/3d-models/supermarine-spitfire-59c2b5bc2c8b4dc7b50059a8c5bfa56b
+German aircraft (1.11.1025), all CC BY 4.0, modified (reoriented, scaled, decimated, textures downsized, materials merged) for Iron Admiral:
+- bf109t (drawn from a Bf 109 K-4): "Messerschmitt Bf-109 K4 (low poly)" by Goetz von Berlichingen - https://sketchfab.com/3d-models/messerschmitt-bf-109-k4-low-poly-53ec8c75306340d49d319a65a2e733a1
+- ju87c: "Junkers Ju 87 Stuka" by scorpion81 - https://sketchfab.com/3d-models/junkers-ju-87-stuka-80fe9909938a44159d1906a81092c006
+- he51: "He51" by manilov.ap - https://sketchfab.com/3d-models/he51-b899d72d3647475aa114dbfc64546c9b
+Carrier hull and island variants (*_hull.iam, *_island.iam, 1.11.1025) are cut from the carrier models credited above.
