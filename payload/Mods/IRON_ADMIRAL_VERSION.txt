@@ -1,4 +1,4 @@
-1.2.78-beta.161
-DIP_GG_Fixes 1.11.1039
-2026-11-13 00:16
-Submarine: underwater tubes count as torpedo launchers
+1.2.78-beta.162
+DIP_GG_Fixes 1.11.1040
+2026-11-13 00:27
+Submarine design numbers behind their own switch (off)
