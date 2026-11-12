@@ -1,4 +1,4 @@
-1.2.78-beta.128
-DIP_GG_Fixes 1.11.1001
-2026-11-12 10:12
-Carrier aircraft no longer hang astern before take-off
+1.2.78-beta.129
+DIP_GG_Fixes 1.11.1002
+2026-11-12 10:40
+Base game gun models
