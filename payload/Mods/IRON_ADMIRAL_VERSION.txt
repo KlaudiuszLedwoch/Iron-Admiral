@@ -1,4 +1,4 @@
-1.2.78-beta.138
-DIP_GG_Fixes 1.11.1014
-2026-11-12 17:38
-Design your own carriers (#104), battle start fix (#331)
+1.2.78-beta.139
+DIP_GG_Fixes 1.11.1015
+2026-11-12 17:57
+Carrier model in the designer
