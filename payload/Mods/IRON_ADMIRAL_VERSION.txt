@@ -1,4 +1,4 @@
-1.2.78-beta.147
-DIP_GG_Fixes 1.11.1025
-2026-11-12 20:06
-Carrier models split into hull and island, German aircraft models
+1.2.78-beta.148
+DIP_GG_Fixes 1.11.1026
+2026-11-12 20:26
+Submarine designer, step 1 (experimental)
