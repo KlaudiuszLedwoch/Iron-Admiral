@@ -1,4 +1,4 @@
-1.2.78-beta.149
-DIP_GG_Fixes 1.11.1027
-2026-11-12 20:39
-Submarine hulls kept from the AI, submarine textures
+1.2.78-beta.150
+DIP_GG_Fixes 1.11.1028
+2026-11-12 21:06
+Army losses -2147483648 and army logistics NaN: guard (#334)
