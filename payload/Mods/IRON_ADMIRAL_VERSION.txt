@@ -1,4 +1,4 @@
-1.2.78-beta.164
-DIP_GG_Fixes 1.11.1042
-2026-11-13 03:23
-Campaign test tool: map after load with submarines
+1.2.78-beta.165
+DIP_GG_Fixes 1.11.1043
+2026-11-13 06:51
+Carriers cost 3x to build and 5x to maintain
