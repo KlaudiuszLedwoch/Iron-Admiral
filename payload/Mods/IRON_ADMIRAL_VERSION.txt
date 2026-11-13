@@ -1,4 +1,4 @@
-1.2.78-beta.168
-DIP_GG_Fixes 1.11.1046
-2026-11-13 07:21
-Aerial torpedo bad runs by torpedo technology
+1.2.78-beta.169
+DIP_GG_Fixes 1.11.1047
+2026-11-13 07:25
+Battleships capsize more readily
