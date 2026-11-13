@@ -1,4 +1,4 @@
-1.2.78-beta.180
-DIP_GG_Fixes 1.11.1058
-2026-11-13 17:59
-Background design never left half-done
+1.2.78-beta.181
+DIP_GG_Fixes 1.11.1059
+2026-11-13 18:08
+Designer placement log
