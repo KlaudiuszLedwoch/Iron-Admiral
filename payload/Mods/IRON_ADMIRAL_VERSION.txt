@@ -1,4 +1,4 @@
-1.2.78-beta.175
-DIP_GG_Fixes 1.11.1053
-2026-11-13 12:35
-Aircraft paint and stand-in models
+1.2.78-beta.176
+DIP_GG_Fixes 1.11.1054
+2026-11-13 13:13
+HE on turrets by plate thickness
