@@ -1,4 +1,4 @@
-1.2.78-beta.184
-DIP_GG_Fixes 1.11.1062
-2026-11-13 19:59
-Battleship limits and naval treaty
+1.2.78-beta.185
+DIP_GG_Fixes 1.11.1063
+2026-11-13 20:25
+Settings strip, aircraft cards and camera
