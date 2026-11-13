@@ -1,4 +1,4 @@
-1.2.78-beta.165
-DIP_GG_Fixes 1.11.1043
-2026-11-13 06:51
-Carriers cost 3x to build and 5x to maintain
+1.2.78-beta.166
+DIP_GG_Fixes 1.11.1044
+2026-11-13 07:05
+Carrier battles open at about 50 km; damage and crew losses hurt more
