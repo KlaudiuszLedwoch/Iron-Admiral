@@ -1,4 +1,4 @@
-1.2.78-beta.162
-DIP_GG_Fixes 1.11.1040
-2026-11-13 00:27
-Submarine design numbers behind their own switch (off)
+1.2.78-beta.163
+DIP_GG_Fixes 1.11.1041
+2026-11-13 02:15
+Shorter coastal submarine hull
