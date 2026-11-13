@@ -1,4 +1,4 @@
-1.2.78-beta.170
-DIP_GG_Fixes 1.11.1048
-2026-11-13 10:00
-Battle orders as icons, squadron cards and orders
+1.2.78-beta.171
+DIP_GG_Fixes 1.11.1049
+2026-11-13 10:05
+Icon orders keep the panel information
