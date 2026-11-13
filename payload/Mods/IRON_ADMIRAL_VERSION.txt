@@ -1,4 +1,4 @@
-1.2.78-beta.167
-DIP_GG_Fixes 1.11.1045
-2026-11-13 07:15
-Aerial torpedoes: bad runs, longer drops; a list hurts gunnery more
+1.2.78-beta.168
+DIP_GG_Fixes 1.11.1046
+2026-11-13 07:21
+Aerial torpedo bad runs by torpedo technology
