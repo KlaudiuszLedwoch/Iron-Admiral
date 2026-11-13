@@ -1,4 +1,4 @@
-1.2.78-beta.181
-DIP_GG_Fixes 1.11.1059
-2026-11-13 18:08
-Designer placement log
+1.2.78-beta.182
+DIP_GG_Fixes 1.11.1060
+2026-11-13 18:46
+Designer mount log, camera hold fix
