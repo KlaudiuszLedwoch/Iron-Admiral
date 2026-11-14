@@ -1,4 +1,4 @@
-1.2.78-beta.207
-DIP_GG_Fixes 1.11.1088
-2026-11-14 13:52
-Designer thumbnails 3
+1.2.78-beta.208
+DIP_GG_Fixes 1.11.1089
+2026-11-14 14:08
+Faster designer
