@@ -1,4 +1,4 @@
-1.2.78-beta.233
-DIP_GG_Fixes 1.11.1116
-2026-11-14 23:41
-Battle weather
+1.2.78-beta.234
+DIP_GG_Fixes 1.11.1117
+2026-11-15 00:18
+AI designs on own hulls
