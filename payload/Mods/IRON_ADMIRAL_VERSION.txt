@@ -1,4 +1,4 @@
-1.2.78-beta.214
-DIP_GG_Fixes 1.11.1096
-2026-11-14 15:43
-Order windows, fog
+1.2.78-beta.215
+DIP_GG_Fixes 1.11.1097
+2026-11-14 16:15
+Fog test, labels
