@@ -141,3 +141,7 @@ Thank you to everyone who shared their designs.
 2026-11-14 - 7924f80da3224625: 1 design(s): 1930 china Akanagi [6e47cd38]
 2026-11-14 - d456666670ef450e: 1 design(s): 1890 scandinavia TP Frigate [469656ba]
 2026-11-14 - d68768f24d4c4cab: 1 design(s): 1890 greece Alk [1cd54d3e]
+2026-11-14 - d456666670ef450e: 1 design(s): 1892 greece Wisconsin [f1fd87a2]
+2026-11-14 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1930 Germany CA Coronel
+2026-11-14 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1950 German Reich CA Seydlitz
+2026-11-14 - decce84de3554982: 1 design(s): (DIP GG 1.3.5) 1930 United States CL Brooklyn
