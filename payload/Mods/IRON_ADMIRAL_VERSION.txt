@@ -1,4 +1,4 @@
-1.2.78-beta.235
-DIP_GG_Fixes 1.11.1118
-2026-11-15 00:28
-AI designs on own hulls
+1.2.78-beta.236
+DIP_GG_Fixes 1.11.1119
+2026-11-15 00:38
+AI library hull check
