@@ -790,10 +790,16 @@ at_4,naval_aviation,,$technology_name_at_4,1937,1,380,"recon(1)",,,$technology_d
 at_5,naval_aviation,,$technology_name_at_5,1941,1,440,"recon(1)",,,$technology_desc_at_5,,,#85 naval aviation
 at_6,naval_aviation,,$technology_name_at_6,1943,1,480,"recon(1)",,,$technology_desc_at_6,,,#85 naval aviation
 at_7,naval_aviation,,$technology_name_at_7,1944,1,520,"recon(1)",,,$technology_desc_at_7,,,#85 naval aviation
-av_carrier_1,naval_aviation,,$technology_name_av_carrier_1,1914,1,220,"recon(1), unlock(cv_1_langley_ca)",,,$technology_desc_av_carrier_1,,,#85 naval aviation
-av_carrier_2,naval_aviation,,$technology_name_av_carrier_2,1917,1,260,"recon(1)",,,$technology_desc_av_carrier_2,,,#85 naval aviation
-av_carrier_3,naval_aviation,,$technology_name_av_carrier_3,1918,1,300,"recon(1), unlock(cv_2_yorktown_ca)",,,$technology_desc_av_carrier_3,,,#85 naval aviation
-av_carrier_4,naval_aviation,,$technology_name_av_carrier_4,1925,1,320,"recon(1), unlock(cv_3_essex_ca)",,,$technology_desc_av_carrier_4,,,#85 naval aviation
+av_carrier_1,naval_aviation,,$technology_name_av_carrier_1,1914,1,220,"recon(1), unlock(cv_1_langley_ca)",cv_hangar_open,,$technology_desc_av_carrier_1,,,#85 naval aviation
+av_carrier_2,naval_aviation,,$technology_name_av_carrier_2,1917,1,260,"recon(1), unlock(cv_2_yorktown_ca)",cv_avgas_1,,$technology_desc_av_carrier_2,,,#85 naval aviation
+av_carrier_3,naval_aviation,,$technology_name_av_carrier_3,1937,1,360,"recon(1)",,,$technology_desc_av_carrier_3,,,#85 naval aviation
+av_carrier_4,naval_aviation,,$technology_name_av_carrier_4,1942,1,440,"recon(1)",,,$technology_desc_av_carrier_4,,,#85 naval aviation
+av_cv_conversion,naval_aviation,,$technology_name_av_cv_conversion,1922,1,300,"recon(1), unlock(cv_3_essex_ca)",,,$technology_desc_av_cv_conversion,,,#104 CV design (Washington Treaty conversions: Lexington, Akagi, Courageous)
+av_cv_catapult,naval_aviation,,$technology_name_av_cv_catapult,1934,1,360,"recon(1)",,,$technology_desc_av_cv_catapult,,,#104 CV design (hydraulic catapult H-2, Yorktown 1937)
+av_cv_armdeck,naval_aviation,,$technology_name_av_cv_armdeck,1937,1,400,"recon(1)",cv_hangar_closed,,$technology_desc_av_cv_armdeck,,,#104 CV design (armoured flight deck and closed hangar, Illustrious 1937)
+av_cv_edgelift,naval_aviation,,$technology_name_av_cv_edgelift,1942,1,440,"recon(1)",,,$technology_desc_av_cv_edgelift,,,#104 CV design (deck-edge elevator, Wasp 1940 / Essex 1942)
+av_cv_cic,naval_aviation,,$technology_name_av_cv_cic,1942,1,460,"recon(1)",,,$technology_desc_av_cv_cic,,,#104 CV design (air search radar and Combat Information Center)
+av_cv_fuelprot,naval_aviation,,$technology_name_av_cv_fuelprot,1943,1,460,"recon(1)",cv_avgas_2,,$technology_desc_av_cv_fuelprot,,,#104 CV design (avgas tanks in cofferdams, CO2 inerting - lessons of Lexington 1942)
 av_types_1,naval_aviation,,$technology_name_av_types_1,1934,1,360,"recon(1)",,,$technology_desc_av_types_1,,,#85 naval aviation
 av_types_2,naval_aviation,,$technology_name_av_types_2,1940,1,420,"recon(1)",,,$technology_desc_av_types_2,,,#85 naval aviation
 av_types_3,naval_aviation,,$technology_name_av_types_3,1942,1,460,"recon(1)",,,$technology_desc_av_types_3,,,#85 naval aviation
@@ -807,3 +813,22 @@ aa_4,naval_aviation,,$technology_name_aa_4,1940,1,420,"recon(1)",,,$technology_d
 aa_5,naval_aviation,,$technology_name_aa_5,1941,1,440,"recon(1)",,,$technology_desc_aa_5,,,#85 naval aviation
 aa_6,naval_aviation,,$technology_name_aa_6,1943,1,480,"recon(1)",,,$technology_desc_aa_6,,,#85 naval aviation
 aa_7,naval_aviation,,$technology_name_aa_7,1940,1,420,"recon(1)",,,$technology_desc_aa_7,,,#85 naval aviation
+ss_tech_petrol,ss_tech,,$technology_name_ss_tech_petrol,1900,1,300,"recon(1)",ss_prop_petrol,,$technology_desc_ss_tech_petrol,,,#SS design
+ss_tech_kerosene,ss_tech,,$technology_name_ss_tech_kerosene,1905,1,300,"recon(1)",ss_prop_kerosene,,$technology_desc_ss_tech_kerosene,,,#SS design
+ss_tech_diesel,ss_tech,,$technology_name_ss_tech_diesel,1908,1,300,"recon(1)",ss_prop_diesel,,$technology_desc_ss_tech_diesel,,,#SS design
+ss_tech_diesel_sc,ss_tech,,$technology_name_ss_tech_diesel_sc,1925,1,300,"recon(1)",ss_prop_diesel_sc,,$technology_desc_ss_tech_diesel_sc,,,#SS design
+ss_tech_walter,ss_tech,,$technology_name_ss_tech_walter,1944,1,300,"recon(1)",ss_prop_walter,,$technology_desc_ss_tech_walter,,,#SS design
+ss_tech_batt_1,ss_tech,,$technology_name_ss_tech_batt_1,1900,1,300,"recon(1)",ss_batt_1,,$technology_desc_ss_tech_batt_1,,,#SS design
+ss_tech_batt_2,ss_tech,,$technology_name_ss_tech_batt_2,1912,1,300,"recon(1)",ss_batt_2,,$technology_desc_ss_tech_batt_2,,,#SS design
+ss_tech_batt_3,ss_tech,,$technology_name_ss_tech_batt_3,1928,1,300,"recon(1)",ss_batt_3,,$technology_desc_ss_tech_batt_3,,,#SS design
+ss_tech_batt_4,ss_tech,,$technology_name_ss_tech_batt_4,1943,1,300,"recon(1)",ss_batt_4,,$technology_desc_ss_tech_batt_4,,,#SS design
+ss_tech_phull_1,ss_tech,,$technology_name_ss_tech_phull_1,1900,1,300,"recon(1)",ss_phull_1,,$technology_desc_ss_tech_phull_1,,,#SS design
+ss_tech_phull_2,ss_tech,,$technology_name_ss_tech_phull_2,1912,1,300,"recon(1)",ss_phull_2,,$technology_desc_ss_tech_phull_2,,,#SS design
+ss_tech_phull_3,ss_tech,,$technology_name_ss_tech_phull_3,1925,1,300,"recon(1)",ss_phull_3,,$technology_desc_ss_tech_phull_3,,,#SS design
+ss_tech_phull_4,ss_tech,,$technology_name_ss_tech_phull_4,1935,1,300,"recon(1)",ss_phull_4,,$technology_desc_ss_tech_phull_4,,,#SS design
+ss_tech_phull_5,ss_tech,,$technology_name_ss_tech_phull_5,1943,1,300,"recon(1)",ss_phull_5,,$technology_desc_ss_tech_phull_5,,,#SS design
+ss_tech_sens_1,ss_tech,,$technology_name_ss_tech_sens_1,1902,1,300,"recon(1)",ss_sens_1,,$technology_desc_ss_tech_sens_1,,,#SS design
+ss_tech_sens_2,ss_tech,,$technology_name_ss_tech_sens_2,1915,1,300,"recon(1)",ss_sens_2,,$technology_desc_ss_tech_sens_2,,,#SS design
+ss_tech_sens_3,ss_tech,,$technology_name_ss_tech_sens_3,1935,1,300,"recon(1)",ss_sens_3,,$technology_desc_ss_tech_sens_3,,,#SS design
+ss_tech_sens_4,ss_tech,,$technology_name_ss_tech_sens_4,1943,1,300,"recon(1)",ss_sens_4,,$technology_desc_ss_tech_sens_4,,,#SS design
+ss_tech_snorkel,ss_tech,,$technology_name_ss_tech_snorkel,1943,1,300,"recon(1)",ss_snorkel_1,,$technology_desc_ss_tech_snorkel,,,#SS design

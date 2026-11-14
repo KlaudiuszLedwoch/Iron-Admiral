@@ -32,3 +32,4 @@ tactics_comm,tactics,$techType_name_tactics_comm,,1,$techType_tooltip_tactics_co
 tactics_mines,tactics,$Ui_Constr_Mines,,1,$techType_tooltip_tactics_mines,,0
 tactics_asw,tactics,$techType_name_tactics_asw,,1,$techType_tooltip_tactics_asw,ToEnable,0
 naval_aviation,tactics,$techType_name_naval_aviation,,1,$techType_tooltip_naval_aviation,,30
+ss_tech,torpedo,$techType_name_ss_tech,,1,$techType_tooltip_ss_tech,,40
