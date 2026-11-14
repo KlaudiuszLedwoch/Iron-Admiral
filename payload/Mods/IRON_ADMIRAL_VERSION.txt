@@ -1,4 +1,4 @@
-1.2.78-beta.200
-DIP_GG_Fixes 1.11.1078
-2026-11-14 09:20
-New technologies in old campaigns
+1.2.78-beta.201
+DIP_GG_Fixes 1.11.1079
+2026-11-14 10:38
+Designer timing, 474 community designs
