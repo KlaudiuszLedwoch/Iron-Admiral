@@ -1,4 +1,4 @@
-1.2.78-beta.188
-DIP_GG_Fixes 1.11.1066
-2026-11-14 00:21
-Mines in the campaign
+1.2.78-beta.189
+DIP_GG_Fixes 1.11.1067
+2026-11-14 01:47
+Mine technology log
