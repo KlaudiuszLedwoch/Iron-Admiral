@@ -231,6 +231,7 @@ depth_charge_5,,depthcharge,$component_name_short_depth_charge_5,25,$technology_
 depth_charge_6,,depthcharge,$component_name_short_depth_charge_6,25,$technology_name_tactics_asw_14,$technology_desc_tactics_asw_10,,
 cv_hangar_open,,cv_hangar,$component_name_short_cv_hangar_open,10,$component_name_cv_hangar_open,$component_desc_cv_hangar_open,,#104 CV
 cv_hangar_closed,,cv_hangar,$component_name_short_cv_hangar_closed,10,$component_name_cv_hangar_closed,$component_desc_cv_hangar_closed,,#104 CV
+cv_hangar_armoured,,cv_hangar,$component_name_short_cv_hangar_armoured,10,$component_name_cv_hangar_armoured,$component_desc_cv_hangar_armoured,,#104 CV
 cv_avgas_1,,cv_avgas,$component_name_short_cv_avgas_1,10,$component_name_cv_avgas_1,$component_desc_cv_avgas_1,,#104 CV
 cv_avgas_2,,cv_avgas,$component_name_short_cv_avgas_2,20,$component_name_cv_avgas_2,$component_desc_cv_avgas_2,,#104 CV
 ##,,submarine components (Iron Admiral SS design),,,,,,

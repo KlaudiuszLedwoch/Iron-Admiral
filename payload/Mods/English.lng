@@ -586,8 +586,8 @@ $technology_name_av_cv_conversion;Capital Ship Conversion
 $technology_desc_av_cv_conversion;Battleship and battlecruiser hulls are completed as large carriers. Unlocks the Heavy Fleet Carrier hull.
 $technology_name_av_cv_catapult;Hydraulic Flight Deck Catapult
 $technology_desc_av_cv_catapult;Catapults launch aircraft without a full take-off run: a larger deck park, a shorter interval between waves.
-$technology_name_av_cv_armdeck;Armoured Flight Deck
-$technology_desc_av_cv_armdeck;An armoured flight deck over a closed hangar: bombs do less harm, the hangar holds fewer aircraft.
+$technology_name_av_cv_armdeck;Armoured Hangar
+$technology_desc_av_cv_armdeck;A closed armoured box around the hangar (Illustrious 1937): unlocks the armoured hangar.
 $technology_name_av_cv_edgelift;Deck-Edge Elevator
 $technology_desc_av_cv_edgelift;An elevator outside the flight deck: aircraft move between hangar and deck while the deck is in use - shorter interval between waves.
 $technology_name_av_cv_cic;Air Search Radar and CIC
@@ -603,14 +603,13 @@ $component_name_cv_hangar_open;Open hangar
 $component_desc_cv_hangar_open;Hangar with open sides: aircraft warm up below deck - shorter interval between waves; bombs inside do more harm.
 $component_name_short_cv_hangar_closed;Closed
 $component_name_cv_hangar_closed;Closed hangar
-$component_desc_cv_hangar_closed;Enclosed hangar: bombs do less harm, the air group is a tenth smaller.
+$component_desc_cv_hangar_closed;Closed hangar: enclosed sides - the air group is a tenth smaller and bombs inside do a little less harm.
 $component_name_short_cv_avgas_1;Tanks
 $component_name_cv_avgas_1;Aviation fuel tanks
 $component_desc_cv_avgas_1;6.5 t of aviation fuel per aircraft: about 4 waves in a battle and full support from sea; the fuel counts in the tonnage.
 $component_name_short_cv_avgas_2;Protected
 $component_name_cv_avgas_2;Protected aviation fuel tanks
 $component_desc_cv_avgas_2;As the fuel tanks, in cofferdams with inert gas: no fuel vapour explosion when a bomb bursts inside.
-# Iron Admiral submarine design
 $techType_name_ss_tech;Submarines
 $techType_tooltip_ss_tech;Submarine propulsion, batteries, pressure hulls and sensors
 $compTypes_name_short_ss_prop;SS propulsion
@@ -718,3 +717,6 @@ $component_name_ss_snorkel_1;Snorkel
 $component_desc_ss_snorkel_1;Diesels run at periscope depth: battery recharged submerged, much harder to find in transit.
 $technology_name_ss_tech_snorkel;Snorkel
 $technology_desc_ss_tech_snorkel;Air mast for running diesels submerged.
+$component_name_short_cv_hangar_armoured;Armoured
+$component_name_cv_hangar_armoured;Armoured hangar
+$component_desc_cv_hangar_armoured;Armoured hangar: closed armoured box around the hangar - about a third fewer aircraft, but bombs and shells hitting the hangar no longer set off the fuel and aircraft inside.
