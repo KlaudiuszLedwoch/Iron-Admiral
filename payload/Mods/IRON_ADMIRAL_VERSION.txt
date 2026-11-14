@@ -1,4 +1,4 @@
-1.2.78-beta.219
-DIP_GG_Fixes 1.11.1101
-2026-11-14 17:25
-Horizon test
+1.2.78-beta.220
+DIP_GG_Fixes 1.11.1102
+2026-11-14 17:40
+Torpedo setting
