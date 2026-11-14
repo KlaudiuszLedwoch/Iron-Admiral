@@ -1,4 +1,4 @@
-1.2.78-beta.232
-DIP_GG_Fixes 1.11.1115
-2026-11-14 23:29
-AI design tech check
+1.2.78-beta.233
+DIP_GG_Fixes 1.11.1116
+2026-11-14 23:41
+Battle weather
