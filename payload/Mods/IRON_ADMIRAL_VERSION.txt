@@ -1,4 +1,4 @@
-1.2.78-beta.192
-DIP_GG_Fixes 1.11.1070
-2026-11-14 04:20
-Mine technologies in old saves
+1.2.78-beta.193
+DIP_GG_Fixes 1.11.1071
+2026-11-14 04:39
+Minelayer count
