@@ -1,4 +1,4 @@
-1.2.78-beta.201
-DIP_GG_Fixes 1.11.1079
-2026-11-14 10:38
-Designer timing, 474 community designs
+1.2.78-beta.202
+DIP_GG_Fixes 1.11.1080
+2026-11-14 10:55
+Designer timing 2
