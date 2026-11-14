@@ -151,3 +151,8 @@ Thank you to everyone who shared their designs.
 2026-11-14 - 96180e0c97ab41a9: 1 design(s): 1890 scandinavia Anakriya [d44e2fd5]
 2026-11-14 - 51f4de246b5846f4: 1 design(s): 1890 netherlands 1890 [85a8eb08]
 2026-11-14 - b37536ad96de4a25: 1 design(s): 1910 germany Moltke [3f51e3a8]
+2026-11-14 - 669d83664c544198: 1 design(s): 1910 austria V-1 [d845f187]
+2026-11-14 - fd0b6872e8714066: 1 design(s): 1890 netherlands Ōtori [0b06162e]
+2026-11-14 - 4c4019dd01794c70: 1 design(s): 1890 greece Tripoli [5240bdc5]
+2026-11-14 - 4c4019dd01794c70: 1 design(s): 1892 spain Andrea Doria [8d70a6a6]
+2026-11-14 - 51f4de246b5846f4: 1 design(s): 1893 china Immortalite [0ee9bdcc]
