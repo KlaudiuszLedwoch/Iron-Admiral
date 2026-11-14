@@ -156,3 +156,4 @@ Thank you to everyone who shared their designs.
 2026-11-14 - 4c4019dd01794c70: 1 design(s): 1890 greece Tripoli [5240bdc5]
 2026-11-14 - 4c4019dd01794c70: 1 design(s): 1892 spain Andrea Doria [8d70a6a6]
 2026-11-14 - 51f4de246b5846f4: 1 design(s): 1893 china Immortalite [0ee9bdcc]
+2026-11-14 - d0ea406d3218481a: 1 design(s): 1890 scandinavia Oakland [bdee4ba6]
