@@ -15,5 +15,129 @@ Thank you to everyone who shared their designs.
 2026-11-06 - 75102d6d5703418c: 1 design(s): 1890 japan Empress of India [d2c7755b]
 2026-11-06 - 0d09c497ddf7422d: 14 design(s): 1890 britain Hogi [b439f8b7]; 1890 britain Izumi [03540c18]; 1890 china Izumi [03540c18]; 1890 France BB Valeureuse; 1890 france São Simão [c1518e2f]; 1890 greece Izumi [03540c18]; 1890 italy Izumi [03540c18]; 1890 japan Hogi [b439f8b7]; 1890 japan Izumi [03540c18]; 1890 portugal São Simão [c1518e2f]; 1890 spain Izumi [03540c18]; 1890 usa Izumi [03540c18]; 1895 Empire of Japan CA MHMW Kasa; 1895 Spanish Empire CA MHMW San Pedro
 2026-11-06 - f7f37bd1c5184ba6: 1 design(s): 1900 greece Holland [394e8890]
-
-2026-11-09 - restored (were withdrawn in 1.11.864 for technology later than their year; author 9.11: used only by nations that have researched it; #277): Datong [9f100ecc], Daoguang [46990d7f] and 48 file(s): 1886 austria S-1 [bab29add]; 1886 france Lübeck [abbf5b0a]; 1886 germany Lübeck [abbf5b0a]; 1886 germany S-1 [bab29add]; 1886 greece S-1 [bab29add]; 1886 italy S-1 [bab29add]; 1886 netherlands Lübeck [abbf5b0a]; 1886 portugal Lübeck [abbf5b0a]; 1886 portugal S-1 [bab29add]; 1886 russia Lübeck [abbf5b0a]; 1890 austria Nanjing [08770c90]; 1890 austria Qishan [9eaeabc0]; 1890 austria Wuhan [760846bd]; 1890 britain Hirado [c83ab63c]; 1890 britain Nanjing [08770c90]; 1890 britain Qishan [9eaeabc0]; 1890 britain Wuhan [760846bd]; 1890 china Anqing [ac686be1]; 1890 china Fuyang [ae7dd34f]; 1890 china Gansu [64ae5b1c]; 1890 china Hirado [c83ab63c]; 1890 china Huanggutun [51d82394]; 1890 china Hunan [b7def56b]; 1890 china Nanjing [08770c90]; 1890 china Qishan [9eaeabc0]; 1890 china Shuanglong [cc3a3757]; 1890 china Wuhan [760846bd]; 1890 china Yulin [16575e6e]; 1890 china Zhili [89bdd116]; 1890 france Nanjing [08770c90]; 1890 france Qishan [9eaeabc0]; 1890 france Wuhan [760846bd]; 1890 germany Nanjing [08770c90]; 1890 germany Qishan [9eaeabc0]; 1890 germany Wuhan [760846bd]; 1890 greece Hirado [c83ab63c]; 1890 greece Nanjing [08770c90]; 1890 greece Qishan [9eaeabc0]; 1890 greece Wuhan [760846bd]; 1890 italy Hirado [c83ab63c]; 1890 italy Nanjing [08770c90]; 1890 italy Qishan [9eaeabc0]; 1890 italy Wuhan [760846bd]; 1890 japan Empress of India [d2c7755b]; 1890 japan Hirado [c83ab63c]; 1890 japan Ming-Rui [c3b4e75f]; 1890 spain Hirado [c83ab63c]; 1890 usa Hirado [c83ab63c]
+2026-11-06 - 4d4f0d6960554fb6: 1 design(s): 1890 greece Kentauros [0dc9a62d]
+2026-11-07 - 4d4f0d6960554fb6: 1 design(s): 1900 netherlands Tategami [dbbd1dc1]
+2026-11-07 - f7f37bd1c5184ba6: 1 design(s): 1902 netherlands Gorinchem [7724e701]
+2026-11-07 - 4d4f0d6960554fb6: 1 design(s): 1902 japan Abukuma [153e679c]
+2026-11-07 - 0d09c497ddf7422d: 1 design(s): 1890 china Tsugaru [421a0a13]
+2026-11-07 - 4d4f0d6960554fb6: 1 design(s): 1904 japan Chishima [5e99c665]
+2026-11-07 - 4d4f0d6960554fb6: 1 design(s): 1904 scandinavia Taiyō [3c90e034]
+2026-11-08 - 4d4f0d6960554fb6: 1 design(s): 1910 portugal Wakamiya [4b3f5af0]
+2026-11-08 - 87c8908a086043b9: 1 design(s): (DIP GG 1.3.5) 1935 United States BB Indiana
+2026-11-08 - 4d4f0d6960554fb6: 1 design(s): 1911 scandinavia Kuwa [9c8c0310]
+2026-11-08 - b37536ad96de4a25: 1 design(s): 1920 netherlands Aquila [307a4980]
+2026-11-08 - A Simple Tako: 1 design(s): 1912 netherlands Hōshō [f7fe8a8e]
+2026-11-08 - Iain F: 22 design(s): 1890 greece Ancona [d7685605]; 1890 china Ancona [d7685605]; 1890 spain Ancona [d7685605]; 1890 japan Ancona [d7685605]; 1890 italy Ancona [d7685605]; 1890 usa Ancona [d7685605]; 1890 britain Ancona [d7685605]; 1890 greece Piemonte [cdcdcae4]; 1890 italy Piemonte [cdcdcae4]; 1890 china F-1 [694e59c1]; 1890 spain F-1 [694e59c1]; 1890 japan F-1 [694e59c1]; 1890 italy F-1 [694e59c1]; 1890 usa F-1 [694e59c1]; 1890 britain F-1 [694e59c1]; 1890 spain Vulcano [7ff3401f]; 1890 italy Vulcano [7ff3401f]; 1890 russia Vulcano [7ff3401f]; 1890 greece Göta [72fddfe1]; 1890 scandinavia Göta [72fddfe1]; 1890 scandinavia A Klasse [ca026c56]; 1890 austria A Klasse [ca026c56]
+2026-11-08 - A Simple Tako: 1 design(s): 1917 china Mikuma [1c6d65cb]
+2026-11-08 - 075d50ec485747c4: 1 design(s): (DIP GG 1.3.5) 1890 France CA La raleuse
+2026-11-09 - 75102d6d5703418c: 1 design(s): 1890 netherlands Thornycroft [3195bbf4]
+2026-11-09 - 75102d6d5703418c: 1 design(s): 1892 china Hogue [0244d926]
+2026-11-09 - A Simple Tako: 1 design(s): 1917 portugal Shiomi [fece2d49]
+2026-11-09 - 7a5aebb6b53347d0: 1 design(s): 1891 greece Legione [b5306044]
+2026-11-09 - f216beb63b514848: 30 design(s): 1940 china Huron [a195e7a9]; 1940 spain Huron [a195e7a9]; 1940 japan Huron [a195e7a9]; 1940 austria Huron [a195e7a9]; 1940 italy Huron [a195e7a9]; 1940 russia Huron [a195e7a9]; 1940 usa Huron [a195e7a9]; 1940 germany Huron [a195e7a9]; 1940 france Huron [a195e7a9]; 1940 britain Huron [a195e7a9]; 1936 greece Ingersoll [ae7357b0]; 1936 netherlands Ingersoll [ae7357b0]; 1936 portugal Ingersoll [ae7357b0]; 1936 china Ingersoll [ae7357b0]; 1936 usa Ingersoll [ae7357b0]; 1936 britain Ingersoll [ae7357b0]; 1936 scandinavia Concord [be71853d]; 1936 china Concord [be71853d]; 1936 usa Concord [be71853d]; 1936 usa Hawaii [ac548f85]; 1936 spain Missouri [7221cb20]; 1936 usa Missouri [7221cb20]; 1890 greece S-2B [149bcf41]; 1890 portugal S-2B [149bcf41]; 1890 austria S-2B [149bcf41]; 1890 italy S-2B [149bcf41]; 1890 germany S-2B [149bcf41]; 1890 greece S-2 [b06f3721]; 1890 portugal S-2 [b06f3721]; 1890 austria S-2 [b06f3721]
+2026-11-10 - A Simple Tako: 1 design(s): 1890 china Zexu [3d3a2173]
+2026-11-10 - A Simple Tako: 1 design(s): 1892 greece Yulin [20bc2f15]
+2026-11-10 - 71754c584da04cb2: 1 design(s): 1890 netherlands 1890 [18a38691]
+2026-11-10 - A Simple Tako: 1 design(s): 1892 china Guangdong [a2647245]
+2026-11-10 - 71754c584da04cb2: 1 design(s): 1890 spain 1890 Dubrava [05a14c19]
+2026-11-10 - 1495fb9838824051: 1 design(s): 1910 netherlands V-25 [dcc39906]
+2026-11-10 - 1495fb9838824051: 1 design(s): 1912 germany Kaiser [4535dc16]
+2026-11-10 - 71754c584da04cb2: 1 design(s): 1894 russia 1894 Dreven [30686f9d]
+2026-11-10 - dfa0d03f6fec4a9c: 1 design(s): 1920 greece Truxtun [193e2eb6]
+2026-11-10 - 71754c584da04cb2: 1 design(s): 1896 greece TRA 1896 [0b4689cb]
+2026-11-10 - 7ae32ee72e1c4fa1: 1 design(s): 1890 china Intrepido [8f45d2ed]
+2026-11-10 - 075d50ec485747c4: 1 design(s): (DIP GG 1.3.5) 1890 Kingdom of Portugal CL Oliveira da Figueira
+2026-11-10 - d68768f24d4c4cab: 1 design(s): 1897 austria Mournaveil [dad7546c]
+2026-11-10 - 075d50ec485747c4: 1 design(s): (DIP GG 1.3.5) 1890 Kingdom of Portugal CL O bacalhau
+2026-11-10 - 075d50ec485747c4: 1 design(s): (DIP GG 1.3.5) 1890 Kingdom of Portugal CA A tartaruga
+2026-11-10 - 075d50ec485747c4: 1 design(s): (DIP GG 1.3.5) 1890 Ottoman Empire CL Vezir Iznogoud
+2026-11-10 - 075d50ec485747c4: 1 design(s): (DIP GG 1.3.5) 1890 Kingdom of Portugal CL Oliveira da Figueira 1
+2026-11-10 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1940 Estado Novo Portugal BC Porto Seguro
+2026-11-10 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1940 British Empire BC Hood
+2026-11-10 - A Simple Tako: 26 design(s): 1917 italy Shiomi [fece2d49]; 1917 japan Shiomi [fece2d49]; 1917 japan Hamakaze [e958d177]; 1917 spain Mikuma [1c6d65cb]; 1917 japan Mikuma [1c6d65cb]; 1917 austria Mikuma [1c6d65cb]; 1917 italy Mikuma [1c6d65cb]; 1917 russia Mikuma [1c6d65cb]; 1917 usa Mikuma [1c6d65cb]; 1917 germany Mikuma [1c6d65cb]; 1917 france Mikuma [1c6d65cb]; 1917 britain Mikuma [1c6d65cb]; 1916 japan Yamashiro [c2dbcdae]; 1906 netherlands Izumrud [06d6949d]; 1906 russia Izumrud [06d6949d]; 1912 china Hōshō [f7fe8a8e]; 1912 spain Hōshō [f7fe8a8e]; 1912 austria Hōshō [f7fe8a8e]; 1912 japan Hōshō [f7fe8a8e]; 1912 russia Hōshō [f7fe8a8e]; 1911 japan Kuwa [9c8c0310]; 1908 scandinavia Forfait [632e8b91]; 1908 france Forfait [632e8b91]; 1927 usa Lexington [343aacf7]; 1927 germany Carrier Mk3 [50ad144e]; 1922 usa Langley [69fb6de1]
+2026-11-10 - 669d83664c544198: 1 design(s): (DIP GG 1.3.5) 1945 German Reich CA Thuringia
+2026-11-10 - A Simple Tako: 1 design(s): 1923 japan Kuzu [ffcacfc5]
+2026-11-11 - 3df63c8a7db14231: 1 design(s): (DIP GG 1.3.5) 1929 United States BB Arizona 1931 refit
+2026-11-11 - 891cd66df6794dbf: 1 design(s): 1901 germany Blücher [bcfecd53]
+2026-11-11 - 71754c584da04cb2: 1 design(s): 1890 spain 1890 Pochatok [a1f66973]
+2026-11-11 - 71754c584da04cb2: 1 design(s): 1890 netherlands 1890 [995d4bf3]
+2026-11-11 - 71754c584da04cb2: 1 design(s): 1894 greece TRA 1894 [4c950f0f]
+2026-11-11 - b37536ad96de4a25: 1 design(s): (DIP GG 1.3.5) 1920 British Empire BC Resistance
+2026-11-11 - 71754c584da04cb2: 1 design(s): 1895 russia 1895 Dreven [a6064180]
+2026-11-11 - 71754c584da04cb2: 1 design(s): 1901 netherlands 1901 [76368afa]
+2026-11-11 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1930 British Empire BB Queen Elisabeth
+2026-11-11 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1930 Estado Novo Portugal CA Tristão Vaz Teixeira
+2026-11-11 - A Simple Tako: 1 design(s): 1925 japan Teibo [4ca048cd]
+2026-11-11 - A Simple Tako: 1 design(s): 1926 japan Karasawa [ad2f3b8a]
+2026-11-11 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1935 Austria-Hungary CA Lussin
+2026-11-11 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1940 Italian Empire BC Cerere
+2026-11-11 - A Simple Tako: 9 design(s): 1926 china Uji [650490bf]; 1926 japan Uji [650490bf]; 1916 netherlands De Zeven Provinciën [4ba32689]; 1916 china De Zeven Provinciën [4ba32689]; 1916 spain De Zeven Provinciën [4ba32689]; 1925 netherlands Kitahotaka [0743e778]; 1925 portugal Kitahotaka [0743e778]; 1925 japan Kitahotaka [0743e778]; 1923 scandinavia Kuzu [ffcacfc5]
+2026-11-12 - b37536ad96de4a25: 1 design(s): 1921 italy Urania [29c439ea]
+2026-11-12 - b37536ad96de4a25: 1 design(s): 1921 netherlands Intrepido [c381a050]
+2026-11-12 - 669d83664c544198: 1 design(s): (DIP GG 1.3.5) 1945 German Reich BB Kaiser
+2026-11-12 - 669d83664c544198: 1 design(s): (DIP GG 1.3.5) 1945 Kingdom of the Netherlands CA Prinses Roijaal Maria
+2026-11-12 - 71754c584da04cb2: 1 design(s): 1890 netherlands 1890 [5883a7a0]
+2026-11-12 - 6d732d308c3f4e9b: 1 design(s): (DIP GG 1.3.5) 1960 China BB Dragon of the East
+2026-11-12 - 3cf7cd05eb7c471b: 1 design(s): 1890 greece Sevket [58daa6df]
+2026-11-12 - f77c72a6158c416c: 1 design(s): 1890 scandinavia Delfin [36b44687]
+2026-11-12 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1920 Portugal BC Tristan de Cunha
+2026-11-12 - 50f8f54ed1704ff4: 1 design(s): (DIP GG 1.3.5) 1930 British Empire CA Hogue
+2026-11-12 - 5cc451f0fe734fe0: 1 design(s): (DIP GG 1.3.5) 1933 Italian Empire CA Brindisi
+2026-11-13 - decce84de3554982: 1 design(s): 1894 china Alberico da Barbiano [a468a5a2]
+2026-11-13 - A Simple Tako: 1 design(s): 1927 japan Tateshina [45359537]
+2026-11-13 - 669d83664c544198: 1 design(s): (DIP GG 1.3.5) 1945 United States BB Mississippi
+2026-11-13 - 669d83664c544198: 1 design(s): (DIP GG 1.3.5) 1945 United States BB Montana
+2026-11-13 - A Simple Tako: 1 design(s): 1929 japan Kaiten [42eb8372]
+2026-11-13 - A Simple Tako: 1 design(s): 1930 japan Kaimon [edd2c70c]
+2026-11-13 - 3cf7cd05eb7c471b: 1 design(s): 1890 greece Sevekia [c8a1be6a]
+2026-11-13 - 669d83664c544198: 1 design(s): (DIP GG 1.3.5) 1945 France BB Omlette
+2026-11-13 - A Simple Tako: 1 design(s): 1931 japan Yahagi [7566bcbe]
+2026-11-13 - 3cf7cd05eb7c471b: 1 design(s): 1890 portugal San Francesco [f4457f88]
+2026-11-13 - A Simple Tako: 1 design(s): 1933 japan Furutaka [e380748f]
+2026-11-13 - a74a21d8a7f84443: 1 design(s): 1890 greece Nisshin [793e5190]
+2026-11-13 - 71754c584da04cb2: 1 design(s): 1890 spain 1890 Pochatok [5b84ecb9]
+2026-11-13 - a74a21d8a7f84443: 1 design(s): 1890 china Niitaka [51c8b6c0]
+2026-11-13 - a74a21d8a7f84443: 1 design(s): 1890 netherlands Asadori [c58a0e6d]
+2026-11-13 - d68768f24d4c4cab: 1 design(s): 1890 greece Python [f604f08b]
+2026-11-13 - 7ae32ee72e1c4fa1: 1 design(s): 1890 china Vittorio Veneto [d68dc7a8]
+2026-11-13 - 5d3f3c0891354579: 1 design(s): 1890 portugal Escorpião [4a772188]
+2026-11-13 - 7ae32ee72e1c4fa1: 1 design(s): 1890 spain Euridice [97790e71]
+2026-11-13 - a74a21d8a7f84443: 1 design(s): 1890 britain Sagami [f05edc29]
+2026-11-13 - 71754c584da04cb2: 1 design(s): 1890 china 1890 [c3a315b7]
+2026-11-13 - 3416e787096f4d7f: 1 design(s): (DIP GG 1.3.5) 1890 British Empire CP27_AUX_ARMED_MERCHANT Tempest
+2026-11-13 - 3416e787096f4d7f: 1 design(s): (DIP GG 1.3.5) 1890 British Empire CP27_AUX_FORWARD_BASE Monmouth
+2026-11-13 - b37536ad96de4a25: 1 design(s): (DIP GG 1.3.5) 1920 Spanish Empire CL Concordia
+2026-11-13 - b37536ad96de4a25: 1 design(s): (DIP GG 1.3.5) 1920 Ottoman Empire CA Krystallidis
+2026-11-13 - d68768f24d4c4cab: 1 design(s): 1900 netherlands Vitiaz [11e49609]
+2026-11-14 - 3416e787096f4d7f: 1 design(s): (DIP GG 1.3.5) 1890 British Empire TB Sparrowhawk
+2026-11-14 - A Simple Tako: 1 design(s): 1934 netherlands Arakawa-Naka [156cd00f]
+2026-11-14 - 34e913d8aef543ab: 1 design(s): (DIP GG 1.3.5) 1915 German Empire CV Widder
+2026-11-14 - f77c72a6158c416c: 1 design(s): 1890 china Jingjiang [175f5139]
+2026-11-14 - 3416e787096f4d7f: 1 design(s): (DIP GG 1.3.5) 1890 British Empire CL Diadem
+2026-11-14 - 3416e787096f4d7f: 1 design(s): (DIP GG 1.3.5) 1890 British Empire CL Forward
+2026-11-14 - d42ba2b272c3499e: 1 design(s): (DIP GG 1.3.5) 1915 British Empire BC Hercules
+2026-11-14 - b37536ad96de4a25: 1 design(s): (DIP GG 1.3.5) 1910 German Empire CL Augsburg
+2026-11-14 - b37536ad96de4a25: 1 design(s): (DIP GG 1.3.5) 1950 German Reich CL Stettin
+2026-11-14 - 34e913d8aef543ab: 1 design(s): 1910 germany Kaiser Barbarossa [c68e054a]
+2026-11-14 - 891cd66df6794dbf: 1 design(s): 1900 greece New York [97cc7952]
+2026-11-14 - 34e913d8aef543ab: 1 design(s): 1910 china S-1 [7e3b6aeb]
+2026-11-14 - b37536ad96de4a25: 1 design(s): (DIP GG 1.3.5) 1950 German Reich BC Guido Karcher
+2026-11-14 - A Simple Tako: 1 design(s): 1936 japan Nisshin [64e8a4b3]
+2026-11-14 - A Simple Tako: 1 design(s): 1936 china Miyako [e408bfb2]
+2026-11-14 - 669d83664c544198: 1 design(s): 1920 scandinavia Töter I [8f7cadcd]
+2026-11-14 - 5d3f3c0891354579: 1 design(s): 1920 china Salem [fc7c903f]
+2026-11-14 - 6d732d308c3f4e9b: 1 design(s): (DIP GG 1.3.5) 1960 United States BC Colorado
+2026-11-14 - d42ba2b272c3499e: 1 design(s): (DIP GG 1.3.5) 1930 British Empire BB St. Vincent
+2026-11-14 - a74a21d8a7f84443: 1 design(s): 1895 china Kasasagi [8860f541]
+2026-11-14 - d0ea406d3218481a: 1 design(s): (DIP GG 1.3.5) 1910 Empire of Japan DD Porpoise
+2026-11-14 - 5d3f3c0891354579: 1 design(s): 1892 netherlands António Enes [50e71325]
+2026-11-14 - b32aefc28edd40cf: 1 design(s): 1890 netherlands Futami [41dc03af]
+2026-11-14 - 09cb6854fdcc4e75: 1 design(s): 1890 netherlands Doesburg [39a0d13f]
+2026-11-14 - 78db372174f149d9: 1 design(s): 1894 greece TRA 1894 [d55ce3f1]
+2026-11-14 - 3df63c8a7db14231: 1 design(s): (DIP GG 1.3.5) 1941 Soviet Union CL Kirov class cruiser
+2026-11-14 - d96e2c77bc62406d: 1 design(s): 1900 greece S-1 [185d8b08]
+2026-11-14 - 3df63c8a7db14231: 1 design(s): (DIP GG 1.3.5) 1948 Soviet Union CL Sverdlov class
+2026-11-14 - 3df63c8a7db14231: 1 design(s): (DIP GG 1.3.5) 1948 United States CL Cleveland class
+2026-11-14 - 7924f80da3224625: 1 design(s): 1930 china Akanagi [6e47cd38]
+2026-11-14 - d456666670ef450e: 1 design(s): 1890 scandinavia TP Frigate [469656ba]
+2026-11-14 - d68768f24d4c4cab: 1 design(s): 1890 greece Alk [1cd54d3e]
