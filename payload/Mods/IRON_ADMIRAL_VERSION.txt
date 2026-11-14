@@ -1,4 +1,4 @@
-1.2.78-beta.199
-DIP_GG_Fixes 1.11.1077
-2026-11-14 08:34
-Designer load timing
+1.2.78-beta.200
+DIP_GG_Fixes 1.11.1078
+2026-11-14 09:20
+New technologies in old campaigns
