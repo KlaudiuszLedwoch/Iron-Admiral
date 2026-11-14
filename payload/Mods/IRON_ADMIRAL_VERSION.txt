@@ -1,4 +1,4 @@
-1.2.78-beta.225
-DIP_GG_Fixes 1.11.1107
-2026-11-14 20:41
-Ranking by sinkings, fog sliders
+1.2.78-beta.226
+DIP_GG_Fixes 1.11.1108
+2026-11-14 20:53
+F10 number entry fix
