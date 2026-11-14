@@ -1,4 +1,4 @@
-1.2.78-beta.224
-DIP_GG_Fixes 1.11.1106
-2026-11-14 20:27
-Haze diagnostics
+1.2.78-beta.225
+DIP_GG_Fixes 1.11.1107
+2026-11-14 20:41
+Ranking by sinkings, fog sliders
