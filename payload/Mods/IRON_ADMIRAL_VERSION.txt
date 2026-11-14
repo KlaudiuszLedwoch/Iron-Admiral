@@ -1,4 +1,4 @@
-1.2.78-beta.227
-DIP_GG_Fixes 1.11.1109
-2026-11-14 21:32
-Horizon edge
+1.2.78-beta.228
+DIP_GG_Fixes 1.11.1110
+2026-11-14 22:17
+Selected ship
