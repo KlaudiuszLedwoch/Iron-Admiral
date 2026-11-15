@@ -1,4 +1,4 @@
-1.2.78-beta.280
-DIP_GG_Fixes 1.11.1185
-2026-11-15 21:45
-Lighter carrier decks
+1.2.78-beta.281
+DIP_GG_Fixes 1.11.1186
+2026-11-15 22:16
+Faster carrier air groups
