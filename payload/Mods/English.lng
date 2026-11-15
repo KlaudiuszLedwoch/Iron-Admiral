@@ -728,3 +728,7 @@ $technology_desc_ss_tech_snorkel;Air mast for running diesels submerged.
 $component_name_short_cv_hangar_armoured;Armoured
 $component_name_cv_hangar_armoured;Armoured hangar
 $component_desc_cv_hangar_armoured;Armoured hangar: closed armoured box around the hangar - about a third fewer aircraft, but bombs and shells hitting the hangar no longer set off the fuel and aircraft inside.
+$technology_name_av_cv_foldwing;Folding Wings
+$technology_desc_av_cv_foldwing;Carrier aircraft with wings that fold back or up for stowage: more aircraft fit in the same hangar (the air group follows the hangar area against the aircraft size).
+$technology_name_av_cv_stowing;Sto-Wing Folding
+$technology_desc_av_cv_stowing;Wings that rotate and fold back along the fuselage (Grumman Sto-Wing): about half as many aircraft again in the same hangar.

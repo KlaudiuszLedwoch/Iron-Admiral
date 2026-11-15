@@ -798,6 +798,8 @@ av_cv_conversion,naval_aviation,,$technology_name_av_cv_conversion,1922,1,300,"r
 av_cv_catapult,naval_aviation,,$technology_name_av_cv_catapult,1934,1,360,"recon(1)",,,$technology_desc_av_cv_catapult,,,#104 CV design (hydraulic catapult H-2; Yorktown 1937)
 av_cv_armdeck,naval_aviation,,$technology_name_av_cv_armdeck,1937,1,400,"recon(1)",cv_hangar_armoured,,$technology_desc_av_cv_armdeck,,,#104 CV design (armoured flight deck and closed hangar; Illustrious 1937)
 av_cv_edgelift,naval_aviation,,$technology_name_av_cv_edgelift,1942,1,440,"recon(1)",,,$technology_desc_av_cv_edgelift,,,#104 CV design (deck-edge elevator; Wasp 1940 / Essex 1942)
+av_cv_foldwing,naval_aviation,,$technology_name_av_cv_foldwing,1936,1,340,"recon(1)",,,$technology_desc_av_cv_foldwing,,,#hangar air group (Swordfish 1936; TBD 1937; B5N 1938)
+av_cv_stowing,naval_aviation,,$technology_name_av_cv_stowing,1941,1,420,"recon(1)",,,$technology_desc_av_cv_stowing,,,#hangar air group (Grumman Sto-Wing: Martlet II 1940; F4F-4 1941; +50% per ASME)
 av_cv_cic,naval_aviation,,$technology_name_av_cv_cic,1942,1,460,"recon(1)",,,$technology_desc_av_cv_cic,,,#104 CV design (air search radar and Combat Information Center)
 av_cv_fuelprot,naval_aviation,,$technology_name_av_cv_fuelprot,1943,1,460,"recon(1)",cv_avgas_2,,$technology_desc_av_cv_fuelprot,,,#104 CV design (avgas tanks in cofferdams; CO2 inerting - lessons of Lexington 1942)
 av_types_1,naval_aviation,,$technology_name_av_types_1,1934,1,360,"recon(1)",,,$technology_desc_av_types_1,,,#85 naval aviation
