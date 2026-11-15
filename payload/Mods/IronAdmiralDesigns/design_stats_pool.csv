@@ -5,7 +5,7 @@ id,name,nation,type,battles,wins,draws,losses,lost,kills,sunk_t,tons,kbattles
 1c024b28-9a21-40ba-b56f-dccf9c0388bc,Dragon of the East,china,bb,2,2,0,0,0,,,,
 2750b24f-85cf-4d2e-aa3c-f7580f910112,Dreadnought,britain,bb,9,0,9,0,6,,,,
 a7aba8c4-e731-4176-b442-e7d005e9aa10,Dvenadsat Apostolov,russia,bb,1,0,1,0,0,,,,
-8fdfcf28-2ddf-4172-9d32-23b0f5faf7f5,Hoche,france,bb,3,0,2,1,1,0,0,10820,3
+8fdfcf28-2ddf-4172-9d32-23b0f5faf7f5,Hoche,france,bb,5,2,2,1,1,0,0,10820,5
 36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
 cce939f4-3726-4c23-a0e9-23c4f8013937,Kaiser,germany,bb,13,12,0,1,1,,,,
 52935de8-3488-4eb8-83be-d9bd519c1702,Liberté,france,bb,2,2,0,0,0,,,,
@@ -97,7 +97,7 @@ ed08e778-a27f-407f-a5ad-b7cd107522bf,Vezir Iznogoud,greece,cl,3,3,0,0,0,,,,
 5d21d6b5-1eb3-4478-a2a3-3019343a6eab,Wiesbaden,france,cl,19,0,9,10,19,0,0,3000,19
 6ba765dd-a3b5-40f0-abea-59f3f154e285,Wiesbaden,netherlands,cl,1,0,0,1,1,,,,
 5af56ce0-97e2-4fea-b100-3ba2cd8b57f1,Carrier Mk1,usa,cv,1,0,0,1,1,,,,
-8c53b72d-8974-4e06-b58f-ad5580fb16b4,Essex,usa,cv,3,3,0,0,0,,,,
+8c53b72d-8974-4e06-b58f-ad5580fb16b4,Essex,usa,cv,5,3,0,2,0,0,0,16513,2
 1f15602a-1f70-4c94-85ea-5e84f09da684,Shokaku,japan,cv,5,5,0,0,0,,,,
 6108782b-9263-414f-8fa7-960b0d63e211,MHMW Bodryi,russia,dd,1,0,0,1,1,,,,
 320c029d-ce28-4cce-80f5-e338a9ff0e4d,MHMW Uranami,japan,dd,4,0,0,4,4,,,,
