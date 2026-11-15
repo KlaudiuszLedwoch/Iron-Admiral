@@ -1,4 +1,4 @@
-1.2.78-beta.266
-DIP_GG_Fixes 1.11.1167
-2026-11-15 17:35
-Designer placement, AI designs
+1.2.78-beta.267
+DIP_GG_Fixes 1.11.1169
+2026-11-15 17:53
+Squadron cards
