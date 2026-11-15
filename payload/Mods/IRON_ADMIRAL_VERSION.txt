@@ -1,4 +1,4 @@
-1.2.78-beta.271
-DIP_GG_Fixes 1.11.1174
-2026-11-15 19:24
-Carrier air group test
+1.2.78-beta.272
+DIP_GG_Fixes 1.11.1175
+2026-11-15 19:28
+Folding wings
