@@ -1,4 +1,4 @@
-1.2.78-beta.261
-DIP_GG_Fixes 1.11.1160
-2026-11-15 15:33
-End turn fixes
+1.2.78-beta.262
+DIP_GG_Fixes 1.11.1162
+2026-11-15 15:46
+Stuck forces, strike auto-resolve
