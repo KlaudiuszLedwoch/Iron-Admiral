@@ -1,4 +1,4 @@
-1.2.78-beta.276
-DIP_GG_Fixes 1.11.1180
-2026-11-15 20:34
-Design age limit
+1.2.78-beta.277
+DIP_GG_Fixes 1.11.1181
+2026-11-15 20:48
+View from the aircraft
