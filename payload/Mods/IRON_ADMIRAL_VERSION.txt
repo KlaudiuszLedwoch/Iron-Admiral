@@ -1,4 +1,4 @@
-1.2.78-beta.265
-DIP_GG_Fixes 1.11.1165
-2026-11-15 17:09
-Armour layers test
+1.2.78-beta.266
+DIP_GG_Fixes 1.11.1167
+2026-11-15 17:35
+Designer placement, AI designs
