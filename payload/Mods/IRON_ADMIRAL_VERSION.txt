@@ -1,4 +1,4 @@
-1.2.78-beta.269
-DIP_GG_Fixes 1.11.1172
-2026-11-15 18:21
-Carriers at true length
+1.2.78-beta.270
+DIP_GG_Fixes 1.11.1173
+2026-11-15 18:44
+Carrier size by tonnage
