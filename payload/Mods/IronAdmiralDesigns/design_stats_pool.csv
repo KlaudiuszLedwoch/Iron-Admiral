@@ -5,6 +5,7 @@ id,name,nation,type,battles,wins,draws,losses,lost,kills,sunk_t,tons,kbattles
 1c024b28-9a21-40ba-b56f-dccf9c0388bc,Dragon of the East,china,bb,2,2,0,0,0,,,,
 2750b24f-85cf-4d2e-aa3c-f7580f910112,Dreadnought,britain,bb,9,0,9,0,6,,,,
 a7aba8c4-e731-4176-b442-e7d005e9aa10,Dvenadsat Apostolov,russia,bb,1,0,1,0,0,,,,
+8fdfcf28-2ddf-4172-9d32-23b0f5faf7f5,Hoche,france,bb,1,0,1,0,0,0,0,10820,1
 36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
 cce939f4-3726-4c23-a0e9-23c4f8013937,Kaiser,germany,bb,13,12,0,1,1,,,,
 52935de8-3488-4eb8-83be-d9bd519c1702,Liberté,france,bb,2,2,0,0,0,,,,
@@ -35,8 +36,8 @@ fc1b19f4-6046-4071-a59c-c9663d067b0f,Furutaka,greece,ca,14,0,10,4,2,0,0,4689,8
 526a6ae6-0611-47a3-9689-3f84c8fb5f26,Hogue,britain,ca,1,1,0,0,0,,,,
 c3e3bb66-efc7-4f88-9063-861311000b65,Kaiser Franz Joseph I,austria,ca,2,0,2,0,0,,,,
 b8cb2465-5c39-459c-af4a-196a411118ca,Kurobegorō,spain,ca,6,0,6,0,0,,,,
-3cfb0e5d-ea45-49ee-ba34-bd6ea283e25e,Kurobegorō,russia,ca,5,0,5,0,0,,,,
 54c70bbb-ef43-4e25-85c5-e01f9f812a65,Kurobegorō,britain,ca,24,0,22,2,9,0,0,6000,1
+3cfb0e5d-ea45-49ee-ba34-bd6ea283e25e,Kurobegorō,russia,ca,5,0,5,0,0,,,,
 cd972214-2d2d-4da3-a98f-04cec9d62783,Kurobegorō,china,ca,13,0,13,0,1,,,,
 d12f9bce-783c-4923-b116-f88fc2bd9ba6,La raleuse,france,ca,1,1,0,0,0,,,,
 f2610b17-c51b-49db-9404-bf625a226f2c,Lussin,austria,ca,1,1,0,0,0,,,,
@@ -53,8 +54,8 @@ fe309184-7433-425d-aaa4-ea56eb37cc23,Seydlitz,germany,ca,1,1,0,0,0,,,,
 b63ef6b3-d76d-415c-ac63-ebd112c77cbd,Trento,italy,ca,4,0,0,4,4,,,,
 1fe78142-4b3f-421a-b6f2-af1ef3324ed1,Tristão Vaz Teixeira,portugal,ca,1,0,0,1,1,,,,
 cb459306-c6e1-4952-8982-d5b5dcee12a8,A Klasse,austria,cl,5,2,0,3,3,,,,
-1261b0ce-0dba-4c3b-b671-ed83f167c7fc,Akitsushima,greece,cl,11,0,7,4,1,0,0,2450,8
 bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
+1261b0ce-0dba-4c3b-b671-ed83f167c7fc,Akitsushima,greece,cl,11,0,7,4,1,0,0,2450,8
 944685e7-36a1-4dda-9650-e0bf012119ee,Ancona,china,cl,18,0,5,13,8,2,3482,3000,8
 848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,15,0,15,0,0,,,,
 3d9a05a0-13f8-45c3-a817-dedf26535ccc,Arrogant,britain,cl,6,1,5,0,1,,,,
@@ -87,6 +88,7 @@ db327d11-30f4-4667-aee2-0c29dee118b8,Newark,usa,cl,1,0,0,1,1,,,,
 4582d2cf-f1c3-48ef-8a0a-d66a6b0713b4,Svetlana (Profintern,russia,cl,1,0,0,1,1,0,0,6788,1
 e728ae07-15a1-4413-828c-955bf8d588b6,Umbria,italy,cl,1,0,0,1,1,,,,
 ed08e778-a27f-407f-a5ad-b7cd107522bf,Vezir Iznogoud,greece,cl,3,3,0,0,0,,,,
+5d21d6b5-1eb3-4478-a2a3-3019343a6eab,Wiesbaden,france,cl,9,0,9,0,9,0,0,3000,9
 6ba765dd-a3b5-40f0-abea-59f3f154e285,Wiesbaden,netherlands,cl,1,0,0,1,1,,,,
 5af56ce0-97e2-4fea-b100-3ba2cd8b57f1,Carrier Mk1,usa,cv,1,0,0,1,1,,,,
 8c53b72d-8974-4e06-b58f-ad5580fb16b4,Essex,usa,cv,3,3,0,0,0,,,,
