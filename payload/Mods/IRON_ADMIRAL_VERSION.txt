@@ -1,4 +1,4 @@
-1.2.78-beta.238
-DIP_GG_Fixes 1.11.1121
-2026-11-15 01:42
-AI library carrier type
+1.2.78-beta.239
+DIP_GG_Fixes 1.11.1122
+2026-11-15 02:45
+Player fleet guard
