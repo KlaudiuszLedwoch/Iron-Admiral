@@ -582,6 +582,14 @@ $IA_Tip_162;Iron Admiral: Campaign map: right-click your task force to select it
 $IA_Tip_163;Iron Admiral: Task force orders (P, Orders): Readiness, Shadow, Escort, Patrol, Intercept, Raid, Bombard, Blockade - the force carries them out every turn until you change them.
 $IA_Tip_164;Iron Admiral: Battle orders (Alt+1..9): Manual, Screen, Scout, Torpedo attack, Free action, Hunt, Finish off, Keep range, Scout + torpedo attack. Plain Scout only scouts and reports.
 $IA_Tip_165;Iron Admiral: Carriers have their own tab: press P and open CV. There you restore the ready carrier design, see your air groups, losses and support radius, and read how carriers work.
+$IA_Tip_166;Iron Admiral: Nations judge every decision by how it changes the balance of power: what strengthens a nation earns its goodwill, what strengthens its rivals costs it.
+$IA_Tip_167;Iron Admiral: The enemy of my enemy is my friend - and the friend of my enemy is not.
+$IA_Tip_168;Iron Admiral: Building or selling warships for one nation pleases it and its allies, and angers its enemies.
+$IA_Tip_169;Iron Admiral: Reactions depend on the situation: in wartime, or when a rival is courting them, nations react more strongly.
+$IA_Tip_170;Iron Admiral: One decision can set off a chain of reactions across several nations.
+$IA_Tip_171;Iron Admiral: The strongest power tends to unite the others against itself.
+$IA_Tip_172;Iron Admiral: Grievances fade with time; coercion and lost territory are remembered for many years.
+$IA_Tip_173;Iron Admiral: Decision windows show the expected diplomatic effect before you choose.
 $technology_name_av_cv_conversion;Capital Ship Conversion
 $technology_desc_av_cv_conversion;Battleship and battlecruiser hulls are completed as large carriers. Unlocks the Heavy Fleet Carrier hull.
 $technology_name_av_cv_catapult;Hydraulic Flight Deck Catapult
