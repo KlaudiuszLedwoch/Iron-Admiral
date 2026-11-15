@@ -1,4 +1,4 @@
-1.2.78-beta.278
-DIP_GG_Fixes 1.11.1182
-2026-11-15 21:07
-Spectacular screenshots
+1.2.78-beta.279
+DIP_GG_Fixes 1.11.1184
+2026-11-15 21:10
+Torpedo drop shots
