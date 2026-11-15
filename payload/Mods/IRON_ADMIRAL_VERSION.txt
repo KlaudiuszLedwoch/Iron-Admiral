@@ -1,4 +1,4 @@
-1.2.78-beta.283
-DIP_GG_Fixes 1.11.1188
-2026-11-15 22:54
-Aircraft timing
+1.2.78-beta.284
+DIP_GG_Fixes 1.11.1189
+2026-11-15 23:12
+Lighter flak
