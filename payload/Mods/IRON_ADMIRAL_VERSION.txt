@@ -1,4 +1,4 @@
-1.2.78-beta.237
-DIP_GG_Fixes 1.11.1120
-2026-11-15 00:47
-AI library research check
+1.2.78-beta.238
+DIP_GG_Fixes 1.11.1121
+2026-11-15 01:42
+AI library carrier type
