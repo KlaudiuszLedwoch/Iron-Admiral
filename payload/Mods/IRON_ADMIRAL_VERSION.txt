@@ -1,4 +1,4 @@
-1.2.78-beta.252
-DIP_GG_Fixes 1.11.1136
-2026-11-15 10:26
-Hunt from the free side
+1.2.78-beta.253
+DIP_GG_Fixes 1.11.1137
+2026-11-15 10:34
+Nothing over the game menu
