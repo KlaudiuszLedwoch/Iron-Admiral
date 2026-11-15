@@ -1,4 +1,4 @@
-1.2.78-beta.246
-DIP_GG_Fixes 1.11.1130
-2026-11-15 09:08
-Design list repair
+1.2.78-beta.247
+DIP_GG_Fixes 1.11.1131
+2026-11-15 09:25
+New campaign peace fix
