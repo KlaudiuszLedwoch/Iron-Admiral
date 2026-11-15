@@ -1,4 +1,4 @@
-1.2.78-beta.267
-DIP_GG_Fixes 1.11.1169
-2026-11-15 17:53
-Squadron cards
+1.2.78-beta.268
+DIP_GG_Fixes 1.11.1171
+2026-11-15 18:14
+Armour layers: decapping
