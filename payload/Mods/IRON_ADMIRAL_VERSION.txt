@@ -1,4 +1,4 @@
-1.2.78-beta.281
-DIP_GG_Fixes 1.11.1186
-2026-11-15 22:16
-Faster carrier air groups
+1.2.78-beta.282
+DIP_GG_Fixes 1.11.1187
+2026-11-15 22:35
+Carrier hit errors
