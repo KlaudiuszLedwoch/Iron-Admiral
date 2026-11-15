@@ -1,4 +1,4 @@
-1.2.78-beta.248
-DIP_GG_Fixes 1.11.1132
-2026-11-15 09:28
-Watch carrier strikes
+1.2.78-beta.249
+DIP_GG_Fixes 1.11.1133
+2026-11-15 09:37
+Carrier strikes by day
