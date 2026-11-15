@@ -1,4 +1,4 @@
-1.2.78-beta.258
-DIP_GG_Fixes 1.11.1152
-2026-11-15 14:48
-Carrier, submarine and mine work
+1.2.78-beta.259
+DIP_GG_Fixes 1.11.1153
+2026-11-15 15:00
+Mines
