@@ -36,9 +36,9 @@ fc1b19f4-6046-4071-a59c-c9663d067b0f,Furutaka,greece,ca,14,0,10,4,2,0,0,4689,8
 1d3ca911-66f5-4f1b-a262-0b95454180f4,Hai Chi,china,ca,1,0,1,0,0,0,0,4300,1
 526a6ae6-0611-47a3-9689-3f84c8fb5f26,Hogue,britain,ca,1,1,0,0,0,,,,
 c3e3bb66-efc7-4f88-9063-861311000b65,Kaiser Franz Joseph I,austria,ca,2,0,2,0,0,,,,
-cd972214-2d2d-4da3-a98f-04cec9d62783,Kurobegorō,china,ca,13,0,13,0,1,,,,
 3cfb0e5d-ea45-49ee-ba34-bd6ea283e25e,Kurobegorō,russia,ca,5,0,5,0,0,,,,
 b8cb2465-5c39-459c-af4a-196a411118ca,Kurobegorō,spain,ca,6,0,6,0,0,,,,
+cd972214-2d2d-4da3-a98f-04cec9d62783,Kurobegorō,china,ca,13,0,13,0,1,,,,
 54c70bbb-ef43-4e25-85c5-e01f9f812a65,Kurobegorō,britain,ca,24,0,22,2,9,0,0,6000,1
 d12f9bce-783c-4923-b116-f88fc2bd9ba6,La raleuse,france,ca,1,1,0,0,0,,,,
 f2610b17-c51b-49db-9404-bf625a226f2c,Lussin,austria,ca,1,1,0,0,0,,,,
@@ -56,11 +56,11 @@ fe309184-7433-425d-aaa4-ea56eb37cc23,Seydlitz,germany,ca,1,1,0,0,0,,,,
 b63ef6b3-d76d-415c-ac63-ebd112c77cbd,Trento,italy,ca,4,0,0,4,4,,,,
 1fe78142-4b3f-421a-b6f2-af1ef3324ed1,Tristão Vaz Teixeira,portugal,ca,1,0,0,1,1,,,,
 cb459306-c6e1-4952-8982-d5b5dcee12a8,A Klasse,austria,cl,5,2,0,3,3,,,,
-8a0cb230-bd28-4ce5-b967-4ae720bcf1b3,Akitsushima,usa,cl,9,0,0,9,9,0,0,2450,9
 1261b0ce-0dba-4c3b-b671-ed83f167c7fc,Akitsushima,greece,cl,11,0,7,4,1,0,0,2450,8
 bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
-848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,15,0,15,0,0,,,,
+8a0cb230-bd28-4ce5-b967-4ae720bcf1b3,Akitsushima,usa,cl,9,0,0,9,9,0,0,2450,9
 944685e7-36a1-4dda-9650-e0bf012119ee,Ancona,china,cl,18,0,5,13,8,2,3482,3000,8
+848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,15,0,15,0,0,,,,
 3d9a05a0-13f8-45c3-a817-dedf26535ccc,Arrogant,britain,cl,6,1,5,0,1,,,,
 a9584e61-b68b-4ef3-bc5c-0ecef6f41516,Barham,britain,cl,101,0,101,0,10,0,0,1780,51
 68c8a913-e3ad-4a1f-ae0c-9f689b8e46ef,Blonde,britain,cl,12,0,0,12,12,0,0,3498,10
