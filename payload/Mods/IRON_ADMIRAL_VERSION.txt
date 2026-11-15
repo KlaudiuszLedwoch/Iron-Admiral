@@ -1,4 +1,4 @@
-1.2.78-beta.251
-DIP_GG_Fixes 1.11.1135
-2026-11-15 10:01
-Strike losses in air stock
+1.2.78-beta.252
+DIP_GG_Fixes 1.11.1136
+2026-11-15 10:26
+Hunt from the free side
