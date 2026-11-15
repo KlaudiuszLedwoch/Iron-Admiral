@@ -1,4 +1,4 @@
-1.2.78-beta.274
-DIP_GG_Fixes 1.11.1177
-2026-11-15 19:54
-Aircraft log
+1.2.78-beta.275
+DIP_GG_Fixes 1.11.1179
+2026-11-15 20:30
+Faster custom battles
