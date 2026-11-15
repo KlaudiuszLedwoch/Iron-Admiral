@@ -1,4 +1,4 @@
-1.2.78-beta.241
-DIP_GG_Fixes 1.11.1125
-2026-11-15 07:46
-Ship trade offers
+1.2.78-beta.242
+DIP_GG_Fixes 1.11.1126
+2026-11-15 08:01
+Campaign start fix
