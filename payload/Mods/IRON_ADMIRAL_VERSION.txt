@@ -1,4 +1,4 @@
-1.2.78-beta.255
-DIP_GG_Fixes 1.11.1139
-2026-11-15 11:19
-Auto-resolve crash fix
+1.2.78-beta.256
+DIP_GG_Fixes 1.11.1143
+2026-11-15 11:41
+Campaign state in the save
