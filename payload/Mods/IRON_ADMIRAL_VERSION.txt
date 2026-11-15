@@ -1,4 +1,4 @@
-1.2.78-beta.244
-DIP_GG_Fixes 1.11.1128
-2026-11-15 08:38
-Diplomacy memory in the save
+1.2.78-beta.245
+DIP_GG_Fixes 1.11.1129
+2026-11-15 08:57
+Hunt and torpedo fixes
