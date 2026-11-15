@@ -1,4 +1,4 @@
-1.2.78-beta.263
-DIP_GG_Fixes 1.11.1163
-2026-11-15 15:55
-Trade error fix
+1.2.78-beta.264
+DIP_GG_Fixes 1.11.1164
+2026-11-15 16:33
+Smoother battles
