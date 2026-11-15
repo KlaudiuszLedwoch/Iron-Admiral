@@ -1,4 +1,4 @@
-1.2.78-beta.239
-DIP_GG_Fixes 1.11.1122
-2026-11-15 02:45
-Player fleet guard
+1.2.78-beta.240
+DIP_GG_Fixes 1.11.1124
+2026-11-15 06:57
+AI orders abroad
