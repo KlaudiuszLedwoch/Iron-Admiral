@@ -1,4 +1,4 @@
-1.2.78-beta.240
-DIP_GG_Fixes 1.11.1124
-2026-11-15 06:57
-AI orders abroad
+1.2.78-beta.241
+DIP_GG_Fixes 1.11.1125
+2026-11-15 07:46
+Ship trade offers
