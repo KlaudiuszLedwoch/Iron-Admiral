@@ -1,4 +1,4 @@
-1.2.78-beta.264
-DIP_GG_Fixes 1.11.1164
-2026-11-15 16:33
-Smoother battles
+1.2.78-beta.265
+DIP_GG_Fixes 1.11.1165
+2026-11-15 17:09
+Armour layers test
