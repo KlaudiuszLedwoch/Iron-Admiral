@@ -1,4 +1,4 @@
-1.2.78-beta.313
-DIP_GG_Fixes 1.11.1227
-2026-11-16 15:35
-Hull sheen
+1.2.78-beta.314
+DIP_GG_Fixes 1.11.1228
+2026-11-16 15:49
+Scene probe
