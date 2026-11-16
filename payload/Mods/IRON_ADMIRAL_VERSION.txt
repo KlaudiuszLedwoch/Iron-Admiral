@@ -1,4 +1,4 @@
-1.2.78-beta.344
-DIP_GG_Fixes 1.11.1271
-2026-11-16 23:52
-Weathered hulls by default
+1.2.78-beta.345
+DIP_GG_Fixes 1.11.1272
+2026-11-17 00:02
+Sun breaks
