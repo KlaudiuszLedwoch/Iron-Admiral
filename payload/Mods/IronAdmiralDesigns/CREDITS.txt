@@ -194,3 +194,5 @@ Thank you to everyone who shared their designs.
 2026-11-16 - Фабушка: 1 design(s): 1899 greece TRA 1899 [c21d22f6]
 2026-11-16 - a74a21d8a7f84443: 1 design(s): 1902 japan Shinonome [5669b170]
 2026-11-16 - a74a21d8a7f84443: 1 design(s): 1903 netherlands Shohei [f1779d5d]
+2026-11-16 - Фабушка: 1 design(s): 1900 russia 1900 Dreven [fae17c4a]
+2026-11-16 - 0f1e1ad02d024fd5: 1 design(s): 1894 china Chillicothe [90efb3cf]
