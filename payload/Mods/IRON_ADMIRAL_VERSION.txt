@@ -1,4 +1,4 @@
-1.2.78-beta.305
-DIP_GG_Fixes 1.11.1218
-2026-11-16 13:21
+1.2.78-beta.306
+DIP_GG_Fixes 1.11.1219
+2026-11-16 13:31
 Battle diagnostics
