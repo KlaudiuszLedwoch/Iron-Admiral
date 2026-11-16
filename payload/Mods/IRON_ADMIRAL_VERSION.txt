@@ -1,4 +1,4 @@
-1.2.77.9
+1.2.77.10
 DIP_GG_Fixes 1.11.8654
-2026-11-12 17:00
-Stable fix 1.2.77.9: end of turn no longer stops on a ship with unset stats (...
+2026-11-16 14:52
+Stable fix 1.2.77.10: installer folder window on top
