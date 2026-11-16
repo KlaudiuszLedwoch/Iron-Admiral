@@ -2,8 +2,8 @@ id,name,nation,type,battles,wins,draws,losses,lost,kills,sunk_t,tons,kbattles
 8de1fccf-c7bd-4ee0-bbe9-264145d0cebe,Agincourt (ex-Rio de Janeiro - Sultan Osman I),britain,bb,2,0,0,2,2,0,0,30860,2
 d3ab1111-16f9-430e-b476-104e76b4e870,Amagi,japan,bb,2,2,0,0,0,2,446000,214424,2
 9626d4b9-fbc3-46b0-bcda-8f3e3be43a1b,Arizona 1931 refit,usa,bb,1,0,0,1,1,,,,
-3b1f0e7d-548c-4b90-9b57-d0b100fe81cb,Daoguang,greece,bb,4,2,2,0,0,,,,
 1d308e60-c69f-49a1-98ca-7ddf42cb4908,Daoguang,austria,bb,9,0,7,2,1,,,,
+3b1f0e7d-548c-4b90-9b57-d0b100fe81cb,Daoguang,greece,bb,4,2,2,0,0,,,,
 1c024b28-9a21-40ba-b56f-dccf9c0388bc,Dragon of the East,china,bb,2,2,0,0,0,,,,
 2750b24f-85cf-4d2e-aa3c-f7580f910112,Dreadnought,britain,bb,9,0,9,0,6,,,,
 a7aba8c4-e731-4176-b442-e7d005e9aa10,Dvenadsat Apostolov,russia,bb,1,0,1,0,0,,,,
@@ -39,17 +39,17 @@ c4bbc91c-e55d-4eee-b456-eb0c2bf29258,Tristan de Cunha,portugal,bc,1,1,0,0,0,,,,
 526adf6f-19eb-43fe-96ef-dddf29645f54,Coronel,germany,ca,1,1,0,0,0,,,,
 f2ebc263-d7f9-4aeb-a73d-36347732ff73,Coronel,germany,ca,1,0,1,0,1,1,6000,4500,1
 1faf6e3d-251b-4155-8ba4-7662bfa247fe,Duquesne,france,ca,8,0,8,0,1,,,,
-7ef6193a-e354-43a7-b94c-75903bc1cef4,Furutaka,colombia,ca,3,0,3,0,0,0,0,10600,3
 232d8477-722b-451d-9592-3ab8b2559da8,Furutaka,netherlands,ca,6,0,6,0,0,0,0,4689,6
 fc1b19f4-6046-4071-a59c-c9663d067b0f,Furutaka,greece,ca,14,0,10,4,2,0,0,4689,8
+7ef6193a-e354-43a7-b94c-75903bc1cef4,Furutaka,colombia,ca,3,0,3,0,0,0,0,10600,3
 03cec267-abf2-4c21-a84a-e4870180c53d,Fylgia,scandinavia,ca,6,5,0,1,0,1,12000,4310,6
 1d3ca911-66f5-4f1b-a262-0b95454180f4,Hai Chi,china,ca,1,0,1,0,0,0,0,4300,1
 526a6ae6-0611-47a3-9689-3f84c8fb5f26,Hogue,britain,ca,1,1,0,0,0,,,,
 c3e3bb66-efc7-4f88-9063-861311000b65,Kaiser Franz Joseph I,austria,ca,2,0,2,0,0,,,,
 d10fc3bc-66d3-4663-bac6-44c1a7b571eb,Katsonis,greece,ca,2,0,2,0,2,1,1741,6000,2
-54c70bbb-ef43-4e25-85c5-e01f9f812a65,Kurobegorō,britain,ca,24,0,22,2,9,0,0,6000,1
-cd972214-2d2d-4da3-a98f-04cec9d62783,Kurobegorō,china,ca,13,0,13,0,1,,,,
 3cfb0e5d-ea45-49ee-ba34-bd6ea283e25e,Kurobegorō,russia,ca,7,0,7,0,0,0,0,6000,2
+cd972214-2d2d-4da3-a98f-04cec9d62783,Kurobegorō,china,ca,13,0,13,0,1,,,,
+54c70bbb-ef43-4e25-85c5-e01f9f812a65,Kurobegorō,britain,ca,24,0,22,2,9,0,0,6000,1
 b8cb2465-5c39-459c-af4a-196a411118ca,Kurobegorō,spain,ca,6,0,6,0,0,,,,
 d12f9bce-783c-4923-b116-f88fc2bd9ba6,La raleuse,france,ca,1,1,0,0,0,,,,
 f2610b17-c51b-49db-9404-bf625a226f2c,Lussin,austria,ca,1,1,0,0,0,,,,
@@ -68,11 +68,11 @@ fe309184-7433-425d-aaa4-ea56eb37cc23,Seydlitz,germany,ca,1,1,0,0,0,,,,
 b63ef6b3-d76d-415c-ac63-ebd112c77cbd,Trento,italy,ca,4,0,0,4,4,,,,
 1fe78142-4b3f-421a-b6f2-af1ef3324ed1,Tristão Vaz Teixeira,portugal,ca,1,0,0,1,1,,,,
 cb459306-c6e1-4952-8982-d5b5dcee12a8,A Klasse,austria,cl,5,2,0,3,3,,,,
-bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
 1261b0ce-0dba-4c3b-b671-ed83f167c7fc,Akitsushima,greece,cl,11,0,7,4,1,0,0,2450,8
+bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
 8a0cb230-bd28-4ce5-b967-4ae720bcf1b3,Akitsushima,usa,cl,9,0,0,9,9,0,0,2450,9
-848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,15,0,15,0,0,,,,
 944685e7-36a1-4dda-9650-e0bf012119ee,Ancona,china,cl,18,0,5,13,8,2,3482,3000,8
+848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,15,0,15,0,0,,,,
 3d9a05a0-13f8-45c3-a817-dedf26535ccc,Arrogant,britain,cl,6,1,5,0,1,,,,
 a9584e61-b68b-4ef3-bc5c-0ecef6f41516,Barham,britain,cl,101,0,101,0,10,0,0,1780,51
 68c8a913-e3ad-4a1f-ae0c-9f689b8e46ef,Blonde,britain,cl,12,0,0,12,12,0,0,3498,10
@@ -94,6 +94,7 @@ def26443-7106-45ff-a2cd-fbc5a260ea3d,Cleveland,spain,cl,7,0,7,0,2,,,,
 888e3599-e54e-473c-a4b1-21c4e5a37460,MHMW Troude,france,cl,1,1,0,0,0,,,,
 7b747fbc-50fe-457f-adf7-436fdb12d8db,MHMW Yuzhou,china,cl,2,0,0,2,2,,,,
 db327d11-30f4-4667-aee2-0c29dee118b8,Newark,usa,cl,1,0,0,1,1,,,,
+d5055818-c1dd-4e25-901c-8d090246a92e,Niitaka,spain,cl,2,0,0,2,2,0,0,3000,2
 115ec79f-7370-4d68-b19f-0821eec1077a,O bacalhau,portugal,cl,1,1,0,0,0,,,,
 8e1da671-cc67-422e-ad2d-cba6682f7d83,Oliveira da Figueira,portugal,cl,3,0,0,3,3,,,,
 38f3bf86-1215-4705-97e6-f7ba9f66db42,Oliveira da Figueira,portugal,cl,1,1,0,0,0,,,,
@@ -116,13 +117,13 @@ df2e47e2-5437-47f4-b56d-42589a65c23c,Ranger,usa,cv,1,0,0,1,0,0,0,15597,1
 320c029d-ce28-4cce-80f5-e338a9ff0e4d,MHMW Uranami,japan,dd,4,0,0,4,4,,,,
 5f3c9f52-6541-421a-b8d1-e5182c5cc38c,MHMW V-1,germany,dd,8,0,0,8,8,,,,
 f6aa2b46-d3c8-48c4-aec3-e49fb864e4a0,MHMW V-7,germany,dd,3,3,0,0,0,0,0,5412,3
-8547c4e6-8620-4112-a505-33eaab5a7c42,Etorofu,france,tb,1,0,0,1,1,,,,
-8157953d-1bbc-4a23-a9f9-8d2510a515b4,Etorofu,britain,tb,2,0,1,1,1,,,,
-9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,2,0,0,2,0,,,,
 4b4e8c11-aedb-4ab6-844e-efe764e6e5f3,Etorofu,netherlands,tb,3,0,0,3,3,,,,
 cbcde8f6-3eda-474e-8614-4e475543f1fc,Etorofu,spain,tb,20,10,10,0,0,,,,
+9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,2,0,0,2,0,,,,
+8547c4e6-8620-4112-a505-33eaab5a7c42,Etorofu,france,tb,1,0,0,1,1,,,,
+8157953d-1bbc-4a23-a9f9-8d2510a515b4,Etorofu,britain,tb,2,0,1,1,1,,,,
 6b04f7a9-b106-4d29-8aa3-18bab4c1e180,S-1,bulgaria,tb,1,0,0,1,1,,,,
-ffab2b3d-7602-493c-b777-a9acbd760679,S-1,greece,tb,12,3,3,6,6,0,0,275,6
-337d06ef-6158-4cfd-bb65-5d319f82a693,S-1,austria,tb,4,0,0,4,4,,,,
 a4b73793-6ed8-4b0e-a248-51cbd919caa2,S-1,germany,tb,11,0,4,7,11,,,,
+337d06ef-6158-4cfd-bb65-5d319f82a693,S-1,austria,tb,4,0,0,4,4,,,,
+ffab2b3d-7602-493c-b777-a9acbd760679,S-1,greece,tb,12,3,3,6,6,0,0,275,6
 b380acbf-3608-41b0-a418-aa391a860370,Yudong,china,tb,16,9,4,3,9,1,275,198,16
