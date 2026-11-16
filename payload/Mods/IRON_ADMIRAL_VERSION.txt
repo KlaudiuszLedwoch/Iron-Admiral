@@ -1,4 +1,4 @@
-1.2.78-beta.322
-DIP_GG_Fixes 1.11.1239
-2026-11-16 17:39
-Foam and lightning
+1.2.78-beta.323
+DIP_GG_Fixes 1.11.1241
+2026-11-16 18:01
+Hull colour fix
