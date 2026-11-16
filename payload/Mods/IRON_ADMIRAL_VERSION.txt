@@ -1,4 +1,4 @@
-1.2.78-beta.314
-DIP_GG_Fixes 1.11.1228
-2026-11-16 15:49
-Scene probe
+1.2.78-beta.315
+DIP_GG_Fixes 1.11.1229
+2026-11-16 16:11
+Haze and Graphics tab
