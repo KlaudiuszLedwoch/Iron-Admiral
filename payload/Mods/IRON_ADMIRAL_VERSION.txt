@@ -1,4 +1,4 @@
-1.2.78-beta.293
-DIP_GG_Fixes 1.11.1200
-2026-11-16 09:37
-Flak cloud colours
+1.2.78-beta.294
+DIP_GG_Fixes 1.11.1202
+2026-11-16 09:50
+Close-up screenshots
