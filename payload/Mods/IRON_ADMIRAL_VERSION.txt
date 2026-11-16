@@ -1,4 +1,4 @@
-1.2.78-beta.289
-DIP_GG_Fixes 1.11.1194
-2026-11-16 08:59
-Citadel by the belt
+1.2.78-beta.290
+DIP_GG_Fixes 1.11.1196
+2026-11-16 09:15
+Citadel warning in the designer
