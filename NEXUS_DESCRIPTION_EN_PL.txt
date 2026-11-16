@@ -6,7 +6,7 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights, ai
 [size=5][b]Iron Admiral[/b][/size]
 [i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, with a navy simulation that thinks, fights and remembers.[/i]
 
-[i]Description as of 8 November 2026. Stable: Iron Admiral 1.2.77.10 (DIP_GG_Fixes 1.11.8654). Betas follow on GitHub and through the in-game update (F10, Beta updates - on by default).[/i]
+[i]Description as of 16 November 2026. Stable: Iron Admiral 1.2.77.10 (DIP_GG_Fixes 1.11.8654). Betas follow on GitHub and through the in-game update (F10, Beta updates - on by default).[/i]
 
 [b]Download (one-click installer and all packages): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - the files here on Nexus are the same build.
 [b]Guide for players: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]Iron Admiral wiki[/url][/b] | Bug reports and ideas: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]GitHub issues[/url] or the comments here.
@@ -16,6 +16,17 @@ Short summary field: DIP "The Great Game" 1.3.5 with a battle AI that fights, ai
 [*][url=https://youtu.be/DjmOu0KVnwE]Three battles, ending with two surrendered destroyers taken as prizes[/url]
 [*][url=https://youtu.be/ZAPta33uJXE]Two battles[/url]
 [*][url=https://youtu.be/SZzuVT4X2qY]The first battle uncut[/url]
+[/list]
+
+[size=4][b]Mechanic compendium[/b][/size] [i](based on the documentation and the project wiki)[/i]
+[list]
+[*][b]Aircraft carriers and naval aviation (CV)[/b] - a separate ship type with ready historical designs for every nation and era (1915-1945), its own technology branch and an aviation budget. On the campaign map a carrier supports battles within 225-300 km and detects the enemy up to 370 km; in a tactical battle it stays out of gun range and sends torpedo squadrons and reconnaissance aircraft.
+[*][b]Fog of war and intelligence (F7)[/b] - on the strategic map the sea beyond your reconnaissance is darkened, and detected enemy fleets have an estimated composition and position that age over time. In battle unidentified ships are grey silhouettes with a presumed class (e.g. CL?), and the player and the AI fight under the same limited visibility.
+[*][b]Battle AI and national doctrines[/b] - the AI follows battleDoctrines.csv, so Britain fights differently (range, caution) from Japan (aggressive charges, night attacks). Battleships close the range when they cannot penetrate, destroyers make coordinated torpedo attacks by the target's speed, damaged ships leave their divisions, and ships that cannot escape turn back to fight.
+[*][b]Crews, panic and prizes[/b] - crew training works non-linearly, and green crews under heavy fire can panic and break off. Surrendered ships do not vanish: after a won battle (or the fall of the enemy's last port) they pass to the winner as prizes, with their design added to the shipyard.
+[*][b]Historical ballistics and armour[/b] - penetration rebuilt from De Marre's formulas and Nathan Okun's tables for 16-21 in guns; the shell's angle of fall, steel quality (against Krupp cemented armour), radar at night and in storms, and sinking by displacement (no more unsinkable torpedo boats).
+[*][b]Economy, treaties and ship trade (F8, F9)[/b] - series production (an expensive prototype, cheaper sisters), war loans, money printing with inflation, the Washington and London treaty limits, a ship trade panel (F9), and the sovereign territories of the small states restored.
+[*][b]Fleet orders and settings (F10)[/b] - task forces on the campaign map take Patrol, Raid, Shadow, Intercept, Bombard and Blockade orders. Every feature can be switched or tuned in F10, and the game downloads and installs its own updates (stable and the daily betas).
 [/list]
 
 [size=4][b]What is new in 1.2.77 (8 November 2026)[/b][/size]
@@ -64,15 +75,28 @@ Built on DIP "The Great Game" and TweaksAndFixes - many thanks to their authors.
 [size=4][b]Coming next[/b][/size]
 Logistics: oil, supply and sea routes; carriers in the campaign; crew training and damage control; per-nation gun data; submarines after carriers.
 
+[b]Klaudiusz Ledwoch (Klod76) - Iron Admiral[/b] | [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]GitHub[/url] | [url=https://discord.gg/EgKHjQ5DB]Discord[/url] | [url=https://www.youtube.com/playlist?list=PLDadyjtzEqhg]YouTube[/url]
+
 ==========================================================================
 
 [size=5][b]Iron Admiral - wersja polska[/b][/size]
 [i]DIP "The Great Game" 1.3.5 + TweaksAndFixes, z symulacją marynarki, która myśli, walczy i pamięta.[/i]
 
-[i]Stan opisu: 8 listopada 2026. Wersja stabilna: Iron Admiral 1.2.77.10 (DIP_GG_Fixes 1.11.8654). Bety na GitHubie i przez aktualizację w grze (F10, Beta updates - domyślnie włączone).[/i]
+[i]Stan opisu: 16 listopada 2026. Wersja stabilna: Iron Admiral 1.2.77.10 (DIP_GG_Fixes 1.11.8654). Bety na GitHubie i przez aktualizację w grze (F10, Beta updates - domyślnie włączone).[/i]
 
 [b]Pobieranie (instalator i wszystkie paczki): [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases]GitHub releases[/url][/b] - pliki tutaj na Nexusie to ta sama wersja.
 [b]Poradnik dla graczy: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki]wiki Iron Admiral[/url][/b] | Błędy i pomysły: [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral/issues]zgłoszenia na GitHubie[/url] albo komentarze tutaj.
+
+[size=4][b]Kompendium mechanik[/b][/size] [i](na podstawie dokumentacji i wiki projektu)[/i]
+[list]
+[*][b]Lotniskowce i lotnictwo morskie (CV)[/b] - osobny typ okrętu z gotowymi historycznymi projektami dla każdego państwa i epoki (1915-1945), własna gałąź technologii i budżet lotnictwa. Na mapie kampanii lotniskowiec wspiera bitwy w promieniu 225-300 km i wykrywa wroga do 370 km; w bitwie trzyma się poza zasięgiem dział i wysyła eskadry torpedowe i samoloty rozpoznawcze.
+[*][b]Mgła wojny i wywiad (F7)[/b] - na mapie strategicznej morze poza rozpoznaniem jest przyciemnione, a wykryte floty wroga mają szacowany skład i pozycję, które się starzeją. W bitwie nierozpoznane okręty to szare sylwetki z domniemaną klasą (np. CL?), a gracz i AI walczą przy tej samej ograniczonej widoczności.
+[*][b]AI bitewne i doktryny narodowe[/b] - AI korzysta z battleDoctrines.csv, więc Wielka Brytania walczy inaczej (dystans, ostrożność) niż Japonia (agresywne szarże, ataki nocne). Pancerniki skracają dystans, gdy nie przebijają pancerza, niszczyciele wykonują skoordynowane ataki torpedowe z uwzględnieniem prędkości celu, uszkodzone okręty odłączają się od dywizji, a okręty, które nie mogą uciec, wracają do walki.
+[*][b]Załogi, panika i pryzy[/b] - wyszkolenie załóg działa nieliniowo, a niedoświadczone załogi pod silnym ogniem mogą wpaść w panikę i uciec. Poddane okręty nie znikają: po wygranej bitwie (albo po zdobyciu ostatniego portu wroga) przechodzą na własność zwycięzcy jako pryzy, z projektem w stoczni.
+[*][b]Historyczna balistyka i pancerz[/b] - przebijalność przeliczona od nowa ze wzorów De Marre'a i tabel Nathana Okuna dla dział 16-21 cali; kąt upadku pocisku, jakość stali (względem pancerza Kruppa), radar w nocy i w sztormie oraz tonięcie zależne od wyporności (koniec niezatapialnych torpedowców).
+[*][b]Gospodarka, traktaty i handel okrętami (F8, F9)[/b] - produkcja seryjna (drogi prototyp, tańsze kolejne jednostki), pożyczki wojenne, dodruk pieniądza z inflacją, limity traktatów waszyngtońskiego i londyńskiego, panel handlu okrętami (F9) i przywrócone terytoria małych państw.
+[*][b]Rozkazy flot i ustawienia (F10)[/b] - zespoły na mapie kampanii wykonują rozkazy Patrol, Raid, Shadow, Intercept, Bombard i Blockade. Każdą funkcję można włączyć, wyłączyć lub dostroić w F10, a gra sama pobiera i instaluje aktualizacje (stabilne i codzienne bety).
+[/list]
 
 [size=4][b]Co nowego w 1.2.77 (8 listopada 2026)[/b][/size]
 [list]
@@ -119,3 +143,5 @@ Mod powstał na bazie DIP "The Great Game" i TweaksAndFixes - wielkie podziękow
 
 [size=4][b]Co dalej[/b][/size]
 Logistyka: ropa, zaopatrzenie i szlaki morskie; lotniskowce w kampanii; wyszkolenie załóg i kontrola uszkodzeń; dane dział osobno dla każdego państwa; okręty podwodne po lotniskowcach.
+
+[b]Klaudiusz Ledwoch (Klod76) - Iron Admiral[/b] | [url=https://github.com/KlaudiuszLedwoch/Iron-Admiral]GitHub[/url] | [url=https://discord.gg/EgKHjQ5DB]Discord[/url] | [url=https://www.youtube.com/playlist?list=PLDadyjtzEqhg]YouTube[/url]
