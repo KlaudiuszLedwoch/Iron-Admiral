@@ -1,4 +1,4 @@
-1.2.78-beta.301
-DIP_GG_Fixes 1.11.1213
-2026-11-16 11:49
-Mediterranean weather
+1.2.78-beta.302
+DIP_GG_Fixes 1.11.1215
+2026-11-16 12:01
+Weather by the atlas
