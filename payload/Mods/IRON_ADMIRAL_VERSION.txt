@@ -1,4 +1,4 @@
-1.2.78-beta.346
-DIP_GG_Fixes 1.11.1273
-2026-11-17 00:08
-Whitecap shapes
+1.2.78-beta.347
+DIP_GG_Fixes 1.11.1274
+2026-11-17 00:38
+Water in hulls: diagnostics
