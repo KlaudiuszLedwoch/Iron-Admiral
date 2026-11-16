@@ -317,6 +317,28 @@ What the later 1.2.77 betas add (each with its switch in the F10 panel).
 **Fighters and ammunition.** Fighters carry only a few seconds of fire, and cannon run dry long before machine guns. A fighter out of ammunition breaks off. Escorts stay with their strike and fly home with it. Patrolling fighters land, rearm on deck and take off again while the battle lasts.
 
 All of this can be switched or tuned in the F10 panel (Battle AI tab: carrier dive bombers, carrier fighters, and the time between take-offs).
+## 18. Battle weather
+
+**Weather by place and season.** A campaign battle takes its weather and wind from the sea it is fought in and the month: North Sea gales in winter, a calm Mediterranean summer, the Southern Ocean, the monsoon in the Arabian Sea and the Bay of Bengal, tropical cyclone seasons. The battle's hour can be chosen by the side with better speed and scouting (Form IA-24).
+
+**How often a gale blows (wind of Beaufort 8 and above), share of battles:**
+
+| Sea | Winter | Summer |
+|---|---|---|
+| North Sea and Channel | about 11 % | about 2 % |
+| Baltic | about 9 % | about 2 % |
+| Mediterranean | about 12 % | about 3 % |
+| Open ocean 45-66 N | about 25 % | about 4 % |
+| 30-45 N and S | about 7 % | about 2 % |
+| Southern Ocean 45-60 S | about 25 % | about 10 % |
+| 15-30 and the tropics | rare (about 1-2 %), more in the cyclone season | |
+
+Spring and autumn lie between. The Arctic and Antarctic seas, the south-west monsoon and the cyclone seasons keep their own, stormier tables.
+
+**Source:** U.S. Navy, *Marine Climatic Atlas of the World*, version 1.1 (1995) - volumes Europe, Mediterranean, North Pacific Ocean and South Pacific Ocean (gales = winds of 34 knots or more, share of ship observations). Where the atlas gives a range (for example 2-5 % in most of the Mediterranean and 10-15 % on the mistral routes in winter), the game uses a value inside it for the whole sea.
+
+F10 switch: *BattleClimateWeather* (on by default) - off gives the game's own weather.
+
 ### Guide history
 - **4 November 2026, Iron Admiral 1.2.77-beta.78:** section 16 - Denmark, the Ottoman Empire, starting fleets, oil, armies by economy and supply, army budget and garrisons, industrial fund, why relations change, historical build times, building ports and port fit on the map, command limit, control zone by speed and range, prizes.
 - **2 November 2026, Iron Admiral 1.2.77-beta.33:** naval treaties (limits, totals, signing and withdrawal); alliances against a common enemy.
