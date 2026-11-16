@@ -1,4 +1,4 @@
-1.2.78-beta.323
-DIP_GG_Fixes 1.11.1241
-2026-11-16 18:01
-Hull colour fix
+1.2.78-beta.324
+DIP_GG_Fixes 1.11.1243
+2026-11-16 18:19
+Side spray
