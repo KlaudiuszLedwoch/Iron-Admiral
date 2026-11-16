@@ -1,4 +1,4 @@
-# Iron Admiral 1.2.77.9 (DIP GG Extended) - shared helpers (game folder detection)
+# Iron Admiral 1.2.75.3.2.1 (DIP GG Extended) - shared helpers (game folder detection)
 $AppId   = "1069660"
 $GameExe = "Ultimate Admiral Dreadnoughts.exe"
 function Test-GameDir($p) { return ($p -and (Test-Path (Join-Path $p $GameExe))) }
@@ -31,9 +31,12 @@ function Find-Game {
     }
     # 3) Ask the user
     Add-Type -AssemblyName System.Windows.Forms
+    Write-Host "[PL] Nie znaleziono gry przez Steam - wskaz folder gry w oknie wyboru (moze byc za innymi oknami: pasek zadan / Alt+Tab)."
+    Write-Host "[EN] Game not found through Steam - pick the game folder in the folder window (it may be behind other windows: taskbar / Alt+Tab)."
+    $owner = New-Object System.Windows.Forms.Form; $owner.TopMost = $true; $owner.ShowInTaskbar = $false; $owner.Opacity = 0; $owner.Show(); $owner.Activate()
     $dlg = New-Object System.Windows.Forms.FolderBrowserDialog
     $dlg.Description = "Wskaz folder gry / Select the game folder (Ultimate Admiral Dreadnoughts)"
-    if ($dlg.ShowDialog() -eq "OK" -and (Test-GameDir $dlg.SelectedPath)) { return $dlg.SelectedPath }
+    if ($dlg.ShowDialog($owner) -eq "OK" -and (Test-GameDir $dlg.SelectedPath)) { return $dlg.SelectedPath }
     return $null
 }
 
