@@ -1,4 +1,4 @@
-1.2.78-beta.300
-DIP_GG_Fixes 1.11.1212
-2026-11-16 11:16
-Citadel length
+1.2.78-beta.301
+DIP_GG_Fixes 1.11.1213
+2026-11-16 11:49
+Mediterranean weather
