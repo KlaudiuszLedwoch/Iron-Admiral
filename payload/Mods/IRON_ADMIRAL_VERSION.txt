@@ -1,4 +1,4 @@
-1.2.78-beta.286
-DIP_GG_Fixes 1.11.1191
-2026-11-16 06:39
-Carrier models and invasion window
+1.2.78-beta.287
+DIP_GG_Fixes 1.11.1192
+2026-11-16 06:49
+Model download notice
