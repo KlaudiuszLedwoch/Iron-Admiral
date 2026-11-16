@@ -1,4 +1,4 @@
-1.2.78-beta.294
-DIP_GG_Fixes 1.11.1202
-2026-11-16 09:50
-Close-up screenshots
+1.2.78-beta.295
+DIP_GG_Fixes 1.11.1204
+2026-11-16 10:04
+Varied aircraft losses
