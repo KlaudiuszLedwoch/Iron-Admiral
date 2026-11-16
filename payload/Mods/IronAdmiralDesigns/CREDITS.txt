@@ -198,3 +198,4 @@ Thank you to everyone who shared their designs.
 2026-11-16 - 0f1e1ad02d024fd5: 1 design(s): 1894 china Chillicothe [90efb3cf]
 2026-11-16 - 7ca6671449304da6: 1 design(s): 1890 china Jiangyin [f90d8217]
 2026-11-16 - f9e19b149cae4cc0: 1 design(s): 1920 china Suzuya [ed7ff9a8]
+2026-11-16 - f9e19b149cae4cc0: 1 design(s): 1920 japan Nikko-Shirane [368b5065]

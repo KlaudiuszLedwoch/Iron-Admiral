@@ -13,7 +13,7 @@ a7aba8c4-e731-4176-b442-e7d005e9aa10,Dvenadsat Apostolov,russia,bb,1,0,1,0,0,,,,
 36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
 cce939f4-3726-4c23-a0e9-23c4f8013937,Kaiser,germany,bb,13,12,0,1,1,,,,
 52935de8-3488-4eb8-83be-d9bd519c1702,Liberté,france,bb,2,2,0,0,0,,,,
-b4b64640-bb82-40d4-8fc9-aedd6b2c9187,MHMW Asahi,japan,bb,7,7,0,0,0,5,55392,116000,7
+b4b64640-bb82-40d4-8fc9-aedd6b2c9187,MHMW Asahi,japan,bb,9,9,0,0,1,7,86587,116000,9
 4267ec10-24dd-432b-831d-99f55eadff61,MHMW ChĹŤyĹŤ,japan,bb,1,1,0,0,0,0,0,86431,1
 bb30b85c-aaf2-4440-a19c-0624767cfe1c,MHMW Kurfürst Friedrich Wilhelm,germany,bb,5,0,1,4,4,0,0,10959,2
 d95ad3f6-bbc9-4901-b607-0e6319c83d2d,MHMW Nassau,germany,bb,1,1,0,0,0,,,,
@@ -120,13 +120,13 @@ ed08e778-a27f-407f-a5ad-b7cd107522bf,Vezir Iznogoud,greece,cl,3,3,0,0,0,,,,
 08819aac-a420-491e-9ed2-632d9e9fe93f,Yahagi,colombia,cl,13,0,13,0,0,0,0,4350,13
 5af56ce0-97e2-4fea-b100-3ba2cd8b57f1,Carrier Mk1,usa,cv,1,0,0,1,1,,,,
 8c53b72d-8974-4e06-b58f-ad5580fb16b4,Essex,usa,cv,13,3,0,10,1,0,0,16513,10
-df2e47e2-5437-47f4-b56d-42589a65c23c,Ranger,usa,cv,1,0,0,1,0,0,0,15597,1
+df2e47e2-5437-47f4-b56d-42589a65c23c,Ranger,usa,cv,3,0,0,3,2,0,0,15597,3
 1f15602a-1f70-4c94-85ea-5e84f09da684,Shokaku,japan,cv,7,7,0,0,0,0,0,14550,2
 3c32061b-caf7-4c93-b7d6-23b78c8a044c,Soryu,japan,cv,2,2,0,0,0,0,0,16200,2
 766985d5-d871-47ce-8063-e7ad0cc7607d,Wakamiya,japan,cv,2,2,0,0,0,0,0,9000,2
 6108782b-9263-414f-8fa7-960b0d63e211,MHMW Bodryi,russia,dd,1,0,0,1,1,,,,
 1af9584a-2134-4ca7-b2eb-bad89132dc4c,MHMW Palmer,usa,dd,2,0,0,2,0,0,0,4103,2
-320c029d-ce28-4cce-80f5-e338a9ff0e4d,MHMW Uranami,japan,dd,6,2,0,4,4,2,18981,3342,2
+320c029d-ce28-4cce-80f5-e338a9ff0e4d,MHMW Uranami,japan,dd,8,4,0,4,4,2,18981,3342,4
 5f3c9f52-6541-421a-b8d1-e5182c5cc38c,MHMW V-1,germany,dd,8,0,0,8,8,,,,
 f6aa2b46-d3c8-48c4-aec3-e49fb864e4a0,MHMW V-7,germany,dd,3,3,0,0,0,0,0,5412,3
 4b4e8c11-aedb-4ab6-844e-efe764e6e5f3,Etorofu,netherlands,tb,3,0,0,3,3,,,,
