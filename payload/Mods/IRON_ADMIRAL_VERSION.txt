@@ -1,4 +1,4 @@
-1.2.78-beta.345
-DIP_GG_Fixes 1.11.1272
-2026-11-17 00:02
-Sun breaks
+1.2.78-beta.346
+DIP_GG_Fixes 1.11.1273
+2026-11-17 00:08
+Whitecap shapes
