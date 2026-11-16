@@ -1,4 +1,4 @@
-1.2.78-beta.299
-DIP_GG_Fixes 1.11.1210
-2026-11-16 10:56
-Bailout ladder
+1.2.78-beta.300
+DIP_GG_Fixes 1.11.1212
+2026-11-16 11:16
+Citadel length
