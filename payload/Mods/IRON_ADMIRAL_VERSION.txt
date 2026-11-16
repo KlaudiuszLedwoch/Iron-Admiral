@@ -1,4 +1,4 @@
-1.2.78-beta.321
-DIP_GG_Fixes 1.11.1236
-2026-11-16 17:15
-Scene dump
+1.2.78-beta.322
+DIP_GG_Fixes 1.11.1239
+2026-11-16 17:39
+Foam and lightning
