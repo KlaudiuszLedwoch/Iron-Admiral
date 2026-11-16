@@ -1,4 +1,4 @@
-1.2.78-beta.311
-DIP_GG_Fixes 1.11.1223
-2026-11-16 15:04
-Carrier hit boxes
+1.2.78-beta.312
+DIP_GG_Fixes 1.11.1225
+2026-11-16 15:18
+Steel sheen
