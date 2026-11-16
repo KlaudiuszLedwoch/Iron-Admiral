@@ -1,4 +1,4 @@
-1.2.78-beta.343
-DIP_GG_Fixes 1.11.1270
-2026-11-16 23:47
-Rust streaks
+1.2.78-beta.344
+DIP_GG_Fixes 1.11.1271
+2026-11-16 23:52
+Weathered hulls by default
