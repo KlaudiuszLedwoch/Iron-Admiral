@@ -1,4 +1,4 @@
-1.2.78-beta.288
-DIP_GG_Fixes 1.11.1193
-2026-11-16 08:41
-JPG-only screenshots in F10
+1.2.78-beta.289
+DIP_GG_Fixes 1.11.1194
+2026-11-16 08:59
+Citadel by the belt
