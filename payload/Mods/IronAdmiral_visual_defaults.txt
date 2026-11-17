@@ -46,4 +46,4 @@ VisualDeckOverWater=true
 VisualFunnelSmokeVar=true
 VisualNavalPaint=true
 VisualWake=true
-VisualWakeStrength=1.0
+VisualWakeStrength=2.0
