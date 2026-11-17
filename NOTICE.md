@@ -4,7 +4,7 @@ Iron Admiral includes or builds on the following works. Each keeps its own licen
 
 | Component | Authors | Licence |
 |---|---|---|
-| Dreadnought Improvement Project "The Great Game" (DIP GG) | Brother Munro and the DIP team | Apache License 2.0 (`licenses/DIP_LICENSE_Apache-2.0.txt`) |
+| Dreadnought Improvement Project "The Great Game" (DIP GG) | Brother Munro and the DIP team | Apache License 2.0 (`licenses/DIP_LICENSE_Apache-2.0.txt`, source and basis: `licenses/DIP_LICENSE_SOURCE.md`) |
 | TweaksAndFixes (TAF) | NathanKell, DukeDagor | MIT (`licenses/TweaksAndFixes_LICENSE_MIT.txt`) |
 | MelonLoader | LavaGang | Apache License 2.0 (`licenses/MelonLoader_LICENSE_Apache-2.0.txt`) |
 | Ultimate Admiral's Shippack (Nexus mod 45) | Badkapp / MarineWerft | free use with credit, not for paid mods (`Mods/IronAdmiralDesigns/Shippack/CREDITS.txt`) |
