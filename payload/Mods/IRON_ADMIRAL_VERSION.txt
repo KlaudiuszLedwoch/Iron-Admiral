@@ -1,4 +1,4 @@
-1.2.78-beta.377
-DIP_GG_Fixes 1.11.1306
-2026-11-17 17:56
-Rust from time at sea
+1.2.78-beta.378
+DIP_GG_Fixes 1.11.1308
+2026-11-17 18:18
+Crash fix, navy colours
