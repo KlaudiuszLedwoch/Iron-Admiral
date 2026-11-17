@@ -1,4 +1,4 @@
-1.2.78-beta.349
-DIP_GG_Fixes 1.11.1276
-2026-11-17 01:10
-Water in hulls: test step 2
+1.2.78-beta.350
+DIP_GG_Fixes 1.11.1277
+2026-11-17 01:18
+No waves through superstructures
