@@ -1,4 +1,4 @@
-# Iron Admiral — DIP The Great Game Extended: licence
+# Iron Admiral: licence
 
 Copyright (c) 2026 Klaudiusz Ledwoch (Steam: Klod76). All rights reserved, except as granted below.
 
