@@ -1,4 +1,4 @@
-1.2.78-beta.375
-DIP_GG_Fixes 1.11.1304
-2026-11-17 17:32
-Smoke trail length
+1.2.78-beta.376
+DIP_GG_Fixes 1.11.1305
+2026-11-17 17:47
+Smoke by engine and speed
