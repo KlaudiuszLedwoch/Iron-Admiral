@@ -1,4 +1,4 @@
-1.2.78-beta.371
-DIP_GG_Fixes 1.11.1300
-2026-11-17 16:10
-Invisible ships fixed
+1.2.78-beta.372
+DIP_GG_Fixes 1.11.1301
+2026-11-17 16:16
+Log flood fixed
