@@ -1,4 +1,4 @@
-1.2.78-beta.357
-DIP_GG_Fixes 1.11.1286
-2026-11-17 08:49
-Funnel smoke by ship and wind
+1.2.78-beta.358
+DIP_GG_Fixes 1.11.1287
+2026-11-17 12:55
+17 in reload
