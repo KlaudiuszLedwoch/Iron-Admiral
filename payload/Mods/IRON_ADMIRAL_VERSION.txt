@@ -1,4 +1,4 @@
-1.2.78-beta.358
-DIP_GG_Fixes 1.11.1287
-2026-11-17 12:55
-17 in reload
+1.2.78-beta.359
+DIP_GG_Fixes 1.11.1288
+2026-11-17 12:59
+Alliances that last
