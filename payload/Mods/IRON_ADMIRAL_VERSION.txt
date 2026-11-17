@@ -1,4 +1,4 @@
-1.2.78-beta.356
-DIP_GG_Fixes 1.11.1285
-2026-11-17 08:43
-Calmer lightning, credits
+1.2.78-beta.357
+DIP_GG_Fixes 1.11.1286
+2026-11-17 08:49
+Funnel smoke by ship and wind
