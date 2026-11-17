@@ -3,8 +3,8 @@ id,name,nation,type,battles,wins,draws,losses,lost,kills,sunk_t,tons,kbattles
 d3ab1111-16f9-430e-b476-104e76b4e870,Amagi,japan,bb,3,2,0,1,1,2,446000,214424,3
 d5197642-02e7-4795-b705-e61d95d87698,Andrea Doria,russia,bb,2,2,0,0,0,1,7200,10714,2
 9626d4b9-fbc3-46b0-bcda-8f3e3be43a1b,Arizona 1931 refit,usa,bb,1,0,0,1,1,,,,
-1d308e60-c69f-49a1-98ca-7ddf42cb4908,Daoguang,austria,bb,9,0,7,2,1,,,,
 3b1f0e7d-548c-4b90-9b57-d0b100fe81cb,Daoguang,greece,bb,4,2,2,0,0,,,,
+1d308e60-c69f-49a1-98ca-7ddf42cb4908,Daoguang,austria,bb,9,0,7,2,1,,,,
 1c024b28-9a21-40ba-b56f-dccf9c0388bc,Dragon of the East,china,bb,2,2,0,0,0,,,,
 2750b24f-85cf-4d2e-aa3c-f7580f910112,Dreadnought,britain,bb,9,0,9,0,6,,,,
 a7aba8c4-e731-4176-b442-e7d005e9aa10,Dvenadsat Apostolov,russia,bb,1,0,1,0,0,,,,
@@ -45,12 +45,12 @@ c4bbc91c-e55d-4eee-b456-eb0c2bf29258,Tristan de Cunha,portugal,bc,1,1,0,0,0,,,,
 9759a28e-3aa1-47ec-a78e-2f348ac42ed3,Blake,britain,ca,52,0,34,18,14,0,0,5056,52
 29995c0b-9d85-4bf0-a80a-7ea9e96f0c9d,Brindisi,italy,ca,1,1,0,0,0,,,,
 9ed7d210-a47b-47e1-a18e-6bed2bb7d4a0,Canarias,spain,ca,2,0,0,2,2,,,,
-f2ebc263-d7f9-4aeb-a73d-36347732ff73,Coronel,germany,ca,1,0,1,0,1,1,6000,4500,1
 526adf6f-19eb-43fe-96ef-dddf29645f54,Coronel,germany,ca,1,1,0,0,0,,,,
+f2ebc263-d7f9-4aeb-a73d-36347732ff73,Coronel,germany,ca,1,0,1,0,1,1,6000,4500,1
 9da1cd75-6ed6-4eb7-8ef0-76f99441c899,Dmitrii Donskoi,britain,ca,2,0,0,2,2,0,0,6500,2
 1faf6e3d-251b-4155-8ba4-7662bfa247fe,Duquesne,france,ca,8,0,8,0,1,,,,
-7ef6193a-e354-43a7-b94c-75903bc1cef4,Furutaka,colombia,ca,3,0,3,0,0,0,0,10600,3
 232d8477-722b-451d-9592-3ab8b2559da8,Furutaka,netherlands,ca,6,0,6,0,0,0,0,4689,6
+7ef6193a-e354-43a7-b94c-75903bc1cef4,Furutaka,colombia,ca,3,0,3,0,0,0,0,10600,3
 fc1b19f4-6046-4071-a59c-c9663d067b0f,Furutaka,greece,ca,14,0,10,4,2,0,0,4689,8
 03cec267-abf2-4c21-a84a-e4870180c53d,Fylgia,scandinavia,ca,6,5,0,1,0,1,12000,4310,6
 1d3ca911-66f5-4f1b-a262-0b95454180f4,Hai Chi,china,ca,1,0,1,0,0,0,0,4300,1
@@ -73,8 +73,8 @@ a4a29c5f-cc5f-4fab-8bf7-ce36f3c6a0d0,MHMW Admiral Graf Spree,germany,ca,14,0,13,
 e64d9cdc-a7f1-4b87-baec-2844d56e672f,Minotaur,britain,ca,8,0,8,0,0,,,,
 1755bf6d-4d12-46be-880f-dfb2aa9e0576,Northampton,usa,ca,1,0,1,0,0,,,,
 fe309184-7433-425d-aaa4-ea56eb37cc23,Seydlitz,germany,ca,1,1,0,0,0,,,,
-6704dc06-a21c-4d87-abb0-910853cdd459,Tengu,britain,ca,1,0,0,1,1,0,0,6000,1
 7b8c973d-ad0f-40c8-a9c2-c21da7ae1d88,Tengu,spain,ca,7,0,0,7,7,1,945,6000,7
+6704dc06-a21c-4d87-abb0-910853cdd459,Tengu,britain,ca,1,0,0,1,1,0,0,6000,1
 1476b50f-b032-4581-a40d-d1e496246bea,Tone (1938),japan,ca,1,1,0,0,1,,,,
 b63ef6b3-d76d-415c-ac63-ebd112c77cbd,Trento,italy,ca,4,0,0,4,4,,,,
 1fe78142-4b3f-421a-b6f2-af1ef3324ed1,Tristão Vaz Teixeira,portugal,ca,1,0,0,1,1,,,,
@@ -82,8 +82,8 @@ d1f8c0c0-02a3-4fd4-a294-491e0438c4c7,1890,france,cl,4,0,0,4,4,0,0,3000,4
 1b90c4b1-f1ae-47ff-b269-d8c9079f5cb9,1890,russia,cl,4,4,0,0,4,4,8067,2000,4
 cb459306-c6e1-4952-8982-d5b5dcee12a8,A Klasse,austria,cl,5,2,0,3,3,,,,
 1261b0ce-0dba-4c3b-b671-ed83f167c7fc,Akitsushima,greece,cl,11,0,7,4,1,0,0,2450,8
-bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
 8a0cb230-bd28-4ce5-b967-4ae720bcf1b3,Akitsushima,usa,cl,9,0,0,9,9,0,0,2450,9
+bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
 944685e7-36a1-4dda-9650-e0bf012119ee,Ancona,china,cl,18,0,5,13,8,2,3482,3000,8
 848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,15,0,15,0,0,,,,
 3d9a05a0-13f8-45c3-a817-dedf26535ccc,Arrogant,britain,cl,6,1,5,0,1,,,,
@@ -95,8 +95,8 @@ ff664df7-333f-4896-ac79-7fc94592e8f1,Bristol,britain,cl,6,0,6,0,0,,,,
 e0270e90-e3d7-4bba-81d4-eb1997867a7e,Brooklyn,usa,cl,1,1,0,0,0,,,,
 a9998cad-8e22-422c-96a7-d92c79fd8695,Bussard,germany,cl,58,0,34,24,36,,,,
 0f6bb6ab-1bdd-43e7-9820-1ca29b4fd470,Cairo,britain,cl,56,15,31,10,9,,,,
-5709a28c-d900-45f4-a1a1-62ca5bf142d3,Cleveland,china,cl,2,0,2,0,0,,,,
 def26443-7106-45ff-a2cd-fbc5a260ea3d,Cleveland,spain,cl,7,0,7,0,2,,,,
+5709a28c-d900-45f4-a1a1-62ca5bf142d3,Cleveland,china,cl,2,0,2,0,0,,,,
 94e9a858-c764-47ab-9c9f-975c570b5d39,Cleveland class,usa,cl,3,2,0,1,1,0,0,13016,1
 4a85fe52-f5c0-4ea6-8da2-6395f3a8eee3,Davout,france,cl,2,2,0,0,1,0,0,2735,1
 694c14f2-b83e-4c1b-b9e1-ac7e28a03a8e,Dresden,sweden,cl,3,0,1,2,1,,,,
@@ -107,14 +107,15 @@ def26443-7106-45ff-a2cd-fbc5a260ea3d,Cleveland,spain,cl,7,0,7,0,2,,,,
 45fcc0b1-c60d-4ae3-8fcd-10550e85b2f9,MHMW Amiral CĂ©cille,france,cl,3,3,0,0,0,0,0,2719,3
 99eb8efe-4e6e-448e-a9f2-204a11b9864d,MHMW Marseillaise,france,cl,2,2,0,0,0,0,0,2663,2
 622f7832-881f-480a-98e2-1db6de779951,MHMW Oklahoma,usa,cl,1,0,0,1,1,,,,
+2b65959e-127d-4597-8c59-22d7ba42ffb8,MHMW Sfax,france,cl,1,1,0,0,0,0,0,1803,1
 2e5be373-ea7c-448e-9089-7c80c10e7536,MHMW Tourville,france,cl,1,1,0,0,0,0,0,1316,1
 888e3599-e54e-473c-a4b1-21c4e5a37460,MHMW Troude,france,cl,2,2,0,0,0,0,0,2493,1
 7b747fbc-50fe-457f-adf7-436fdb12d8db,MHMW Yuzhou,china,cl,2,0,0,2,2,,,,
 db327d11-30f4-4667-aee2-0c29dee118b8,Newark,usa,cl,1,0,0,1,1,,,,
 d5055818-c1dd-4e25-901c-8d090246a92e,Niitaka,spain,cl,3,0,0,3,3,0,0,3000,3
 115ec79f-7370-4d68-b19f-0821eec1077a,O bacalhau,portugal,cl,1,1,0,0,0,,,,
-38f3bf86-1215-4705-97e6-f7ba9f66db42,Oliveira da Figueira,portugal,cl,1,1,0,0,0,,,,
 8e1da671-cc67-422e-ad2d-cba6682f7d83,Oliveira da Figueira,portugal,cl,3,0,0,3,3,,,,
+38f3bf86-1215-4705-97e6-f7ba9f66db42,Oliveira da Figueira,portugal,cl,1,1,0,0,0,,,,
 aa5d3889-1ef2-40a4-9673-a12a11402ef9,Ōyodo,greece,cl,1,0,1,0,1,0,0,3000,1
 d003e204-ab2a-426c-bebc-3220e5178968,Pallas,britain,cl,1,0,0,1,0,0,0,2575,1
 6aaf22db-175c-4571-8616-824887183ef7,Poseidon,greece,cl,1,0,0,1,1,,,,
@@ -142,15 +143,15 @@ df2e47e2-5437-47f4-b56d-42589a65c23c,Ranger,usa,cv,3,0,0,3,2,0,0,15597,3
 5f3c9f52-6541-421a-b8d1-e5182c5cc38c,MHMW V-1,germany,dd,8,0,0,8,8,,,,
 f6aa2b46-d3c8-48c4-aec3-e49fb864e4a0,MHMW V-7,germany,dd,3,3,0,0,0,0,0,5412,3
 8157953d-1bbc-4a23-a9f9-8d2510a515b4,Etorofu,britain,tb,4,0,1,3,1,0,0,275,2
-9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,2,0,0,2,0,,,,
 cbcde8f6-3eda-474e-8614-4e475543f1fc,Etorofu,spain,tb,20,10,10,0,0,,,,
+9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,2,0,0,2,0,,,,
 8547c4e6-8620-4112-a505-33eaab5a7c42,Etorofu,france,tb,2,1,0,1,1,0,0,275,1
-8423d3a9-725c-4559-b74f-7e1b7019c5ba,Etorofu,france,tb,2,2,0,0,0,0,0,275,2
 4b4e8c11-aedb-4ab6-844e-efe764e6e5f3,Etorofu,netherlands,tb,3,0,0,3,3,,,,
+8423d3a9-725c-4559-b74f-7e1b7019c5ba,Etorofu,france,tb,2,2,0,0,0,0,0,275,2
 89ed4c26-111b-497e-a80e-7307757b6284,Fort Hindman,britain,tb,7,0,0,7,0,0,0,275,7
 66dbb344-d0d0-47ee-884b-5a6999db7280,Fort Hindman,france,tb,5,5,0,0,0,0,0,275,5
-f3c7e662-ac78-4542-b5ff-abee57c25b15,Hato,france,tb,1,1,0,0,0,0,0,174,1
-2d09a566-1739-4602-b5e9-3d4d6e1264ef,Hato,britain,tb,3,0,0,3,0,0,0,174,3
+f3c7e662-ac78-4542-b5ff-abee57c25b15,Hato,france,tb,3,3,0,0,0,0,0,174,3
+2d09a566-1739-4602-b5e9-3d4d6e1264ef,Hato,britain,tb,5,0,0,5,0,0,0,174,5
 961abece-a11c-4850-a14c-67f7f18a9b1f,MHMW BĂ©lier,france,tb,1,1,0,0,0,0,0,247,1
 9643e796-da0d-44f1-8782-e6087ef29b62,MHMW Seal,britain,tb,3,0,0,3,0,0,0,271,3
 bdceedab-390c-4966-8011-1abc077ceff0,Okitsu,france,tb,4,4,0,0,0,0,0,275,4
