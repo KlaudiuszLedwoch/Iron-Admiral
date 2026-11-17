@@ -1,4 +1,4 @@
-1.2.78-beta.381
-DIP_GG_Fixes 1.11.1315
-2026-11-17 18:46
-Funnel smoke back, rust holds still
+1.2.78-beta.382
+DIP_GG_Fixes 1.11.1316
+2026-11-17 18:51
+Updater ready for the new DLL name
