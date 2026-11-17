@@ -1,4 +1,4 @@
-1.2.78-beta.393
-DIP_GG_Fixes 1.11.1336
-2026-11-17 21:11
-Lighter orders bar
+1.2.78-beta.394
+DIP_GG_Fixes 1.11.1338
+2026-11-17 22:30
+Orders bar halved
