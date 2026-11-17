@@ -1,4 +1,4 @@
-1.2.78-beta.399
-DIP_GG_Fixes 1.11.1346
-2026-11-17 23:31
-Frames in heavy fights
+1.2.78-beta.400
+DIP_GG_Fixes 1.11.1348
+2026-11-17 23:36
+Orders for allied ships
