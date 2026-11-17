@@ -243,3 +243,5 @@ Thank you to everyone who shared their designs.
 2026-11-17 - 96fecdd5882043f0: 1 design(s): 1890 greece S-1 (Nov. 1891) [911342f4]
 2026-11-17 - fa03261bc851439d: 1 design(s): 1890 china Oleg [75a6d3e1]
 2026-11-17 - fa03261bc851439d: 1 design(s): 1890 scandinavia Kasatka [6e9b5f76]
+2026-11-17 - fd0b6872e8714066: 1 design(s): 1910 greece Suma [e16a10c5]
+2026-11-17 - 96180e0c97ab41a9: 1 design(s): 1900 china Kniaz Dovmont [3f399411]
