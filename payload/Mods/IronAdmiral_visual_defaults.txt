@@ -47,3 +47,4 @@ VisualFunnelSmokeVar=true
 VisualNavalPaint=true
 VisualWake=true
 VisualWakeStrength=2.0
+VisualDebris=true

@@ -66,7 +66,7 @@ f2ebc263-d7f9-4aeb-a73d-36347732ff73,Coronel,germany,ca,1,0,1,0,1,1,6000,4500,1
 50b78474-9913-4aa7-b6fe-0e3b4d8fc163,Datong,china,ca,4,0,4,0,0,0,0,6000,4
 9da1cd75-6ed6-4eb7-8ef0-76f99441c899,Dmitrii Donskoi,britain,ca,2,0,0,2,2,0,0,6500,2
 1faf6e3d-251b-4155-8ba4-7662bfa247fe,Duquesne,france,ca,8,0,8,0,1,,,,
-4679196a-c99b-454c-92fe-be0b0ae6b3f7,Emperador Carlos V,spain,ca,4,0,4,0,0,0,0,9090,4
+4679196a-c99b-454c-92fe-be0b0ae6b3f7,Emperador Carlos V,spain,ca,12,0,12,0,1,0,0,9090,12
 232d8477-722b-451d-9592-3ab8b2559da8,Furutaka,netherlands,ca,6,0,6,0,0,0,0,4689,6
 7ef6193a-e354-43a7-b94c-75903bc1cef4,Furutaka,colombia,ca,3,0,3,0,0,0,0,10600,3
 fc1b19f4-6046-4071-a59c-c9663d067b0f,Furutaka,greece,ca,14,0,10,4,2,0,0,4689,8
@@ -110,7 +110,7 @@ cb459306-c6e1-4952-8982-d5b5dcee12a8,A Klasse,austria,cl,5,2,0,3,3,,,,
 bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
 1261b0ce-0dba-4c3b-b671-ed83f167c7fc,Akitsushima,greece,cl,11,0,7,4,1,0,0,2450,8
 8a0cb230-bd28-4ce5-b967-4ae720bcf1b3,Akitsushima,usa,cl,9,0,0,9,9,0,0,2450,9
-0b7fc5f7-3cc7-4e42-9a8b-b04d643221f5,Alberico da Barbiano,sweden,cl,3,0,0,3,3,0,0,3406,3
+0b7fc5f7-3cc7-4e42-9a8b-b04d643221f5,Alberico da Barbiano,sweden,cl,31,28,0,3,31,0,0,3406,31
 944685e7-36a1-4dda-9650-e0bf012119ee,Ancona,china,cl,18,0,5,13,8,2,3482,3000,8
 848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,15,0,15,0,0,,,,
 3d9a05a0-13f8-45c3-a817-dedf26535ccc,Arrogant,britain,cl,6,1,5,0,1,,,,
@@ -138,7 +138,7 @@ d95032df-e72c-4bfc-8723-a626a1322608,Medusa,russia,cl,1,0,1,0,1,1,6000,3500,1
 8e6c1a38-2d2d-4766-8515-6a1028a05333,MHMW Admiral Nevel‘skoi,russia,cl,16,0,10,6,4,,,,
 45fcc0b1-c60d-4ae3-8fcd-10550e85b2f9,MHMW Amiral CĂ©cille,france,cl,3,3,0,0,0,0,0,2719,3
 99eb8efe-4e6e-448e-a9f2-204a11b9864d,MHMW Marseillaise,france,cl,2,2,0,0,0,0,0,2663,2
-bff6bbc5-09e8-447e-819e-fd13b3e0cadf,MHMW Navas de Tolosa,spain,cl,10,0,10,0,0,0,0,3235,10
+bff6bbc5-09e8-447e-819e-fd13b3e0cadf,MHMW Navas de Tolosa,spain,cl,33,0,33,0,3,0,0,3235,33
 622f7832-881f-480a-98e2-1db6de779951,MHMW Oklahoma,usa,cl,1,0,0,1,1,,,,
 2b65959e-127d-4597-8c59-22d7ba42ffb8,MHMW Sfax,france,cl,1,1,0,0,0,0,0,1803,1
 2e5be373-ea7c-448e-9089-7c80c10e7536,MHMW Tourville,france,cl,1,1,0,0,0,0,0,1316,1
