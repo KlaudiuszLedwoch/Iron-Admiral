@@ -238,3 +238,5 @@ Thank you to everyone who shared their designs.
 2026-11-17 - A Simple Tako: 1 design(s): 1940 china Hayashio [add41a1e]
 2026-11-17 - c0f6e50d221f4662: 1 design(s): (DIP GG 1.3.5) 1960 German Reich CV Coronel
 2026-11-17 - 96180e0c97ab41a9: 1 design(s): 1896 portugal Kazarskii [c98b3bac]
+2026-11-17 - c8c802d3d97b47ab: 1 design(s): (DIP GG 1.3.5) 1926 Scandinavia BB Trefoldighed
+2026-11-17 - fa03261bc851439d: 1 design(s): 1890 greece Izumrud [78c67d9a]
