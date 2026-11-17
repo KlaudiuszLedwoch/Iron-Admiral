@@ -1,4 +1,4 @@
-1.2.78-beta.364
-DIP_GG_Fixes 1.11.1293
-2026-11-17 13:42
-Funnel smoke fix
+1.2.78-beta.365
+DIP_GG_Fixes 1.11.1294
+2026-11-17 14:05
+Diagnostics
