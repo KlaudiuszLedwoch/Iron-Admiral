@@ -1,4 +1,4 @@
-1.2.78-beta.347
-DIP_GG_Fixes 1.11.1274
-2026-11-17 00:38
-Water in hulls: diagnostics
+1.2.78-beta.348
+DIP_GG_Fixes 1.11.1275
+2026-11-17 01:05
+Water in hulls: test step
