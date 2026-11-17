@@ -1,4 +1,4 @@
-1.2.78-beta.388
-DIP_GG_Fixes 1.11.1327
-2026-11-17 20:08
-Readable citadel line in the designer
+1.2.78-beta.389
+DIP_GG_Fixes 1.11.1329
+2026-11-17 20:14
+Smaller, lighter F10 window, lighter aircraft labels
