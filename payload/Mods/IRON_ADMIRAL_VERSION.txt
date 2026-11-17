@@ -1,4 +1,4 @@
-1.2.78-beta.380
-DIP_GG_Fixes 1.11.1310
-2026-11-17 18:30
-Bomb hits for carriers
+1.2.78-beta.381
+DIP_GG_Fixes 1.11.1315
+2026-11-17 18:46
+Funnel smoke back, rust holds still
