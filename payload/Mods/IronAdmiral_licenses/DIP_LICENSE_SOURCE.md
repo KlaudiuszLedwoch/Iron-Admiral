@@ -24,3 +24,6 @@ Section 2 grants a perpetual, worldwide, non-exclusive, no-charge, royalty-free,
 ## Nexus Mods permissions
 
 The DIP page on Nexus Mods lists stricter permissions for the files downloaded from Nexus. Iron Admiral does not use the Nexus download. The Apache License 2.0 granted on GitHub applies to the files taken from GitHub.
+## Confirmation from the DIP author
+
+On 2026-11-17 the author of DIP confirmed by e-mail that Iron Admiral may distribute DIP files under the Apache License 2.0 terms described above, that the current attribution is sufficient, and that the use of AI tools in making Iron Admiral is fine with him.
