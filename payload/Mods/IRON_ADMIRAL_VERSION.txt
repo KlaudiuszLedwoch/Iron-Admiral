@@ -1,4 +1,4 @@
-1.2.78-beta.384
-DIP_GG_Fixes 1.11.1319
-2026-11-17 19:20
-Hulls no longer white, smarter quality steps
+1.2.78-beta.385
+DIP_GG_Fixes 1.11.1320
+2026-11-17 19:27
+Hull look kept at lower frame rates
