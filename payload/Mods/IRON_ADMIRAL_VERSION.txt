@@ -1,4 +1,4 @@
-1.2.78-beta.386
-DIP_GG_Fixes 1.11.1322
-2026-11-17 19:43
-Rust rocks with the hull, more rust, armour layers
+1.2.78-beta.387
+DIP_GG_Fixes 1.11.1326
+2026-11-17 20:05
+Rust on superstructures, damage visible, smarter quality
