@@ -1,4 +1,4 @@
-1.2.78-beta.397
-DIP_GG_Fixes 1.11.1342
-2026-11-17 22:55
-Stronger wake
+1.2.78-beta.398
+DIP_GG_Fixes 1.11.1345
+2026-11-17 23:20
+Fix and buoyancy
