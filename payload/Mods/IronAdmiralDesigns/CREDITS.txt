@@ -209,3 +209,10 @@ Thank you to everyone who shared their designs.
 2026-11-17 - Фабушка: 1 design(s): 1900 greece TRA 1900 [7d509be8]
 2026-11-17 - c7edf570a05d4c1f: 1 design(s): (DIP GG 1.3.5) 1926 Empire of Japan CL Tenryū
 2026-11-17 - f4a5ac4781f742f0: 1 design(s): 1897 greece Grand Gulf [07dccbb5]
+2026-11-17 - f4a5ac4781f742f0: 1 design(s): 1890 china Bremerton (Jul. 1897) [6fbdb75b]
+2026-11-17 - 6f491ec3942649ee: 1 design(s): 1911 britain Ocean [4a236164]
+2026-11-17 - Фабушка: 1 design(s): 1900 russia 1900 Dreven [cf8d62e5]
+2026-11-17 - Фабушка: 1 design(s): 1900 greece TRA 1900 [560bbb1d]
+2026-11-17 - c8c802d3d97b47ab: 1 design(s): (DIP GG 1.3.5) 1942 British Empire BC Glorious
+2026-11-17 - c8c802d3d97b47ab: 1 design(s): (DIP GG 1.3.5) 1942 British Empire CV Warspite
+2026-11-17 - 7ca6671449304da6: 1 design(s): 1893 china Yinchuan [57e7dade]
