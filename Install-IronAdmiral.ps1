@@ -30,7 +30,7 @@ if (-not $GamePath -or -not (Test-Path (Join-Path $GamePath $Exe))) {
 if (-not $GamePath) { $GamePath = Read-Host "Game folder not found. Paste the folder that contains $Exe" }
 if (-not (Test-Path (Join-Path $GamePath $Exe))) { Write-Host "No $Exe in $GamePath - stopping."; Read-Host "Enter to exit"; exit 1 }
 if (Get-Process "Ultimate Admiral Dreadnoughts" -ErrorAction SilentlyContinue) { Write-Host "Close the game first."; Read-Host "Enter to exit"; exit 1 }
-Write-Host "Game folder: $GamePath"
+Write-Host "Iron Admiral builds on DIP and TweaksAndFixes - see Mods\IronAdmiral_NOTICE.md and the in-game Help, chapter Credits and licences."; Write-Host "Game folder: $GamePath"
 $tmp = Join-Path $env:TEMP "IronAdmiralSetup"; New-Item -ItemType Directory -Force $tmp | Out-Null
 
 # 3. .NET 6 Desktop Runtime and VC++ Redistributable (via winget when available)
