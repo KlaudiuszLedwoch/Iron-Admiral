@@ -2,6 +2,8 @@
 
 **A total overhaul of battle AI, campaign mechanics and naval aviation for Ultimate Admiral: Dreadnoughts.**
 
+![Iron Admiral](docs/banner.png)
+
 Enemy flotillas charge your battle line with torpedoes. Carriers send out strikes and scouts. Fleets on the map hide in the fog of war. Every ship is built in classes and paid for in an economy with inflation and credit. And every feature has its own switch in the F10 panel.
 
 [Download (Releases)](https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases) | [Nexus Mods](https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66) | [Wiki](https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki) | [Discord](https://discord.gg/EgKHjQ5DB)
