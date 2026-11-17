@@ -1,4 +1,4 @@
-1.2.78-beta.379
-DIP_GG_Fixes 1.11.1309
-2026-11-17 18:26
-Smoke trails back
+1.2.78-beta.380
+DIP_GG_Fixes 1.11.1310
+2026-11-17 18:30
+Bomb hits for carriers
