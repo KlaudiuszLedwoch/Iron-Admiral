@@ -1,4 +1,4 @@
-1.2.78-beta.361
-DIP_GG_Fixes 1.11.1290
-2026-11-17 13:06
-Every carrier launches
+1.2.78-beta.362
+DIP_GG_Fixes 1.11.1291
+2026-11-17 13:29
+Funnel smoke fix
