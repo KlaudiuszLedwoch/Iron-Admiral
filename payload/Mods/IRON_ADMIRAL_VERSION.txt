@@ -1,4 +1,4 @@
-1.2.78-beta.383
-DIP_GG_Fixes 1.11.1318
-2026-11-17 19:07
-No white hulls, allies only at war
+1.2.78-beta.384
+DIP_GG_Fixes 1.11.1319
+2026-11-17 19:20
+Hulls no longer white, smarter quality steps
