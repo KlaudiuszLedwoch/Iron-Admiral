@@ -1,11 +1,40 @@
-# Iron Admiral - mod for Ultimate Admiral: Dreadnoughts (UAD), built on DIP The Great Game
+# Iron Admiral
 
-_Description as of 6 November 2026. Stable: Iron Admiral 1.2.77.2. Betas: see the releases page._
+**A total overhaul of battle AI, campaign mechanics and naval aviation for Ultimate Admiral: Dreadnoughts.**
 
-**Iron Admiral is a free mod for Ultimate Admiral: Dreadnoughts (UAD): a battle and campaign AI that fights back, historical ballistics and armour penetration, naval aviation, fog of war, diplomacy, shared ship designs and a switch in the F10 panel for every feature. Built on the Dreadnought Improvement Project (DIP) "The Great Game" 1.3.5, TweaksAndFixes 3.21.1 and MelonLoader 0.6.6.**
+Enemy flotillas charge your battle line with torpedoes. Carriers send out strikes and scouts. Fleets on the map hide in the fog of war. Every ship is built in classes and paid for in an economy with inflation and credit. And every feature has its own switch in the F10 panel.
 
-Download / Nexus page: https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66
-Discord: https://discord.gg/EgKHjQ5DB
+[Download (Releases)](https://github.com/KlaudiuszLedwoch/Iron-Admiral/releases) | [Nexus Mods](https://www.nexusmods.com/ultimateadmiraldreadnoughts/mods/66) | [Wiki](https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki) | [Discord](https://discord.gg/EgKHjQ5DB)
+
+## Iron Admiral Battle AI
+- **Torpedo attacks** - torpedo boats, destroyers and light cruisers charge capital ships to get into torpedo range, pull back when empty or hit, and return if they carry reloads.
+- **Massed attacks** - when you are stronger, the whole enemy torpedo force goes in together.
+- **An enemy that picks its fights** - ships that cannot hurt your armour stay out of your range or close in; crippled ships leave their division; guns finish off damaged targets first.
+- **National doctrines** - Britain, Japan, Austria-Hungary, France and others fight differently (`Mods/battleDoctrines.csv`, with sources).
+- **Torpedo aiming error**, **crew panic**, **surrender and prizes**.
+
+## Carrier aviation
+- Carriers (CV) as their own ship type, with a ready historical design for each nation and period.
+- Campaign: battle support within aircraft reach (225 km in 1929 to 300 km in 1942), air reconnaissance, CV tab, naval aviation budget.
+- Battle: launches in waves, torpedo planes from both bows, dive bombers, escorting fighters; losses replaced over time.
+
+## Fog of war (F7)
+Strategic map dark beyond your reconnaissance, estimated enemy fleets that age; unidentified grey silhouettes in battle. The AI plays by the same rules.
+
+## Task force orders
+Patrol, Raid, Shadow, Intercept, Bombard, Blockade; control zones by speed and range; convoy escorts.
+
+## Campaign
+Series production, treasury with inflation and credit (F8), ship trade (F9), Washington and London treaties, war weariness and peace treaties, sovereign minor nations, a campaign AI that keeps building.
+
+## Ships and gunnery
+Penetration from De Marre and Okun's tables, historical shells by generation, recorded salvo dispersion, radar at night, historical classes and shared player designs with a ranking.
+
+## F10 panel
+Press F10 anywhere: every feature with an ON/OFF switch, update channel (stable / beta), and *Create problem report* for bug reports.
+
+## Install
+Download the installer package from Releases, extract, run `Install.bat`. It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing and copies everything the mod needs. Then start a new campaign. Details: [Installation](https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki/Installation).
 
 ## Videos
 
@@ -14,23 +43,6 @@ The battle AI in action - every caption comes from the mod's own battle log:
 - [Three battles, 6 min, ending with two surrendered destroyers taken as prizes](https://youtu.be/DjmOu0KVnwE)
 - [Two battles, 4 min](https://youtu.be/ZAPta33uJXE)
 - [The first battle uncut, 5 min](https://youtu.be/SZzuVT4X2qY)
-
-## What it adds
-
-- **Battle AI that fights like a navy** (DIP_GG_Fixes add-on): torpedo charges by destroyers, torpedo boats and light cruisers; divisions that cannot outrun a pursuit turn and fight; crippled ships are detached so the healthy ones keep speed; focus fire on damaged targets; national doctrines read from `Mods/battleDoctrines.csv`.
-- **Campaign AI that does not give up**: cruisers instead of empty yards when short of money, balance-of-power funding when the player's fleet pulls ahead, construction watch, automatic shared designs, an economic-collapse grace period before a nation is dissolved.
-- **Ships built in classes and money with a price**: series production (expensive prototypes, cheaper and faster follow-on ships, ordering together, idle and overloaded yards, cheaper sister ships) and an economy with inflation, credit ratings, interest and growth; treasury panel on the campaign map (F8), inflation in the Finances window, monthly treasury report. Campaign guide: `GUIDE_EN.md`.
-- **Fog of war**: enemy fleets on the strategic map hidden or shown inexactly by reconnaissance, contact reports that can misidentify ships, enemy ships in battle unidentified until your ships close in (night, weather, smoke) - and the AI fights in the same fog.
-- **Ready-made ship designs**: 50 shared designs from the author's campaigns (1890-1941) are installed into the game's shared designs at start; your own designs are never overwritten.
-- **A living world**: sovereign minor nations with their territories restored, diplomacy with consequences (worsening x4), a post-war crisis that hurts without being terminal.
-- **Ships and tech**: armour penetration rebuilt from De Marre physics and anchored on Okun/NavWeaps tables for 16–21", treaty tonnage limits (Washington 35,000 t, London 45,000 t) then a physical Super Battleship ceiling, radar that matters at night, Long Lance range, research and national specialisations retuned.
-- Two game-code bugs that aborted turn processing in DIP are caught.
-
-Problem? F10 > Tools > *Create problem report* writes logs, settings and a Mods folder check into one zip on your desktop - attach it to your report (nothing is sent by the mod).
-
-Full, reasoned change history: `CHANGELOG_EN.txt` / `CHANGELOG_PL.txt` (103 sections). Readme: `README_EN.txt` / `README_PL.txt`.
-
-Latest in the current 1.1 package: DIP_GG_Fixes 1.11.0 (torpedo charges start by torpedo range and speed advantage; AI capital ships charge or close in when outgunned; player scout divisions charge; torpedoes held while a friendly ship is in the lane; smart target selection for all guns; non-linear veterancy up to +100%/-50%; surrender threshold by crew training; panic of green crews; surrendered ships captured by the winner - experimental), DIP_GG_Fixes 1.10.2 (shared designs are no longer re-exported every turn), a save migration tool for 1.0 campaigns (`source/save_tools`), work on the AI ship generator (lower minimum battleship belt for 1890-1900: 6"/7.5" instead of 9"; "Experimental Small Ironclad" relaxed to a 10" calibre limit and 1 turret minimum; full generator diagnostics in the log via taf_debug_shipgen_info=2 while the remaining failed designs are tracked down), and new campaigns start correctly again (predefined designs disabled, as the package ships without `predefinedDesigns.bin`).
 
 ## Stable and beta
 
@@ -41,8 +53,7 @@ Iron Admiral is released in two lines.
 
 The in-game update check follows the line you installed. To switch, install the package of the other line, or set UpdateChannel = stable / beta in UserData\MelonPreferences.cfg.
 
-Iron Admiral wydawany jest w dwóch liniach. **Stabilna** - główne pobranie (wydanie "Latest" na GitHubie, główne pliki na Nexusie); trafiają tu tylko funkcje sprawdzone w grze, a poprawki błędów od razu. **Beta** - nowe funkcje do testów (wydania wstępne 1.2.N-beta.K na GitHubie, osobny plik BETA na Nexusie); każda beta zawiera też wszystkie poprawki stabilnej. Funkcja przechodzi do stabilnej po pewnym czasie w becie bez zgłoszonych błędów. Sprawdzanie aktualizacji w grze podąża za zainstalowaną linią; zmiana linii: instalacja paczki drugiej linii albo UpdateChannel = stable / beta w UserData\MelonPreferences.cfg.
-## Install
+## Install in detail
 
 Download `releases/Iron_Admiral_1.2.77.10_Nexus.zip`, extract anywhere, run `Install.bat` (plain PowerShell, no exe). It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing (downloaded from the official LavaGang release, SHA-256 verified) and copies the mod. `Uninstall.bat` restores the previous state. Start a new campaign.
 
@@ -64,22 +75,23 @@ Already running MelonLoader 0.6.6? Take `releases/Iron_Admiral_1.2.77.10_Mods_on
 
 ## Repository layout
 
-- `payload/Mods/` — the mod data (CSV, TAF, DIP_GG_Fixes.dll, battleDoctrines.csv, techBonuses.csv)
-- `source/DIP_GG_Fixes/` — C# source of the add-on (`Mod.cs`, build notes in `BUILD.md`)
-- `source/merge_dip_1.3.5/` — the three-way merge script and report used to rebase on DIP 1.3.5
-- `installer/` — Install.ps1 / Uninstall.ps1
-- `releases/` — the two zips published on Nexus
+- `payload/Mods/` - the mod data (CSV, TAF, DIP_GG_Fixes.dll, battleDoctrines.csv, techBonuses.csv)
+- `source/DIP_GG_Fixes/` - C# source of the add-on (`Mod.cs`, build notes in `BUILD.md`)
+- - `installer/` - Install.ps1 / Uninstall.ps1
+- `releases/` - the two zips published on Nexus
 
 ## Credits and licences
+Iron Admiral includes and builds on:
+- **Dreadnought Improvement Project "The Great Game"** 1.3.6 HF1 - Brother Munro and the DIP team. Used under the Apache License 2.0 that Brother Munro published with [DIP on GitHub](https://github.com/brothermunro/Dreadnought-Improvement-Project), with his permission (basis: [licenses/DIP_LICENSE_SOURCE.md](licenses/DIP_LICENSE_SOURCE.md)). Hulls, parts, nations, map and technologies come from DIP; files taken from DIP and changed for Iron Admiral are marked as changed. Comparison: [Differences from DIP](https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki/Differences-from-DIP).
+- **TweaksAndFixes** 3.21.1 - NathanKell, DukeDagor (MIT): the modding framework Iron Admiral runs on
+- **MelonLoader** 0.6.6 - LavaGang (Apache 2.0)
+- **Ultimate Admiral's Shippack** - Badkapp / MarineWerft (free use with credit, not for paid mods)
+- **CV Barebone Modification** - ChonkE (MIT)
+- **Fleet Operations** - wangchuanyu666 / MaoDDi (MIT)
+- **UAD Vanilla Plus** - xxfivebyfivexx (ideas, reimplemented with credit); **Custom Task Force Names** - GorillaLegs1 (idea)
 
-- Dreadnought Improvement Project "The Great Game" — Brother Munro and the DIP team (Apache 2.0)
-- TweaksAndFixes — NathanKell, DukeDagor (MIT)
-- MelonLoader — LavaGang (Apache 2.0)
-- Ultimate Admiral's Shippack — Badkapp / MarineWerft (free use with credit, not for paid mods)
-- UAD Vanilla Plus - xxfivebyfivexx (GitHub: gregorymostizky): continuous campaign map approach and other ideas, reimplemented (borrowing allowed by the author with credit)
-- CV Barebone Modification (carrier ship type and air wing design study) - ChonkE (MIT)
-- Iron Admiral data changes, DIP_GG_Fixes add-on, installer, historical data and designs — Klaudiusz Ledwoch (Steam: Klod76)
+Third-party licences: [NOTICE.md](NOTICE.md) and `licenses/` (the same texts ship in both downloads and in the game under Help > Credits and licences). My own work (1.2.48 and later): [LICENSE](LICENSE).
 
-Licence: from version 1.2.48 the author's own work is covered by [LICENSE](LICENSE) - free to play, change for private use and make videos about; republishing, forks and reuse in other mods need the author's written permission; no commercial use. Versions up to 1.2.47 remain under Apache 2.0. Third-party parts keep their own licences, see [NOTICE.md](NOTICE.md). Contributions are welcome under [CONTRIBUTING.md](CONTRIBUTING.md).
+Unofficial fan modification, not affiliated with Game-Labs.
 
-Unofficial fan modification; do not report issues with the modded game to Game-Labs.
+Licence: from version 1.2.48 my own work is covered by [LICENSE](LICENSE) - free to play, change for private use and make videos about; republishing, forks and reuse in other mods need my written permission; no commercial use. Versions up to 1.2.47 remain under Apache 2.0. Contributions are welcome under [CONTRIBUTING.md](CONTRIBUTING.md).
