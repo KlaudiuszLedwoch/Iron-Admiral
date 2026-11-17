@@ -1,4 +1,4 @@
-1.2.78-beta.395
-DIP_GG_Fixes 1.11.1339
-2026-11-17 22:35
-CPU or GPU limit
+1.2.78-beta.396
+DIP_GG_Fixes 1.11.1341
+2026-11-17 22:53
+Falling wreckage
