@@ -1,4 +1,4 @@
-1.2.78-beta.373
-DIP_GG_Fixes 1.11.1302
-2026-11-17 16:41
-Target order fix
+1.2.78-beta.374
+DIP_GG_Fixes 1.11.1303
+2026-11-17 17:06
+Dispatch panel readable
