@@ -1,4 +1,4 @@
-1.2.78-beta.409
-DIP_GG_Fixes 1.11.1358
-2026-11-18 06:45
-Aircraft smoke and models
+1.2.78-beta.410
+DIP_GG_Fixes 1.11.1361
+2026-11-18 07:03
+Carrier fixes
