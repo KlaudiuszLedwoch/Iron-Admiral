@@ -1,4 +1,4 @@
-1.2.78-beta.416
-DIP_GG_Fixes 1.11.1381
-2026-11-18 19:11
-Citadel bulkheads
+1.2.78-beta.417
+DIP_GG_Fixes 1.11.1384
+2026-11-18 19:29
+Armour layers physics on
