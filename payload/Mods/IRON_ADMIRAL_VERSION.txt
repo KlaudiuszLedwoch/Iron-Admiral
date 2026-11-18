@@ -1,4 +1,4 @@
-1.2.78-beta.413
-DIP_GG_Fixes 1.11.1365
-2026-11-18 08:31
-Orders kept at sea
+1.2.78-beta.414
+DIP_GG_Fixes 1.11.1367
+2026-11-18 09:57
+Submarine build notice
