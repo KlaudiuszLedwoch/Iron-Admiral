@@ -1,4 +1,4 @@
-1.2.78-beta.419
-DIP_GG_Fixes 1.11.1407
-2026-11-18 22:32
-AI destroyers, historical armour limits
+1.2.78-beta.420
+DIP_GG_Fixes 1.11.1409
+2026-11-19 00:01
+Battle AI stands and fights
