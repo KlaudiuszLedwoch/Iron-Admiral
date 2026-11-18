@@ -1,4 +1,4 @@
-1.2.78-beta.417
-DIP_GG_Fixes 1.11.1384
-2026-11-18 19:29
-Armour layers physics on
+1.2.78-beta.418
+DIP_GG_Fixes 1.11.1393
+2026-11-18 20:20
+Designer armour limits, AI designs
