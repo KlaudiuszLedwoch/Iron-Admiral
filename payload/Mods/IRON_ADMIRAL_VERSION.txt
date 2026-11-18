@@ -1,4 +1,4 @@
-1.2.78-beta.418
-DIP_GG_Fixes 1.11.1393
-2026-11-18 20:20
-Designer armour limits, AI designs
+1.2.78-beta.419
+DIP_GG_Fixes 1.11.1407
+2026-11-18 22:32
+AI destroyers, historical armour limits
