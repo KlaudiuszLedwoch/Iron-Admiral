@@ -6,19 +6,20 @@ d3ab1111-16f9-430e-b476-104e76b4e870,Amagi,japan,bb,3,2,0,1,1,2,446000,214424,3
 d5197642-02e7-4795-b705-e61d95d87698,Andrea Doria,russia,bb,2,2,0,0,0,1,7200,10714,2
 9626d4b9-fbc3-46b0-bcda-8f3e3be43a1b,Arizona 1931 refit,usa,bb,1,0,0,1,1,,,,
 387d079d-0c90-422a-9374-7109c550f667,Canada (ex-Almirante Latorre),britain,bb,3,0,0,3,0,0,0,27553,3
-1d308e60-c69f-49a1-98ca-7ddf42cb4908,Daoguang,austria,bb,9,0,7,2,1,,,,
 3b1f0e7d-548c-4b90-9b57-d0b100fe81cb,Daoguang,greece,bb,4,2,2,0,0,,,,
+1d308e60-c69f-49a1-98ca-7ddf42cb4908,Daoguang,austria,bb,9,0,7,2,1,,,,
 1c024b28-9a21-40ba-b56f-dccf9c0388bc,Dragon of the East,china,bb,2,2,0,0,0,,,,
 2750b24f-85cf-4d2e-aa3c-f7580f910112,Dreadnought,britain,bb,9,0,9,0,6,,,,
 a7aba8c4-e731-4176-b442-e7d005e9aa10,Dvenadsat Apostolov,russia,bb,1,0,1,0,0,,,,
+ac26e6b0-f1c4-4658-bdbd-e00034b6a51b,Erin (ex-Resadiye),britain,bb,5,0,0,5,4,0,0,25250,5
 1a157ae6-f012-42ef-826a-dd905b994fbe,Helgoland,germany,bb,3,3,0,0,0,0,0,23500,3
 31a676e3-881b-4edf-867c-c8fcd206b11e,Hildebrand,germany,bb,1,1,0,0,0,2,65874,140555,1
 8b199511-4a66-4563-b7c0-a65f970da1bd,Hizen,japan,bb,1,1,0,0,0,0,0,236000,1
 54aa4bcc-58f4-4dc1-814a-3e7f5fabf2a6,HMS Imperial,britain,bb,1,1,0,0,0,1,17991,211000,1
 8fdfcf28-2ddf-4172-9d32-23b0f5faf7f5,Hoche,france,bb,16,2,9,5,5,0,0,10820,16
 72f1454c-d676-4592-bb97-c26c96915fae,Hogi,britain,bb,21,0,7,14,13,0,0,11000,21
-36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
 446d7e58-ae81-4f18-aa3b-87bb64d8c606,Iron Duke,britain,bb,18,6,0,12,1,4,132452,29500,18
+36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
 4adf56c1-e54e-4366-9254-405ca474cb7e,Kaiser,germany,bb,39,39,0,0,0,1,3750,27417,39
 cce939f4-3726-4c23-a0e9-23c4f8013937,Kaiser,germany,bb,17,15,0,2,2,3,515279,243591,4
 5cccf0b8-8b8c-481b-aaeb-088c23d3e578,Kaiser Friedrich III,germany,bb,2,2,0,0,0,0,0,11097,2
@@ -45,8 +46,8 @@ b690a3bf-7f42-488c-aca2-5d674662fc84,Montana,usa,bb,3,1,0,2,2,1,243591,230354,1
 342b6332-96a4-4804-9b87-8bf06ff7ba5d,Queen Elisabeth,britain,bb,1,1,0,0,0,,,,
 b67440be-e573-45fe-a600-e46e7d5fc88a,Revenge,britain,bb,3,0,0,3,0,0,0,34163,3
 a0f40a0b-a972-4d82-b4ea-1d855e2b3a7d,São Simão,portugal,bb,2,1,0,1,1,,,,
-c3fe14ac-1197-4555-baed-12e7509ef64f,Shinano,russia,bb,14,0,11,3,2,1,3000,8235,7
 8c3acd92-798b-4cbc-a858-73283e9e2c23,Shinano,austria,bb,3,0,1,2,2,0,0,8235,3
+c3fe14ac-1197-4555-baed-12e7509ef64f,Shinano,russia,bb,14,0,11,3,2,1,3000,8235,7
 5c9d821e-13d7-49fb-a9fe-39ccc96a5b4b,Shinano,china,bb,3,3,0,0,0,4,1065,8235,3
 566c666c-2fae-4567-b753-6bf9fff1d0f3,Texas,usa,bb,2,2,0,0,0,,,,
 2eba0407-0eb5-4c8e-8723-c847616394b3,Tosa,japan,bb,5,5,0,0,0,0,0,33332,5
@@ -207,7 +208,7 @@ e9da8b79-793b-45fe-a967-12a44ae94ade,Porpoise,spain,dd,7,0,7,0,5,1,1200,1180,7
 cbcde8f6-3eda-474e-8614-4e475543f1fc,Etorofu,spain,tb,44,10,17,17,0,0,0,275,24
 8547c4e6-8620-4112-a505-33eaab5a7c42,Etorofu,france,tb,2,1,0,1,1,0,0,275,1
 8423d3a9-725c-4559-b74f-7e1b7019c5ba,Etorofu,france,tb,2,2,0,0,0,0,0,275,2
-9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,2,0,0,2,0,,,,
+9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,8,0,8,0,0,,,,
 89ed4c26-111b-497e-a80e-7307757b6284,Fort Hindman,britain,tb,8,0,1,7,0,0,0,275,8
 66dbb344-d0d0-47ee-884b-5a6999db7280,Fort Hindman,france,tb,5,5,0,0,0,0,0,275,5
 2d09a566-1739-4602-b5e9-3d4d6e1264ef,Hato,britain,tb,5,0,0,5,0,0,0,174,5
