@@ -1,4 +1,4 @@
-1.2.78-beta.408
-DIP_GG_Fixes 1.11.1357
-2026-11-18 06:19
-Closed citadel keeps her afloat
+1.2.78-beta.409
+DIP_GG_Fixes 1.11.1358
+2026-11-18 06:45
+Aircraft smoke and models
