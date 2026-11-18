@@ -1,4 +1,4 @@
-1.2.78-beta.414
-DIP_GG_Fixes 1.11.1367
-2026-11-18 09:57
-Submarine build notice
+1.2.78-beta.415
+DIP_GG_Fixes 1.11.1378
+2026-11-18 18:11
+Battle and map performance
