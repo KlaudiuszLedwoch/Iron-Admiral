@@ -1,4 +1,4 @@
-1.2.78-beta.426
-DIP_GG_Fixes 1.11.1465
-2026-11-19 21:05
-No duplicate ordered designs, salvo mode
+1.2.78-beta.427
+DIP_GG_Fixes 1.11.1467
+2026-11-19 21:15
+Shells leave the muzzle straight, guns hold their target
