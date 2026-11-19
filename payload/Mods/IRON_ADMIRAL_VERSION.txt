@@ -1,4 +1,4 @@
-1.2.78-beta.430
-DIP_GG_Fixes 1.11.1481
-2026-11-19 22:35
-Capsize angle in the designer
+1.2.78-beta.431
+DIP_GG_Fixes 1.11.1482
+2026-11-19 22:52
+Stability estimate for small ships
