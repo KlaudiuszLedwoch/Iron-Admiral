@@ -1,4 +1,4 @@
-1.2.78-beta.420
-DIP_GG_Fixes 1.11.1409
-2026-11-19 00:01
-Battle AI stands and fights
+1.2.78-beta.421
+DIP_GG_Fixes 1.11.1418
+2026-11-19 06:48
+Mines on, sonar for capital ships
