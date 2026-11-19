@@ -1,4 +1,4 @@
-1.2.78-beta.428
-DIP_GG_Fixes 1.11.1477
-2026-11-19 22:21
-Task forces shown by silhouettes
+1.2.78-beta.429
+DIP_GG_Fixes 1.11.1478
+2026-11-19 22:24
+No escape for slower ships
