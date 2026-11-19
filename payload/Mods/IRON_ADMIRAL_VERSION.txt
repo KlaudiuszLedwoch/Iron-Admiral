@@ -1,4 +1,4 @@
-1.2.78-beta.423
-DIP_GG_Fixes 1.11.1434
-2026-11-19 12:35
-Carrier strikes by ship size, durability battle log
+1.2.78-beta.424
+DIP_GG_Fixes 1.11.1449
+2026-11-19 17:48
+Sonar blind astern, sonar area button
