@@ -1,4 +1,4 @@
-1.2.78-beta.427
-DIP_GG_Fixes 1.11.1467
-2026-11-19 21:15
-Shells leave the muzzle straight, guns hold their target
+1.2.78-beta.428
+DIP_GG_Fixes 1.11.1477
+2026-11-19 22:21
+Task forces shown by silhouettes
