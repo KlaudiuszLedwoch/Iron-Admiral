@@ -281,3 +281,5 @@ Thank you to everyone who shared their designs.
 2026-11-19 - Фабушка: 1 design(s): 1900 scandinavia 1900 (Mar. 1904) [4764e926]
 2026-11-19 - Фабушка: 1 design(s): 1907 netherlands 1907 [b3a6b762]
 2026-11-19 - Фабушка: 1 design(s): 1907 greece 1907 Istok [90d5511c]
+2026-11-19 - 32475aae958b43f5: 1 design(s): (DIP GG 1.3.5) 1942 German Reich BB Zähringen
+2026-11-19 - 66218334615c4ae1: 1 design(s): 1910 austria Quarto [f106e5f7]
