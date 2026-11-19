@@ -31,7 +31,7 @@ torpedo_prop,$compTypes_name_short_torpedo_prop,$compTypes_name_torpedo_prop,$co
 torpedo_size,$compTypes_name_short_torpedo_size,$compTypes_name_torpedo_size,$comptypes_category_armament,"bb, bc, ca, cv, cl, dd, tb, tr",assign,10,needs_part(torpedo),,,,,,
 ammo_torp,$compTypes_name_short_ammo_torp,$compTypes_name_ammo_torp,$comptypes_category_armament,"bb, bc, ca, cv, cl, dd, tb, tr",assign,10,needs_part(torpedo),,,,,,
 rangefinder,$compTypes_name_short_rangefinder,$compTypes_name_rangefinder,$comptypes_category_equipment,"bb, bc, ca, cv, cl, dd, tb",,10,needs_part(tower_main),,,,,,
-sonar,$compTypes_name_short_sonar,$compTypes_name_sonar,$comptypes_category_equipment,"cl, dd, tb",,10,needs_part(tower_main),,,,,,
+sonar,$compTypes_name_short_sonar,$compTypes_name_sonar,$comptypes_category_equipment,"bb, bc, ca, cl, dd, tb",,10,needs_part(tower_main),,,,,,
 radio,$compTypes_name_radio,$compTypes_name_radio,$comptypes_category_equipment,"bb, bc, ca, cv, cl, dd, tb",,10,needs_part(tower_main),,,,,,
 radar,$Ui_Constr_Radar,$Ui_Constr_Radar,$comptypes_category_equipment,"bb, bc, ca, cv, cl, dd, tb",,10,needs_part(tower_main),,,,,,
 mines,$Ui_Constr_Mines,$Ui_Constr_Mines,$comptypes_category_special,"dd, cl, tb",campaign,5,random(25),,,,,,
