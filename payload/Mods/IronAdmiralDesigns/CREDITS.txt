@@ -283,3 +283,6 @@ Thank you to everyone who shared their designs.
 2026-11-19 - Фабушка: 1 design(s): 1907 greece 1907 Istok [90d5511c]
 2026-11-19 - 32475aae958b43f5: 1 design(s): (DIP GG 1.3.5) 1942 German Reich BB Zähringen
 2026-11-19 - 66218334615c4ae1: 1 design(s): 1910 austria Quarto [f106e5f7]
+2026-11-19 - Gronus: 1 design(s): 1894 greece Flint [9a37dd62]
+2026-11-19 - 044367e16f114d59: 1 design(s): (DIP GG 1.3.5) 1940 United States CL San DIego
+2026-11-19 - 5b43438fe0494117: 1 design(s): 1900 netherlands Futami [9e4d7da0]
