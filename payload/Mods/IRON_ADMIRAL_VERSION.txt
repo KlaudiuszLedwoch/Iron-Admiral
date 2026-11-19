@@ -1,4 +1,4 @@
-1.2.78-beta.422
-DIP_GG_Fixes 1.11.1429
-2026-11-19 07:40
-Task force markers, port roles, every carrier strikes
+1.2.78-beta.423
+DIP_GG_Fixes 1.11.1434
+2026-11-19 12:35
+Carrier strikes by ship size, durability battle log
