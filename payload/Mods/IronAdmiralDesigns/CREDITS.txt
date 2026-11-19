@@ -289,3 +289,5 @@ Thank you to everyone who shared their designs.
 2026-11-19 - 96180e0c97ab41a9: 1 design(s): 1905 china Olifant [d105d2f5]
 2026-11-19 - 96180e0c97ab41a9: 1 design(s): 1907 portugal Voronezh [67922a28]
 2026-11-19 - 8b97566239c544a0: 1 design(s): 1892 japan Akagi [e3d341d6]
+2026-11-19 - 6c80bc810f184422: 1 design(s): 1894 scandinavia Philippine Sea [194c7c0d]
+2026-11-19 - 6c80bc810f184422: 1 design(s): 1894 greece Alert [e9bdd5e3]
