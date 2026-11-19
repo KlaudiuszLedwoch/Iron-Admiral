@@ -1,4 +1,4 @@
-1.2.78-beta.432
-DIP_GG_Fixes 1.11.1484
-2026-11-19 23:26
-Campaign log with braced design names
+1.2.78-beta.433
+DIP_GG_Fixes 1.11.1485
+2026-11-19 23:31
+AI hunts convoys
