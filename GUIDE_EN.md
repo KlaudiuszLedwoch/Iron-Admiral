@@ -76,6 +76,8 @@ Ships already on the slips also move: when the yard learns, the remaining work o
 
 In the base game an AI power could pour its whole naval budget into research and never order a ship. The test campaign showed it: the USA sat on 1.2 billion in cash with not a single ship or order, spending almost the whole naval budget on research and a shipyard expansion. Iron Admiral fixes that for the AI – research is free while there is a surplus and is cut when the books go red, and no yards are expanded in deficit. The AI navies therefore build fleets again, and you will meet them at sea.
 
+Since 1.2.78-beta.446 the AI also plans with its treasury. Spending above income is allowed while the cash in hand covers 20 turns of the deficit; below 10 turns the AI cuts new ship orders and research, and below 5 turns it orders nothing new. The fleet mix follows the money as well: the AI compares its resources (treasury plus a year of income) with those of its likely enemy. If the enemy has half as much again or more, or the battleship race is lost, it turns to a war on trade – more cruisers and destroyers, fewer capital ships.
+
 **What to do:** treat research and shipyard expansion the same way. They pay off (they also add economic growth), but only while your income covers them.
 
 ## 5. Treasury crisis, inflation and credit
