@@ -1,4 +1,4 @@
-1.2.78-beta.441
-DIP_GG_Fixes 1.11.1512
-2026-11-20 10:12
-Discord status
+1.2.78-beta.442
+DIP_GG_Fixes 1.11.1517
+2026-11-20 11:46
+The moon at night
