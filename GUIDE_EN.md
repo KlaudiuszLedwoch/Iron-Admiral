@@ -317,6 +317,8 @@ What the later 1.2.77 betas add (each with its switch in the F10 panel).
 **Fighters and ammunition.** Fighters carry only a few seconds of fire, and cannon run dry long before machine guns. A fighter out of ammunition breaks off. Escorts stay with their strike and fly home with it. Patrolling fighters land, rearm on deck and take off again while the battle lasts.
 
 All of this can be switched or tuned in the F10 panel (Battle AI tab: carrier dive bombers, carrier fighters, and the time between take-offs).
+**Strike size.** A carrier sends the strike its air group and flight deck allow. A large carrier launches a large strike; there is no fixed cap per wave. A carrier you have given an order keeps it, and a carrier never closes on a distant enemy on its own.
+
 ## 18. Battle weather
 
 **Weather by place and season.** A campaign battle takes its weather and wind from the sea it is fought in and the month: North Sea gales in winter, a calm Mediterranean summer, the Southern Ocean, the monsoon in the Arabian Sea and the Bay of Bengal, tropical cyclone seasons. The battle's hour can be chosen by the side with better speed and scouting (Form IA-24).
@@ -339,7 +341,16 @@ Spring and autumn lie between. The Arctic and Antarctic seas, the south-west mon
 
 F10 switch: *BattleClimateWeather* (on by default) - off gives the game's own weather.
 
+## 19. Gunnery: ranging and scattering
+
+**Ranging.** When your ship opens fire on a new target, the main battery first fires slow salvoes to find the range: the first salvo, then corrections of about 400, 200 and 100 yards as the falls cross the target, until a straddle. Each step is reported in the dispatch log of that ship. After the straddle every fourth salvo is a range check.
+
+**Salvo button (AIM / FULL).** On AIM your ship waits for the fall of its last salvo before firing the next, until the straddle; then it shifts to full rate on its own. On FULL the guns fire as soon as they are loaded.
+
+**Scatter.** A beaten side that has lost a large part of its strength and cannot answer the enemy scatters: every ship runs away on its own course. The AI does this by itself; you have the same order as the Scatter button in the ship orders.
+
 ### Guide history
+- **20 November 2026, Iron Admiral 1.2.78-beta.438:** section 19 - ranging procedure in the dispatch log, AIM / FULL salvoes, scatter; section 17 - strike size by air group and deck, carriers keep the player's orders.
 - **4 November 2026, Iron Admiral 1.2.77-beta.78:** section 16 - Denmark, the Ottoman Empire, starting fleets, oil, armies by economy and supply, army budget and garrisons, industrial fund, why relations change, historical build times, building ports and port fit on the map, command limit, control zone by speed and range, prizes.
 - **2 November 2026, Iron Admiral 1.2.77-beta.33:** naval treaties (limits, totals, signing and withdrawal); alliances against a common enemy.
 - **2 November 2026, Iron Admiral 1.2.77-beta.29:** war and peace (war weariness, treaties, alliances, war limit), invasions by army, distance and target, torpedo aiming error, crew training at sea and the yearly draft, refits within the hull's limit.
