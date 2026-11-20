@@ -304,3 +304,5 @@ Thank you to everyone who shared their designs.
 2026-11-20 - 94c7e00b0dcb4b09: 1 design(s): 1914 scandinavia Königsberg [4aa75a9e]
 2026-11-20 - 3985bc2673654568: 1 design(s): 1896 germany Wörth [b3151b4d]
 2026-11-20 - 3985bc2673654568: 1 design(s): 1897 germany König Albert [74df3288]
+2026-11-20 - 044367e16f114d59: 1 design(s): 1910 greece Adatepe [29354ec2]
+2026-11-20 - 5b43438fe0494117: 1 design(s): 1910 netherlands V-2 [bc40a5d6]
