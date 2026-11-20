@@ -1,4 +1,4 @@
-1.2.78-beta.453
-DIP_GG_Fixes 1.11.1545
-2026-11-20 22:12
-Keep range distances in the options column
+1.2.78-beta.454
+DIP_GG_Fixes 1.11.1546
+2026-11-20 22:14
+Order buttons switch on and off
