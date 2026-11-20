@@ -1,4 +1,4 @@
-1.2.78-beta.439
-DIP_GG_Fixes 1.11.1505
-2026-11-20 08:08
-Pilots and aces
+1.2.78-beta.440
+DIP_GG_Fixes 1.11.1509
+2026-11-20 08:52
+Torpedo order menu, strike pilots
