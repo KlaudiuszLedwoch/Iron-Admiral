@@ -1,4 +1,4 @@
-1.2.78-beta.451
-DIP_GG_Fixes 1.11.1543
-2026-11-20 20:41
-No return under fire, whole ship rocks together
+1.2.78-beta.452
+DIP_GG_Fixes 1.11.1544
+2026-11-20 20:44
+Transports always run, scattering
