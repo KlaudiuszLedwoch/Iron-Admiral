@@ -1,4 +1,4 @@
-1.2.78-beta.434
-DIP_GG_Fixes 1.11.1486
-2026-11-19 23:54
-AI judges penetration with the real shell
+1.2.78-beta.435
+DIP_GG_Fixes 1.11.1490
+2026-11-20 01:32
+Option: no shipbuilding requests
