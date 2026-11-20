@@ -300,3 +300,4 @@ Thank you to everyone who shared their designs.
 2026-11-20 - Фабушка: 1 design(s): 1910 scandinavia 1910 Borey [07166de9]
 2026-11-20 - Фабушка: 1 design(s): 1910 greece TRA 1910 [db348765]
 2026-11-20 - 94c7e00b0dcb4b09: 1 design(s): 1911 scandinavia Irene [30e882c5]
+2026-11-20 - 94c7e00b0dcb4b09: 1 design(s): 1914 scandinavia Magdeburg [e6676562]
