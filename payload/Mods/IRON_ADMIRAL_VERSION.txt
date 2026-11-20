@@ -1,4 +1,4 @@
-1.2.78-beta.445
-DIP_GG_Fixes 1.11.1526
-2026-11-20 14:53
-Campaign map fixes (#442, #443)
+1.2.78-beta.446
+DIP_GG_Fixes 1.11.1531
+2026-11-20 15:26
+AI fleet mix and money, options for every battle order
