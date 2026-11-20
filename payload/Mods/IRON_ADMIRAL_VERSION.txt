@@ -1,4 +1,4 @@
-1.2.78-beta.457
-DIP_GG_Fixes 1.11.1549
-2026-11-20 23:48
-Torpedo numbers decide, no double pitching
+1.2.78-beta.458
+DIP_GG_Fixes 1.11.1550
+2026-11-21 00:28
+Flotillas surround their target
