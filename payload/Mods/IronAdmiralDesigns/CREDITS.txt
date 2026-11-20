@@ -306,3 +306,6 @@ Thank you to everyone who shared their designs.
 2026-11-20 - 3985bc2673654568: 1 design(s): 1897 germany König Albert [74df3288]
 2026-11-20 - 044367e16f114d59: 1 design(s): 1910 greece Adatepe [29354ec2]
 2026-11-20 - 5b43438fe0494117: 1 design(s): 1910 netherlands V-2 [bc40a5d6]
+2026-11-20 - b37536ad96de4a25: 1 design(s): 1918 netherlands V-10 [4b260922]
+2026-11-20 - 2139723e26384f59: 1 design(s): 1890 scandinavia Oddane (Mar. 1894) [08057a49]
+2026-11-20 - 2139723e26384f59: 1 design(s): 1890 greece Tre Løver (Jan. 1895) [765af9f3]
