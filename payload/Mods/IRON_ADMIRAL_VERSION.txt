@@ -1,4 +1,4 @@
-1.2.78-beta.437
-DIP_GG_Fixes 1.11.1497
-2026-11-20 06:49
-Ranging and scatter
+1.2.78-beta.438
+DIP_GG_Fixes 1.11.1502
+2026-11-20 07:05
+Full carrier strikes
