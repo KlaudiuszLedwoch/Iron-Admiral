@@ -1,4 +1,4 @@
-1.2.78-beta.448
-DIP_GG_Fixes 1.11.1538
-2026-11-20 18:13
-Lighter campaign map II
+1.2.78-beta.449
+DIP_GG_Fixes 1.11.1541
+2026-11-20 19:27
+Massed torpedo attack holds, Hunt paces the prey
