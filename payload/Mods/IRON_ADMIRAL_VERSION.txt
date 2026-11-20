@@ -1,4 +1,4 @@
-1.2.78-beta.435
-DIP_GG_Fixes 1.11.1490
-2026-11-20 01:32
-Option: no shipbuilding requests
+1.2.78-beta.436
+DIP_GG_Fixes 1.11.1491
+2026-11-20 06:17
+No false stability figures
