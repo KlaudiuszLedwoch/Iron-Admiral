@@ -1,4 +1,4 @@
-1.2.78-beta.440
-DIP_GG_Fixes 1.11.1509
-2026-11-20 08:52
-Torpedo order menu, strike pilots
+1.2.78-beta.441
+DIP_GG_Fixes 1.11.1512
+2026-11-20 10:12
+Discord status
