@@ -1,4 +1,4 @@
-1.2.78-beta.452
-DIP_GG_Fixes 1.11.1544
-2026-11-20 20:44
-Transports always run, scattering
+1.2.78-beta.453
+DIP_GG_Fixes 1.11.1545
+2026-11-20 22:12
+Keep range distances in the options column
