@@ -301,3 +301,6 @@ Thank you to everyone who shared their designs.
 2026-11-20 - Фабушка: 1 design(s): 1910 greece TRA 1910 [db348765]
 2026-11-20 - 94c7e00b0dcb4b09: 1 design(s): 1911 scandinavia Irene [30e882c5]
 2026-11-20 - 94c7e00b0dcb4b09: 1 design(s): 1914 scandinavia Magdeburg [e6676562]
+2026-11-20 - 94c7e00b0dcb4b09: 1 design(s): 1914 scandinavia Königsberg [4aa75a9e]
+2026-11-20 - 3985bc2673654568: 1 design(s): 1896 germany Wörth [b3151b4d]
+2026-11-20 - 3985bc2673654568: 1 design(s): 1897 germany König Albert [74df3288]
