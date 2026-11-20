@@ -1,4 +1,4 @@
-1.2.78-beta.454
-DIP_GG_Fixes 1.11.1546
-2026-11-20 22:14
-Order buttons switch on and off
+1.2.78-beta.455
+DIP_GG_Fixes 1.11.1547
+2026-11-20 22:33
+No structure bars, conversion no longer unlocks the Essex hull
