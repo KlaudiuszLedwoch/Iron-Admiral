@@ -1,4 +1,4 @@
-1.2.78-beta.491
-DIP_GG_Fixes 1.11.1598
-2026-11-21 12:20
-No false reload turn-away
+1.2.78-beta.492
+DIP_GG_Fixes 1.11.1599
+2026-11-21 12:30
+Head-on test placement
