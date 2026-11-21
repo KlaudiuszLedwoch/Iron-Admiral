@@ -1,4 +1,4 @@
-1.2.78-beta.482
-DIP_GG_Fixes 1.11.1589
-2026-11-21 11:01
-Closer torpedo shots by day
+1.2.78-beta.483
+DIP_GG_Fixes 1.11.1590
+2026-11-21 11:10
+Group torpedo plan
