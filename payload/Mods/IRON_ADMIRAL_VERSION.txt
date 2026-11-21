@@ -1,4 +1,4 @@
-1.2.78-beta.467
-DIP_GG_Fixes 1.11.1567
-2026-11-21 07:18
-Air defence turn, search after lost contact
+1.2.78-beta.468
+DIP_GG_Fixes 1.11.1568
+2026-11-21 07:31
+Torpedo craft attack what is in reach
