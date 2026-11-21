@@ -1,4 +1,4 @@
-1.2.78-beta.493
-DIP_GG_Fixes 1.11.1600
-2026-11-21 12:55
-Cleared to fire
+1.2.78-beta.494
+DIP_GG_Fixes 1.11.1601
+2026-11-21 13:14
+Launch no closer than 40 percent
