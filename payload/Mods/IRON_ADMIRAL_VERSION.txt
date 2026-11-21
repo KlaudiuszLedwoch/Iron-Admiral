@@ -1,4 +1,4 @@
-1.2.78-beta.471
-DIP_GG_Fixes 1.11.1575
-2026-11-21 08:13
-AI battle plan
+1.2.78-beta.472
+DIP_GG_Fixes 1.11.1578
+2026-11-21 08:29
+The fleet stays together
