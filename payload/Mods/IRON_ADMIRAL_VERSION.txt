@@ -1,4 +1,4 @@
-1.2.78-beta.465
-DIP_GG_Fixes 1.11.1563
-2026-11-21 06:51
-Player reports from Discord
+1.2.78-beta.466
+DIP_GG_Fixes 1.11.1565
+2026-11-21 07:14
+Ship shaking fixed
