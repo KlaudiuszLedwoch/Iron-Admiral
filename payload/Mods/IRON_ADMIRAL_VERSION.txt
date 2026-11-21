@@ -1,4 +1,4 @@
-1.2.78-beta.474
-DIP_GG_Fixes 1.11.1580
-2026-11-21 09:14
-A steeper run-in
+1.2.78-beta.475
+DIP_GG_Fixes 1.11.1581
+2026-11-21 09:17
+To the launch point
