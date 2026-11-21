@@ -1,4 +1,4 @@
-1.2.78-beta.483
-DIP_GG_Fixes 1.11.1590
-2026-11-21 11:10
-Group torpedo plan
+1.2.78-beta.484
+DIP_GG_Fixes 1.11.1591
+2026-11-21 11:18
+Group torpedo plan calibrated
