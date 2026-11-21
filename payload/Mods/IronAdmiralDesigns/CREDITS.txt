@@ -349,3 +349,4 @@ Thank you to everyone who shared their designs.
 2026-11-21 - 96180e0c97ab41a9: 1 design(s): 1910 greece Leitenant Burakov [13910376]
 2026-11-21 - 63f46b35c5e64583: 1 design(s): 1890 greece Kurd [3ccbac58]
 2026-11-21 - 96180e0c97ab41a9: 1 design(s): 1910 scandinavia Imperator Pavel I [d72f3a09]
+2026-11-21 - b37536ad96de4a25: 1 design(s): 1920 germany Hans von Koester [78c3556f]
