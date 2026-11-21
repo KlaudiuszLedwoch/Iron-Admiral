@@ -1,4 +1,4 @@
-1.2.78-beta.504
-DIP_GG_Fixes 1.11.1613
-2026-11-21 18:39
-Full torpedo salvoes
+1.2.78-beta.505
+DIP_GG_Fixes 1.11.1614
+2026-11-21 19:06
+One target, one salvo
