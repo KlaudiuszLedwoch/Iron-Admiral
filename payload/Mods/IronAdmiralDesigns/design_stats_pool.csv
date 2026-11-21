@@ -206,7 +206,7 @@ bff6bbc5-09e8-447e-819e-fd13b3e0cadf,MHMW Navas de Tolosa,spain,cl,39,0,37,2,5,0
 622f7832-881f-480a-98e2-1db6de779951,MHMW Oklahoma,usa,cl,1,0,0,1,1,,,,
 2b65959e-127d-4597-8c59-22d7ba42ffb8,MHMW Sfax,france,cl,1,1,0,0,0,0,0,1803,1
 2e5be373-ea7c-448e-9089-7c80c10e7536,MHMW Tourville,france,cl,1,1,0,0,0,0,0,1316,1
-881936a4-96b1-4892-9322-ffc4c4f88e1f,MHMW Troude,france,cl,4,4,0,0,2,0,0,9283,4
+881936a4-96b1-4892-9322-ffc4c4f88e1f,MHMW Troude,france,cl,6,4,0,2,2,0,0,9283,6
 888e3599-e54e-473c-a4b1-21c4e5a37460,MHMW Troude,france,cl,2,2,0,0,0,0,0,2493,1
 7b747fbc-50fe-457f-adf7-436fdb12d8db,MHMW Yuzhou,china,cl,2,0,0,2,2,,,,
 a42da3b3-7ba5-4796-b692-7758b47edf8b,Miyako,china,cl,2,0,2,0,1,0,0,9000,2
@@ -288,24 +288,24 @@ f3c7e662-ac78-4542-b5ff-abee57c25b15,Hato,france,tb,6,3,0,3,1,0,0,174,6
 04e2d89e-d3ea-488b-aba5-03e903e0242a,Hezhou,china,tb,39,21,7,11,25,,,,
 c8e80182-70ce-48da-b887-8c7c35ec83b6,Huanggutun,russia,tb,5,0,4,1,1,0,0,300,5
 c24430fb-05d5-4ae4-b516-ef8b240e616e,Kentauros,greece,tb,14,0,0,14,7,0,0,260,14
+b380acbf-3608-41b0-a418-aa391a860370,Mech,china,tb,48,0,48,0,1,0,0,198,48
 b824d0d4-7652-458d-be68-82d20484eea9,Mech,russia,tb,3,0,3,0,0,0,0,198,3
 961abece-a11c-4850-a14c-67f7f18a9b1f,MHMW BĂ©lier,france,tb,3,3,0,0,0,0,0,247,3
 9643e796-da0d-44f1-8782-e6087ef29b62,MHMW Seal,britain,tb,3,0,0,3,0,0,0,271,3
-6de91b21-a21b-4948-bd92-8f5ade0e9680,Okitsu,britain,tb,3,0,2,1,0,0,0,275,1
 bdceedab-390c-4966-8011-1abc077ceff0,Okitsu,france,tb,4,4,0,0,0,0,0,275,4
-a4b73793-6ed8-4b0e-a248-51cbd919caa2,S-1,germany,tb,11,0,4,7,11,,,,
+6de91b21-a21b-4948-bd92-8f5ade0e9680,Okitsu,britain,tb,3,0,2,1,0,0,0,275,1
+9b3d3471-c732-40d1-9691-b4769db80968,S-1,italy,tb,24,0,24,0,15,3,1950,275,24
 5becc4c8-2b81-472c-b7ba-de8878a5acae,S-1,korean_empire,tb,5,0,5,0,5,0,0,275,5
+ffab2b3d-7602-493c-b777-a9acbd760679,S-1,greece,tb,13,3,4,6,7,0,0,275,7
+a4b73793-6ed8-4b0e-a248-51cbd919caa2,S-1,germany,tb,11,0,4,7,11,,,,
 6b04f7a9-b106-4d29-8aa3-18bab4c1e180,S-1,bulgaria,tb,1,0,0,1,1,,,,
 337d06ef-6158-4cfd-bb65-5d319f82a693,S-1,austria,tb,4,0,0,4,4,,,,
-ffab2b3d-7602-493c-b777-a9acbd760679,S-1,greece,tb,13,3,4,6,7,0,0,275,7
-9b3d3471-c732-40d1-9691-b4769db80968,S-1,italy,tb,24,0,24,0,15,3,1950,275,24
 ba719c09-2c48-4bd5-8313-93188f3d8643,S-2,austria,tb,3,0,3,0,1,0,0,273,3
 72206e6a-635f-41b0-9257-78c5629bd13e,S-2B,germany,tb,1,0,0,1,0,0,0,174,1
 f223b4e7-ab44-411c-a361-7bd4f43043e3,Seta,britain,tb,63,0,60,3,3,1,6000,275,63
-3be1cabe-4571-459f-b8ae-6f5e5655852c,Seta,france,tb,1,0,0,1,1,0,0,275,1
 e46a1fce-837e-438c-8daf-19e4e0fe3bae,Seta,britain,tb,5,0,5,0,4,1,2000,275,5
+3be1cabe-4571-459f-b8ae-6f5e5655852c,Seta,france,tb,1,0,0,1,1,0,0,275,1
 b265e8b2-2621-4921-9bad-f956c18f80b2,Seta,britain,tb,15,0,15,0,9,1,3000,275,15
 1586d198-63f2-4d2e-ada5-d2f6e110e3f8,Sparrowhawk,britain,tb,3,0,0,3,0,0,0,275,3
-fa6be47a-9a21-49d7-a3a2-f0a17a1889c1,Toba,britain,tb,5,0,0,5,0,0,0,275,5
 8901b081-c542-4e42-9cbd-bf38d028c602,Toba,france,tb,4,4,0,0,0,0,0,275,4
-b380acbf-3608-41b0-a418-aa391a860370,Yudong,china,tb,16,9,4,3,9,1,275,198,16
+fa6be47a-9a21-49d7-a3a2-f0a17a1889c1,Toba,britain,tb,5,0,0,5,0,0,0,275,5
