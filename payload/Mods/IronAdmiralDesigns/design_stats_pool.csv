@@ -53,7 +53,7 @@ ec7ba746-2924-482f-ad39-f4285623c00e,MHMW Tango,japan,bb,1,1,0,0,0,,,,
 a461c5f9-283f-436a-b7a6-0f9d1b4920e0,Mikasa,japan,bb,3,0,3,0,2,6,5800,11000,3
 4a57623a-750c-4b59-8b85-a41b1da7eff0,Mikasa,japan,bb,9,2,4,3,4,0,0,11000,4
 3a430266-954d-4125-9d8c-4e02917a383e,Mikasa,britain,bb,8,0,8,0,0,0,0,11000,8
-124f7147-7f6d-4253-b01c-4eccade99259,Mikasa,britain,bb,2,0,2,0,0,0,0,11000,2
+124f7147-7f6d-4253-b01c-4eccade99259,Mikasa,britain,bb,3,0,2,1,1,1,3406,11000,3
 6559d423-9ed0-4b9a-a162-786baa6ed7fb,Mikasa,britain,bb,5,0,4,1,1,0,0,11000,5
 c7bb59c2-fd09-4e53-96fc-2915828bb4d1,Mississippi,usa,bb,1,0,0,1,1,,,,
 b690a3bf-7f42-488c-aca2-5d674662fc84,Montana,usa,bb,3,1,0,2,2,1,243591,230354,1
@@ -126,7 +126,7 @@ f2610b17-c51b-49db-9404-bf625a226f2c,Lussin,austria,ca,1,1,0,0,0,,,,
 a4a29c5f-cc5f-4fab-8bf7-ce36f3c6a0d0,MHMW Admiral Graf Spree,germany,ca,14,0,13,1,1,,,,
 39602a03-03e4-4f54-bdea-42b775eb8a31,MHMW Admiral Scheer,germany,ca,24,7,12,5,3,,,,
 0b479ada-1667-485a-ba46-d8c3c4fd24ee,MHMW Cambridge,usa,ca,1,0,0,1,0,0,0,15505,1
-06aaa1ae-0881-4b58-8eca-21b14ee4c063,MHMW Columbia,usa,ca,5,1,4,0,1,,,,
+06aaa1ae-0881-4b58-8eca-21b14ee4c063,MHMW Columbia,usa,ca,7,3,4,0,2,1,2000,3406,5
 1a19408c-fb0b-41fa-8081-b59a6aa87492,MHMW Debrecen,austria,ca,1,1,0,0,0,1,20065,8505,1
 6b65b0ca-2094-4837-a63f-c5ba1d057e78,MHMW Goryu,japan,ca,24,0,24,0,2,2,3300,3585,24
 0e5e7dcd-98ea-4af2-b32f-a47dc0e9d4b3,MHMW Huron,usa,ca,4,0,4,0,0,0,0,3680,4
@@ -290,7 +290,7 @@ c86ca0dd-1734-44e6-a25a-5489e27ab1cb,Etorofu,spain,tb,7,0,5,2,0,0,0,275,7
 66dbb344-d0d0-47ee-884b-5a6999db7280,Fort Hindman,france,tb,5,5,0,0,0,0,0,275,5
 8ad6a90c-2f57-4561-9529-d4e8660712ee,Grand Gulf,france,tb,31,0,18,13,6,0,0,500,31
 46745022-ea7e-4206-8b60-817e9e6184e2,Hato,japan,tb,12,0,12,0,12,0,0,174,12
-2d09a566-1739-4602-b5e9-3d4d6e1264ef,Hato,britain,tb,7,0,2,5,0,0,0,174,7
+2d09a566-1739-4602-b5e9-3d4d6e1264ef,Hato,britain,tb,8,0,2,6,0,0,0,174,8
 f3c7e662-ac78-4542-b5ff-abee57c25b15,Hato,france,tb,6,3,0,3,1,0,0,174,6
 04e2d89e-d3ea-488b-aba5-03e903e0242a,Hezhou,china,tb,39,21,7,11,25,,,,
 c8e80182-70ce-48da-b887-8c7c35ec83b6,Huanggutun,russia,tb,5,0,4,1,1,0,0,300,5
