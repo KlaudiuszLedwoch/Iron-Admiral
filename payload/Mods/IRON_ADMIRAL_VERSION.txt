@@ -1,4 +1,4 @@
-1.2.78-beta.501
-DIP_GG_Fixes 1.11.1608
-2026-11-21 17:10
-Long-range salvo and away
+1.2.78-beta.502
+DIP_GG_Fixes 1.11.1611
+2026-11-21 17:30
+The group goes in together
