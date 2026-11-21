@@ -1,4 +1,4 @@
-1.2.78-beta.490
-DIP_GG_Fixes 1.11.1597
-2026-11-21 12:08
-Search ahead of the lost enemy
+1.2.78-beta.491
+DIP_GG_Fixes 1.11.1598
+2026-11-21 12:20
+No false reload turn-away
