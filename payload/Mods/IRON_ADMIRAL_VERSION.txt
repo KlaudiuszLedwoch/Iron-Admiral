@@ -1,4 +1,4 @@
-1.2.78-beta.503
-DIP_GG_Fixes 1.11.1612
-2026-11-21 17:33
-Charge without second thoughts
+1.2.78-beta.504
+DIP_GG_Fixes 1.11.1613
+2026-11-21 18:39
+Full torpedo salvoes
