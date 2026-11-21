@@ -1,4 +1,4 @@
-1.2.78-beta.485
-DIP_GG_Fixes 1.11.1592
-2026-11-21 11:27
-The group goes in
+1.2.78-beta.486
+DIP_GG_Fixes 1.11.1593
+2026-11-21 11:37
+Shadow until the chance comes
