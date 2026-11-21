@@ -1,4 +1,4 @@
-1.2.78-beta.466
-DIP_GG_Fixes 1.11.1565
-2026-11-21 07:14
-Ship shaking fixed
+1.2.78-beta.467
+DIP_GG_Fixes 1.11.1567
+2026-11-21 07:18
+Air defence turn, search after lost contact
