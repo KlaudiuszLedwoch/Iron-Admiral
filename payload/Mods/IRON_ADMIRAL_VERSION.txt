@@ -1,4 +1,4 @@
-1.2.78-beta.502
-DIP_GG_Fixes 1.11.1611
-2026-11-21 17:30
-The group goes in together
+1.2.78-beta.503
+DIP_GG_Fixes 1.11.1612
+2026-11-21 17:33
+Charge without second thoughts
