@@ -1,4 +1,4 @@
-1.2.78-beta.476
-DIP_GG_Fixes 1.11.1582
-2026-11-21 10:11
-Pincer from ahead
+1.2.78-beta.477
+DIP_GG_Fixes 1.11.1583
+2026-11-21 10:17
+Launch point fix
