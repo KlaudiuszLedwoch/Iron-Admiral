@@ -205,7 +205,7 @@ e1151c53-7756-463b-b666-304fde0725d2,Nagara,britain,cl,7,0,7,0,0,0,0,2450,7
 c61de2ab-0a62-4fb6-b5f9-17c3662f76c0,Newark,spain,cl,2,0,2,0,1,1,275,3000,2
 db327d11-30f4-4667-aee2-0c29dee118b8,Newark,usa,cl,8,0,7,1,1,0,0,3000,7
 e12b091c-3420-4f02-a759-ce9e8df737c6,Niitaka,usa,cl,1,0,1,0,0,0,0,3000,1
-958e6eda-77fa-4ffd-b491-a234ddc02708,Niitaka,mexico,cl,8,0,8,0,3,6,10200,3000,8
+958e6eda-77fa-4ffd-b491-a234ddc02708,Niitaka,mexico,cl,10,0,10,0,5,6,10200,3000,10
 870fd179-5c63-443f-9daa-a64cf859a78d,Niitaka,greece,cl,12,0,12,0,3,0,0,3000,12
 d5055818-c1dd-4e25-901c-8d090246a92e,Niitaka,spain,cl,4,0,0,4,4,0,0,3000,1
 115ec79f-7370-4d68-b19f-0821eec1077a,O bacalhau,portugal,cl,1,1,0,0,0,,,,
@@ -293,7 +293,7 @@ ba719c09-2c48-4bd5-8313-93188f3d8643,S-2,austria,tb,3,0,3,0,1,0,0,273,3
 b265e8b2-2621-4921-9bad-f956c18f80b2,Seta,britain,tb,15,0,15,0,9,1,3000,275,15
 3be1cabe-4571-459f-b8ae-6f5e5655852c,Seta,france,tb,1,0,0,1,1,0,0,275,1
 f223b4e7-ab44-411c-a361-7bd4f43043e3,Seta,britain,tb,63,0,60,3,3,1,6000,275,63
-e46a1fce-837e-438c-8daf-19e4e0fe3bae,Seta,britain,tb,1,0,1,0,1,0,0,275,1
+e46a1fce-837e-438c-8daf-19e4e0fe3bae,Seta,britain,tb,4,0,4,0,4,1,2000,275,4
 1586d198-63f2-4d2e-ada5-d2f6e110e3f8,Sparrowhawk,britain,tb,3,0,0,3,0,0,0,275,3
 8901b081-c542-4e42-9cbd-bf38d028c602,Toba,france,tb,4,4,0,0,0,0,0,275,4
 fa6be47a-9a21-49d7-a3a2-f0a17a1889c1,Toba,britain,tb,5,0,0,5,0,0,0,275,5
