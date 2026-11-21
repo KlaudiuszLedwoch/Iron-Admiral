@@ -1,4 +1,4 @@
-1.2.78-beta.461
-DIP_GG_Fixes 1.11.1553
-2026-11-21 02:18
-Engine speed probe
+1.2.78-beta.462
+DIP_GG_Fixes 1.11.1554
+2026-11-21 03:58
+Ship trade window fix
