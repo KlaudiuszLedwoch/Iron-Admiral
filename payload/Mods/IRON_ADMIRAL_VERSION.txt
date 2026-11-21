@@ -1,4 +1,4 @@
-1.2.78-beta.489
-DIP_GG_Fixes 1.11.1596
-2026-11-21 11:56
-Night group plan holds fire
+1.2.78-beta.490
+DIP_GG_Fixes 1.11.1597
+2026-11-21 12:08
+Search ahead of the lost enemy
