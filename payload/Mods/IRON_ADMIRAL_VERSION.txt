@@ -1,4 +1,4 @@
-1.2.78-beta.469
-DIP_GG_Fixes 1.11.1569
-2026-11-21 07:36
-Steady air defence turn
+1.2.78-beta.470
+DIP_GG_Fixes 1.11.1574
+2026-11-21 08:10
+Flotillas surround a faster target
