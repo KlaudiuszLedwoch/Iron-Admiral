@@ -1,4 +1,4 @@
-1.2.78-beta.478
-DIP_GG_Fixes 1.11.1584
-2026-11-21 10:25
-Ring stations lead to the charge
+1.2.78-beta.479
+DIP_GG_Fixes 1.11.1585
+2026-11-21 10:39
+Flotillas leave a fleeing carrier
