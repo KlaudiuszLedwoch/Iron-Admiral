@@ -1,4 +1,4 @@
-1.2.78-beta.541
-DIP_GG_Fixes 1.11.1659
-2026-11-22 14:11
-Power tiers in the balance of power
+1.2.78-beta.542
+DIP_GG_Fixes 1.11.1660
+2026-11-22 14:50
+Lighter battle order icons
