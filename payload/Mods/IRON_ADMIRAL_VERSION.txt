@@ -1,4 +1,4 @@
-1.2.78-beta.525
-DIP_GG_Fixes 1.11.1640
-2026-11-22 08:55
-No mod orders for player ships at the start and torpedo craft block from ahead
+1.2.78-beta.526
+DIP_GG_Fixes 1.11.1641
+2026-11-22 09:14
+AI knows where the enemy comes from and what he has
