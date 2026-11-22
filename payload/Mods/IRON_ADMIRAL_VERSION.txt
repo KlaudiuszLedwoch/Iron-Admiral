@@ -1,4 +1,4 @@
-1.2.78-beta.520
-DIP_GG_Fixes 1.11.1633
-2026-11-22 07:57
-Lighter smoke fire and flak far from the camera
+1.2.78-beta.521
+DIP_GG_Fixes 1.11.1634
+2026-11-22 08:14
+Stern chase torpedo rule
