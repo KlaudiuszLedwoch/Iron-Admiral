@@ -1,4 +1,4 @@
-1.2.78-beta.517
-DIP_GG_Fixes 1.11.1630
-2026-11-22 07:38
-Tactical profile drives the torpedo attack
+1.2.78-beta.518
+DIP_GG_Fixes 1.11.1631
+2026-11-22 07:45
+Lighter hull effects far from the camera
