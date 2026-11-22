@@ -1,4 +1,4 @@
-1.2.78-beta.534
-DIP_GG_Fixes 1.11.1652
-2026-11-22 11:48
-Smoother campaign map 3
+1.2.78-beta.535
+DIP_GG_Fixes 1.11.1653
+2026-11-22 12:41
+Smoother campaign map 4
