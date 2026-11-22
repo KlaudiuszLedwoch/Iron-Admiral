@@ -1,4 +1,4 @@
-1.2.78-beta.538
-DIP_GG_Fixes 1.11.1656
-2026-11-22 13:03
-Smoother campaign map 6
+1.2.78-beta.539
+DIP_GG_Fixes 1.11.1657
+2026-11-22 13:22
+Torpedo log range at launch
