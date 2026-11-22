@@ -388,3 +388,4 @@ Thank you to everyone who shared their designs.
 2026-11-22 - ddaa52df640948bf: 1 design(s): 1900 greece Mogami [9b66d382]
 2026-11-22 - a1b4ae9fefa8463e: 1 design(s): 1890 portugal Tigre [e457269d]
 2026-11-22 - Фабушка: 1 design(s): 1922 russia 1922 Yarilo [08e6ac71]
+2026-11-22 - Bariett: 1 design(s): 1894 china Marsala [844b3395]
