@@ -351,3 +351,15 @@ Thank you to everyone who shared their designs.
 2026-11-21 - 96180e0c97ab41a9: 1 design(s): 1910 scandinavia Imperator Pavel I [d72f3a09]
 2026-11-21 - b37536ad96de4a25: 1 design(s): 1920 germany Hans von Koester [78c3556f]
 2026-11-21 - f38d1a6547c5479d: 1 design(s): 1894 greece New Haven [a7824916]
+2026-11-22 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1930 British Empire BB Nelson
+2026-11-22 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1930 British Empire BB N3
+2026-11-22 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1937 British Empire BB King George V
+2026-11-22 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1939 British Empire BB Lion
+2026-11-22 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1941 British Empire BB Vanguard
+2026-11-22 - ed85001e95fc45d0: 1 design(s): 1890 scandinavia Maine [77d1e331]
+2026-11-22 - 7705db8d16e04d74: 1 design(s): 1890 germany Scharnhorst [6ceda907]
+2026-11-22 - ed85001e95fc45d0: 1 design(s): 1890 greece Fresno [a6a9b15d]
+2026-11-22 - f4a5ac4781f742f0: 1 design(s): 1891 netherlands Polar [3e2813fb]
+2026-11-22 - cfce47a4684c4311: 1 design(s): (DIP GG 1.3.5) 1960 United States BC Columbia
+2026-11-22 - 7705db8d16e04d74: 1 design(s): 1890 portugal Gunboat [0bf53680]
+2026-11-22 - f4a5ac4781f742f0: 1 design(s): 1891 greece Honolulu [2f19f466]
