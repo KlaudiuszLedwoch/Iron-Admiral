@@ -10,3 +10,4 @@ lastchance.tca,*,*,*,*,*,25,seconds to the closest approach - no better shot com
 chase.launch,*,*,*,*,*,0.9,stern chase: long setting and fire from 90 % of the range - otherwise it will not work (22.11 08:12)
 split.min_craft,*,*,*,*,*,12,torpedo craft needed to split at the start of the battle (22.11 08:14 - 'that many destroyers')
 split.gap_km,*,*,*,*,*,35,parallel courses 30-40 km apart (22.11 08:14)
+block.ahead_km,*,*,*,*,*,15,after contact the outer group of the start split takes station this far ahead of the enemy on his course (22.11 08:14 'blocks my course from ahead')
