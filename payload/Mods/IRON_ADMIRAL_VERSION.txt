@@ -1,4 +1,4 @@
-1.2.78-beta.526
-DIP_GG_Fixes 1.11.1641
-2026-11-22 09:14
-AI knows where the enemy comes from and what he has
+1.2.78-beta.527
+DIP_GG_Fixes 1.11.1642
+2026-11-22 09:41
+Torpedo craft fire in a stern chase
