@@ -1,4 +1,4 @@
-1.2.78-beta.522
-DIP_GG_Fixes 1.11.1635
-2026-11-22 08:17
-Torpedo craft split at the start
+1.2.78-beta.523
+DIP_GG_Fixes 1.11.1637
+2026-11-22 08:33
+Torpedo craft turn to fire and carrier keeps its course
