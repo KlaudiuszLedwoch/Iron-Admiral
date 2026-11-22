@@ -384,3 +384,4 @@ Thank you to everyone who shared their designs.
 2026-11-22 - 66218334615c4ae1: 1 design(s): 1910 japan Sagami [ab3fbe5b]
 2026-11-22 - Bariett: 1 design(s): 1890 greece Partenope [14c53d56]
 2026-11-22 - b37536ad96de4a25: 1 design(s): 1921 germany Braunschweig [09e18148]
+2026-11-22 - ddaa52df640948bf: 1 design(s): 1892 netherlands Fushimi [9049c718]
