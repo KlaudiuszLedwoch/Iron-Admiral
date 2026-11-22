@@ -372,3 +372,5 @@ Thank you to everyone who shared their designs.
 2026-11-22 - Фабушка: 1 design(s): 1920 japan 1920 Rodnik [c9227a8f]
 2026-11-22 - Фабушка: 1 design(s): 1920 russia TRA 1920 [1ae8ff9d]
 2026-11-22 - 94c7e00b0dcb4b09: 1 design(s): 1930 scandinavia Pommern [bd8ba509]
+2026-11-22 - Фабушка: 1 design(s): 1920 russia 1920 Borey [da1757f3]
+2026-11-22 - 94c7e00b0dcb4b09: 1 design(s): 1931 china Roon [17a4df03]
