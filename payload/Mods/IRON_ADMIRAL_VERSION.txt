@@ -1,4 +1,4 @@
-1.2.78-beta.544
-DIP_GG_Fixes 1.11.1662
-2026-11-22 15:33
-Lighter sea mist
+1.2.78-beta.545
+DIP_GG_Fixes 1.11.1663
+2026-11-22 16:24
+Auto-resolve crash fix
