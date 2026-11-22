@@ -1,4 +1,4 @@
-1.2.78-beta.523
-DIP_GG_Fixes 1.11.1637
-2026-11-22 08:33
-Torpedo craft turn to fire and carrier keeps its course
+1.2.78-beta.524
+DIP_GG_Fixes 1.11.1638
+2026-11-22 08:38
+AI ships share enemy sightings by wireless
