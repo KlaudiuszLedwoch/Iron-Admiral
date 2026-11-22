@@ -1,4 +1,4 @@
-1.2.78-beta.543
-DIP_GG_Fixes 1.11.1661
-2026-11-22 15:21
-Sea effects timing diagnostics
+1.2.78-beta.544
+DIP_GG_Fixes 1.11.1662
+2026-11-22 15:33
+Lighter sea mist
