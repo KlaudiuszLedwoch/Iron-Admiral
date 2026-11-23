@@ -1,4 +1,4 @@
-1.2.78-beta.561
-DIP_GG_Fixes 1.11.1679
-2026-11-23 10:46
-Destroyers return to the attack
+1.2.78-beta.562
+DIP_GG_Fixes 1.11.1680
+2026-11-23 11:01
+Fewer windows to click
