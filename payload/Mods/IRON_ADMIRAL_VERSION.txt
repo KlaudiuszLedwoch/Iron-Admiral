@@ -1,4 +1,4 @@
-1.2.78-beta.601
-DIP_GG_Fixes 1.11.1731
-2026-11-23 22:18
-Hull look without breaks at section joints
+1.2.78-beta.602
+DIP_GG_Fixes 1.11.1732
+2026-11-23 23:11
+Victory points with separators
