@@ -1,4 +1,4 @@
-1.2.78-beta.565
-DIP_GG_Fixes 1.11.1684
-2026-11-23 11:46
-Deck torpedo bursts by technology
+1.2.78-beta.566
+DIP_GG_Fixes 1.11.1685
+2026-11-23 12:00
+Torpedo tube hit log
