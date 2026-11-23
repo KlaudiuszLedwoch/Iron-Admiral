@@ -1,4 +1,4 @@
-1.2.78-beta.597
-DIP_GG_Fixes 1.11.1727
-2026-11-23 21:19
-Torpedo last chance range
+1.2.78-beta.598
+DIP_GG_Fixes 1.11.1728
+2026-11-23 21:29
+Diagnostics for invasions
