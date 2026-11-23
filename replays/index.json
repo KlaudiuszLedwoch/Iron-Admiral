@@ -1,1 +1,16 @@
-[{"file":"klod76te_1916-01_20261123_160927_battle.jsonl","who":"Klod76","title":"1916 Britain vs Germany - test battle","date":"2026-11-23","ver":"1.2.78-beta.585"}]
+[
+    {
+        "file":  "klod76te_1940-01_20261123_172848_battle.jsonl",
+        "who":  "Klod76",
+        "title":  "1940 Usa vs Japan - 10 sunk",
+        "date":  "2026-11-23",
+        "ver":  "1.2.78-beta.587"
+    },
+    {
+        "file":  "klod76te_1916-01_20261123_160927_battle.jsonl",
+        "who":  "Klod76",
+        "title":  "1916 Britain vs Germany - test battle",
+        "date":  "2026-11-23",
+        "ver":  "1.2.78-beta.585"
+    }
+]
