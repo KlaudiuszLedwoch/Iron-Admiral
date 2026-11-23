@@ -38,6 +38,10 @@ Press F10 anywhere: every feature with an ON/OFF switch, update channel (stable 
 ## Install
 Download the installer package from Releases, extract, run `Install.bat`. It backs up your `Mods` folder, installs MelonLoader 0.6.6 if missing and copies everything the mod needs. Then start a new campaign. Details: [Installation](https://github.com/KlaudiuszLedwoch/Iron-Admiral/wiki/Installation).
 
+## Battle replays
+
+Every battle is recorded on your PC (UserData\IronAdmiral\Replays): ship positions, headings and damage, torpedoes, aircraft, sinkings and the battle AI's orders. With F10 > Tools > ShareReplays on (off by default, log sharing must be on), battles with a ship sunk are shared: an animated replay appears in the Discord channel #replays with a link to the interactive replay. All shared battles, listed by the name set in ShareCreditName: [Iron Admiral battle replays](https://klaudiuszledwoch.github.io/Iron-Admiral/replays/). F10 > Tools > Open replay page opens it from the game.
+
 ## Videos
 
 The battle AI in action - every caption comes from the mod's own battle log:
