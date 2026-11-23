@@ -205,7 +205,7 @@ ff664df7-333f-4896-ac79-7fc94592e8f1,Bristol,britain,cl,6,0,6,0,0,,,,
 e0270e90-e3d7-4bba-81d4-eb1997867a7e,Brooklyn,usa,cl,1,1,0,0,0,,,,
 75747e00-505f-4d76-a2ee-41e632cbb6a0,Brummer,germany,cl,2,0,0,2,1,0,0,4511,2
 a9998cad-8e22-422c-96a7-d92c79fd8695,Bussard,germany,cl,58,0,34,24,36,,,,
-0f6bb6ab-1bdd-43e7-9820-1ca29b4fd470,Cairo,britain,cl,56,15,31,10,9,,,,
+0f6bb6ab-1bdd-43e7-9820-1ca29b4fd470,Cairo,britain,cl,57,15,32,10,9,0,0,4285,1
 65bfcc62-97f1-49dc-8005-682d8d06941a,Calliope,britain,cl,13,2,0,11,1,1,10862,3750,13
 5d9f9265-9490-45ed-bc92-4b99ecbf4d98,Chester,usa,cl,20,0,20,0,0,0,0,3330,20
 1c26043a-e67f-4303-ba52-d1ee9d1eb1ee,Cleveland,usa,cl,9,7,0,2,2,,,,
@@ -258,7 +258,7 @@ db327d11-30f4-4667-aee2-0c29dee118b8,Newark,usa,cl,8,0,7,1,1,0,0,3000,7
 c61de2ab-0a62-4fb6-b5f9-17c3662f76c0,Newark,spain,cl,9,0,2,7,7,1,188,3000,7
 d2b246d0-1c75-483a-82d5-2df90159bddc,Niitaka,mexico,cl,4,0,4,0,3,0,0,2000,4
 870fd179-5c63-443f-9daa-a64cf859a78d,Niitaka,greece,cl,12,0,12,0,3,0,0,3000,12
-d5055818-c1dd-4e25-901c-8d090246a92e,Niitaka,spain,cl,4,0,0,4,4,0,0,3000,1
+d5055818-c1dd-4e25-901c-8d090246a92e,Niitaka,spain,cl,8,0,0,8,8,0,0,3000,5
 e12b091c-3420-4f02-a759-ce9e8df737c6,Niitaka,usa,cl,1,0,1,0,0,0,0,3000,1
 958e6eda-77fa-4ffd-b491-a234ddc02708,Niitaka,mexico,cl,17,0,17,0,9,9,17500,3000,17
 115ec79f-7370-4d68-b19f-0821eec1077a,O bacalhau,portugal,cl,1,1,0,0,0,,,,
@@ -326,7 +326,7 @@ c4cf7b0b-59cd-494e-9bd1-645bbd8c54b8,V-1,germany,dd,21,18,0,3,4,1,23000,850,18
 6471b793-5b31-4ba2-8674-bb1b8fa917c0,V-2,germany,dd,19,0,0,19,18,0,0,738,19
 59317734-7709-4399-83e7-c1a58f141e86,Barracuda,mexico,tb,2,0,0,2,1,0,0,174,2
 3388bb35-e969-41e6-a1d1-e03391b0ab3c,Delfin,scandinavia,tb,8,0,8,0,5,0,0,275,8
-5c4a5520-206b-4d08-91bd-c1a4ca3a6ca0,Etorofu,venezuela,tb,10,0,7,3,9,0,0,275,8
+5c4a5520-206b-4d08-91bd-c1a4ca3a6ca0,Etorofu,venezuela,tb,11,0,7,4,10,0,0,275,9
 8423d3a9-725c-4559-b74f-7e1b7019c5ba,Etorofu,france,tb,10,4,6,0,6,0,0,275,2
 8157953d-1bbc-4a23-a9f9-8d2510a515b4,Etorofu,britain,tb,4,0,1,3,1,0,0,275,2
 fc27a140-4d6b-4f27-bfbf-ac5e8dc9d7a6,Etorofu,japan,tb,1,0,0,1,1,0,0,275,1
