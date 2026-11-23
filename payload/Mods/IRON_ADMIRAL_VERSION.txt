@@ -1,4 +1,4 @@
-1.2.78-beta.596
-DIP_GG_Fixes 1.11.1726
-2026-11-23 20:58
-Line with screen and scout
+1.2.78-beta.597
+DIP_GG_Fixes 1.11.1727
+2026-11-23 21:19
+Torpedo last chance range
