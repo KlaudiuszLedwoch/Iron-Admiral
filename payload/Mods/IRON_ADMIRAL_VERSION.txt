@@ -1,4 +1,4 @@
-1.2.78-beta.564
-DIP_GG_Fixes 1.11.1683
-2026-11-23 11:31
-No designs from the future
+1.2.78-beta.565
+DIP_GG_Fixes 1.11.1684
+2026-11-23 11:46
+Deck torpedo bursts by technology
