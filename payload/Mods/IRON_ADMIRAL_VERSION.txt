@@ -1,4 +1,4 @@
-1.2.78-beta.551
-DIP_GG_Fixes 1.11.1669
-2026-11-22 20:08
-Notification feed
+1.2.78-beta.552
+DIP_GG_Fixes 1.11.1670
+2026-11-23 07:05
+Light AA below 4 inches
