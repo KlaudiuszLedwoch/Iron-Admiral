@@ -1,4 +1,4 @@
-1.2.78-beta.563
-DIP_GG_Fixes 1.11.1682
-2026-11-23 11:17
-Deck tubes and turret reload
+1.2.78-beta.564
+DIP_GG_Fixes 1.11.1683
+2026-11-23 11:31
+No designs from the future
