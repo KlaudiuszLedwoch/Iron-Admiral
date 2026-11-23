@@ -1,4 +1,4 @@
-1.2.78-beta.598
-DIP_GG_Fixes 1.11.1728
-2026-11-23 21:29
-Diagnostics for invasions
+1.2.78-beta.599
+DIP_GG_Fixes 1.11.1729
+2026-11-23 21:36
+Peace cancels invasions
