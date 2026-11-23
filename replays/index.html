@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Iron Admiral Replays</title>
+<style>
+:root{--bg:#f4f1ea;--fg:#1d2530;--muted:#6b7380;--sea:#dfe8ef;--grid:#c9d5df;--p:#2f6db3;--e:#c0392b;--card:#ffffff;--tp:#2f6db399;--te:#c0392b99}
+@media (prefers-color-scheme:dark){:root{--bg:#11161d;--fg:#e6e9ee;--muted:#8b95a3;--sea:#17222e;--grid:#24323f;--p:#6aa7ec;--e:#ef6f5e;--card:#1a222c;--tp:#6aa7ec99;--te:#ef6f5e99}}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,sans-serif}
+main{max-width:1200px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:0 0 4px}.sub{color:var(--muted);margin:0 0 10px}
+a{color:var(--p)}
+.wrap{display:grid;grid-template-columns:1fr 300px;gap:12px}@media(max-width:860px){.wrap{grid-template-columns:1fr}}
+canvas{width:100%;aspect-ratio:1/1;background:var(--sea);border-radius:8px;display:block;cursor:grab;touch-action:none}
+.ctl{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap}input[type=range]{flex:1;min-width:140px}
+button,select{background:var(--card);color:var(--fg);border:1px solid var(--grid);border-radius:6px;padding:6px 10px;cursor:pointer}
+.card{background:var(--card);border-radius:8px;padding:10px;max-height:760px;overflow:auto}
+.ev{padding:3px 0;border-bottom:1px solid var(--grid);font-size:12px;cursor:pointer}.ev.past{opacity:.4}.ev.ai{color:var(--muted)}
+.k{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+label{font-size:12px;color:var(--muted)}
+#list a{display:block;padding:4px 0}
+</style></head><body><main>
+<h1 id="ttl">Iron Admiral battle replays</h1>
+<p class="sub" id="sub">Loading…</p>
+<div id="list"></div>
+<div id="view" style="display:none">
+<div class="wrap"><div>
+<canvas id="c" width="1000" height="1000"></canvas>
+<div class="ctl"><button id="play">Play</button><select id="spd"><option value="300">x1</option><option value="120" selected>x2.5</option><option value="50">x6</option></select><input id="t" type="range" min="0" value="0"><span id="tl">0:00</span><button id="fit">Fit</button></div>
+<div class="ctl"><label><input type="checkbox" id="fol" checked> follow the action</label><label><input type="checkbox" id="lbl" checked> names</label><label><input type="checkbox" id="trk" checked> tracks</label><label><input type="checkbox" id="aiev"> AI decisions in the list</label></div>
+<p class="sub"><span class="k" style="background:var(--p)"></span>player <span class="k" style="background:var(--e)"></span>enemy &nbsp;× sunk, ring = withdrawing, line = heading, small dots = torpedoes, ▲ aircraft. Wheel or pinch = zoom, drag = move.</p>
+</div><div class="card" id="log"></div></div></div>
+</main>
+<script>
+const qs=new URLSearchParams(location.search),file=qs.get('r');
+const $=id=>document.getElementById(id);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt=t=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+async function listPage(){
+ try{const L=await (await fetch('index.json',{cache:'no-cache'})).json();
+  $('sub').textContent=L.length+' shared battle(s), newest first. Shared by players with F10 ShareReplays on.';
+  const by={};for(const b of L){(by[b.who]=by[b.who]||[]).push(b)}
+  $('list').innerHTML=Object.keys(by).sort().map(w=>`<h3>${w}</h3>`+by[w].map(b=>`<a href="?r=${encodeURIComponent(b.file)}">${b.title}</a>`).join('')).join('');
+ }catch(e){$('sub').textContent='No replays yet.'}}
+if(!file){listPage()}else{load()}
+async function load(){
+ const txt=await (await fetch('data/'+file)).text();
+ const L=txt.replace(/^﻿/,'').split('\n').filter(x=>x.trim()).map(x=>JSON.parse(x));
+ const st=L.find(l=>l.ev==='start'),S=st.ships,F=L.filter(l=>l.s),E=L.filter(l=>l.ev&&l.ev!=='start'&&l.ev!=='end');
+ $('view').style.display='';$('list').style.display='none';
+ const sides=[...new Set(S.map(s=>s.nation))];$('ttl').textContent='Battle replay: '+sides.map(n=>n[0].toUpperCase()+n.slice(1)).join(' vs ');
+ $('sub').innerHTML=`${S.length} ships, ${fmt(F[F.length-1].t)} of battle. <a href="./">All replays</a>`;
+ const cls=s=>(s.type||'').toUpperCase(),nm=s=>{const m=s.name.match(/^\w+ ([^(]+)/);return m?m[1].trim():s.name};
+ const cv=$('c'),x=cv.getContext('2d');$('t').max=F.length-1;
+ let minX=1e9,maxX=-1e9,minZ=1e9,maxZ=-1e9;for(const f of F)for(const s of f.s){minX=Math.min(minX,s[1]);maxX=Math.max(maxX,s[1]);minZ=Math.min(minZ,s[2]);maxZ=Math.max(maxZ,s[2]);}
+ let view;const fit=()=>{view={cx:(minX+maxX)/2,cz:(minZ+maxZ)/2,span:Math.max(maxX-minX,maxZ-minZ,2000)*1.1};};fit();
+ const px=v=>(v-view.cx)/view.span*cv.width+cv.width/2,pz=v=>cv.height/2-(v-view.cz)/view.span*cv.height;
+ const evTxt={sunk:'sunk',withdraw:'withdraws',surrender:'surrenders'};
+ function renderLog(){const showAi=$('aiev').checked;$('log').innerHTML='<b>Events</b>'+E.filter(e=>e.ev!=='ai'||showAi).map(e=>{
+   if(e.ev==='ai')return `<div class="ev ai" data-t="${e.t}">${fmt(e.t)} AI: ${e.k} – ${e.msg.replace(/</g,'&lt;').slice(0,140)}</div>`;
+   const s=S[e.id];return `<div class="ev" data-t="${e.t}"><span class="k" style="background:${s.player?'var(--p)':'var(--e)'}"></span>${fmt(e.t)} ${cls(s)} ${nm(s)} ${evTxt[e.ev]||e.ev}</div>`}).join('');
+  for(const d of $('log').querySelectorAll('.ev'))d.onclick=()=>{const t=+d.dataset.t;let i=F.findIndex(f=>f.t>=t);if(i<0)i=F.length-1;k=i;$('t').value=k;if($('fol').checked){for(let r=0;r<8;r++)follow(F[k])}draw()};draw()}
+ let k=0;
+ function follow(f){let a=1e9,b=-1e9,c=1e9,d=-1e9,n=0;for(const s of f.s){if(s[6]==='x')continue;n++;a=Math.min(a,s[1]);b=Math.max(b,s[1]);c=Math.min(c,s[2]);d=Math.max(d,s[2])}if(!n)return;const tv={cx:(a+b)/2,cz:(c+d)/2,span:Math.max(b-a,d-c,6000)*1.25};view.cx+=(tv.cx-view.cx)*.35;view.cz+=(tv.cz-view.cz)*.35;view.span+=(tv.span-view.span)*.35}
+ function draw(){const f=F[k],t=f.t;if($('fol').checked)follow(f);x.clearRect(0,0,cv.width,cv.height);
+  const g=css('--grid');x.strokeStyle=g;x.lineWidth=1;const kmPx=1000/view.span*cv.width;let stepKm=1;while(stepKm*kmPx<70)stepKm*=2;
+  for(let gx=Math.floor((view.cx-view.span/2)/(stepKm*1000))*stepKm*1000;gx<view.cx+view.span/2;gx+=stepKm*1000){x.beginPath();x.moveTo(px(gx),0);x.lineTo(px(gx),cv.height);x.stroke()}
+  for(let gz=Math.floor((view.cz-view.span/2)/(stepKm*1000))*stepKm*1000;gz<view.cz+view.span/2;gz+=stepKm*1000){x.beginPath();x.moveTo(0,pz(gz));x.lineTo(cv.width,pz(gz));x.stroke()}
+  x.fillStyle=css('--muted');x.font='14px system-ui';x.fillText('grid '+stepKm+' map-km',12,cv.height-12);
+  if($('trk').checked)for(let j=Math.max(0,k-15);j<k;j++)for(const s of F[j].s){const sh=S[s[0]];x.fillStyle=sh.player?css('--p'):css('--e');x.globalAlpha=.15;x.fillRect(px(s[1])-1.5,pz(s[2])-1.5,3,3)}
+  x.globalAlpha=1;
+  for(let j=Math.max(0,k-3);j<=k;j++){const tp=F[j].tp;if(!tp)continue;for(const q of tp){x.fillStyle=q[2]?css('--tp'):css('--te');x.globalAlpha=j===k?1:.35;x.beginPath();x.arc(px(q[0]),pz(q[1]),2.5,0,7);x.fill()}}x.globalAlpha=1;
+  if(f.a)for(const a of f.a){const X=px(a[0]),Z=pz(a[1]);x.fillStyle=a[2]?css('--p'):css('--e');x.beginPath();x.moveTo(X,Z-6);x.lineTo(X-5,Z+4);x.lineTo(X+5,Z+4);x.closePath();x.fill()}
+  x.font='13px system-ui';
+  for(const s of f.s){const sh=S[s[0]],c=sh.player?css('--p'):css('--e'),X=px(s[1]),Z=pz(s[2]),r=sh.tons>20000?8:sh.tons>8000?6:4;x.fillStyle=c;x.strokeStyle=c;
+   if(s[6]==='x'){x.lineWidth=2.5;x.beginPath();x.moveTo(X-r,Z-r);x.lineTo(X+r,Z+r);x.moveTo(X+r,Z-r);x.lineTo(X-r,Z+r);x.stroke()}
+   else{if(s[6]==='r'){x.lineWidth=2;x.beginPath();x.arc(X,Z,r,0,7);x.stroke()}else{x.beginPath();x.arc(X,Z,r,0,7);x.fill()}
+    const a=s[3]*Math.PI/180;x.lineWidth=2;x.beginPath();x.moveTo(X,Z);x.lineTo(X+Math.sin(a)*r*2.6,Z-Math.cos(a)*r*2.6);x.stroke()}
+   if($('lbl').checked){x.fillStyle=css('--fg');x.globalAlpha=s[6]==='x'?.5:.9;x.fillText(cls(sh)+' '+nm(sh)+(s[5]>0?' '+Math.round(s[5])+'%':''),X+r+4,Z+4);x.globalAlpha=1}}
+  $('tl').textContent=fmt(t);for(const d of $('log').querySelectorAll('.ev'))d.classList.toggle('past',+d.dataset.t>t)}
+ $('t').oninput=()=>{k=+$('t').value;if($('fol').checked){for(let r=0;r<8;r++)follow(F[k])}draw()};['lbl','trk'].forEach(i=>$(i).onchange=draw);$('aiev').onchange=renderLog;$('fit').onclick=()=>{fit();$('fol').checked=false;draw()};$('fol').onchange=draw;
+ let run=null;$('play').onclick=()=>{if(run){clearInterval(run);run=null;$('play').textContent='Play';return}$('play').textContent='Pause';run=setInterval(()=>{if(k>=F.length-1){clearInterval(run);run=null;$('play').textContent='Play';return}k++;$('t').value=k;draw()},+$('spd').value)};
+ $('spd').onchange=()=>{if(run){$('play').click();$('play').click()}};
+ const toWorld=(ex,ey)=>{const r=cv.getBoundingClientRect(),sx=(ex-r.left)/r.width*cv.width,sy=(ey-r.top)/r.height*cv.height;return[(sx-cv.width/2)/cv.width*view.span+view.cx,(cv.height/2-sy)/cv.height*view.span+view.cz]};
+ cv.addEventListener('wheel',e=>{e.preventDefault();$('fol').checked=false;const [wx,wz]=toWorld(e.clientX,e.clientY),f=e.deltaY>0?1.2:1/1.2;view.cx=wx+(view.cx-wx)*f;view.cz=wz+(view.cz-wz)*f;view.span*=f;draw()},{passive:false});
+ let drag=null;cv.addEventListener('pointerdown',e=>{$('fol').checked=false;drag=[e.clientX,e.clientY];cv.setPointerCapture(e.pointerId)});
+ cv.addEventListener('pointermove',e=>{if(!drag)return;const r=cv.getBoundingClientRect();view.cx-=(e.clientX-drag[0])/r.width*view.span;view.cz+=(e.clientY-drag[1])/r.height*view.span;drag=[e.clientX,e.clientY];draw()});
+ cv.addEventListener('pointerup',()=>drag=null);
+ renderLog();
+}
+</script></body></html>
