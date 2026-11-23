@@ -1,4 +1,4 @@
-1.2.78-beta.567
-DIP_GG_Fixes 1.11.1686
-2026-11-23 12:15
-Torpedo tube burst test
+1.2.78-beta.568
+DIP_GG_Fixes 1.11.1687
+2026-11-23 12:29
+Safer torpedo warheads
