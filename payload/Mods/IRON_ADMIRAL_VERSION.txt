@@ -1,4 +1,4 @@
-1.2.78-beta.560
-DIP_GG_Fixes 1.11.1678
-2026-11-23 10:20
-Pre-1910 torpedo speeds
+1.2.78-beta.561
+DIP_GG_Fixes 1.11.1679
+2026-11-23 10:46
+Destroyers return to the attack
