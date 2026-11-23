@@ -406,3 +406,5 @@ Thank you to everyone who shared their designs.
 2026-11-23 - 63f46b35c5e64583: 1 design(s): 1916 scandinavia Najenda [5a4982f5]
 2026-11-23 - f4a5ac4781f742f0: 1 design(s): 1900 netherlands Commodore [ead587a3]
 2026-11-23 - f4a5ac4781f742f0: 1 design(s): 1900 greece Montgomery [ee0025e0]
+2026-11-23 - 0d2377a4e44944c8: 1 design(s): 1891 greece S-28 [96ad3255]
+2026-11-23 - eff9892271ee4e01: 1 design(s): 1905 greece Peloro [1a6fe04e]
