@@ -43,7 +43,7 @@ async function listPage(){
 if(!file){listPage()}else{load()}
 async function load(){
  const txt=await (await fetch('data/'+file)).text();
- const L=txt.replace(/^﻿/,'').split('\n').filter(x=>x.trim()).map(x=>JSON.parse(x));
+ const L=txt.replace(/^﻿/,'').split('\n').filter(x=>x.trim()).map(x=>{try{return JSON.parse(x)}catch(e){try{return JSON.parse(x.replace(/(\d),(\d)(?=[,}\]])/g,'$1.$2'))}catch(e2){return null}}}).filter(x=>x);
  const st=L.find(l=>l.ev==='start'),S=st.ships,F=L.filter(l=>l.s),E=L.filter(l=>l.ev&&l.ev!=='start'&&l.ev!=='end');
  $('view').style.display='';$('list').style.display='none';
  const sides=[...new Set(S.map(s=>s.nation))];$('ttl').textContent='Battle replay: '+sides.map(n=>n[0].toUpperCase()+n.slice(1)).join(' vs ');
