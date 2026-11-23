@@ -1,4 +1,4 @@
-1.2.78-beta.600
-DIP_GG_Fixes 1.11.1730
-2026-11-23 22:11
-Peace proposal once a turn and ships for allies
+1.2.78-beta.601
+DIP_GG_Fixes 1.11.1731
+2026-11-23 22:18
+Hull look without breaks at section joints
