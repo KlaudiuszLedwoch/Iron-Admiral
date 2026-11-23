@@ -1,4 +1,4 @@
-1.2.78-beta.599
-DIP_GG_Fixes 1.11.1729
-2026-11-23 21:36
-Peace cancels invasions
+1.2.78-beta.600
+DIP_GG_Fixes 1.11.1730
+2026-11-23 22:11
+Peace proposal once a turn and ships for allies
