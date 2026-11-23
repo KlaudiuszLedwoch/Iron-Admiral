@@ -1,4 +1,4 @@
-1.2.78-beta.591
-DIP_GG_Fixes 1.11.1713
-2026-11-23 18:02
-Dispatch bubbles beside the ship
+1.2.78-beta.592
+DIP_GG_Fixes 1.11.1718
+2026-11-23 18:54
+Torpedo guard and formation picker
