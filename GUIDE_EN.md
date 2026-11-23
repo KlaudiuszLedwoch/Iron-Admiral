@@ -406,3 +406,12 @@ F10 switch: *BattleClimateWeather* (on by default) - off gives the game's own we
 ---
 
 > **Get Iron Admiral:** https://github.com/KlaudiuszLedwoch/Iron-Admiral – every new version is published there first, with both download packages, the one-file setup script, the full changelog and the source code. Feedback, logs (`MelonLoader\Latest.log`) and campaign stories are welcome in the Steam discussion thread or on GitHub.
+
+## 20. Battle replays (1.2.78 betas)
+
+Every battle you fight is recorded on your PC in UserData\IronAdmiral\Replays: ship positions, headings and damage every 5 seconds, torpedoes, aircraft, sinkings, surrenders, withdrawals and the battle AI's orders. Nothing leaves your PC unless you allow it.
+
+- F10 > Tools > ShareReplays (off by default; log sharing must be on): battles in which a ship was sunk are shared. Within about 10 minutes they appear in the Discord channel #replays as an animated replay with a link to the interactive one.
+- The interactive replay (play, speed, time slider, follow the action, zoom and drag, ship names and classes, torpedoes, aircraft, list of events, AI decisions): [Iron Admiral battle replays](https://klaudiuszledwoch.github.io/Iron-Admiral/replays/). F10 > Tools > Open replay page opens it from the game.
+- Put a name in F10 > ShareCreditName to have your battles listed under it; without a name they are shown as an anonymous tester.
+- To stop sharing switch ShareReplays off; to stop recording switch BattleRecord (F10 > Display) off.
