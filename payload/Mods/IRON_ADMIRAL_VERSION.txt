@@ -1,4 +1,4 @@
-1.2.78-beta.593
-DIP_GG_Fixes 1.11.1719
-2026-11-23 18:58
-Starting fleet formations
+1.2.78-beta.594
+DIP_GG_Fixes 1.11.1724
+2026-11-23 20:08
+Reviewed features on and feed fixes
