@@ -1,4 +1,4 @@
-1.2.78-beta.571
-DIP_GG_Fixes 1.11.1690
-2026-11-23 13:24
-Carrier strikes on ports
+1.2.78-beta.572
+DIP_GG_Fixes 1.11.1691
+2026-11-23 13:53
+Port strike reports
