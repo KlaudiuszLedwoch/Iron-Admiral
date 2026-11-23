@@ -1,4 +1,4 @@
-1.2.78-beta.579
-DIP_GG_Fixes 1.11.1699
-2026-11-23 15:37
-Quieter sonar reports
+1.2.78-beta.580
+DIP_GG_Fixes 1.11.1700
+2026-11-23 15:50
+Admiral on the pre-battle screen
