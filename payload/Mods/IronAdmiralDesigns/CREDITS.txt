@@ -389,3 +389,20 @@ Thank you to everyone who shared their designs.
 2026-11-22 - a1b4ae9fefa8463e: 1 design(s): 1890 portugal Tigre [e457269d]
 2026-11-22 - Фабушка: 1 design(s): 1922 russia 1922 Yarilo [08e6ac71]
 2026-11-22 - Bariett: 1 design(s): 1894 china Marsala [844b3395]
+2026-11-22 - 8bb6d3d9d13e46ba: 1 design(s): (DIP GG 1.3.5) 1940 Scandinavia BB Sköld
+2026-11-22 - 9e70fad050414a9d: 1 design(s): 1913 netherlands V-2 [6e3bdff3]
+2026-11-22 - 98b1031c9d304399: 1 design(s): (DIP GG 1.3.5) 1936 Scandinavia BB Förgylta Dufva
+2026-11-22 - 98b1031c9d304399: 1 design(s): (DIP GG 1.3.5) 1936 Scandinavia BC Tomler
+2026-11-22 - 98b1031c9d304399: 1 design(s): (DIP GG 1.3.5) 1936 Scandinavia CL Ve
+2026-11-23 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1915 British Empire BC Renown
+2026-11-23 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1916 British Empire BC Courageous
+2026-11-23 - 99d33e1719d54dfd: 1 design(s): 1890 china Jintsu [c93ab0ce]
+2026-11-23 - 2e584533534446ca: 1 design(s): (DIP GG 1.3.5) 1925 British Empire BC Admiral
+2026-11-23 - 98b1031c9d304399: 1 design(s): (DIP GG 1.3.5) 1933 Germany CA Prinzess Wilhelm
+2026-11-23 - 98b1031c9d304399: 1 design(s): (DIP GG 1.3.5) 1933 Germany CL Bremse
+2026-11-23 - Bariett: 1 design(s): 1901 china Ottaviano Augusto [759c8417]
+2026-11-23 - 99d33e1719d54dfd: 1 design(s): 1890 china Tenryū [b6acd4eb]
+2026-11-23 - 63f46b35c5e64583: 1 design(s): 1914 spain Amuria [c4b430cc]
+2026-11-23 - 63f46b35c5e64583: 1 design(s): 1916 scandinavia Najenda [5a4982f5]
+2026-11-23 - f4a5ac4781f742f0: 1 design(s): 1900 netherlands Commodore [ead587a3]
+2026-11-23 - f4a5ac4781f742f0: 1 design(s): 1900 greece Montgomery [ee0025e0]
