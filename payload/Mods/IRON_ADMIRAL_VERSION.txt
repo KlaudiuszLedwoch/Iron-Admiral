@@ -1,4 +1,4 @@
-1.2.78-beta.590
-DIP_GG_Fixes 1.11.1712
-2026-11-23 18:00
-Foreign orders count for the buyer
+1.2.78-beta.591
+DIP_GG_Fixes 1.11.1713
+2026-11-23 18:02
+Dispatch bubbles beside the ship
