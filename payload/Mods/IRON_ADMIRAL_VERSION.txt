@@ -1,4 +1,4 @@
-1.2.78-beta.585
-DIP_GG_Fixes 1.11.1706
-2026-11-23 16:53
-Replays with aircraft and torpedoes
+1.2.78-beta.586
+DIP_GG_Fixes 1.11.1707
+2026-11-23 17:03
+Replay page live
