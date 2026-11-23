@@ -416,3 +416,4 @@ Thank you to everyone who shared their designs.
 2026-11-23 - 99d33e1719d54dfd: 1 design(s): 1904 china Chikuma [82ebccb3]
 2026-11-23 - Gronus: 1 design(s): 1890 china Tone (Jan. 1891) [6a5a3c96]
 2026-11-23 - 7f7d8347309c4f3e: 1 design(s): 1890 greece Katori (Spitfire) [2beeaaeb]
+2026-11-23 - 0d2377a4e44944c8: 1 design(s): 1901 portugal Emden [967017ee]
