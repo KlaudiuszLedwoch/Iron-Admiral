@@ -1,4 +1,4 @@
-1.2.78-beta.558
-DIP_GG_Fixes 1.11.1676
-2026-11-23 09:29
-Standing relation orders
+1.2.78-beta.559
+DIP_GG_Fixes 1.11.1677
+2026-11-23 09:42
+Battle performance mode
