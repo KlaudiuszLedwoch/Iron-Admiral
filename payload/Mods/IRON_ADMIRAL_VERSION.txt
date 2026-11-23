@@ -1,4 +1,4 @@
-1.2.78-beta.581
-DIP_GG_Fixes 1.11.1701
-2026-11-23 16:06
-Battle record
+1.2.78-beta.582
+DIP_GG_Fixes 1.11.1702
+2026-11-23 16:21
+Battle record fixes
