@@ -1,4 +1,4 @@
-1.2.78-beta.554
-DIP_GG_Fixes 1.11.1672
-2026-11-23 08:25
-Turret and camera diagnostics
+1.2.78-beta.555
+DIP_GG_Fixes 1.11.1673
+2026-11-23 08:38
+Turret watch main battery
