@@ -418,3 +418,5 @@ Thank you to everyone who shared their designs.
 2026-11-23 - 7f7d8347309c4f3e: 1 design(s): 1890 greece Katori (Spitfire) [2beeaaeb]
 2026-11-23 - 0d2377a4e44944c8: 1 design(s): 1901 portugal Emden [967017ee]
 2026-11-23 - Bariett: 1 design(s): 1902 portugal Giacinto Carini [035a5ee0]
+2026-11-23 - 239c598dc61a41b5: 1 design(s): 1890 china Minneapolis [db2f839a]
+2026-11-24 - 239c598dc61a41b5: 1 design(s): 1890 netherlands C-Class [b11412d0]
