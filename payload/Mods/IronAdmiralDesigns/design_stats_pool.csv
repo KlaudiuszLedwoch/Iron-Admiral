@@ -79,7 +79,7 @@ a0f40a0b-a972-4d82-b4ea-1d855e2b3a7d,São Simão,portugal,bb,2,1,0,1,1,,,,
 c20a2646-075c-4cf0-be56-639718c5749e,Scharnhorst (1938),germany,bb,3,1,0,2,0,3,12000,32100,3
 ca24d6bc-00ff-41ed-8010-83a27f75f836,Schleswig-Holstein,germany,bb,16,0,14,2,1,0,0,11994,16
 19eb1208-5475-4495-a21d-fa4c469db7a2,Selimiye,greece,bb,1,1,0,0,0,16,124978,80940,1
-c3fe14ac-1197-4555-baed-12e7509ef64f,Shinano,russia,bb,18,0,14,4,3,1,3000,8235,11
+c3fe14ac-1197-4555-baed-12e7509ef64f,Shinano,russia,bb,20,0,15,5,4,1,3000,8235,13
 5c9d821e-13d7-49fb-a9fe-39ccc96a5b4b,Shinano,china,bb,9,8,0,1,1,7,36259,8235,5
 e08c0318-8b8f-4ef3-a7f5-27e09f844b22,Shinano,france,bb,1,1,0,0,0,3,8786,8235,1
 8c3acd92-798b-4cbc-a858-73283e9e2c23,Shinano,austria,bb,3,0,1,2,2,0,0,8235,3
@@ -230,7 +230,7 @@ e6680aa1-cbed-4ced-b350-b634f049663a,Kolberg,germany,cl,9,0,5,4,3,,,,
 c08ceefc-30c7-4194-8e94-c6f242fa9fc3,La Galissonnière,netherlands,cl,20,0,12,8,19,2,11029,7600,20
 b3524d8c-dd26-4314-9286-0a04545ab754,Liverpool,greece,cl,6,0,1,5,5,1,2150,8500,6
 deb633d4-bd9d-4f11-aa3f-892999817bc9,Lübeck,france,cl,2,0,2,0,0,0,0,2454,2
-67fa0792-2005-4292-825f-058290125239,Lübeck,russia,cl,5,1,3,1,2,0,0,2454,1
+67fa0792-2005-4292-825f-058290125239,Lübeck,russia,cl,6,1,4,1,2,0,0,2454,2
 ca0cde17-3b33-4e3b-a1e4-c22924cb599c,Lübeck,russia,cl,7,0,7,0,0,0,0,2454,7
 2e466c9a-4495-4272-a7b2-aea1e27770b5,Lübeck,russia,cl,1,0,0,1,1,0,0,2454,1
 18e7dd74-857c-4785-a2dd-87f709052372,Luigi di Savoia Duca degli Abruzzi,italy,cl,6,4,0,2,2,0,0,11008,4
@@ -269,7 +269,7 @@ d003e204-ab2a-426c-bebc-3220e5178968,Pallas,britain,cl,1,0,0,1,0,0,0,2575,1
 63068896-9500-46ab-9f77-e69cdb457cc1,Raimondo Montecuccoli,italy,cl,2,0,0,2,2,,,,
 22b7bac6-0abc-4245-b727-ba8ceccbb5c4,Rauma,scandinavia,cl,29,0,0,29,28,0,0,3374,29
 b1b9035c-fef4-4c21-9739-e937d1bcd97a,San DIego,usa,cl,6,6,0,0,0,2,34280,14364,6
-a9a72d2d-7832-4a11-9c1d-5a0b92545251,Schwalbe,russia,cl,30,2,22,6,9,1,3374,2450,25
+a9a72d2d-7832-4a11-9c1d-5a0b92545251,Schwalbe,russia,cl,40,2,26,12,12,1,3374,2450,35
 7bbd564d-9326-4281-bd97-21c8effb9aa5,Schwalbe,netherlands,cl,3,0,3,0,0,,,,
 c09d0cac-7345-469c-8b9e-54fb974ce81b,Schwalbe,france,cl,10,1,0,9,9,1,275,2450,10
 e3a096e2-943d-403a-a8d8-1cb91ba65cf3,Schwalbe,germany,cl,6,0,3,3,2,0,0,2450,6
