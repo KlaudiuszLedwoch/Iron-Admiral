@@ -1,4 +1,4 @@
-1.2.78-beta.580
-DIP_GG_Fixes 1.11.1700
-2026-11-23 15:50
-Admiral on the pre-battle screen
+1.2.78-beta.581
+DIP_GG_Fixes 1.11.1701
+2026-11-23 16:06
+Battle record
