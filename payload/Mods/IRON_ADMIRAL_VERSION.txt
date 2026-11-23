@@ -1,4 +1,4 @@
-1.2.78-beta.575
-DIP_GG_Fixes 1.11.1694
-2026-11-23 14:53
-Merging task forces works again
+1.2.78-beta.576
+DIP_GG_Fixes 1.11.1695
+2026-11-23 14:56
+Admiral withdrawal threshold
