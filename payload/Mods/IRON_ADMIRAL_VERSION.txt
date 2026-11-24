@@ -1,4 +1,4 @@
-1.2.78-beta.629
-DIP_GG_Fixes 1.11.1769
-2026-11-24 14:52
-Battle log reasons
+1.2.78-beta.630
+DIP_GG_Fixes 1.11.1770
+2026-11-24 15:11
+Charge speed diagnostics
