@@ -1,4 +1,4 @@
-1.2.78-beta.603
-DIP_GG_Fixes 1.11.1733
-2026-11-24 00:17
-Destroyer charge loop fixed
+1.2.78-beta.604
+DIP_GG_Fixes 1.11.1734
+2026-11-24 01:18
+Underwater torpedo tube load errors
