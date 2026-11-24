@@ -1,4 +1,4 @@
-1.2.78-beta.625
-DIP_GG_Fixes 1.11.1764
-2026-11-24 12:51
-AI withdrawal only when weaker
+1.2.78-beta.626
+DIP_GG_Fixes 1.11.1765
+2026-11-24 13:37
+AI withdrawal threshold
