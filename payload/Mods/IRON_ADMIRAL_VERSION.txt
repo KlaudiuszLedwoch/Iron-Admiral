@@ -1,4 +1,4 @@
-1.2.78-beta.617
-DIP_GG_Fixes 1.11.1753
-2026-11-24 08:27
-Carrier strikes and battle texts
+1.2.78-beta.618
+DIP_GG_Fixes 1.11.1755
+2026-11-24 08:31
+Air support messages
