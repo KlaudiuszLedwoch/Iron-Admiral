@@ -1,4 +1,4 @@
-1.2.78-beta.606
-DIP_GG_Fixes 1.11.1736
-2026-11-24 03:12
-Declined peace keeps invasions
+1.2.78-beta.607
+DIP_GG_Fixes 1.11.1737
+2026-11-24 03:14
+No formation when the enemy is close
