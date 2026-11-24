@@ -1,4 +1,4 @@
-1.2.78-beta.616
-DIP_GG_Fixes 1.11.1749
-2026-11-24 07:41
-Order bar fold and air report fix
+1.2.78-beta.617
+DIP_GG_Fixes 1.11.1753
+2026-11-24 08:27
+Carrier strikes and battle texts
