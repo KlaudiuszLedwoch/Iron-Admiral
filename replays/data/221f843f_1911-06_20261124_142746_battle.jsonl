@@ -1,0 +1,22 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia]","type":"bb","nation":"scandinavia","player":true,"tons":16886},{"id":1,"name":"CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia]","type":"cl","nation":"scandinavia","player":true,"tons":6500},{"id":2,"name":"CL Monkey (Gurtilder (1906 Nov.)) [scandinavia]","type":"cl","nation":"scandinavia","player":true,"tons":6500},{"id":3,"name":"CL Voyevoda (Rauma) [russia]","type":"cl","nation":"russia","player":false,"tons":3374}]}
+{"t":0.0,"s":[[0,-14619,6394,109,0.0,0,"a"],[1,-14746,5955,109,0.0,0,"a"],[2,-14981,6034,114,0.0,0,"a"],[3,14578,-4785,289,0.0,0,"a"]]}
+{"t":5.0,"ev":"withdraw","id":3}
+{"t":5.0,"s":[[0,-14579,6381,109,5.1,0,"a"],[1,-14693,5937,110,7.2,0,"a"],[2,-14938,6016,113,5.8,0,"a"],[3,-13984,5830,290,5.8,0,"r"]]}
+{"t":10.0,"s":[[0,-14531,6365,109,6.7,0,"a"],[1,-14620,5909,111,10.6,0,"a"],[2,-14880,5994,110,8.5,0,"a"],[3,-14038,5851,292,7.4,0,"r"]]}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] main guns (152 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [27 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (102 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [28 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (76 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [29 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (51 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [30 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (76 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [31 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (102 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [32 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (76 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [33 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (51 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [34 changes]"}
+{"t":14.1,"ev":"ai","k":"target","msg":"CL Voyevoda (Rauma) [russia] secondary guns (76 mm): target CL Gorilla (Gurtilder (1906 Nov.)) [scandinavia] (cl, dmg 0.00) instead of BB Milk Sickness (Milk Sickness (1906 Dec.)) [scandinavia] [35 changes]"}
+{"t":15.0,"s":[[0,-14470,6344,109,9.1,0,"a"],[1,-14526,5872,112,14.1,0,"a"],[2,-14803,5969,107,11.3,0,"a"],[3,-14097,5877,297,8.9,0,"r"]]}
+{"t":18.0,"ev":"ai","k":"scatter","msg":"CL Voyevoda (Rauma) [russia]: escape mission - scattering"}
+{"t":20.0,"s":[[0,-14407,6323,109,8.2,0,"a"],[1,-14433,5836,111,12.1,0,"a"],[2,-14727,5947,105,9.7,0,"a"],[3,-14154,5909,301,8.0,0,"a"]]}
+{"t":25.1,"s":[[0,-14343,6301,109,8.3,0,"a"],[1,-14341,5804,107,11.9,0,"a"],[2,-14651,5926,106,9.5,0,"a"],[3,-14208,5944,306,7.9,0,"a"]],"tp":[[-14280,5901,0]]}
+{"t":30.1,"s":[[0,-14278,6277,111,8.6,0,"a"],[1,-14249,5779,102,11.6,0,"a"],[2,-14578,5903,109,9.3,0,"a"],[3,-14258,5984,312,7.8,0,"a"]]}
+{"t":35.1,"ev":"sunk","id":3}
+{"t":35.1,"s":[[0,-14210,6250,113,8.9,0,"a"],[1,-14157,5763,97,11.3,0,"a"],[2,-14509,5877,112,9.0,0,"a"],[3,-14301,6026,315,7.2,0,"x"]],"tp":[[-14216,6138,1]]}
+{"t":38.7,"ev":"end"}
