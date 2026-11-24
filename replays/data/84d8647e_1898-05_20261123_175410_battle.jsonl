@@ -1,0 +1,901 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"CL Dauntless (Colombo (Jan. 1897)) [britain]","type":"cl","nation":"britain","player":true,"tons":3500},{"id":1,"name":"CL Figueira da Foz  (António Enes) [portugal]","type":"cl","nation":"portugal","player":false,"tons":3307},{"id":2,"name":"TB Princesa de Abiena (Yulin) [portugal]","type":"tb","nation":"portugal","player":false,"tons":300},{"id":3,"name":"TB Tamega (Yulin) [portugal]","type":"tb","nation":"portugal","player":false,"tons":300}]}
+{"t":0.0,"s":[[0,-932,-3513,22,0.0,0,"a"],[1,3530,4797,221,0.0,0,"a"],[2,2748,2699,221,0.0,0,"a"],[3,3041,3040,221,0.0,0,"a"]]}
+{"t":0.0,"ev":"ai","k":"target","msg":"CL Figueira da Foz  (António Enes) [portugal]: no visible capital target"}
+{"t":0.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: no visible capital target"}
+{"t":5.0,"s":[[0,-74,-1987,22,19.2,0,"a"],[1,3342,3787,222,13.0,0,"a"],[2,2723,3068,221,19.3,0,"a"],[3,3020,3413,221,19.3,0,"a"]]}
+{"t":8.0,"ev":"ai","k":"massattack","msg":"massed torpedo attack ON for portugal: enemy combat tonnage 3500 t vs own 3907 t, 3 torpedo craft vs 1 targets (needed 3 per target at night)"}
+{"t":10.0,"s":[[0,-15,-1840,21,19.2,0,"a"],[1,3268,3708,224,13.2,0,"a"],[2,2620,2948,221,19.2,0,"a"],[3,2917,3292,221,19.3,0,"a"]]}
+{"t":15.1,"s":[[0,42,-1693,20,18.9,0,"a"],[1,3190,3630,226,13.2,0,"a"],[2,2520,2830,221,18.5,0,"a"],[3,2812,3171,221,19.2,0,"a"]]}
+{"t":15.2,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target CL Figueira da Foz  (António Enes) [portugal] (cl, dmg 0.00) instead of none [1 changes]"}
+{"t":15.2,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target CL Figueira da Foz  (António Enes) [portugal] (cl, dmg 0.00) instead of none [2 changes]"}
+{"t":15.2,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target CL Figueira da Foz  (António Enes) [portugal] (cl, dmg 0.00) instead of none [3 changes]"}
+{"t":15.2,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target CL Figueira da Foz  (António Enes) [portugal] (cl, dmg 0.00) instead of none [4 changes]"}
+{"t":20.2,"s":[[0,95,-1546,19,18.9,0,"a"],[1,3112,3553,225,13.3,0,"a"],[2,2422,2715,220,18.2,0,"a"],[3,2709,3051,221,19.2,0,"a"]]}
+{"t":25.2,"s":[[0,145,-1400,19,18.5,0,"a"],[1,3034,3475,224,13.3,0,"a"],[2,2326,2604,220,17.5,0,"a"],[3,2607,2931,221,18.9,0,"a"]]}
+{"t":27.1,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Princesa de Abiena (Yulin) [portugal] (tb, dmg 0.00) instead of CL Figueira da Foz  (António Enes) [portugal] [5 changes]"}
+{"t":27.1,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Princesa de Abiena (Yulin) [portugal] (tb, dmg 0.00) instead of CL Figueira da Foz  (António Enes) [portugal] [6 changes]"}
+{"t":28.1,"ev":"ai","k":"massattack","msg":"TB Princesa de Abiena (Yulin) [portugal] (tb): massed torpedo attack - charges CL Dauntless (Colombo (Jan. 1897)) [britain] from 4395 m (torpedoes 670 m, night); alone it would not get through, part of the attack will"}
+{"t":28.1,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal] (tb) charges CL Dauntless (Colombo (Jan. 1897)) [britain] (cl) at 4395 m, torpedo range 670 m, massed attack"}
+{"t":28.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: sector starboard bow of CL Dauntless (Colombo (Jan. 1897)) [britain] (division 1 on this target)"}
+{"t":30.3,"s":[[0,193,-1256,19,18.7,0,"a"],[1,2958,3397,224,13.5,0,"a"],[2,2234,2496,221,17.4,0,"a"],[3,2506,2814,221,18.8,0,"a"]]}
+{"t":32.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to a bow launch station (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 30.0 vs target 30.0, 28 s to the launch point"}
+{"t":35.3,"s":[[0,241,-1113,18,18.3,0,"a"],[1,2882,3317,223,13.3,0,"a"],[2,2145,2390,220,16.7,0,"a"],[3,2409,2700,221,18.2,0,"a"]]}
+{"t":40.4,"s":[[0,285,-971,16,18.5,0,"a"],[1,2808,3238,223,13.5,0,"a"],[2,2059,2286,219,16.6,0,"a"],[3,2314,2588,220,18.1,0,"a"]]}
+{"t":45.4,"s":[[0,325,-829,15,18.9,0,"a"],[1,2735,3160,223,13.7,0,"a"],[2,1977,2185,219,16.7,0,"a"],[3,2221,2479,220,18.3,0,"a"]]}
+{"t":50.4,"s":[[0,359,-688,13,17.7,0,"a"],[1,2663,3083,223,12.8,0,"a"],[2,1897,2087,219,15.3,0,"a"],[3,2133,2373,220,16.8,0,"a"]]}
+{"t":55.4,"s":[[0,388,-546,11,17.6,0,"a"],[1,2592,3006,222,12.6,0,"a"],[2,1818,1991,220,14.9,0,"a"],[3,2046,2268,219,16.5,0,"a"]]}
+{"t":60.4,"s":[[0,412,-405,9,17.3,0,"a"],[1,2524,2931,222,12.4,0,"a"],[2,1742,1900,220,14.4,0,"a"],[3,1962,2166,219,15.9,0,"a"]]}
+{"t":65.5,"s":[[0,432,-265,7,18.0,0,"a"],[1,2455,2855,222,12.9,0,"a"],[2,1667,1809,220,14.9,0,"a"],[3,1879,2065,220,16.5,0,"a"]]}
+{"t":70.5,"s":[[0,448,-125,6,17.3,0,"a"],[1,2389,2781,222,12.1,0,"a"],[2,1593,1722,220,13.9,0,"a"],[3,1799,1968,220,15.4,0,"a"]]}
+{"t":75.5,"s":[[0,463,13,6,1.1,0,"a"],[1,2325,2710,222,0.8,0,"a"],[2,1523,1639,220,0.9,0,"a"],[3,1720,1875,220,1.0,0,"a"]]}
+{"t":76.5,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal] (tb) charges CL Dauntless (Colombo (Jan. 1897)) [britain] (cl) at 1897 m, torpedo range 670 m, massed attack"}
+{"t":80.6,"s":[[0,476,152,6,16.7,0,"a"],[1,2260,2639,223,11.5,0,"a"],[2,1453,1557,221,12.8,0,"a"],[3,1643,1783,220,14.4,0,"a"]]}
+{"t":85.6,"s":[[0,489,287,5,16.5,0,"a"],[1,2195,2572,225,11.3,0,"a"],[2,1385,1480,222,12.4,0,"a"],[3,1569,1695,220,13.9,0,"a"]]}
+{"t":90.6,"s":[[0,502,423,5,14.2,0,"a"],[1,2128,2507,227,9.6,0,"a"],[2,1317,1407,224,10.4,0,"a"],[3,1496,1608,221,11.8,0,"a"]]}
+{"t":92.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to a bow launch station (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 27.0 vs target 27.0, 20 s to the launch point"}
+{"t":95.6,"s":[[0,515,557,5,16.4,0,"a"],[1,2060,2447,229,11.0,0,"a"],[2,1248,1336,224,11.9,0,"a"],[3,1422,1524,222,13.5,0,"a"]]}
+{"t":100.6,"s":[[0,527,690,5,15.1,0,"a"],[1,1991,2390,231,10.1,0,"a"],[2,1181,1268,225,10.8,0,"a"],[3,1348,1444,223,12.3,0,"a"]]}
+{"t":105.6,"s":[[0,539,822,5,16.1,0,"a"],[1,1923,2335,232,10.6,0,"a"],[2,1116,1203,225,11.0,0,"a"],[3,1276,1367,224,12.7,0,"a"]],"tp":[[585,846,1]]}
+{"t":110.7,"s":[[0,550,952,4,16.6,0,"a"],[1,1856,2282,231,10.8,0,"a"],[2,1055,1140,225,11.1,0,"a"],[3,1205,1296,224,12.7,0,"a"]],"tp":[[775,948,1]]}
+{"t":112.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":112.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.5 km, guns 11.4 km, cannot get out) - at"}
+{"t":115.7,"s":[[0,557,1080,1,15.2,0,"a"],[1,1790,2228,231,10.1,0,"a"],[2,995,1079,225,10.1,0,"a"],[3,1139,1227,223,11.2,0,"a"]],"tp":[[963,1050,1]]}
+{"t":120.7,"s":[[0,554,1206,356,15.5,0,"a"],[1,1725,2176,232,10.3,0,"a"],[2,935,1020,226,10.3,0,"a"],[3,1079,1159,221,11.0,0,"a"]],"tp":[[911,1114,0]]}
+{"t":120.7,"ev":"ai","k":"smoke","msg":"TB Tamega (Yulin) [portugal]: hit during the approach to CL Dauntless (Colombo (Jan. 1897)) [britain] at 527 m (division damage 0.00 -> 0.01) - smoke"}
+{"t":124.7,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":125.7,"s":[[0,538,1330,350,15.2,0,"a"],[1,1659,2126,234,10.0,0,"a"],[2,875,963,226,10.0,0,"a"],[3,1022,1093,220,10.5,0,"a"]],"tp":[[793,1270,0]]}
+{"t":129.9,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] main guns (178 mm): target CL Figueira da Foz  (António Enes) [portugal] (cl, dmg 0.00) instead of TB Princesa de Abiena (Yulin) [portugal] [7 changes]"}
+{"t":130.7,"s":[[0,512,1451,346,15.0,0,"a"],[1,1592,2079,235,10.0,0,"a"],[2,818,906,224,9.8,0,"a"],[3,969,1028,219,10.1,0,"a"]],"tp":[[676,1426,0]]}
+{"t":135.7,"s":[[0,480,1569,343,14.9,0,"a"],[1,1525,2031,234,10.1,0,"a"],[2,765,846,219,9.7,0,"a"],[3,916,965,221,9.9,0,"a"]],"tp":[[558,1582,0]]}
+{"t":140.7,"s":[[0,439,1684,337,14.9,0,"a"],[1,1459,1982,233,10.1,0,"a"],[2,719,783,214,9.6,0,"a"],[3,862,905,224,9.8,0,"a"]]}
+{"t":144.8,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":144.8,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.1 km, guns 11.4 km, cannot get out) - at"}
+{"t":144.8,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Tamega (Yulin) [portugal] (tb, dmg 0.00) instead of TB Princesa de Abiena (Yulin) [portugal] [8 changes]"}
+{"t":144.8,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Tamega (Yulin) [portugal] (tb, dmg 0.00) instead of TB Princesa de Abiena (Yulin) [portugal] [9 changes]"}
+{"t":145.8,"s":[[0,385,1793,330,14.8,0,"a"],[1,1394,1931,231,10.0,0,"a"],[2,676,718,212,9.5,0,"a"],[3,806,849,226,9.7,0,"a"]]}
+{"t":150.8,"s":[[0,315,1892,320,14.8,0,"a"],[1,1331,1879,229,10.0,0,"a"],[2,635,652,212,9.4,0,"a"],[3,748,795,228,9.6,0,"a"]]}
+{"t":152.8,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 12.2 vs target 23.9, 1200 s to the launch point"}
+{"t":155.8,"s":[[0,232,1979,313,14.9,0,"a"],[1,1271,1823,225,10.1,0,"a"],[2,593,588,214,9.4,0,"a"],[3,690,743,228,9.6,0,"a"]]}
+{"t":156.9,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":160.8,"s":[[0,140,2058,308,14.6,0,"a"],[1,1216,1763,220,9.8,0,"a"],[2,549,527,218,9.2,0,"a"],[3,634,690,225,9.3,0,"a"]]}
+{"t":165.8,"s":[[0,44,2129,306,13.6,0,"a"],[1,1168,1700,215,9.0,0,"a"],[2,502,470,222,8.4,0,"a"],[3,583,635,221,8.4,0,"a"]]}
+{"t":170.8,"s":[[0,-52,2197,305,14.4,0,"a"],[1,1126,1635,211,9.4,0,"a"],[2,452,419,226,8.6,0,"a"],[3,540,580,215,8.4,0,"a"]]}
+{"t":175.9,"s":[[0,-147,2266,307,13.5,0,"a"],[1,1090,1569,207,8.7,0,"a"],[2,403,374,229,7.7,0,"a"],[3,505,525,211,7.4,0,"a"]]}
+{"t":176.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":176.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 2.0 km, guns 11.4 km, cannot get out) - at"}
+{"t":180.9,"s":[[0,-234,2338,312,13.8,0,"a"],[1,1056,1501,205,9.4,0,"a"],[2,355,333,230,7.6,0,"a"],[3,475,474,210,7.1,0,"a"]]}
+{"t":185.9,"s":[[0,-314,2417,318,13.7,0,"a"],[1,1023,1430,205,9.6,0,"a"],[2,309,294,230,7.3,0,"a"],[3,447,425,210,6.7,0,"a"]]}
+{"t":189.0,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":191.0,"s":[[0,-381,2506,327,13.5,0,"a"],[1,990,1357,205,9.8,0,"a"],[2,263,258,234,7.0,0,"a"],[3,420,380,212,6.3,0,"a"]]}
+{"t":196.0,"s":[[0,-433,2603,337,13.4,0,"a"],[1,957,1283,203,9.9,0,"a"],[2,215,226,238,6.9,0,"a"],[3,391,338,217,6.2,0,"a"]]}
+{"t":201.0,"s":[[0,-468,2707,346,13.4,0,"a"],[1,926,1207,202,10.1,0,"a"],[2,166,198,243,6.9,0,"a"],[3,359,300,223,6.0,0,"a"]]}
+{"t":206.0,"s":[[0,-485,2816,355,12.5,0,"a"],[1,896,1130,200,9.4,0,"a"],[2,115,174,247,6.4,0,"a"],[3,323,266,229,5.6,0,"a"]]}
+{"t":209.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":209.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 2.8 km, guns 11.4 km, cannot get out) - at"}
+{"t":211.0,"s":[[0,-488,2925,2,13.3,0,"a"],[1,868,1052,200,10.2,0,"a"],[2,64,156,253,6.7,0,"a"],[3,285,236,235,5.9,0,"a"]]}
+{"t":213.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 10.9 vs target 21.4, 1200 s to the launch point"}
+{"t":216.0,"s":[[0,-480,3032,6,12.9,0,"a"],[1,838,973,201,10.2,0,"a"],[2,12,144,261,6.3,0,"a"],[3,246,211,241,5.5,0,"a"]]}
+{"t":221.1,"s":[[0,-467,3137,8,13.0,0,"a"],[1,808,896,203,10.0,0,"a"],[2,-37,140,269,6.0,0,"a"],[3,207,192,246,5.2,0,"a"]]}
+{"t":221.2,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":226.1,"s":[[0,-452,3241,9,12.5,0,"a"],[1,773,823,207,9.6,0,"a"],[2,-84,142,276,5.5,0,"a"],[3,168,177,252,4.9,0,"a"]]}
+{"t":231.2,"s":[[0,-435,3344,10,12.1,0,"a"],[1,734,755,212,9.2,0,"a"],[2,-128,149,281,5.2,0,"a"],[3,130,167,257,4.6,0,"a"]]}
+{"t":234.4,"ev":"ai","k":"target","msg":"player order: CL Dauntless (Colombo (Jan. 1897)) [britain] all guns fire at TR Ternate (Pedro Alvares Cabral) [portugal] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":234.6,"ev":"ai","k":"target","msg":"player order: CL Dauntless (Colombo (Jan. 1897)) [britain] - TR Ternate (Pedro Alvares Cabral) [portugal] is out of the fight, the mod picks targets again"}
+{"t":236.2,"s":[[0,-416,3445,11,11.5,0,"a"],[1,689,691,218,8.7,0,"a"],[2,-171,159,284,4.9,0,"a"],[3,92,160,261,4.3,0,"a"]]}
+{"t":241.2,"s":[[0,-396,3546,12,12.5,0,"a"],[1,639,631,222,9.4,0,"a"],[2,-213,171,287,5.2,0,"a"],[3,54,155,266,4.6,0,"a"]]}
+{"t":241.3,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":241.3,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 3.4 km, guns 11.4 km, cannot get out) - at"}
+{"t":246.3,"s":[[0,-375,3646,12,11.2,0,"a"],[1,585,575,225,8.4,0,"a"],[2,-253,184,289,4.5,0,"a"],[3,17,154,270,4.0,0,"a"]]}
+{"t":251.3,"s":[[0,-352,3745,13,12.3,0,"a"],[1,529,521,227,9.6,0,"a"],[2,-290,196,290,4.6,0,"a"],[3,-17,154,273,4.1,0,"a"]]}
+{"t":253.3,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":256.3,"s":[[0,-329,3842,13,11.9,0,"a"],[1,469,468,229,9.6,0,"a"],[2,-321,208,291,4.0,0,"a"],[3,-47,157,276,3.5,0,"a"]]}
+{"t":261.4,"s":[[0,-307,3936,14,11.7,0,"a"],[1,408,415,231,9.7,0,"a"],[2,-352,219,291,4.0,0,"a"],[3,-75,160,277,3.5,0,"a"]]}
+{"t":266.4,"s":[[0,-284,4029,14,11.7,0,"a"],[1,346,368,234,9.5,0,"a"],[2,-382,231,293,4.0,0,"a"],[3,-104,164,279,3.5,0,"a"]]}
+{"t":271.4,"s":[[0,-261,4122,14,11.7,0,"a"],[1,283,325,238,9.3,0,"a"],[2,-412,244,295,4.0,0,"a"],[3,-132,169,281,3.5,0,"a"]]}
+{"t":273.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":273.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 3.9 km, guns 11.4 km, cannot get out) - at"}
+{"t":276.4,"s":[[0,-237,4214,14,11.7,0,"a"],[1,218,288,242,9.2,0,"a"],[2,-441,258,295,4.0,0,"a"],[3,-160,174,281,3.5,0,"a"]]}
+{"t":277.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.7 vs target 19.1, 1200 s to the launch point"}
+{"t":281.4,"s":[[0,-214,4307,14,11.7,0,"a"],[1,150,253,245,9.4,0,"a"],[2,-470,273,298,3.9,0,"a"],[3,-188,180,284,3.5,0,"a"]]}
+{"t":285.5,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":286.5,"s":[[0,-190,4400,14,11.7,0,"a"],[1,79,222,247,9.5,0,"a"],[2,-499,288,300,4.0,0,"a"],[3,-215,188,286,3.5,0,"a"]]}
+{"t":291.5,"s":[[0,-166,4493,14,11.6,0,"a"],[1,6,191,247,9.6,0,"a"],[2,-527,304,300,3.9,0,"a"],[3,-243,195,286,3.5,0,"a"]]}
+{"t":296.5,"s":[[0,-142,4586,14,12.7,0,"a"],[1,-68,160,249,10.7,0,"a"],[2,-555,321,303,4.3,0,"a"],[3,-271,203,287,3.8,0,"a"]]}
+{"t":301.5,"s":[[0,-119,4678,14,11.9,0,"a"],[1,-143,133,251,9.8,0,"a"],[2,-582,339,305,4.1,0,"a"],[3,-298,213,290,3.6,0,"a"]]}
+{"t":305.5,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":305.5,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 4.4 km, guns 11.4 km, cannot get out) - at"}
+{"t":306.5,"s":[[0,-95,4771,14,11.7,0,"a"],[1,-217,109,254,9.4,0,"a"],[2,-609,358,305,4.0,0,"a"],[3,-324,223,291,3.5,0,"a"]]}
+{"t":311.6,"s":[[0,-71,4864,14,11.7,0,"a"],[1,-292,90,257,9.3,0,"a"],[2,-635,377,306,4.0,0,"a"],[3,-351,233,292,3.5,0,"a"]]}
+{"t":316.6,"s":[[0,-47,4957,15,10.3,0,"a"],[1,-368,75,260,8.3,0,"a"],[2,-661,396,309,3.4,0,"a"],[3,-377,244,294,3.0,0,"a"]]}
+{"t":317.6,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":321.6,"s":[[0,-23,5050,15,11.6,0,"a"],[1,-446,62,261,9.7,0,"a"],[2,-686,417,310,4.0,0,"a"],[3,-403,257,295,3.5,0,"a"]]}
+{"t":326.6,"s":[[0,2,5143,15,11.7,0,"a"],[1,-526,49,261,9.9,0,"a"],[2,-711,438,310,4.0,0,"a"],[3,-429,269,296,3.5,0,"a"]]}
+{"t":331.7,"s":[[0,26,5236,15,11.7,0,"a"],[1,-608,36,261,10.0,0,"a"],[2,-736,460,313,4.0,0,"a"],[3,-455,282,298,3.5,0,"a"]]}
+{"t":336.7,"s":[[0,50,5329,15,11.3,0,"a"],[1,-690,25,263,9.7,0,"a"],[2,-760,482,314,3.8,0,"a"],[3,-480,296,300,3.4,0,"a"]]}
+{"t":337.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":337.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 4.9 km, guns 11.4 km, cannot get out) - at"}
+{"t":341.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.7 vs target 19.1, 1200 s to the launch point"}
+{"t":341.7,"s":[[0,74,5422,15,11.9,0,"a"],[1,-771,16,265,10.1,0,"a"],[2,-783,505,314,4.1,0,"a"],[3,-505,310,300,3.6,0,"a"]]}
+{"t":346.7,"s":[[0,98,5514,15,10.2,0,"a"],[1,-851,11,267,8.5,0,"a"],[2,-806,528,316,3.5,0,"a"],[3,-530,325,302,3.1,0,"a"]]}
+{"t":349.7,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":349.7,"ev":"ai","k":"scatter","msg":"TR Ternate (Pedro Alvares Cabral) [portugal] (tr) cannot outrun CL Dauntless (Colombo (Jan. 1897)) [britain] (9.3 vs own 1.5 speed units, 1299 m) - a transport does not fight: runs on its own bearing, scattering"}
+{"t":349.7,"ev":"ai","k":"charge","msg":"TR Ternate (Pedro Alvares Cabral) [portugal]: damaged beyond the charge limit - escapes on its own bearing (+60 deg off straight away) under smoke"}
+{"t":349.7,"ev":"ai","k":"scatter","msg":"TR Ternate (Pedro Alvares Cabral) [portugal]: transport - runs, scattering"}
+{"t":351.7,"s":[[0,122,5607,15,11.7,0,"a"],[1,-931,8,269,9.8,0,"a"],[2,-828,551,319,4.0,0,"a"],[3,-553,341,304,3.5,0,"a"]]}
+{"t":356.8,"s":[[0,146,5700,15,11.6,0,"a"],[1,-1012,7,269,10.0,0,"a"],[2,-849,576,320,4.0,0,"a"],[3,-577,357,305,3.5,0,"a"]]}
+{"t":361.8,"s":[[0,171,5791,16,11.0,0,"a"],[1,-1094,6,268,9.6,0,"a"],[2,-870,601,321,3.8,0,"a"],[3,-600,373,305,3.3,0,"a"]]}
+{"t":366.8,"s":[[0,199,5881,19,12.8,0,"a"],[1,-1176,2,267,11.2,0,"a"],[2,-890,626,323,4.4,0,"a"],[3,-623,390,308,3.9,0,"a"]]}
+{"t":369.8,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":369.8,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 5.4 km, guns 11.4 km, cannot get out) - at"}
+{"t":371.8,"s":[[0,231,5970,21,11.5,0,"a"],[1,-1261,-2,267,10.2,0,"a"],[2,-910,653,323,4.0,0,"a"],[3,-646,408,310,3.5,0,"a"]]}
+{"t":376.9,"s":[[0,267,6057,24,11.4,0,"a"],[1,-1346,-6,268,10.4,0,"a"],[2,-930,679,323,4.0,0,"a"],[3,-668,427,310,3.5,0,"a"]]}
+{"t":381.9,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":381.9,"s":[[0,306,6141,26,11.3,0,"a"],[1,-1431,-9,268,10.5,0,"a"],[2,-949,705,324,4.0,0,"a"],[3,-690,445,311,3.6,0,"a"]]}
+{"t":384.8,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TR Tristão Vaz Teixeira (Pedro Alvares Cabral) [portugal] (tr, dmg 0.00) instead of TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] [1"}
+{"t":384.8,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TR Tristão Vaz Teixeira (Pedro Alvares Cabral) [portugal] (tr, dmg 0.00) instead of TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] [1"}
+{"t":386.9,"s":[[0,346,6222,28,10.7,0,"a"],[1,-1517,-12,268,10.3,0,"a"],[2,-968,732,326,3.9,0,"a"],[3,-711,465,314,3.4,0,"a"]]}
+{"t":392.0,"s":[[0,389,6301,29,11.1,0,"a"],[1,-1602,-15,267,10.3,0,"a"],[2,-986,759,326,4.0,0,"a"],[3,-732,485,314,3.5,0,"a"]]}
+{"t":397.0,"s":[[0,435,6380,31,11.1,0,"a"],[1,-1685,-21,265,9.9,0,"a"],[2,-1004,786,328,4.0,0,"a"],[3,-753,505,315,3.5,0,"a"]]}
+{"t":402.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":402.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 5.8 km, guns 11.4 km, cannot get out) - at"}
+{"t":402.1,"s":[[0,483,6458,32,11.4,0,"a"],[1,-1764,-31,261,9.9,0,"a"],[2,-1021,814,329,4.1,0,"a"],[3,-773,525,316,3.6,0,"a"]]}
+{"t":406.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.2 vs target 18.1, 1200 s to the launch point"}
+{"t":407.1,"s":[[0,533,6535,35,10.7,0,"a"],[1,-1842,-45,259,9.4,0,"a"],[2,-1038,842,330,3.9,0,"a"],[3,-792,546,317,3.4,0,"a"]]}
+{"t":412.1,"s":[[0,587,6607,38,11.0,0,"a"],[1,-1920,-62,257,9.7,0,"a"],[2,-1054,871,331,4.0,0,"a"],[3,-812,568,318,3.5,0,"a"]]}
+{"t":414.1,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":417.2,"s":[[0,645,6677,42,11.2,0,"a"],[1,-1999,-83,255,10.2,0,"a"],[2,-1070,900,332,4.1,0,"a"],[3,-831,589,320,3.6,0,"a"]]}
+{"t":422.2,"s":[[0,707,6742,45,10.6,0,"a"],[1,-2077,-105,252,9.6,0,"a"],[2,-1085,928,332,3.9,0,"a"],[3,-849,611,320,3.4,0,"a"]]}
+{"t":427.2,"s":[[0,771,6803,48,10.9,0,"a"],[1,-2153,-132,249,9.8,0,"a"],[2,-1100,958,334,4.0,0,"a"],[3,-868,634,322,3.6,0,"a"]]}
+{"t":430.1,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] (tr, dmg 0.00) instead of TR Tristão Vaz Teixeira (Pedro Alvares Cabral) [portugal] [1"}
+{"t":430.1,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] (tr, dmg 0.00) instead of TR Tristão Vaz Teixeira (Pedro Alvares Cabral) [portugal] [1"}
+{"t":432.2,"s":[[0,837,6860,50,10.8,0,"a"],[1,-2225,-161,247,9.6,0,"a"],[2,-1114,987,334,4.0,0,"a"],[3,-885,656,322,3.5,0,"a"]]}
+{"t":434.3,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":434.3,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 6.2 km, guns 11.4 km, cannot get out) - at"}
+{"t":437.3,"s":[[0,907,6915,53,10.6,0,"a"],[1,-2297,-194,244,9.5,0,"a"],[2,-1128,1016,336,3.9,0,"a"],[3,-903,679,324,3.5,0,"a"]]}
+{"t":442.3,"s":[[0,979,6967,55,10.3,0,"a"],[1,-2368,-230,243,9.3,0,"a"],[2,-1142,1047,337,3.8,0,"a"],[3,-920,702,324,3.3,0,"a"]]}
+{"t":446.4,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":447.4,"s":[[0,1054,7019,56,11.4,0,"a"],[1,-2441,-267,243,10.3,0,"a"],[2,-1154,1077,338,4.1,0,"a"],[3,-937,726,325,3.6,0,"a"]]}
+{"t":452.5,"s":[[0,1130,7070,57,11.3,0,"a"],[1,-2515,-305,243,10.3,0,"a"],[2,-1167,1107,338,4.1,0,"a"],[3,-953,750,326,3.6,0,"a"]]}
+{"t":457.5,"s":[[0,1208,7120,58,11.1,0,"a"],[1,-2590,-344,242,10.2,0,"a"],[2,-1179,1138,339,3.9,0,"a"],[3,-969,774,327,3.5,0,"a"]]}
+{"t":462.5,"s":[[0,1286,7169,58,11.9,0,"a"],[1,-2665,-384,241,10.9,0,"a"],[2,-1190,1168,340,4.2,0,"a"],[3,-984,798,328,3.7,0,"a"]]}
+{"t":466.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":466.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 6.5 km, guns 11.4 km, cannot get out) - at"}
+{"t":467.6,"s":[[0,1365,7218,59,11.3,0,"a"],[1,-2738,-425,239,10.2,0,"a"],[2,-1201,1199,341,4.0,0,"a"],[3,-999,823,329,3.5,0,"a"]]}
+{"t":470.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.4 vs target 18.4, 1200 s to the launch point"}
+{"t":472.6,"s":[[0,1446,7266,59,11.3,0,"a"],[1,-2809,-469,238,10.0,0,"a"],[2,-1211,1230,342,3.9,0,"a"],[3,-1014,848,330,3.5,0,"a"]]}
+{"t":477.7,"s":[[0,1527,7314,59,11.6,0,"a"],[1,-2879,-514,237,10.3,0,"a"],[2,-1221,1262,343,4.0,0,"a"],[3,-1028,873,331,3.5,0,"a"]]}
+{"t":478.7,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":482.7,"s":[[0,1609,7362,60,11.5,0,"a"],[1,-2950,-560,237,10.3,0,"a"],[2,-1231,1293,343,4.0,0,"a"],[3,-1042,898,332,3.5,0,"a"]]}
+{"t":487.7,"s":[[0,1690,7410,60,11.6,0,"a"],[1,-3021,-606,238,10.3,0,"a"],[2,-1241,1324,343,4.0,0,"a"],[3,-1055,924,333,3.5,0,"a"]]}
+{"t":492.8,"s":[[0,1772,7457,59,10.7,0,"a"],[1,-3094,-651,238,9.7,0,"a"],[2,-1251,1355,342,3.7,0,"a"],[3,-1068,950,334,3.3,0,"a"]]}
+{"t":497.7,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] main guns (178 mm): target TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] (tr, dmg 0.00) instead of TR Tristão Vaz Teixeira (Pedro Alvares Cabral) [portugal] [14 ch"}
+{"t":497.8,"s":[[0,1850,7507,56,11.0,0,"a"],[1,-3167,-696,238,10.3,0,"a"],[2,-1260,1387,343,3.9,0,"a"],[3,-1080,975,334,3.4,0,"a"]]}
+{"t":498.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":498.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 6.9 km, guns 11.4 km, cannot get out) - at"}
+{"t":502.9,"s":[[0,1924,7561,51,10.9,0,"a"],[1,-3240,-742,237,10.2,0,"a"],[2,-1270,1418,344,3.9,0,"a"],[3,-1093,1002,335,3.4,0,"a"]],"tp":[[1941,7345,1]]}
+{"t":507.9,"s":[[0,1991,7624,43,11.3,0,"a"],[1,-3310,-790,235,10.5,0,"a"],[2,-1279,1449,344,4.1,0,"a"],[3,-1105,1028,336,3.6,0,"a"]],"tp":[[2030,7161,1]]}
+{"t":511.0,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":512.9,"s":[[0,2046,7694,33,11.0,0,"a"],[1,-3379,-838,235,10.4,0,"a"],[2,-1288,1481,344,4.0,0,"a"],[3,-1116,1054,336,3.5,0,"a"]],"tp":[[2125,6977,1]]}
+{"t":517.9,"s":[[0,2089,7773,24,11.1,0,"a"],[1,-3449,-888,235,10.7,0,"a"],[2,-1297,1512,343,4.1,0,"a"],[3,-1127,1080,338,3.6,0,"a"]],"tp":[[2219,6796,1]]}
+{"t":523.0,"s":[[0,2117,7855,14,11.3,0,"a"],[1,-3519,-936,236,11.1,0,"a"],[2,-1306,1544,344,4.3,0,"a"],[3,-1138,1107,339,3.8,0,"a"]],"tp":[[2313,6616,1]]}
+{"t":528.0,"s":[[0,2131,7938,5,10.2,0,"a"],[1,-3589,-982,237,10.2,0,"a"],[2,-1316,1575,344,4.0,0,"a"],[3,-1149,1134,339,3.5,0,"a"]]}
+{"t":531.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":531.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 7.3 km, guns 11.4 km, cannot get out) - at"}
+{"t":533.0,"s":[[0,2131,8021,355,10.1,0,"a"],[1,-3660,-1028,237,10.4,0,"a"],[2,-1324,1607,346,4.0,0,"a"],[3,-1159,1161,339,3.5,0,"a"]]}
+{"t":535.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 8.4 vs target 16.5, 1200 s to the launch point"}
+{"t":538.1,"s":[[0,2118,8101,346,9.9,0,"a"],[1,-3732,-1074,237,10.4,0,"a"],[2,-1331,1638,349,3.9,0,"a"],[3,-1169,1187,340,3.4,0,"a"]]}
+{"t":543.1,"s":[[0,2092,8177,337,9.7,0,"a"],[1,-3801,-1122,235,10.2,0,"a"],[2,-1336,1667,353,3.6,0,"a"],[3,-1178,1212,341,3.2,0,"a"]]}
+{"t":543.2,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":548.2,"s":[[0,2054,8249,327,9.6,0,"a"],[1,-3871,-1172,234,10.0,0,"a"],[2,-1339,1699,356,3.7,0,"a"],[3,-1187,1239,341,3.3,0,"a"]]}
+{"t":553.3,"s":[[0,2004,8313,317,10.3,0,"a"],[1,-3940,-1223,234,11.1,0,"a"],[2,-1340,1732,358,4.2,0,"a"],[3,-1196,1266,342,3.7,0,"a"]]}
+{"t":558.4,"s":[[0,1945,8366,308,9.1,0,"a"],[1,-4010,-1273,235,9.9,0,"a"],[2,-1341,1765,359,3.8,0,"a"],[3,-1204,1294,343,3.3,0,"a"]]}
+{"t":563.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":563.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 7.4 km, guns 11.4 km, cannot get out) - at"}
+{"t":563.4,"s":[[0,1880,8408,298,9.6,0,"a"],[1,-4080,-1323,235,10.7,0,"a"],[2,-1341,1798,1,4.1,0,"a"],[3,-1212,1322,344,3.6,0,"a"]]}
+{"t":568.5,"s":[[0,1810,8438,289,9.0,0,"a"],[1,-4151,-1372,235,10.4,0,"a"],[2,-1340,1830,3,3.9,0,"a"],[3,-1220,1350,345,3.5,0,"a"]]}
+{"t":573.5,"s":[[0,1739,8456,279,8.8,0,"a"],[1,-4219,-1422,233,10.1,0,"a"],[2,-1338,1863,5,4.0,0,"a"],[3,-1227,1378,347,3.5,0,"a"]]}
+{"t":578.5,"s":[[0,1668,8461,270,8.7,0,"a"],[1,-4285,-1472,232,10.2,0,"a"],[2,-1334,1895,7,4.0,0,"a"],[3,-1233,1406,348,3.5,0,"a"]]}
+{"t":583.5,"s":[[0,1598,8455,260,8.5,0,"a"],[1,-4352,-1523,232,10.2,0,"a"],[2,-1331,1928,6,3.9,0,"a"],[3,-1239,1434,349,3.5,0,"a"]]}
+{"t":588.6,"s":[[0,1531,8437,251,8.5,0,"a"],[1,-4419,-1574,234,10.3,0,"a"],[2,-1327,1960,5,4.0,0,"a"],[3,-1244,1462,350,3.5,0,"a"]]}
+{"t":593.6,"s":[[0,1469,8410,241,10.8,0,"a"],[1,-4486,-1622,235,13.3,0,"a"],[2,-1325,1993,2,5.3,0,"a"],[3,-1249,1490,351,4.6,0,"a"]]}
+{"t":596.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 6.7 vs target 13.2, 1200 s to the launch point"}
+{"t":598.6,"s":[[0,1415,8374,232,8.1,0,"a"],[1,-4554,-1668,237,10.2,0,"a"],[2,-1325,2025,0,4.1,0,"a"],[3,-1253,1519,352,3.6,0,"a"]]}
+{"t":603.6,"s":[[0,1368,8330,222,7.5,0,"a"],[1,-4623,-1713,238,9.6,0,"a"],[2,-1325,2058,358,3.8,0,"a"],[3,-1257,1547,352,3.4,0,"a"]]}
+{"t":608.7,"s":[[0,1329,8279,213,7.6,0,"a"],[1,-4694,-1757,238,9.9,0,"a"],[2,-1326,2091,358,3.9,0,"a"],[3,-1261,1576,353,3.4,0,"a"]]}
+{"t":613.7,"s":[[0,1299,8222,204,7.9,0,"a"],[1,-4766,-1802,237,10.3,0,"a"],[2,-1327,2124,359,4.0,0,"a"],[3,-1264,1604,353,3.5,0,"a"]]}
+{"t":618.8,"s":[[0,1276,8160,197,8.4,0,"a"],[1,-4835,-1848,235,10.1,0,"a"],[2,-1327,2156,2,4.0,0,"a"],[3,-1268,1633,353,3.5,0,"a"]]}
+{"t":623.8,"s":[[0,1258,8090,193,8.4,0,"a"],[1,-4903,-1895,235,9.7,0,"a"],[2,-1326,2189,2,3.8,0,"a"],[3,-1271,1661,354,3.3,0,"a"]]}
+{"t":628.8,"s":[[0,1243,8018,191,9.0,0,"a"],[1,-4972,-1943,236,9.9,0,"a"],[2,-1325,2221,2,3.8,0,"a"],[3,-1274,1690,354,3.4,0,"a"]]}
+{"t":633.9,"s":[[0,1228,7940,191,9.7,0,"a"],[1,-5043,-1991,236,10.3,0,"a"],[2,-1324,2254,1,4.0,0,"a"],[3,-1277,1719,355,3.5,0,"a"]]}
+{"t":638.9,"s":[[0,1212,7861,192,10.0,0,"a"],[1,-5113,-2038,237,10.5,0,"a"],[2,-1323,2287,1,4.0,0,"a"],[3,-1279,1747,355,3.5,0,"a"]]}
+{"t":643.9,"s":[[0,1195,7780,193,10.1,0,"a"],[1,-5185,-2085,236,10.4,0,"a"],[2,-1323,2319,1,4.0,0,"a"],[3,-1282,1776,356,3.5,0,"a"]]}
+{"t":648.9,"s":[[0,1175,7698,194,10.1,0,"a"],[1,-5255,-2132,235,10.0,0,"a"],[2,-1321,2352,4,3.8,0,"a"],[3,-1284,1804,356,3.4,0,"a"]]}
+{"t":654.0,"s":[[0,1154,7614,195,10.3,0,"a"],[1,-5323,-2181,233,9.9,0,"a"],[2,-1319,2384,6,3.8,0,"a"],[3,-1286,1833,356,3.4,0,"a"]]}
+{"t":656.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 8.7 vs target 17.0, 217 s to the launch point"}
+{"t":659.0,"s":[[0,1131,7529,196,10.9,0,"a"],[1,-5391,-2232,233,10.5,0,"a"],[2,-1314,2417,8,4.1,0,"a"],[3,-1287,1862,357,3.6,0,"a"]]}
+{"t":664.1,"s":[[0,1106,7444,197,10.8,0,"a"],[1,-5459,-2284,233,10.4,0,"a"],[2,-1310,2449,8,4.0,0,"a"],[3,-1289,1890,358,3.5,0,"a"]]}
+{"t":669.1,"s":[[0,1079,7357,198,11.1,0,"a"],[1,-5528,-2334,234,10.4,0,"a"],[2,-1306,2482,7,4.0,0,"a"],[3,-1290,1919,358,3.5,0,"a"]]}
+{"t":674.1,"s":[[0,1051,7271,198,11.1,0,"a"],[1,-5597,-2383,235,10.3,0,"a"],[2,-1302,2514,7,4.0,0,"a"],[3,-1291,1948,359,3.5,0,"a"]]}
+{"t":679.1,"s":[[0,1022,7184,198,11.2,0,"a"],[1,-5667,-2432,235,10.4,0,"a"],[2,-1297,2546,8,4.0,0,"a"],[3,-1291,1977,359,3.5,0,"a"]]}
+{"t":684.1,"s":[[0,993,7097,199,11.2,0,"a"],[1,-5736,-2482,233,10.4,0,"a"],[2,-1292,2578,11,4.0,0,"a"],[3,-1292,2005,360,3.5,0,"a"]]}
+{"t":689.2,"s":[[0,963,7008,199,14.1,0,"a"],[1,-5803,-2533,232,12.7,0,"a"],[2,-1285,2611,13,4.9,0,"a"],[3,-1292,2034,0,4.3,0,"a"]]}
+{"t":694.2,"s":[[0,933,6920,199,11.0,0,"a"],[1,-5869,-2585,231,9.9,0,"a"],[2,-1278,2642,14,3.9,0,"a"],[3,-1291,2063,1,3.4,0,"a"]]}
+{"t":699.2,"s":[[0,903,6831,199,11.4,0,"a"],[1,-5935,-2638,232,10.3,0,"a"],[2,-1270,2674,13,4.0,0,"a"],[3,-1291,2091,2,3.5,0,"a"]]}
+{"t":704.2,"s":[[0,873,6745,201,11.2,0,"a"],[1,-6002,-2689,233,10.3,0,"a"],[2,-1263,2706,12,4.0,0,"a"],[3,-1290,2120,2,3.5,0,"a"]]}
+{"t":709.2,"s":[[0,838,6661,205,11.0,0,"a"],[1,-6069,-2739,234,10.2,0,"a"],[2,-1256,2738,11,4.0,0,"a"],[3,-1288,2149,3,3.5,0,"a"]]}
+{"t":714.3,"s":[[0,797,6582,211,11.1,0,"a"],[1,-6138,-2788,234,10.6,0,"a"],[2,-1250,2770,11,4.1,0,"a"],[3,-1287,2177,3,3.6,0,"a"]]}
+{"t":717.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to a bow launch station (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.1 vs target 17.8, 120 s to the launch point"}
+{"t":719.3,"s":[[0,746,6509,219,10.7,0,"a"],[1,-6207,-2838,234,10.3,0,"a"],[2,-1243,2802,12,3.9,0,"a"],[3,-1285,2206,4,3.5,0,"a"]]}
+{"t":724.4,"s":[[0,683,6443,227,11.1,0,"a"],[1,-6276,-2891,232,10.7,0,"a"],[2,-1236,2834,13,4.1,0,"a"],[3,-1283,2236,4,3.6,0,"a"]]}
+{"t":729.5,"s":[[0,616,6387,234,10.7,0,"a"],[1,-6343,-2944,231,10.3,0,"a"],[2,-1228,2866,12,4.0,0,"a"],[3,-1281,2264,5,3.5,0,"a"]]}
+{"t":734.5,"s":[[0,542,6340,240,10.6,0,"a"],[1,-6410,-2997,232,10.4,0,"a"],[2,-1223,2897,9,3.8,0,"a"],[3,-1278,2292,5,3.4,0,"a"]]}
+{"t":739.6,"s":[[0,465,6300,246,10.3,0,"a"],[1,-6478,-3049,233,10.1,0,"a"],[2,-1219,2928,5,3.7,0,"a"],[3,-1276,2320,5,3.3,0,"a"]]}
+{"t":744.6,"s":[[0,386,6268,250,9.8,0,"a"],[1,-6545,-3099,234,9.7,0,"a"],[2,-1217,2959,1,3.6,0,"a"],[3,-1273,2346,5,3.2,0,"a"]]}
+{"t":746.4,"ev":"ai","k":"target","msg":"player order: CL Dauntless (Colombo (Jan. 1897)) [britain] all guns fire at TR Tristão Vaz Teixeira (Pedro Alvares Cabral) [portugal] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":748.4,"ev":"ai","k":"target","msg":"player order: CL Dauntless (Colombo (Jan. 1897)) [britain] - TR Tristão Vaz Teixeira (Pedro Alvares Cabral) [portugal] is out of the fight, the mod picks targets again"}
+{"t":749.6,"s":[[0,307,6241,252,10.5,0,"a"],[1,-6612,-3146,235,10.3,0,"a"],[2,-1218,2989,357,3.9,0,"a"],[3,-1271,2373,5,3.5,0,"a"]]}
+{"t":754.7,"s":[[0,224,6214,251,6.4,0,"a"],[1,-6683,-3194,236,6.3,0,"a"],[2,-1221,3022,354,2.4,0,"a"],[3,-1268,2402,5,2.1,0,"a"]]}
+{"t":759.7,"s":[[0,142,6184,248,10.6,0,"a"],[1,-6752,-3243,235,10.4,0,"a"],[2,-1224,3054,353,4.0,0,"a"],[3,-1266,2430,4,3.5,0,"a"]]}
+{"t":764.8,"s":[[0,63,6148,243,10.1,0,"a"],[1,-6820,-3293,233,9.8,0,"a"],[2,-1228,3087,355,3.8,0,"a"],[3,-1264,2459,4,3.4,0,"a"]]}
+{"t":769.8,"s":[[0,-11,6105,236,10.7,0,"a"],[1,-6887,-3344,232,10.6,0,"a"],[2,-1230,3119,355,4.1,0,"a"],[3,-1262,2488,3,3.6,0,"a"]]}
+{"t":774.8,"s":[[0,-79,6054,230,13.3,0,"a"],[1,-6954,-3396,232,13.4,0,"a"],[2,-1233,3152,355,5.1,0,"a"],[3,-1261,2516,3,4.5,0,"a"]]}
+{"t":777.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 8.6 vs target 16.7, 1200 s to the launch point"}
+{"t":779.8,"s":[[0,-138,5997,222,10.0,0,"a"],[1,-7021,-3448,233,10.3,0,"a"],[2,-1237,3184,353,4.0,0,"a"],[3,-1260,2545,2,3.5,0,"a"]]}
+{"t":784.8,"s":[[0,-187,5933,213,9.8,0,"a"],[1,-7089,-3499,233,10.3,0,"a"],[2,-1241,3217,352,4.0,0,"a"],[3,-1259,2574,2,3.5,0,"a"]]}
+{"t":789.9,"s":[[0,-224,5864,203,9.4,0,"a"],[1,-7158,-3549,234,10.3,0,"a"],[2,-1245,3249,351,4.0,0,"a"],[3,-1258,2603,1,3.5,0,"a"]]}
+{"t":794.9,"s":[[0,-248,5791,194,9.4,0,"a"],[1,-7227,-3601,233,10.4,0,"a"],[2,-1250,3281,352,4.0,0,"a"],[3,-1257,2631,1,3.5,0,"a"]]}
+{"t":799.9,"s":[[0,-260,5715,184,9.7,0,"a"],[1,-7294,-3653,231,10.7,0,"a"],[2,-1255,3314,352,4.2,0,"a"],[3,-1257,2660,0,3.7,0,"a"]]}
+{"t":805.0,"s":[[0,-260,5640,175,9.4,0,"a"],[1,-7359,-3706,230,10.4,0,"a"],[2,-1259,3346,352,4.1,0,"a"],[3,-1257,2689,0,3.6,0,"a"]]}
+{"t":810.0,"s":[[0,-247,5567,165,8.6,0,"a"],[1,-7423,-3759,230,10.0,0,"a"],[2,-1264,3378,352,3.9,0,"a"],[3,-1257,2717,360,3.4,0,"a"]]}
+{"t":815.0,"s":[[0,-223,5500,156,10.9,0,"a"],[1,-7489,-3814,231,13.1,0,"a"],[2,-1269,3411,350,5.0,0,"a"],[3,-1257,2746,359,4.4,0,"a"]]}
+{"t":820.1,"s":[[0,-189,5439,146,8.3,0,"a"],[1,-7556,-3867,232,10.2,0,"a"],[2,-1275,3443,349,3.9,0,"a"],[3,-1258,2775,359,3.5,0,"a"]]}
+{"t":825.2,"s":[[0,-147,5385,137,10.0,0,"a"],[1,-7624,-3921,232,12.7,0,"a"],[2,-1281,3476,349,4.9,0,"a"],[3,-1258,2804,358,4.3,0,"a"]]}
+{"t":826.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":826.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 2.2 km, guns 11.4 km, cannot get out) - at"}
+{"t":830.2,"s":[[0,-96,5340,127,8.7,0,"a"],[1,-7692,-3974,231,11.0,0,"a"],[2,-1287,3508,350,4.2,0,"a"],[3,-1259,2833,358,3.7,0,"a"]]}
+{"t":835.3,"s":[[0,-40,5304,119,8.6,0,"a"],[1,-7757,-4029,230,10.9,0,"a"],[2,-1292,3540,353,4.0,0,"a"],[3,-1261,2862,358,3.5,0,"a"]]}
+{"t":838.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 6.8 vs target 13.3, 1200 s to the launch point"}
+{"t":840.4,"s":[[0,25,5273,113,8.9,0,"a"],[1,-7823,-4085,230,10.4,0,"a"],[2,-1296,3572,355,4.0,0,"a"],[3,-1262,2890,357,3.5,0,"a"]]}
+{"t":845.4,"s":[[0,94,5246,110,8.8,0,"a"],[1,-7887,-4139,231,9.9,0,"a"],[2,-1298,3605,355,3.9,0,"a"],[3,-1263,2919,357,3.4,0,"a"]]}
+{"t":846.1,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":850.5,"s":[[0,168,5220,109,9.6,0,"a"],[1,-7952,-4190,233,9.8,0,"a"],[2,-1301,3638,355,4.0,0,"a"],[3,-1265,2948,357,3.5,0,"a"]]}
+{"t":855.5,"s":[[0,244,5195,109,9.6,0,"a"],[1,-8017,-4237,235,9.5,0,"a"],[2,-1304,3670,354,3.9,0,"a"],[3,-1266,2977,357,3.4,0,"a"]]}
+{"t":858.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":858.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 2.2 km, guns 11.4 km, cannot get out) - at"}
+{"t":860.5,"s":[[0,323,5168,108,10.2,0,"a"],[1,-8085,-4283,237,10.0,0,"a"],[2,-1308,3703,354,4.0,0,"a"],[3,-1268,3006,357,3.5,0,"a"]]}
+{"t":865.6,"s":[[0,402,5142,108,10.5,0,"a"],[1,-8154,-4328,237,10.2,0,"a"],[2,-1311,3735,356,4.0,0,"a"],[3,-1269,3034,357,3.6,0,"a"]]}
+{"t":870.6,"s":[[0,484,5115,108,10.5,0,"a"],[1,-8224,-4373,236,10.1,0,"a"],[2,-1312,3767,359,3.7,0,"a"],[3,-1271,3062,357,3.3,0,"a"]]}
+{"t":875.6,"s":[[0,568,5088,108,9.4,0,"a"],[1,-8293,-4420,236,8.9,0,"a"],[2,-1312,3799,2,3.5,0,"a"],[3,-1273,3090,357,3.1,0,"a"]]}
+{"t":878.3,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":880.6,"s":[[0,653,5061,108,8.0,0,"a"],[1,-8363,-4468,236,7.6,0,"a"],[2,-1311,3831,3,2.9,0,"a"],[3,-1274,3119,357,2.6,0,"a"]]}
+{"t":885.7,"s":[[0,739,5033,108,11.0,0,"a"],[1,-8434,-4513,238,10.1,0,"a"],[2,-1309,3864,3,4.0,0,"a"],[3,-1276,3148,357,3.5,0,"a"]]}
+{"t":890.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":890.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 2.4 km, guns 11.4 km, cannot get out) - at"}
+{"t":890.7,"s":[[0,825,5005,108,11.2,0,"a"],[1,-8503,-4556,240,10.0,0,"a"],[2,-1307,3897,3,4.0,0,"a"],[3,-1277,3176,357,3.5,0,"a"]]}
+{"t":895.7,"s":[[0,912,4977,108,8.4,0,"a"],[1,-8574,-4596,241,7.6,0,"a"],[2,-1305,3929,4,3.0,0,"a"],[3,-1278,3205,358,2.6,0,"a"]]}
+{"t":898.5,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.3 vs target 18.1, 1200 s to the launch point"}
+{"t":900.7,"s":[[0,999,4949,108,10.1,0,"a"],[1,-8647,-4636,242,9.1,0,"a"],[2,-1303,3962,5,3.6,0,"a"],[3,-1279,3234,358,3.2,0,"a"]]}
+{"t":905.8,"s":[[0,1088,4921,108,11.6,0,"a"],[1,-8721,-4676,241,10.5,0,"a"],[2,-1299,3994,8,3.9,0,"a"],[3,-1280,3262,358,3.4,0,"a"]]}
+{"t":910.6,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":910.8,"s":[[0,1177,4892,108,10.9,0,"a"],[1,-8792,-4717,239,9.6,0,"a"],[2,-1294,4021,13,3.2,0,"a"],[3,-1281,3287,359,2.8,0,"a"]]}
+{"t":915.8,"s":[[0,1265,4866,106,10.8,0,"a"],[1,-8862,-4761,238,9.6,0,"a"],[2,-1286,4048,19,3.4,0,"a"],[3,-1281,3312,359,3.0,0,"a"]]}
+{"t":920.8,"s":[[0,1355,4844,101,11.4,0,"a"],[1,-8932,-4805,237,10.3,0,"a"],[2,-1275,4076,24,3.7,0,"a"],[3,-1282,3337,360,3.2,0,"a"]]}
+{"t":922.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":922.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 2.8 km, guns 11.4 km, cannot get out) - at"}
+{"t":925.9,"s":[[0,1447,4831,95,12.1,0,"a"],[1,-9004,-4851,238,11.2,0,"a"],[2,-1262,4104,27,4.1,0,"a"],[3,-1281,3365,1,3.6,0,"a"]]}
+{"t":930.9,"s":[[0,1537,4830,86,9.2,0,"a"],[1,-9076,-4896,238,8.7,0,"a"],[2,-1246,4131,31,3.1,0,"a"],[3,-1281,3393,2,2.8,0,"a"]]}
+{"t":935.9,"s":[[0,1626,4845,76,11.2,0,"a"],[1,-9150,-4941,238,10.9,0,"a"],[2,-1230,4157,35,3.8,0,"a"],[3,-1280,3419,3,3.3,0,"a"]]}
+{"t":940.9,"s":[[0,1708,4873,67,10.7,0,"a"],[1,-9221,-4987,237,10.3,0,"a"],[2,-1213,4179,41,3.5,0,"a"],[3,-1278,3444,4,3.1,0,"a"]]}
+{"t":942.9,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":946.0,"s":[[0,1785,4913,57,10.1,0,"a"],[1,-9290,-5033,235,9.6,0,"a"],[2,-1192,4200,46,3.5,0,"a"],[3,-1276,3470,6,3.0,0,"a"]]}
+{"t":951.1,"s":[[0,1852,4966,48,10.4,0,"a"],[1,-9357,-5081,234,10.1,0,"a"],[2,-1170,4220,51,3.5,0,"a"],[3,-1273,3496,7,3.1,0,"a"]]}
+{"t":955.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":955.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 3.1 km, guns 11.4 km, cannot get out) - at"}
+{"t":956.1,"s":[[0,1910,5028,38,10.2,0,"a"],[1,-9425,-5131,234,10.2,0,"a"],[2,-1148,4236,58,3.3,0,"a"],[3,-1270,3520,9,3.0,0,"a"]]}
+{"t":959.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 8.5 vs target 16.5, 1200 s to the launch point"}
+{"t":961.1,"s":[[0,1955,5098,29,10.5,0,"a"],[1,-9493,-5179,235,10.6,0,"a"],[2,-1125,4247,66,3.2,0,"a"],[3,-1266,3543,10,2.8,0,"a"]]}
+{"t":966.1,"s":[[0,1989,5173,19,10.2,0,"a"],[1,-9562,-5226,236,10.3,0,"a"],[2,-1102,4256,75,3.1,0,"a"],[3,-1262,3564,12,2.7,0,"a"]]}
+{"t":971.1,"s":[[0,2009,5251,10,9.9,0,"a"],[1,-9632,-5272,237,10.2,0,"a"],[2,-1078,4260,83,3.2,0,"a"],[3,-1257,3586,14,2.8,0,"a"]]}
+{"t":975.1,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":976.2,"s":[[0,2016,5330,0,9.8,0,"a"],[1,-9704,-5318,237,10.7,0,"a"],[2,-1050,4262,89,3.5,0,"a"],[3,-1251,3609,16,3.1,0,"a"]]}
+{"t":981.2,"s":[[0,2010,5406,351,9.3,0,"a"],[1,-9773,-5365,236,10.2,0,"a"],[2,-1021,4261,94,3.8,0,"a"],[3,-1243,3634,18,3.3,0,"a"]]}
+{"t":986.2,"s":[[0,1992,5480,342,9.4,0,"a"],[1,-9841,-5412,234,10.3,0,"a"],[2,-988,4259,96,4.1,0,"a"],[3,-1234,3661,21,3.6,0,"a"]]}
+{"t":987.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":987.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 3.2 km, guns 11.4 km, cannot get out) - at"}
+{"t":991.2,"s":[[0,1963,5549,334,9.0,0,"a"],[1,-9908,-5461,234,10.1,0,"a"],[2,-958,4254,100,3.7,0,"a"],[3,-1223,3687,24,3.3,0,"a"]]}
+{"t":996.3,"s":[[0,1927,5616,330,9.5,0,"a"],[1,-9977,-5511,234,10.6,0,"a"],[2,-928,4248,105,3.6,0,"a"],[3,-1212,3710,26,3.2,0,"a"]]}
+{"t":1001.3,"s":[[0,1885,5683,327,9.6,0,"a"],[1,-10047,-5561,235,10.3,0,"a"],[2,-900,4239,109,3.5,0,"a"],[3,-1200,3733,29,3.1,0,"a"]]}
+{"t":1006.3,"s":[[0,1841,5750,327,9.8,0,"a"],[1,-10116,-5610,235,10.3,0,"a"],[2,-872,4228,114,3.7,0,"a"],[3,-1186,3756,32,3.2,0,"a"]]}
+{"t":1011.4,"s":[[0,1797,5821,328,10.2,0,"a"],[1,-10186,-5660,234,10.3,0,"a"],[2,-843,4215,117,4.0,0,"a"],[3,-1171,3780,35,3.5,0,"a"]]}
+{"t":1016.5,"s":[[0,1753,5894,329,9.9,0,"a"],[1,-10253,-5710,232,9.6,0,"a"],[2,-814,4200,117,3.8,0,"a"],[3,-1153,3803,39,3.3,0,"a"]]}
+{"t":1019.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1019.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 3.1 km, guns 11.4 km, cannot get out) - at"}
+{"t":1021.5,"s":[[0,1709,5969,330,12.6,0,"a"],[1,-10318,-5762,231,12.1,0,"a"],[2,-784,4185,116,4.7,0,"a"],[3,-1134,3825,43,4.2,0,"a"]]}
+{"t":1023.7,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 8.6 vs target 16.9, 1200 s to the launch point"}
+{"t":1026.5,"s":[[0,1667,6046,331,10.7,0,"a"],[1,-10383,-5815,231,10.3,0,"a"],[2,-755,4171,115,4.0,0,"a"],[3,-1114,3845,46,3.5,0,"a"]]}
+{"t":1031.5,"s":[[0,1624,6124,331,10.7,0,"a"],[1,-10449,-5868,232,10.2,0,"a"],[2,-725,4157,116,3.9,0,"a"],[3,-1093,3864,50,3.4,0,"a"]]}
+{"t":1036.6,"s":[[0,1580,6202,329,10.5,0,"a"],[1,-10516,-5920,233,10.0,0,"a"],[2,-696,4142,117,3.9,0,"a"],[3,-1070,3882,54,3.4,0,"a"]]}
+{"t":1041.6,"s":[[0,1532,6274,324,10.7,0,"a"],[1,-10583,-5971,233,10.5,0,"a"],[2,-667,4128,117,4.0,0,"a"],[3,-1046,3898,57,3.6,0,"a"]]}
+{"t":1046.6,"s":[[0,1478,6340,317,10.4,0,"a"],[1,-10651,-6022,233,10.4,0,"a"],[2,-637,4113,116,4.0,0,"a"],[3,-1022,3913,61,3.5,0,"a"]]}
+{"t":1051.7,"s":[[0,1416,6396,308,10.3,0,"a"],[1,-10718,-6074,232,10.4,0,"a"],[2,-608,4099,113,3.9,0,"a"],[3,-996,3926,65,3.5,0,"a"]]}
+{"t":1051.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1051.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 3.1 km, guns 11.4 km, cannot get out) - at"}
+{"t":1056.0,"ev":"ai","k":"smoke","msg":"TB Princesa de Abiena (Yulin) [portugal]: 1 ship(s) lay a smoke screen"}
+{"t":1056.7,"s":[[0,1345,6441,298,10.2,0,"a"],[1,-10784,-6127,231,10.4,0,"a"],[2,-578,4088,111,4.0,0,"a"],[3,-970,3937,68,3.5,0,"a"]]}
+{"t":1061.7,"s":[[0,1269,6474,289,10.0,0,"a"],[1,-10851,-6181,232,10.2,0,"a"],[2,-548,4076,109,3.9,0,"a"],[3,-943,3947,71,3.5,0,"a"]]}
+{"t":1066.8,"s":[[0,1189,6494,279,13.2,0,"a"],[1,-10918,-6232,234,13.4,0,"a"],[2,-517,4066,109,5.3,0,"a"],[3,-916,3956,74,4.7,0,"a"]]}
+{"t":1071.8,"s":[[0,1108,6500,270,10.9,0,"a"],[1,-10985,-6279,236,11.1,0,"a"],[2,-486,4055,110,4.4,0,"a"],[3,-888,3964,76,3.9,0,"a"]]}
+{"t":1076.8,"s":[[0,1029,6493,260,10.2,0,"a"],[1,-11053,-6324,237,10.5,0,"a"],[2,-455,4043,110,4.2,0,"a"],[3,-860,3970,79,3.7,0,"a"]]}
+{"t":1081.8,"s":[[0,952,6472,251,9.5,0,"a"],[1,-11123,-6368,238,9.9,0,"a"],[2,-424,4033,109,3.9,0,"a"],[3,-832,3975,81,3.4,0,"a"]]}
+{"t":1084.2,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 8.0 vs target 15.6, 1200 s to the launch point"}
+{"t":1086.9,"s":[[0,880,6440,241,8.9,0,"a"],[1,-11194,-6413,237,9.6,0,"a"],[2,-394,4023,105,3.6,0,"a"],[3,-804,3979,83,3.1,0,"a"]]}
+{"t":1091.9,"s":[[0,816,6398,232,9.2,0,"a"],[1,-11263,-6459,236,10.0,0,"a"],[2,-365,4016,101,3.7,0,"a"],[3,-778,3981,85,3.3,0,"a"]]}
+{"t":1096.9,"s":[[0,762,6347,222,10.1,0,"a"],[1,-11332,-6506,236,11.5,0,"a"],[2,-333,4011,99,4.5,0,"a"],[3,-749,3984,86,3.9,0,"a"]]}
+{"t":1101.9,"s":[[0,718,6290,213,8.8,0,"a"],[1,-11402,-6553,237,10.3,0,"a"],[2,-301,4006,97,4.0,0,"a"],[3,-721,3986,87,3.5,0,"a"]]}
+{"t":1107.0,"s":[[0,685,6227,203,8.3,0,"a"],[1,-11473,-6598,238,9.9,0,"a"],[2,-268,4002,96,3.9,0,"a"],[3,-692,3987,88,3.4,0,"a"]]}
+{"t":1112.0,"s":[[0,663,6160,194,8.4,0,"a"],[1,-11545,-6641,239,10.1,0,"a"],[2,-235,3999,96,4.0,0,"a"],[3,-663,3988,88,3.5,0,"a"]]}
+{"t":1117.1,"s":[[0,652,6091,184,8.6,0,"a"],[1,-11618,-6684,240,10.5,0,"a"],[2,-202,3996,94,4.1,0,"a"],[3,-634,3989,89,3.6,0,"a"]]}
+{"t":1122.1,"s":[[0,653,6022,175,8.6,0,"a"],[1,-11692,-6726,240,10.6,0,"a"],[2,-170,3994,92,4.0,0,"a"],[3,-605,3989,89,3.5,0,"a"]]}
+{"t":1127.2,"s":[[0,664,5956,165,8.1,0,"a"],[1,-11764,-6769,239,10.1,0,"a"],[2,-140,3994,87,3.6,0,"a"],[3,-579,3989,89,3.1,0,"a"]]}
+{"t":1132.2,"s":[[0,686,5895,156,7.6,0,"a"],[1,-11833,-6812,237,9.6,0,"a"],[2,-113,3997,81,3.4,0,"a"],[3,-554,3990,89,3.0,0,"a"]]}
+{"t":1137.2,"s":[[0,717,5839,147,7.7,0,"a"],[1,-11902,-6857,237,9.9,0,"a"],[2,-83,4003,77,3.7,0,"a"],[3,-528,3990,89,3.2,0,"a"]]}
+{"t":1142.3,"s":[[0,757,5785,140,8.3,0,"a"],[1,-11973,-6904,237,10.2,0,"a"],[2,-52,4011,74,3.9,0,"a"],[3,-500,3991,88,3.5,0,"a"]]}
+{"t":1145.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 6.8 vs target 13.2, 1200 s to the launch point"}
+{"t":1147.3,"s":[[0,805,5732,136,9.0,0,"a"],[1,-12044,-6949,238,10.3,0,"a"],[2,-21,4021,71,3.9,0,"a"],[3,-471,3992,87,3.5,0,"a"]]}
+{"t":1152.4,"s":[[0,859,5680,134,9.1,0,"a"],[1,-12117,-6993,238,10.4,0,"a"],[2,9,4032,68,4.0,0,"a"],[3,-443,3994,86,3.5,0,"a"]]}
+{"t":1153.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1153.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.8 km, guns 11.4 km, cannot get out) - at"}
+{"t":1157.4,"s":[[0,915,5625,135,9.6,0,"a"],[1,-12189,-7038,238,10.4,0,"a"],[2,39,4045,66,3.8,0,"a"],[3,-415,3997,84,3.4,0,"a"]]}
+{"t":1162.4,"s":[[0,971,5568,136,10.4,0,"a"],[1,-12259,-7083,236,10.6,0,"a"],[2,68,4059,64,4.2,0,"a"],[3,-386,4000,83,3.7,0,"a"]]}
+{"t":1167.4,"s":[[0,1028,5508,137,10.6,0,"a"],[1,-12326,-7130,235,10.4,0,"a"],[2,98,4073,64,4.2,0,"a"],[3,-358,4004,82,3.7,0,"a"]]}
+{"t":1172.5,"s":[[0,1085,5445,138,10.4,0,"a"],[1,-12393,-7179,234,10.1,0,"a"],[2,127,4087,66,4.0,0,"a"],[3,-329,4008,81,3.5,0,"a"]]}
+{"t":1177.5,"s":[[0,1142,5380,140,10.4,0,"a"],[1,-12461,-7228,234,10.1,0,"a"],[2,157,4100,68,3.9,0,"a"],[3,-301,4013,80,3.4,0,"a"]]}
+{"t":1182.5,"s":[[0,1198,5312,140,11.1,0,"a"],[1,-12531,-7277,235,10.7,0,"a"],[2,187,4111,71,4.0,0,"a"],[3,-273,4018,79,3.5,0,"a"]]}
+{"t":1184.9,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Princesa de Abiena (Yulin) [portugal] (tb, dmg 0.10) instead of TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] [15 changes]"}
+{"t":1184.9,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Princesa de Abiena (Yulin) [portugal] (tb, dmg 0.10) instead of TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] [16 changes]"}
+{"t":1184.9,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] main guns (178 mm): target TB Princesa de Abiena (Yulin) [portugal] (tb, dmg 0.10) instead of TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] [17 changes]"}
+{"t":1184.9,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Princesa de Abiena (Yulin) [portugal] (tb, dmg 0.10) instead of TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] [18 changes]"}
+{"t":1184.9,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] secondary guns (76 mm): target TB Princesa de Abiena (Yulin) [portugal] (tb, dmg 0.10) instead of TR Pedro Alvares Cabral (Pedro Alvares Cabral) [portugal] [19 changes]"}
+{"t":1185.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1185.4,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.5 km, guns 11.4 km, cannot get out) - at"}
+{"t":1187.7,"s":[[0,1257,5240,141,10.9,0,"a"],[1,-12604,-7328,235,10.5,0,"a"],[2,219,4121,74,4.0,0,"a"],[3,-244,4024,78,3.5,0,"a"]]}
+{"t":1192.8,"s":[[0,1312,5170,142,11.1,0,"a"],[1,-12673,-7378,234,10.3,0,"a"],[2,251,4130,75,4.0,0,"a"],[3,-216,4030,78,3.5,0,"a"]]}
+{"t":1197.9,"s":[[0,1369,5096,143,10.0,0,"a"],[1,-12740,-7429,232,9.1,0,"a"],[2,283,4138,77,3.6,0,"a"],[3,-187,4036,78,3.2,0,"a"]]}
+{"t":1203.0,"s":[[0,1426,5023,141,10.5,0,"a"],[1,-12807,-7482,232,9.8,0,"a"],[2,315,4144,81,3.6,0,"a"],[3,-160,4042,78,3.2,0,"a"]]}
+{"t":1205.5,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.2 vs target 17.9, 1200 s to the launch point"}
+{"t":1208.1,"s":[[0,1483,4953,140,10.4,0,"a"],[1,-12874,-7534,233,9.8,0,"a"],[2,344,4147,86,3.4,0,"a"],[3,-134,4047,78,3.0,0,"a"]]}
+{"t":1213.1,"s":[[0,1541,4885,139,10.8,0,"a"],[1,-12940,-7584,234,9.9,0,"a"],[2,370,4148,92,3.1,0,"a"],[3,-111,4052,79,2.8,0,"a"]]}
+{"t":1217.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1217.6,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.4 km, guns 11.4 km, cannot get out) - at"}
+{"t":1218.1,"s":[[0,1601,4818,138,11.0,0,"a"],[1,-13008,-7631,236,10.0,0,"a"],[2,395,4145,99,2.9,0,"a"],[3,-90,4057,79,2.6,0,"a"]]}
+{"t":1223.2,"s":[[0,1662,4751,137,11.0,0,"a"],[1,-13077,-7676,238,10.0,0,"a"],[2,418,4141,105,2.9,0,"a"],[3,-69,4060,80,2.5,0,"a"]]}
+{"t":1225.6,"ev":"ai","k":"charge","msg":"TB Princesa de Abiena (Yulin) [portugal]: group losses 0% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1228.2,"s":[[0,1725,4685,136,11.0,0,"a"],[1,-13148,-7720,238,10.1,0,"a"],[2,442,4133,110,3.1,0,"a"],[3,-47,4064,81,2.7,0,"a"]]}
+{"t":1233.2,"s":[[0,1789,4620,135,11.0,0,"a"],[1,-13220,-7764,238,10.1,0,"a"],[2,468,4123,112,3.4,0,"a"],[3,-23,4067,83,3.0,0,"a"]]}
+{"t":1238.2,"s":[[0,1853,4556,135,11.1,0,"a"],[1,-13289,-7809,237,10.1,0,"a"],[2,493,4112,115,3.3,0,"a"],[3,1,4070,84,2.9,0,"a"]]}
+{"t":1243.3,"s":[[0,1915,4491,138,11.2,0,"a"],[1,-13359,-7856,237,10.7,0,"a"],[2,515,4101,119,2.9,0,"a"],[3,23,4072,86,2.6,0,"a"]]}
+{"t":1248.3,"s":[[0,1972,4424,142,10.4,0,"a"],[1,-13430,-7901,238,9.9,0,"a"],[2,532,4090,125,2.2,0,"a"],[3,41,4073,87,2.0,0,"a"]]}
+{"t":1249.8,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1249.8,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.5 km, guns 11.4 km, cannot get out) - at"}
+{"t":1253.3,"s":[[0,2021,4353,149,10.3,0,"a"],[1,-13500,-7943,240,9.9,0,"a"],[2,546,4079,131,2.3,0,"a"],[3,57,4073,89,2.0,0,"a"]]}
+{"t":1258.3,"s":[[0,2061,4278,155,10.4,0,"a"],[1,-13572,-7984,241,10.1,0,"a"],[2,560,4066,137,2.3,0,"a"],[3,73,4073,90,2.0,0,"a"]]}
+{"t":1263.4,"s":[[0,2093,4199,161,10.2,0,"a"],[1,-13646,-8023,242,10.1,0,"a"],[2,572,4051,142,2.4,0,"a"],[3,90,4073,92,2.1,0,"a"]]}
+{"t":1265.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 5.9 vs target 16.8, 1200 s to the launch point"}
+{"t":1268.4,"s":[[0,2117,4118,166,10.2,0,"a"],[1,-13720,-8063,242,10.3,0,"a"],[2,585,4034,146,2.6,0,"a"],[3,109,4072,94,2.3,0,"a"]]}
+{"t":1273.4,"s":[[0,2135,4037,170,10.7,0,"a"],[1,-13793,-8103,240,10.7,0,"a"],[2,597,4016,148,2.8,0,"a"],[3,128,4071,96,2.5,0,"a"]]}
+{"t":1278.5,"s":[[0,2146,3956,174,8.9,0,"a"],[1,-13866,-8145,240,9.3,0,"a"],[2,607,3998,151,2.2,0,"a"],[3,146,4068,98,1.9,0,"a"]]}
+{"t":1282.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1282.0,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.5 km, guns 11.4 km, cannot get out) - at"}
+{"t":1283.5,"s":[[0,2151,3875,178,9.7,0,"a"],[1,-13940,-8187,241,9.9,0,"a"],[2,616,3981,157,2.3,0,"a"],[3,163,4066,100,2.0,0,"a"]]}
+{"t":1288.6,"s":[[0,2151,3794,183,9.6,0,"a"],[1,-14013,-8226,242,10.0,0,"a"],[2,622,3963,162,2.3,0,"a"],[3,179,4063,102,2.0,0,"a"]]}
+{"t":1293.6,"s":[[0,2143,3715,188,9.7,0,"a"],[1,-14088,-8265,243,10.2,0,"a"],[2,627,3945,167,2.4,0,"a"],[3,196,4059,104,2.1,0,"a"]]}
+{"t":1298.6,"s":[[0,2128,3637,193,9.6,0,"a"],[1,-14163,-8302,243,10.3,0,"a"],[2,631,3925,172,2.5,0,"a"],[3,213,4054,106,2.2,0,"a"]]}
+{"t":1303.7,"s":[[0,2106,3561,199,9.6,0,"a"],[1,-14240,-8341,242,10.3,0,"a"],[2,634,3903,174,2.7,0,"a"],[3,231,4048,109,2.3,0,"a"]]}
+{"t":1308.7,"s":[[0,2078,3489,204,9.4,0,"a"],[1,-14313,-8381,240,10.1,0,"a"],[2,636,3881,175,2.7,0,"a"],[3,249,4042,111,2.3,0,"a"]]}
+{"t":1313.7,"s":[[0,2043,3421,210,9.2,0,"a"],[1,-14385,-8423,240,10.1,0,"a"],[2,637,3860,177,2.6,0,"a"],[3,267,4034,114,2.3,0,"a"]]}
+{"t":1314.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1314.1,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.5 km, guns 11.4 km, cannot get out) - at"}
+{"t":1318.7,"s":[[0,2002,3355,214,10.1,0,"a"],[1,-14457,-8465,240,10.9,0,"a"],[2,638,3839,180,2.6,0,"a"],[3,283,4026,117,2.3,0,"a"]]}
+{"t":1323.8,"s":[[0,1954,3292,219,9.6,0,"a"],[1,-14531,-8507,241,10.2,0,"a"],[2,637,3818,184,2.4,0,"a"],[3,299,4018,120,2.2,0,"a"]]}
+{"t":1326.3,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 5.5 vs target 15.6, 1200 s to the launch point"}
+{"t":1328.8,"s":[[0,1902,3231,223,9.7,0,"a"],[1,-14605,-8549,241,10.1,0,"a"],[2,635,3798,188,2.5,0,"a"],[3,315,4009,122,2.2,0,"a"]]}
+{"t":1333.8,"s":[[0,1844,3173,226,10.1,0,"a"],[1,-14681,-8590,241,10.6,0,"a"],[2,632,3776,190,2.7,0,"a"],[3,331,3998,122,2.4,0,"a"]]}
+{"t":1338.8,"s":[[0,1782,3117,230,10.1,0,"a"],[1,-14755,-8632,240,10.4,0,"a"],[2,628,3755,189,2.6,0,"a"],[3,347,3988,123,2.3,0,"a"]]}
+{"t":1343.9,"s":[[0,1717,3065,234,10.0,0,"a"],[1,-14828,-8676,238,10.3,0,"a"],[2,625,3733,189,2.6,0,"a"],[3,363,3978,122,2.3,0,"a"]]}
+{"t":1348.9,"s":[[0,1649,3019,238,10.1,0,"a"],[1,-14901,-8721,237,10.5,0,"a"],[2,621,3712,189,2.7,0,"a"],[3,380,3967,123,2.4,0,"a"]]}
+{"t":1353.9,"s":[[0,1578,2980,243,10.0,0,"a"],[1,-14973,-8767,238,10.6,0,"a"],[2,618,3690,189,2.7,0,"a"],[3,396,3957,123,2.4,0,"a"]]}
+{"t":1359.0,"s":[[0,1505,2945,246,10.2,0,"a"],[1,-15044,-8810,240,10.3,0,"a"],[2,614,3669,190,2.7,0,"a"],[3,412,3946,126,2.4,0,"a"]]}
+{"t":1364.0,"s":[[0,1428,2914,250,10.1,0,"a"],[1,-15115,-8850,241,9.9,0,"a"],[2,610,3647,192,2.7,0,"a"],[3,427,3934,132,2.3,0,"a"]]}
+{"t":1369.0,"s":[[0,1349,2887,253,10.2,0,"a"],[1,-15188,-8889,243,10.1,0,"a"],[2,605,3626,192,2.7,0,"a"],[3,440,3921,137,2.3,0,"a"]]}
+{"t":1374.1,"s":[[0,1267,2864,256,10.1,0,"a"],[1,-15262,-8927,243,9.9,0,"a"],[2,601,3604,192,2.6,0,"a"],[3,453,3906,141,2.3,0,"a"]]}
+{"t":1379.1,"s":[[0,1184,2845,257,10.6,0,"a"],[1,-15337,-8965,243,10.4,0,"a"],[2,596,3584,193,2.6,0,"a"],[3,464,3891,143,2.3,0,"a"]]}
+{"t":1384.1,"s":[[0,1099,2826,258,10.6,0,"a"],[1,-15411,-9004,241,10.2,0,"a"],[2,591,3564,195,2.4,0,"a"],[3,475,3877,147,2.1,0,"a"]]}
+{"t":1386.9,"ev":"ai","k":"target","msg":"TB Princesa de Abiena (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.3 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 5.2 vs target 17.3, 1200 s to the launch point"}
+{"t":1389.2,"ev":"sunk","id":2}
+{"t":1389.2,"s":[[0,1011,2807,258,10.6,0,"a"],[1,-15484,-9047,239,10.0,0,"a"],[2,586,3547,197,2.2,0,"x"],[3,485,3860,151,2.0,0,"a"]]}
+{"t":1394.2,"s":[[0,923,2788,258,11.1,0,"a"],[1,-15556,-9090,239,10.4,0,"a"],[2,582,3532,197,1.8,0,"x"],[3,506,3822,152,5.5,0,"a"]]}
+{"t":1395.0,"ev":"ai","k":"massattack","msg":"massed torpedo attack off for portugal: enemy combat tonnage 3500 t vs own 3607 t, 2 torpedo craft vs 1 targets (needed 3 per target at night)"}
+{"t":1395.0,"ev":"ai","k":"target","msg":"CL Figueira da Foz  (António Enes) [portugal]: no visible capital target"}
+{"t":1399.3,"s":[[0,834,2770,258,9.4,0,"a"],[1,-15630,-9134,240,8.8,0,"a"],[2,579,3523,197,1.2,0,"x"],[3,534,3770,153,6.7,0,"a"]]}
+{"t":1404.3,"s":[[0,744,2751,258,11.1,0,"a"],[1,-15702,-9174,243,10.0,0,"a"],[2,577,3518,197,0.6,0,"x"],[3,564,3706,156,8.7,0,"a"]]}
+{"t":1409.3,"s":[[0,654,2733,258,10.5,0,"a"],[1,-15775,-9208,248,9.0,0,"a"],[2,577,3517,197,0.1,0,"x"],[3,590,3644,159,7.5,0,"a"]]}
+{"t":1414.4,"s":[[0,563,2714,259,10.0,0,"a"],[1,-15849,-9233,255,8.3,0,"a"],[2,577,3517,197,0.0,0,"x"],[3,612,3585,160,6.6,0,"a"]]}
+{"t":1419.2,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1419.4,"s":[[0,474,2698,262,10.5,0,"a"],[1,-15921,-9248,263,8.6,0,"a"],[2,577,3517,196,0.0,0,"x"],[3,631,3530,160,6.8,0,"a"]]}
+{"t":1424.5,"s":[[0,385,2689,267,10.8,0,"a"],[1,-15993,-9251,272,8.6,0,"a"],[2,577,3517,196,0.0,0,"x"],[3,651,3474,161,7.6,0,"a"]]}
+{"t":1429.5,"s":[[0,296,2689,274,10.4,0,"a"],[1,-16064,-9243,280,8.3,0,"a"],[2,577,3517,196,0.0,0,"x"],[3,672,3406,165,8.6,0,"a"]]}
+{"t":1434.5,"s":[[0,211,2702,283,10.4,0,"a"],[1,-16130,-9226,289,8.2,0,"a"],[2,577,3517,195,0.0,0,"x"],[3,688,3336,170,8.5,0,"a"]]}
+{"t":1439.5,"s":[[0,129,2729,293,10.3,0,"a"],[1,-16193,-9199,297,8.2,0,"a"],[2,577,3517,195,0.0,0,"x"],[3,695,3266,178,8.4,0,"a"]]}
+{"t":1444.6,"s":[[0,53,2768,302,10.2,0,"a"],[1,-16251,-9164,304,8.0,0,"a"],[2,577,3517,194,0.0,0,"x"],[3,693,3198,186,8.1,0,"a"]]}
+{"t":1447.3,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 15.5 vs target 16.8, 214 s to the launch point"}
+{"t":1449.6,"s":[[0,-14,2819,312,10.3,0,"a"],[1,-16303,-9124,311,8.1,0,"a"],[2,577,3517,193,0.0,0,"x"],[3,681,3134,195,7.7,0,"a"]]}
+{"t":1451.3,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1454.6,"s":[[0,-70,2878,321,9.6,0,"a"],[1,-16351,-9078,317,8.0,0,"a"],[2,577,3517,192,0.0,0,"x"],[3,662,3080,204,6.8,0,"a"]]}
+{"t":1459.7,"s":[[0,-115,2944,331,9.7,0,"a"],[1,-16395,-9025,322,8.6,0,"a"],[2,577,3517,191,0.0,0,"x"],[3,634,3029,212,7.2,0,"a"]]}
+{"t":1464.7,"s":[[0,-148,3014,340,9.5,0,"a"],[1,-16436,-8968,327,8.7,0,"a"],[2,577,3517,190,0.0,0,"x"],[3,598,2979,219,7.8,0,"a"]]}
+{"t":1469.7,"s":[[0,-168,3089,350,9.2,0,"a"],[1,-16473,-8905,332,8.7,0,"a"],[2,577,3517,188,0.0,0,"x"],[3,555,2931,225,7.8,0,"a"]]}
+{"t":1474.7,"s":[[0,-175,3165,359,9.6,0,"a"],[1,-16505,-8839,336,9.3,0,"a"],[2,577,3517,186,0.0,0,"x"],[3,507,2887,231,8.1,0,"a"]]}
+{"t":1479.7,"s":[[0,-170,3241,8,9.2,0,"a"],[1,-16534,-8770,339,9.1,0,"a"],[2,577,3517,184,0.0,0,"x"],[3,456,2851,238,7.6,0,"a"]]}
+{"t":1483.8,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1484.7,"s":[[0,-153,3314,18,9.3,0,"a"],[1,-16558,-8698,343,9.5,0,"a"],[2,577,3517,182,0.0,0,"x"],[3,402,2822,246,7.5,0,"a"]]}
+{"t":1489.7,"s":[[0,-124,3382,27,9.0,0,"a"],[1,-16579,-8624,346,9.3,0,"a"],[2,577,3517,179,0.0,0,"x"],[3,345,2802,255,7.2,0,"a"]]}
+{"t":1494.8,"s":[[0,-85,3445,37,8.9,0,"a"],[1,-16597,-8548,348,9.5,0,"a"],[2,577,3517,176,0.0,0,"x"],[3,288,2792,265,7.0,0,"a"]]}
+{"t":1499.8,"s":[[0,-37,3499,46,8.7,0,"a"],[1,-16611,-8471,351,9.6,0,"a"],[2,577,3517,172,0.0,0,"x"],[3,232,2791,273,6.9,0,"a"]]}
+{"t":1504.8,"s":[[0,17,3543,56,8.5,0,"a"],[1,-16622,-8392,353,9.7,0,"a"],[2,577,3517,168,0.0,0,"x"],[3,172,2798,280,7.4,0,"a"]]}
+{"t":1507.9,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 12.8 vs target 13.9, 248 s to the launch point"}
+{"t":1509.8,"s":[[0,78,3578,65,8.5,0,"a"],[1,-16630,-8312,355,9.8,0,"a"],[2,577,3517,164,0.0,0,"x"],[3,113,2813,287,7.6,0,"a"]]}
+{"t":1514.8,"s":[[0,143,3601,75,8.5,0,"a"],[1,-16635,-8231,357,10.0,0,"a"],[2,577,3517,159,0.0,0,"x"],[3,55,2835,295,7.6,0,"a"]]}
+{"t":1515.9,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1519.9,"s":[[0,211,3614,84,8.4,0,"a"],[1,-16637,-8150,359,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,1,2864,303,7.4,0,"a"]]}
+{"t":1524.9,"s":[[0,279,3615,94,8.5,0,"a"],[1,-16637,-8068,1,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-45,2900,313,7.4,0,"a"]]}
+{"t":1529.9,"s":[[0,346,3605,103,8.7,0,"a"],[1,-16635,-7986,2,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-83,2942,322,7.3,0,"a"]]}
+{"t":1534.9,"s":[[0,407,3586,113,8.0,0,"a"],[1,-16631,-7903,4,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-114,2988,331,7.1,0,"a"]]}
+{"t":1539.9,"s":[[0,463,3557,122,7.6,0,"a"],[1,-16624,-7820,5,10.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-139,3042,338,7.4,0,"a"]]}
+{"t":1545.0,"s":[[0,513,3519,131,7.6,0,"a"],[1,-16616,-7737,6,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-158,3100,345,7.5,0,"a"]]}
+{"t":1550.0,"s":[[0,556,3475,141,7.7,0,"a"],[1,-16606,-7654,8,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-170,3159,352,7.4,0,"a"]]}
+{"t":1555.0,"s":[[0,592,3423,150,7.4,0,"a"],[1,-16594,-7570,9,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-174,3218,1,6.9,0,"a"]]}
+{"t":1560.1,"s":[[0,618,3366,160,7.7,0,"a"],[1,-16580,-7487,10,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-168,3275,11,7.1,0,"a"]]}
+{"t":1565.1,"s":[[0,634,3306,169,7.4,0,"a"],[1,-16566,-7405,11,10.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-153,3330,20,6.7,0,"a"]]}
+{"t":1568.3,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 11.2 vs target 12.2, 243 s to the launch point"}
+{"t":1570.1,"s":[[0,640,3245,179,6.3,0,"a"],[1,-16550,-7322,12,8.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-129,3380,29,5.7,0,"a"]]}
+{"t":1575.1,"s":[[0,636,3183,188,7.5,0,"a"],[1,-16532,-7239,12,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-97,3430,37,7.2,0,"a"]]}
+{"t":1580.1,"s":[[0,622,3122,198,7.6,0,"a"],[1,-16513,-7156,13,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-58,3477,43,7.5,0,"a"]]}
+{"t":1585.2,"s":[[0,598,3064,207,5.6,0,"a"],[1,-16493,-7073,14,7.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-13,3519,50,5.6,0,"a"]]}
+{"t":1590.2,"s":[[0,565,3011,217,7.7,0,"a"],[1,-16472,-6990,15,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,37,3555,58,7.5,0,"a"]]}
+{"t":1595.2,"s":[[0,524,2965,226,7.9,0,"a"],[1,-16450,-6908,15,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,90,3583,67,7.5,0,"a"]]}
+{"t":1600.3,"s":[[0,475,2925,236,8.0,0,"a"],[1,-16427,-6825,16,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,144,3601,77,7.1,0,"a"]]}
+{"t":1605.3,"s":[[0,421,2895,245,7.2,0,"a"],[1,-16403,-6743,17,9.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,195,3608,87,5.9,0,"a"]]}
+{"t":1610.3,"s":[[0,363,2874,255,7.6,0,"a"],[1,-16378,-6661,17,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,245,3606,97,6.2,0,"a"]]}
+{"t":1615.4,"s":[[0,301,2862,264,7.6,0,"a"],[1,-16352,-6578,17,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,295,3596,107,6.2,0,"a"]]}
+{"t":1620.4,"s":[[0,239,2861,274,6.9,0,"a"],[1,-16326,-6495,18,9.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,342,3577,117,5.6,0,"a"]]}
+{"t":1625.5,"s":[[0,177,2870,283,7.6,0,"a"],[1,-16299,-6412,18,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,386,3551,126,6.2,0,"a"]]}
+{"t":1629.2,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 11.2 vs target 12.2, 164 s to the launch point"}
+{"t":1630.5,"s":[[0,117,2890,293,6.5,0,"a"],[1,-16272,-6329,18,9.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,424,3517,136,5.3,0,"a"]]}
+{"t":1635.5,"s":[[0,62,2919,302,7.6,0,"a"],[1,-16244,-6247,18,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,455,3477,146,6.2,0,"a"]]}
+{"t":1640.6,"s":[[0,12,2956,312,7.8,0,"a"],[1,-16216,-6163,18,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,480,3432,156,6.4,0,"a"]]}
+{"t":1645.6,"s":[[0,-31,3002,321,7.1,0,"a"],[1,-16189,-6080,19,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,497,3382,166,6.3,0,"a"]]}
+{"t":1650.6,"s":[[0,-65,3053,331,7.6,0,"a"],[1,-16161,-5997,19,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,507,3326,174,7.0,0,"a"]]}
+{"t":1655.7,"s":[[0,-91,3110,340,6.8,0,"a"],[1,-16133,-5914,19,9.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,510,3267,182,6.5,0,"a"]]}
+{"t":1660.8,"s":[[0,-108,3171,350,7.5,0,"a"],[1,-16105,-5830,19,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,504,3207,190,7.0,0,"a"]]}
+{"t":1665.8,"s":[[0,-114,3233,359,7.7,0,"a"],[1,-16076,-5747,19,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,490,3152,198,6.8,0,"a"]]}
+{"t":1670.9,"s":[[0,-109,3296,9,7.5,0,"a"],[1,-16048,-5664,19,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,470,3104,208,6.2,0,"a"]]}
+{"t":1675.9,"s":[[0,-94,3356,18,7.3,0,"a"],[1,-16020,-5581,19,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,442,3061,218,6.0,0,"a"]]}
+{"t":1681.0,"s":[[0,-70,3414,28,7.5,0,"a"],[1,-15992,-5498,19,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,407,3023,227,6.2,0,"a"]]}
+{"t":1686.0,"s":[[0,-35,3470,35,9.4,0,"a"],[1,-15964,-5415,19,12.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,363,2988,235,8.1,0,"a"]]}
+{"t":1689.9,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1689.9,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 12.2 vs target 13.2, 180 s to the launch point"}
+{"t":1691.0,"s":[[0,9,3526,40,10.0,0,"a"],[1,-15935,-5332,19,12.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,312,2958,243,8.3,0,"a"]]}
+{"t":1696.0,"s":[[0,58,3580,43,8.5,0,"a"],[1,-15907,-5250,19,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,257,2934,250,7.0,0,"a"]]}
+{"t":1701.0,"s":[[0,111,3636,43,9.1,0,"a"],[1,-15879,-5167,19,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,199,2917,258,7.0,0,"a"]]}
+{"t":1702.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1702.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.7 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1706.1,"s":[[0,164,3695,41,9.8,0,"a"],[1,-15850,-5085,19,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,143,2909,265,6.8,0,"a"]]}
+{"t":1711.1,"s":[[0,215,3758,36,9.6,0,"a"],[1,-15822,-5002,19,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,90,2908,273,6.2,0,"a"]]}
+{"t":1716.1,"s":[[0,258,3823,30,9.8,0,"a"],[1,-15793,-4919,19,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,40,2914,281,6.4,0,"a"]]}
+{"t":1721.1,"s":[[0,290,3893,20,10.1,0,"a"],[1,-15764,-4837,19,11.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-9,2928,289,6.8,0,"a"]]}
+{"t":1722.3,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1726.1,"s":[[0,310,3965,11,9.2,0,"a"],[1,-15736,-4755,19,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-57,2949,297,6.4,0,"a"]]}
+{"t":1731.2,"s":[[0,318,4040,1,9.0,0,"a"],[1,-15706,-4672,19,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-102,2976,305,6.3,0,"a"]]}
+{"t":1734.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1734.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.2 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1736.2,"s":[[0,314,4115,352,9.0,0,"a"],[1,-15677,-4590,19,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-144,3008,312,6.4,0,"a"]]}
+{"t":1741.2,"s":[[0,297,4187,342,9.1,0,"a"],[1,-15648,-4507,19,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-180,3046,320,6.5,0,"a"]]}
+{"t":1746.3,"s":[[0,270,4255,333,9.1,0,"a"],[1,-15619,-4425,20,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-213,3090,327,6.8,0,"a"]]}
+{"t":1750.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 12.3 vs target 14.0, 852 s to the launch point"}
+{"t":1751.3,"s":[[0,232,4315,324,8.5,0,"a"],[1,-15590,-4342,20,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-240,3138,333,6.8,0,"a"]]}
+{"t":1754.4,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1756.3,"s":[[0,187,4366,314,8.3,0,"a"],[1,-15560,-4260,19,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-263,3190,340,7.0,0,"a"]]}
+{"t":1761.4,"s":[[0,135,4409,304,8.3,0,"a"],[1,-15531,-4177,19,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-281,3246,345,7.4,0,"a"]]}
+{"t":1766.4,"s":[[0,78,4441,295,7.8,0,"a"],[1,-15502,-4095,19,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-293,3304,350,7.1,0,"a"]]}
+{"t":1766.6,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1766.6,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.2 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1771.4,"s":[[0,17,4464,286,8.1,0,"a"],[1,-15473,-4012,19,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-301,3365,355,7.6,0,"a"]]}
+{"t":1776.5,"s":[[0,-47,4476,276,7.7,0,"a"],[1,-15444,-3930,19,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-304,3428,360,7.6,0,"a"]]}
+{"t":1781.5,"s":[[0,-109,4478,267,7.7,0,"a"],[1,-15415,-3847,19,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-302,3491,3,7.9,0,"a"]]}
+{"t":1786.5,"s":[[0,-176,4469,259,8.4,0,"a"],[1,-15385,-3765,20,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-296,3557,7,8.2,0,"a"]]}
+{"t":1791.5,"s":[[0,-243,4452,254,8.7,0,"a"],[1,-15356,-3682,20,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-286,3623,10,8.2,0,"a"]]}
+{"t":1796.6,"s":[[0,-314,4430,251,8.7,0,"a"],[1,-15327,-3600,20,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-273,3689,12,8.0,0,"a"]]}
+{"t":1798.8,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1798.8,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.7 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1801.6,"s":[[0,-386,4404,251,9.8,0,"a"],[1,-15297,-3517,20,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-257,3756,14,8.6,0,"a"]]}
+{"t":1806.8,"s":[[0,-465,4378,253,8.4,0,"a"],[1,-15267,-3432,20,9.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-239,3825,16,7.0,0,"a"]]}
+{"t":1810.9,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 13.0 vs target 15.7, 379 s to the launch point"}
+{"t":1811.9,"s":[[0,-544,4354,254,9.8,0,"a"],[1,-15237,-3349,20,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-220,3888,17,7.7,0,"a"]]}
+{"t":1814.9,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1816.9,"s":[[0,-624,4331,254,10.2,0,"a"],[1,-15207,-3268,20,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-202,3946,18,7.4,0,"a"]]}
+{"t":1822.0,"s":[[0,-706,4305,251,10.7,0,"a"],[1,-15177,-3185,20,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-183,4005,18,7.7,0,"a"]]}
+{"t":1827.0,"s":[[0,-783,4274,245,9.9,0,"a"],[1,-15146,-3103,20,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-165,4063,17,7.3,0,"a"]]}
+{"t":1831.2,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1831.2,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.7 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1832.0,"s":[[0,-855,4235,237,9.1,0,"a"],[1,-15116,-3021,21,9.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-147,4121,17,6.7,0,"a"]]}
+{"t":1837.1,"s":[[0,-922,4186,230,10.1,0,"a"],[1,-15085,-2939,21,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-130,4180,15,7.5,0,"a"]]}
+{"t":1842.2,"s":[[0,-982,4131,225,9.5,0,"a"],[1,-15054,-2857,21,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-114,4240,14,7.2,0,"a"]]}
+{"t":1847.2,"s":[[0,-1039,4072,223,9.6,0,"a"],[1,-15023,-2776,21,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-101,4299,12,7.1,0,"a"]]}
+{"t":1847.4,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1852.2,"s":[[0,-1096,4010,223,10.2,0,"a"],[1,-14991,-2695,21,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-90,4358,9,7.2,0,"a"]]}
+{"t":1857.2,"s":[[0,-1155,3949,225,10.3,0,"a"],[1,-14960,-2615,22,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-82,4416,6,7.1,0,"a"]]}
+{"t":1862.2,"s":[[0,-1216,3893,230,9.2,0,"a"],[1,-14927,-2534,22,9.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-78,4474,3,6.4,0,"a"]]}
+{"t":1863.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1863.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.3 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1867.4,"s":[[0,-1284,3844,238,9.5,0,"a"],[1,-14894,-2452,22,10.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-78,4532,358,6.6,0,"a"]]}
+{"t":1871.8,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 13.4 vs target 16.2, 1146 s to the launch point"}
+{"t":1872.4,"s":[[0,-1356,3806,247,9.9,0,"a"],[1,-14861,-2371,23,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-81,4587,354,6.7,0,"a"]]}
+{"t":1877.5,"s":[[0,-1432,3781,257,13.8,0,"a"],[1,-14827,-2290,23,15.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-90,4641,349,9.4,0,"a"]]}
+{"t":1880.3,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1882.6,"s":[[0,-1510,3770,266,9.2,0,"a"],[1,-14793,-2209,23,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-102,4693,344,6.3,0,"a"]]}
+{"t":1887.6,"s":[[0,-1585,3771,276,9.6,0,"a"],[1,-14758,-2129,23,11.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-120,4742,337,6.5,0,"a"]]}
+{"t":1892.7,"s":[[0,-1659,3785,285,8.2,0,"a"],[1,-14723,-2048,23,9.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-143,4786,328,5.5,0,"a"]]}
+{"t":1896.6,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1896.6,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.9 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1897.7,"s":[[0,-1729,3811,295,7.9,0,"a"],[1,-14689,-1968,24,9.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-170,4825,320,5.0,0,"a"]]}
+{"t":1902.7,"s":[[0,-1791,3846,304,7.2,0,"a"],[1,-14654,-1889,24,8.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-201,4856,312,4.4,0,"a"]]}
+{"t":1907.8,"s":[[0,-1846,3891,314,10.8,0,"a"],[1,-14618,-1809,24,13.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-239,4886,305,7.4,0,"a"]]}
+{"t":1912.9,"s":[[0,-1893,3944,323,8.6,0,"a"],[1,-14583,-1728,24,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-283,4913,298,6.3,0,"a"]]}
+{"t":1918.0,"s":[[0,-1929,4003,333,7.6,0,"a"],[1,-14546,-1646,24,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-330,4935,292,6.0,0,"a"]]}
+{"t":1923.0,"s":[[0,-1954,4063,342,8.3,0,"a"],[1,-14511,-1566,24,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-379,4952,287,6.7,0,"a"]]}
+{"t":1928.4,"s":[[0,-1969,4131,353,6.7,0,"a"],[1,-14473,-1481,24,9.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-434,4966,281,5.6,0,"a"]]}
+{"t":1933.3,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 10.7 vs target 12.9, 244 s to the launch point"}
+{"t":1933.4,"s":[[0,-1973,4198,1,7.5,0,"a"],[1,-14438,-1401,24,9.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-491,4975,278,6.5,0,"a"]]}
+{"t":1938.4,"s":[[0,-1968,4267,7,8.3,0,"a"],[1,-14402,-1321,24,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-551,4982,276,7.2,0,"a"]]}
+{"t":1943.5,"s":[[0,-1957,4341,10,9.5,0,"a"],[1,-14366,-1241,24,11.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-611,4987,273,7.7,0,"a"]]}
+{"t":1948.6,"s":[[0,-1943,4416,11,9.1,0,"a"],[1,-14330,-1160,24,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-671,4989,270,7.0,0,"a"]]}
+{"t":1953.6,"s":[[0,-1928,4495,10,9.9,0,"a"],[1,-14295,-1080,24,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-732,4987,268,7.5,0,"a"]]}
+{"t":1958.6,"s":[[0,-1914,4576,10,10.3,0,"a"],[1,-14259,-1000,24,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-793,4984,266,7.6,0,"a"]]}
+{"t":1963.7,"s":[[0,-1900,4659,9,12.3,0,"a"],[1,-14224,-919,24,12.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-854,4978,264,8.9,0,"a"]]}
+{"t":1968.8,"s":[[0,-1887,4744,9,10.4,0,"a"],[1,-14188,-839,24,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-915,4972,264,7.3,0,"a"]]}
+{"t":1973.8,"s":[[0,-1874,4830,9,10.7,0,"a"],[1,-14153,-759,24,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-975,4967,266,7.4,0,"a"]]}
+{"t":1977.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":1977.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.8 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":1978.8,"s":[[0,-1860,4917,9,11.1,0,"a"],[1,-14118,-679,24,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1035,4964,268,7.6,0,"a"]]}
+{"t":1983.8,"s":[[0,-1847,5005,9,11.1,0,"a"],[1,-14083,-600,24,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1096,4962,268,7.5,0,"a"]]}
+{"t":1988.8,"s":[[0,-1834,5095,8,11.0,0,"a"],[1,-14047,-520,24,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1157,4960,267,7.4,0,"a"]]}
+{"t":1993.9,"s":[[0,-1820,5186,8,11.1,0,"a"],[1,-14012,-439,24,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1216,4957,266,7.1,0,"a"]]}
+{"t":1994.0,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 14.1 vs target 18.0, 177 s to the launch point"}
+{"t":1998.0,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":1998.9,"s":[[0,-1807,5276,8,11.4,0,"a"],[1,-13977,-359,24,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1272,4953,266,6.8,0,"a"]]}
+{"t":2003.9,"s":[[0,-1797,5366,5,11.0,0,"a"],[1,-13942,-279,24,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1326,4949,266,6.7,0,"a"]]}
+{"t":2008.9,"s":[[0,-1794,5457,359,13.8,0,"a"],[1,-13907,-199,23,13.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1381,4946,268,8.3,0,"a"]]}
+{"t":2010.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2010.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.7 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2014.0,"s":[[0,-1801,5546,351,10.9,0,"a"],[1,-13873,-119,23,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1435,4946,271,6.6,0,"a"]]}
+{"t":2019.0,"s":[[0,-1821,5632,342,10.8,0,"a"],[1,-13838,-39,23,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1489,4948,272,6.6,0,"a"]]}
+{"t":2024.0,"s":[[0,-1855,5713,333,10.3,0,"a"],[1,-13804,42,23,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1544,4950,273,6.5,0,"a"]]}
+{"t":2029.2,"s":[[0,-1902,5787,323,11.0,0,"a"],[1,-13768,124,23,11.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1600,4953,273,7.1,0,"a"]]}
+{"t":2030.4,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2034.2,"s":[[0,-1957,5849,313,9.9,0,"a"],[1,-13734,205,23,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1655,4955,273,6.5,0,"a"]]}
+{"t":2039.2,"s":[[0,-2022,5900,304,10.0,0,"a"],[1,-13700,285,23,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1709,4958,273,6.6,0,"a"]]}
+{"t":2042.6,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2042.6,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.0 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2044.2,"s":[[0,-2093,5939,294,9.9,0,"a"],[1,-13666,366,23,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1763,4962,275,6.7,0,"a"]]}
+{"t":2049.2,"s":[[0,-2167,5966,285,7.1,0,"a"],[1,-13633,446,23,7.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1815,4969,279,4.6,0,"a"]]}
+{"t":2054.3,"s":[[0,-2244,5980,275,9.2,0,"a"],[1,-13599,527,23,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1863,4979,285,5.8,0,"a"]]}
+{"t":2054.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 11.9 vs target 15.3, 1079 s to the launch point"}
+{"t":2059.3,"s":[[0,-2320,5980,266,19.9,0,"a"],[1,-13565,608,23,22.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1912,4994,288,13.5,0,"a"]]}
+{"t":2064.4,"s":[[0,-2396,5968,256,8.8,0,"a"],[1,-13531,690,23,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-1963,5012,291,6.2,0,"a"]]}
+{"t":2069.4,"s":[[0,-2467,5944,247,9.3,0,"a"],[1,-13498,770,23,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2014,5032,292,6.8,0,"a"]]}
+{"t":2074.4,"s":[[0,-2532,5910,238,9.2,0,"a"],[1,-13464,850,23,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2064,5053,292,6.8,0,"a"]]}
+{"t":2075.0,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2075.0,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.0 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2079.5,"s":[[0,-2590,5866,229,8.7,0,"a"],[1,-13430,931,23,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2116,5072,291,6.6,0,"a"]]}
+{"t":2084.6,"s":[[0,-2641,5816,222,7.5,0,"a"],[1,-13396,1012,23,9.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2168,5091,288,5.7,0,"a"]]}
+{"t":2089.6,"s":[[0,-2689,5758,218,10.0,0,"a"],[1,-13361,1092,23,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2219,5106,285,6.9,0,"a"]]}
+{"t":2094.7,"s":[[0,-2737,5695,217,9.5,0,"a"],[1,-13326,1173,24,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2271,5118,281,6.3,0,"a"]]}
+{"t":2099.8,"s":[[0,-2786,5631,218,10.3,0,"a"],[1,-13291,1252,24,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2322,5127,278,6.6,0,"a"]]}
+{"t":2104.8,"s":[[0,-2838,5566,219,10.1,0,"a"],[1,-13255,1332,24,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2376,5133,275,6.5,0,"a"]]}
+{"t":2107.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2107.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.6 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2109.8,"s":[[0,-2892,5501,221,10.4,0,"a"],[1,-13219,1410,25,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2429,5136,273,6.3,0,"a"]]}
+{"t":2114.9,"s":[[0,-2949,5435,222,10.6,0,"a"],[1,-13182,1489,25,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2480,5138,271,6.2,0,"a"]]}
+{"t":2115.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 12.4 vs target 16.8, 559 s to the launch point"}
+{"t":2120.0,"s":[[0,-3008,5370,223,11.2,0,"a"],[1,-13145,1567,26,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2530,5138,269,6.4,0,"a"]]}
+{"t":2123.8,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2125.0,"s":[[0,-3069,5306,224,14.4,0,"a"],[1,-13107,1644,26,13.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2581,5137,268,8.2,0,"a"]]}
+{"t":2130.0,"s":[[0,-3132,5241,225,10.6,0,"a"],[1,-13069,1720,27,10.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2631,5133,265,5.9,0,"a"]]}
+{"t":2135.0,"s":[[0,-3196,5177,225,13.1,0,"a"],[1,-13030,1797,27,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2680,5128,262,7.1,0,"a"]]}
+{"t":2140.0,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2140.0,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.5 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2140.0,"s":[[0,-3262,5113,226,11.1,0,"a"],[1,-12990,1873,28,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2727,5120,260,5.7,0,"a"]]}
+{"t":2145.1,"s":[[0,-3328,5050,227,10.9,0,"a"],[1,-12949,1949,28,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2771,5112,259,5.4,0,"a"]]}
+{"t":2150.1,"s":[[0,-3395,4987,227,10.7,0,"a"],[1,-12908,2024,29,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2815,5103,257,5.2,0,"a"]]}
+{"t":2155.1,"s":[[0,-3463,4924,227,11.4,0,"a"],[1,-12866,2099,30,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2859,5092,255,5.5,0,"a"]]}
+{"t":2156.2,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2160.1,"s":[[0,-3531,4862,227,11.4,0,"a"],[1,-12824,2173,30,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2902,5080,254,5.5,0,"a"]]}
+{"t":2165.1,"s":[[0,-3596,4797,223,11.0,0,"a"],[1,-12780,2247,31,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2945,5068,254,5.4,0,"a"]]}
+{"t":2170.2,"s":[[0,-3656,4727,218,12.8,0,"a"],[1,-12736,2321,31,12.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-2989,5055,254,6.3,0,"a"]]}
+{"t":2172.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2172.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.8 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2175.2,"s":[[0,-3709,4652,213,10.5,0,"a"],[1,-12691,2394,32,9.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3032,5043,255,5.2,0,"a"]]}
+{"t":2176.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 12.3 vs target 18.2, 1200 s to the launch point"}
+{"t":2180.2,"s":[[0,-3756,4576,210,11.0,0,"a"],[1,-12646,2466,32,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3076,5031,256,5.5,0,"a"]]}
+{"t":2185.2,"s":[[0,-3801,4498,210,10.9,0,"a"],[1,-12599,2538,33,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3120,5020,257,5.4,0,"a"]]}
+{"t":2188.6,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2190.3,"s":[[0,-3848,4422,213,10.8,0,"a"],[1,-12552,2610,34,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3164,5010,258,5.5,0,"a"]]}
+{"t":2195.4,"s":[[0,-3899,4348,218,10.3,0,"a"],[1,-12503,2683,34,10.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3209,5001,259,5.3,0,"a"]]}
+{"t":2200.4,"s":[[0,-3955,4284,225,10.2,0,"a"],[1,-12455,2753,35,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3251,4994,260,5.0,0,"a"]]}
+{"t":2204.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2204.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.0 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2205.5,"s":[[0,-4020,4228,234,10.3,0,"a"],[1,-12405,2823,36,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3292,4987,260,5.1,0,"a"]]}
+{"t":2210.5,"s":[[0,-4093,4184,243,10.4,0,"a"],[1,-12354,2892,36,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3334,4980,260,5.2,0,"a"]]}
+{"t":2215.5,"s":[[0,-4170,4153,253,10.5,0,"a"],[1,-12304,2960,37,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3375,4972,259,5.3,0,"a"]]}
+{"t":2220.6,"s":[[0,-4251,4136,262,9.9,0,"a"],[1,-12252,3028,38,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3416,4964,258,5.1,0,"a"]]}
+{"t":2220.9,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2225.6,"s":[[0,-4331,4132,272,9.3,0,"a"],[1,-12199,3096,38,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3458,4954,257,4.9,0,"a"]]}
+{"t":2230.7,"s":[[0,-4409,4141,281,9.3,0,"a"],[1,-12145,3163,39,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3498,4944,254,4.9,0,"a"]]}
+{"t":2235.7,"s":[[0,-4482,4162,291,8.8,0,"a"],[1,-12091,3229,40,10.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3538,4931,251,4.9,0,"a"]]}
+{"t":2237.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2237.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.2 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2240.8,"s":[[0,-4551,4195,301,9.1,0,"a"],[1,-12035,3297,40,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3578,4917,249,5.1,0,"a"]]}
+{"t":2241.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.5 vs target 14.9, 1200 s to the launch point"}
+{"t":2245.9,"s":[[0,-4613,4239,310,9.4,0,"a"],[1,-11978,3364,40,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3618,4902,250,5.3,0,"a"]]}
+{"t":2251.0,"s":[[0,-4665,4292,320,8.8,0,"a"],[1,-11921,3430,41,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3658,4888,252,5.0,0,"a"]]}
+{"t":2256.0,"s":[[0,-4708,4351,329,8.9,0,"a"],[1,-11864,3496,41,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3698,4876,254,5.1,0,"a"]]}
+{"t":2261.0,"s":[[0,-4739,4415,339,7.5,0,"a"],[1,-11807,3562,41,9.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3739,4865,257,4.4,0,"a"]]}
+{"t":2266.0,"s":[[0,-4758,4481,348,8.4,0,"a"],[1,-11750,3628,41,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3778,4857,260,4.8,0,"a"]]}
+{"t":2269.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2269.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.0 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2271.0,"s":[[0,-4767,4547,358,8.1,0,"a"],[1,-11693,3694,41,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3816,4852,264,4.8,0,"a"]]}
+{"t":2276.1,"s":[[0,-4764,4614,6,8.4,0,"a"],[1,-11635,3760,41,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3858,4849,267,5.3,0,"a"]]}
+{"t":2281.2,"s":[[0,-4754,4682,11,8.7,0,"a"],[1,-11577,3826,41,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3900,4847,267,5.1,0,"a"]]}
+{"t":2286.3,"s":[[0,-4737,4755,14,9.3,0,"a"],[1,-11519,3893,41,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3943,4845,268,5.2,0,"a"]]}
+{"t":2291.3,"s":[[0,-4718,4829,15,9.7,0,"a"],[1,-11462,3959,41,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-3984,4845,270,5.2,0,"a"]]}
+{"t":2296.3,"s":[[0,-4699,4907,13,9.3,0,"a"],[1,-11404,4026,41,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4026,4845,271,4.9,0,"a"]]}
+{"t":2301.4,"s":[[0,-4681,4986,12,10.0,0,"a"],[1,-11347,4092,41,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4068,4847,273,5.0,0,"a"]]}
+{"t":2301.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2301.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.6 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2305.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.8 vs target 16.0, 442 s to the launch point"}
+{"t":2306.4,"s":[[0,-4664,5068,11,10.5,0,"a"],[1,-11290,4158,41,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4108,4850,277,5.1,0,"a"]]}
+{"t":2309.9,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2311.4,"s":[[0,-4649,5151,10,12.3,0,"a"],[1,-11233,4223,41,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4148,4856,281,5.6,0,"a"]]}
+{"t":2316.4,"s":[[0,-4635,5237,9,10.6,0,"a"],[1,-11176,4290,41,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4185,4865,285,4.7,0,"a"]]}
+{"t":2321.4,"s":[[0,-4622,5324,8,10.5,0,"a"],[1,-11120,4356,40,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4224,4876,287,4.8,0,"a"]]}
+{"t":2326.5,"s":[[0,-4611,5412,6,11.0,0,"a"],[1,-11063,4423,40,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4262,4889,288,5.1,0,"a"]]}
+{"t":2331.5,"s":[[0,-4605,5499,2,9.3,0,"a"],[1,-11007,4489,40,9.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4301,4902,290,4.4,0,"a"]]}
+{"t":2334.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2334.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.7 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2336.6,"s":[[0,-4606,5586,355,10.2,0,"a"],[1,-10951,4557,40,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4339,4916,291,4.8,0,"a"]]}
+{"t":2341.6,"s":[[0,-4620,5671,346,10.4,0,"a"],[1,-10895,4624,40,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4376,4932,294,4.9,0,"a"]]}
+{"t":2342.3,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2346.6,"s":[[0,-4647,5752,337,11.4,0,"a"],[1,-10840,4691,39,11.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4411,4949,299,5.2,0,"a"]]}
+{"t":2351.6,"s":[[0,-4685,5825,327,11.6,0,"a"],[1,-10785,4758,39,12.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4441,4968,306,4.8,0,"a"]]}
+{"t":2356.7,"s":[[0,-4734,5889,318,9.8,0,"a"],[1,-10731,4826,39,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4467,4989,312,4.1,0,"a"]]}
+{"t":2361.7,"s":[[0,-4792,5943,309,9.4,0,"a"],[1,-10676,4894,39,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4492,5014,317,4.2,0,"a"]]}
+{"t":2366.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2366.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.0 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2366.7,"s":[[0,-4856,5986,299,9.0,0,"a"],[1,-10622,4962,38,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4515,5041,322,4.2,0,"a"]]}
+{"t":2370.4,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.5 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 9.3 vs target 15.1, 1200 s to the launch point"}
+{"t":2371.8,"s":[[0,-4924,6017,290,8.8,0,"a"],[1,-10567,5030,38,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4536,5072,327,4.4,0,"a"]]}
+{"t":2374.5,"ev":"ai","k":"charge","msg":"TB Tamega (Yulin) [portugal]: group losses 33% since the charge began - launch at 0.6 km (90% of 0.7 km)"}
+{"t":2376.8,"s":[[0,-4997,6036,280,9.2,0,"a"],[1,-10513,5099,38,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4556,5105,330,4.8,0,"a"]]}
+{"t":2381.8,"s":[[0,-5071,6043,271,8.9,0,"a"],[1,-10459,5168,38,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4576,5140,332,4.9,0,"a"]]}
+{"t":2386.9,"s":[[0,-5144,6037,261,8.9,0,"a"],[1,-10404,5236,38,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4595,5176,332,5.0,0,"a"]]}
+{"t":2391.9,"s":[[0,-5213,6020,252,8.6,0,"a"],[1,-10350,5305,38,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4614,5212,331,4.9,0,"a"]]}
+{"t":2396.9,"s":[[0,-5277,5993,242,9.5,0,"a"],[1,-10297,5373,38,11.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4634,5248,332,5.6,0,"a"]]}
+{"t":2398.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2398.7,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 1.0 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2401.9,"s":[[0,-5334,5957,233,8.2,0,"a"],[1,-10245,5441,37,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4652,5283,334,4.9,0,"a"]]}
+{"t":2407.0,"s":[[0,-5384,5911,223,8.2,0,"a"],[1,-10193,5510,37,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4670,5320,335,4.9,0,"a"]]}
+{"t":2412.0,"s":[[0,-5426,5858,214,8.3,0,"a"],[1,-10142,5579,36,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4686,5357,336,5.0,0,"a"]]}
+{"t":2417.0,"s":[[0,-5458,5801,204,8.3,0,"a"],[1,-10091,5649,36,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4703,5394,335,5.1,0,"a"]]}
+{"t":2422.1,"s":[[0,-5479,5740,195,7.8,0,"a"],[1,-10040,5720,36,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4721,5430,332,4.7,0,"a"]]}
+{"t":2427.1,"s":[[0,-5490,5678,185,7.6,0,"a"],[1,-9989,5791,36,10.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4740,5463,328,4.8,0,"a"]]}
+{"t":2430.9,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2430.9,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.7 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2432.2,"s":[[0,-5491,5615,176,7.3,0,"a"],[1,-9937,5862,36,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4762,5497,326,4.8,0,"a"]]}
+{"t":2434.9,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: torpedo run-in to the nearest launch point (0.4 km from CL Dauntless (Colombo (Jan. 1897)) [britain]), own speed 7.6 vs target 12.2, 1200 s to the launch point"}
+{"t":2436.6,"ev":"ai","k":"target","msg":"CL Dauntless (Colombo (Jan. 1897)) [britain] main guns (178 mm): target CL Figueira da Foz  (António Enes) [portugal] (cl, dmg 0.00) instead of TB Tamega (Yulin) [portugal] [20 changes]"}
+{"t":2437.3,"s":[[0,-5480,5552,166,6.6,0,"a"],[1,-9885,5934,36,9.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4786,5531,324,4.3,0,"a"]]}
+{"t":2442.4,"s":[[0,-5460,5493,156,7.5,0,"a"],[1,-9834,6003,37,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4811,5563,322,4.9,0,"a"]]}
+{"t":2447.4,"s":[[0,-5431,5438,147,7.4,0,"a"],[1,-9783,6071,38,10.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4836,5594,319,4.8,0,"a"]]}
+{"t":2452.4,"s":[[0,-5392,5389,138,8.7,0,"a"],[1,-9730,6138,38,11.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4863,5623,315,5.5,0,"a"]]}
+{"t":2457.4,"s":[[0,-5347,5347,128,7.5,0,"a"],[1,-9677,6205,39,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4892,5649,309,4.6,0,"a"]]}
+{"t":2462.5,"s":[[0,-5293,5312,118,7.7,0,"a"],[1,-9622,6271,40,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4923,5672,305,4.6,0,"a"]]}
+{"t":2463.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: slower than the target - station ahead on its course"}
+{"t":2463.1,"ev":"ai","k":"target","msg":"TB Tamega (Yulin) [portugal]: under fire - waiting not allowed (slower than the target - station ahead on its course; CL Dauntless (Colombo (Jan. 1897)) [britain] at 0.5 km, guns 11.4 km, cannot get out) - attack on CL D"}
+{"t":2467.6,"s":[[0,-5235,5287,109,8.1,0,"a"],[1,-9567,6336,41,10.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4954,5693,302,4.7,0,"a"]]}
+{"t":2472.6,"s":[[0,-5173,5271,99,7.6,0,"a"],[1,-9510,6401,42,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-4984,5710,300,4.0,0,"a"]],"tp":[[-4978,5615,0]]}
+{"t":2477.6,"s":[[0,-5107,5265,91,8.0,0,"a"],[1,-9450,6466,43,10.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5012,5726,300,3.7,0,"a"]],"tp":[[-5005,5428,0]]}
+{"t":2482.6,"s":[[0,-5035,5269,85,9.0,0,"a"],[1,-9389,6530,44,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5037,5742,303,3.6,0,"a"]]}
+{"t":2487.7,"s":[[0,-4963,5278,81,8.9,0,"a"],[1,-9325,6595,45,11.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5059,5758,308,3.1,0,"a"]]}
+{"t":2492.8,"s":[[0,-4893,5290,80,8.5,0,"a"],[1,-9260,6659,46,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5079,5775,313,3.3,0,"a"]]}
+{"t":2497.8,"s":[[0,-4826,5302,80,8.7,0,"a"],[1,-9193,6721,47,11.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5099,5795,316,3.7,0,"a"]]}
+{"t":2502.8,"s":[[0,-4761,5313,81,8.2,0,"a"],[1,-9125,6783,48,11.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5118,5816,320,3.5,0,"a"]]}
+{"t":2507.9,"s":[[0,-4698,5322,82,7.6,0,"a"],[1,-9055,6845,49,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5134,5837,325,3.2,0,"a"]]}
+{"t":2512.9,"s":[[0,-4637,5329,83,7.5,0,"a"],[1,-8984,6905,50,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5148,5859,331,3.0,0,"a"]]}
+{"t":2517.9,"s":[[0,-4575,5336,84,7.5,0,"a"],[1,-8911,6964,51,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5158,5880,336,2.9,0,"a"]]}
+{"t":2523.0,"s":[[0,-4512,5342,84,8.1,0,"a"],[1,-8837,7022,52,12.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5166,5900,340,2.7,0,"a"]]}
+{"t":2528.0,"s":[[0,-4451,5350,82,7.9,0,"a"],[1,-8762,7080,53,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5173,5920,344,2.6,0,"a"]]}
+{"t":2533.0,"s":[[0,-4398,5359,77,6.5,0,"a"],[1,-8686,7135,54,11.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5177,5938,348,2.3,0,"a"]]}
+{"t":2538.0,"ev":"sunk","id":3}
+{"t":2538.0,"s":[[0,-4345,5373,73,6.9,0,"a"],[1,-8609,7190,55,11.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5180,5953,348,1.9,0,"x"]]}
+{"t":2543.1,"s":[[0,-4288,5392,72,7.2,0,"a"],[1,-8530,7244,56,11.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5182,5963,348,1.3,0,"x"]]}
+{"t":2548.1,"s":[[0,-4227,5412,72,7.4,0,"a"],[1,-8450,7298,57,11.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5183,5969,348,0.8,0,"x"]]}
+{"t":2553.2,"s":[[0,-4167,5432,72,8.0,0,"a"],[1,-8369,7350,58,12.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,348,0.2,0,"x"]]}
+{"t":2558.3,"s":[[0,-4106,5452,72,7.8,0,"a"],[1,-8286,7402,58,11.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,348,0.0,0,"x"]]}
+{"t":2563.3,"s":[[0,-4045,5473,72,7.7,0,"a"],[1,-8203,7452,59,11.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,348,0.0,0,"x"]]}
+{"t":2568.3,"s":[[0,-3985,5493,72,7.5,0,"a"],[1,-8120,7502,60,11.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,347,0.0,0,"x"]]}
+{"t":2573.3,"s":[[0,-3925,5513,72,7.8,0,"a"],[1,-8033,7552,60,12.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,347,0.0,0,"x"]]}
+{"t":2578.4,"s":[[0,-3865,5533,71,7.7,0,"a"],[1,-7944,7602,61,12.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,346,0.0,0,"x"]]}
+{"t":2583.5,"s":[[0,-3809,5553,68,7.2,0,"a"],[1,-7853,7652,62,13.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,346,0.0,0,"x"]]}
+{"t":2588.5,"s":[[0,-3757,5576,65,6.9,0,"a"],[1,-7761,7701,62,12.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,345,0.0,0,"x"]]}
+{"t":2593.5,"s":[[0,-3707,5601,62,9.1,0,"a"],[1,-7669,7750,62,16.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,343,0.0,0,"x"]]}
+{"t":2598.5,"s":[[0,-3657,5630,59,6.8,0,"a"],[1,-7574,7800,63,12.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,342,0.0,0,"x"]]}
+{"t":2603.6,"s":[[0,-3607,5661,56,7.1,0,"a"],[1,-7476,7850,63,13.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,341,0.0,0,"x"]]}
+{"t":2608.6,"s":[[0,-3559,5695,54,7.2,0,"a"],[1,-7377,7901,63,13.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,339,0.0,0,"x"]]}
+{"t":2613.7,"s":[[0,-3511,5730,52,7.2,0,"a"],[1,-7277,7952,63,13.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,337,0.0,0,"x"]]}
+{"t":2618.7,"s":[[0,-3465,5768,50,7.2,0,"a"],[1,-7177,8002,63,13.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,335,0.0,0,"x"]]}
+{"t":2623.7,"s":[[0,-3420,5806,49,7.3,0,"a"],[1,-7077,8054,63,13.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,333,0.0,0,"x"]]}
+{"t":2628.8,"s":[[0,-3374,5847,47,7.5,0,"a"],[1,-6972,8107,63,14.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,331,0.0,0,"x"]]}
+{"t":2633.9,"s":[[0,-3330,5889,46,7.3,0,"a"],[1,-6867,8161,63,14.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,329,0.0,0,"x"]]}
+{"t":2638.9,"s":[[0,-3287,5932,45,7.5,0,"a"],[1,-6761,8216,63,14.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,327,0.0,0,"x"]]}
+{"t":2644.0,"s":[[0,-3244,5977,43,7.1,0,"a"],[1,-6654,8271,62,13.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,325,0.0,0,"x"]]}
+{"t":2649.0,"s":[[0,-3203,6022,42,7.0,0,"a"],[1,-6548,8326,62,13.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,323,0.0,0,"x"]]}
+{"t":2654.0,"s":[[0,-3161,6068,41,7.6,0,"a"],[1,-6442,8383,62,14.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2659.1,"s":[[0,-3119,6116,41,7.8,0,"a"],[1,-6336,8440,62,14.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2664.1,"s":[[0,-3078,6162,41,7.1,0,"a"],[1,-6230,8498,61,14.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2669.1,"s":[[0,-3039,6209,40,7.4,0,"a"],[1,-6124,8556,61,14.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2674.1,"s":[[0,-3000,6257,39,7.6,0,"a"],[1,-6019,8614,61,14.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2679.2,"s":[[0,-2961,6306,38,7.7,0,"a"],[1,-5914,8674,60,14.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2684.2,"s":[[0,-2922,6355,38,7.4,0,"a"],[1,-5809,8734,60,14.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2689.2,"s":[[0,-2883,6405,38,7.7,0,"a"],[1,-5703,8796,60,14.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2694.3,"s":[[0,-2845,6455,37,7.6,0,"a"],[1,-5599,8858,59,14.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2699.3,"s":[[0,-2806,6505,37,7.8,0,"a"],[1,-5497,8921,57,14.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2704.4,"s":[[0,-2767,6557,37,7.8,0,"a"],[1,-5399,8991,52,14.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2709.5,"s":[[0,-2728,6609,37,7.6,0,"a"],[1,-5309,9066,48,13.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2714.5,"s":[[0,-2683,6667,37,9.3,0,"a"],[1,-5228,9147,43,14.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2719.6,"s":[[0,-2636,6730,37,9.6,0,"a"],[1,-5154,9232,39,13.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2724.6,"s":[[0,-2589,6793,37,9.6,0,"a"],[1,-5087,9319,37,13.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2729.8,"s":[[0,-2539,6859,37,7.3,0,"a"],[1,-5020,9409,37,9.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2734.8,"s":[[0,-2488,6927,37,10.6,0,"a"],[1,-4955,9493,39,12.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2739.9,"s":[[0,-2433,6999,37,10.7,0,"a"],[1,-4887,9573,42,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2744.9,"s":[[0,-2379,7072,37,11.2,0,"a"],[1,-4816,9648,44,12.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2749.9,"s":[[0,-2324,7145,37,11.3,0,"a"],[1,-4744,9721,45,12.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2754.9,"s":[[0,-2269,7219,37,11.2,0,"a"],[1,-4673,9794,43,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2760.0,"s":[[0,-2212,7294,37,11.5,0,"a"],[1,-4604,9870,40,12.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2765.0,"s":[[0,-2155,7370,37,11.4,0,"a"],[1,-4539,9950,39,12.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2770.0,"s":[[0,-2098,7445,37,12.3,0,"a"],[1,-4474,10030,39,13.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2775.1,"s":[[0,-2041,7521,37,9.9,0,"a"],[1,-4408,10109,40,10.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2780.1,"s":[[0,-1985,7596,37,11.4,0,"a"],[1,-4343,10188,40,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2785.1,"s":[[0,-1928,7672,37,10.3,0,"a"],[1,-4276,10268,40,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2790.1,"s":[[0,-1871,7748,37,11.3,0,"a"],[1,-4209,10349,40,12.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2795.2,"s":[[0,-1814,7824,37,9.9,0,"a"],[1,-4139,10433,40,11.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2800.2,"s":[[0,-1756,7901,37,11.6,0,"a"],[1,-4071,10516,40,13.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2805.3,"s":[[0,-1699,7977,37,11.6,0,"a"],[1,-4003,10598,40,12.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2810.3,"s":[[0,-1642,8053,37,11.6,0,"a"],[1,-3935,10680,40,13.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2815.3,"s":[[0,-1585,8129,37,11.7,0,"a"],[1,-3867,10762,40,13.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2820.3,"s":[[0,-1529,8204,37,11.6,0,"a"],[1,-3800,10843,40,12.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2825.4,"s":[[0,-1471,8280,37,11.2,0,"a"],[1,-3733,10924,39,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2830.4,"s":[[0,-1415,8356,37,11.2,0,"a"],[1,-3666,11005,40,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2835.5,"s":[[0,-1358,8432,37,11.7,0,"a"],[1,-3600,11085,40,12.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2840.5,"s":[[0,-1300,8508,37,11.0,0,"a"],[1,-3534,11165,40,12.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2845.5,"s":[[0,-1244,8584,37,11.5,0,"a"],[1,-3469,11244,40,12.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2850.6,"s":[[0,-1187,8660,37,11.9,0,"a"],[1,-3404,11323,39,12.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2855.6,"s":[[0,-1130,8736,37,11.4,0,"a"],[1,-3339,11401,39,12.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2860.6,"s":[[0,-1073,8812,37,11.4,0,"a"],[1,-3275,11480,39,12.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2865.7,"s":[[0,-1015,8888,37,10.8,0,"a"],[1,-3212,11557,39,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2870.8,"s":[[0,-957,8965,37,10.5,0,"a"],[1,-3148,11636,39,10.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2876.0,"s":[[0,-899,9043,37,11.5,0,"a"],[1,-3084,11714,39,11.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2881.0,"s":[[0,-844,9117,36,11.1,0,"a"],[1,-3023,11790,39,12.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2886.0,"s":[[0,-793,9191,34,10.9,0,"a"],[1,-2963,11866,39,11.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2891.0,"s":[[0,-743,9266,33,11.1,0,"a"],[1,-2903,11941,39,11.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2896.1,"s":[[0,-694,9343,31,11.1,0,"a"],[1,-2843,12016,38,11.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2901.1,"s":[[0,-648,9420,30,10.7,0,"a"],[1,-2785,12090,38,11.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2906.1,"s":[[0,-604,9499,29,10.7,0,"a"],[1,-2728,12165,37,11.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2911.1,"s":[[0,-561,9579,28,11.1,0,"a"],[1,-2672,12239,36,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2916.2,"s":[[0,-519,9660,27,11.2,0,"a"],[1,-2618,12313,36,11.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2921.2,"s":[[0,-479,9742,26,11.2,0,"a"],[1,-2565,12388,35,11.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2926.2,"s":[[0,-439,9827,25,13.1,0,"a"],[1,-2513,12463,34,12.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2931.3,"s":[[0,-400,9911,24,9.8,0,"a"],[1,-2463,12539,33,9.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2936.3,"s":[[0,-363,9996,23,10.1,0,"a"],[1,-2415,12614,32,9.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2941.3,"s":[[0,-326,10082,23,12.6,0,"a"],[1,-2369,12690,31,12.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2946.3,"s":[[0,-290,10167,23,12.1,0,"a"],[1,-2324,12765,30,11.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2951.4,"s":[[0,-254,10255,22,11.4,0,"a"],[1,-2281,12842,29,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2956.4,"s":[[0,-218,10343,22,9.6,0,"a"],[1,-2240,12918,28,8.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2961.5,"s":[[0,-183,10430,22,11.7,0,"a"],[1,-2200,12994,27,10.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2966.5,"s":[[0,-147,10519,22,11.6,0,"a"],[1,-2162,13070,26,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2971.6,"s":[[0,-112,10608,22,11.7,0,"a"],[1,-2126,13146,25,10.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2976.7,"s":[[0,-76,10697,22,11.7,0,"a"],[1,-2091,13222,24,10.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2981.7,"s":[[0,-41,10784,22,11.5,0,"a"],[1,-2059,13296,23,9.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2986.7,"s":[[0,-6,10872,22,11.7,0,"a"],[1,-2028,13369,22,9.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2991.7,"s":[[0,29,10960,22,11.5,0,"a"],[1,-1998,13443,21,9.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":2996.7,"s":[[0,63,11047,21,11.3,0,"a"],[1,-1971,13514,21,9.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3001.9,"s":[[0,95,11134,19,10.7,0,"a"],[1,-1945,13585,20,8.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3006.9,"s":[[0,123,11220,18,11.3,0,"a"],[1,-1922,13650,19,8.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3012.0,"s":[[0,151,11307,17,11.1,0,"a"],[1,-1901,13714,18,8.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3017.0,"s":[[0,176,11395,16,10.9,0,"a"],[1,-1882,13775,17,7.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3022.0,"s":[[0,200,11483,15,10.9,0,"a"],[1,-1865,13834,15,7.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3027.0,"s":[[0,222,11572,14,11.3,0,"a"],[1,-1850,13890,14,7.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3032.0,"s":[[0,244,11662,13,11.5,0,"a"],[1,-1837,13945,13,7.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3037.1,"s":[[0,264,11752,12,11.2,0,"a"],[1,-1827,13997,11,6.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3042.1,"s":[[0,282,11841,11,11.0,0,"a"],[1,-1817,14046,10,6.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3047.2,"s":[[0,298,11930,9,10.5,0,"a"],[1,-1809,14097,8,5.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3052.2,"s":[[0,311,12019,8,11.0,0,"a"],[1,-1803,14146,7,6.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3057.2,"s":[[0,322,12108,6,11.4,0,"a"],[1,-1797,14196,6,6.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3062.3,"s":[[0,330,12197,5,11.4,0,"a"],[1,-1793,14246,4,6.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3067.3,"s":[[0,336,12287,3,11.6,0,"a"],[1,-1790,14295,3,6.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3072.6,"s":[[0,340,12383,2,11.2,0,"a"],[1,-1787,14347,2,6.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3077.6,"s":[[0,342,12475,1,11.0,0,"a"],[1,-1786,14397,1,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3082.7,"s":[[0,343,12567,360,11.3,0,"a"],[1,-1786,14447,359,6.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3087.7,"s":[[0,342,12658,359,11.5,0,"a"],[1,-1787,14496,358,6.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3092.7,"s":[[0,339,12751,358,11.4,0,"a"],[1,-1789,14546,357,6.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3097.7,"s":[[0,335,12844,357,11.2,0,"a"],[1,-1792,14595,356,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3102.7,"s":[[0,330,12936,357,12.7,0,"a"],[1,-1797,14644,354,6.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3107.8,"s":[[0,325,13029,356,11.4,0,"a"],[1,-1802,14693,353,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3112.8,"s":[[0,318,13122,356,11.5,0,"a"],[1,-1808,14742,352,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3117.8,"s":[[0,311,13217,356,13.6,0,"a"],[1,-1816,14791,350,7.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3122.8,"s":[[0,304,13311,355,11.4,0,"a"],[1,-1825,14839,349,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3127.8,"s":[[0,296,13405,355,12.2,0,"a"],[1,-1835,14887,347,6.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3132.9,"s":[[0,288,13499,355,11.2,0,"a"],[1,-1846,14934,346,5.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3137.9,"s":[[0,280,13593,355,11.4,0,"a"],[1,-1859,14982,344,5.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3142.9,"s":[[0,271,13682,353,11.0,0,"a"],[1,-1873,15029,343,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3148.0,"s":[[0,259,13770,351,10.6,0,"a"],[1,-1888,15076,341,5.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3153.0,"s":[[0,244,13856,349,10.8,0,"a"],[1,-1904,15122,340,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3158.0,"s":[[0,225,13942,347,10.8,0,"a"],[1,-1921,15166,339,5.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3163.0,"s":[[0,203,14028,345,10.8,0,"a"],[1,-1938,15210,337,5.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3168.0,"s":[[0,179,14114,343,11.6,0,"a"],[1,-1957,15253,336,6.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3173.1,"s":[[0,152,14200,342,11.0,0,"a"],[1,-1977,15296,334,5.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3178.1,"s":[[0,123,14286,341,11.5,0,"a"],[1,-1999,15339,333,6.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3183.1,"s":[[0,92,14372,339,11.9,0,"a"],[1,-2021,15380,331,6.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3188.1,"s":[[0,59,14457,338,10.8,0,"a"],[1,-2044,15422,330,5.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3193.2,"s":[[0,24,14543,337,10.4,0,"a"],[1,-2069,15463,328,5.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3198.3,"s":[[0,-12,14628,337,11.2,0,"a"],[1,-2094,15503,327,5.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3203.3,"s":[[0,-50,14713,336,11.0,0,"a"],[1,-2121,15543,325,5.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3208.4,"s":[[0,-88,14798,335,11.3,0,"a"],[1,-2147,15580,324,5.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3213.4,"s":[[0,-128,14882,334,10.9,0,"a"],[1,-2173,15615,323,4.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3218.5,"s":[[0,-169,14967,334,10.7,0,"a"],[1,-2199,15648,321,4.7,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3223.5,"s":[[0,-211,15052,334,11.5,0,"a"],[1,-2224,15678,320,4.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3228.5,"s":[[0,-253,15137,334,11.3,0,"a"],[1,-2250,15707,318,4.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3233.6,"s":[[0,-295,15221,333,11.3,0,"a"],[1,-2275,15734,317,4.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3238.6,"s":[[0,-337,15307,333,11.4,0,"a"],[1,-2300,15760,315,4.1,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3243.7,"s":[[0,-380,15391,333,11.9,0,"a"],[1,-2324,15783,313,4.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3248.7,"s":[[0,-423,15476,333,11.9,0,"a"],[1,-2347,15805,312,3.9,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3253.8,"s":[[0,-466,15562,333,11.1,0,"a"],[1,-2370,15824,310,3.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3258.8,"s":[[0,-509,15646,333,9.2,0,"a"],[1,-2390,15841,308,2.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3263.8,"s":[[0,-551,15730,333,11.6,0,"a"],[1,-2409,15855,307,2.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3268.9,"s":[[0,-594,15815,333,12.0,0,"a"],[1,-2427,15868,305,2.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3273.9,"s":[[0,-637,15898,332,10.8,0,"a"],[1,-2444,15880,303,2.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3278.9,"s":[[0,-679,15975,330,11.9,0,"a"],[1,-2459,15889,301,2.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3283.9,"s":[[0,-725,16052,329,11.6,0,"a"],[1,-2475,15898,299,2.3,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3288.9,"s":[[0,-772,16127,327,11.1,0,"a"],[1,-2490,15907,298,2.0,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3294.0,"s":[[0,-823,16204,326,10.2,0,"a"],[1,-2503,15913,296,1.5,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3299.1,"s":[[0,-875,16279,324,11.5,0,"a"],[1,-2514,15918,295,1.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3304.1,"s":[[0,-930,16353,323,11.9,0,"a"],[1,-2520,15921,294,0.8,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3307.2,"ev":"ai","k":"withdraw","msg":"CL Figueira da Foz  (António Enes) [portugal] (cl): every ship badly damaged (CL Figueira da Foz  (António Enes) [portugal] 32%) - the division withdraws"}
+{"t":3307.2,"ev":"ai","k":"withdraw","msg":"CL Figueira da Foz  (António Enes) [portugal]: withdrawing - badly damaged"}
+{"t":3309.3,"ev":"withdraw","id":1}
+{"t":3309.3,"s":[[0,-987,16428,322,10.5,0,"a"],[1,-2524,15923,293,0.3,0,"r"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3311.3,"ev":"ai","k":"charge","msg":"CL Figueira da Foz  (António Enes) [portugal]: damaged beyond the charge limit - escapes on its own bearing (-20 deg off straight away) under smoke"}
+{"t":3311.3,"ev":"ai","k":"smoke","msg":"CL Figueira da Foz  (António Enes) [portugal]: too damaged - escaping under smoke"}
+{"t":3314.3,"s":[[0,-1044,16500,321,10.6,0,"a"],[1,-2527,15924,293,0.4,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3319.4,"s":[[0,-1102,16572,320,11.7,0,"a"],[1,-2531,15926,292,0.6,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3324.4,"s":[[0,-1162,16643,320,11.4,0,"a"],[1,-2534,15927,291,0.2,0,"a"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3329.4,"ev":"sunk","id":1}
+{"t":3329.4,"s":[[0,-1222,16713,319,10.5,0,"a"],[1,-2534,15927,291,0.1,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3334.5,"s":[[0,-1284,16784,318,11.1,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3339.5,"s":[[0,-1347,16854,318,11.5,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3344.5,"s":[[0,-1409,16923,318,11.0,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3349.6,"s":[[0,-1473,16994,318,11.6,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3354.6,"s":[[0,-1537,17064,318,11.7,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3359.6,"s":[[0,-1601,17133,317,11.5,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3364.6,"s":[[0,-1664,17203,317,11.4,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3369.7,"s":[[0,-1729,17273,317,11.7,0,"a"],[1,-2534,15927,291,0.0,0,"x"],[2,577,3517,158,0.0,0,"x"],[3,-5184,5971,322,0.0,0,"x"]]}
+{"t":3372.4,"ev":"end"}
