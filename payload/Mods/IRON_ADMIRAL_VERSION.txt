@@ -1,4 +1,4 @@
-1.2.78-beta.612
-DIP_GG_Fixes 1.11.1742
-2026-11-24 06:33
-First ship names
+1.2.78-beta.613
+DIP_GG_Fixes 1.11.1743
+2026-11-24 06:39
+Formation order fix
