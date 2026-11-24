@@ -1,0 +1,18 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"BB Iron Duke (New Zealand) [britain]","type":"bb","nation":"britain","player":true,"tons":18500},{"id":1,"name":"BB Hood (Albemarle (Feb. 1895)) [britain]","type":"bb","nation":"britain","player":true,"tons":13500},{"id":2,"name":"CA Drake (Essex (Apr. 1895)) [britain]","type":"ca","nation":"britain","player":true,"tons":6000},{"id":3,"name":"CA Argonaut (Essex (Apr. 1895)) [britain]","type":"ca","nation":"britain","player":true,"tons":6000},{"id":4,"name":"CL Melpomene (Colombo (Jan. 1897)) [britain]","type":"cl","nation":"britain","player":true,"tons":3500},{"id":5,"name":"TB Nargen (Grand Gulf) [russia]","type":"tb","nation":"russia","player":false,"tons":500}]}
+{"t":0.0,"s":[[0,-5680,3092,99,0.0,0,"a"],[1,-5489,3026,109,0.0,0,"a"],[2,-5794,2996,102,0.0,0,"a"],[3,-5611,2934,109,0.0,0,"a"],[4,-5156,4375,109,0.0,0,"a"],[5,7164,-1352,289,0.0,0,"a"]]}
+{"t":5.0,"ev":"withdraw","id":5}
+{"t":5.0,"s":[[0,-5248,3201,106,10.7,0,"a"],[1,-5715,3332,106,6.5,0,"a"],[2,-4647,4695,106,4.1,0,"a"],[3,-5076,4815,106,4.9,0,"a"],[4,-5477,4927,104,10.5,0,"a"],[5,-4516,3860,287,7.3,0,"r"]]}
+{"t":10.0,"s":[[0,-5163,3177,107,10.7,0,"a"],[1,-5658,3315,107,7.5,0,"a"],[2,-4608,4683,109,5.2,0,"a"],[3,-5027,4800,107,6.5,0,"a"],[4,-5370,4903,101,13.9,0,"a"],[5,-4602,3881,281,11.4,0,"r"]]}
+{"t":13.7,"ev":"ai","k":"target","msg":"TB Nargen (Grand Gulf) [russia] secondary guns (51 mm): target CA Drake (Essex (Apr. 1895)) [britain] (ca, dmg 0.00) instead of BB Iron Duke (New Zealand) [britain] [31 changes]"}
+{"t":13.7,"ev":"ai","k":"target","msg":"TB Nargen (Grand Gulf) [russia] secondary guns (51 mm): target CA Drake (Essex (Apr. 1895)) [britain] (ca, dmg 0.00) instead of BB Iron Duke (New Zealand) [britain] [32 changes]"}
+{"t":15.0,"s":[[0,-5081,3150,109,10.6,0,"a"],[1,-5594,3296,107,8.5,0,"a"],[2,-4567,4667,112,5.4,0,"a"],[3,-4975,4784,107,6.8,0,"a"],[4,-5253,4887,95,14.6,0,"a"],[5,-4698,3891,271,11.9,0,"r"]],"tp":[[-4615,4606,1],[-4618,4593,1]]}
+{"t":20.0,"s":[[0,-5000,3121,111,10.3,0,"a"],[1,-5523,3274,107,9.2,0,"a"],[2,-4526,4648,118,5.6,0,"a"],[3,-4920,4767,108,7.0,0,"a"],[4,-5135,4884,87,14.4,0,"a"],[5,-4797,3884,263,12.0,0,"r"]],"tp":[[-4717,4422,1],[-4715,4408,1]]}
+{"t":24.1,"ev":"ai","k":"scatter","msg":"TB Nargen (Grand Gulf) [russia]: escape mission - scattering"}
+{"t":25.0,"s":[[0,-4922,3089,114,10.4,0,"a"],[1,-5447,3251,106,9.8,0,"a"],[2,-4485,4623,125,5.9,0,"a"],[3,-4863,4748,109,7.4,0,"a"],[4,-5018,4898,79,14.3,0,"a"],[5,-4895,3868,259,12.2,0,"a"]],"tp":[[-4812,4234,1],[-4804,4219,1]]}
+{"t":28.1,"ev":"ai","k":"target","msg":"TB Nargen (Grand Gulf) [russia] secondary guns (51 mm): target CA Argonaut (Essex (Apr. 1895)) [britain] (ca, dmg 0.00) instead of CA Drake (Essex (Apr. 1895)) [britain] [33 changes]"}
+{"t":28.1,"ev":"ai","k":"target","msg":"TB Nargen (Grand Gulf) [russia] secondary guns (51 mm): target CA Argonaut (Essex (Apr. 1895)) [britain] (ca, dmg 0.00) instead of CA Drake (Essex (Apr. 1895)) [britain] [34 changes]"}
+{"t":30.0,"s":[[0,-4845,3052,118,10.4,0,"a"],[1,-5368,3228,106,10.2,0,"a"],[2,-4446,4593,132,6.1,0,"a"],[3,-4806,4727,111,7.6,0,"a"],[4,-4905,4927,72,14.3,0,"a"],[5,-4992,3845,255,12.1,0,"a"]],"tp":[[-4906,4046,1],[-4892,4030,1]]}
+{"t":35.1,"ev":"sunk","id":5}
+{"t":35.1,"s":[[0,-4773,3011,122,9.8,0,"a"],[1,-5288,3204,107,9.8,0,"a"],[2,-4412,4557,140,5.8,0,"a"],[3,-4748,4703,113,7.3,0,"a"],[4,-4795,4970,66,13.8,0,"a"],[5,-5082,3822,255,11.4,0,"x"]],"tp":[[-5001,3856,1],[-4981,3838,1]]}
+{"t":40.1,"s":[[0,-4705,2965,126,9.9,0,"a"],[1,-5210,3178,109,10.0,0,"a"],[2,-4383,4519,146,5.7,0,"a"],[3,-4694,4679,114,7.2,0,"a"],[4,-4689,5023,61,14.6,0,"a"],[5,-5169,3799,255,11.0,0,"x"]]}
+{"t":41.3,"ev":"end"}
