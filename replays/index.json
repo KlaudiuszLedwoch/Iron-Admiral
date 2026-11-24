@@ -1,5 +1,12 @@
 [
     {
+        "file":  "78db3721_1927-02_20261124_111052_battle.jsonl",
+        "who":  "Фабушка",
+        "title":  "1927 Russia vs Japan - 20 sunk",
+        "date":  "2026-11-24",
+        "ver":  "1.2.78-beta.609"
+    },
+    {
         "file":  "b608aa03_1897-01_20261123_231825_battle.jsonl",
         "who":  "Anonymous tester b608aa",
         "title":  "1897 USA vs Britain - 1 sunk",
