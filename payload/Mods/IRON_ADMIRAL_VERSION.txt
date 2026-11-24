@@ -1,4 +1,4 @@
-1.2.78-beta.633
-DIP_GG_Fixes 1.11.1775
-2026-11-24 17:52
-Map encounters and notifications
+1.2.78-beta.634
+DIP_GG_Fixes 1.11.1776
+2026-11-24 17:54
+Danish flags
