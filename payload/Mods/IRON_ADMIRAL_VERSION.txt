@@ -1,4 +1,4 @@
-1.2.78-beta.626
-DIP_GG_Fixes 1.11.1765
-2026-11-24 13:37
-AI withdrawal threshold
+1.2.78-beta.627
+DIP_GG_Fixes 1.11.1766
+2026-11-24 14:18
+Air strike wave limits
