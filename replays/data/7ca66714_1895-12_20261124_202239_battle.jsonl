@@ -1,0 +1,174 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"CL Chiyoda (Sakawa) [japan]","type":"cl","nation":"japan","player":true,"tons":2176},{"id":1,"name":"CL Sakawa (Sakawa) [japan]","type":"cl","nation":"japan","player":true,"tons":2176},{"id":2,"name":"CL Natori (Sakawa) [japan]","type":"cl","nation":"japan","player":true,"tons":2176},{"id":3,"name":"CL Klein Hollandia (António Enes) [netherlands]","type":"cl","nation":"netherlands","player":false,"tons":3307}]}
+{"t":0.0,"s":[[0,-4009,1479,35,0.0,0,"a"],[1,-3729,1888,34,0.0,0,"a"],[2,-4291,1073,32,0.0,0,"a"],[3,2538,-1801,41,0.0,0,"a"]]}
+{"t":0.0,"ev":"ai","k":"massattack","msg":"massed torpedo attack off for netherlands: enemy combat tonnage 6529 t vs own 3307 t, 1 torpedo craft vs 0 targets (needed 4 per target by day) - too few to get through, ships faster than the enemy withdraw"}
+{"t":0.0,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: no visible capital target"}
+{"t":5.0,"s":[[0,-3952,1567,34,15.5,0,"a"],[1,-3606,2087,34,19.4,0,"a"],[2,-4296,1050,34,12.4,0,"a"],[3,2606,-1722,40,16.0,0,"a"]]}
+{"t":10.0,"s":[[0,-3882,1672,34,15.5,0,"a"],[1,-3517,2219,34,19.4,0,"a"],[2,-4239,1135,34,12.4,0,"a"],[3,2689,-1619,37,16.2,0,"a"]]}
+{"t":15.0,"s":[[0,-3812,1778,34,16.7,0,"a"],[1,-3429,2351,34,20.9,0,"a"],[2,-4183,1220,34,13.4,0,"a"],[3,2764,-1513,33,17.0,0,"a"]]}
+{"t":16.0,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: group plan short of hits - shadowing ahead of the target"}
+{"t":21.7,"s":[[0,-3717,1919,34,2.8,0,"a"],[1,-3309,2525,35,3.6,0,"a"],[2,-4108,1332,34,2.3,0,"a"],[3,2847,-1364,26,2.9,0,"a"]]}
+{"t":27.7,"s":[[0,-3634,2041,35,13.2,0,"a"],[1,-3196,2671,40,16.5,0,"a"],[2,-4042,1431,34,10.6,0,"a"],[3,2906,-1229,22,13.1,0,"a"]]}
+{"t":33.4,"s":[[0,-3552,2156,36,12.1,0,"a"],[1,-3077,2799,45,15.1,0,"a"],[2,-3979,1525,34,9.7,0,"a"],[3,2952,-1095,17,12.3,0,"a"]]}
+{"t":39.4,"s":[[0,-3466,2268,38,20.3,0,"a"],[1,-2947,2918,49,25.3,0,"a"],[2,-3915,1619,35,16.3,0,"a"],[3,2990,-954,14,21.0,0,"a"]]}
+{"t":45.8,"s":[[0,-3367,2385,41,11.6,0,"a"],[1,-2796,3037,53,14.4,0,"a"],[2,-3844,1719,36,9.3,0,"a"],[3,3022,-797,10,12.0,0,"a"]]}
+{"t":51.3,"s":[[0,-3279,2481,43,13.6,0,"a"],[1,-2663,3128,57,16.9,0,"a"],[2,-3783,1803,36,10.9,0,"a"],[3,3042,-663,8,14.2,0,"a"]]}
+{"t":56.3,"s":[[0,-3196,2565,45,10.5,0,"a"],[1,-2539,3206,59,13.1,0,"a"],[2,-3726,1879,37,8.4,0,"a"],[3,3056,-540,6,11.1,0,"a"]]}
+{"t":61.4,"s":[[0,-3111,2646,47,10.2,0,"a"],[1,-2410,3278,61,12.8,0,"a"],[2,-3667,1953,39,8.2,0,"a"],[3,3066,-414,4,10.9,0,"a"]]}
+{"t":67.1,"s":[[0,-3013,2733,49,16.7,0,"a"],[1,-2264,3353,64,20.8,0,"a"],[2,-3601,2034,40,13.3,0,"a"],[3,3073,-273,2,17.8,0,"a"]]}
+{"t":72.1,"s":[[0,-2925,2810,49,13.3,0,"a"],[1,-2132,3415,66,16.6,0,"a"],[2,-3540,2105,41,10.6,0,"a"],[3,3077,-149,2,14.2,0,"a"]]}
+{"t":78.2,"s":[[0,-2816,2901,51,13.1,0,"a"],[1,-1969,3485,68,16.4,0,"a"],[2,-3465,2190,42,10.5,0,"a"],[3,3084,3,3,14.0,0,"a"]]}
+{"t":81.4,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] main guns (127 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [1 changes]"}
+{"t":81.4,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] main guns (127 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [2 changes]"}
+{"t":83.7,"s":[[0,-2715,2981,52,11.4,0,"a"],[1,-1819,3543,69,14.2,0,"a"],[2,-3396,2266,42,9.1,0,"a"],[3,3096,140,6,12.2,0,"a"]]}
+{"t":88.7,"s":[[0,-2621,3053,53,11.7,0,"a"],[1,-1680,3594,71,14.6,0,"a"],[2,-3332,2336,43,9.3,0,"a"],[3,3116,264,11,12.3,0,"a"]]}
+{"t":95.0,"s":[[0,-2502,3139,55,6.3,0,"a"],[1,-1506,3653,72,7.8,0,"a"],[2,-3251,2421,44,5.0,0,"a"],[3,3153,412,16,6.5,0,"a"]]}
+{"t":100.4,"s":[[0,-2398,3210,56,17.9,0,"a"],[1,-1355,3700,73,22.4,0,"a"],[2,-3180,2493,45,14.3,0,"a"],[3,3196,534,21,18.4,0,"a"]]}
+{"t":105.4,"s":[[0,-2300,3274,58,11.4,0,"a"],[1,-1214,3741,74,14.2,0,"a"],[2,-3113,2560,46,9.1,0,"a"],[3,3245,645,25,11.7,0,"a"]]}
+{"t":110.4,"s":[[0,-2198,3336,59,14.4,0,"a"],[1,-1071,3781,75,18.0,0,"a"],[2,-3045,2626,46,11.5,0,"a"],[3,3301,753,30,14.8,0,"a"]]}
+{"t":116.8,"s":[[0,-2069,3411,61,2.1,0,"a"],[1,-892,3831,74,2.6,0,"a"],[2,-2958,2707,48,1.7,0,"a"],[3,3383,883,34,2.1,0,"a"]]}
+{"t":117.9,"ev":"ai","k":"target","msg":"CL Sakawa (Sakawa) [japan] main guns (127 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [3 changes]"}
+{"t":117.9,"ev":"ai","k":"target","msg":"CL Sakawa (Sakawa) [japan] main guns (127 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [4 changes]"}
+{"t":122.7,"s":[[0,-1942,3478,63,13.4,0,"a"],[1,-724,3881,73,16.3,0,"a"],[2,-2872,2783,49,10.7,0,"a"],[3,3470,998,39,13.4,0,"a"]]}
+{"t":128.2,"s":[[0,-1821,3538,64,8.8,0,"a"],[1,-569,3930,72,10.6,0,"a"],[2,-2790,2853,50,7.0,0,"a"],[3,3558,1098,43,8.7,0,"a"]]}
+{"t":133.9,"s":[[0,-1692,3597,66,12.3,0,"a"],[1,-409,3984,71,14.6,0,"a"],[2,-2703,2924,51,9.8,0,"a"],[3,3659,1194,48,12.0,0,"a"]]}
+{"t":139.0,"s":[[0,-1573,3649,67,7.8,0,"a"],[1,-266,4034,71,9.1,0,"a"],[2,-2621,2989,52,6.2,0,"a"],[3,3754,1274,51,7.5,0,"a"]]}
+{"t":145.0,"s":[[0,-1429,3707,68,14.6,0,"a"],[1,-98,4093,70,16.7,0,"a"],[2,-2522,3063,54,11.7,0,"a"],[3,3869,1364,53,13.7,0,"a"]]}
+{"t":148.0,"ev":"ai","k":"target","msg":"CL Sakawa (Sakawa) [japan] secondary guns (102 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [5 changes]"}
+{"t":148.0,"ev":"ai","k":"target","msg":"CL Sakawa (Sakawa) [japan] secondary guns (102 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [6 changes]"}
+{"t":150.0,"s":[[0,-1306,3754,69,29.9,0,"a"],[1,42,4144,70,33.8,0,"a"],[2,-2436,3125,55,24.1,0,"a"],[3,3967,1437,54,27.8,0,"a"]]}
+{"t":155.0,"s":[[0,-1179,3801,70,16.8,0,"a"],[1,183,4195,70,18.5,0,"a"],[2,-2345,3188,56,13.6,0,"a"],[3,4067,1509,54,15.2,0,"a"]]}
+{"t":160.0,"s":[[0,-1049,3846,71,16.9,0,"a"],[1,324,4247,70,18.3,0,"a"],[2,-2251,3250,57,13.8,0,"a"],[3,4168,1580,56,15.0,0,"a"]]}
+{"t":165.1,"s":[[0,-916,3891,72,16.8,0,"a"],[1,467,4300,70,18.3,0,"a"],[2,-2154,3311,58,13.8,0,"a"],[3,4272,1649,58,15.0,0,"a"]]}
+{"t":170.1,"s":[[0,-785,3933,72,16.9,0,"a"],[1,608,4352,70,18.3,0,"a"],[2,-2055,3370,60,14.1,0,"a"],[3,4378,1712,61,15.0,0,"a"]]}
+{"t":175.1,"s":[[0,-652,3975,72,17.0,0,"a"],[1,750,4405,70,18.4,0,"a"],[2,-1952,3429,61,14.6,0,"a"],[3,4488,1767,65,15.0,0,"a"]]}
+{"t":180.1,"s":[[0,-520,4017,73,16.9,0,"a"],[1,891,4458,70,18.4,0,"a"],[2,-1846,3487,62,14.8,0,"a"],[3,4601,1817,67,15.0,0,"a"]]}
+{"t":185.2,"s":[[0,-386,4059,73,21.6,0,"a"],[1,1034,4511,70,23.5,0,"a"],[2,-1737,3543,63,18.9,0,"a"],[3,4716,1864,69,19.1,0,"a"]]}
+{"t":190.3,"s":[[0,-250,4101,72,16.4,0,"a"],[1,1179,4565,69,17.8,0,"a"],[2,-1623,3600,64,14.8,0,"a"],[3,4834,1907,70,14.5,0,"a"]]}
+{"t":192.3,"ev":"ai","k":"target","msg":"CL Chiyoda (Sakawa) [japan] main guns (127 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [7 changes]"}
+{"t":192.3,"ev":"ai","k":"target","msg":"CL Chiyoda (Sakawa) [japan] main guns (127 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [8 changes]"}
+{"t":195.3,"s":[[0,-116,4144,72,15.4,0,"a"],[1,1323,4619,69,16.7,0,"a"],[2,-1508,3653,65,13.9,0,"a"],[3,4953,1946,73,13.6,0,"a"]]}
+{"t":200.4,"s":[[0,16,4187,72,17.0,0,"a"],[1,1465,4672,69,18.5,0,"a"],[2,-1392,3705,66,15.6,0,"a"],[3,5072,1979,77,15.1,0,"a"]]}
+{"t":205.4,"s":[[0,150,4230,72,17.1,0,"a"],[1,1607,4725,69,18.6,0,"a"],[2,-1272,3756,67,16.0,0,"a"],[3,5192,2003,81,14.9,0,"a"]]}
+{"t":210.4,"s":[[0,283,4273,72,17.1,0,"a"],[1,1750,4779,69,18.7,0,"a"],[2,-1149,3806,68,16.3,0,"a"],[3,5313,2020,83,15.0,0,"a"]]}
+{"t":215.6,"s":[[0,420,4319,72,3.7,0,"a"],[1,1898,4833,71,4.1,0,"a"],[2,-1019,3856,69,3.6,0,"a"],[3,5438,2031,86,3.3,0,"a"]]}
+{"t":220.8,"s":[[0,558,4366,71,16.8,0,"a"],[1,2049,4880,74,18.2,0,"a"],[2,-886,3905,70,16.4,0,"a"],[3,5565,2036,89,14.7,0,"a"]]}
+{"t":225.8,"s":[[0,692,4411,71,16.9,0,"a"],[1,2196,4914,80,18.1,0,"a"],[2,-756,3951,71,16.5,0,"a"],[3,5689,2034,92,14.8,0,"a"]]}
+{"t":231.0,"s":[[0,833,4458,72,15.9,0,"a"],[1,2351,4932,86,16.8,0,"a"],[2,-620,3998,71,15.5,0,"a"],[3,5817,2027,94,13.9,0,"a"]]}
+{"t":236.3,"s":[[0,973,4504,72,12.2,0,"a"],[1,2505,4935,91,12.6,0,"a"],[2,-484,4044,72,11.9,0,"a"],[3,5945,2016,95,10.6,0,"a"]]}
+{"t":241.5,"s":[[0,1113,4548,73,17.4,0,"a"],[1,2655,4924,96,17.9,0,"a"],[2,-347,4089,72,17.0,0,"a"],[3,6073,2003,96,15.2,0,"a"]]}
+{"t":246.6,"s":[[0,1254,4590,74,19.0,0,"a"],[1,2803,4902,100,19.3,0,"a"],[2,-211,4133,72,18.5,0,"a"],[3,6200,1988,97,16.5,0,"a"]]}
+{"t":251.6,"s":[[0,1391,4628,75,17.4,0,"a"],[1,2942,4871,104,17.3,0,"a"],[2,-79,4176,72,16.9,0,"a"],[3,6322,1970,99,15.1,0,"a"]]}
+{"t":256.1,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL Sakawa (Sakawa) [japan] at 4,4 km, guns 4,4 km, cannot get out) - attack on "}
+{"t":256.9,"s":[[0,1535,4665,76,6.8,0,"a"],[1,3083,4830,109,6.7,0,"a"],[2,59,4220,72,6.6,0,"a"],[3,6449,1946,102,5.9,0,"a"]]}
+{"t":257.3,"ev":"ai","k":"smoke","msg":"CL Klein Hollandia (António Enes) [netherlands]: 1 ship(s) lay a smoke screen"}
+{"t":257.3,"ev":"ai","k":"scatter","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire without a charge - scattering under smoke"}
+{"t":262.0,"s":[[0,1678,4698,78,15.9,0,"a"],[1,3217,4777,114,15.4,0,"a"],[2,196,4263,73,15.5,0,"a"],[3,6573,1914,106,13.7,0,"a"]]}
+{"t":267.3,"s":[[0,1825,4728,79,17.5,0,"a"],[1,3345,4712,119,16.8,0,"a"],[2,336,4306,73,17.1,0,"a"],[3,6695,1873,110,15.0,0,"a"]]}
+{"t":272.3,"s":[[0,1967,4752,81,18.5,0,"a"],[1,3462,4641,123,17.5,0,"a"],[2,470,4347,73,18.1,0,"a"],[3,6809,1827,113,15.9,0,"a"]]}
+{"t":277.6,"s":[[0,2117,4772,83,17.6,0,"a"],[1,3580,4557,127,16.8,0,"a"],[2,613,4388,74,17.2,0,"a"],[3,6928,1772,116,15.1,0,"a"]]}
+{"t":282.7,"s":[[0,2263,4787,86,12.0,0,"a"],[1,3688,4469,131,11.5,0,"a"],[2,750,4427,75,11.8,0,"a"],[3,7039,1714,119,10.3,0,"a"]]}
+{"t":286.3,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: group plan short of hits - shadowing ahead of the target"}
+{"t":286.3,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL Sakawa (Sakawa) [japan] at 4,3 km, guns 4,4 km, cannot get out) - attack on "}
+{"t":288.0,"s":[[0,2414,4795,88,20.4,0,"a"],[1,3795,4371,134,19.5,0,"a"],[2,893,4465,75,19.9,0,"a"],[3,7151,1648,122,17.5,0,"a"]]}
+{"t":290.3,"ev":"ai","k":"scatter","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire without a charge - scattering under smoke"}
+{"t":293.0,"s":[[0,2558,4797,91,17.6,0,"a"],[1,3892,4273,137,16.9,0,"a"],[2,1030,4499,76,17.2,0,"a"],[3,7254,1579,125,15.1,0,"a"]]}
+{"t":298.2,"s":[[0,2710,4791,94,12.9,0,"a"],[1,3989,4165,140,12.4,0,"a"],[2,1174,4533,77,12.6,0,"a"],[3,7358,1500,129,11.1,0,"a"]]}
+{"t":303.4,"s":[[0,2859,4777,97,19.0,0,"a"],[1,4075,4052,146,18.0,0,"a"],[2,1317,4565,78,18.6,0,"a"],[3,7455,1417,132,16.3,0,"a"]]}
+{"t":308.8,"s":[[0,3012,4755,100,15.3,0,"a"],[1,4148,3927,152,14.2,0,"a"],[2,1465,4594,79,15.0,0,"a"],[3,7547,1325,138,12.8,0,"a"]]}
+{"t":314.0,"s":[[0,3161,4724,103,17.2,0,"a"],[1,4206,3800,158,15.7,0,"a"],[2,1612,4621,80,16.8,0,"a"],[3,7625,1227,145,14.0,0,"a"]]}
+{"t":319.4,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: group plan short of hits - shadowing ahead of the target"}
+{"t":319.4,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL Sakawa (Sakawa) [japan] at 4,3 km, guns 4,4 km, cannot get out) - attack on "}
+{"t":319.4,"s":[[0,3311,4682,107,19.1,0,"a"],[1,4251,3666,164,17.4,0,"a"],[2,1762,4645,82,18.7,0,"a"],[3,7692,1119,151,15.5,0,"a"]]}
+{"t":323.4,"ev":"ai","k":"scatter","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire without a charge - scattering under smoke"}
+{"t":324.4,"s":[[0,3448,4634,111,18.0,0,"a"],[1,4283,3538,168,16.4,0,"a"],[2,1903,4664,83,17.6,0,"a"],[3,7741,1014,158,14.2,0,"a"]]}
+{"t":329.7,"s":[[0,3592,4573,115,21.6,0,"a"],[1,4306,3396,173,19.9,0,"a"],[2,2055,4681,84,21.1,0,"a"],[3,7778,899,165,16.6,0,"a"]]}
+{"t":334.7,"s":[[0,3722,4505,119,19.3,0,"a"],[1,4319,3262,176,17.9,0,"a"],[2,2198,4692,86,18.9,0,"a"],[3,7802,789,170,14.9,0,"a"]]}
+{"t":339.5,"ev":"ai","k":"target","msg":"CL Chiyoda (Sakawa) [japan] main guns (127 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [9 changes]"}
+{"t":339.8,"s":[[0,3848,4428,124,16.3,0,"a"],[1,4323,3123,180,15.5,0,"a"],[2,2342,4700,88,16.0,0,"a"],[3,7819,675,173,12.8,0,"a"]]}
+{"t":344.9,"s":[[0,3969,4340,128,16.8,0,"a"],[1,4321,2980,183,16.0,0,"a"],[2,2489,4702,90,16.5,0,"a"],[3,7827,557,178,13.3,0,"a"]]}
+{"t":348.6,"ev":"ai","k":"charge","msg":"CL Klein Hollandia (António Enes) [netherlands] (cl): under fire with no charge possible - leaves the battle for port under smoke"}
+{"t":348.6,"ev":"ai","k":"withdraw","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire without a charge - withdrawing to port under smoke"}
+{"t":350.2,"ev":"withdraw","id":3}
+{"t":350.2,"s":[[0,4086,4239,133,19.5,0,"a"],[1,4310,2834,185,18.5,0,"a"],[2,2640,4700,92,19.1,0,"a"],[3,7824,436,184,15.3,0,"r"]]}
+{"t":352.9,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: group plan short of hits - shadowing ahead of the target"}
+{"t":352.9,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL Sakawa (Sakawa) [japan] at 4,2 km, guns 4,4 km, cannot get out) - attack on "}
+{"t":355.2,"s":[[0,4190,4135,137,19.4,0,"a"],[1,4294,2695,188,18.5,0,"a"],[2,2784,4691,94,19.0,0,"a"],[3,7810,320,189,15.3,0,"a"]]}
+{"t":357.2,"ev":"ai","k":"charge","msg":"CL Klein Hollandia (António Enes) [netherlands]: charge on CL Natori (Sakawa) [japan] not feasible (6635 m, start distance 2969 m, speed 11,5 vs 12,1) - fighting with guns"}
+{"t":357.2,"ev":"ai","k":"charge","msg":"CL Klein Hollandia (António Enes) [netherlands]: charge not feasible - guns"}
+{"t":360.4,"s":[[0,4290,4016,142,14.6,0,"a"],[1,4271,2549,190,13.8,0,"a"],[2,2935,4676,97,14.3,0,"a"],[3,7784,202,196,11.4,0,"a"]]}
+{"t":365.7,"s":[[0,4379,3890,147,18.4,0,"a"],[1,4244,2405,192,17.5,0,"a"],[2,3084,4654,100,18.1,0,"a"],[3,7744,90,203,14.1,0,"a"]]}
+{"t":370.9,"s":[[0,4458,3757,152,18.2,0,"a"],[1,4211,2262,194,17.3,0,"a"],[2,3233,4624,103,17.8,0,"a"],[3,7693,-17,209,13.9,0,"a"]]}
+{"t":375.9,"s":[[0,4524,3624,156,19.6,0,"a"],[1,4176,2125,195,18.7,0,"a"],[2,3374,4588,106,19.2,0,"a"],[3,7633,-115,214,15.2,0,"a"]]}
+{"t":380.9,"s":[[0,4578,3486,160,19.0,0,"a"],[1,4137,1989,197,18.1,0,"a"],[2,3513,4545,109,18.6,0,"a"],[3,7565,-207,219,14.7,0,"a"]]}
+{"t":386.0,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: group plan short of hits - shadowing ahead of the target"}
+{"t":386.0,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL Sakawa (Sakawa) [japan] at 4,0 km, guns 4,4 km, cannot get out) - attack on "}
+{"t":386.0,"s":[[0,4623,3343,165,17.6,0,"a"],[1,4095,1853,198,16.7,0,"a"],[2,3650,4493,112,17.2,0,"a"],[3,7488,-296,223,13.9,0,"a"]]}
+{"t":389.7,"ev":"ai","k":"target","msg":"CL Chiyoda (Sakawa) [japan] secondary guns (102 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [10 changes]"}
+{"t":389.7,"ev":"ai","k":"target","msg":"CL Chiyoda (Sakawa) [japan] secondary guns (102 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [11 changes]"}
+{"t":390.3,"ev":"ai","k":"charge","msg":"CL Klein Hollandia (António Enes) [netherlands]: charge not feasible - guns"}
+{"t":391.0,"s":[[0,4657,3197,169,20.3,0,"a"],[1,4050,1718,199,19.3,0,"a"],[2,3783,4432,116,19.9,0,"a"],[3,7404,-379,227,16.1,0,"a"]]}
+{"t":396.0,"s":[[0,4681,3050,173,17.9,0,"a"],[1,4003,1584,200,17.1,0,"a"],[2,3913,4364,120,17.6,0,"a"],[3,7315,-457,230,14.2,0,"a"]]}
+{"t":400.6,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (102 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [12 changes]"}
+{"t":400.6,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (102 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [13 changes]"}
+{"t":401.0,"s":[[0,4695,2901,176,18.2,0,"a"],[1,3954,1450,201,17.4,0,"a"],[2,4037,4287,123,17.9,0,"a"],[3,7222,-530,234,14.4,0,"a"]]}
+{"t":406.0,"s":[[0,4700,2751,180,18.3,0,"a"],[1,3902,1317,202,17.5,0,"a"],[2,4157,4202,127,18.0,0,"a"],[3,7125,-598,236,14.5,0,"a"]]}
+{"t":411.1,"s":[[0,4695,2600,184,18.4,0,"a"],[1,3849,1184,202,17.5,0,"a"],[2,4271,4109,131,18.1,0,"a"],[3,7024,-662,239,14.6,0,"a"]]}
+{"t":416.1,"s":[[0,4681,2451,187,18.4,0,"a"],[1,3794,1052,203,17.5,0,"a"],[2,4378,4007,135,18.0,0,"a"],[3,6922,-721,241,14.5,0,"a"]]}
+{"t":418.4,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: group plan short of hits - shadowing ahead of the target"}
+{"t":418.4,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL Sakawa (Sakawa) [japan] at 3,6 km, guns 4,4 km, cannot get out) - attack on "}
+{"t":421.1,"s":[[0,4659,2302,190,18.4,0,"a"],[1,3738,919,203,17.5,0,"a"],[2,4478,3898,140,18.0,0,"a"],[3,6817,-777,243,14.5,0,"a"]]}
+{"t":422.4,"ev":"ai","k":"charge","msg":"CL Klein Hollandia (António Enes) [netherlands]: charge not feasible - guns"}
+{"t":426.4,"s":[[0,4627,2145,193,17.2,0,"a"],[1,3679,779,202,16.4,0,"a"],[2,4575,3775,144,16.8,0,"a"],[3,6703,-832,245,13.6,0,"a"]]}
+{"t":431.6,"s":[[0,4588,1994,196,17.4,0,"a"],[1,3627,640,199,16.5,0,"a"],[2,4660,3647,148,17.1,0,"a"],[3,6591,-883,246,13.8,0,"a"]]}
+{"t":436.6,"s":[[0,4544,1849,198,25.5,0,"a"],[1,3588,503,193,23.8,0,"a"],[2,4733,3518,153,25.0,0,"a"],[3,6481,-930,248,20.1,0,"a"]]}
+{"t":441.6,"s":[[0,4494,1706,200,18.5,0,"a"],[1,3562,365,188,17.1,0,"a"],[2,4796,3383,157,18.2,0,"a"],[3,6370,-975,249,14.6,0,"a"]]}
+{"t":443.2,"ev":"ai","k":"target","msg":"CL Sakawa (Sakawa) [japan] secondary guns (76 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of TR Noordzee (Krokodil) [netherlands] [14 changes]"}
+{"t":443.2,"ev":"ai","k":"target","msg":"CL Sakawa (Sakawa) [japan] secondary guns (76 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of TR Noordzee (Krokodil) [netherlands] [15 changes]"}
+{"t":446.8,"s":[[0,4436,1559,202,19.6,0,"a"],[1,3548,221,183,17.9,0,"a"],[2,4852,3239,161,19.2,0,"a"],[3,6253,-1019,249,15.4,0,"a"]]}
+{"t":451.6,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: group plan short of hits - shadowing ahead of the target"}
+{"t":451.6,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL Sakawa (Sakawa) [japan] at 2,8 km, guns 4,4 km, cannot get out) - attack on "}
+{"t":452.0,"s":[[0,4375,1415,204,18.3,0,"a"],[1,3546,79,179,16.6,0,"a"],[2,4896,3092,165,18.0,0,"a"],[3,6137,-1062,250,14.5,0,"a"]]}
+{"t":455.6,"ev":"ai","k":"charge","msg":"CL Klein Hollandia (António Enes) [netherlands]: speed check at the charge - SpeedMax(fff) 11,5, (ttt) 29,4, (tff) 29,4, (ftf) 11,5, (fft) 11,5, moving 24,0; target 12,1"}
+{"t":455.6,"ev":"ai","k":"charge","msg":"CL Klein Hollandia (António Enes) [netherlands] (cl) charges CL Natori (Sakawa) [japan] (cl) at 4231 m, torpedo range 670 m, start distance 2969 m"}
+{"t":455.6,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: sector port bow of CL Natori (Sakawa) [japan] (division 1 on this target)"}
+{"t":455.7,"ev":"ai","k":"target","msg":"CL Chiyoda (Sakawa) [japan] secondary guns (76 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [16 changes]"}
+{"t":455.7,"ev":"ai","k":"target","msg":"CL Chiyoda (Sakawa) [japan] secondary guns (76 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [17 changes]"}
+{"t":457.0,"s":[[0,4311,1275,205,19.7,0,"a"],[1,3553,-58,175,17.6,0,"a"],[2,4930,2945,169,19.3,0,"a"],[3,6023,-1102,251,15.5,0,"a"]]}
+{"t":459.6,"ev":"ai","k":"target","msg":"CL Klein Hollandia (António Enes) [netherlands]: no visible capital target"}
+{"t":462.3,"s":[[0,4242,1129,206,17.3,0,"a"],[1,3569,-203,172,15.6,0,"a"],[2,4954,2788,173,17.0,0,"a"],[3,5902,-1144,251,13.7,0,"a"]]}
+{"t":467.6,"s":[[0,4171,983,206,18.5,0,"a"],[1,3591,-347,170,16.7,0,"a"],[2,4968,2629,177,18.2,0,"a"],[3,5781,-1185,251,14.6,0,"a"]]}
+{"t":471.2,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (76 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [18 changes]"}
+{"t":471.2,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (76 mm): target CL Klein Hollandia (António Enes) [netherlands] (cl, dmg 0,00) instead of none [19 changes]"}
+{"t":472.6,"s":[[0,4106,844,205,18.7,0,"a"],[1,3616,-483,169,16.9,0,"a"],[2,4971,2479,181,18.4,0,"a"],[3,5667,-1226,250,14.8,0,"a"]]}
+{"t":477.7,"s":[[0,4043,703,204,18.8,0,"a"],[1,3644,-619,168,16.9,0,"a"],[2,4965,2327,184,18.4,0,"a"],[3,5554,-1269,249,14.8,0,"a"]]}
+{"t":482.7,"s":[[0,3983,562,202,18.7,0,"a"],[1,3674,-755,167,16.9,0,"a"],[2,4950,2177,187,18.4,0,"a"],[3,5442,-1315,247,14.8,0,"a"]]}
+{"t":487.7,"s":[[0,3926,418,201,18.8,0,"a"],[1,3705,-890,167,17.0,0,"a"],[2,4928,2027,190,18.5,0,"a"],[3,5331,-1365,245,14.8,0,"a"]]}
+{"t":492.7,"s":[[0,3874,273,199,18.5,0,"a"],[1,3737,-1026,166,16.7,0,"a"],[2,4897,1879,193,18.2,0,"a"],[3,5223,-1419,242,14.4,0,"a"]]}
+{"t":497.8,"s":[[0,3826,126,197,18.6,0,"a"],[1,3771,-1161,166,16.8,0,"a"],[2,4860,1731,195,18.3,0,"a"],[3,5120,-1480,237,14.3,0,"a"]]}
+{"t":502.8,"s":[[0,3784,-23,195,19.1,0,"a"],[1,3805,-1297,166,17.2,0,"a"],[2,4817,1585,198,18.8,0,"a"],[3,5026,-1549,230,14.3,0,"a"]]}
+{"t":507.8,"s":[[0,3747,-174,193,18.9,0,"a"],[1,3839,-1433,166,17.0,0,"a"],[2,4768,1441,200,18.5,0,"a"],[3,4942,-1629,222,14.1,0,"a"]]}
+{"t":512.8,"s":[[0,3715,-326,190,18.9,0,"a"],[1,3874,-1569,166,17.1,0,"a"],[2,4715,1297,201,18.6,0,"a"],[3,4871,-1720,214,14.0,0,"a"]]}
+{"t":517.8,"s":[[0,3691,-479,188,18.8,0,"a"],[1,3909,-1705,166,17.1,0,"a"],[2,4657,1156,203,18.6,0,"a"],[3,4815,-1818,206,13.7,0,"a"]]}
+{"t":522.9,"s":[[0,3672,-633,186,19.8,0,"a"],[1,3944,-1842,165,18.1,0,"a"],[2,4596,1015,204,19.6,0,"a"],[3,4773,-1922,198,14.2,0,"a"]]}
+{"t":527.9,"s":[[0,3661,-786,183,18.6,0,"a"],[1,3979,-1979,166,17.2,0,"a"],[2,4532,875,205,18.7,0,"a"],[3,4747,-2026,191,13.0,0,"a"]]}
+{"t":532.9,"s":[[0,3655,-938,181,17.6,0,"a"],[1,4013,-2116,168,16.4,0,"a"],[2,4466,736,205,17.9,0,"a"],[3,4734,-2130,183,11.9,0,"a"]]}
+{"t":537.9,"s":[[0,3656,-1089,178,18.3,0,"a"],[1,4038,-2255,172,17.1,0,"a"],[2,4400,597,205,18.8,0,"a"],[3,4734,-2230,177,12.0,0,"a"]]}
+{"t":542.9,"s":[[0,3663,-1237,176,18.2,0,"a"],[1,4049,-2393,179,17.0,0,"a"],[2,4335,457,205,19.0,0,"a"],[3,4745,-2324,170,11.4,0,"a"]]}
+{"t":544.0,"ev":"ai","k":"withdraw","msg":"CL Klein Hollandia (António Enes) [netherlands] (cl): every ship badly damaged (CL Klein Hollandia (António Enes) [netherlands] 8%) - the division withdraws"}
+{"t":544.0,"ev":"ai","k":"withdraw","msg":"CL Klein Hollandia (António Enes) [netherlands]: withdrawing - badly damaged"}
+{"t":547.9,"ev":"withdraw","id":3}
+{"t":547.9,"s":[[0,3675,-1384,174,17.9,0,"a"],[1,4046,-2531,184,16.7,0,"a"],[2,4272,316,204,18.8,0,"a"],[3,4765,-2411,165,10.9,0,"r"]]}
+{"t":548.0,"ev":"ai","k":"withdraw","msg":"CL Klein Hollandia (António Enes) [netherlands] (cl): the attack has failed and the enemy is stronger - withdraws while the lighter ships cover it"}
+{"t":548.0,"ev":"ai","k":"withdraw","msg":"CL Klein Hollandia (António Enes) [netherlands]: withdrawing under cover"}
+{"t":552.9,"s":[[0,3692,-1529,173,17.7,0,"a"],[1,4034,-2667,186,16.7,0,"a"],[2,4211,174,203,18.9,0,"a"],[3,4791,-2491,159,10.1,0,"r"]]}
+{"t":557.9,"s":[[0,3712,-1672,171,17.5,0,"a"],[1,4018,-2803,187,16.8,0,"a"],[2,4153,30,201,18.9,0,"a"],[3,4824,-2563,151,9.3,0,"r"]]}
+{"t":559.8,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (102 mm): target TR Noordzee (Krokodil) [netherlands] (tr, dmg 0,00) instead of none [20 changes]"}
+{"t":559.8,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] main guns (127 mm): target TR Noordzee (Krokodil) [netherlands] (tr, dmg 0,00) instead of none [21 changes]"}
+{"t":559.8,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (76 mm): target TR Noordzee (Krokodil) [netherlands] (tr, dmg 0,00) instead of none [22 changes]"}
+{"t":559.8,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (102 mm): target TR Noordzee (Krokodil) [netherlands] (tr, dmg 0,00) instead of none [23 changes]"}
+{"t":559.8,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] main guns (127 mm): target TR Noordzee (Krokodil) [netherlands] (tr, dmg 0,00) instead of none [24 changes]"}
+{"t":559.8,"ev":"ai","k":"target","msg":"CL Natori (Sakawa) [japan] secondary guns (76 mm): target TR Noordzee (Krokodil) [netherlands] (tr, dmg 0,00) instead of none [25 changes]"}
+{"t":563.0,"ev":"sunk","id":3}
+{"t":563.0,"s":[[0,3734,-1812,170,17.2,0,"a"],[1,4004,-2940,185,16.6,0,"a"],[2,4098,-115,200,18.8,0,"a"],[3,4860,-2624,149,8.5,0,"x"]]}
+{"t":568.0,"s":[[0,3759,-1951,170,16.9,0,"a"],[1,3993,-3077,184,16.6,0,"a"],[2,4046,-261,199,18.7,0,"a"],[3,4894,-2680,149,8.1,0,"x"]]}
+{"t":572.0,"ev":"end"}
