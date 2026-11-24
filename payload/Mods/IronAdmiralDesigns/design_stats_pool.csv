@@ -62,7 +62,7 @@ e53cf2fb-ce07-4ea8-84c8-04d9686b89ad,MHMW Renown,britain,bb,1,0,1,0,0,0,0,38686,
 7938d960-7075-4406-9050-3e2d2af8b4c6,MHMW Riga,russia,bb,12,0,12,0,2,0,0,11804,4
 ec7ba746-2924-482f-ad39-f4285623c00e,MHMW Tango,japan,bb,1,1,0,0,0,,,,
 0a0efcac-2f4a-4166-9782-65ae3eff6341,MHMW Tosa,japan,bb,5,0,0,5,0,2,57249,83173,5
-3a430266-954d-4125-9d8c-4e02917a383e,Mikasa,britain,bb,9,0,8,1,1,0,0,11000,1
+3a430266-954d-4125-9d8c-4e02917a383e,Mikasa,britain,bb,14,0,13,1,2,6,4369,11000,6
 a461c5f9-283f-436a-b7a6-0f9d1b4920e0,Mikasa,japan,bb,3,0,3,0,2,6,5800,11000,3
 124f7147-7f6d-4253-b01c-4eccade99259,Mikasa,britain,bb,5,0,4,1,1,1,3406,11000,5
 4a57623a-750c-4b59-8b85-a41b1da7eff0,Mikasa,japan,bb,9,2,4,3,4,0,0,11000,4
@@ -172,7 +172,7 @@ e64d9cdc-a7f1-4b87-baec-2844d56e672f,Minotaur,britain,ca,8,0,8,0,0,,,,
 faa6c074-8b32-4f77-8e45-299f664b6482,Monmouth,japan,ca,25,0,15,10,8,0,0,9352,25
 f197d8a3-91e4-49be-a54b-1f746d04362c,Navarinon,britain,ca,2,2,0,0,0,0,0,13300,2
 194d5784-ad33-468f-b831-0739f26941ee,Nokogiri,spain,ca,7,0,5,2,2,2,8300,6000,7
-1755bf6d-4d12-46be-880f-dfb2aa9e0576,Northampton,usa,ca,4,3,1,0,0,2,2709,10789,3
+1755bf6d-4d12-46be-880f-dfb2aa9e0576,Northampton,usa,ca,10,9,1,0,0,5,6773,10789,9
 61ae4420-2cf7-4016-85af-84dde0567fa7,Prinzess Wilhelm,germany,ca,4,4,0,0,0,12,189699,19812,4
 82ac7ca8-7858-44ff-8fe8-7057a5e1cde8,Scharnhorst (1907),germany,ca,6,4,0,2,0,3,5101,11098,6
 fe309184-7433-425d-aaa4-ea56eb37cc23,Seydlitz,germany,ca,1,1,0,0,0,,,,
@@ -225,7 +225,7 @@ def26443-7106-45ff-a2cd-fbc5a260ea3d,Cleveland,spain,cl,7,0,7,0,2,,,,
 94e9a858-c764-47ab-9c9f-975c570b5d39,Cleveland class,usa,cl,3,2,0,1,1,0,0,13016,1
 4a85fe52-f5c0-4ea6-8da2-6395f3a8eee3,Davout,france,cl,2,2,0,0,1,0,0,2735,1
 694c14f2-b83e-4c1b-b9e1-ac7e28a03a8e,Dresden,sweden,cl,3,0,1,2,1,,,,
-fbc1d582-28ad-4610-87f2-e371bb201e0c,Duguay-Trouin,france,cl,93,62,0,31,1,2,111744,7365,93
+fbc1d582-28ad-4610-87f2-e371bb201e0c,Duguay-Trouin,france,cl,123,62,0,61,1,2,111744,7365,123
 63817c7f-9e77-42af-8e25-08252bfc50fb,F-1,spain,cl,15,0,15,0,9,,,,
 233ec218-95de-4023-83fb-8620b3fad37d,Forfait,france,cl,6,0,3,3,3,0,0,6653,6
 d6e32287-7550-4453-890e-02ed76b5be3f,Forward,britain,cl,1,0,0,1,1,,,,
