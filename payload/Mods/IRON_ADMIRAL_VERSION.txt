@@ -1,4 +1,4 @@
-1.2.78-beta.610
-DIP_GG_Fixes 1.11.1740
-2026-11-24 05:17
-Deck tube burst damages the hull
+1.2.78-beta.611
+DIP_GG_Fixes 1.11.1741
+2026-11-24 06:16
+Battle AI one enemy strength figure
