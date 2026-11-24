@@ -64,7 +64,7 @@ ec7ba746-2924-482f-ad39-f4285623c00e,MHMW Tango,japan,bb,1,1,0,0,0,,,,
 124f7147-7f6d-4253-b01c-4eccade99259,Mikasa,britain,bb,5,0,4,1,1,1,3406,11000,5
 4a57623a-750c-4b59-8b85-a41b1da7eff0,Mikasa,japan,bb,9,2,4,3,4,0,0,11000,4
 a461c5f9-283f-436a-b7a6-0f9d1b4920e0,Mikasa,japan,bb,3,0,3,0,2,6,5800,11000,3
-3a430266-954d-4125-9d8c-4e02917a383e,Mikasa,britain,bb,8,0,8,0,0,0,0,11000,8
+3a430266-954d-4125-9d8c-4e02917a383e,Mikasa,britain,bb,9,0,8,1,1,0,0,11000,1
 b6fa1d0a-96bf-4d19-8157-14d477b45cf8,Mikasa,japan,bb,1,0,0,1,0,0,0,15140,1
 6559d423-9ed0-4b9a-a162-786baa6ed7fb,Mikasa,britain,bb,5,0,4,1,1,0,0,11000,5
 c7bb59c2-fd09-4e53-96fc-2915828bb4d1,Mississippi,usa,bb,1,0,0,1,1,,,,
@@ -88,7 +88,7 @@ c3fe14ac-1197-4555-baed-12e7509ef64f,Shinano,russia,bb,22,2,15,5,4,1,3000,8235,1
 8c3acd92-798b-4cbc-a858-73283e9e2c23,Shinano,austria,bb,3,0,1,2,2,0,0,8235,3
 566c666c-2fae-4567-b753-6bf9fff1d0f3,Texas,usa,bb,2,2,0,0,0,,,,
 2eba0407-0eb5-4c8e-8723-c847616394b3,Tosa,japan,bb,8,8,0,0,0,0,0,33332,8
-c748f2ec-0cb0-4185-b6ea-b46fe85e5778,Tre Løver (Jan. 1895),greece,bb,6,0,5,1,2,0,0,7093,6
+c748f2ec-0cb0-4185-b6ea-b46fe85e5778,Tre Løver (Jan. 1895),greece,bb,8,2,5,1,2,2,2388,7093,8
 1011370d-0226-406f-ab70-e00138de775b,Trefoldighed,scandinavia,bb,1,1,0,0,0,3,33786,24000,1
 fcb42a42-0576-4745-b7b6-ce4866beee0d,Tripoli,greece,bb,1,0,0,1,1,0,0,6989,1
 a7730112-c2c8-419d-bd69-3d3c4072945a,Amagi,japan,bc,3,3,0,0,0,2,7003,40566,3
@@ -227,7 +227,7 @@ fbc1d582-28ad-4610-87f2-e371bb201e0c,Duguay-Trouin,france,cl,2,2,0,0,0,2,111744,
 d6e32287-7550-4453-890e-02ed76b5be3f,Forward,britain,cl,1,0,0,1,1,,,,
 a3f82e3b-3040-43f1-8633-afad586e131b,Hirado,italy,cl,16,0,15,1,7,7,19700,3500,16
 a3c7e6ac-d709-4376-893e-84977a60405e,Hirado,britain,cl,6,2,4,0,0,0,0,3500,6
-3b12115a-3048-48f8-8b65-64b0ae473905,Hirado,greece,cl,14,0,9,5,9,6,29016,3500,14
+3b12115a-3048-48f8-8b65-64b0ae473905,Hirado,greece,cl,15,1,9,5,9,7,31016,3500,15
 95380b7e-1dbb-4aff-9974-9981c233d959,Hirado,britain,cl,1,0,0,1,1,0,0,3500,1
 c9846198-e860-4bda-828d-24afeea0e3a5,Hirado,japan,cl,9,0,0,9,9,0,0,3500,3
 79f2b3fe-778d-46c9-a40a-825eead5d2b9,Izumi,spain,cl,37,0,11,26,14,0,0,3000,37
@@ -252,7 +252,7 @@ d95032df-e72c-4bfc-8723-a626a1322608,Medusa,russia,cl,9,0,8,1,2,4,1775,3500,1
 45fcc0b1-c60d-4ae3-8fcd-10550e85b2f9,MHMW Amiral Cécille,france,cl,63,0,44,19,17,0,0,2719,3
 99eb8efe-4e6e-448e-a9f2-204a11b9864d,MHMW Marseillaise,france,cl,5,2,0,3,3,0,0,2663,2
 bff6bbc5-09e8-447e-819e-fd13b3e0cadf,MHMW Navas de Tolosa,spain,cl,39,0,37,2,5,0,0,3235,39
-053a1386-b221-4993-855e-855af2fa56ba,MHMW Ochakov,russia,cl,2,0,1,1,1,0,0,12938,2
+053a1386-b221-4993-855e-855af2fa56ba,MHMW Ochakov,russia,cl,3,0,1,2,2,1,2897,12938,3
 622f7832-881f-480a-98e2-1db6de779951,MHMW Oklahoma,usa,cl,1,0,0,1,1,,,,
 2b65959e-127d-4597-8c59-22d7ba42ffb8,MHMW Sfax,france,cl,1,1,0,0,0,0,0,1803,1
 2e5be373-ea7c-448e-9089-7c80c10e7536,MHMW Tourville,france,cl,1,1,0,0,0,0,0,1316,1
