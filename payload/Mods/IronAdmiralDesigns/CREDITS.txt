@@ -422,3 +422,5 @@ Thank you to everyone who shared their designs.
 2026-11-24 - 239c598dc61a41b5: 1 design(s): 1890 netherlands C-Class [b11412d0]
 2026-11-24 - 86eeee1da1c441a7: 1 design(s): 1902 china Zara [38273724]
 2026-11-24 - d1c95e2513434977: 1 design(s): 1890 netherlands Carnation [b4c59076]
+2026-11-24 - 86eeee1da1c441a7: 1 design(s): 1902 italy Costituzione [3a9d8a06]
+2026-11-24 - bcd2fd0408a24a8d: 1 design(s): 1894 greece Montgomery [4fe317cf]
