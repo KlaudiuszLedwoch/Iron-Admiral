@@ -1,4 +1,4 @@
-1.2.78-beta.624
-DIP_GG_Fixes 1.11.1763
-2026-11-24 11:24
-Performance diagnostics 3
+1.2.78-beta.625
+DIP_GG_Fixes 1.11.1764
+2026-11-24 12:51
+AI withdrawal only when weaker
