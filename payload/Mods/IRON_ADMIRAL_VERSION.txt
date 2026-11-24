@@ -1,4 +1,4 @@
-1.2.78-beta.607
-DIP_GG_Fixes 1.11.1737
-2026-11-24 03:14
-No formation when the enemy is close
+1.2.78-beta.608
+DIP_GG_Fixes 1.11.1738
+2026-11-24 03:21
+Battles kept off land
