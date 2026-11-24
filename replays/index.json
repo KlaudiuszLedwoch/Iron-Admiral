@@ -1,5 +1,12 @@
 [
     {
+        "file":  "cptoswald_1944-10_20261123_213043_battle.jsonl",
+        "who":  "cptoswaldboelcke",
+        "title":  "1944 USA vs Italy - 43 sunk",
+        "date":  "2026-11-24",
+        "ver":  "attached by the player"
+    },
+    {
         "file":  "84d8647e_1898-10_20261123_214803_battle.jsonl",
         "who":  "Anonymous tester 84d864",
         "title":  "1898 Britain vs Scandinavia - 6 sunk",
@@ -57,7 +64,7 @@
     },
     {
         "file":  "78db3721_1927-02_20261124_111052_battle.jsonl",
-        "who":  "Фабушка",
+        "who":  "Đ¤Đ°Đ±ŃŃĐşĐ°",
         "title":  "1927 Russia vs Japan - 20 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.609"
@@ -85,7 +92,7 @@
     },
     {
         "file":  "78db3721_1926-11_20261124_105919_battle.jsonl",
-        "who":  "Фабушка",
+        "who":  "Đ¤Đ°Đ±ŃŃĐşĐ°",
         "title":  "1926 Russia vs Japan - 3 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.609"
@@ -330,21 +337,21 @@
     },
     {
         "file":  "78db3721_1926-09_20261124_032446_battle.jsonl",
-        "who":  "Фабушка",
+        "who":  "Đ¤Đ°Đ±ŃŃĐşĐ°",
         "title":  "1926 Japan vs Russia - 7 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.596"
     },
     {
         "file":  "78db3721_1926-07_20261124_031146_battle.jsonl",
-        "who":  "Фабушка",
+        "who":  "Đ¤Đ°Đ±ŃŃĐşĐ°",
         "title":  "1926 Russia vs Germany - 1 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.596"
     },
     {
         "file":  "5b32118e_1940-12_20261123_203216_battle.jsonl",
-        "who":  "klod76_szpieg_Z_krainy_deszczowcĂ“w",
+        "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
         "title":  "1940 France vs Germany - 6 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.594 (Reviewed features on and feed fixes)"
@@ -358,7 +365,7 @@
     },
     {
         "file":  "5b32118e_1940-11_20261123_202001_battle.jsonl",
-        "who":  "klod76_szpieg_Z_krainy_deszczowcĂ“w",
+        "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
         "title":  "1940 Germany vs France - 3 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.594 (Reviewed features on and feed fixes)"
@@ -372,14 +379,14 @@
     },
     {
         "file":  "5b32118e_1940-11_20261123_195948_battle.jsonl",
-        "who":  "klod76_szpieg_Z_krainy_deszczowcĂ“w",
+        "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
         "title":  "1940 Germany vs Scandinavia - 1 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.593 (Starting fleet formations)"
     },
     {
         "file":  "5b32118e_1940-11_20261123_195056_battle.jsonl",
-        "who":  "klod76_szpieg_Z_krainy_deszczowcĂ“w",
+        "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
         "title":  "1940 Germany vs Greece - 5 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.593 (Starting fleet formations)"
@@ -414,14 +421,14 @@
     },
     {
         "file":  "5b32118e_1940-10_20261123_183006_battle.jsonl",
-        "who":  "klod76_szpieg_Z_krainy_deszczowcĂ“w",
+        "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
         "title":  "1940 Germany vs Greece - 2 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.591 (Dispatch bubbles beside the ship)"
     },
     {
         "file":  "5b32118e_1940-10_20261123_182025_battle.jsonl",
-        "who":  "klod76_szpieg_Z_krainy_deszczowcĂ“w",
+        "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
         "title":  "1940 Germany vs France - 1 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.591 (Dispatch bubbles beside the ship)"
