@@ -58,7 +58,7 @@ c661d52f-1abc-4236-ba4c-81489cfb47c7,MHMW Pu-yun,china,bb,3,0,3,0,1,1,850,12815,
 488a63ad-fd13-43b9-aeaf-303e8daf8c64,MHMW Reina Luisa,spain,bb,1,0,0,1,1,0,0,58868,1
 e53cf2fb-ce07-4ea8-84c8-04d9686b89ad,MHMW Renown,britain,bb,1,0,1,0,0,0,0,38686,1
 8c43b6e5-7437-47f5-bffd-156e93bb8adb,MHMW Richelieu,france,bb,3,3,0,0,0,,,,
-7938d960-7075-4406-9050-3e2d2af8b4c6,MHMW Riga,russia,bb,11,0,11,0,1,0,0,11804,3
+7938d960-7075-4406-9050-3e2d2af8b4c6,MHMW Riga,russia,bb,12,0,12,0,2,0,0,11804,4
 ec7ba746-2924-482f-ad39-f4285623c00e,MHMW Tango,japan,bb,1,1,0,0,0,,,,
 0a0efcac-2f4a-4166-9782-65ae3eff6341,MHMW Tosa,japan,bb,5,0,0,5,0,2,57249,83173,5
 124f7147-7f6d-4253-b01c-4eccade99259,Mikasa,britain,bb,5,0,4,1,1,1,3406,11000,5
@@ -88,7 +88,7 @@ e08c0318-8b8f-4ef3-a7f5-27e09f844b22,Shinano,france,bb,1,1,0,0,0,3,8786,8235,1
 8c3acd92-798b-4cbc-a858-73283e9e2c23,Shinano,austria,bb,3,0,1,2,2,0,0,8235,3
 566c666c-2fae-4567-b753-6bf9fff1d0f3,Texas,usa,bb,2,2,0,0,0,,,,
 2eba0407-0eb5-4c8e-8723-c847616394b3,Tosa,japan,bb,8,8,0,0,0,0,0,33332,8
-c748f2ec-0cb0-4185-b6ea-b46fe85e5778,Tre Løver (Jan. 1895),greece,bb,5,0,5,0,1,0,0,7093,5
+c748f2ec-0cb0-4185-b6ea-b46fe85e5778,Tre Løver (Jan. 1895),greece,bb,6,0,5,1,2,0,0,7093,6
 1011370d-0226-406f-ab70-e00138de775b,Trefoldighed,scandinavia,bb,1,1,0,0,0,3,33786,24000,1
 fcb42a42-0576-4745-b7b6-ce4866beee0d,Tripoli,greece,bb,1,0,0,1,1,0,0,6989,1
 a7730112-c2c8-419d-bd69-3d3c4072945a,Amagi,japan,bc,3,3,0,0,0,2,7003,40566,3
@@ -108,7 +108,7 @@ c4bbc91c-e55d-4eee-b456-eb0c2bf29258,Tristan de Cunha,portugal,bc,1,1,0,0,0,,,,
 051e73a7-92e0-4f00-8859-f1f16f6030a4,A tartaruga,portugal,ca,3,0,0,3,3,4,8000,5575,3
 ee692a88-c015-4369-9fde-b34b03442ced,Admiral Hipper,germany,ca,1,1,0,0,0,1,4000,16170,1
 03c64675-5abe-4363-90d6-0a7a2a2d515d,Alexandria,usa,ca,1,0,0,1,1,0,0,6000,1
-266e5e4a-6ac0-4eb8-bbaa-ba63f689001b,Algérie,france,ca,7,1,0,6,6,0,0,10075,7
+266e5e4a-6ac0-4eb8-bbaa-ba63f689001b,Algérie,france,ca,8,1,0,7,7,0,0,10075,8
 baab7e72-1cc4-41e7-acf1-ffe6d55144cc,Anqing,china,ca,5,0,2,3,2,1,5000,7500,5
 65fd5ff6-7352-4b4f-abe7-cc07e08f903e,Azuma,japan,ca,5,0,0,5,5,,,,
 9759a28e-3aa1-47ec-a78e-2f348ac42ed3,Blake,britain,ca,61,0,34,27,23,1,650,5056,9
@@ -177,7 +177,7 @@ fe309184-7433-425d-aaa4-ea56eb37cc23,Seydlitz,germany,ca,1,1,0,0,0,,,,
 7b8c973d-ad0f-40c8-a9c2-c21da7ae1d88,Tengu,spain,ca,7,0,0,7,7,1,945,6000,7
 b19c4553-2f7a-455a-ad48-05b4863aa343,Tengu,britain,ca,11,3,8,0,0,0,0,6000,11
 0368dd88-10bb-4ba8-aa7d-94f7e0e46d6b,Tengu,netherlands,ca,3,1,2,0,0,2,7000,3371,3
-f8d2ce99-ab75-43fb-93ca-38beeb6d3525,Tengu,usa,ca,5,0,2,3,3,0,0,6000,5
+f8d2ce99-ab75-43fb-93ca-38beeb6d3525,Tengu,usa,ca,7,0,2,5,5,0,0,6000,7
 1476b50f-b032-4581-a40d-d1e496246bea,Tone (1938),japan,ca,5,5,0,0,1,2,35933,11875,1
 7ef1cb4b-84c3-4a2b-9e74-1a12f54c6c6a,TRA 1893,russia,ca,6,0,5,1,1,0,0,6500,6
 4d64b201-41f7-4ae6-99d4-a30225f8f088,TRA 1896,russia,ca,4,0,4,0,1,1,903,7500,4
