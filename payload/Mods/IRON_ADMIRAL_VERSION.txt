@@ -1,4 +1,4 @@
-1.2.78-beta.627
-DIP_GG_Fixes 1.11.1766
-2026-11-24 14:18
-Air strike wave limits
+1.2.78-beta.628
+DIP_GG_Fixes 1.11.1767
+2026-11-24 14:37
+Torpedo salvo log
