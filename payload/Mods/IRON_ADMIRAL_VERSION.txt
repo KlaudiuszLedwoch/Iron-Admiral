@@ -1,4 +1,4 @@
-1.2.78-beta.622
-DIP_GG_Fixes 1.11.1760
-2026-11-24 10:10
-Large battle performance 2
+1.2.78-beta.623
+DIP_GG_Fixes 1.11.1762
+2026-11-24 10:45
+Large battle performance 3
