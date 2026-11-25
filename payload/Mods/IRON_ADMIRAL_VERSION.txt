@@ -1,4 +1,4 @@
-1.2.78-beta.638
-DIP_GG_Fixes 1.11.1814
-2026-11-25 16:54
-Torpedo craft attack instead of waiting
+1.2.78-beta.639
+DIP_GG_Fixes 1.11.1816
+2026-11-25 17:14
+Citadel flooding and immune zone
