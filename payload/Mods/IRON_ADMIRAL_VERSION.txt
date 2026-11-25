@@ -1,4 +1,4 @@
-1.2.78-beta.647
-DIP_GG_Fixes 1.11.1831
-2026-11-25 20:52
+1.2.78-beta.648
+DIP_GG_Fixes 1.11.1838
+2026-11-25 21:06
 Citadel flooding and immune zone
