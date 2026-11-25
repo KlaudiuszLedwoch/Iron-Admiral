@@ -132,3 +132,5 @@ Submarines (1.11.1026), all CC BY 4.0, modified (reoriented, scaled, decimated, 
 - ss_k1: "K-1" by mamont nikita - https://sketchfab.com/3d-models/k-1-869dc3ba99924568b3d2d1d6662c20ae
 - ss_fleet: "WWII Submarine" by Anex - https://sketchfab.com/3d-models/wwii-submarine-5b1417d8eb3e408581e0ad7b87c37f5d
 - ss_type21: "Low poly Type XXI Submarine" by SIpriv - https://sketchfab.com/3d-models/low-poly-type-xxi-submarine-0ff124b1141b470998f83319801fe1dd
+fr_bearn.iam (converted capital ships, #484) - "Porte avion - Le Bearn" by Gabrielcambreling (https://sketchfab.com/Gabrielcambreling), CC BY 4.0
+  Source: https://sketchfab.com/3d-models/porte-avion-le-bearn-b74d3467c07540ca89cb76a9a27cbc66
