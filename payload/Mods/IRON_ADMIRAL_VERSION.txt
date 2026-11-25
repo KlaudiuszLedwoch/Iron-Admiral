@@ -1,4 +1,4 @@
-1.2.78-beta.637
-DIP_GG_Fixes 1.11.1812
-2026-11-25 15:35
-AI flees hopeless battles
+1.2.78-beta.638
+DIP_GG_Fixes 1.11.1814
+2026-11-25 16:54
+Torpedo craft attack instead of waiting
