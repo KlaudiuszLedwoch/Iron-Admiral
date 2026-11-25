@@ -1,6 +1,6 @@
 id,name,nation,type,battles,wins,draws,losses,lost,kills,sunk_t,tons,kbattles
-c2210e46-a9c2-461d-82c5-6dcabae19d07,1890 Pochatok,russia,bb,2,2,0,0,0,2,9427,12884,2
 eaad96e6-eab2-472d-a733-f49cdb2dd646,1890 Pochatok,russia,bb,3,0,3,0,0,0,0,12000,2
+c2210e46-a9c2-461d-82c5-6dcabae19d07,1890 Pochatok,russia,bb,4,2,2,0,0,0,0,12884,2
 3e4e3567-c77b-4ec5-951c-90fc0ed0111d,1890 Pochatok (Mar. 1892),russia,bb,1,0,0,1,1,0,0,17000,1
 bdaa26ef-cb84-44fb-883f-729faf134351,1901 Avsen,russia,bb,6,0,2,4,4,0,0,18657,6
 59059de2-e7fb-417d-a3c7-161934ad52c7,1908 Agni,china,bb,3,0,0,3,3,1,1010,26415,3
@@ -11,9 +11,9 @@ d5197642-02e7-4795-b705-e61d95d87698,Andrea Doria,russia,bb,2,2,0,0,0,1,7200,107
 9626d4b9-fbc3-46b0-bcda-8f3e3be43a1b,Arizona 1931 refit,usa,bb,1,0,0,1,1,,,,
 31aaa668-29f5-434b-ba1f-e5ef1c8365e8,Borodino,russia,bb,3,0,0,3,3,,,,
 387d079d-0c90-422a-9374-7109c550f667,Canada (ex-Almirante Latorre),britain,bb,3,0,0,3,0,0,0,27553,3
-72e8cdd0-e4f0-4ecb-9935-60a97d83bb2d,Daoguang,china,bb,2,0,0,2,2,,,,
-3b1f0e7d-548c-4b90-9b57-d0b100fe81cb,Daoguang,greece,bb,4,2,2,0,0,,,,
 1d308e60-c69f-49a1-98ca-7ddf42cb4908,Daoguang,austria,bb,9,0,7,2,1,,,,
+3b1f0e7d-548c-4b90-9b57-d0b100fe81cb,Daoguang,greece,bb,4,2,2,0,0,,,,
+72e8cdd0-e4f0-4ecb-9935-60a97d83bb2d,Daoguang,china,bb,2,0,0,2,2,,,,
 ba0c018a-ea7c-483d-ae9a-c7a27cbf0143,De Zeven Provinciën,spain,bb,4,0,0,4,4,0,0,27412,4
 1c024b28-9a21-40ba-b56f-dccf9c0388bc,Dragon of the East,china,bb,2,2,0,0,0,,,,
 2750b24f-85cf-4d2e-aa3c-f7580f910112,Dreadnought,britain,bb,9,0,9,0,6,,,,
@@ -21,10 +21,10 @@ b175a45b-b183-48b3-9638-2a330448dc54,Dunkerque,france,bb,1,1,0,0,0,0,0,23634,1
 a7aba8c4-e731-4176-b442-e7d005e9aa10,Dvenadsat Apostolov,russia,bb,1,0,1,0,0,,,,
 ac26e6b0-f1c4-4658-bdbd-e00034b6a51b,Erin (ex-Resadiye),britain,bb,7,0,0,7,6,0,0,25250,7
 1a157ae6-f012-42ef-826a-dd905b994fbe,Helgoland,germany,bb,3,3,0,0,0,0,0,23500,3
-99891c8e-d442-40c1-a88a-0f9a46ff25e6,Hibernia,britain,bb,4,0,0,4,4,4,4000,31111,4
 62517dc0-f327-4203-a0ff-70614c03f169,Hibernia,britain,bb,2,0,2,0,2,0,0,31111,2
-364ff3ff-3fe4-49af-b8df-9c013d6e0c5c,Hibernia,greece,bb,2,0,0,2,1,0,0,31111,2
+99891c8e-d442-40c1-a88a-0f9a46ff25e6,Hibernia,britain,bb,4,0,0,4,4,4,4000,31111,4
 206ef11c-3ce3-4ac5-9bdf-8daabcf355d4,Hibernia,greece,bb,1,1,0,0,0,0,0,31111,1
+364ff3ff-3fe4-49af-b8df-9c013d6e0c5c,Hibernia,greece,bb,2,0,0,2,1,0,0,31111,2
 31a676e3-881b-4edf-867c-c8fcd206b11e,Hildebrand,germany,bb,1,1,0,0,0,2,65874,140555,1
 8b199511-4a66-4563-b7c0-a65f970da1bd,Hizen,japan,bb,1,1,0,0,0,0,0,236000,1
 54aa4bcc-58f4-4dc1-814a-3e7f5fabf2a6,HMS Imperial,britain,bb,1,1,0,0,0,1,17991,211000,1
@@ -34,14 +34,16 @@ ac26e6b0-f1c4-4658-bdbd-e00034b6a51b,Erin (ex-Resadiye),britain,bb,7,0,0,7,6,0,0
 df1c763a-9be1-4875-bd72-fdc5c6e9dab7,Imperatritsa Mariya,russia,bb,1,0,0,1,1,0,0,31889,1
 36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
 446d7e58-ae81-4f18-aa3b-87bb64d8c606,Iron Duke,britain,bb,20,8,0,12,1,8,139165,29500,20
-4adf56c1-e54e-4366-9254-405ca474cb7e,Kaiser,germany,bb,50,50,0,0,2,7,25956,27417,50
 cce939f4-3726-4c23-a0e9-23c4f8013937,Kaiser,germany,bb,17,15,0,2,2,3,515279,243591,4
+4adf56c1-e54e-4366-9254-405ca474cb7e,Kaiser,germany,bb,50,50,0,0,2,7,25956,27417,50
 37e2e85c-d943-4499-bcf8-79fdf3defd13,Kaiser Barbarossa,germany,bb,2,0,2,0,1,0,0,12623,2
 5cccf0b8-8b8c-481b-aaeb-088c23d3e578,Kaiser Friedrich III,germany,bb,2,2,0,0,0,0,0,11097,2
 dda739b6-2260-4479-8704-cc55f5d561f0,Kaiser Wilhelm der Grosse,netherlands,bb,1,0,0,1,1,1,10160,74473,1
-bb9e6ace-1f46-4c7d-a16c-a7410d6a6c34,King George V (1940),britain,bb,19,1,12,6,7,21,337334,37829,19
+bb9e6ace-1f46-4c7d-a16c-a7410d6a6c34,King George V (1940),britain,bb,24,4,12,8,10,3,195000,65000,5
 52935de8-3488-4eb8-83be-d9bd519c1702,Liberté,france,bb,2,2,0,0,0,,,,
+8493de4e-e4bd-4cb3-86ce-c907b5d4ad3e,Lion (1939),britain,bb,2,0,0,2,2,0,0,40550,2
 25d84446-b57e-48d1-aa1e-a39152f17c79,Louisiana,usa,bb,1,0,0,1,1,0,0,8500,1
+d1be2ad5-e498-4b25-90cf-51187f15a59a,Madonna della Vigna,italy,bb,6,3,0,3,3,4,211100,65000,6
 f62397dc-efb6-4356-8ab5-9067a10ff816,Magnanime,france,bb,5,0,1,4,4,0,0,31202,5
 7a81b828-d837-4110-a810-78d221b700b9,MHMW Ă„gir,germany,bb,6,0,0,6,6,6,28426,55872,6
 a4cedbaa-f960-4967-a918-123032308806,MHMW Afrika,germany,bb,3,3,0,0,0,,,,
@@ -62,12 +64,12 @@ e53cf2fb-ce07-4ea8-84c8-04d9686b89ad,MHMW Renown,britain,bb,1,0,1,0,0,0,0,38686,
 7938d960-7075-4406-9050-3e2d2af8b4c6,MHMW Riga,russia,bb,12,0,12,0,2,0,0,11804,4
 ec7ba746-2924-482f-ad39-f4285623c00e,MHMW Tango,japan,bb,1,1,0,0,0,,,,
 0a0efcac-2f4a-4166-9782-65ae3eff6341,MHMW Tosa,japan,bb,5,0,0,5,0,2,57249,83173,5
-6559d423-9ed0-4b9a-a162-786baa6ed7fb,Mikasa,britain,bb,5,0,4,1,1,0,0,11000,5
-3a430266-954d-4125-9d8c-4e02917a383e,Mikasa,britain,bb,14,0,13,1,2,6,4369,11000,6
+3a430266-954d-4125-9d8c-4e02917a383e,Mikasa,britain,bb,16,0,15,1,4,7,4557,11000,8
+b6fa1d0a-96bf-4d19-8157-14d477b45cf8,Mikasa,japan,bb,1,0,0,1,0,0,0,15140,1
 a461c5f9-283f-436a-b7a6-0f9d1b4920e0,Mikasa,japan,bb,3,0,3,0,2,6,5800,11000,3
+6559d423-9ed0-4b9a-a162-786baa6ed7fb,Mikasa,britain,bb,5,0,4,1,1,0,0,11000,5
 124f7147-7f6d-4253-b01c-4eccade99259,Mikasa,britain,bb,5,0,4,1,1,1,3406,11000,5
 4a57623a-750c-4b59-8b85-a41b1da7eff0,Mikasa,japan,bb,9,2,4,3,4,0,0,11000,4
-b6fa1d0a-96bf-4d19-8157-14d477b45cf8,Mikasa,japan,bb,1,0,0,1,0,0,0,15140,1
 c7bb59c2-fd09-4e53-96fc-2915828bb4d1,Mississippi,usa,bb,1,0,0,1,1,,,,
 b690a3bf-7f42-488c-aca2-5d674662fc84,Montana,usa,bb,3,1,0,2,2,1,243591,230354,1
 3ddb4dfd-b47c-46b7-99a0-9a388a99f709,Nanjing,austria,bb,1,0,0,1,1,0,0,7389,1
@@ -84,10 +86,10 @@ a0f40a0b-a972-4d82-b4ea-1d855e2b3a7d,São Simão,portugal,bb,2,1,0,1,1,,,,
 c20a2646-075c-4cf0-be56-639718c5749e,Scharnhorst (1938),germany,bb,3,1,0,2,0,3,12000,32100,3
 ca24d6bc-00ff-41ed-8010-83a27f75f836,Schleswig-Holstein,germany,bb,16,0,14,2,1,0,0,11994,16
 19eb1208-5475-4495-a21d-fa4c469db7a2,Selimiye,greece,bb,1,1,0,0,0,16,124978,80940,1
-5c9d821e-13d7-49fb-a9fe-39ccc96a5b4b,Shinano,china,bb,9,8,0,1,1,7,36259,8235,5
 c3fe14ac-1197-4555-baed-12e7509ef64f,Shinano,russia,bb,22,2,15,5,4,1,3000,8235,15
-e08c0318-8b8f-4ef3-a7f5-27e09f844b22,Shinano,france,bb,1,1,0,0,0,3,8786,8235,1
 8c3acd92-798b-4cbc-a858-73283e9e2c23,Shinano,austria,bb,3,0,1,2,2,0,0,8235,3
+e08c0318-8b8f-4ef3-a7f5-27e09f844b22,Shinano,france,bb,1,1,0,0,0,3,8786,8235,1
+5c9d821e-13d7-49fb-a9fe-39ccc96a5b4b,Shinano,china,bb,11,8,1,2,3,7,36259,8235,7
 566c666c-2fae-4567-b753-6bf9fff1d0f3,Texas,usa,bb,2,2,0,0,0,,,,
 2eba0407-0eb5-4c8e-8723-c847616394b3,Tosa,japan,bb,8,8,0,0,0,0,0,33332,8
 c748f2ec-0cb0-4185-b6ea-b46fe85e5778,Tre Løver (Jan. 1895),greece,bb,8,2,5,1,2,2,2388,7093,8
@@ -97,7 +99,7 @@ a7730112-c2c8-419d-bd69-3d3c4072945a,Amagi,japan,bc,3,3,0,0,0,2,7003,40566,3
 b755cadd-8be4-481b-9b2a-38c64892ffe9,Cerere,italy,bc,1,1,0,0,0,,,,
 99e17a99-e5a6-4bc5-ae29-e90f5b4bdd38,Hydra,greece,bc,3,0,0,3,3,0,0,46138,3
 7bc4a520-6416-46da-8a26-53b5f53b99ea,Hydra,britain,bc,4,0,4,0,0,1,3000,46138,4
-faa95062-ba14-4e99-9aa5-fe64900c137c,Invincible,britain,bc,2,0,2,0,0,,,,
+faa95062-ba14-4e99-9aa5-fe64900c137c,Invincible,britain,bc,6,0,5,1,1,1,13838,20420,4
 38faffc6-f1c2-4d59-9358-087010982c6f,Königsberg,scandinavia,bc,1,0,1,0,0,0,0,27973,1
 8d07fa99-b910-472b-812b-e8d504651ae4,MHMW Armide,france,bc,1,0,1,0,0,0,0,20677,1
 37228c7a-fa2d-4501-9562-dfd28751b202,MHMW Ruggiero,italy,bc,1,0,0,1,1,0,0,36963,1
@@ -111,7 +113,7 @@ c4bbc91c-e55d-4eee-b456-eb0c2bf29258,Tristan de Cunha,portugal,bc,1,1,0,0,0,,,,
 051e73a7-92e0-4f00-8859-f1f16f6030a4,A tartaruga,portugal,ca,3,0,0,3,3,4,8000,5575,3
 ee692a88-c015-4369-9fde-b34b03442ced,Admiral Hipper,germany,ca,1,1,0,0,0,1,4000,16170,1
 03c64675-5abe-4363-90d6-0a7a2a2d515d,Alexandria,usa,ca,1,0,0,1,1,0,0,6000,1
-266e5e4a-6ac0-4eb8-bbaa-ba63f689001b,Algérie,france,ca,10,1,1,8,8,0,0,10075,10
+266e5e4a-6ac0-4eb8-bbaa-ba63f689001b,Algérie,france,ca,11,1,1,9,9,0,0,10075,11
 baab7e72-1cc4-41e7-acf1-ffe6d55144cc,Anqing,china,ca,5,0,2,3,2,1,5000,7500,5
 65fd5ff6-7352-4b4f-abe7-cc07e08f903e,Azuma,japan,ca,5,0,0,5,5,,,,
 9759a28e-3aa1-47ec-a78e-2f348ac42ed3,Blake,britain,ca,61,0,34,27,23,1,650,5056,9
@@ -119,9 +121,9 @@ baab7e72-1cc4-41e7-acf1-ffe6d55144cc,Anqing,china,ca,5,0,2,3,2,1,5000,7500,5
 29995c0b-9d85-4bf0-a80a-7ea9e96f0c9d,Brindisi,italy,ca,1,1,0,0,0,,,,
 9ed7d210-a47b-47e1-a18e-6bed2bb7d4a0,Canarias,spain,ca,7,0,1,6,5,3,12600,12001,5
 50ad144e-45df-4cd4-9ab0-e4ccec70dbae,Carrier Mk3,germany,ca,2,0,0,2,0,0,0,13334,2
+41504acd-40d5-4ccc-b12d-57293878196e,Coronel,austria,ca,6,4,0,2,2,0,0,4500,5
 f2ebc263-d7f9-4aeb-a73d-36347732ff73,Coronel,germany,ca,3,0,1,2,3,0,0,4500,2
 526adf6f-19eb-43fe-96ef-dddf29645f54,Coronel,germany,ca,1,1,0,0,0,,,,
-41504acd-40d5-4ccc-b12d-57293878196e,Coronel,austria,ca,6,4,0,2,2,0,0,4500,5
 50b78474-9913-4aa7-b6fe-0e3b4d8fc163,Datong,china,ca,6,2,4,0,0,3,9198,6000,2
 9da1cd75-6ed6-4eb7-8ef0-76f99441c899,Dmitrii Donskoi,britain,ca,2,0,0,2,2,0,0,6500,2
 1faf6e3d-251b-4155-8ba4-7662bfa247fe,Duquesne,france,ca,11,0,8,3,1,0,0,10160,3
@@ -130,12 +132,12 @@ f2ebc263-d7f9-4aeb-a73d-36347732ff73,Coronel,germany,ca,3,0,1,2,3,0,0,4500,2
 2c5d0e93-bcc4-4969-b109-02f2536ad1fa,Europa,britain,ca,3,0,3,0,0,0,0,8765,3
 829afe47-9324-4964-8002-7aa949bf927a,Friedrich Carl,germany,ca,1,0,0,1,1,0,0,6000,1
 232d8477-722b-451d-9592-3ab8b2559da8,Furutaka,netherlands,ca,6,0,6,0,0,0,0,4689,6
+7ef6193a-e354-43a7-b94c-75903bc1cef4,Furutaka,colombia,ca,4,0,3,1,1,0,0,10600,4
 fc1b19f4-6046-4071-a59c-c9663d067b0f,Furutaka,greece,ca,34,0,30,4,6,2,6000,4689,28
-7ef6193a-e354-43a7-b94c-75903bc1cef4,Furutaka,colombia,ca,3,0,3,0,0,0,0,10600,3
 7839e71d-f308-4b4a-807f-2227754bc4ab,Fuyang,china,ca,1,0,0,1,1,0,0,6000,1
 03cec267-abf2-4c21-a84a-e4870180c53d,Fylgia,scandinavia,ca,6,5,0,1,0,1,12000,4310,6
 983cea05-490e-40f9-a9c3-4f726dccbf8e,Göta,greece,ca,6,0,0,6,6,0,0,6000,6
-e56744e0-e7f0-4837-baa0-0dd90db55d34,Göta,scandinavia,ca,3,0,3,0,2,,,,
+e56744e0-e7f0-4837-baa0-0dd90db55d34,Göta,scandinavia,ca,4,0,3,1,3,0,0,6000,1
 1d3ca911-66f5-4f1b-a262-0b95454180f4,Hai Chi,china,ca,1,0,1,0,0,0,0,4300,1
 526a6ae6-0611-47a3-9689-3f84c8fb5f26,Hogue,britain,ca,1,1,0,0,0,,,,
 8aa98f23-48f4-4ed4-a176-0703d10e6b6a,Irene,germany,ca,4,0,4,0,0,0,0,5458,4
@@ -144,8 +146,8 @@ d10fc3bc-66d3-4663-bac6-44c1a7b571eb,Katsonis,greece,ca,2,0,2,0,2,1,1741,6000,2
 df288069-6b03-46a9-a84e-f5e59093ee19,Krystallidis,greece,ca,2,0,1,1,2,0,0,14850,2
 54c70bbb-ef43-4e25-85c5-e01f9f812a65,Kurobegorō,britain,ca,24,0,22,2,9,0,0,6000,1
 cd972214-2d2d-4da3-a98f-04cec9d62783,Kurobegorō,china,ca,13,0,13,0,1,,,,
-b8cb2465-5c39-459c-af4a-196a411118ca,Kurobegorō,spain,ca,15,1,12,2,2,2,6275,6000,9
 3cfb0e5d-ea45-49ee-ba34-bd6ea283e25e,Kurobegorō,russia,ca,18,0,13,5,3,0,0,6000,11
+b8cb2465-5c39-459c-af4a-196a411118ca,Kurobegorō,spain,ca,15,1,12,2,2,2,6275,6000,9
 d12f9bce-783c-4923-b116-f88fc2bd9ba6,La raleuse,france,ca,4,1,0,3,3,0,0,6000,3
 f2610b17-c51b-49db-9404-bf625a226f2c,Lussin,austria,ca,1,1,0,0,0,,,,
 227c6359-5789-44c8-a390-aab9255d9517,Maine (1895),china,ca,1,0,1,0,1,0,0,6682,1
@@ -161,17 +163,17 @@ be1a7fd5-7dca-44d1-b0d6-19cd8b9f2b0a,MHMW Gorizia,italy,ca,2,1,0,1,1,2,7950,1105
 0e5e7dcd-98ea-4af2-b32f-a47dc0e9d4b3,MHMW Huron,usa,ca,4,0,4,0,0,0,0,3680,4
 2cdb6f00-0f49-40c1-a5d0-8a83710320ef,MHMW Lussin,austria,ca,1,0,1,0,0,0,0,3721,1
 5e754a11-4131-4968-b736-f1419188549a,MHMW Rurik,russia,ca,2,0,2,0,1,,,,
-89e5f06d-7d27-4461-a82e-44c00e5d45ab,MHMW Thionville,france,ca,5,3,2,0,0,1,3129,3557,3
+89e5f06d-7d27-4461-a82e-44c00e5d45ab,MHMW Thionville,france,ca,6,3,2,1,1,1,3129,3557,4
 e66c5271-3311-4716-8ee3-feae61062dea,MHMW Vittoria,italy,ca,1,0,1,0,0,,,,
 1b8e95c9-3f51-4f5a-a1a5-df4e7efbf57f,MHMW Yakushi,japan,ca,1,1,0,0,0,,,,
-5320b910-9ebe-4796-8874-3068cc871153,Milford,russia,ca,3,1,2,0,0,,,,
 026be71a-c442-4536-adc6-b2e58b9d1298,Milford,china,ca,1,0,1,0,0,0,0,6000,1
+5320b910-9ebe-4796-8874-3068cc871153,Milford,russia,ca,3,1,2,0,0,,,,
 5a9defbe-6706-48c9-ac58-31c4d3030cbb,Milford,colombia,ca,2,0,0,2,2,0,0,6000,2
 db95d07a-b5bb-481f-adb1-8816ffbc9a7a,Milford,britain,ca,1,0,1,0,0,,,,
 e64d9cdc-a7f1-4b87-baec-2844d56e672f,Minotaur,britain,ca,8,0,8,0,0,,,,
 faa6c074-8b32-4f77-8e45-299f664b6482,Monmouth,japan,ca,25,0,15,10,8,0,0,9352,25
 f197d8a3-91e4-49be-a54b-1f746d04362c,Navarinon,britain,ca,2,2,0,0,0,0,0,13300,2
-194d5784-ad33-468f-b831-0739f26941ee,Nokogiri,spain,ca,7,0,5,2,2,2,8300,6000,7
+194d5784-ad33-468f-b831-0739f26941ee,Nokogiri,spain,ca,8,0,6,2,2,2,8300,6000,8
 1755bf6d-4d12-46be-880f-dfb2aa9e0576,Northampton,usa,ca,22,21,1,0,0,13,17609,10789,21
 61ae4420-2cf7-4016-85af-84dde0567fa7,Prinzess Wilhelm,germany,ca,4,4,0,0,0,12,189699,19812,4
 5c6af6c1-75b9-4ecc-bdf8-1c72bb7cadfd,Rurik (1895),russia,ca,4,0,0,4,4,0,0,8205,4
@@ -179,9 +181,9 @@ f197d8a3-91e4-49be-a54b-1f746d04362c,Navarinon,britain,ca,2,2,0,0,0,0,0,13300,2
 fe309184-7433-425d-aaa4-ea56eb37cc23,Seydlitz,germany,ca,1,1,0,0,0,,,,
 2bb4e443-8351-46de-b092-c8beaf548f54,Suffren (1930),france,ca,18,3,0,15,0,0,0,10160,18
 7b8c973d-ad0f-40c8-a9c2-c21da7ae1d88,Tengu,spain,ca,7,0,0,7,7,1,945,6000,7
+b19c4553-2f7a-455a-ad48-05b4863aa343,Tengu,britain,ca,15,3,12,0,0,0,0,6000,15
 0368dd88-10bb-4ba8-aa7d-94f7e0e46d6b,Tengu,netherlands,ca,3,1,2,0,0,2,7000,3371,3
 f8d2ce99-ab75-43fb-93ca-38beeb6d3525,Tengu,usa,ca,7,0,2,5,5,0,0,6000,7
-b19c4553-2f7a-455a-ad48-05b4863aa343,Tengu,britain,ca,11,3,8,0,0,0,0,6000,11
 6704dc06-a21c-4d87-abb0-910853cdd459,Tengu,britain,ca,1,0,0,1,1,0,0,6000,1
 1476b50f-b032-4581-a40d-d1e496246bea,Tone (1938),japan,ca,5,5,0,0,1,2,35933,11875,1
 7ef1cb4b-84c3-4a2b-9e74-1a12f54c6c6a,TRA 1893,russia,ca,6,0,5,1,1,0,0,6500,6
@@ -192,18 +194,19 @@ f60d7129-a145-4b2a-9723-55ec90093c99,Vandegrift,china,ca,2,1,1,0,0,0,0,6000,2
 dbecfcdc-3533-46e1-8215-f79a1c6cb1a8,Vandegrift,spain,ca,12,0,11,1,4,3,9000,6000,6
 b08d79b2-1738-4c1c-95cd-6d2243dbc509,Vandegrift,britain,ca,2,0,2,0,0,0,0,6000,2
 1ab85632-686b-4d52-b00f-56d29dd4b29d,Vittorio Veneto,mexico,ca,4,0,4,0,0,0,0,5000,4
-1b90c4b1-f1ae-47ff-b269-d8c9079f5cb9,1890,russia,cl,4,4,0,0,4,4,8067,2000,4
 d1f8c0c0-02a3-4fd4-a294-491e0438c4c7,1890,france,cl,4,0,0,4,4,0,0,3000,4
-cb459306-c6e1-4952-8982-d5b5dcee12a8,A Klasse,austria,cl,9,2,4,3,7,1,1400,3000,4
+1b90c4b1-f1ae-47ff-b269-d8c9079f5cb9,1890,russia,cl,4,4,0,0,4,4,8067,2000,4
+cb459306-c6e1-4952-8982-d5b5dcee12a8,A Klasse,austria,cl,10,2,2,6,5,1,1400,3000,4
 fade1807-2beb-40b8-8d61-78133eb28e32,Ă‰mile Bertin,france,cl,4,4,0,0,0,0,0,6500,4
 0e674142-3595-4b9d-8ceb-44585227f203,Agano,japan,cl,1,1,0,0,0,0,0,7046,1
+8a0cb230-bd28-4ce5-b967-4ae720bcf1b3,Akitsushima,usa,cl,9,0,0,9,9,0,0,2450,9
 1261b0ce-0dba-4c3b-b671-ed83f167c7fc,Akitsushima,greece,cl,11,0,7,4,1,0,0,2450,8
 bcfcc3ee-09b9-439b-bfa9-30acae305e89,Akitsushima,spain,cl,10,2,3,5,4,,,,
-8a0cb230-bd28-4ce5-b967-4ae720bcf1b3,Akitsushima,usa,cl,9,0,0,9,9,0,0,2450,9
 0b7fc5f7-3cc7-4e42-9a8b-b04d643221f5,Alberico da Barbiano,sweden,cl,33,28,2,3,31,0,0,3406,33
 a08f017f-6a12-4823-819e-e1f8ccbef466,Alger,france,cl,4,1,3,0,0,0,0,3384,4
 944685e7-36a1-4dda-9650-e0bf012119ee,Ancona,china,cl,18,0,5,13,8,2,3482,3000,8
 848e60fd-5fff-43ac-a82e-be3f042c81f9,Ancona,spain,cl,25,0,23,2,4,2,3275,3000,6
+3eca183c-8d35-4772-8043-d05a150e9e5a,António Enes,netherlands,cl,8,0,3,5,5,0,0,3307,8
 b91ec83f-f499-4002-80cd-d008a48acbb8,Arethusa,britain,cl,7,0,2,5,4,4,4000,3512,7
 3d9a05a0-13f8-45c3-a817-dedf26535ccc,Arrogant,britain,cl,6,1,5,0,1,,,,
 19c92fa7-79e3-4efc-a765-ba6fa5d560e6,Astraea,britain,cl,1,0,0,1,0,0,0,3930,1
@@ -219,46 +222,49 @@ e0270e90-e3d7-4bba-81d4-eb1997867a7e,Brooklyn,usa,cl,1,1,0,0,0,,,,
 a9998cad-8e22-422c-96a7-d92c79fd8695,Bussard,germany,cl,58,0,34,24,36,,,,
 0f6bb6ab-1bdd-43e7-9820-1ca29b4fd470,Cairo,britain,cl,58,15,32,11,10,0,0,4285,2
 65bfcc62-97f1-49dc-8005-682d8d06941a,Calliope,britain,cl,13,2,0,11,1,1,10862,3750,13
+0de509ef-a502-4317-815f-dd01a6446cb1,Cardiff,norway,cl,15,0,14,1,12,0,0,9320,15
 5d9f9265-9490-45ed-bc92-4b99ecbf4d98,Chester,usa,cl,20,0,20,0,0,0,0,3330,20
-1c26043a-e67f-4303-ba52-d1ee9d1eb1ee,Cleveland,usa,cl,9,7,0,2,2,,,,
+5709a28c-d900-45f4-a1a1-62ca5bf142d3,Cleveland,china,cl,20,0,19,1,13,0,0,1665,18
 def26443-7106-45ff-a2cd-fbc5a260ea3d,Cleveland,spain,cl,7,0,7,0,2,,,,
-5709a28c-d900-45f4-a1a1-62ca5bf142d3,Cleveland,china,cl,2,0,2,0,0,,,,
+1c26043a-e67f-4303-ba52-d1ee9d1eb1ee,Cleveland,usa,cl,9,7,0,2,2,,,,
 80b2d957-de29-4a96-8d9a-21391109e0da,Cleveland,britain,cl,7,0,6,1,1,0,0,1665,7
 94e9a858-c764-47ab-9c9f-975c570b5d39,Cleveland class,usa,cl,3,2,0,1,1,0,0,13016,1
+0578a514-2ba0-403e-952b-0942c155c99c,Conde del Venadito,spain,cl,2,0,2,0,0,0,0,3000,2
 4a85fe52-f5c0-4ea6-8da2-6395f3a8eee3,Davout,france,cl,2,2,0,0,1,0,0,2735,1
 694c14f2-b83e-4c1b-b9e1-ac7e28a03a8e,Dresden,sweden,cl,3,0,1,2,1,,,,
 fbc1d582-28ad-4610-87f2-e371bb201e0c,Duguay-Trouin,france,cl,155,62,0,93,1,3,120744,7365,155
 63817c7f-9e77-42af-8e25-08252bfc50fb,F-1,spain,cl,15,0,15,0,9,,,,
 233ec218-95de-4023-83fb-8620b3fad37d,Forfait,france,cl,6,0,3,3,3,0,0,6653,6
 d6e32287-7550-4453-890e-02ed76b5be3f,Forward,britain,cl,1,0,0,1,1,,,,
-95380b7e-1dbb-4aff-9974-9981c233d959,Hirado,britain,cl,1,0,0,1,1,0,0,3500,1
 c9846198-e860-4bda-828d-24afeea0e3a5,Hirado,japan,cl,9,0,0,9,9,0,0,3500,3
-a3c7e6ac-d709-4376-893e-84977a60405e,Hirado,britain,cl,6,2,4,0,0,0,0,3500,6
-a3f82e3b-3040-43f1-8633-afad586e131b,Hirado,italy,cl,16,0,15,1,7,7,19700,3500,16
+a3c7e6ac-d709-4376-893e-84977a60405e,Hirado,britain,cl,8,4,4,0,0,0,0,3500,8
 3b12115a-3048-48f8-8b65-64b0ae473905,Hirado,greece,cl,15,1,9,5,9,7,31016,3500,15
+95380b7e-1dbb-4aff-9974-9981c233d959,Hirado,britain,cl,6,0,5,1,1,0,0,3500,6
+a3f82e3b-3040-43f1-8633-afad586e131b,Hirado,italy,cl,16,0,15,1,7,7,19700,3500,16
 beda06b9-b60c-419b-89a9-fb3ffa704d8e,Izumi,korean_empire,cl,3,0,3,0,2,0,0,3000,3
+22d98d84-ea82-41c0-b02a-00e6649dde16,Izumi,italy,cl,7,0,7,0,0,0,0,3000,7
 79f2b3fe-778d-46c9-a40a-825eead5d2b9,Izumi,spain,cl,37,0,11,26,14,0,0,3000,37
 1a02f527-6826-48e7-b616-918dbb7aaffb,Izumi,britain,cl,25,0,5,20,23,1,275,3000,25
-22d98d84-ea82-41c0-b02a-00e6649dde16,Izumi,italy,cl,7,0,7,0,0,0,0,3000,7
 06629855-4c79-46ac-9ded-087ff016ff9a,Izumrud,russia,cl,20,0,20,0,0,0,0,4580,20
 719edc06-c5bf-4330-8948-2fee9e8e7f15,Karlsruhe,germany,cl,16,16,0,0,0,0,0,4900,16
-20f50cc5-2b59-4faf-a852-f4585253d362,Kolberg,germany,cl,3,0,0,3,1,0,0,7250,3
 e6680aa1-cbed-4ced-b350-b634f049663a,Kolberg,germany,cl,9,0,5,4,3,,,,
+20f50cc5-2b59-4faf-a852-f4585253d362,Kolberg,germany,cl,3,0,0,3,1,0,0,7250,3
 e871e457-8f65-47da-96df-0b94893d0ab8,Kuma,bulgaria,cl,21,7,8,6,14,2,38363,5289,21
 c08ceefc-30c7-4194-8e94-c6f242fa9fc3,La Galissonnière,netherlands,cl,20,0,12,8,19,2,11029,7600,20
 b3524d8c-dd26-4314-9286-0a04545ab754,Liverpool,greece,cl,7,0,2,5,5,1,2150,8500,7
-ca0cde17-3b33-4e3b-a1e4-c22924cb599c,Lübeck,russia,cl,7,0,7,0,0,0,0,2454,7
-67fa0792-2005-4292-825f-058290125239,Lübeck,russia,cl,6,1,4,1,2,0,0,2454,2
-deb633d4-bd9d-4f11-aa3f-892999817bc9,Lübeck,russia,cl,11,0,6,5,4,0,0,2454,11
 2e466c9a-4495-4272-a7b2-aea1e27770b5,Lübeck,russia,cl,7,0,1,6,7,1,275,2454,7
+67fa0792-2005-4292-825f-058290125239,Lübeck,russia,cl,6,1,4,1,2,0,0,2454,2
+deb633d4-bd9d-4f11-aa3f-892999817bc9,Lübeck,russia,cl,21,0,16,5,9,0,0,2454,21
+83c225c3-d1ef-4ffc-9c71-eeab0fb5fc3a,Lübeck,russia,cl,6,5,1,0,0,1,1587,2454,6
+ca0cde17-3b33-4e3b-a1e4-c22924cb599c,Lübeck,russia,cl,7,0,7,0,0,0,0,2454,7
 18e7dd74-857c-4785-a2dd-87f709052372,Luigi di Savoia Duca degli Abruzzi,italy,cl,6,4,0,2,2,0,0,11008,4
-9bbccb9f-7c76-4aa8-aff8-742429ac01ce,M,germany,cl,13,13,0,0,0,,,,
+9bbccb9f-7c76-4aa8-aff8-742429ac01ce,M,germany,cl,15,13,0,2,2,,,,
 866201b8-75f2-44f3-bf2c-800aa00645b8,Magdeburg,germany,cl,2,2,0,0,0,0,0,4570,2
 82193d69-25da-41a3-bb63-358ccc6243e2,Manchester,britain,cl,5,0,5,0,5,5,54633,9100,5
 d95032df-e72c-4bfc-8723-a626a1322608,Medusa,russia,cl,9,0,8,1,2,4,1775,3500,1
 8e6c1a38-2d2d-4766-8515-6a1028a05333,MHMW Admiral Nevel‘skoi,russia,cl,16,0,10,6,4,,,,
 45fcc0b1-c60d-4ae3-8fcd-10550e85b2f9,MHMW Amiral Cécille,france,cl,63,0,44,19,17,0,0,2719,3
-99eb8efe-4e6e-448e-a9f2-204a11b9864d,MHMW Marseillaise,france,cl,5,2,0,3,3,0,0,2663,2
+99eb8efe-4e6e-448e-a9f2-204a11b9864d,MHMW Marseillaise,france,cl,16,2,4,10,10,0,0,2663,2
 bff6bbc5-09e8-447e-819e-fd13b3e0cadf,MHMW Navas de Tolosa,spain,cl,39,0,37,2,5,0,0,3235,39
 053a1386-b221-4993-855e-855af2fa56ba,MHMW Ochakov,russia,cl,6,0,1,5,5,1,2897,12938,6
 622f7832-881f-480a-98e2-1db6de779951,MHMW Oklahoma,usa,cl,1,0,0,1,1,,,,
@@ -270,17 +276,17 @@ bff6bbc5-09e8-447e-819e-fd13b3e0cadf,MHMW Navas de Tolosa,spain,cl,39,0,37,2,5,0
 a42da3b3-7ba5-4796-b692-7758b47edf8b,Miyako,china,cl,2,0,2,0,1,0,0,9000,2
 e1151c53-7756-463b-b666-304fde0725d2,Nagara,britain,cl,7,0,7,0,0,0,0,2450,7
 73e417db-9767-43b0-9436-e536377597ae,NĂĽrnberg,germany,cl,1,0,0,1,1,0,0,8415,1
-db327d11-30f4-4667-aee2-0c29dee118b8,Newark,usa,cl,8,0,7,1,1,0,0,3000,7
 c61de2ab-0a62-4fb6-b5f9-17c3662f76c0,Newark,spain,cl,9,0,2,7,7,1,188,3000,7
+db327d11-30f4-4667-aee2-0c29dee118b8,Newark,usa,cl,8,0,7,1,1,0,0,3000,7
+d5055818-c1dd-4e25-901c-8d090246a92e,Niitaka,spain,cl,8,0,0,8,8,0,0,3000,5
 d2b246d0-1c75-483a-82d5-2df90159bddc,Niitaka,mexico,cl,4,0,4,0,3,0,0,2000,4
+e12b091c-3420-4f02-a759-ce9e8df737c6,Niitaka,usa,cl,1,0,1,0,0,0,0,3000,1
 870fd179-5c63-443f-9daa-a64cf859a78d,Niitaka,greece,cl,12,0,12,0,3,0,0,3000,12
 958e6eda-77fa-4ffd-b491-a234ddc02708,Niitaka,mexico,cl,17,0,17,0,9,9,17500,3000,17
-e12b091c-3420-4f02-a759-ce9e8df737c6,Niitaka,usa,cl,1,0,1,0,0,0,0,3000,1
-d5055818-c1dd-4e25-901c-8d090246a92e,Niitaka,spain,cl,8,0,0,8,8,0,0,3000,5
 115ec79f-7370-4d68-b19f-0821eec1077a,O bacalhau,portugal,cl,1,1,0,0,0,,,,
 c72d206b-0268-42d2-b66d-bbab50aab95d,Oakland,greece,cl,1,1,0,0,1,3,1455,3500,1
-8e1da671-cc67-422e-ad2d-cba6682f7d83,Oliveira da Figueira,portugal,cl,3,0,0,3,3,,,,
 38f3bf86-1215-4705-97e6-f7ba9f66db42,Oliveira da Figueira,portugal,cl,1,1,0,0,0,,,,
+8e1da671-cc67-422e-ad2d-cba6682f7d83,Oliveira da Figueira,portugal,cl,3,0,0,3,3,,,,
 4de02e5f-39f1-4445-a7f5-0cf536048bca,Ōyodo,britain,cl,3,0,0,3,3,0,0,3000,3
 aa5d3889-1ef2-40a4-9673-a12a11402ef9,Ōyodo,greece,cl,1,0,1,0,1,0,0,3000,1
 d003e204-ab2a-426c-bebc-3220e5178968,Pallas,britain,cl,1,0,0,1,0,0,0,2575,1
@@ -288,17 +294,18 @@ d003e204-ab2a-426c-bebc-3220e5178968,Pallas,britain,cl,1,0,0,1,0,0,0,2575,1
 63068896-9500-46ab-9f77-e69cdb457cc1,Raimondo Montecuccoli,italy,cl,2,0,0,2,2,,,,
 22b7bac6-0abc-4245-b727-ba8ceccbb5c4,Rauma,scandinavia,cl,37,0,0,37,36,0,0,3374,37
 b1b9035c-fef4-4c21-9739-e937d1bcd97a,San DIego,usa,cl,6,6,0,0,0,2,34280,14364,6
-e3a096e2-943d-403a-a8d8-1cb91ba65cf3,Schwalbe,germany,cl,6,0,3,3,2,0,0,2450,6
-c09d0cac-7345-469c-8b9e-54fb974ce81b,Schwalbe,france,cl,10,1,0,9,9,1,275,2450,10
-cfe50fb6-ff83-4506-98c1-5b23d759a2dc,Schwalbe,russia,cl,1,0,0,1,1,0,0,2450,1
 7bbd564d-9326-4281-bd97-21c8effb9aa5,Schwalbe,netherlands,cl,3,0,3,0,0,,,,
+cfe50fb6-ff83-4506-98c1-5b23d759a2dc,Schwalbe,russia,cl,1,0,0,1,1,0,0,2450,1
+c09d0cac-7345-469c-8b9e-54fb974ce81b,Schwalbe,france,cl,10,1,0,9,9,1,275,2450,10
 a9a72d2d-7832-4a11-9c1d-5a0b92545251,Schwalbe,russia,cl,52,2,38,12,12,1,3374,2450,47
+e3a096e2-943d-403a-a8d8-1cb91ba65cf3,Schwalbe,germany,cl,6,0,3,3,2,0,0,2450,6
 da26a54f-c8af-4dfe-9cf5-316e10fe54f4,Soya,japan,cl,1,0,0,1,1,0,0,1330,1
-a752c560-2f2b-4092-b529-fc423a92d0eb,Soya,spain,cl,10,0,10,0,0,0,0,1330,10
 475fbd62-e672-4f4e-a4cf-8805abb8549e,Soya,britain,cl,5,0,0,5,0,0,0,1330,5
+a752c560-2f2b-4092-b529-fc423a92d0eb,Soya,spain,cl,10,0,10,0,0,0,0,1330,10
 fa71ecb6-2021-4101-90dd-d9030b7df101,Suchet,france,cl,8,8,0,0,0,4,3954,3404,8
-8f1d5e0c-04df-4b59-9be8-80da34c9e076,Suzuya,china,cl,1,0,0,1,1,0,0,1600,1
+ed7fe555-3d6d-4feb-a3f7-d34cb3381903,Suzuya,korean_empire,cl,2,0,1,1,1,0,0,1600,2
 e69beba7-8747-4728-af02-65fee58deac2,Suzuya,spain,cl,12,0,0,12,3,0,0,1600,12
+8f1d5e0c-04df-4b59-9be8-80da34c9e076,Suzuya,china,cl,1,0,0,1,1,0,0,1600,1
 4840db06-c680-40e2-9714-e1abb0989121,Sverdlov class,russia,cl,2,0,0,2,2,,,,
 4582d2cf-f1c3-48ef-8a0a-d66a6b0713b4,Svetlana (Profintern,russia,cl,1,0,0,1,1,0,0,6788,1
 26db1b4e-56d6-4283-bd6f-91ec97c3ef98,Ter Veere,netherlands,cl,2,0,2,0,0,0,0,2530,2
@@ -310,40 +317,43 @@ e728ae07-15a1-4413-828c-955bf8d588b6,Umbria,italy,cl,1,0,0,1,1,,,,
 ed08e778-a27f-407f-a5ad-b7cd107522bf,Vezir Iznogoud,greece,cl,6,3,3,0,3,,,,
 55d34c81-d44c-44b0-a898-0c6f38d12bba,Viking,scandinavia,cl,10,3,5,2,4,0,0,1120,3
 c42eb72a-d335-4110-a530-cabef75d661c,Vitiaz,netherlands,cl,9,0,9,0,0,1,740,3665,9
-5d21d6b5-1eb3-4478-a2a3-3019343a6eab,Wiesbaden,france,cl,37,0,20,17,36,1,250,3000,18
 6ba765dd-a3b5-40f0-abea-59f3f154e285,Wiesbaden,netherlands,cl,1,0,0,1,1,,,,
+5d21d6b5-1eb3-4478-a2a3-3019343a6eab,Wiesbaden,france,cl,38,0,20,18,37,1,250,3000,18
 11989d53-5816-4941-8d56-203c18c0af14,Wiesbaden,russia,cl,20,0,8,12,14,4,2600,3000,20
 b9366a5c-8aaa-43c7-a8d1-937c43f31781,Wiesbaden,germany,cl,2,0,0,2,0,0,0,5199,2
-08819aac-a420-491e-9ed2-632d9e9fe93f,Yahagi,colombia,cl,13,0,13,0,0,0,0,4350,13
+08819aac-a420-491e-9ed2-632d9e9fe93f,Yahagi,colombia,cl,14,0,13,1,1,0,0,4350,14
 57c51b8a-aa97-4011-a145-a2da7f8c0a3f,Yulin,italy,cl,5,0,5,0,0,0,0,2500,5
-c3cd3e48-2fad-4a05-b92c-a960c6201e85,Carnarvon,britain,cv,1,0,1,0,0,0,0,16012,1
+c3cd3e48-2fad-4a05-b92c-a960c6201e85,Carnarvon,britain,cv,2,0,2,0,1,0,0,16012,2
 5af56ce0-97e2-4fea-b100-3ba2cd8b57f1,Carrier Mk1,usa,cv,1,0,0,1,1,,,,
+a3746806-1009-41f2-a1d9-de148c55cc18,Carrier Mk3,germany,cv,1,1,0,0,0,,,,
 8c53b72d-8974-4e06-b58f-ad5580fb16b4,Essex,usa,cv,23,6,0,17,1,0,0,16513,20
 a28652e5-7c54-4d94-a02b-2f104c71f427,Foudre,france,cv,1,0,0,1,0,0,0,9000,1
 4868e14f-7b78-435d-8f6e-7c3dfecac08e,Joffre,france,cv,2,0,0,2,1,0,0,18395,2
+7b2d6f8e-b9f3-4375-b1bd-efef3f689928,Mikuma,britain,cv,1,0,1,0,0,0,0,9000,1
 e51c91f8-0d61-45c4-b4e1-66bcd1b50e71,Mikuma,japan,cv,2,1,1,0,0,0,0,9000,2
 24c5aed0-7645-4dff-bbe7-793a5d4901b6,Mikuma,china,cv,2,0,1,1,1,0,0,9000,2
 df2e47e2-5437-47f4-b56d-42589a65c23c,Ranger,usa,cv,3,0,0,3,2,0,0,15597,3
+e2492f99-49d5-4d7a-8feb-ac6b1a1f71e5,Santa Elena,germany,cv,1,0,1,0,0,0,0,13900,1
 1f15602a-1f70-4c94-85ea-5e84f09da684,Shokaku,japan,cv,10,8,0,2,0,1,4103,14550,5
 3c32061b-caf7-4c93-b7d6-23b78c8a044c,Soryu,japan,cv,6,6,0,0,0,0,0,16200,2
-766985d5-d871-47ce-8063-e7ad0cc7607d,Wakamiya,japan,cv,2,2,0,0,0,0,0,9000,2
-78fd84fd-19b9-41a6-8020-2647b8f3883a,Fitzgerald,usa,dd,12,0,0,12,1,0,0,1643,12
+766985d5-d871-47ce-8063-e7ad0cc7607d,Wakamiya,japan,cv,3,2,0,1,1,0,0,9000,3
+78fd84fd-19b9-41a6-8020-2647b8f3883a,Fitzgerald,usa,dd,21,9,0,12,2,6,59054,1643,21
 a38d89b1-3f54-470d-933f-31a5643d8d8e,Impavido,china,dd,6,0,2,4,4,0,0,2133,6
-a6a2badd-cf25-4552-8b62-6448ffe9b350,Ingersoll,netherlands,dd,6,0,5,1,3,3,10287,1504,6
 178f0d2a-c6ea-4240-af0f-c5d033606ade,Ingersoll,britain,dd,5,0,4,1,1,0,0,1504,5
+a6a2badd-cf25-4552-8b62-6448ffe9b350,Ingersoll,netherlands,dd,6,0,5,1,3,3,10287,1504,6
 b5f2218f-cf2c-4f49-ba30-2503b54f6597,Kuzu,japan,dd,9,0,0,9,8,0,0,1000,9
 edfd2a93-fdbf-44de-b974-1ad29ed1eccf,Le Hardi,sweden,dd,14,2,11,1,5,0,0,696,14
 60707b8d-0144-4dfc-94ca-c7ee525a9eea,Mecheslav,mexico,dd,21,0,0,21,11,0,0,4200,21
 6108782b-9263-414f-8fa7-960b0d63e211,MHMW Bodryi,russia,dd,1,0,0,1,1,,,,
 1af9584a-2134-4ca7-b2eb-bad89132dc4c,MHMW Palmer,usa,dd,6,4,0,2,0,0,0,4103,6
 320c029d-ce28-4cce-80f5-e338a9ff0e4d,MHMW Uranami,japan,dd,10,4,0,6,5,2,18981,3342,6
-a3597f86-396c-4cb6-bfdc-df60d08aea5a,MHMW V-1,germany,dd,6,2,0,4,4,0,0,1678,6
 5f3c9f52-6541-421a-b8d1-e5182c5cc38c,MHMW V-1,germany,dd,8,0,0,8,8,,,,
+a3597f86-396c-4cb6-bfdc-df60d08aea5a,MHMW V-1,germany,dd,6,2,0,4,4,0,0,1678,6
 a3cf3bff-6187-41fa-8324-197b3a079269,MHMW V-4,germany,dd,14,6,0,8,10,4,62118,1417,14
 f6aa2b46-d3c8-48c4-aec3-e49fb864e4a0,MHMW V-7,germany,dd,3,3,0,0,0,0,0,5412,3
 e9da8b79-793b-45fe-a967-12a44ae94ade,Porpoise,spain,dd,20,0,10,10,14,6,9866,1180,20
 abb3a0cc-1bf6-44f1-8c30-0cd75065b9e3,Sims,usa,dd,24,12,0,12,0,0,0,2612,24
-a5fa7eff-2a3d-41c9-830b-95c5f5defa75,Truxtun,greece,dd,3,0,0,3,2,0,0,2200,3
+a5fa7eff-2a3d-41c9-830b-95c5f5defa75,Truxtun,greece,dd,4,0,0,4,2,0,0,2200,4
 886cdc05-3342-48ec-8ab9-c4911b547c0b,Tsubaki,japan,dd,3,3,0,0,0,3,12600,3700,3
 c4cf7b0b-59cd-494e-9bd1-645bbd8c54b8,V-1,germany,dd,21,18,0,3,4,1,23000,850,18
 353287b5-bf60-4563-aa36-4f8019851050,V-1,germany,dd,20,0,20,0,15,0,0,850,20
@@ -351,27 +361,27 @@ c4cf7b0b-59cd-494e-9bd1-645bbd8c54b8,V-1,germany,dd,21,18,0,3,4,1,23000,850,18
 6471b793-5b31-4ba2-8674-bb1b8fa917c0,V-2,germany,dd,19,0,0,19,18,0,0,738,19
 e29b89de-a61b-4b5f-84c7-cf4b0779f3da,1890,netherlands,tb,3,0,0,3,0,,,,
 11a969e9-31a5-4d3f-854a-f1fd472f55b2,Alert,russia,tb,6,0,6,0,3,0,0,500,6
-59317734-7709-4399-83e7-c1a58f141e86,Barracuda,mexico,tb,2,0,0,2,1,0,0,174,2
+59317734-7709-4399-83e7-c1a58f141e86,Barracuda,mexico,tb,3,0,0,3,2,0,0,174,3
 3388bb35-e969-41e6-a1d1-e03391b0ab3c,Delfin,scandinavia,tb,8,0,8,0,5,0,0,275,8
-fc27a140-4d6b-4f27-bfbf-ac5e8dc9d7a6,Etorofu,japan,tb,1,0,0,1,1,0,0,275,1
+8547c4e6-8620-4112-a505-33eaab5a7c42,Etorofu,france,tb,2,1,0,1,1,0,0,275,1
+4b4e8c11-aedb-4ab6-844e-efe764e6e5f3,Etorofu,netherlands,tb,3,0,0,3,3,,,,
+9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,13,0,8,5,5,,,,
+8157953d-1bbc-4a23-a9f9-8d2510a515b4,Etorofu,britain,tb,4,0,1,3,1,0,0,275,2
+5c4a5520-206b-4d08-91bd-c1a4ca3a6ca0,Etorofu,venezuela,tb,11,0,7,4,10,0,0,275,9
 8423d3a9-725c-4559-b74f-7e1b7019c5ba,Etorofu,france,tb,10,4,6,0,6,0,0,275,2
 c86ca0dd-1734-44e6-a25a-5489e27ab1cb,Etorofu,spain,tb,7,0,5,2,0,0,0,275,7
-8157953d-1bbc-4a23-a9f9-8d2510a515b4,Etorofu,britain,tb,4,0,1,3,1,0,0,275,2
-4b4e8c11-aedb-4ab6-844e-efe764e6e5f3,Etorofu,netherlands,tb,3,0,0,3,3,,,,
-8547c4e6-8620-4112-a505-33eaab5a7c42,Etorofu,france,tb,2,1,0,1,1,0,0,275,1
-9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,13,0,8,5,5,,,,
-5c4a5520-206b-4d08-91bd-c1a4ca3a6ca0,Etorofu,venezuela,tb,11,0,7,4,10,0,0,275,9
+fc27a140-4d6b-4f27-bfbf-ac5e8dc9d7a6,Etorofu,japan,tb,3,0,2,1,1,0,0,275,2
 cbcde8f6-3eda-474e-8614-4e475543f1fc,Etorofu,spain,tb,46,10,19,17,0,0,0,275,24
-89ed4c26-111b-497e-a80e-7307757b6284,Fort Hindman,britain,tb,8,0,1,7,0,0,0,275,8
+66dbb344-d0d0-47ee-884b-5a6999db7280,Fort Hindman,france,tb,13,5,0,8,8,0,0,275,5
 3e16ef67-dc2f-4e46-a8a1-2db101c0f18a,Fort Hindman,spain,tb,1,0,0,1,0,0,0,275,1
-66dbb344-d0d0-47ee-884b-5a6999db7280,Fort Hindman,france,tb,6,5,0,1,1,0,0,275,5
+89ed4c26-111b-497e-a80e-7307757b6284,Fort Hindman,britain,tb,8,0,1,7,0,0,0,275,8
 8eac7596-70b2-43ea-8b30-e412de77393b,Furie,netherlands,tb,22,0,22,0,13,1,740,275,22
 8ad6a90c-2f57-4561-9529-d4e8660712ee,Grand Gulf,france,tb,31,0,18,13,6,0,0,500,31
 46745022-ea7e-4206-8b60-817e9e6184e2,Hato,japan,tb,12,0,12,0,12,0,0,174,12
-2d09a566-1739-4602-b5e9-3d4d6e1264ef,Hato,britain,tb,14,12,2,0,12,4,12550,174,14
 f3c7e662-ac78-4542-b5ff-abee57c25b15,Hato,france,tb,6,3,0,3,1,0,0,174,6
-04e2d89e-d3ea-488b-aba5-03e903e0242a,Hezhou,china,tb,39,21,7,11,25,,,,
+2d09a566-1739-4602-b5e9-3d4d6e1264ef,Hato,britain,tb,14,12,2,0,12,4,12550,174,14
 b5dea688-153f-4ac9-838f-4d1f79219cd8,Hezhou,russia,tb,2,2,0,0,0,0,0,388,2
+04e2d89e-d3ea-488b-aba5-03e903e0242a,Hezhou,china,tb,39,21,7,11,25,,,,
 c8e80182-70ce-48da-b887-8c7c35ec83b6,Huanggutun,russia,tb,5,0,4,1,1,0,0,300,5
 e807780a-c5dd-404c-9b99-ae9f66736773,Kasatka,scandinavia,tb,2,0,0,2,2,0,0,259,2
 c24430fb-05d5-4ae4-b516-ef8b240e616e,Kentauros,greece,tb,14,0,0,14,7,0,0,260,14
@@ -380,28 +390,30 @@ b824d0d4-7652-458d-be68-82d20484eea9,Mech,russia,tb,23,2,21,0,11,0,0,198,6
 961abece-a11c-4850-a14c-67f7f18a9b1f,MHMW BĂ©lier,france,tb,3,3,0,0,0,0,0,247,3
 9643e796-da0d-44f1-8782-e6087ef29b62,MHMW Seal,britain,tb,3,0,0,3,0,0,0,271,3
 acda7310-26cc-4c38-98a3-633bddb381ca,Oddane (Mar. 1894),russia,tb,113,2,108,3,9,4,851,275,113
-5d9b60e4-b318-44ac-89df-bdbcb12008ba,Okitsu,spain,tb,2,0,2,0,1,,,,
 6de91b21-a21b-4948-bd92-8f5ade0e9680,Okitsu,britain,tb,3,0,2,1,0,0,0,275,1
 bdceedab-390c-4966-8011-1abc077ceff0,Okitsu,france,tb,5,4,0,1,1,0,0,275,4
+5d9b60e4-b318-44ac-89df-bdbcb12008ba,Okitsu,spain,tb,2,0,2,0,1,,,,
 bc063632-185e-4b7a-a6fe-f250d0736e45,Poryvistyy,china,tb,1,0,0,1,1,0,0,756,1
-5becc4c8-2b81-472c-b7ba-de8878a5acae,S-1,korean_empire,tb,5,0,5,0,5,0,0,275,5
-a4b73793-6ed8-4b0e-a248-51cbd919caa2,S-1,germany,tb,11,0,4,7,11,,,,
 6b04f7a9-b106-4d29-8aa3-18bab4c1e180,S-1,bulgaria,tb,1,0,0,1,1,,,,
-9b3d3471-c732-40d1-9691-b4769db80968,S-1,italy,tb,24,0,24,0,15,3,1950,275,24
+2b996413-baac-4bf9-8279-843fb81aa50d,S-1,austria,tb,5,5,0,0,4,0,0,275,5
 337d06ef-6158-4cfd-bb65-5d319f82a693,S-1,austria,tb,4,0,0,4,4,,,,
 ffab2b3d-7602-493c-b777-a9acbd760679,S-1,greece,tb,13,3,4,6,7,0,0,275,7
-2b996413-baac-4bf9-8279-843fb81aa50d,S-1,austria,tb,5,5,0,0,4,0,0,275,5
+5becc4c8-2b81-472c-b7ba-de8878a5acae,S-1,korean_empire,tb,5,0,5,0,5,0,0,275,5
+9b3d3471-c732-40d1-9691-b4769db80968,S-1,italy,tb,24,0,24,0,15,3,1950,275,24
+a4b73793-6ed8-4b0e-a248-51cbd919caa2,S-1,germany,tb,11,0,4,7,11,,,,
 3d82ed22-ac6d-4801-8c54-b6f7b5f1a1e3,S-2,mexico,tb,4,0,0,4,4,0,0,273,4
 ba719c09-2c48-4bd5-8313-93188f3d8643,S-2,austria,tb,3,0,3,0,1,0,0,273,3
 7fd03f8d-0ecd-40a0-a84c-b4b32bf968bb,S-2B,austria,tb,11,11,0,0,8,0,0,174,11
 72206e6a-635f-41b0-9257-78c5629bd13e,S-2B,germany,tb,1,0,0,1,0,0,0,174,1
-f223b4e7-ab44-411c-a361-7bd4f43043e3,Seta,britain,tb,63,0,60,3,3,1,6000,275,63
-b265e8b2-2621-4921-9bad-f956c18f80b2,Seta,britain,tb,15,0,15,0,9,1,3000,275,15
 3be1cabe-4571-459f-b8ae-6f5e5655852c,Seta,france,tb,5,0,0,5,5,0,0,275,5
+f223b4e7-ab44-411c-a361-7bd4f43043e3,Seta,britain,tb,63,0,60,3,3,1,6000,275,63
 b81e876e-fa16-4482-878b-3129d00abeea,Seta,usa,tb,1,0,0,1,1,0,0,275,1
 e46a1fce-837e-438c-8daf-19e4e0fe3bae,Seta,britain,tb,15,0,15,0,4,1,2000,275,15
+b265e8b2-2621-4921-9bad-f956c18f80b2,Seta,britain,tb,15,0,15,0,9,1,3000,275,15
 f0353d0e-54d9-4080-a100-7390eac984a5,Shuanglong,russia,tb,4,0,3,1,4,0,0,500,4
 1586d198-63f2-4d2e-ada5-d2f6e110e3f8,Sparrowhawk,britain,tb,3,0,0,3,0,0,0,275,3
-fa6be47a-9a21-49d7-a3a2-f0a17a1889c1,Toba,britain,tb,5,0,0,5,0,0,0,275,5
+9c1945ee-9b74-4a48-9a0c-5ab981fcf29c,Thornycroft,netherlands,tb,7,7,0,0,4,1,3000,275,7
 8901b081-c542-4e42-9cbd-bf38d028c602,Toba,france,tb,4,4,0,0,0,0,0,275,4
+fa6be47a-9a21-49d7-a3a2-f0a17a1889c1,Toba,britain,tb,5,0,0,5,0,0,0,275,5
 eacf9a6d-3941-4764-b613-6a9fbd6f8ea5,Yinchuan,china,tb,3,1,2,0,2,1,8500,174,3
+5b6f27e9-32f4-419b-ac67-56d1d060480f,Yulin,china,tb,8,0,8,0,8,0,0,300,8
