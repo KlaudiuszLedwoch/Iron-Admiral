@@ -1,5 +1,12 @@
 [
     {
+        "file":  "102120f7_1896-12_20261124_200418_battle.jsonl",
+        "who":  "Anonymous tester 102120",
+        "title":  "1896 China vs Japan - 4 sunk",
+        "date":  "2026-11-25",
+        "ver":  "1.2.78-beta.625"
+    },
+    {
         "file":  "7705db8d_1892-01_20261124_195637_battle.jsonl",
         "who":  "Anonymous tester 7705db",
         "title":  "1892 Germany vs Netherlands - 11 sunk",
@@ -387,7 +394,7 @@
     {
         "file":  "a8fd077c_1896-05_20261125_015033_battle.jsonl",
         "who":  "Anonymous tester a8fd07",
-        "title":  "1896 Scandinavia vs USA - 3 sunk",
+        "title":  "1896 Denmark vs USA - 3 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.624"
     },
@@ -436,7 +443,7 @@
     {
         "file":  "a8fd077c_1894-11_20261125_011259_battle.jsonl",
         "who":  "Anonymous tester a8fd07",
-        "title":  "1894 USA vs Scandinavia - 5 sunk",
+        "title":  "1894 USA vs Denmark - 5 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.624"
     },
@@ -618,14 +625,14 @@
     {
         "file":  "102120f7_1894-09_20261124_044734_battle.jsonl",
         "who":  "Anonymous tester 102120",
-        "title":  "1894 China vs Scandinavia - 1 sunk",
+        "title":  "1894 China vs Denmark - 1 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.621"
     },
     {
         "file":  "102120f7_1894-07_20261124_041128_battle.jsonl",
         "who":  "Anonymous tester 102120",
-        "title":  "1894 Scandinavia vs China - 3 sunk",
+        "title":  "1894 Denmark vs China - 3 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.621"
     },
@@ -709,7 +716,7 @@
     {
         "file":  "c1ce4d53_1892-06_20261124_005646_battle.jsonl",
         "who":  "Anonymous tester c1ce4d",
-        "title":  "1892 Scandinavia vs Germany - 1 sunk",
+        "title":  "1892 Denmark vs Germany - 1 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.609"
     },
@@ -751,14 +758,14 @@
     {
         "file":  "84d8647e_1898-10_20261123_214803_battle.jsonl",
         "who":  "Anonymous tester 84d864",
-        "title":  "1898 Britain vs Scandinavia - 6 sunk",
+        "title":  "1898 Britain vs Denmark - 6 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.609"
     },
     {
         "file":  "f4a5ac47_1906-11_20261123_205655_battle.jsonl",
         "who":  "Anonymous tester f4a5ac",
-        "title":  "1906 USA vs Greece - 7 sunk",
+        "title":  "1906 USA vs Ottoman Empire - 7 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.609"
     },
@@ -786,7 +793,7 @@
     {
         "file":  "f4a5ac47_1906-06_20261123_204110_battle.jsonl",
         "who":  "Anonymous tester f4a5ac",
-        "title":  "1906 Greece vs USA - 3 sunk",
+        "title":  "1906 Ottoman Empire vs USA - 3 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.609"
     },
@@ -842,7 +849,7 @@
     {
         "file":  "eff98922_1907-09_20261123_210012_battle.jsonl",
         "who":  "Anonymous tester eff989",
-        "title":  "1907 Italy vs Greece - 18 sunk",
+        "title":  "1907 Italy vs Ottoman Empire - 18 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.604"
     },
@@ -863,7 +870,7 @@
     {
         "file":  "eff98922_1907-08_20261123_205202_battle.jsonl",
         "who":  "Anonymous tester eff989",
-        "title":  "1907 Greece vs Italy - 7 sunk",
+        "title":  "1907 Ottoman Empire vs Italy - 7 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.604"
     },
@@ -919,7 +926,7 @@
     {
         "file":  "eff98922_1906-05_20261123_175325_battle.jsonl",
         "who":  "Anonymous tester eff989",
-        "title":  "1906 Greece vs Italy - 3 sunk",
+        "title":  "1906 Ottoman Empire vs Italy - 3 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.602"
     },
@@ -933,7 +940,7 @@
     {
         "file":  "eff98922_1906-05_20261123_174549_battle.jsonl",
         "who":  "Anonymous tester eff989",
-        "title":  "1906 Greece vs Italy - 1 sunk",
+        "title":  "1906 Ottoman Empire vs Italy - 1 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.602"
     },
@@ -947,7 +954,7 @@
     {
         "file":  "eff98922_1906-05_20261123_172820_battle.jsonl",
         "who":  "Anonymous tester eff989",
-        "title":  "1906 Greece vs Italy - 7 sunk",
+        "title":  "1906 Ottoman Empire vs Italy - 7 sunk",
         "date":  "2026-11-24",
         "ver":  "1.2.78-beta.602"
     },
@@ -1101,7 +1108,7 @@
     {
         "file":  "221f843f_1909-05_20261123_121807_battle.jsonl",
         "who":  "Anonymous tester 221f84",
-        "title":  "1909 Spain vs Scandinavia - 4 sunk",
+        "title":  "1909 Spain vs Denmark - 4 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.591"
     },
@@ -1122,14 +1129,14 @@
     {
         "file":  "5b32118e_1940-11_20261123_195948_battle.jsonl",
         "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
-        "title":  "1940 Germany vs Scandinavia - 1 sunk",
+        "title":  "1940 Germany vs Denmark - 1 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.593 (Starting fleet formations)"
     },
     {
         "file":  "5b32118e_1940-11_20261123_195056_battle.jsonl",
         "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
-        "title":  "1940 Germany vs Greece - 5 sunk",
+        "title":  "1940 Germany vs Ottoman Empire - 5 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.593 (Starting fleet formations)"
     },
@@ -1143,7 +1150,7 @@
     {
         "file":  "221f843f_1908-10_20261123_114057_battle.jsonl",
         "who":  "Anonymous tester 221f84",
-        "title":  "1908 Scandinavia vs Sweden - 18 sunk",
+        "title":  "1908 Denmark vs Sweden - 18 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.591"
     },
@@ -1164,7 +1171,7 @@
     {
         "file":  "5b32118e_1940-10_20261123_183006_battle.jsonl",
         "who":  "klod76_szpieg_Z_krainy_deszczowcÄ‚â€św",
-        "title":  "1940 Germany vs Greece - 2 sunk",
+        "title":  "1940 Germany vs Ottoman Empire - 2 sunk",
         "date":  "2026-11-23",
         "ver":  "1.2.78-beta.591 (Dispatch bubbles beside the ship)"
     },

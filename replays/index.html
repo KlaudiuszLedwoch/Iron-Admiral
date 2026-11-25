@@ -46,7 +46,7 @@ async function load(){
  const L=txt.replace(/^﻿/,'').split('\n').filter(x=>x.trim()).map(x=>{try{return JSON.parse(x)}catch(e){try{return JSON.parse(x.replace(/(\d),(\d)(?=[,}\]])/g,'$1.$2'))}catch(e2){return null}}}).filter(x=>x);
  const st=L.find(l=>l.ev==='start'),S=st.ships,F=L.filter(l=>l.s),E=L.filter(l=>l.ev&&l.ev!=='start'&&l.ev!=='end');
  $('view').style.display='';$('list').style.display='none';
- const sides=[...new Set(S.map(s=>s.nation))];$('ttl').textContent='Battle replay: '+sides.map(n=>n[0].toUpperCase()+n.slice(1)).join(' vs ');
+ const sides=[...new Set(S.map(s=>s.nation))];$('ttl').textContent='Battle replay: '+sides.map(n=>({usa:'USA',scandinavia:'Denmark',greece:'Ottoman Empire',greece_kingdom:'Greece'})[n]||(n[0].toUpperCase()+n.slice(1))).join(' vs ');
  $('sub').innerHTML=`${S.length} ships, ${fmt(F[F.length-1].t)} of battle. <a href="./">All replays</a>`;
  const cls=s=>(s.type||'').toUpperCase(),nm=s=>{const m=s.name.match(/^\w+ ([^(]+)/);return m?m[1].trim():s.name};
  const cv=$('c'),x=cv.getContext('2d');$('t').max=F.length-1;
