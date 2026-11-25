@@ -429,6 +429,148 @@ $IA_Help_title_ia_69;Settings #154-158: Info & updates (1/2)
 $IA_Help_desc_ia_69;Update check, beta channel, problem reports and save compatibility. The tab has 10 switches.\n\n*#154 BetaUpdates* (default OFF - applies after a game restart)\n[ON] Beta updates (for testers): the update check offers beta versions (new features under test), off = stable versions, also back from a beta to the latest stable. Takes effect at the next start.\n[OFF] The update check offers stable versions only.\n\n*#155 CheckForUpdates* (default ON - applies after a game restart)\n[ON] At game start fetch the VERSION file of the Iron Admiral GitHub repository (one HTTPS request to raw.githubusercontent.com) and show a message when a newer release exists (1.11.9)\n[OFF] No update check at start.\n\n*#156 CheckOtherMods* (default ON)\n[ON] At start, list other mods installed next to Iron Admiral and offer to move them to a backup folder.\n[OFF] Other mods are not listed at start.\n\n*#157 SaveCompatibilityFix* (default ON)\n[ON] While a save loads, ship designs and nations are checked against the installed game data, parts, components, technologies or turret calibres that no longer exist are removed so the save loads (backup of the saves before the first change). Missing hulls are only reported.\n[OFF] A save with parts or technologies that no longer exist may fail to load.\n\n*#158 ShareLogs* (default OFF)\n[ON] Share logs with the author: battle logs, errors and the session log are sent to help fix and balance the mod (the Windows user name is removed).\n[OFF] Nothing is sent (default).
 $IA_Help_title_ia_70;Settings #159-160, #218-219, #227: Info & updates (2/2)
 $IA_Help_desc_ia_70;Continued from the previous chapter.\n\n*#159 UpdateDownloadButton* (default ON - applies after a game restart)\n[ON] Show a Download button in the update message, the download starts only after the player clicks it (1.11.11). false = message with a link only.\n[OFF] The update message has a link only.\n\n*#160 UsageStatistics* (default OFF)\n[ON] Keep anonymous usage counters on this PC (sessions, turns, battles, nation and year) and add them to a problem report - nothing is ever sent, you send the report yourself.\n[OFF] No usage counters are kept (default).\n\n*#218 SaveBackup* (default ON)\n[ON] At every start of the game the campaign saves are copied to IronAdmiral_backups next to them (a copy only when they changed, the newest 30 kept)\n[OFF] No copies of the campaign saves are made.\n\n*#219 SaveBackupKeep* (default OFF)\n[ON] How many backups of the campaign saves are kept.\n[OFF] Used only when SaveBackup is on.\n\n*#227 UpdateAutoInstall* (default ON)\n[ON] Install a newer Iron Admiral version automatically at game start (the Mods folder of the package, SHA-256 verified) - the game only asks for a restart afterwards, false = the message with the Download button.\n[OFF] A message with the Download button, nothing is downloaded unless clicked.
+$technology_name_av_cv_conversion;Capital Ship Conversion
+$technology_desc_av_cv_conversion;Battleship and battlecruiser hulls are completed as large carriers. Unlocks the Heavy Fleet Carrier hull.
+$technology_name_av_cv_catapult;Hydraulic Flight Deck Catapult
+$technology_desc_av_cv_catapult;Catapults launch aircraft without a full take-off run: a larger deck park, a shorter interval between waves.
+$technology_name_av_cv_armdeck;Armoured Hangar
+$technology_desc_av_cv_armdeck;A closed armoured box around the hangar (Illustrious 1937): unlocks the armoured hangar.
+$technology_name_av_cv_edgelift;Deck-Edge Elevator
+$technology_desc_av_cv_edgelift;An elevator outside the flight deck: aircraft move between hangar and deck while the deck is in use - shorter interval between waves.
+$technology_name_av_cv_cic;Air Search Radar and CIC
+$technology_desc_av_cv_cic;Air search radar and a Combat Information Center direct the fighters: the anti-aircraft defence of the carrier is stronger.
+$technology_name_av_cv_fuelprot;Protected Aviation Fuel
+$technology_desc_av_cv_fuelprot;Aviation fuel tanks in water-filled cofferdams and inert gas: no fuel vapour explosions when the carrier is hit.
+$compTypes_name_short_cv_hangar;Hangar
+$compTypes_name_cv_hangar;Carrier hangar
+$compTypes_name_short_cv_avgas;Avgas
+$compTypes_name_cv_avgas;Aviation fuel
+$component_name_short_cv_hangar_open;Open
+$component_name_cv_hangar_open;Open hangar
+$component_desc_cv_hangar_open;Hangar with open sides: aircraft warm up below deck - shorter interval between waves; bombs inside do more harm.
+$component_name_short_cv_hangar_closed;Closed
+$component_name_cv_hangar_closed;Closed hangar
+$component_desc_cv_hangar_closed;Closed hangar: enclosed sides - the air group is a tenth smaller and bombs inside do a little less harm.
+$component_name_short_cv_avgas_1;Tanks
+$component_name_cv_avgas_1;Aviation fuel tanks
+$component_desc_cv_avgas_1;6.5 t of aviation fuel per aircraft: about 4 waves in a battle and full support from sea; the fuel counts in the tonnage.
+$component_name_short_cv_avgas_2;Protected
+$component_name_cv_avgas_2;Protected aviation fuel tanks
+$component_desc_cv_avgas_2;As the fuel tanks, in cofferdams with inert gas: no fuel vapour explosion when a bomb bursts inside.
+$techType_name_ss_tech;Submarines
+$techType_tooltip_ss_tech;Submarine propulsion, batteries, pressure hulls and sensors
+$compTypes_name_short_ss_prop;SS propulsion
+$compTypes_name_ss_prop;Submarine propulsion
+$compTypes_name_short_ss_battery;Battery
+$compTypes_name_ss_battery;Submarine battery
+$compTypes_name_short_ss_phull;Pressure hull
+$compTypes_name_ss_phull;Submarine pressure hull
+$compTypes_name_short_ss_sensor;Periscope/hydrophone
+$compTypes_name_ss_sensor;Submarine sensors
+$compTypes_name_short_ss_snorkel;Snorkel
+$compTypes_name_ss_snorkel;Submarine snorkel
+$component_name_short_ss_prop_petrol;Petrol
+$component_name_ss_prop_petrol;Petrol engine / electric motor
+$component_desc_ss_prop_petrol;Petrol engine on the surface, electric motor submerged. Short range, fume hazard.
+$technology_name_ss_tech_petrol;Petrol-Electric Submarine
+$technology_desc_ss_tech_petrol;First practical submarines (Holland type): petrol engine and electric motor.
+$component_name_short_ss_prop_kerosene;Kerosene
+$component_name_ss_prop_kerosene;Kerosene engine / electric motor
+$component_desc_ss_prop_kerosene;Heavy-oil (Koerting) engine: safer than petrol, more range, visible exhaust.
+$technology_name_ss_tech_kerosene;Kerosene Engine
+$technology_desc_ss_tech_kerosene;Heavy-oil engines replace petrol in submarines.
+$component_name_short_ss_prop_diesel;Diesel
+$component_name_ss_prop_diesel;Diesel-electric
+$component_desc_ss_prop_diesel;Diesel on the surface, electric motor submerged: the standard submarine drive.
+$technology_name_ss_tech_diesel;Submarine Diesel
+$technology_desc_ss_tech_diesel;Diesel engines give submarines ocean range.
+$component_name_short_ss_prop_diesel_sc;Diesel SC
+$component_name_ss_prop_diesel_sc;Supercharged diesel-electric
+$component_desc_ss_prop_diesel_sc;Supercharged diesels: higher surface speed and range.
+$technology_name_ss_tech_diesel_sc;Supercharged Diesel
+$technology_desc_ss_tech_diesel_sc;Supercharged submarine diesels.
+$component_name_short_ss_prop_walter;Walter
+$component_name_ss_prop_walter;Walter turbine (AIP)
+$component_desc_ss_prop_walter;Hydrogen-peroxide turbine: very high submerged speed for a few hours.
+$technology_name_ss_tech_walter;Walter AIP
+$technology_desc_ss_tech_walter;Air-independent hydrogen-peroxide turbine.
+$component_name_short_ss_batt_1;Lead-acid I
+$component_name_ss_batt_1;Lead-acid battery I
+$component_desc_ss_batt_1;Small battery: submerged 6.5 kn, about 8 h at 4 kn.
+$technology_name_ss_tech_batt_1;Submarine Battery
+$technology_desc_ss_tech_batt_1;Lead-acid accumulator for submerged running.
+$component_name_short_ss_batt_2;Lead-acid II
+$component_name_ss_batt_2;Lead-acid battery II
+$component_desc_ss_batt_2;Submerged 8 kn, about 14 h at 4 kn.
+$technology_name_ss_tech_batt_2;Improved Battery
+$technology_desc_ss_tech_batt_2;Larger cells in a double hull.
+$component_name_short_ss_batt_3;Lead-acid III
+$component_name_ss_batt_3;Lead-acid battery III
+$component_desc_ss_batt_3;Submerged 8.5 kn, about 20 h at 4 kn.
+$technology_name_ss_tech_batt_3;Battery III
+$technology_desc_ss_tech_batt_3;Improved lead-acid cells.
+$component_name_short_ss_batt_4;High-capacity
+$component_name_ss_batt_4;High-capacity battery
+$component_desc_ss_batt_4;Type XXI style: submerged 16 kn, about 68 h at 4 kn.
+$technology_name_ss_tech_batt_4;High-Capacity Battery
+$technology_desc_ss_tech_batt_4;Triple battery capacity and a streamlined hull.
+$component_name_short_ss_phull_1;Single hull
+$component_name_ss_phull_1;Riveted single hull
+$component_desc_ss_phull_1;Test depth 30 m, depth-charge resistance x0.6.
+$technology_name_ss_tech_phull_1;Pressure Hull
+$technology_desc_ss_tech_phull_1;Riveted pressure hull.
+$component_name_short_ss_phull_2;Double hull
+$component_name_ss_phull_2;Riveted double hull
+$component_desc_ss_phull_2;Test depth 50 m, depth-charge resistance x0.8.
+$technology_name_ss_tech_phull_2;Double Hull
+$technology_desc_ss_tech_phull_2;Outer hull around the pressure hull.
+$component_name_short_ss_phull_3;Improved
+$component_name_ss_phull_3;Improved steel hull
+$component_desc_ss_phull_3;Test depth 80 m, depth-charge resistance x1.0.
+$technology_name_ss_tech_phull_3;Improved Pressure Hull
+$technology_desc_ss_tech_phull_3;Better steel and frames.
+$component_name_short_ss_phull_4;Welded
+$component_name_ss_phull_4;Welded high-tensile hull
+$component_desc_ss_phull_4;Test depth 100 m, depth-charge resistance x1.2.
+$technology_name_ss_tech_phull_4;Welded Pressure Hull
+$technology_desc_ss_tech_phull_4;Welded high-tensile steel.
+$component_name_short_ss_phull_5;Deep
+$component_name_ss_phull_5;Welded deep-diving hull
+$component_desc_ss_phull_5;Test depth 135 m, depth-charge resistance x1.4.
+$technology_name_ss_tech_phull_5;Deep-Diving Hull
+$technology_desc_ss_tech_phull_5;Thicker welded pressure hull.
+$component_name_short_ss_sens_1;Periscope
+$component_name_ss_sens_1;Periscope
+$component_desc_ss_sens_1;Detection x1.0, torpedo accuracy x1.0.
+$technology_name_ss_tech_sens_1;Periscope
+$technology_desc_ss_tech_sens_1;Optical periscope for submerged attack.
+$component_name_short_ss_sens_2;Hydrophone
+$component_name_ss_sens_2;Periscope + hydrophone
+$component_desc_ss_sens_2;Detection x1.3, torpedo accuracy x1.05.
+$technology_name_ss_tech_sens_2;Hydrophone
+$technology_desc_ss_tech_sens_2;Passive listening gear.
+$component_name_short_ss_sens_3;GHG
+$component_name_ss_sens_3;Attack periscope + group hydrophone
+$component_desc_ss_sens_3;Detection x1.6, torpedo accuracy x1.15.
+$technology_name_ss_tech_sens_3;Group Hydrophone
+$technology_desc_ss_tech_sens_3;Hydrophone arrays and attack periscopes.
+$component_name_short_ss_sens_4;Sonar+TDC
+$component_name_ss_sens_4;Hydrophone, active sonar, TDC
+$component_desc_ss_sens_4;Detection x1.9, torpedo accuracy x1.3.
+$technology_name_ss_tech_sens_4;Submarine Sonar and TDC
+$technology_desc_ss_tech_sens_4;Active sonar and torpedo data computer.
+$component_name_short_ss_snorkel_1;Snorkel
+$component_name_ss_snorkel_1;Snorkel
+$component_desc_ss_snorkel_1;Diesels run at periscope depth: battery recharged submerged, much harder to find in transit.
+$technology_name_ss_tech_snorkel;Snorkel
+$technology_desc_ss_tech_snorkel;Air mast for running diesels submerged.
+$component_name_short_cv_hangar_armoured;Armoured
+$component_name_cv_hangar_armoured;Armoured hangar
+$component_desc_cv_hangar_armoured;Armoured hangar: closed armoured box around the hangar - about a third fewer aircraft, but bombs and shells hitting the hangar no longer set off the fuel and aircraft inside.
+$technology_name_av_cv_foldwing;Folding Wings
+$technology_desc_av_cv_foldwing;Carrier aircraft with wings that fold back or up for stowage: more aircraft fit in the same hangar (the air group follows the hangar area against the aircraft size).
+$technology_name_av_cv_stowing;Sto-Wing Folding
+$technology_desc_av_cv_stowing;Wings that rotate and fold back along the fuselage (Grumman Sto-Wing): about half as many aircraft again in the same hangar.
 $IA_Tip_1;Iron Admiral: In campaign battles the faster force chooses the hour of the battle. A slower fleet can be caught at dusk or at night, and night actions open at short range.
 $IA_Tip_2;Iron Admiral: Penetration follows historical guns: shell weight and muzzle velocity by calibre and period. Armour quality and the angle of impact decide whether a shell gets through.
 $IA_Tip_3;Iron Admiral: Hits at long range are rare. Battleships and cruisers with a catapult launch a spotting aircraft in daylight, which improves the hit chance beyond 12 km.
@@ -602,145 +744,5 @@ $IA_Tip_170;Iron Admiral: One decision can set off a chain of reactions across s
 $IA_Tip_171;Iron Admiral: The strongest power tends to unite the others against itself.
 $IA_Tip_172;Iron Admiral: Grievances fade with time; coercion and lost territory are remembered for many years.
 $IA_Tip_173;Iron Admiral: Decision windows show the expected diplomatic effect before you choose.
-$technology_name_av_cv_conversion;Capital Ship Conversion
-$technology_desc_av_cv_conversion;Battleship and battlecruiser hulls are completed as large carriers. Unlocks the Heavy Fleet Carrier hull.
-$technology_name_av_cv_catapult;Hydraulic Flight Deck Catapult
-$technology_desc_av_cv_catapult;Catapults launch aircraft without a full take-off run: a larger deck park, a shorter interval between waves.
-$technology_name_av_cv_armdeck;Armoured Hangar
-$technology_desc_av_cv_armdeck;A closed armoured box around the hangar (Illustrious 1937): unlocks the armoured hangar.
-$technology_name_av_cv_edgelift;Deck-Edge Elevator
-$technology_desc_av_cv_edgelift;An elevator outside the flight deck: aircraft move between hangar and deck while the deck is in use - shorter interval between waves.
-$technology_name_av_cv_cic;Air Search Radar and CIC
-$technology_desc_av_cv_cic;Air search radar and a Combat Information Center direct the fighters: the anti-aircraft defence of the carrier is stronger.
-$technology_name_av_cv_fuelprot;Protected Aviation Fuel
-$technology_desc_av_cv_fuelprot;Aviation fuel tanks in water-filled cofferdams and inert gas: no fuel vapour explosions when the carrier is hit.
-$compTypes_name_short_cv_hangar;Hangar
-$compTypes_name_cv_hangar;Carrier hangar
-$compTypes_name_short_cv_avgas;Avgas
-$compTypes_name_cv_avgas;Aviation fuel
-$component_name_short_cv_hangar_open;Open
-$component_name_cv_hangar_open;Open hangar
-$component_desc_cv_hangar_open;Hangar with open sides: aircraft warm up below deck - shorter interval between waves; bombs inside do more harm.
-$component_name_short_cv_hangar_closed;Closed
-$component_name_cv_hangar_closed;Closed hangar
-$component_desc_cv_hangar_closed;Closed hangar: enclosed sides - the air group is a tenth smaller and bombs inside do a little less harm.
-$component_name_short_cv_avgas_1;Tanks
-$component_name_cv_avgas_1;Aviation fuel tanks
-$component_desc_cv_avgas_1;6.5 t of aviation fuel per aircraft: about 4 waves in a battle and full support from sea; the fuel counts in the tonnage.
-$component_name_short_cv_avgas_2;Protected
-$component_name_cv_avgas_2;Protected aviation fuel tanks
-$component_desc_cv_avgas_2;As the fuel tanks, in cofferdams with inert gas: no fuel vapour explosion when a bomb bursts inside.
-$techType_name_ss_tech;Submarines
-$techType_tooltip_ss_tech;Submarine propulsion, batteries, pressure hulls and sensors
-$compTypes_name_short_ss_prop;SS propulsion
-$compTypes_name_ss_prop;Submarine propulsion
-$compTypes_name_short_ss_battery;Battery
-$compTypes_name_ss_battery;Submarine battery
-$compTypes_name_short_ss_phull;Pressure hull
-$compTypes_name_ss_phull;Submarine pressure hull
-$compTypes_name_short_ss_sensor;Periscope/hydrophone
-$compTypes_name_ss_sensor;Submarine sensors
-$compTypes_name_short_ss_snorkel;Snorkel
-$compTypes_name_ss_snorkel;Submarine snorkel
-$component_name_short_ss_prop_petrol;Petrol
-$component_name_ss_prop_petrol;Petrol engine / electric motor
-$component_desc_ss_prop_petrol;Petrol engine on the surface, electric motor submerged. Short range, fume hazard.
-$technology_name_ss_tech_petrol;Petrol-Electric Submarine
-$technology_desc_ss_tech_petrol;First practical submarines (Holland type): petrol engine and electric motor.
-$component_name_short_ss_prop_kerosene;Kerosene
-$component_name_ss_prop_kerosene;Kerosene engine / electric motor
-$component_desc_ss_prop_kerosene;Heavy-oil (Koerting) engine: safer than petrol, more range, visible exhaust.
-$technology_name_ss_tech_kerosene;Kerosene Engine
-$technology_desc_ss_tech_kerosene;Heavy-oil engines replace petrol in submarines.
-$component_name_short_ss_prop_diesel;Diesel
-$component_name_ss_prop_diesel;Diesel-electric
-$component_desc_ss_prop_diesel;Diesel on the surface, electric motor submerged: the standard submarine drive.
-$technology_name_ss_tech_diesel;Submarine Diesel
-$technology_desc_ss_tech_diesel;Diesel engines give submarines ocean range.
-$component_name_short_ss_prop_diesel_sc;Diesel SC
-$component_name_ss_prop_diesel_sc;Supercharged diesel-electric
-$component_desc_ss_prop_diesel_sc;Supercharged diesels: higher surface speed and range.
-$technology_name_ss_tech_diesel_sc;Supercharged Diesel
-$technology_desc_ss_tech_diesel_sc;Supercharged submarine diesels.
-$component_name_short_ss_prop_walter;Walter
-$component_name_ss_prop_walter;Walter turbine (AIP)
-$component_desc_ss_prop_walter;Hydrogen-peroxide turbine: very high submerged speed for a few hours.
-$technology_name_ss_tech_walter;Walter AIP
-$technology_desc_ss_tech_walter;Air-independent hydrogen-peroxide turbine.
-$component_name_short_ss_batt_1;Lead-acid I
-$component_name_ss_batt_1;Lead-acid battery I
-$component_desc_ss_batt_1;Small battery: submerged 6.5 kn, about 8 h at 4 kn.
-$technology_name_ss_tech_batt_1;Submarine Battery
-$technology_desc_ss_tech_batt_1;Lead-acid accumulator for submerged running.
-$component_name_short_ss_batt_2;Lead-acid II
-$component_name_ss_batt_2;Lead-acid battery II
-$component_desc_ss_batt_2;Submerged 8 kn, about 14 h at 4 kn.
-$technology_name_ss_tech_batt_2;Improved Battery
-$technology_desc_ss_tech_batt_2;Larger cells in a double hull.
-$component_name_short_ss_batt_3;Lead-acid III
-$component_name_ss_batt_3;Lead-acid battery III
-$component_desc_ss_batt_3;Submerged 8.5 kn, about 20 h at 4 kn.
-$technology_name_ss_tech_batt_3;Battery III
-$technology_desc_ss_tech_batt_3;Improved lead-acid cells.
-$component_name_short_ss_batt_4;High-capacity
-$component_name_ss_batt_4;High-capacity battery
-$component_desc_ss_batt_4;Type XXI style: submerged 16 kn, about 68 h at 4 kn.
-$technology_name_ss_tech_batt_4;High-Capacity Battery
-$technology_desc_ss_tech_batt_4;Triple battery capacity and a streamlined hull.
-$component_name_short_ss_phull_1;Single hull
-$component_name_ss_phull_1;Riveted single hull
-$component_desc_ss_phull_1;Test depth 30 m, depth-charge resistance x0.6.
-$technology_name_ss_tech_phull_1;Pressure Hull
-$technology_desc_ss_tech_phull_1;Riveted pressure hull.
-$component_name_short_ss_phull_2;Double hull
-$component_name_ss_phull_2;Riveted double hull
-$component_desc_ss_phull_2;Test depth 50 m, depth-charge resistance x0.8.
-$technology_name_ss_tech_phull_2;Double Hull
-$technology_desc_ss_tech_phull_2;Outer hull around the pressure hull.
-$component_name_short_ss_phull_3;Improved
-$component_name_ss_phull_3;Improved steel hull
-$component_desc_ss_phull_3;Test depth 80 m, depth-charge resistance x1.0.
-$technology_name_ss_tech_phull_3;Improved Pressure Hull
-$technology_desc_ss_tech_phull_3;Better steel and frames.
-$component_name_short_ss_phull_4;Welded
-$component_name_ss_phull_4;Welded high-tensile hull
-$component_desc_ss_phull_4;Test depth 100 m, depth-charge resistance x1.2.
-$technology_name_ss_tech_phull_4;Welded Pressure Hull
-$technology_desc_ss_tech_phull_4;Welded high-tensile steel.
-$component_name_short_ss_phull_5;Deep
-$component_name_ss_phull_5;Welded deep-diving hull
-$component_desc_ss_phull_5;Test depth 135 m, depth-charge resistance x1.4.
-$technology_name_ss_tech_phull_5;Deep-Diving Hull
-$technology_desc_ss_tech_phull_5;Thicker welded pressure hull.
-$component_name_short_ss_sens_1;Periscope
-$component_name_ss_sens_1;Periscope
-$component_desc_ss_sens_1;Detection x1.0, torpedo accuracy x1.0.
-$technology_name_ss_tech_sens_1;Periscope
-$technology_desc_ss_tech_sens_1;Optical periscope for submerged attack.
-$component_name_short_ss_sens_2;Hydrophone
-$component_name_ss_sens_2;Periscope + hydrophone
-$component_desc_ss_sens_2;Detection x1.3, torpedo accuracy x1.05.
-$technology_name_ss_tech_sens_2;Hydrophone
-$technology_desc_ss_tech_sens_2;Passive listening gear.
-$component_name_short_ss_sens_3;GHG
-$component_name_ss_sens_3;Attack periscope + group hydrophone
-$component_desc_ss_sens_3;Detection x1.6, torpedo accuracy x1.15.
-$technology_name_ss_tech_sens_3;Group Hydrophone
-$technology_desc_ss_tech_sens_3;Hydrophone arrays and attack periscopes.
-$component_name_short_ss_sens_4;Sonar+TDC
-$component_name_ss_sens_4;Hydrophone, active sonar, TDC
-$component_desc_ss_sens_4;Detection x1.9, torpedo accuracy x1.3.
-$technology_name_ss_tech_sens_4;Submarine Sonar and TDC
-$technology_desc_ss_tech_sens_4;Active sonar and torpedo data computer.
-$component_name_short_ss_snorkel_1;Snorkel
-$component_name_ss_snorkel_1;Snorkel
-$component_desc_ss_snorkel_1;Diesels run at periscope depth: battery recharged submerged, much harder to find in transit.
-$technology_name_ss_tech_snorkel;Snorkel
-$technology_desc_ss_tech_snorkel;Air mast for running diesels submerged.
-$component_name_short_cv_hangar_armoured;Armoured
-$component_name_cv_hangar_armoured;Armoured hangar
-$component_desc_cv_hangar_armoured;Armoured hangar: closed armoured box around the hangar - about a third fewer aircraft, but bombs and shells hitting the hangar no longer set off the fuel and aircraft inside.
-$technology_name_av_cv_foldwing;Folding Wings
-$technology_desc_av_cv_foldwing;Carrier aircraft with wings that fold back or up for stowage: more aircraft fit in the same hangar (the air group follows the hangar area against the aircraft size).
-$technology_name_av_cv_stowing;Sto-Wing Folding
-$technology_desc_av_cv_stowing;Wings that rotate and fold back along the fuselage (Grumman Sto-Wing): about half as many aircraft again in the same hangar.
+$IA_Tip_174;Iron Admiral: Many shared designs come from the community: 920 from Badkapp's Shippack (Nexus mod 45) - thank you, Badkapp!
+$IA_Tip_175;Iron Admiral: 20 historical designs, accurate down to armour and superstructure, come from Giovix21's Ultimate Historical Dreadnoughts (Nexus mod 61) - thank you, Giovix21!
