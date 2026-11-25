@@ -1,0 +1,15 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"CL Atlanta (Miami) [usa]","type":"cl","nation":"usa","player":true,"tons":14000},{"id":1,"name":"CL Yarmouth (Medusa) [britain]","type":"cl","nation":"britain","player":false,"tons":3500}]}
+{"t":0.0,"s":[[0,837,10257,175,0.0,0,"a"],[1,-674,-8630,354,0.0,0,"a"]]}
+{"t":1.2,"ev":"ai","k":"target","msg":"player order: CL Atlanta (Miami) [usa] all guns fire at CL Yarmouth (Medusa) [britain] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":5.0,"ev":"withdraw","id":1}
+{"t":5.0,"s":[[0,845,10174,173,11.3,0,"a"],[1,769,9486,353,5.9,0,"r"]]}
+{"t":8.0,"ev":"ai","k":"scatter","msg":"CL Yarmouth (Medusa) [britain]: escape mission - scattering"}
+{"t":10.0,"s":[[0,861,10082,166,11.6,0,"a"],[1,762,9539,351,7.0,0,"a"]]}
+{"t":15.1,"s":[[0,895,9987,154,12.1,0,"a"],[1,750,9597,346,7.0,0,"a"]],"tp":[[771,9820,1],[786,9793,0],[802,9795,0],[792,9817,1]]}
+{"t":20.1,"s":[[0,951,9897,142,13.2,0,"a"],[1,733,9653,340,7.2,0,"a"]],"tp":[[812,9699,0]]}
+{"t":25.1,"s":[[0,1029,9818,129,14.4,0,"a"],[1,709,9705,331,7.2,0,"a"]],"tp":[[988,9814,0]]}
+{"t":28.3,"ev":"ai","k":"target","msg":"player order: CL Atlanta (Miami) [usa] - CL Yarmouth (Medusa) [britain] is out of the fight, the mod picks targets again"}
+{"t":30.1,"ev":"sunk","id":1}
+{"t":30.1,"s":[[0,1130,9759,113,14.5,0,"a"],[1,681,9751,328,6.5,0,"x"]]}
+{"t":35.1,"s":[[0,1244,9724,102,13.9,0,"a"],[1,654,9794,328,6.2,0,"x"]]}
+{"t":38.5,"ev":"end"}
