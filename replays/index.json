@@ -1,5 +1,12 @@
 [
     {
+        "file":  "78db3721_1923-03_20261125_145932_battle.jsonl",
+        "who":  "Фабушка",
+        "title":  "1923 Russia vs Ottoman Empire - 7 sunk",
+        "date":  "2026-11-25",
+        "ver":  "1.2.78-beta.635"
+    },
+    {
         "file":  "d7d2d21c_1929-06_20261125_095452_battle.jsonl",
         "who":  "Anonymous tester d7d2d2",
         "title":  "1929 Japan vs Russia - 5 sunk",
