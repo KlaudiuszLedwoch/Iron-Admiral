@@ -34,9 +34,9 @@ ac26e6b0-f1c4-4658-bdbd-e00034b6a51b,Erin (ex-Resadiye),britain,bb,7,0,0,7,6,0,0
 df1c763a-9be1-4875-bd72-fdc5c6e9dab7,Imperatritsa Mariya,russia,bb,1,0,0,1,1,0,0,31889,1
 568c2547-a498-438b-9ab5-4c5f4189b021,Indiana,usa,bb,2,0,0,2,0,0,0,32605,2
 36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
-446d7e58-ae81-4f18-aa3b-87bb64d8c606,Iron Duke,britain,bb,20,8,0,12,1,8,139165,29500,20
+446d7e58-ae81-4f18-aa3b-87bb64d8c606,Iron Duke,britain,bb,23,8,0,15,1,8,139165,29500,23
 cce939f4-3726-4c23-a0e9-23c4f8013937,Kaiser,germany,bb,17,15,0,2,2,3,515279,243591,4
-4adf56c1-e54e-4366-9254-405ca474cb7e,Kaiser,germany,bb,50,50,0,0,2,7,25956,27417,50
+4adf56c1-e54e-4366-9254-405ca474cb7e,Kaiser,germany,bb,51,50,0,1,3,7,25956,27417,51
 37e2e85c-d943-4499-bcf8-79fdf3defd13,Kaiser Barbarossa,germany,bb,2,0,2,0,1,0,0,12623,2
 5cccf0b8-8b8c-481b-aaeb-088c23d3e578,Kaiser Friedrich III,germany,bb,2,2,0,0,0,0,0,11097,2
 dda739b6-2260-4479-8704-cc55f5d561f0,Kaiser Wilhelm der Grosse,netherlands,bb,1,0,0,1,1,1,10160,74473,1
@@ -161,7 +161,7 @@ a4a29c5f-cc5f-4fab-8bf7-ce36f3c6a0d0,MHMW Admiral Graf Spree,germany,ca,14,0,13,
 06aaa1ae-0881-4b58-8eca-21b14ee4c063,MHMW Columbia,usa,ca,7,3,4,0,2,1,2000,3406,5
 123a0633-c3b9-4198-a044-eada328afede,MHMW Dallas,usa,ca,5,0,5,0,2,0,0,14193,5
 1a19408c-fb0b-41fa-8081-b59a6aa87492,MHMW Debrecen,austria,ca,1,1,0,0,0,1,20065,8505,1
-808f56ef-4c34-4c19-bae1-f1aade866104,MHMW Drake,britain,ca,4,0,4,0,0,0,0,9917,4
+808f56ef-4c34-4c19-bae1-f1aade866104,MHMW Drake,britain,ca,32,1,30,1,5,3,10500,9917,28
 be1a7fd5-7dca-44d1-b0d6-19cd8b9f2b0a,MHMW Gorizia,italy,ca,2,1,0,1,1,2,7950,11057,2
 6b65b0ca-2094-4837-a63f-c5ba1d057e78,MHMW Goryu,japan,ca,26,0,26,0,4,0,0,3585,2
 0e5e7dcd-98ea-4af2-b32f-a47dc0e9d4b3,MHMW Huron,usa,ca,4,0,4,0,0,0,0,3680,4
@@ -246,7 +246,7 @@ d6e32287-7550-4453-890e-02ed76b5be3f,Forward,britain,cl,1,0,0,1,1,,,,
 3b12115a-3048-48f8-8b65-64b0ae473905,Hirado,greece,cl,15,1,9,5,9,7,31016,3500,15
 a3f82e3b-3040-43f1-8633-afad586e131b,Hirado,italy,cl,16,0,15,1,7,7,19700,3500,16
 c9846198-e860-4bda-828d-24afeea0e3a5,Hirado,japan,cl,9,0,0,9,9,0,0,3500,3
-95380b7e-1dbb-4aff-9974-9981c233d959,Hirado,britain,cl,6,0,5,1,1,0,0,3500,6
+95380b7e-1dbb-4aff-9974-9981c233d959,Hirado,britain,cl,7,0,6,1,1,0,0,3500,7
 a3c7e6ac-d709-4376-893e-84977a60405e,Hirado,britain,cl,8,4,4,0,0,0,0,3500,8
 22d98d84-ea82-41c0-b02a-00e6649dde16,Izumi,italy,cl,7,0,7,0,0,0,0,3000,7
 1a02f527-6826-48e7-b616-918dbb7aaffb,Izumi,britain,cl,25,0,5,20,23,1,275,3000,25
@@ -347,7 +347,7 @@ e2492f99-49d5-4d7a-8feb-ac6b1a1f71e5,Santa Elena,germany,cv,1,0,1,0,0,0,0,13900,
 78fd84fd-19b9-41a6-8020-2647b8f3883a,Fitzgerald,usa,dd,21,9,0,12,2,6,59054,1643,21
 a38d89b1-3f54-470d-933f-31a5643d8d8e,Impavido,china,dd,6,0,2,4,4,0,0,2133,6
 97955c4a-16ff-49dd-af86-c8fab5dc06aa,Ingersoll,usa,dd,2,0,0,2,1,0,0,1504,2
-178f0d2a-c6ea-4240-af0f-c5d033606ade,Ingersoll,britain,dd,5,0,4,1,1,0,0,1504,5
+178f0d2a-c6ea-4240-af0f-c5d033606ade,Ingersoll,britain,dd,26,0,25,1,22,2,5004,1504,21
 a6a2badd-cf25-4552-8b62-6448ffe9b350,Ingersoll,netherlands,dd,6,0,5,1,3,3,10287,1504,6
 b5f2218f-cf2c-4f49-ba30-2503b54f6597,Kuzu,japan,dd,9,0,0,9,8,0,0,1000,9
 edfd2a93-fdbf-44de-b974-1ad29ed1eccf,Le Hardi,sweden,dd,14,2,11,1,5,0,0,696,14
@@ -360,7 +360,7 @@ fc95e8d9-b4cb-4bef-92e1-6b4949072d51,MHMW Soley,usa,dd,6,4,0,2,3,1,2590,3059,6
 320c029d-ce28-4cce-80f5-e338a9ff0e4d,MHMW Uranami,japan,dd,12,6,0,6,5,2,18981,3342,8
 a3597f86-396c-4cb6-bfdc-df60d08aea5a,MHMW V-1,germany,dd,6,2,0,4,4,0,0,1678,6
 5f3c9f52-6541-421a-b8d1-e5182c5cc38c,MHMW V-1,germany,dd,8,0,0,8,8,,,,
-a3cf3bff-6187-41fa-8324-197b3a079269,MHMW V-4,germany,dd,14,6,0,8,10,4,62118,1417,14
+a3cf3bff-6187-41fa-8324-197b3a079269,MHMW V-4,germany,dd,16,6,0,10,12,5,63818,1417,16
 f6aa2b46-d3c8-48c4-aec3-e49fb864e4a0,MHMW V-7,germany,dd,3,3,0,0,0,0,0,5412,3
 e9da8b79-793b-45fe-a967-12a44ae94ade,Porpoise,spain,dd,20,0,10,10,14,6,9866,1180,20
 abb3a0cc-1bf6-44f1-8c30-0cd75065b9e3,Sims,usa,dd,24,12,0,12,0,0,0,2612,24
