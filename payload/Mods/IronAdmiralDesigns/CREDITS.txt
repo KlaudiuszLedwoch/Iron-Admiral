@@ -466,3 +466,4 @@ Thank you to everyone who shared their designs.
 2026-11-25 - a8fd077c223040c9: 1 design(s): 1921 usa Morrison [75b97854]
 2026-11-25 - 6365c8f6a6c14718: 1 design(s): 1920 china Charleston [11af4672]
 2026-11-25 - 880fb9bff7de40fc: 1 design(s): 1890 japan Chigusa [0222200d]
+2026-11-25 - 6365c8f6a6c14718: 1 design(s): 1920 greece Hull [12db259b]
