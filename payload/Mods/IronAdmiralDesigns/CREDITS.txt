@@ -494,3 +494,4 @@ Thank you to everyone who shared their designs.
 2026-11-26 - 84d8647e3d044489: 1 design(s): 1906 scandinavia Minotaur [d918dfbf]
 2026-11-26 - a8fd077c223040c9: 1 design(s): 1928 usa Herbert J. Thomas [ab0b8f31]
 2026-11-26 - 84d8647e3d044489: 1 design(s): 1906 greece Pronto [22c7c6a1]
+2026-11-26 - c1ce4d53b3264e7e: 1 design(s): 1890 germany Kurfürst Friedrich Wilhelm [2fcd8b93]
