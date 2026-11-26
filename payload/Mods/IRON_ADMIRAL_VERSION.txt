@@ -1,4 +1,4 @@
-1.2.78-beta.652
-DIP_GG_Fixes 1.11.1861
-2026-11-26 06:35
-Magazine blast
+1.2.78-beta.653
+DIP_GG_Fixes 1.11.1864
+2026-11-26 08:24
+Citadel edge by impact, battle freeze fix
