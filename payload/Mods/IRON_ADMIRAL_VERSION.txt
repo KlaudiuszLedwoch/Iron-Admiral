@@ -1,4 +1,4 @@
-1.2.78-beta.660
-DIP_GG_Fixes 1.11.1878
-2026-11-26 22:40
-Aircraft fly home after the strike
+1.2.78-beta.661
+DIP_GG_Fixes 1.11.1879
+2026-11-26 23:03
+Support waves named after their carrier
