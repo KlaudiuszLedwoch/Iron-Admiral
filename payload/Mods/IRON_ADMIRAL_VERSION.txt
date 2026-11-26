@@ -1,4 +1,4 @@
-1.2.78-beta.658
-DIP_GG_Fixes 1.11.1871
-2026-11-26 17:50
-Citadel boundary flooding
+1.2.78-beta.659
+DIP_GG_Fixes 1.11.1877
+2026-11-26 22:19
+CAP stays up, stray map ship
