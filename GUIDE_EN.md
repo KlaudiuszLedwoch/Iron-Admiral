@@ -234,6 +234,7 @@ What the 1.2.77 betas add (each with its switch in the F10 panel):
 - **Losing a jewel** - a great power that loses one of its richest colonies (India and the like) to the enemy and is not winning asks for peace.
 - **Peace treaties** last five years. Democracies and constitutional monarchies keep them; an absolute monarchy breaks one only with a fleet twice the enemy's, a nationalist or communist government with 1.3 times. The player may break a treaty at a cost in unrest and relations with every great power.
 - **The loser of a war** (fewer victory points at the peace) may not lay down battleships or battlecruisers while the treaty lasts.
+- **A great power that loses every port is not dissolved** (switch PortlessPowersWait, on by default). As long as it still has a land province or a single ship, it stays in the game: its ships use allied ports, it builds nothing, and it waits for a rising, a land offensive, an ally or peace terms to give it a port back. It disappears only when it has neither provinces nor ships. To finish off such a power, sink its last ships, or make peace: a power that has no war left and did not win hands its fleet to an ally (or to whoever controls the port where the ships lie), and with no ships and no provinces it is gone. With the switch off, it is dissolved the moment it loses its last port, as in the game.
 
 **Starting wars and finding friends**
 - **No fight with everyone** - an AI nation already at war with two countries does not declare a third war itself; it can still be attacked.
