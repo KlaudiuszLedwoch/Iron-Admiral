@@ -1,4 +1,4 @@
-1.2.78-beta.651
-DIP_GG_Fixes 1.11.1860
-2026-11-26 06:15
-Trade offer follows the request
+1.2.78-beta.652
+DIP_GG_Fixes 1.11.1861
+2026-11-26 06:35
+Magazine blast
