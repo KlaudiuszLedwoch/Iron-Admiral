@@ -1,4 +1,4 @@
-1.2.78-beta.663
-DIP_GG_Fixes 1.11.1881
-2026-11-27 00:00
-Citadel diagnostics 2
+1.2.78-beta.664
+DIP_GG_Fixes 1.11.1882
+2026-11-27 00:29
+THROTTLE DIAGNOSTICS
