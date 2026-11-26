@@ -491,3 +491,6 @@ Thank you to everyone who shared their designs.
 2026-11-26 - 84d8647e3d044489: 1 design(s): 1903 greece Essex [c3aa7609]
 2026-11-26 - a8fd077c223040c9: 1 design(s): 1927 usa Idaho [39a97564]
 2026-11-26 - 3985bc2673654568: 1 design(s): 1890 germany Hildebrand [87623fe1]
+2026-11-26 - 84d8647e3d044489: 1 design(s): 1906 scandinavia Minotaur [d918dfbf]
+2026-11-26 - a8fd077c223040c9: 1 design(s): 1928 usa Herbert J. Thomas [ab0b8f31]
+2026-11-26 - 84d8647e3d044489: 1 design(s): 1906 greece Pronto [22c7c6a1]
