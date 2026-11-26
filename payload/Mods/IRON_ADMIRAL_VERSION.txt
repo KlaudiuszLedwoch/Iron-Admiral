@@ -1,4 +1,4 @@
-1.2.78-beta.655
-DIP_GG_Fixes 1.11.1867
-2026-11-26 10:58
-Data file check
+1.2.78-beta.656
+DIP_GG_Fixes 1.11.1869
+2026-11-26 16:58
+Series build time, aerial torpedo credit
