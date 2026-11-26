@@ -1,0 +1,43 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"BB Kaiser Friedrich III (Helgoland) [germany]","type":"bb","nation":"germany","player":true,"tons":17000},{"id":1,"name":"BB Schwaben (Helgoland) [germany]","type":"bb","nation":"germany","player":true,"tons":17000},{"id":2,"name":"CL Boyarin (Medusa) [russia]","type":"cl","nation":"russia","player":false,"tons":3500}]}
+{"t":0.0,"s":[[0,10719,3157,253,0.0,0,"a"],[1,10304,3067,258,0.0,0,"a"],[2,-8535,-1261,78,0.0,0,"a"]]}
+{"t":5.0,"ev":"withdraw","id":2}
+{"t":5.0,"s":[[0,10768,3178,256,4.3,0,"a"],[1,10182,3027,256,5.2,0,"a"],[2,9489,2875,79,8.6,0,"r"]]}
+{"t":10.0,"s":[[0,10733,3169,256,4.5,0,"a"],[1,10141,3017,256,5.2,0,"a"],[2,9558,2888,79,8.6,0,"r"]]}
+{"t":15.0,"s":[[0,10692,3158,256,5.2,0,"a"],[1,10100,3006,256,5.2,0,"a"],[2,9625,2901,79,8.2,0,"r"]],"tp":[[9753,2931,0],[10531,3116,1],[9938,2971,1]]}
+{"t":20.0,"s":[[0,10652,3148,256,5.1,0,"a"],[1,10059,2996,256,5.2,0,"a"],[2,9690,2913,79,8.0,0,"r"]],"tp":[[9940,2979,0],[10325,3062,1],[9729,2942,1]]}
+{"t":20.6,"ev":"ai","k":"target","msg":"torpedo attack target: auto (order menu)"}
+{"t":25.1,"s":[[0,10609,3137,255,5.4,0,"a"],[1,10017,2986,256,5.2,0,"a"],[2,9754,2925,81,7.9,0,"r"]],"tp":[[10130,3028,0],[10117,3007,1],[9518,2916,1]]}
+{"t":30.1,"s":[[0,10565,3124,253,5.5,0,"a"],[1,9976,2976,256,5.1,0,"a"],[2,9818,2934,83,7.7,0,"r"]],"tp":[[10318,3075,0],[9308,2892,1]]}
+{"t":35.1,"s":[[0,10521,3109,251,5.6,0,"a"],[1,9936,2967,258,5.1,0,"a"],[2,9877,2934,88,7.5,0,"r"]],"tp":[[9097,2867,1]]}
+{"t":40.1,"s":[[0,10479,3094,249,5.4,0,"a"],[1,9894,2960,259,5.2,0,"a"],[2,9941,2930,93,7.9,0,"r"]],"tp":[[8887,2843,1]]}
+{"t":41.5,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":42.0,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":45.2,"s":[[0,10438,3078,249,5.3,0,"a"],[1,9853,2952,260,5.1,0,"a"],[2,10004,2923,98,7.7,0,"r"]],"tp":[[9880,2944,1],[8675,2818,1]]}
+{"t":50.2,"s":[[0,10398,3063,249,5.2,0,"a"],[1,9812,2945,261,5.0,0,"a"],[2,10066,2912,102,7.5,0,"r"]],"tp":[[8466,2793,1]]}
+{"t":53.4,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":53.4,"ev":"ai","k":"target","msg":"player order: BB Kaiser Friedrich III (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":53.6,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":53.6,"ev":"ai","k":"target","msg":"player order: BB Kaiser Friedrich III (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":53.8,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":53.8,"ev":"ai","k":"target","msg":"player order: BB Kaiser Friedrich III (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":53.8,"ev":"ai","k":"target","msg":"CL Boyarin (Medusa) [russia] secondary guns (76 mm): target BB Kaiser Friedrich III (Helgoland) [germany] (bb, dmg 0.00) instead of BB Schwaben (Helgoland) [germany] [7 changes]"}
+{"t":53.9,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":53.9,"ev":"ai","k":"target","msg":"player order: BB Kaiser Friedrich III (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":54.1,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":54.1,"ev":"ai","k":"target","msg":"player order: BB Kaiser Friedrich III (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":54.3,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":54.3,"ev":"ai","k":"target","msg":"player order: BB Kaiser Friedrich III (Helgoland) [germany] all guns fire at CL Boyarin (Medusa) [russia] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":55.2,"s":[[0,10360,3048,250,4.9,0,"a"],[1,9771,2939,262,5.0,0,"a"],[2,10122,2900,103,6.8,0,"r"]],"tp":[[8254,2769,1]]}
+{"t":60.2,"s":[[0,10323,3034,251,4.8,0,"a"],[1,9732,2934,263,4.8,0,"a"],[2,10177,2888,102,6.9,0,"r"]],"tp":[[8045,2744,1]]}
+{"t":64.2,"ev":"ai","k":"scatter","msg":"CL Boyarin (Medusa) [russia]: escape mission - scattering"}
+{"t":65.2,"ev":"ai","k":"charge","msg":"BB Schwaben (Helgoland) [germany]: speed check at the charge - SpeedMax(fff) 8.6, (ttt) 15.5, (tff) 15.5, (ftf) 8.6, (fft) 8.6, moving 8.4; target 7.8"}
+{"t":65.2,"ev":"ai","k":"charge","msg":"BB Schwaben (Helgoland) [germany] (bb) charges CL Boyarin (Medusa) [russia] (cl) at 154 m, torpedo range 2995 m, ordered - goes in at once"}
+{"t":65.3,"s":[[0,10284,3021,251,5.3,0,"a"],[1,9692,2929,264,5.0,0,"a"],[2,10235,2876,101,7.7,0,"a"]],"tp":[[7833,2720,1]]}
+{"t":70.3,"s":[[0,10242,3007,251,5.5,0,"a"],[1,9654,2926,265,4.7,0,"a"],[2,10294,2865,102,7.1,0,"a"]],"tp":[[7623,2695,1]]}
+{"t":75.3,"s":[[0,10198,2991,250,5.8,0,"a"],[1,9616,2923,266,4.6,0,"a"],[2,10346,2853,105,6.2,0,"a"]],"tp":[[10326,2884,0]]}
+{"t":80.2,"ev":"ai","k":"target","msg":"player order: BB Kaiser Friedrich III (Helgoland) [germany] - CL Boyarin (Medusa) [russia] is out of the fight, the mod picks targets again"}
+{"t":80.3,"ev":"sunk","id":2}
+{"t":80.3,"s":[[0,10151,2974,249,6.3,0,"a"],[1,9578,2921,268,4.6,0,"a"],[2,10389,2840,107,5.3,0,"x"]]}
+{"t":80.3,"ev":"ai","k":"target","msg":"player order: BB Schwaben (Helgoland) [germany] - CL Boyarin (Medusa) [russia] is out of the fight, the mod picks targets again"}
+{"t":85.3,"s":[[0,10102,2953,246,6.5,0,"a"],[1,9542,2920,269,4.5,0,"a"],[2,10428,2828,107,4.9,0,"x"]]}
+{"t":89.4,"ev":"end"}
