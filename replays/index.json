@@ -1,5 +1,12 @@
 [
     {
+        "file":  "78db3721_1923-05_20261126_235757_battle.jsonl",
+        "who":  "Фабушка",
+        "title":  "1923 Russia vs Denmark - 6 sunk",
+        "date":  "2026-11-26",
+        "ver":  "1.2.78-beta.657"
+    },
+    {
         "file":  "b37536ad_1930-09_20261126_174300_battle.jsonl",
         "who":  "Anonymous tester b37536",
         "title":  "1930 Japan vs Germany - 1 sunk",
