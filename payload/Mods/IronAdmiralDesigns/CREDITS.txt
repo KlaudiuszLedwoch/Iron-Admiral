@@ -498,3 +498,10 @@ Thank you to everyone who shared their designs.
 2026-11-26 - 4a2f99afd1654fd0: 1 design(s): 1890 scandinavia Massachusetts [9beb13dc]
 2026-11-26 - a8fd077c223040c9: 1 design(s): 1933 usa Lynde McCormick [33e861ba]
 2026-11-26 - fe9fc7c3c4b74cd2: 1 design(s): 1890 germany Nassau [1ee80ddd]
+2026-11-26 - 87a8bb68792c4466: 1 design(s): 1890 greece S-1 [cb023261]
+2026-11-26 - d42ba2b272c3499e: 1 design(s): (DIP GG 1.3.5) 1940 British Empire BC Howe
+2026-11-26 - d42ba2b272c3499e: 1 design(s): (DIP GG 1.3.5) 1940 British Empire CV Cumberland
+2026-11-26 - a8fd077c223040c9: 1 design(s): 1937 portugal Indianapolis [4c90e79f]
+2026-11-26 - fc1168466b8c45e1: 1 design(s): 1895 greece S-3 [9d9be37f]
+2026-11-26 - d5f6dcfdd1e04ea9: 1 design(s): (DIP GG 1.3.5) 1930 Soviet Union BB Dvenadsat Apostolov
+2026-11-26 - fc1168466b8c45e1: 1 design(s): 1896 germany Orion [5da2a9a5]
