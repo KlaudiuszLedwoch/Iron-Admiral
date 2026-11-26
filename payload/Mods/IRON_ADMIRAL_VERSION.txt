@@ -1,4 +1,4 @@
-1.2.78-beta.649
-DIP_GG_Fixes 1.11.1858
-2026-11-26 05:21
-Pumps, transport losses, tower wrecks
+1.2.78-beta.650
+DIP_GG_Fixes 1.11.1859
+2026-11-26 05:29
+Stray ship check
