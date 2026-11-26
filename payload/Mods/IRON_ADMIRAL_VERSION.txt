@@ -1,4 +1,4 @@
-1.2.78-beta.653
-DIP_GG_Fixes 1.11.1864
-2026-11-26 08:24
-Citadel edge by impact, battle freeze fix
+1.2.78-beta.654
+DIP_GG_Fixes 1.11.1866
+2026-11-26 10:06
+Port expansion, towers for US armoured cruisers
