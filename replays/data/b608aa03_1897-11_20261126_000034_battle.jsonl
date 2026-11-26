@@ -1,0 +1,22 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"TB Burgvlied (Ariel) [netherlands]","type":"tb","nation":"netherlands","player":false,"tons":275},{"id":1,"name":"TB Panther (Vulture) [britain]","type":"tb","nation":"britain","player":true,"tons":291}]}
+{"t":0.0,"s":[[0,-6556,-3612,66,0.0,0,"a"],[1,-578,5082,109,0.0,0,"a"]]}
+{"t":3.6,"ev":"ai","k":"target","msg":"player order: TB Panther (Vulture) [britain] all guns fire at TB Burgvlied (Ariel) [netherlands] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":5.0,"s":[[0,-912,4454,66,18.1,0,"a"],[1,-454,5040,107,17.3,0,"a"]]}
+{"t":10.0,"s":[[0,-776,4510,69,17.8,0,"a"],[1,-318,4999,107,17.3,0,"a"]]}
+{"t":13.8,"ev":"ai","k":"target","msg":"TB Burgvlied (Ariel) [netherlands] main guns (127 mm): target TB Panther (Vulture) [britain] (tb, dmg 0.00) instead of TR St George (St George) [britain] [11 changes]"}
+{"t":13.8,"ev":"ai","k":"target","msg":"TB Burgvlied (Ariel) [netherlands] secondary guns (51 mm): target TB Panther (Vulture) [britain] (tb, dmg 0.00) instead of TR St George (St George) [britain] [12 changes]"}
+{"t":15.0,"s":[[0,-639,4554,75,17.6,0,"a"],[1,-184,4955,110,17.1,0,"a"]]}
+{"t":20.0,"s":[[0,-497,4580,84,16.5,0,"a"],[1,-56,4899,117,15.9,0,"a"]],"tp":[[-130,4876,1]]}
+{"t":25.0,"s":[[0,-354,4581,95,17.4,0,"a"],[1,63,4829,122,16.7,0,"a"]],"tp":[[-217,4694,1]]}
+{"t":30.0,"s":[[0,-214,4559,102,17.3,0,"a"],[1,177,4755,124,16.6,0,"a"]]}
+{"t":35.0,"s":[[0,-77,4523,108,17.2,0,"a"],[1,290,4680,123,16.5,0,"a"]]}
+{"t":40.0,"s":[[0,52,4473,115,16.8,0,"a"],[1,401,4606,125,16.2,0,"a"]]}
+{"t":45.0,"s":[[0,170,4408,123,16.4,0,"a"],[1,506,4527,130,16.0,0,"a"]]}
+{"t":50.0,"s":[[0,274,4330,131,15.7,0,"a"],[1,601,4440,135,15.7,0,"a"]]}
+{"t":55.0,"s":[[0,360,4239,142,15.2,0,"a"],[1,689,4349,136,15.4,0,"a"]]}
+{"t":60.1,"s":[[0,426,4138,151,13.5,0,"a"],[1,778,4260,134,14.2,0,"a"]]}
+{"t":65.1,"ev":"sunk","id":0}
+{"t":65.1,"s":[[0,473,4034,159,13.8,0,"x"],[1,868,4177,132,14.9,0,"a"]]}
+{"t":65.3,"ev":"ai","k":"target","msg":"player order: TB Panther (Vulture) [britain] - TB Burgvlied (Ariel) [netherlands] is out of the fight, the mod picks targets again"}
+{"t":70.1,"s":[[0,513,3933,159,13.3,0,"x"],[1,960,4097,130,14.8,0,"a"]]}
+{"t":72.2,"ev":"end"}
