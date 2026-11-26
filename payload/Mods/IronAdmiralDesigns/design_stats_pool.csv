@@ -37,7 +37,7 @@ df1c763a-9be1-4875-bd72-fdc5c6e9dab7,Imperatritsa Mariya,russia,bb,1,0,0,1,1,0,0
 36b6aded-0860-46ca-9b15-5f865254fb6d,Iron Duke,britain,bb,1,1,0,0,0,,,,
 446d7e58-ae81-4f18-aa3b-87bb64d8c606,Iron Duke,britain,bb,29,14,0,15,1,16,214986,29500,29
 cce939f4-3726-4c23-a0e9-23c4f8013937,Kaiser,germany,bb,17,15,0,2,2,3,515279,243591,4
-4adf56c1-e54e-4366-9254-405ca474cb7e,Kaiser,germany,bb,61,53,0,8,10,7,25956,27417,61
+4adf56c1-e54e-4366-9254-405ca474cb7e,Kaiser,germany,bb,64,56,0,8,10,7,25956,27417,64
 37e2e85c-d943-4499-bcf8-79fdf3defd13,Kaiser Barbarossa,germany,bb,2,0,2,0,1,0,0,12623,2
 5cccf0b8-8b8c-481b-aaeb-088c23d3e578,Kaiser Friedrich III,germany,bb,2,2,0,0,0,0,0,11097,2
 dda739b6-2260-4479-8704-cc55f5d561f0,Kaiser Wilhelm der Grosse,netherlands,bb,1,0,0,1,1,1,10160,74473,1
@@ -410,7 +410,7 @@ fc27a140-4d6b-4f27-bfbf-ac5e8dc9d7a6,Etorofu,japan,tb,3,0,2,1,1,0,0,275,2
 c86ca0dd-1734-44e6-a25a-5489e27ab1cb,Etorofu,spain,tb,7,0,5,2,0,0,0,275,7
 5c4a5520-206b-4d08-91bd-c1a4ca3a6ca0,Etorofu,venezuela,tb,11,0,7,4,10,0,0,275,9
 4b4e8c11-aedb-4ab6-844e-efe764e6e5f3,Etorofu,netherlands,tb,3,0,0,3,3,,,,
-9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,13,0,8,5,5,,,,
+9b66b71b-839b-404b-8be5-2571d51bb752,Etorofu,netherlands,tb,14,0,9,5,6,0,0,275,1
 cbcde8f6-3eda-474e-8614-4e475543f1fc,Etorofu,spain,tb,46,10,19,17,0,0,0,275,24
 8547c4e6-8620-4112-a505-33eaab5a7c42,Etorofu,france,tb,2,1,0,1,1,0,0,275,1
 89ed4c26-111b-497e-a80e-7307757b6284,Fort Hindman,britain,tb,8,0,1,7,0,0,0,275,8
