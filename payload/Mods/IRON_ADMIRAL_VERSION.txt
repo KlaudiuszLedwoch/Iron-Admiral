@@ -1,4 +1,4 @@
-1.2.78-beta.679
-DIP_GG_Fixes 1.11.1903
-2026-11-27 15:26
-Hide interface hides the mod too
+1.2.78-beta.680
+DIP_GG_Fixes 1.11.1905
+2026-11-27 16:01
+Port works in the expected balance
