@@ -1,4 +1,4 @@
-1.2.78-beta.674
-DIP_GG_Fixes 1.11.1897
-2026-11-27 13:44
-Crew experience diagnostics
+1.2.78-beta.675
+DIP_GG_Fixes 1.11.1899
+2026-11-27 14:56
+Hull bars back, colonial air group refill
