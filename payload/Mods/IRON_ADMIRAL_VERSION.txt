@@ -1,4 +1,4 @@
-1.2.78-beta.668
-DIP_GG_Fixes 1.11.1887
-2026-11-27 04:10
-Weather wait reinforcements (off)
+1.2.78-beta.669
+DIP_GG_Fixes 1.11.1889
+2026-11-27 06:16
+Path and ammunition diagnostics
