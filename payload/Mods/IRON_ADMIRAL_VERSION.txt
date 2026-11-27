@@ -1,4 +1,4 @@
-1.2.78-beta.673
-DIP_GG_Fixes 1.11.1896
-2026-11-27 13:29
-AI ship requests, shared design names, shore aircraft
+1.2.78-beta.674
+DIP_GG_Fixes 1.11.1897
+2026-11-27 13:44
+Crew experience diagnostics
