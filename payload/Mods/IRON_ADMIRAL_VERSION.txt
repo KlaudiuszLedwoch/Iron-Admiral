@@ -1,4 +1,4 @@
-1.2.78-beta.680
-DIP_GG_Fixes 1.11.1905
-2026-11-27 16:01
-Port works in the expected balance
+1.2.78-beta.681
+DIP_GG_Fixes 1.11.1907
+2026-11-27 16:20
+Garrison cost in the expected balance after loading
