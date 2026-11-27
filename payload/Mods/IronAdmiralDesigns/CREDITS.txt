@@ -521,3 +521,6 @@ Thank you to everyone who shared their designs.
 2026-11-27 - a8fd077c223040c9: 1 design(s): 1890 netherlands Belknap [090c3a9e]
 2026-11-27 - Фабушка: 1 design(s): 1920 greece 1920 Rarog [488be650]
 2026-11-27 - Onix: 1 design(s): 1920 scandinavia Alaska [21951731]
+2026-11-27 - 86eeee1da1c441a7: 1 design(s): 1890 portugal Cöln [73b2cbb1]
+2026-11-27 - Gronus: 1 design(s): 1895 netherlands Escopette [27bf07eb]
+2026-11-27 - 86eeee1da1c441a7: 1 design(s): 1890 netherlands Arcona (Jul. 1890) [78227186]
