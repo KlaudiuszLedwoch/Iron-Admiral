@@ -1,4 +1,4 @@
-1.2.78-beta.688
-DIP_GG_Fixes 1.11.1914
-2026-11-27 22:57
-Battle line width diagnostics 3
+1.2.78-beta.689
+DIP_GG_Fixes 1.11.1915
+2026-11-27 23:16
+Thicker battle lines
