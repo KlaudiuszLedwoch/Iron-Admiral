@@ -1,4 +1,4 @@
-1.2.78-beta.665
-DIP_GG_Fixes 1.11.1883
-2026-11-27 01:21
-Designer hull diagnostics
+1.2.78-beta.666
+DIP_GG_Fixes 1.11.1884
+2026-11-27 01:23
+Citadel plate kept at the edge
