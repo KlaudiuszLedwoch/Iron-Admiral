@@ -1,4 +1,4 @@
-1.2.78-beta.689
-DIP_GG_Fixes 1.11.1915
-2026-11-27 23:16
-Thicker battle lines
+1.2.78-beta.690
+DIP_GG_Fixes 1.11.1916
+2026-11-27 23:53
+Thicker battle lines from the start
