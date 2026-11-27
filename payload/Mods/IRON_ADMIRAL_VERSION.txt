@@ -1,4 +1,4 @@
-1.2.78-beta.664
-DIP_GG_Fixes 1.11.1882
-2026-11-27 00:29
-THROTTLE DIAGNOSTICS
+1.2.78-beta.665
+DIP_GG_Fixes 1.11.1883
+2026-11-27 01:21
+Designer hull diagnostics
