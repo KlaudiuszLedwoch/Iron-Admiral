@@ -1,4 +1,4 @@
-1.2.78-beta.687
-DIP_GG_Fixes 1.11.1913
-2026-11-27 22:20
-Ship list drawing fix
+1.2.78-beta.688
+DIP_GG_Fixes 1.11.1914
+2026-11-27 22:57
+Battle line width diagnostics 3
