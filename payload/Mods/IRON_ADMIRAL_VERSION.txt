@@ -1,4 +1,4 @@
-1.2.78-beta.667
-DIP_GG_Fixes 1.11.1885
-2026-11-27 01:58
-Citadel plate kept at the edge (fix)
+1.2.78-beta.668
+DIP_GG_Fixes 1.11.1887
+2026-11-27 04:10
+Weather wait reinforcements (off)
