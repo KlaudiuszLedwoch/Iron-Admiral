@@ -1,0 +1,55 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"BB Hannover (Hannover) [germany]","type":"bb","nation":"germany","player":true,"tons":150000},{"id":1,"name":"BC Otto von Diederichs (Otto von Diederichs) [germany]","type":"bc","nation":"germany","player":true,"tons":30763},{"id":2,"name":"BB Harald Fairhair (Harald Fairhair) [scandinavia]","type":"bb","nation":"scandinavia","player":false,"tons":49690}]}
+{"t":0.0,"s":[[0,-781,781,132,0.0,0,"a"],[1,-1580,1508,134,0.0,0,"a"],[2,-1973,12368,296,0.0,0,"a"]]}
+{"t":0.0,"ev":"ai","k":"massattack","msg":"massed torpedo attack off for scandinavia: enemy combat tonnage 180763 t vs own 49690 t, 0 torpedo craft vs 0 targets (needed 4 per target by day) - too few to get through, ships faster than the enemy withdraw"}
+{"t":1.9,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (178 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [1 changes]"}
+{"t":1.9,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (152 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [2 changes]"}
+{"t":1.9,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (102 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [3 changes]"}
+{"t":1.9,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (178 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [4 changes]"}
+{"t":1.9,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (152 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [5 changes]"}
+{"t":1.9,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (102 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [6 changes]"}
+{"t":5.0,"s":[[0,-908,888,133,9.7,0,"a"],[1,-2240,1661,132,9.3,0,"a"],[2,-2052,12406,295,12.6,0,"a"]]}
+{"t":10.0,"s":[[0,-832,818,133,13.0,0,"a"],[1,-2182,1612,128,9.3,0,"a"],[2,-2153,12451,293,13.6,0,"a"]]}
+{"t":15.0,"s":[[0,-753,744,133,13.2,0,"a"],[1,-2113,1562,123,11.4,0,"a"],[2,-2258,12495,291,13.9,0,"a"]]}
+{"t":20.0,"s":[[0,-672,670,132,13.3,0,"a"],[1,-2018,1507,117,13.4,0,"a"],[2,-2368,12535,289,14.2,0,"a"]]}
+{"t":25.1,"s":[[0,-590,597,132,13.4,0,"a"],[1,-1914,1464,108,13.7,0,"a"],[2,-2480,12571,287,14.3,0,"a"]]}
+{"t":25.8,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (76 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [7 changes]"}
+{"t":25.8,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] secondary guns (76 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [8 changes]"}
+{"t":30.1,"s":[[0,-508,525,131,13.6,0,"a"],[1,-1805,1439,99,13.9,0,"a"],[2,-2593,12603,285,14.5,0,"a"]]}
+{"t":35.1,"s":[[0,-424,454,130,13.3,0,"a"],[1,-1692,1430,90,13.7,0,"a"],[2,-2707,12632,284,14.3,0,"a"]]}
+{"t":40.1,"s":[[0,-339,384,129,13.7,0,"a"],[1,-1577,1437,83,14.4,0,"a"],[2,-2822,12660,284,14.8,0,"a"]]}
+{"t":45.1,"s":[[0,-252,316,128,13.6,0,"a"],[1,-1459,1460,76,14.9,0,"a"],[2,-2938,12690,285,14.8,0,"a"]]}
+{"t":50.1,"s":[[0,-162,248,126,13.8,0,"a"],[1,-1336,1500,69,16.1,0,"a"],[2,-3057,12722,285,15.2,0,"a"]]}
+{"t":55.1,"s":[[0,-67,180,125,11.7,0,"a"],[1,-1205,1559,63,14.8,0,"a"],[2,-3182,12754,284,13.1,0,"a"]]}
+{"t":60.2,"s":[[0,31,115,123,15.4,0,"a"],[1,-1072,1637,57,20.1,0,"a"],[2,-3311,12786,284,17.4,0,"a"]]}
+{"t":65.2,"s":[[0,134,51,121,15.2,0,"a"],[1,-946,1729,51,19.5,0,"a"],[2,-3446,12819,284,17.4,0,"a"]]}
+{"t":70.2,"s":[[0,240,-11,119,15.6,0,"a"],[1,-829,1833,46,19.8,0,"a"],[2,-3584,12855,285,18.1,0,"a"]]}
+{"t":75.2,"ev":"ai","k":"target","msg":"BB Harald Fairhair (Harald Fairhair) [scandinavia] main guns (432 mm): target BC Otto von Diederichs (Otto von Diederichs) [germany] (bc, dmg 0.00) instead of BB Hannover (Hannover) [germany] [9 changes]"}
+{"t":75.3,"s":[[0,351,-70,117,14.9,0,"a"],[1,-720,1948,41,18.9,0,"a"],[2,-3725,12894,287,17.4,0,"a"]]}
+{"t":80.3,"s":[[0,463,-125,115,17.6,0,"a"],[1,-619,2073,37,22.4,0,"a"],[2,-3865,12940,289,20.7,0,"a"]]}
+{"t":85.4,"s":[[0,581,-178,113,14.0,0,"a"],[1,-527,2207,33,17.7,0,"a"],[2,-4007,12992,291,16.4,0,"a"]]}
+{"t":90.4,"s":[[0,698,-226,111,13.0,0,"a"],[1,-445,2346,29,16.5,0,"a"],[2,-4146,13046,292,15.2,0,"a"]]}
+{"t":95.5,"s":[[0,817,-270,109,15.2,0,"a"],[1,-371,2490,25,19.5,0,"a"],[2,-4283,13103,293,17.8,0,"a"]]}
+{"t":100.5,"s":[[0,938,-310,108,15.0,0,"a"],[1,-304,2639,23,19.2,0,"a"],[2,-4417,13162,294,17.2,0,"a"]]}
+{"t":105.6,"s":[[0,1062,-347,106,14.8,0,"a"],[1,-244,2793,20,18.8,0,"a"],[2,-4551,13225,296,16.7,0,"a"]]}
+{"t":110.6,"s":[[0,1188,-380,104,16.6,0,"a"],[1,-190,2949,18,20.9,0,"a"],[2,-4681,13290,297,18.4,0,"a"]]}
+{"t":115.6,"s":[[0,1320,-410,102,14.9,0,"a"],[1,-140,3109,17,18.5,0,"a"],[2,-4810,13359,299,16.1,0,"a"]]}
+{"t":120.7,"s":[[0,1454,-436,100,16.3,0,"a"],[1,-94,3271,15,20.0,0,"a"],[2,-4936,13432,301,17.2,0,"a"]]}
+{"t":125.7,"s":[[0,1590,-457,98,16.9,0,"a"],[1,-50,3434,15,20.6,0,"a"],[2,-5059,13507,302,17.6,0,"a"]]}
+{"t":130.7,"s":[[0,1729,-475,96,16.3,0,"a"],[1,-8,3599,14,19.7,0,"a"],[2,-5180,13586,304,16.7,0,"a"]]}
+{"t":135.7,"s":[[0,1871,-488,94,17.4,0,"a"],[1,35,3765,14,21.0,0,"a"],[2,-5300,13667,305,17.6,0,"a"]]}
+{"t":140.8,"s":[[0,2013,-496,92,16.6,0,"a"],[1,78,3932,15,20.0,0,"a"],[2,-5416,13752,307,16.7,0,"a"]]}
+{"t":145.9,"s":[[0,2155,-500,91,16.8,0,"a"],[1,124,4096,16,20.3,0,"a"],[2,-5531,13837,307,16.9,0,"a"]]}
+{"t":150.9,"s":[[0,2297,-500,89,17.7,0,"a"],[1,173,4260,17,21.2,0,"a"],[2,-5644,13922,307,17.6,0,"a"]]}
+{"t":156.0,"s":[[0,2443,-497,88,17.8,0,"a"],[1,227,4425,19,21.0,0,"a"],[2,-5761,14008,306,17.4,0,"a"]]}
+{"t":161.1,"s":[[0,2587,-489,86,15.1,0,"a"],[1,286,4584,22,17.6,0,"a"],[2,-5874,14090,305,14.5,0,"a"]]}
+{"t":166.1,"s":[[0,2732,-477,85,18.3,0,"a"],[1,351,4738,24,20.9,0,"a"],[2,-5987,14169,305,17.3,0,"a"]]}
+{"t":171.2,"s":[[0,2881,-462,83,18.6,0,"a"],[1,424,4890,27,20.8,0,"a"],[2,-6102,14246,303,17.0,0,"a"]]}
+{"t":176.2,"s":[[0,3031,-441,82,20.8,0,"a"],[1,505,5035,31,22.7,0,"a"],[2,-6216,14320,302,18.5,0,"a"]]}
+{"t":181.2,"s":[[0,3182,-417,80,19.4,0,"a"],[1,595,5174,35,20.9,0,"a"],[2,-6330,14390,301,16.9,0,"a"]]}
+{"t":186.2,"ev":"sunk","id":2}
+{"t":186.2,"s":[[0,3335,-388,79,18.5,0,"a"],[1,694,5306,39,19.6,0,"a"],[2,-6426,14449,301,14.0,0,"x"]]}
+{"t":191.2,"s":[[0,3488,-355,77,19.5,0,"a"],[1,803,5429,43,20.5,0,"a"],[2,-6531,14512,301,15.0,0,"x"]]}
+{"t":196.3,"s":[[0,3640,-318,76,19.1,0,"a"],[1,919,5544,47,19.8,0,"a"],[2,-6634,14574,301,14.6,0,"x"]]}
+{"t":201.3,"s":[[0,3791,-277,74,19.1,0,"a"],[1,1041,5650,51,19.8,0,"a"],[2,-6733,14634,301,14.1,0,"x"]]}
+{"t":206.3,"s":[[0,3941,-232,73,19.1,0,"a"],[1,1169,5749,53,19.8,0,"a"],[2,-6828,14692,301,13.6,0,"x"]]}
+{"t":207.9,"ev":"end"}
