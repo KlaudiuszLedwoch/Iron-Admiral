@@ -509,3 +509,5 @@ Thank you to everyone who shared their designs.
 2026-11-26 - fc1168466b8c45e1: 1 design(s): 1898 germany Kaiserin Augusta [c439660c]
 2026-11-26 - fc1168466b8c45e1: 1 design(s): (DIP GG 1.3.5) 1960 German Reich BB Preussen
 2026-11-27 - 4b5a360ffc194501: 1 design(s): 1903 greece TB Killer [d35dfd5c]
+2026-11-27 - Onix: 1 design(s): 1920 china Charlotte [b635ab55]
+2026-11-27 - Onix: 1 design(s): 1920 greece Peterson [59f979eb]
