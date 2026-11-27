@@ -529,3 +529,5 @@ Thank you to everyone who shared their designs.
 2026-11-27 - b37536ad96de4a25: 1 design(s): 1932 portugal Kagerō [f1e18741]
 2026-11-27 - 3605c3cd708f42fd: 1 design(s): (DIP GG 1.3.5) 1930 France DD Fantasque
 2026-11-27 - 0e114b1d76c046d1: 1 design(s): 1910 germany Schlesien [78ee8852]
+2026-11-27 - 1e9dc3bbfe0d4f55: 1 design(s): (DIP GG 1.3.5) 1890 Japan BB Duquesne
+2026-11-27 - 1e9dc3bbfe0d4f55: 1 design(s): (DIP GG 1.3.5) 1890 Empire of Japan CA Sully
