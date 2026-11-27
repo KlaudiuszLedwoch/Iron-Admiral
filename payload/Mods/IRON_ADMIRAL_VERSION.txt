@@ -1,4 +1,4 @@
-1.2.78-beta.685
-DIP_GG_Fixes 1.11.1911
-2026-11-27 19:13
-Expected balance includes all mod expenses
+1.2.78-beta.686
+DIP_GG_Fixes 1.11.1912
+2026-11-27 21:47
+Battle line width diagnostics
