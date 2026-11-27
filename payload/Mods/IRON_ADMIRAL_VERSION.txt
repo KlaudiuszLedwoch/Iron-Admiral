@@ -1,4 +1,4 @@
-1.2.78-beta.670
-DIP_GG_Fixes 1.11.1890
-2026-11-27 06:32
-Weather wait reinforcements by speed
+1.2.78-beta.671
+DIP_GG_Fixes 1.11.1892
+2026-11-27 07:59
+Occupation garrisons
