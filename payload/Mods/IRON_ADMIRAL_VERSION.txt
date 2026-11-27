@@ -1,4 +1,4 @@
-1.2.78-beta.671
-DIP_GG_Fixes 1.11.1892
-2026-11-27 07:59
-Occupation garrisons
+1.2.78-beta.672
+DIP_GG_Fixes 1.11.1893
+2026-11-27 13:07
+Occupied provinces list
