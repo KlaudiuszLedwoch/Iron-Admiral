@@ -1,4 +1,4 @@
-1.2.78-beta.666
-DIP_GG_Fixes 1.11.1884
-2026-11-27 01:23
-Citadel plate kept at the edge
+1.2.78-beta.667
+DIP_GG_Fixes 1.11.1885
+2026-11-27 01:58
+Citadel plate kept at the edge (fix)
