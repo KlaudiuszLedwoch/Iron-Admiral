@@ -1,4 +1,4 @@
-1.2.78-beta.678
-DIP_GG_Fixes 1.11.1902
-2026-11-27 15:23
-Handed-over ships keep their progress (fix)
+1.2.78-beta.679
+DIP_GG_Fixes 1.11.1903
+2026-11-27 15:26
+Hide interface hides the mod too
