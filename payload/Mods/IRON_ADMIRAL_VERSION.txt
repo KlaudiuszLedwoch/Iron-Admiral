@@ -1,4 +1,4 @@
-1.2.78-beta.682
-DIP_GG_Fixes 1.11.1908
-2026-11-27 17:10
-Expected balance diagnostics
+1.2.78-beta.683
+DIP_GG_Fixes 1.11.1909
+2026-11-27 18:18
+Treasury diagnostics
