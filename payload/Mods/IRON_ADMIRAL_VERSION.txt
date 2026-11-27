@@ -1,4 +1,4 @@
-1.2.78-beta.675
-DIP_GG_Fixes 1.11.1899
-2026-11-27 14:56
-Hull bars back, colonial air group refill
+1.2.78-beta.676
+DIP_GG_Fixes 1.11.1900
+2026-11-27 15:02
+Hull bars back for everyone
