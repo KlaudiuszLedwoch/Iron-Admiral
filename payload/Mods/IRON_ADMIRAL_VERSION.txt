@@ -1,4 +1,4 @@
-1.2.78-beta.696
-DIP_GG_Fixes 1.11.1923
-2026-11-28 04:20
-Wrecked carriers stop flying
+1.2.78-beta.697
+DIP_GG_Fixes 1.11.1924
+2026-11-28 05:08
+Damage reference correction
