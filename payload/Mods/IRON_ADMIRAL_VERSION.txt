@@ -1,4 +1,4 @@
-1.2.78-beta.698
-DIP_GG_Fixes 1.11.1925
-2026-11-28 05:17
-Light forces opening fix
+1.2.78-beta.699
+DIP_GG_Fixes 1.11.1926
+2026-11-28 06:19
+Hunt division class fix
