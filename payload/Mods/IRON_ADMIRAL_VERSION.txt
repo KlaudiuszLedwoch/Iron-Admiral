@@ -1,4 +1,4 @@
-1.2.78-beta.700
-DIP_GG_Fixes 1.11.1927
-2026-11-28 10:32
-Non-penetrations keep the plate
+1.2.78-beta.701
+DIP_GG_Fixes 1.11.1928
+2026-11-28 10:51
+Shell nose in the penetration table
