@@ -1,0 +1,64 @@
+{"ev":"start","ver":"1.11.1701","ships":[{"id":0,"name":"CL General Kornilov (Abrek (Apr. 1905)) [russia]","type":"cl","nation":"russia","player":true,"tons":5500},{"id":1,"name":"DD Pryamislav (Almirante Guise) [russia]","type":"dd","nation":"russia","player":true,"tons":1000},{"id":2,"name":"DD Dzhigit (Almirante Guise) [russia]","type":"dd","nation":"russia","player":true,"tons":1000},{"id":3,"name":"CL Curacoa (Arethusa) [austria]","type":"cl","nation":"austria","player":false,"tons":3512},{"id":4,"name":"CL Magicienne (Arethusa) [austria]","type":"cl","nation":"austria","player":false,"tons":3512}]}
+{"t":0.0,"s":[[0,-19039,6228,110,0.0,0,"a"],[1,-20067,3419,110,0.0,0,"a"],[2,-20516,3587,106,0.0,0,"a"],[3,8396,-1221,359,0.0,0,"a"],[4,8396,-693,0,0.0,0,"a"]]}
+{"t":0.0,"ev":"ai","k":"target","msg":"CL Magicienne (Arethusa) [austria]: no visible capital target"}
+{"t":5.1,"s":[[0,296,564,109,17.7,0,"a"],[1,841,-1319,111,22.4,0,"a"],[2,246,-1112,109,18.0,0,"a"],[3,8397,-1148,360,14.5,0,"a"],[4,8392,-520,358,18.1,0,"a"]]}
+{"t":10.1,"s":[[0,433,515,110,19.4,0,"a"],[1,1008,-1392,117,24.1,0,"a"],[2,384,-1159,109,19.3,0,"a"],[3,8396,-1031,359,15.5,0,"a"],[4,8381,-374,353,19.4,0,"a"]]}
+{"t":15.1,"s":[[0,568,464,111,17.5,0,"a"],[1,1163,-1484,125,21.9,0,"a"],[2,520,-1208,110,17.5,0,"a"],[3,8392,-915,358,14.0,0,"a"],[4,8354,-232,345,17.5,0,"a"]]}
+{"t":16.2,"ev":"ai","k":"charge","msg":"CL Magicienne (Arethusa) [austria]: group losses 0% since the charge began - launch at 2.5 km (75% of 3.4 km)"}
+{"t":16.2,"ev":"ai","k":"target","msg":"CL Magicienne (Arethusa) [austria] main guns (152 mm): target CL General Kornilov (Abrek (Apr. 1905)) [russia] (cl, dmg 0.00) instead of DD Pryamislav (Almirante Guise) [russia] [1 changes]"}
+{"t":20.1,"s":[[0,699,411,113,18.2,0,"a"],[1,1302,-1593,131,22.7,0,"a"],[2,653,-1258,111,18.2,0,"a"],[3,8385,-802,355,14.5,0,"a"],[4,8309,-99,339,18.1,0,"a"]]}
+{"t":21.8,"ev":"ai","k":"target","msg":"player order: DD Pryamislav (Almirante Guise) [russia] all guns fire at CL Magicienne (Arethusa) [austria] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":21.8,"ev":"ai","k":"target","msg":"player order: DD Dzhigit (Almirante Guise) [russia] all guns fire at CL Magicienne (Arethusa) [austria] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":25.3,"s":[[0,832,354,114,19.0,0,"a"],[1,1436,-1717,134,24.1,0,"a"],[2,787,-1313,113,19.2,0,"a"],[3,8372,-689,352,14.9,0,"a"],[4,8252,32,335,18.7,0,"a"]]}
+{"t":30.4,"s":[[0,962,295,115,19.3,0,"a"],[1,1570,-1842,132,25.1,0,"a"],[2,921,-1373,115,20.1,0,"a"],[3,8353,-579,349,15.0,0,"a"],[4,8189,156,332,18.8,0,"a"]]}
+{"t":35.4,"s":[[0,1089,235,115,19.7,0,"a"],[1,1708,-1959,128,25.1,0,"a"],[2,1051,-1437,117,20.1,0,"a"],[3,8328,-473,346,15.2,0,"a"],[4,8121,274,329,19.0,0,"a"]]}
+{"t":40.4,"s":[[0,1218,176,114,18.7,0,"a"],[1,1857,-2059,119,23.6,0,"a"],[2,1177,-1505,119,18.9,0,"a"],[3,8298,-367,343,14.6,0,"a"],[4,8046,390,326,18.2,0,"a"]]}
+{"t":45.5,"s":[[0,1349,122,110,16.8,0,"a"],[1,2019,-2131,108,21.2,0,"a"],[2,1300,-1577,121,16.9,0,"a"],[3,8262,-263,340,13.0,0,"a"],[4,7965,501,322,16.3,0,"a"]]}
+{"t":50.5,"s":[[0,1480,80,105,17.7,0,"a"],[1,2189,-2170,98,22.4,0,"a"],[2,1420,-1652,122,18.1,0,"a"],[3,8223,-163,337,13.8,0,"a"],[4,7876,600,314,17.2,0,"a"]]}
+{"t":52.6,"ev":"ai","k":"charge","msg":"CL Magicienne (Arethusa) [austria]: group losses 0% since the charge began - launch at 2.5 km (75% of 3.4 km)"}
+{"t":55.5,"s":[[0,1613,52,99,15.9,0,"a"],[1,2361,-2178,88,20.2,0,"a"],[2,1538,-1727,122,16.4,0,"a"],[3,8178,-68,333,12.3,0,"a"],[4,7776,685,306,15.4,0,"a"]]}
+{"t":60.6,"s":[[0,1749,37,94,15.8,0,"a"],[1,2532,-2157,79,20.0,0,"a"],[2,1658,-1800,121,16.3,0,"a"],[3,8128,24,329,12.2,0,"a"],[4,7666,757,301,15.2,0,"a"]]}
+{"t":65.7,"s":[[0,1881,34,89,16.2,0,"a"],[1,2693,-2112,70,20.6,0,"a"],[2,1776,-1867,118,16.7,0,"a"],[3,8072,111,325,12.9,0,"a"],[4,7553,821,299,16.1,0,"a"]]}
+{"t":70.7,"s":[[0,2011,42,85,16.8,0,"a"],[1,2844,-2045,62,21.4,0,"a"],[2,1897,-1928,116,17.5,0,"a"],[3,8008,196,322,13.9,0,"a"],[4,7437,886,300,17.3,0,"a"]]}
+{"t":72.8,"ev":"ai","k":"charge","msg":"CL Curacoa (Arethusa) [austria]: group losses 0% since the charge began - launch at 2.5 km (75% of 3.4 km)"}
+{"t":73.9,"ev":"ai","k":"target","msg":"player order: DD Pryamislav (Almirante Guise) [russia] all guns fire at CL Curacoa (Arethusa) [austria] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":73.9,"ev":"ai","k":"target","msg":"player order: DD Dzhigit (Almirante Guise) [russia] all guns fire at CL Curacoa (Arethusa) [austria] - the mod's target selection leaves them alone until the target is sunk or surrenders"}
+{"t":75.8,"ev":"withdraw","id":4}
+{"t":75.8,"s":[[0,2137,58,81,14.1,0,"a"],[1,2981,-1960,55,17.9,0,"a"],[2,2018,-1982,112,14.8,0,"a"],[3,7940,278,319,11.8,0,"a"],[4,7324,952,300,14.5,0,"r"]]}
+{"t":76.8,"ev":"ai","k":"charge","msg":"CL Magicienne (Arethusa) [austria]: charge on CL General Kornilov (Abrek (Apr. 1905)) [russia] not started - 5218 m beyond start distance 4856 m at 3.1 vs 11.6 (under half its speed) - fighting with guns"}
+{"t":79.8,"ev":"ai","k":"target","msg":"CL General Kornilov (Abrek (Apr. 1905)) [russia] secondary guns (102 mm): target CL Curacoa (Arethusa) [austria] (cl, dmg 0.00) instead of none [2 changes]"}
+{"t":79.8,"ev":"ai","k":"target","msg":"CL General Kornilov (Abrek (Apr. 1905)) [russia] secondary guns (102 mm): target CL Curacoa (Arethusa) [austria] (cl, dmg 0.00) instead of none [3 changes]"}
+{"t":79.8,"ev":"ai","k":"target","msg":"CL General Kornilov (Abrek (Apr. 1905)) [russia] main guns (152 mm): target CL Curacoa (Arethusa) [austria] (cl, dmg 0.00) instead of none [4 changes]"}
+{"t":80.8,"ev":"ai","k":"massattack","msg":"massed torpedo attack off for austria: enemy combat tonnage 7500 t vs own 3512 t, 1 torpedo craft vs 1 targets (needed 4 per target by day) - too few to get through, ships faster than the enemy withdraw"}
+{"t":80.8,"ev":"ai","k":"scatter","msg":"austria: lost 50% of its force without an answer - 1 division(s) scatter on separate bearings"}
+{"t":80.8,"ev":"ai","k":"scatter","msg":"CL Curacoa (Arethusa) [austria]: scattering - heavy losses without an answer"}
+{"t":80.8,"ev":"sunk","id":4}
+{"t":80.8,"s":[[0,2261,83,77,16.4,0,"a"],[1,3106,-1859,48,20.8,0,"a"],[2,2144,-2027,108,17.3,0,"a"],[3,7866,361,317,14.6,0,"a"],[4,7220,1013,300,13.5,0,"x"]]}
+{"t":85.0,"ev":"ai","k":"smoke","msg":"CL Curacoa (Arethusa) [austria]: 1 ship(s) lay a smoke screen"}
+{"t":85.0,"ev":"ai","k":"target","msg":"CL Curacoa (Arethusa) [austria]: group plan short of hits - shadowing ahead of the target"}
+{"t":85.0,"ev":"ai","k":"target","msg":"CL Curacoa (Arethusa) [austria]: under fire - waiting not allowed (group plan short of hits - shadowing ahead of the target; CL General Kornilov (Abrek (Apr. 1905)) [russia] at 5.5 km, guns 15.9 km, cannot get out) - att"}
+{"t":85.9,"s":[[0,2381,114,74,14.8,0,"a"],[1,3217,-1747,42,18.9,0,"a"],[2,2268,-2061,103,15.4,0,"a"],[3,7788,443,316,13.6,0,"a"],[4,7133,1064,300,12.3,0,"x"]]}
+{"t":89.0,"ev":"ai","k":"scatter","msg":"CL Curacoa (Arethusa) [austria]: under fire without a charge - scattering under smoke"}
+{"t":91.0,"s":[[0,2501,153,71,15.3,0,"a"],[1,3324,-1626,41,19.6,0,"a"],[2,2396,-2084,97,15.9,0,"a"],[3,7706,524,314,14.1,0,"a"],[4,7047,1114,300,11.9,0,"x"]]}
+{"t":96.1,"s":[[0,2618,197,68,14.1,0,"a"],[1,3432,-1505,43,18.5,0,"a"],[2,2527,-2094,91,14.9,0,"a"],[3,7621,604,313,13.3,0,"a"],[4,6971,1159,301,10.5,0,"x"]]}
+{"t":101.2,"ev":"ai","k":"charge","msg":"CL Curacoa (Arethusa) [austria]: speed check at the charge - SpeedMax(fff) 11.7, (ttt) 30.3, (tff) 30.3, (ftf) 11.7, (fft) 11.7, moving 23.4; target 11.6"}
+{"t":101.2,"ev":"ai","k":"charge","msg":"CL Curacoa (Arethusa) [austria] (cl) charges CL General Kornilov (Abrek (Apr. 1905)) [russia] (cl) at 4830 m, torpedo range 3366 m, start distance 4892 m"}
+{"t":101.2,"ev":"ai","k":"target","msg":"CL Curacoa (Arethusa) [austria]: sector starboard bow of CL General Kornilov (Abrek (Apr. 1905)) [russia] (division 1 on this target)"}
+{"t":101.2,"s":[[0,2728,244,66,14.6,0,"a"],[1,3545,-1391,46,19.9,0,"a"],[2,2656,-2087,83,15.9,0,"a"],[3,7536,684,313,14.4,0,"a"],[4,6890,1207,301,11.5,0,"x"]]}
+{"t":101.6,"ev":"ai","k":"target","msg":"CL Curacoa (Arethusa) [austria] secondary guns (76 mm): target DD Pryamislav (Almirante Guise) [russia] (dd, dmg 0.00) instead of CL General Kornilov (Abrek (Apr. 1905)) [russia] [5 changes]"}
+{"t":101.6,"ev":"ai","k":"target","msg":"CL Curacoa (Arethusa) [austria] secondary guns (76 mm): target DD Pryamislav (Almirante Guise) [russia] (dd, dmg 0.00) instead of CL General Kornilov (Abrek (Apr. 1905)) [russia] [6 changes]"}
+{"t":105.2,"ev":"ai","k":"charge","msg":"CL Curacoa (Arethusa) [austria]: group losses 50% since the charge began - launch at 2.9 km (86% of 3.4 km)"}
+{"t":105.2,"ev":"ai","k":"target","msg":"CL Curacoa (Arethusa) [austria]: torpedo run-in to a bow launch station (2.6 km from CL General Kornilov (Abrek (Apr. 1905)) [russia]), own speed 23.5 vs target 23.2, 10 s to the launch point"}
+{"t":106.2,"s":[[0,2833,294,63,14.4,0,"a"],[1,3661,-1276,45,20.5,0,"a"],[2,2785,-2061,75,16.5,0,"a"],[3,7448,766,312,15.1,0,"a"],[4,6810,1254,301,11.3,0,"x"]]}
+{"t":111.3,"s":[[0,2936,349,60,14.0,0,"a"],[1,3782,-1154,45,21.0,0,"a"],[2,2917,-2015,67,17.1,0,"a"],[3,7350,849,309,15.8,0,"a"],[4,6743,1293,301,9.3,0,"x"]]}
+{"t":116.3,"s":[[0,3032,409,56,13.4,0,"a"],[1,3908,-1026,44,21.4,0,"a"],[2,3047,-1947,59,17.6,0,"a"],[3,7246,929,307,15.7,0,"a"],[4,6669,1337,301,10.4,0,"x"]]}
+{"t":121.3,"ev":"withdraw","id":3}
+{"t":121.3,"s":[[0,3122,474,52,15.3,0,"a"],[1,4032,-893,41,25.2,0,"a"],[2,3171,-1859,51,21.3,0,"a"],[3,7140,1009,307,18.3,0,"r"],[4,6600,1377,301,9.6,0,"x"]]}
+{"t":126.4,"s":[[0,3207,544,49,12.2,0,"a"],[1,4141,-748,34,20.1,0,"a"],[2,3288,-1752,44,17.6,0,"a"],[3,7036,1089,308,14.6,0,"r"],[4,6538,1414,302,8.9,0,"x"]]}
+{"t":131.5,"ev":"sunk","id":3}
+{"t":131.5,"s":[[0,3290,619,46,12.6,0,"a"],[1,4231,-589,26,20.5,0,"a"],[2,3396,-1627,38,18.8,0,"a"],[3,6936,1168,309,14.7,0,"x"],[4,6479,1448,302,8.0,0,"x"]]}
+{"t":132.4,"ev":"ai","k":"target","msg":"player order: DD Dzhigit (Almirante Guise) [russia] - CL Curacoa (Arethusa) [austria] is out of the fight, the mod picks targets again"}
+{"t":132.9,"ev":"ai","k":"target","msg":"player order: DD Pryamislav (Almirante Guise) [russia] - CL Curacoa (Arethusa) [austria] is out of the fight, the mod picks targets again"}
+{"t":136.6,"s":[[0,3366,696,43,13.2,0,"a"],[1,4297,-427,19,21.1,0,"a"],[2,3494,-1497,36,19.9,0,"a"],[3,6849,1238,309,13.6,0,"x"],[4,6422,1482,302,8.1,0,"x"]]}
+{"t":141.6,"s":[[0,3439,777,41,12.5,0,"a"],[1,4343,-261,13,19.8,0,"a"],[2,3590,-1364,36,18.8,0,"a"],[3,6770,1301,309,12.3,0,"x"],[4,6372,1512,303,7.1,0,"x"]]}
+{"t":143.3,"ev":"end"}
