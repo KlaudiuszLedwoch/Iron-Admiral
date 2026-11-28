@@ -1,4 +1,4 @@
-1.2.78-beta.697
-DIP_GG_Fixes 1.11.1924
-2026-11-28 05:08
-Damage reference correction
+1.2.78-beta.698
+DIP_GG_Fixes 1.11.1925
+2026-11-28 05:17
+Light forces opening fix
