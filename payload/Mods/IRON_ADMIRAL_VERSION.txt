@@ -1,4 +1,4 @@
-1.2.78-beta.690
-DIP_GG_Fixes 1.11.1916
-2026-11-27 23:53
-Thicker battle lines from the start
+1.2.78-beta.691
+DIP_GG_Fixes 1.11.1917
+2026-11-28 01:25
+Game panel orders take command back
