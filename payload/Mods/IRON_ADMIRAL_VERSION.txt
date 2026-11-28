@@ -1,4 +1,4 @@
-1.2.78-beta.692
-DIP_GG_Fixes 1.11.1919
-2026-11-28 02:19
-Occupation without monthly windows
+1.2.78-beta.693
+DIP_GG_Fixes 1.11.1920
+2026-11-28 03:14
+Damage by tonnage reference fix
